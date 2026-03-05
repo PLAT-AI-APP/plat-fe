@@ -64,11 +64,13 @@ export { default as Finfill } from "./Finfill";
 export interface IconProps {
   size?: number | string;
   className?: string;
+  color?: string;
 }
 
 // 아이콘의 틀만 담당하는 컴포넌트
 export const IconWrapper = ({
   size = 24,
+  color = "#000000",
   className = "",
   children,
 }: IconProps & { children: React.ReactNode }) => (
@@ -76,9 +78,10 @@ export const IconWrapper = ({
     width={size}
     height={size}
     viewBox="0 0 24 24"
-    fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    className={className}
+    style={{ color }}
+    /* 🎨 CSS Trick: 하위의 모든 path, circle 등이 currentColor를 강제로 따르게 함 */
+    className={`${className} **:fill-current **:stroke-current`}
   >
     {children}
   </svg>
