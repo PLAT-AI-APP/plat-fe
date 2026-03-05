@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+/* 1. 다크모드 변형 정의 */
+@variant dark (&:where(.dark, .dark *));
+
+:root {
+  --brand: #ff7a00;
+  --brand-opacity: rgba(255, 122, 0, 0.1); /* 10% 투명도 적용 */
+  --red: #ed1c24;
+
+  /* 라이트 모드 시 컬러 */
+  --font-1: #11141f;
+  --font-2: #4a4d5e;
+  --bg: #ffffff;
+}
+
+/* 2. next-themes가 <html>에 .dark를 붙였을 때 (기본 모드) */
+.dark {
+  --font-1: #ecedf5;
+  --font-2: #989db8;
+  --font-3-disabled: #5c6180;
+  --border: #2a2f4a;
+  --bg: #11141f; /* 다크 모드 배경 */
+  --bg-darker: #0a0c14;
+  --bg-card: #181c2e;
+  --bg-card-hover: #1f2440;
+  --bg-card-selected: #252b50;
+  --button-dark-hover: #161a28;
+  --button-dark-selected: #1c2138;
+}
+
+@theme inline {
+  --color-font-1: var(--font-1);
+  --color-font-2: var(--font-2);
+  --color-font-disabled: var(--font-3-disabled);
+  --color-border-main: var(--border);
+  --color-bg-main: var(--bg-dark);
+  --color-bg-darker: var(--bg-darker);
+  --color-card: var(--bg-card);
+  --color-card-hover: var(--bg-card-hover);
+  --color-card-selected: var(--bg-card-selected);
+  --color-btn-hover: var(--button-dark-hover);
+  --color-btn-selected: var(--button-dark-selected);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--font-1);
+}
