@@ -6,10 +6,10 @@ const ArrowUp = (props: IconProps) => {
     <IconWrapper {...props}>
       <path
         d="M17 14L12 9L7 14"
-        stroke="#989DB8"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        stroke="inherit"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </IconWrapper>
   );

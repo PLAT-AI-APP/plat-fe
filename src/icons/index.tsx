@@ -61,27 +61,24 @@ export { default as Headphone } from "./Headphone";
 export { default as Finfill } from "./Finfill";
 
 // 모든 아이콘이 공유할 타입
-export interface IconProps {
+export interface IconProps extends React.ComponentPropsWithoutRef<"svg"> {
   size?: number | string;
-  className?: string;
-  color?: string;
 }
 
 // 아이콘의 틀만 담당하는 컴포넌트
 export const IconWrapper = ({
   size = 24,
-  color = "#000000",
   className = "",
   children,
+  ...props
 }: IconProps & { children: React.ReactNode }) => (
   <svg
     width={size}
     height={size}
     viewBox="0 0 24 24"
     xmlns="http://www.w3.org/2000/svg"
-    style={{ color }}
-    /* 🎨 CSS Trick: 하위의 모든 path, circle 등이 currentColor를 강제로 따르게 함 */
-    className={`${className} **:fill-current **:stroke-current`}
+    className={`${className}`}
+    {...props}
   >
     {children}
   </svg>

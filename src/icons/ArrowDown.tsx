@@ -6,8 +6,8 @@ const ArrowDown = (props: IconProps) => {
     <IconWrapper {...props}>
       <path
         d="M7 10L12 15L17 10"
-        stroke="#989DB8"
-        stroke-width="1.5"
+        stroke="inherit"
+        strokeWidth="1.5"
         stroke-linecap="round"
         stroke-linejoin="round"
       />
