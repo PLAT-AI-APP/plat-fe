@@ -1,24 +1,24 @@
 "use client";
-import Footer from "@/components/Footer";
-import Header from "@/components/header/index";
-import Sidebar from "@/components/Sidebar";
-import { useState } from "react";
 
-export default function MainLayout({
+import { useState } from "react";
+import Header from "@/components/header";
+import Sidebar from "@/components/Sidebar";
+import Footer from "@/components/Footer";
+
+export default function ClientLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const [isFolded, setIsFolded] = useState(true);
-  const handleFoldToggle = () => {
-    setIsFolded((prev) => !prev);
-  };
+  const handleFoldToggle = () => setIsFolded((prev) => !prev);
+
   return (
     <>
       <Header handleFoldToggle={handleFoldToggle} />
       <main className="min-h-screen flex">
         <Sidebar isFolded={isFolded} />
-        {children}
+        <div className="flex-1">{children}</div>
       </main>
       <Footer />
     </>
