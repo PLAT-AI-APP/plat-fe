@@ -1,4 +1,5 @@
 "use client";
+import Footer from "@/components/Footer";
 import Header from "@/components/header/index";
 import Sidebar from "@/components/Sidebar";
 import { useState } from "react";
@@ -19,6 +20,7 @@ export default function MainLayout({
         <Sidebar isFolded={isFolded} />
         {children}
       </main>
+      <Footer />
     </>
   );
 }
