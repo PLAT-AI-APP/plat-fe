@@ -1,9 +1,10 @@
 "use client";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import ProfileImg from "../../../public/p1.png";
 import Link from "next/link";
 import { Logout, Persona, Star, User } from "@/icons";
+import { ModalLayout } from "../ModalLayout";
 
 const Profile = () => {
   const [isActive, setIsActive] = useState<boolean>(false);
@@ -16,9 +17,13 @@ const Profile = () => {
     { name: "내 페르소나", link: "/persona", icon: Persona },
     { name: "토큰 충전", link: "/charge", icon: Star },
   ];
+
+  const triggerRef = useRef<HTMLImageElement>(null);
+
   return (
     <div className="relative text-nowrap">
       <Image
+        ref={triggerRef}
         src={ProfileImg}
         alt="profile image"
         className="w-10 h-10 cursor-pointer"
@@ -26,7 +31,11 @@ const Profile = () => {
       />
 
       {isActive && (
-        <div className="absolute top-full right-0 shadow-card-heavy w-60 translate-y-2 z-10 px-2 py-3 rounded-xl bg-bg-dark">
+        <ModalLayout
+          triggerRef={triggerRef || null}
+          onClose={() => setIsActive(false)}
+          className="top-full right-0 w-60 translate-y-2 z-10 px-2 py-3 rounded-xl"
+        >
           <div className="p-2 flex gap-3">
             <Image src={ProfileImg} alt="profile image" className="w-10 h-10" />
             <div className="flex flex-col gap-0.5">
@@ -64,7 +73,7 @@ const Profile = () => {
             <Logout size={18} className="text-font-2 shrink-0" />
             로그아웃
           </Link>
-        </div>
+        </ModalLayout>
       )}
     </div>
   );

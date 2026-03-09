@@ -1,15 +1,15 @@
 "use client";
 import { Global } from "@/icons";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { ModalLayout } from "../ModalLayout";
 
 const LanguageSelector = () => {
-  const [isActive, setIsActive] = useState<boolean>(true);
+  const [isActive, setIsActive] = useState<boolean>(false);
 
   const [currentLanguage, setCurrentLanguage] = useState<string>("KR");
   const handleLanguageChange = (code: string) => {
     setCurrentLanguage(code);
-    setIsActive(false);
+    setIsActive(!isActive);
   };
 
   const LanguageArray = [
@@ -20,10 +20,13 @@ const LanguageSelector = () => {
     { code: "TH", name: "ภาษาไทย", eng: "Thailand" },
     { code: "VN", name: "Tiếng Việt", eng: "Vietnamese" },
   ];
+
+  const triggerRef = useRef<HTMLDivElement>(null); // 버튼을 위한 ref
   return (
     <div className="relative flex justify-between w-15.25">
       <div
-        onClick={() => setIsActive(!isActive)}
+        ref={triggerRef}
+        onClick={(e) => setIsActive((prev) => !prev)}
         className="flex cursor-pointer items-center gap-1 bg-btn-hover rounded-lg p-1.25 pr-2.5"
       >
         <Global className="text-font-2" />
@@ -32,7 +35,8 @@ const LanguageSelector = () => {
 
       {isActive && (
         <ModalLayout
-          onClose={() => setIsActive(!isActive)}
+          triggerRef={triggerRef || null} // ref 전달
+          onClose={() => setIsActive(false)}
           className="translate-y-2 top-full right-0 w-50 px-2 py-3"
         >
           {LanguageArray.map((lang) => (
