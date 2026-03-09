@@ -6,11 +6,19 @@ import { SearchBar } from "./SearchBar";
 import LanguageSelector from "./LanguageSelector";
 import Profile from "./Profile";
 
-const Header = () => {
+interface HeaderProps {
+  handleFoldToggle: () => void;
+}
+const Header = ({ handleFoldToggle }: HeaderProps) => {
   return (
     <header className="h-15 flex items-center justify-between px-5">
       <div className="flex gap-3.75 items-center">
-        <Fold className="text-font-2 cursor-pointer" />
+        <span className="flex w-8 h-8 justify-center items-center hover:bg-btn-hover rounded-lg">
+          <Fold
+            className="w-6 h-6 text-font-2 cursor-pointer"
+            onClick={handleFoldToggle}
+          />
+        </span>
         <Image
           src={logoImg}
           width={89}
@@ -28,7 +36,7 @@ const Header = () => {
           <LanguageSelector />
 
           <div className="flex cursor-pointer items-center gap-1 bg-btn-hover rounded-b-lg p-1.25 pr-2.5">
-            <Star stroke="white" />
+            <Star fill="none" stroke="white" />
             <span>1,100</span>
           </div>
 
