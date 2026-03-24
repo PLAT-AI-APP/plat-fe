@@ -7,14 +7,10 @@ export const SearchBar = () => (
     className="relative flex items-center group"
     onSubmit={(e) => e.preventDefault()} // 엔터 시 페이지 새로고침 방지
   >
-    <label id="search-input-label" htmlFor="search-input">
-      검색어 입력
-    </label>
-
     <input
       id="search-input"
       type="text"
-      className="text-sm border cursor-pointer border-border-main w-[260px] h-10 px-4 pl-10 rounded-xl focus:outline-none transition-all placeholder:text-font2 focus:cursor-text"
+      className="text-sm border cursor-pointer border-border-main w-65 h-10 px-4 pl-10 rounded-xl focus:outline-none transition-all placeholder:text-font2 focus:cursor-text"
       placeholder="검색어를 입력하세요"
     />
 
