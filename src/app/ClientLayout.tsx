@@ -16,11 +16,17 @@ export default function ClientLayout({
   return (
     <>
       <Header handleFoldToggle={handleFoldToggle} />
-      <main className="min-h-screen flex">
+      <main id="main-container" className="flex h-[calc(100vh-60px)]">
         <Sidebar isFolded={isFolded} />
-        <div className="flex-1">{children}</div>
+
+        <div
+          id="page-content"
+          className="flex-1 overflow-y-auto overflow-x-hidden flex flex-col"
+        >
+          {children}
+          <Footer />
+        </div>
       </main>
-      <Footer />
     </>
   );
 }
