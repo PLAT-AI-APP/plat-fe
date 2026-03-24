@@ -11,6 +11,17 @@
   --bg-dark: #ffffff;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  /* 배경색을 그림자로 덮어씌워 보이지 않게 함 */
+  -webkit-box-shadow: 0 0 0px 1000px #161922 inset !important; /* 글자 색상 고정 */
+  -webkit-text-fill-color: #ffffff !important;
+  /* 배경색 전환 애니메이션을 아주 길게 설정하여 색 변화 방지 */
+  transition: background-color 5000s ease-in-out 0s;
+}
+
 .dark {
   --font-1: #ecedf5;
   --font-2: #989db8;
