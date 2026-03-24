@@ -25,24 +25,40 @@ const Footer = () => {
     },
   ];
   return (
-    <footer className="px-5 py-2.5 flex flex-col gap-4 pt-9">
-      <div className="flex gap-3">
-        {menuArray.map((menu) => (
-          <Link
-            key={menu.text}
-            href={menu.link}
-            className="text-sm font-medium text-font-1"
-          >
-            {menu.text}
-          </Link>
-        ))}
-      </div>
-      <div className="flex gap-3 text-sm text-font-disabled">
-        <span>(주)플랫</span>|<span>대표 김승우</span>|<span>02-123-4567</span>|
-        <span>사업자등록번호: 123-45-67890</span>|
-        <span>서울 OO구 OOO로123길 45, 10F</span>
-      </div>
-      <p className="text-sm text-font-disabled">
+    <footer id="main-footer" className="px-5 py-2.5 flex flex-col gap-4 pt-9">
+      {/* 푸터 내비게이션 영역 */}
+      <nav id="footer-navigation" aria-label="푸터 메뉴">
+        <ul id="footer-menu-list" className="flex gap-3 p-0 m-0 list-none">
+          {menuArray.map((menu) => (
+            <li key={menu.text} id={`footer-menu-item-${menu.text}`}>
+              <Link
+                id={`footer-link-${menu.text}`}
+                href={menu.link}
+                className="text-sm font-medium text-font-1"
+              >
+                {menu.text}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      {/* 사업자 정보 영역: 주소 및 연락처 정보 */}
+      <address
+        id="footer-business-info"
+        className="not-italic flex flex-wrap gap-3 text-sm text-font-disabled"
+      >
+        <span id="footer-company-name">(주)플랫</span>|
+        <span id="footer-representative">대표 김승우</span>|
+        <span id="footer-phone-number">02-123-4567</span>|
+        <span id="footer-registration-number">
+          사업자등록번호: 123-45-67890
+        </span>
+        |<span id="footer-office-address">서울 OO구 OOO로123길 45, 10F</span>
+      </address>
+
+      {/* 저작권 표시 영역 */}
+      <p id="footer-copyright" className="text-sm text-font-disabled">
         © 2025 Wrtn. All rights reserved.
       </p>
     </footer>
