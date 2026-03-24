@@ -5,45 +5,77 @@ import logoImg from "../../../public/logo.png";
 import { SearchBar } from "./SearchBar";
 import LanguageSelector from "./LanguageSelector";
 import Profile from "./Profile";
+import Link from "next/link";
 
 interface HeaderProps {
   handleFoldToggle: () => void;
 }
 const Header = ({ handleFoldToggle }: HeaderProps) => {
   return (
-    <header className="h-15 flex items-center justify-between px-5">
-      <div className="flex gap-3.75 items-center">
-        <span className="flex w-8 h-8 justify-center items-center hover:bg-btn-hover rounded-lg">
-          <Fold
-            className="w-6 h-6 text-font-2 cursor-pointer"
-            onClick={handleFoldToggle}
+    <header
+      id="main-header"
+      className="h-15 flex items-center justify-between px-5 sticky top-0 bg-bg-dark z-20"
+    >
+      {/* 왼쪽 영역: 사이드바 토글 및 로고 */}
+      <div id="header-left-section" className="flex gap-3.75 items-center">
+        <button
+          id="sidebar-toggle-button"
+          type="button"
+          aria-label="사이드바 접기/펴기"
+          onClick={handleFoldToggle}
+          className="flex w-8 h-8 justify-center items-center hover:bg-btn-hover rounded-lg border-none bg-transparent cursor-pointer"
+        >
+          <Fold id="icon-sidebar-fold" className="w-6 h-6 text-font-2" />
+        </button>
+
+        <Link id="header-logo-link" href={"/"}>
+          <Image
+            id="header-logo-image"
+            src={logoImg}
+            width={89}
+            priority
+            alt="plat logo"
+            className="h-6.5"
           />
-        </span>
-        <Image
-          src={logoImg}
-          width={89}
-          priority
-          alt="plat logo"
-          className="h-6.5"
-        />
+        </Link>
       </div>
 
-      {/* 추후 로그인 여부에 따라 Bell icon,포인트 표시 삭제, Profile => User Icon으로 변경 */}
-      <div className="flex items-center h-10 gap-6">
-        <div className="flex justify-between gap-4 items-center">
+      {/* 오른쪽 영역: 검색, 언어, 포인트, 알림, 프로필 */}
+      <div id="header-right-section" className="flex items-center h-10 gap-6">
+        <div
+          id="header-utility-group"
+          className="flex justify-between gap-4 items-center"
+        >
           <SearchBar />
 
           <LanguageSelector />
 
-          <div className="flex cursor-pointer items-center gap-1 bg-btn-hover rounded-b-lg p-1.25 pr-2.5">
-            <Star fill="none" stroke="white" />
-            <span>1,100</span>
+          {/* 포인트 표시 영역 */}
+          <div
+            id="user-point-badge"
+            className="flex cursor-pointer items-center gap-1 bg-btn-hover rounded-lg p-1.25 pr-2.5"
+          >
+            <Star id="icon-point-star" fill="none" stroke="white" />
+            <span id="user-point-value">1,100</span>
           </div>
 
-          <BellOn className="text-font-2 cursor-pointer w-8 h-8" />
+          {/* 알림 버튼 */}
+          <button
+            id="header-notification-button"
+            type="button"
+            className="bg-transparent border-none p-0 cursor-pointer"
+          >
+            <BellOn
+              id="icon-notification-bell"
+              className="text-font-2 w-8 h-8"
+            />
+          </button>
         </div>
 
-        <Profile />
+        {/* 프로필 컴포넌트 */}
+        <div id="header-profile-wrapper">
+          <Profile />
+        </div>
       </div>
     </header>
   );
