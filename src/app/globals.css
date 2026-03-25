@@ -4,7 +4,7 @@
 :root {
   --brand: #ff7a00;
   --brand-opacity: rgba(255, 122, 0, 0.1); /* 10% 투명도 적용 */
-  --red: #ed1c24;
+  --font-accents: #ed1c24;
 
   --font-1: #11141f;
   --font-2: #4a4d5e;
@@ -26,6 +26,7 @@ input:-webkit-autofill:active {
   --font-1: #ecedf5;
   --font-2: #989db8;
   --font-3-disabled: #5c6180;
+  --font-accents: #ed1c24;
   --border: #2a2f4a;
   --bg-dark: #11141f;
   --bg-darker: #0a0c14;
@@ -52,6 +53,7 @@ input:-webkit-autofill:active {
   --color-btn-selected: var(--button-dark-selected);
   --color-brand: var(--brand);
   --color-brand-opacity: var(--brand-opacity);
+  --color-font-accents: var(--font-accents);
 }
 
 body {
