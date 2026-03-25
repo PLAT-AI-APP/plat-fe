@@ -109,7 +109,7 @@ export default function Home() {
               id={`category-link-${category.name}`} // 각 링크에도 고유 ID 부여 (트래킹 용이)
               href={category.link}
               className={`px-2.5 py-2 flex gap-1 items-center justify-center text-sm
-          ${pathname === category.link ? "text-font-1 box-border border-b-2 border-brand" : "text-font-2 hover:text-font-1"}`}
+          ${pathname === category.link ? "text-font-1 box-border border-b-2 border-brand" : "font-normal text-font-2 hover:text-font-1"}`}
             >
               {category.name}
               {category.icon && (
