@@ -4,6 +4,7 @@ import "@/app/globals.css";
 import ReactQueryProvider from "@/providers/ReactQueryProvider";
 import ThemeProvider from "@/providers/ThemeProvider";
 import ClientLayout from "./ClientLayout";
+import "pretendard/dist/web/static/pretendard.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
