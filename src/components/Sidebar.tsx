@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 interface SidebarProps {
   isFolded: boolean;
@@ -49,7 +50,7 @@ const Sidebar = ({ isFolded }: SidebarProps) => {
                 <Link
                   id={`link-${menu.name}`}
                   href={menu.link}
-                  aria-current={isActive ? "page" : undefined} // 현재 페이지임을 브라우저에 알림
+                  aria-current={isActive ? "page" : undefined}
                 >
                   <motion.div
                     id={`nav-button-${menu.name}`}
@@ -57,20 +58,24 @@ const Sidebar = ({ isFolded }: SidebarProps) => {
                     initial={false}
                     animate={{ width: "100%" }}
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                    className={`rounded-lg flex items-center h-11.5 overflow-hidden relative cursor-pointer hover:bg-btn-hover ${
-                      isActive ? "bg-brand/10" : "bg-transparent"
-                    }`}
+                    className={cn(
+                      "relative flex h-11.5 cursor-pointer items-center overflow-hidden rounded-lg transition-colors",
+                      isActive
+                        ? "bg-brand/10"
+                        : "bg-transparent hover:bg-btn-hover",
+                    )}
                   >
                     {/* 아이콘 영역 */}
                     <motion.div
                       layout="position"
-                      className="flex-none w-11.5 flex items-center justify-center"
+                      className="flex w-11.5 flex-none items-center justify-center"
                     >
                       <Icon
                         id={`icon-${menu.name}`}
-                        className={`w-5.5 h-5.5 transition-colors ${
-                          isActive ? "text-brand" : "text-font-2"
-                        }`}
+                        className={cn(
+                          "h-5.5 w-5.5 transition-colors",
+                          isActive ? "text-brand" : "text-font-2",
+                        )}
                       />
                     </motion.div>
 
@@ -84,9 +89,10 @@ const Sidebar = ({ isFolded }: SidebarProps) => {
                           animate={{ opacity: 1, x: 0 }}
                           exit={{ opacity: 0, x: -10 }}
                           transition={{ duration: 0.2 }}
-                          className={`text-sm font-medium whitespace-nowrap ml-1 ${
-                            isActive ? "text-brand" : "text-font-2"
-                          }`}
+                          className={cn(
+                            "ml-1 whitespace-nowrap text-sm",
+                            isActive ? "font-medium text-brand" : "text-font-2",
+                          )}
                         >
                           {menu.name}
                         </motion.span>
