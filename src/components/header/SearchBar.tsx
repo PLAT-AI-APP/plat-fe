@@ -10,7 +10,7 @@ export const SearchBar = () => (
     <input
       id="search-input"
       type="text"
-      className="text-sm border cursor-pointer border-border-main w-full h-10 px-4 pl-10 rounded-xl focus:outline-none transition-all placeholder:text-font2 focus:cursor-text"
+      className="text-sm border cursor-pointer border-border-main w-full h-10 px-4 pl-10 rounded-xl focus:outline-none transition-all placeholder:text-font-disabled focus:cursor-text"
       placeholder="검색어를 입력하세요"
     />
 
@@ -22,7 +22,7 @@ export const SearchBar = () => (
     >
       <Search
         id="icon-search-glass"
-        className="text-font-disabled w-4.5 h-4.5 placeholder:text-font-disabled"
+        className="text-font-disabled w-4.5 h-4.5 "
       />
     </label>
   </form>
