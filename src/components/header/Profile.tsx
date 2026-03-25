@@ -5,6 +5,7 @@ import ProfileImg from "../../../public/p1.png";
 import Link from "next/link";
 import { Logout, Persona, Star, User } from "@/icons";
 import { ModalLayout } from "../ModalLayout";
+import { cn } from "@/lib/utils";
 
 const Profile = () => {
   const [isActive, setIsActive] = useState<boolean>(false);
@@ -34,7 +35,7 @@ const Profile = () => {
         <ModalLayout
           triggerRef={triggerRef || null}
           onClose={() => setIsActive(false)}
-          className="top-full right-0 w-60 translate-y-2 z-10 px-2 py-3 rounded-xl"
+          className="top-full right-0 w-60 translate-y-2.5 z-10 px-2 py-3 rounded-xl"
         >
           <div className="p-2 flex gap-3">
             <Image src={ProfileImg} alt="profile image" className="w-10 h-10" />
@@ -58,7 +59,10 @@ const Profile = () => {
                 <Icon
                   size={18}
                   strokeWidth={0.5}
-                  className="shrink-0 stroke-font-2 fill-none"
+                  className={cn(
+                    "shrink-0 stroke-font-2",
+                    tab.name === "토큰 충전" && "fill-none",
+                  )}
                 />
                 {tab.name}
               </Link>

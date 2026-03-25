@@ -59,7 +59,7 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
           {/* 포인트 표시 영역 */}
           <div
             id="user-point-badge"
-            className="flex cursor-pointer items-center gap-1 bg-btn-hover rounded-lg p-1.25 pr-2.5"
+            className="flex cursor-pointer items-center gap-1 transition-all duration-200 ease-in-out hover:bg-btn-hover rounded-lg p-1.25 pr-2.5"
           >
             <Star id="icon-point-star" fill="none" stroke="white" />
             <span id="user-point-value">1,100</span>

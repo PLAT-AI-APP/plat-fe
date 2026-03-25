@@ -26,7 +26,7 @@ const CharacterCard = ({
   return (
     <div
       style={{ height: `${cardHeight}px` }}
-      className="overflow-hidden bg-card rounded-xl w-44.5 flex flex-col shrink-0"
+      className="group hover:cursor-pointer overflow-hidden bg-card rounded-xl w-44.5 flex flex-col shrink-0"
     >
       {/* 이미지 영역 */}
       <div className="relative w-full h-45 shrink-0 overflow-hidden rounded-t-xl">
@@ -45,8 +45,8 @@ const CharacterCard = ({
       </div>
 
       {/* 텍스트 영역 */}
-      <div className="p-3 pt-2 flex flex-col gap-1.5 flex-1">
-        <p className="text-font-1 text-sm font-bold truncate">{char.name}</p>
+      <div className="p-3 pt-2 flex flex-col gap-1.5 flex-1 group-hover:bg-border-main transition-all duration-200 ease-in-out">
+        <p className="text-font-1 text-sm font-medium truncate">{char.name}</p>
         <p className="text-font-2 text-xs line-clamp-2">{char.dec}</p>
 
         <div className="flex gap-0.75 w-full h-4.5 overflow-hidden flex-wrap">
