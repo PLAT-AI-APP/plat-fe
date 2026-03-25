@@ -55,17 +55,11 @@ const Sidebar = ({ isFolded }: SidebarProps) => {
                     id={`nav-button-${menu.name}`}
                     layout
                     initial={false}
-                    animate={{
-                      width: "100%",
-                      backgroundColor: isActive
-                        ? "rgba(var(--brand-rgb), 0.1)"
-                        : "transparent",
-                    }}
-                    whileHover={{
-                      backgroundColor: "rgba(255, 255, 255, 0.05)",
-                    }}
+                    animate={{ width: "100%" }}
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                    className={`rounded-lg flex items-center h-11.5 overflow-hidden relative cursor-pointer`}
+                    className={`rounded-lg flex items-center h-11.5 overflow-hidden relative cursor-pointer hover:bg-btn-hover ${
+                      isActive ? "bg-brand/10" : "bg-transparent"
+                    }`}
                   >
                     {/* 아이콘 영역 */}
                     <motion.div
