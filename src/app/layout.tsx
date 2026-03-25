@@ -32,7 +32,6 @@ export default function RootLayout({
       >
         <ReactQueryProvider>
           <ThemeProvider>
-            {/* 상태를 관리하는 클라이언트 레이아웃으로 감쌉니다 */}
             <ClientLayout>{children}</ClientLayout>
           </ThemeProvider>
         </ReactQueryProvider>
