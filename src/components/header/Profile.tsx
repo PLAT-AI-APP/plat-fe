@@ -21,12 +21,12 @@ const Profile = () => {
   const triggerRef = useRef<HTMLImageElement>(null);
 
   return (
-    <div className="relative text-nowrap">
+    <div className="relative text-nowrap w-10 h-10">
       <Image
         ref={triggerRef}
         src={ProfileImg}
         alt="profile image"
-        className="w-10 h-10 cursor-pointer"
+        className="w-full h-full cursor-pointer shrink-0"
         onClick={handleToggle}
       />
 

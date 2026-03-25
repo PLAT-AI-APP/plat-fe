@@ -35,18 +35,24 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
             width={89}
             priority
             alt="plat logo"
-            className="h-6.5"
+            className="min-w-22.25 h-6.5 shrink-0"
           />
         </Link>
       </div>
 
       {/* 오른쪽 영역: 검색, 언어, 포인트, 알림, 프로필 */}
-      <div id="header-right-section" className="flex items-center h-10 gap-6">
+      <div
+        id="header-right-section"
+        className="flex flex-1 justify-end items-center h-10 gap-6"
+      >
         <div
           id="header-utility-group"
           className="flex justify-between gap-4 items-center"
         >
-          <SearchBar />
+          {/* SearchBar 내부에서 너비가 유동적으로 변하도록 스타일을 확인해야 합니다 */}
+          <div className="flex-1 max-w-100 min-w-20">
+            <SearchBar />
+          </div>
 
           <LanguageSelector />
 
