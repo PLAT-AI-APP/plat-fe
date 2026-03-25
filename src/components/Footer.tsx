@@ -34,7 +34,7 @@ const Footer = () => {
               <Link
                 id={`footer-link-${menu.text}`}
                 href={menu.link}
-                className="text-sm font-medium text-font-1"
+                className="text-sm font-medium text-font-1 hover:underline"
               >
                 {menu.text}
               </Link>
