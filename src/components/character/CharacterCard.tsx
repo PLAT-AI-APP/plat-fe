@@ -2,7 +2,9 @@ import { ChatFill } from "@/icons";
 import Logo from "@/icons/Logo";
 import New from "@/icons/New";
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
+import TagList from "./TagList";
 
 interface CharacterCardProps {
   cardHeight: number;
@@ -24,7 +26,8 @@ const CharacterCard = ({
   isOfficial = false,
 }: CharacterCardProps) => {
   return (
-    <div
+    <Link
+      href={`/characters/${char.name}`}
       style={{ height: `${cardHeight}px` }}
       className="group hover:cursor-pointer overflow-hidden bg-card rounded-xl w-44.5 flex flex-col shrink-0"
     >
@@ -49,18 +52,9 @@ const CharacterCard = ({
         <p className="text-font-1 text-sm font-medium truncate">{char.name}</p>
         <p className="text-font-2 text-xs line-clamp-2">{char.dec}</p>
 
-        <div className="flex gap-0.75 w-full h-4.5 overflow-hidden flex-wrap">
-          {char.tag.map((tag, index) => (
-            <span
-              key={`${tag}-${index}`}
-              className="bg-border-main rounded-sm px-1 py-0.5 text-brand text-[10px] flex text-nowrap whitespace-nowrap shrink-0"
-            >
-              #{tag}
-            </span>
-          ))}
-        </div>
+        <TagList list={char.tag} />
       </div>
-    </div>
+    </Link>
   );
 };
 
