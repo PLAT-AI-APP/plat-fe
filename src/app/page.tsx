@@ -1,5 +1,6 @@
 "use client";
 import CharacterGrid from "@/components/character/CharacterGrid";
+import { MainBannerCarousel } from "@/components/MainBannerCarousel";
 import Logo from "@/icons/Logo";
 import New from "@/icons/New";
 import Link from "next/link";
@@ -92,9 +93,7 @@ export default function Home() {
       className="flex flex-col gap-7.5 w-full flex-auto"
     >
       {/* 메인 비주얼/슬라이드 영역 */}
-      <section id="hero-slider" aria-label="메인 슬라이드">
-        <div>슬라이드</div>
-      </section>
+      <MainBannerCarousel />
 
       <div className="flex flex-col px-4 gap-6.5">
         {/* 카테고리 필터 영역 */}
