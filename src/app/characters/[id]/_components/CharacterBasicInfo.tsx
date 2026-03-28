@@ -21,9 +21,9 @@ const CharacterBasicInfo = ({
   tags,
 }: CharacterBasicInfoProps) => {
   return (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-1.5">
-        <p className="font-semibold text-[20px] text-font-1">{title}</p>
+    <article className="flex flex-col gap-4">
+      <header className="flex flex-col gap-1.5">
+        <h2 className="font-semibold text-[20px] text-font-1">{title}</h2>
         <div className="flex gap-3">
           <span className="flex items-center gap-1 text-sm text-font-2">
             <ChatFill className="h-4 w-4" />
@@ -34,16 +34,19 @@ const CharacterBasicInfo = ({
             {formatStatCount(heartCount)}
           </span>
         </div>
-      </div>
+      </header>
 
-      <div className="text-sm text-font-2 leading-relaxed">
+      <div
+        id="character-introduction"
+        className="text-sm text-font-2 leading-relaxed"
+      >
         <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>
           {markdownContent}
         </ReactMarkdown>
       </div>
 
       <TagList list={tags} />
-    </div>
+    </article>
   );
 };
 
