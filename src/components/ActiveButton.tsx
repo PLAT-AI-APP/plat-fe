@@ -5,7 +5,7 @@ import React, { ComponentPropsWithoutRef } from "react";
 interface ActiveButtonProps extends ComponentPropsWithoutRef<"button"> {
   text: string;
   isActive: boolean;
-  id: string;
+  id?: string;
 }
 
 const ActiveButton = ({
