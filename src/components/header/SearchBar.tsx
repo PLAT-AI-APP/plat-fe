@@ -55,7 +55,7 @@ export const SearchBar = () => {
         <ModalLayout
           triggerRef={triggerRef || null}
           onClose={() => setIsActive(false)}
-          className="translate-y-2.5 top-full right-0 w-85 p-5 flex flex-col gap-6.5"
+          className="w-85 p-5 flex flex-col gap-6.5"
         >
           {/* 최근 검색어 영역 */}
           {keywords.length > 0 && (

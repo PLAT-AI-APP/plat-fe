@@ -35,7 +35,7 @@ const Profile = () => {
         <ModalLayout
           triggerRef={triggerRef || null}
           onClose={() => setIsActive(false)}
-          className="top-full right-0 w-60 translate-y-2.5 z-10 px-2 py-3 rounded-xl"
+          className="w-60"
         >
           <div className="p-2 flex gap-3">
             <Image src={ProfileImg} alt="profile image" className="w-10 h-10" />

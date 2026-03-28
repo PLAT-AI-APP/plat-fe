@@ -48,7 +48,7 @@ const LanguageSelector = () => {
         <ModalLayout
           triggerRef={triggerRef || null}
           onClose={() => setIsActive(false)}
-          className="translate-y-2.5 top-full right-0 w-50 px-2 py-3"
+          className="w-50"
         >
           {/* 언어 선택 목록 */}
           <ul className="flex flex-col list-none p-0 m-0 gap-1">

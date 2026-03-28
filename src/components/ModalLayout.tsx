@@ -22,11 +22,13 @@ export const ModalLayout = ({
   useClickAway(modalRef, onClose, triggerRef);
 
   return (
-    <div
+    <section
       ref={modalRef}
-      className={`absolute z-10 bg-bg-dark rounded-xl shadow-card-heavy ${className || ""}`}
+      role="dialog"
+      aria-modal="true"
+      className={`px-2 py-3 right-0 top-full translate-y-2.5 absolute z-10 bg-bg-dark rounded-xl shadow-card-heavy ${className || ""}`}
     >
       {children}
-    </div>
+    </section>
   );
 };
