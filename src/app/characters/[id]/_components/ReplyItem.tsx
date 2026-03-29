@@ -99,7 +99,7 @@ const ReplyItem = ({ reply }: { reply: CommentType }) => {
 
           <footer className="pt-3 flex gap-2.5 text-font-2 text-sm">
             <div className="flex items-center gap-1">
-              <Heart className="w-4 h-4" />
+              <Heart className="w-4 h-4 cursor-pointer" />
               {formatStatCount(3789)}
             </div>
             <div className="flex items-center gap-1">
