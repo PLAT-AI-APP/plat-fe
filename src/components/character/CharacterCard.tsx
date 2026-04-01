@@ -37,7 +37,7 @@ const CharacterCard = ({
         <div className="absolute inset-0 bg-linear-to-t from-card to-transparent via-card/0.5" />
         <div className="bg-[rgba(0,0,0,0.6)] justify-center absolute right-2 gap-0.5 bottom-2 py-0.5 pl-1 pr-2 rounded-md flex text-font-2 items-center">
           <ChatFill className="w-4 h-4 translate-y-px" />
-          <span className="text-sm font-medium">{char.chatCount}</span>
+          <span className="text-sm">{char.chatCount}</span>
         </div>
         {isNew && (
           <New className="absolute top-2 left-2 opacity-80 rounded-md w-7.5 h-7.5" />

@@ -90,17 +90,17 @@ export default function Home() {
   return (
     <article
       id="home-container"
-      className="flex flex-col gap-7.5 w-full flex-auto"
+      className="flex flex-col gap-7.5 w-full flex-1"
     >
       {/* 메인 비주얼/슬라이드 영역 */}
       <MainBannerCarousel />
 
-      <div className="flex flex-col px-4 gap-6.5">
+      <div className="max-w-300 w-full flex flex-col px-4 mx-auto gap-6.5 items-center">
         {/* 카테고리 필터 영역 */}
         <nav
           id="category-navigation"
           aria-label="캐릭터 카테고리"
-          className="flex gap-2 font-medium"
+          className="w-full flex gap-2 font-medium"
         >
           {categoryArray.map((category) => (
             <Link
@@ -117,35 +117,32 @@ export default function Home() {
             </Link>
           ))}
         </nav>
-
         <div
           id="contents-wrapper"
           className="flex flex-col gap-15 w-full mx-auto"
         >
           {/* 오늘의 PICK 섹션 */}
-          <section id="today-pick-section" className="flex flex-col gap-4">
-            <h2
-              id="today-pick-title"
-              className="pl-2 font-semibold text-[21px]"
-            >
-              오늘의 PICK
-            </h2>
-            <CharacterGrid char={CharArray} lineCount={2} cardHeight={277} />
+          <section
+            id="today-pick-section"
+            className="w-full max-w-300 flex flex-col gap-4 justify-center"
+          >
+            <CharacterGrid
+              char={CharArray}
+              lineCount={2}
+              cardHeight={277}
+              title="오늘의 PICK"
+            />
           </section>
 
           {/* 추천 신작 섹션 */}
           <section id="trending-new-section" className="flex flex-col gap-4">
-            <h2
-              id="trending-new-title"
-              className="pl-2 font-semibold text-[21px] flex gap-2.5 items-center"
-            >
-              떠오르는 추천 신작 <New className="w-4.5 h-4.5" />
-            </h2>
             <CharacterGrid
               char={CharArray}
               lineCount={1}
               cardHeight={277}
               isNew={true}
+              title="떠오르는 추천 신작"
+              TitleLogo={<New className="w-4.5 h-4.5" />}
             />
           </section>
 
@@ -154,17 +151,13 @@ export default function Home() {
             id="official-characters-section"
             className="flex flex-col gap-4"
           >
-            <h2
-              id="official-characters-title"
-              className="pl-2 font-semibold text-[21px] flex gap-2.5 items-center"
-            >
-              플랫의 공식 캐릭터 <Logo className="w-4.5 h-4.5" />
-            </h2>
             <CharacterGrid
               char={CharArray}
               lineCount={1}
               cardHeight={277}
               isOfficial={true}
+              title="플랫의 공식 캐릭터"
+              TitleLogo={<Logo className="w-4.5 h-4.5" />}
             />
           </section>
         </div>
