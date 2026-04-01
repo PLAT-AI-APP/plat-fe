@@ -15,8 +15,8 @@ const Sidebar = ({ isFolded }: SidebarProps) => {
 
   const menuArray = [
     { name: "홈", link: "/", icon: Home },
-    { name: "내 채팅", link: "/chat", icon: Chat },
-    { name: "스튜디오", link: "/studio", icon: Camera },
+    { name: "내 채팅", link: "/chatting-room", icon: Chat },
+    { name: "캐릭터 제작", link: "/create", icon: Camera },
     { name: "공지사항", link: "/notice", icon: Megaphone },
     { name: "고객센터", link: "/help", icon: Headphone },
   ];
