@@ -29,7 +29,11 @@ const CharacterProfile = ({
 
       {/* 대화하기 좋아요 button */}
       <div className="flex gap-3">
-        <ActiveButton text="대화하기" isActive className="rounded-xl" />
+        <ActiveButton
+          text="대화하기"
+          isActive
+          className="rounded-xl font-normal"
+        />
         <button className="flex rounded-xl justify-center items-center bg-card hover:bg-card-hover cursor-pointer w-11.5 aspect-square">
           <Heart className="text-font-2" />
         </button>
@@ -46,10 +50,7 @@ const CharacterProfile = ({
             className="object-cover aspect-square rounded-full"
           />
           <div className="flex flex-col gap-0.5">
-            <Link
-              href={"/"}
-              className="text-font-1 font-medium hover:underline"
-            >
+            <Link href={"/"} className="text-font-1 hover:underline">
               {creatorName}
             </Link>
             <span className="text-font-2 text-[12px]">

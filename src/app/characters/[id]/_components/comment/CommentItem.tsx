@@ -110,7 +110,7 @@ const CommentItem = ({ comment }: Props) => {
           >
             <p
               ref={textRef}
-              className={`transition-all ${
+              className={`transition-all font-normal ${
                 !isExpanded ? "line-clamp-4" : ""
               } overflow-hidden whitespace-pre-wrap`}
             >

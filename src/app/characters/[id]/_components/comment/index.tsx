@@ -1,9 +1,8 @@
 import { CommentType } from "@/type/comment";
 import React, { useState } from "react";
 import CommentItem from "./CommentItem";
-
-import { CommentHeader } from "./CommentHeader";
 import { CommentInput } from "./CommentInput";
+import CommentHeader from "./CommentHeader";
 
 const CommentSection = () => {
   const COMMENTS_MOCK: CommentType[] = [

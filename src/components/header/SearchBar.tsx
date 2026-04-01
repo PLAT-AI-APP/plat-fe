@@ -108,8 +108,8 @@ export const SearchBar = () => {
                     {/* 순위 숫자 */}
                     <span
                       className={cn(
-                        "w-3.75",
-                        isTopThree ? "text-brand font-semibold" : "text-font-2",
+                        "w-3.75 text-sm",
+                        isTopThree ? "text-brand" : "text-font-2",
                       )}
                     >
                       {index + 1}
@@ -118,7 +118,7 @@ export const SearchBar = () => {
                     <span
                       className={cn(
                         "text-sm cursor-pointer hover:underline",
-                        isTopThree ? "text-font-1 font-medium" : "text-font-2",
+                        isTopThree ? "text-font-1" : "text-font-2",
                       )}
                     >
                       {item}

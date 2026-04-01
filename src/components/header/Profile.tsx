@@ -40,10 +40,8 @@ const Profile = () => {
           <div className="p-2 flex gap-3">
             <Image src={ProfileImg} alt="profile image" className="w-10 h-10" />
             <div className="flex flex-col gap-0.5">
-              <span className="text-sm text-font-1 font-medium">
-                내혹한춤꾼
-              </span>
-              <span className="text-xs font-bold text-font-2">1100 토큰</span>
+              <span className="text-sm text-font-1">내혹한춤꾼</span>
+              <span className="text-xs text-font-2">1100 토큰</span>
             </div>
           </div>
 
@@ -54,7 +52,7 @@ const Profile = () => {
               <Link
                 key={tab.name}
                 href={tab.link}
-                className="flex items-center gap-2 px-3 py-2.5 rounded-lg hover:bg-btn-hover transition-colors text-font-2 hover:text-font-1 text-sm font-medium"
+                className="flex items-center gap-2 px-3 py-2.5 rounded-lg hover:bg-btn-hover transition-colors text-font-2 hover:text-font-1 text-sm"
               >
                 <Icon
                   size={18}
@@ -72,7 +70,7 @@ const Profile = () => {
 
           <Link
             href="/logout"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-card-hover transition-colors text-font-2 hover:text-font-1 text-sm font-medium"
+            className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-card-hover transition-colors text-font-2 hover:text-font-1 text-sm"
           >
             <Logout size={18} className="text-font-2 shrink-0" />
             로그아웃

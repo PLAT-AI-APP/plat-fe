@@ -70,7 +70,10 @@ const LanguageSelector = () => {
                     <span id={`lang-name-${lang.code}`}>{lang.name}</span>
                     <span
                       id={`lang-eng-${lang.code}`}
-                      className="text-xs text-font-2"
+                      className={cn(
+                        "text-xs text-font-2",
+                        currentLanguage === lang.code && "text-sm",
+                      )}
                     >
                       {lang.eng}
                     </span>

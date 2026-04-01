@@ -26,7 +26,7 @@ export const CommentInput = ({
         />
         <textarea
           className={cn(
-            "text-sm font-medium px-3 py-2 h-19 bg-card rounded-2xl resize-none flex-1",
+            "text-sm px-3 py-2 h-19 bg-card rounded-2xl resize-none flex-1",
             isReplyMode && "max-h-14",
           )}
           placeholder="댓글을 입력하세요..."

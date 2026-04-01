@@ -34,7 +34,7 @@ const Footer = () => {
               <Link
                 id={`footer-link-${menu.text}`}
                 href={menu.link}
-                className="text-sm font-medium text-font-1 hover:underline"
+                className="text-sm text-font-1 hover:underline"
               >
                 {menu.text}
               </Link>
@@ -48,7 +48,7 @@ const Footer = () => {
         id="footer-business-info"
         className="not-italic flex flex-wrap gap-3 text-sm text-font-disabled"
       >
-        <span id="footer-company-name">(주)플랫</span>|
+        <span id="footer-company-name">(주)오비트랩</span>|
         <span id="footer-representative">대표 김승우</span>|
         <span id="footer-phone-number">02-123-4567</span>|
         <span id="footer-registration-number">

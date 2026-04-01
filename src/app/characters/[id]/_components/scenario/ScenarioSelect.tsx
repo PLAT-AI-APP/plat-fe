@@ -27,9 +27,7 @@ export const ScenarioSelect = ({
     onClick={toggleIsScenario}
     className="relative flex justify-between px-4 py-2.5 bg-card border border-border-main rounded-xl w-full text-left"
   >
-    <span className="text-sm font-medium text-font-1">
-      {currentScenario.title}
-    </span>
+    <span className="text-sm text-font-1">{currentScenario.title}</span>
 
     {isScenario ? (
       <ArrowUp className="w-5 h-5 text-font-2" />

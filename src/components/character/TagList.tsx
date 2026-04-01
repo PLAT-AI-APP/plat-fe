@@ -9,7 +9,7 @@ const TagList = ({ list }: TagListProps) => {
       {list.map((tag, index) => (
         <li
           key={`${tag}-${index}`}
-          className="bg-border-main rounded-sm px-1 py-0.5 text-brand text-[10px] flex text-nowrap whitespace-nowrap shrink-0"
+          className="bg-border-main rounded-sm px-1 py-0.5 text-brand text-xs flex text-nowrap whitespace-nowrap shrink-0"
         >
           #{tag}
         </li>
