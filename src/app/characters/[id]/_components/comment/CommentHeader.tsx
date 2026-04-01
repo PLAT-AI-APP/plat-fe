@@ -2,9 +2,9 @@ import { ModalLayout } from "@/components/ModalLayout";
 import { Sort } from "@/icons";
 import Check from "@/icons/Check";
 import { cn } from "@/lib/utils";
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 
-export const CommentHeader = ({
+const CommentHeader = ({
   count,
   sort,
   handleSort,
@@ -17,7 +17,7 @@ export const CommentHeader = ({
   const triggerRef = useRef(null);
 
   return (
-    <header className="flex justify-between font-medium">
+    <header className="flex justify-between">
       <span>댓글 {count}개</span>
       <button
         ref={triggerRef}
@@ -58,3 +58,5 @@ export const CommentHeader = ({
     </header>
   );
 };
+
+export default CommentHeader;
