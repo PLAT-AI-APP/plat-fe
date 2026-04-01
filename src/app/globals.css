@@ -29,7 +29,8 @@ input:-webkit-autofill:active {
   --font-accents: #ed1c24;
   --border: #2a2f4a;
   --bg-dark: #11141f;
-  --bg-darker: #0a0c14;
+  --bg-darker: #0e1018;
+  --bg-darkest: #0a0c14;
   --bg-card: #181c2e;
   --bg-card-hover: #1f2440;
   --bg-card-selected: #252b50;
@@ -46,6 +47,7 @@ input:-webkit-autofill:active {
   --color-border-main: var(--border);
   --color-bg-dark: var(--bg-dark);
   --color-bg-darker: var(--bg-darker);
+  --color-bg-darkest: var(--bg-darkest);
   --color-card: var(--bg-card);
   --color-card-hover: var(--bg-card-hover);
   --color-card-selected: var(--bg-card-selected);
@@ -63,8 +65,49 @@ body {
   letter-spacing: -0.025em;
   line-height: 1.4;
   font-family: "Pretendard";
+  white-space: pre-wrap;
+}
+
+textarea {
+  resize: none;
 }
 
 button {
   cursor: pointer;
+}
+
+/* 전체 스크롤바 너비 설정 */
+::-webkit-scrollbar {
+  width: 4px; /* 세로 스크롤바 너비 */
+  height: 4px; /* 가로 스크롤바 높이 (필요시) */
+}
+
+/* 스크롤바 트랙(바탕) 설정 */
+::-webkit-scrollbar-track {
+  background: transparent; /* 배경을 투명하게 하여 디자인 강조 */
+}
+
+/* 스크롤바 막대(Thumb) 설정 */
+::-webkit-scrollbar-thumb {
+  background: var(--font-3-disabled); /* 막대 색상 (원하는 색으로 변경 가능) */
+  border-radius: 100px; /* 요청하신 둥근 모서리 */
+
+  /* 막대의 최소/최대 높이를 조절하여 40px에 가깝게 유지 */
+  min-height: 40px;
+}
+
+/* 마우스 호버 시 막대 색상 변경 (선택 사항) */
+::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}
+
+@utility no-scrollbar {
+  /* IE and Edge */
+  -ms-overflow-style: none;
+  /* Firefox */
+  scrollbar-width: none;
+  /* Chrome, Safari, Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
