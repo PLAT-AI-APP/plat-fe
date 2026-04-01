@@ -1,11 +1,12 @@
 import { cn } from "@/lib/utils";
-import React, { ComponentPropsWithoutRef } from "react";
+import React, { ComponentPropsWithoutRef, ReactNode } from "react";
 
 // HTMLButtonElement의 모든 기본 속성을 포함하도록 확장
 interface ActiveButtonProps extends ComponentPropsWithoutRef<"button"> {
   text: string;
   isActive: boolean;
   id?: string;
+  children?: ReactNode;
 }
 
 const ActiveButton = ({
@@ -14,6 +15,7 @@ const ActiveButton = ({
   isActive,
   type = "submit",
   id,
+  children,
   ...props
 }: ActiveButtonProps) => {
   return (
@@ -31,6 +33,7 @@ const ActiveButton = ({
       {...props}
     >
       {text}
+      {children}
     </button>
   );
 };
