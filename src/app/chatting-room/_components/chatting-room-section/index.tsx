@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import ChatForm from "@/components/chat/ChatForm";
 import MessageList from "@/components/chat/MessageList";
 import ChattingRoomNotice from "./ChattingRoomNotice";
@@ -9,7 +9,7 @@ import { useScrollTimeout } from "@/hooks/useScrollTiemout";
 import { cn } from "@/lib/utils";
 
 const ChattingRoomSection = () => {
-  const { isScrolling, onScroll } = useScrollTimeout(1000);
+  const { isScrolling, onScroll } = useScrollTimeout();
 
   return (
     <section className="flex justify-center h-[calc(100vh-60px)] flex-1 p-4">
