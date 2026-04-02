@@ -18,7 +18,7 @@ const ChattingRoomHeader = ({
     setIsSidebar(!isSidebar);
   };
   return (
-    <header className="flex justify-between sticky top-0 bg-bg-dark py-2 z-10">
+    <header className="flex justify-between sticky top-0 bg-bg-dark z-10">
       <button
         onClick={onBack}
         className="flex items-center gap-6.25 text-[26px] font-semibold"

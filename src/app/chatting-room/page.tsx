@@ -2,7 +2,7 @@
 import React, { useCallback, useState } from "react";
 import ChattingListSection from "./_components/ChattingListSection";
 import { ChatListItemType } from "@/type/chat";
-import ChattingRoomSection from "./_components/chatting-room-section/ChattingRoomSection";
+import ChattingRoomSection from "./_components/chatting-room-section";
 
 const ChattingRoomPage = () => {
   const [currentChat, setCurrentChat] = useState<ChatListItemType>({
@@ -21,7 +21,7 @@ const ChattingRoomPage = () => {
   }, []);
 
   return (
-    <section className="flex gap-4 h-[calc(100vh-216.39px)]">
+    <section className="flex gap-4 h-[calc(100vh-60px)]">
       <ChattingListSection
         currentChat={currentChat}
         handleCurrentChat={handleCurrentChat}

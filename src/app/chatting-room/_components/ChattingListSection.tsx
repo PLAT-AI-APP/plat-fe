@@ -10,7 +10,7 @@ const ChattingListSection = ({
   handleCurrentChat,
 }: ChattingListSectionProps) => {
   return (
-    <section className="flex flex-col flex-1 max-w-75 gap-9 pt-4">
+    <section className="flex flex-col flex-1 max-w-75 gap-9 py-4">
       <h2 className="text-[30px] font-medium">내 채팅</h2>
       <ul
         className="flex-1 pr-2 flex flex-col gap-2 overflow-y-auto [-ms-overflow-style:none] 
