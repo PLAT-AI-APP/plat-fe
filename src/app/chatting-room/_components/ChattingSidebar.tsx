@@ -4,7 +4,7 @@ import UserNoteModal from "@/components/modal/UserNoteModal";
 import { Close, Persona, Storage } from "@/icons";
 import Adjust from "@/icons/Adjust";
 import Note from "@/icons/Note";
-import React, { useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 
 interface ChattingSidebarProps {
   toggleIsSidebar: () => void;
@@ -23,6 +23,12 @@ interface MenuItem {
   icon: React.ElementType;
   text?: string;
 }
+const MENU_LIST: MenuItem[] = [
+  { id: "storage", title: "장기기억", icon: Storage },
+  { id: "persona", title: "페르소나", icon: Persona },
+  { id: "note", title: "유저노트", icon: Note },
+  { id: "adjust", title: "출력량", icon: Adjust, text: "x1.0" },
+];
 
 const ChattingSidebar = ({ toggleIsSidebar }: ChattingSidebarProps) => {
   const [isModal, setIsModal] = useState<ModalState>({
@@ -32,14 +38,7 @@ const ChattingSidebar = ({ toggleIsSidebar }: ChattingSidebarProps) => {
     adjust: false,
   });
 
-  const MENU_LIST: MenuItem[] = [
-    { id: "storage", title: "장기기억", icon: Storage },
-    { id: "persona", title: "페르소나", icon: Persona },
-    { id: "note", title: "유저노트", icon: Note },
-    { id: "adjust", title: "출력량", icon: Adjust, text: "x1.0" },
-  ];
-
-  const openModal = (id: keyof ModalState) => {
+  const openModal = useCallback((id: keyof ModalState) => {
     setIsModal({
       storage: false,
       persona: false,
@@ -47,27 +46,18 @@ const ChattingSidebar = ({ toggleIsSidebar }: ChattingSidebarProps) => {
       adjust: false,
       [id]: true,
     });
-  };
-
-  const closeModal = () => {
+  }, []);
+  const closeModal = useCallback(() => {
     setIsModal({ storage: false, persona: false, note: false, adjust: false });
-  };
+  }, []);
 
-  const renderActiveModal = () => {
+  const activeModal = useMemo(() => {
     if (isModal.storage) return <StorageModal closeModal={closeModal} />;
     if (isModal.persona) return <PersonaModal closeModal={closeModal} />;
     if (isModal.note) return <UserNoteModal closeModal={closeModal} />;
-    if (isModal.adjust)
-      return (
-        <section
-          id="adjust-modal-content"
-          className="fixed inset-0 m-auto w-80 h-60 bg-white z-60"
-        >
-          출력량 모달
-        </section>
-      );
+    if (isModal.adjust) return <section className="...">출력량 모달</section>;
     return null;
-  };
+  }, [isModal, closeModal]);
 
   return (
     <aside className="fixed flex justify-end top-0 right-0 font-medium bg-black/50 w-screen h-screen z-20">
@@ -107,7 +97,7 @@ const ChattingSidebar = ({ toggleIsSidebar }: ChattingSidebarProps) => {
           className="fixed inset-0 flex items-center justify-center z-20"
         >
           <div className="absolute inset-0" />
-          <article className="relative">{renderActiveModal()}</article>
+          <article className="relative">{activeModal}</article>
         </div>
       )}
     </aside>

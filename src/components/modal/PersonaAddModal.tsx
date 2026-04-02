@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useCallback } from "react";
+import { useForm, Controller } from "react-hook-form";
 import { ModalLayout } from "../ModalLayout";
 import { Close, Persona } from "@/icons";
 import SmartInput from "../SmartInput";
@@ -6,15 +7,28 @@ import SmartInput from "../SmartInput";
 interface PersonaAddModalProps {
   toggleIsAddModal: () => void;
 }
+
+interface PersonaFormValues {
+  name: string;
+  info: string;
+}
+
 const PersonaAddModal = ({ toggleIsAddModal }: PersonaAddModalProps) => {
-  const [name, setName] = useState("");
-  const handleName = (text: string) => {
-    setName(text);
-  };
-  const [info, setInfo] = useState("");
-  const handleinfo = (text: string) => {
-    setInfo(text);
-  };
+  const { control, handleSubmit } = useForm<PersonaFormValues>({
+    defaultValues: {
+      name: "",
+      info: "",
+    },
+  });
+
+  const onSubmit = useCallback(
+    (data: PersonaFormValues) => {
+      console.log("Persona Data:", data);
+      toggleIsAddModal();
+    },
+    [toggleIsAddModal],
+  );
+
   return (
     <ModalLayout
       onClose={() => null}
@@ -40,41 +54,49 @@ const PersonaAddModal = ({ toggleIsAddModal }: PersonaAddModalProps) => {
         </p>
       </header>
 
-      <form
-        onSubmit={(e) => {
-          e.stopPropagation();
-          toggleIsAddModal();
-        }}
-      >
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex flex-col gap-6">
-          <SmartInput
-            label="이름"
-            value={name}
-            required
-            maxLength={20}
-            onChange={handleName}
-            placeholder="이름을 입력해주세요."
+          <Controller
+            name="name"
+            control={control}
+            rules={{ required: true, maxLength: 20 }}
+            render={({ field }) => (
+              <SmartInput
+                label="이름"
+                value={field.value}
+                onChange={field.onChange}
+                required
+                maxLength={20}
+                placeholder="이름을 입력해주세요."
+              />
+            )}
           />
-          <SmartInput
-            label="정보"
-            value={info}
-            maxLength={200}
-            minLine={4}
-            maxLine={4}
-            onChange={handleinfo}
-            type="textarea"
-            isBorder={true}
-            inputClassName="max-h-30.25"
-            placeholder={`나이, 성별 등을 자유롭게 입력해주세요.
+          <Controller
+            name="info"
+            control={control}
+            rules={{ maxLength: 200 }}
+            render={({ field }) => (
+              <SmartInput
+                label="정보"
+                value={field.value}
+                onChange={field.onChange}
+                maxLength={200}
+                minLine={4}
+                maxLine={4}
+                type="textarea"
+                isBorder={true}
+                inputClassName="max-h-30.25"
+                placeholder={`나이, 성별 등을 자유롭게 입력해주세요.
 2
 3
 4`}
+              />
+            )}
           />
         </div>
 
         <footer className="pt-9 font-medium">
           <button
-            onSubmit={toggleIsAddModal}
             type="submit"
             className="py-3 w-full rounded-xl bg-bg-darkest border border-border-main hover:bg-btn-hover"
           >
@@ -86,4 +108,4 @@ const PersonaAddModal = ({ toggleIsAddModal }: PersonaAddModalProps) => {
   );
 };
 
-export default PersonaAddModal;
+export default React.memo(PersonaAddModal);

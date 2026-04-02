@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { PersonaType } from "@/type/user";
 import PersonaHeader from "./persona/PersonaHeader";
 import PersonaItem from "./persona/PersonaItem";
 import PersonaFooter from "./persona/PersonaFooter";
 import { ModalLayout } from "../ModalLayout";
-import PersonaAddModal from "./PersonaAddModal";
 
 const PERSONA_LIST: PersonaType[] = [
   {
@@ -42,19 +41,10 @@ const PersonaModal = ({ closeModal }: PersonaModalProps) => {
     PERSONA_LIST[0],
   );
 
-  const handleCurrentPersona = (persona: PersonaType) => {
+  const handleCurrentPersona = useCallback((persona: PersonaType) => {
     setCurrentPersona(persona);
-  };
+  }, []);
 
-  const handleAddPersona = () => {
-    console.log("Add Persona clicked");
-  };
-
-  const [isAddModal, setIsModal] = useState(false);
-  const toggleIsAddModal = () => {
-    console.log("toggle");
-    setIsModal(!isAddModal);
-  };
   return (
     <ModalLayout
       onClose={() => null}
@@ -74,13 +64,10 @@ const PersonaModal = ({ closeModal }: PersonaModalProps) => {
           ))}
         </ul>
 
-        <PersonaFooter toggleIsAddModal={toggleIsAddModal} />
+        <PersonaFooter />
       </div>
-
-      {isAddModal && <PersonaAddModal toggleIsAddModal={toggleIsAddModal} />}
-      {isAddModal && <div className="absolute inset-0 z-15"></div>}
     </ModalLayout>
   );
 };
 
-export default PersonaModal;
+export default React.memo(PersonaModal);

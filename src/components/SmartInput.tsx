@@ -1,5 +1,6 @@
+"use client";
 import { cn } from "@/lib/utils";
-import React from "react";
+import React, { useCallback } from "react";
 
 interface SmartInputProps {
   label?: string;
@@ -28,22 +29,22 @@ const SmartInput = ({
   maxLine,
   minLine,
 }: SmartInputProps) => {
-  if (!onChange) return null;
-
   const isTextarea = type === "textarea";
 
   // 줄 수 제한 로직
-  const handleValueChange = (text: string) => {
-    // const nextValue = e.target.value;
+  const handleValueChange = useCallback(
+    (text: string) => {
+      if (isTextarea && maxLine) {
+        const lineCount = text.split("\n").length;
+        if (lineCount > maxLine) return;
+      }
+      onChange?.(text);
+    },
+    [isTextarea, maxLine, onChange],
+  );
 
-    // textarea일 때만 줄 수 체크
-    if (isTextarea && maxLine) {
-      const lineCount = text.split("\n").length;
-      if (lineCount > maxLine) return; // 제한 줄 수 초과 시 업데이트 안 함
-    }
+  if (!onChange) return null;
 
-    onChange(text);
-  };
   return (
     <div className="flex flex-col gap-3 w-full">
       {/* Label 영역 */}
@@ -103,4 +104,4 @@ const SmartInput = ({
   );
 };
 
-export default SmartInput;
+export default React.memo(SmartInput);
