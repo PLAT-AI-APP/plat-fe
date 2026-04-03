@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import AuthInput from "./AuthInput";
 import OtpInput from "./OtpInput";
@@ -15,7 +15,6 @@ interface EmailOtpStepProps {
     index: number,
     e: React.KeyboardEvent<HTMLInputElement>,
   ) => void;
-  handlePaste: (e: React.ClipboardEvent) => void;
   inputRefs: React.MutableRefObject<(HTMLInputElement | null)[]>;
 }
 
@@ -26,11 +25,54 @@ const EmailOtpStep = ({
   inputRefs,
   ...otpHandlers
 }: EmailOtpStepProps) => {
-  // 부모 Provider로부터 필요한 함수와 상태를 직접 꺼냅니다.
+  const [isOtpSent, setIsOtpSent] = useState(false);
+  const [otpError, setOtpError] = useState("");
+
   const {
     register,
+    trigger,
+    watch,
     formState: { errors },
   } = useFormContext<AuthFormValues>();
+
+  // 타이머 상태 관리 (초 단위: 300초 = 5분)
+  const [timeLeft, setTimeLeft] = useState(300);
+  // 타이머 구동 로직
+  useEffect(() => {
+    if (isOtpSent) {
+      if (timeLeft <= 0) return; // 0초면 중지
+
+      const timer = setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+  }, [timeLeft, isOtpSent]);
+
+  const emailValue = watch("email");
+  const isEmailInputValid = EMAIL_REGEX.test(emailValue || "") && !errors.email;
+
+  const handleButtonClick = async (e: React.MouseEvent) => {
+    if (!isOtpSent) {
+      e.preventDefault();
+      const isEmailValid = await trigger("email");
+      if (isEmailValid) {
+        setIsOtpSent(true);
+      }
+    } else {
+      // 실제로는 서버에서 전달된 코드로 검증하거나, API 호출을 수행해야 합니다.
+      const enteredCode = otpValues.join("");
+      const targetCode = "123456"; // 기존 입력해야 할 예시 코드
+
+      if (enteredCode !== targetCode) {
+        e.preventDefault();
+        setOtpError("코드가 일치하지 않습니다.");
+      } else {
+        setOtpError("");
+      }
+    }
+  };
 
   return (
     <section id="email-otp-auth-step" className="w-full">
@@ -42,7 +84,6 @@ const EmailOtpStep = ({
       </h1>
 
       <div id="auth-fields-container" className="flex flex-col gap-4 pb-8">
-        {/* 이메일 입력 영역 */}
         <AuthInput
           id="input-email"
           label="이메일"
@@ -54,19 +95,34 @@ const EmailOtpStep = ({
               value: EMAIL_REGEX,
               message: "올바른 이메일 형식이 아닙니다.",
             },
+            onChange: () => {
+              trigger("email");
+            },
           })}
           error={errors.email?.message}
         />
 
-        {/* OTP 입력 영역 */}
-        <div id="otp-input-group" className="flex flex-col gap-2">
-          <OtpInput code={otpValues} inputRefs={inputRefs} {...otpHandlers} />
-        </div>
+        {isOtpSent && (
+          <div id="otp-input-group" className="flex flex-col gap-2">
+            <OtpInput
+              code={otpValues}
+              inputRefs={inputRefs}
+              timeLeft={timeLeft}
+              error={otpError}
+              {...otpHandlers}
+            />
+          </div>
+        )}
       </div>
 
-      <ActiveButton id="email-submit-button" text="다음" isActive={isValid} />
+      <ActiveButton
+        id="email-submit-button"
+        text={isOtpSent ? "인증완료" : "인증번호 전송"}
+        isActive={isOtpSent ? isValid && timeLeft > 0 : isEmailInputValid}
+        onClick={handleButtonClick}
+      />
     </section>
   );
 };
 
-export default EmailOtpStep;
+export default React.memo(EmailOtpStep);
