@@ -21,6 +21,7 @@ const LoginPage = () => {
     formState: { errors },
   } = useForm({
     mode: "onSubmit",
+    reValidateMode: "onSubmit",
     defaultValues: {
       email: "",
       pw: "",
@@ -97,6 +98,10 @@ const LoginPage = () => {
                   }
                   {...register("pw", {
                     required: "비밀번호를 입력해주세요.",
+                    minLength: {
+                      value: 8,
+                      message: "최소 8자 이상이어야 합니다.",
+                    },
                   })}
                   error={errors.pw?.message}
                 />
