@@ -18,12 +18,21 @@ const InfoStep = ({ title, buttonText, isValid }: InfoStepProps) => {
     register,
     setValue,
     watch,
+    // setError,
+    // clearErrors,
     formState: { errors },
   } = useFormContext<AuthFormValues>();
 
   // 실시간 UI 반영을 위해 값들을 감시합니다.
   const nickname = watch("nickname");
   const gender = watch("gender");
+
+  // nickname 값이 변하면 1초 뒤에 debouncedNickname이 업데이트됩니다.
+  // const debouncedNickname = useDebounce({ value: nickname, delay: 1000 });
+
+  // useEffect(() => {
+  //   console.log(debouncedNickname);
+  // }, [debouncedNickname]);
 
   return (
     <section id="signup-info-step" className="w-full">
@@ -76,7 +85,6 @@ const InfoStep = ({ title, buttonText, isValid }: InfoStepProps) => {
             {(["MALE", "FEMALE"] as const).map((g) => (
               <button
                 key={g}
-                id={`gender-${g.toLowerCase()}-button`}
                 type="button"
                 onClick={() =>
                   setValue("gender", g, {
