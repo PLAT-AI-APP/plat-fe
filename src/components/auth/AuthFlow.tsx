@@ -31,15 +31,16 @@ export const AuthFlow = ({ type }: AuthFlowProps) => {
 
   // Form Methods 초기화
   const methods = useForm<AuthFormValues>({
-    mode: "onChange",
+    mode: "onSubmit",
+    reValidateMode: "onSubmit",
     defaultValues: {
       email: "",
       otp: Array(6).fill(""),
       password: "",
       passwordConfirm: "",
       nickname: "",
-      gender: "MALE",
-      birthdate: "1990-01-01",
+      gender: "",
+      birthdate: "",
     },
   });
 
@@ -52,8 +53,7 @@ export const AuthFlow = ({ type }: AuthFlowProps) => {
 
   // 데이터 통합 감시 (한 번의 useWatch로 정리)
   const formValues = useWatch({ control });
-  const { email, otp, password, passwordConfirm, nickname, gender, birthdate } =
-    formValues;
+  const { email, otp, nickname, gender, birthdate } = formValues;
 
   // OTP 핸들러 로직 (부모에서 관리)
   const handleChange = (index: number, value: string) => {
@@ -72,31 +72,13 @@ export const AuthFlow = ({ type }: AuthFlowProps) => {
     }
   };
 
-  const handlePaste = (e: React.ClipboardEvent) => {
-    e.preventDefault();
-    const pastedData = e.clipboardData.getData("text").slice(0, 6);
-    if (!/^\d+$/.test(pastedData)) return;
-    pastedData.split("").forEach((char, i) => {
-      setValue(`otp.${i}`, char, { shouldValidate: true });
-    });
-    inputRefs.current[Math.min(pastedData.length, 5)]?.focus();
-  };
-
   // 단계별 유효성 검사 정립
   const isStep1Valid = !!(
     !!email &&
     !errors.email &&
     otp?.every((v) => v !== "")
   );
-  const isStep2Valid =
-    !!password &&
-    !!passwordConfirm &&
-    !errors.password &&
-    !errors.passwordConfirm &&
-    password === passwordConfirm;
-
-  const isStep3Valid =
-    !!nickname && !!gender && !!birthdate && !errors.nickname;
+  const isStep3Valid = !!nickname && !!gender && !!birthdate;
 
   const onSubmit = async (data: AuthFormValues) => {
     if (step === 1) setStep(2);
@@ -127,7 +109,6 @@ export const AuthFlow = ({ type }: AuthFlowProps) => {
               inputRefs={inputRefs}
               handleChange={handleChange}
               handleKeyDown={handleKeyDown}
-              handlePaste={handlePaste}
             />
           )}
 
@@ -135,7 +116,7 @@ export const AuthFlow = ({ type }: AuthFlowProps) => {
             <PasswordStep
               title={config.titles[1]}
               buttonText={config.buttons[1]}
-              isValid={isStep2Valid}
+              // isValid={isStep2Valid}
             />
           )}
 
@@ -143,7 +124,7 @@ export const AuthFlow = ({ type }: AuthFlowProps) => {
             <InfoStep
               title={config.titles[2]}
               buttonText={config.buttons[2]}
-              isValid={isStep3Valid}
+              isValid={isStep3Valid || false}
             />
           )}
         </form>
