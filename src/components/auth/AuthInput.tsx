@@ -1,4 +1,6 @@
+"use client";
 import { cn } from "@/lib/utils";
+import React from "react";
 
 interface LoginInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
@@ -33,19 +35,38 @@ const AuthInput = ({
       </label>
     )}
 
-    <div id={`auth-input-wrapper-${label}`} className="relative">
-      <input
-        id={`auth-input-field-${label}`}
-        {...props}
-        className={cn(
-          "w-full h-11 border border-white/10 bg-black/20 rounded-lg px-4 py-3 text-sm text-font-1",
-          "placeholder:text-font-2/50 focus:outline-none focus:border-brand/50 transition-all",
-          rightElement && "pr-12",
-          leftElement && "pl-12",
-          error && "border-font-accents",
-          InputClassName,
+    <div id={`auth-input-wrapper-${label}`}>
+      <div className="relative">
+        <input
+          id={`auth-input-field-${label}`}
+          {...props}
+          className={cn(
+            "w-full h-11 border border-white/10 bg-black/20 rounded-lg px-4 py-3 text-sm text-font-1",
+            "placeholder:text-font-2/50 focus:outline-none focus:border-font-1 transition-all",
+            rightElement && "pr-12",
+            leftElement && "pl-12",
+            error && "border-font-accents",
+            InputClassName,
+          )}
+        />
+
+        {rightElement && (
+          <div
+            id={`auth-right-icon-${label}`}
+            className="absolute right-5 top-1/2 -translate-y-1/2 flex items-center justify-center"
+          >
+            {rightElement}
+          </div>
         )}
-      />
+        {leftElement && (
+          <div
+            id={`auth-left-icon-${label}`}
+            className="absolute left-5 top-1/2 -translate-y-1/2 flex items-center justify-center"
+          >
+            {leftElement}
+          </div>
+        )}
+      </div>
 
       {error && (
         <span
@@ -55,25 +76,8 @@ const AuthInput = ({
           {error}
         </span>
       )}
-
-      {rightElement && (
-        <div
-          id={`auth-right-icon-${label}`}
-          className="absolute right-5 top-1/2 -translate-y-1/2 flex items-center justify-center"
-        >
-          {rightElement}
-        </div>
-      )}
-      {leftElement && (
-        <div
-          id={`auth-left-icon-${label}`}
-          className="absolute left-5 top-1/2 -translate-y-1/2 flex items-center justify-center"
-        >
-          {leftElement}
-        </div>
-      )}
     </div>
   </section>
 );
 
-export default AuthInput;
+export default React.memo(AuthInput);
