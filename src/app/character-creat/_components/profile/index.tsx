@@ -28,7 +28,6 @@ const Profile = () => {
           isBorder
           {...register("title", { required: true })}
           value={titleValue}
-          className="gap-2"
         />
 
         {/* 캐릭터 이름 input */}
@@ -40,7 +39,6 @@ const Profile = () => {
           isBorder
           {...register("name", { required: true })}
           value={nameValue}
-          className="gap-2"
         />
 
         {/* 캐릭터 소개 input */}
@@ -55,7 +53,6 @@ const Profile = () => {
           isBorder
           {...register("characterIntroduce", { required: true })}
           value={characterIntroduceValue}
-          className="gap-2"
         />
       </div>
 

@@ -54,7 +54,7 @@ const SmartInput = forwardRef<
     };
 
     return (
-      <div className={cn("flex flex-col flex-1 gap-3 w-full", className)}>
+      <div className={cn("flex flex-col flex-1 gap-2 w-full", className)}>
         {label && (
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-1 font-semibold text-sm">
@@ -67,7 +67,7 @@ const SmartInput = forwardRef<
           </div>
         )}
 
-        <div className="relative group text-sm">
+        <div className="relative group text-sm font-medium">
           {isTextarea ? (
             <div
               className={cn(
@@ -95,7 +95,7 @@ const SmartInput = forwardRef<
               ref={ref as React.ForwardedRef<HTMLInputElement>}
               type="text"
               className={cn(
-                "w-full p-3 bg-bg-darkest border border-border-main rounded-xl outline-none placeholder:text-font-disabled",
+                "w-full px-4 py-3 bg-bg-darkest border border-border-main rounded-xl outline-none placeholder:text-font-disabled",
                 inputClassName,
               )}
               placeholder={placeholder}

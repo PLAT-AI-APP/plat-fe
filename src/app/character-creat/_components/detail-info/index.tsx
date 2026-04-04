@@ -21,7 +21,6 @@ const DetailInfo = () => {
           isBorder
           {...register("height")}
           value={heightValue}
-          className="gap-2"
         />
         <SmartInput
           label="몸무게"
@@ -30,7 +29,6 @@ const DetailInfo = () => {
           isBorder
           {...register("weight")}
           value={weightValue}
-          className="gap-2"
         />
       </div>
 
@@ -48,7 +46,6 @@ const DetailInfo = () => {
           isBorder
           {...register("weight")}
           value={weightValue}
-          className="gap-2"
         />
       </article>
     </section>
