@@ -20,6 +20,7 @@ export { default as Edit } from "./Edit";
 export { default as Pen } from "./Pen";
 export { default as PenSparkle } from "./PenSparkle";
 export { default as Reload } from "./Reload";
+export { default as ImageIcon } from "./ImageIcon";
 
 // 4. 채팅 및 메시지
 export { default as Chat } from "./Chat";

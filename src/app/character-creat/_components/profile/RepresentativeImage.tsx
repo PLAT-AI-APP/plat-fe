@@ -1,5 +1,4 @@
-import { Close } from "@/icons";
-import ImageIcon from "@/icons/Image";
+import { Close, ImageIcon } from "@/icons";
 import Image from "next/image";
 import React, { useState, ChangeEvent } from "react";
 
