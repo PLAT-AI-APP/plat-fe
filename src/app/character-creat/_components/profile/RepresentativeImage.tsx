@@ -1,7 +1,43 @@
-import Image from "@/icons/Image";
-import React from "react";
+import { Close } from "@/icons";
+import ImageIcon from "@/icons/Image";
+import Image from "next/image";
+import React, { useState, ChangeEvent } from "react";
 
 const RepresentativeImage = () => {
+  const [preview, setPreview] = useState<string | null>(null);
+
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // 파일 형식 검사
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+    if (!allowedTypes.includes(file.type)) {
+      alert("jpg, png, webp 이미지 파일만 가능합니다.");
+      e.target.value = ""; // 선택 초기화
+      return;
+    }
+
+    // 파일 용량 검사 (5MB)
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      alert("파일 용량은 최대 5MB까지 가능합니다.");
+      e.target.value = ""; // 선택 초기화
+      return;
+    }
+
+    // 프리뷰 생성
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const previewRemove = () => {
+    setPreview("");
+  };
+
   return (
     <section>
       {/* 이미지 가이드 영역 */}
@@ -17,21 +53,54 @@ const RepresentativeImage = () => {
 
       {/* 이미지 업로드 컨트롤러 */}
       <div id="image-upload-wrapper" className="flex flex-col gap-2 w-fit">
-        <input id="image" className="hidden" type="file" />
+        <input
+          id="image"
+          className="hidden"
+          type="file"
+          accept=".jpg,.jpeg,.png,.webp,.jfif"
+          onChange={handleImageChange}
+        />
 
         <label
           htmlFor="image"
-          className="flex w-30 h-30 items-center justify-center bg-card rounded-xl"
+          className="flex w-30 h-30 items-center justify-center bg-card rounded-xl overflow-hidden cursor-pointer"
         >
-          <Image className="text-font-disabled w-7.5 h-7.5" />
+          {preview ? (
+            <Image
+              src={preview} // base64 string
+              alt="대표 이미지 미리보기"
+              // 부모 컨테이너(120px)에 맞춰 렌더링 크기 지정
+              width={120}
+              height={120}
+              className="object-cover w-full h-full"
+              // unoptimized={true}
+            />
+          ) : (
+            <ImageIcon
+              className="text-font-disabled w-7.5 h-7.5"
+              width={60}
+              height={60}
+            />
+          )}
         </label>
 
-        <label
-          htmlFor="image"
-          className="cursor-pointer w-full text-center border border-border-main rounded-xl bg-bg-darkest px-8 py-2"
-        >
-          업로드
-        </label>
+        <div className="flex gap-1 h-9">
+          <label
+            htmlFor="image"
+            className="flex items-center justify-center whitespace-nowrap flex-1 cursor-pointer w-full text-center border border-border-main rounded-xl bg-bg-darkest px-auto py-2"
+          >
+            업로드
+          </label>
+          {preview && (
+            <button
+              onClick={previewRemove}
+              type="button"
+              className="flex items-center justify-center w-9 rounded-xl border border-[#FF383C] bg-[#FF383C]/10"
+            >
+              <Close className="w-4 h-4 text-font-accents" />
+            </button>
+          )}
+        </div>
       </div>
     </section>
   );
