@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+"use client";
+import React from "react";
+import { useForm } from "react-hook-form";
 import { ModalLayout } from "../ModalLayout";
 import { Close, Storage } from "@/icons";
 import ActiveButton from "../ActiveButton";
@@ -8,16 +10,36 @@ interface StorageModalProps {
   closeModal: () => void;
 }
 
-const StorageModal = ({ closeModal }: StorageModalProps) => {
-  const [text, setText] = useState("");
+interface StorageFormValues {
+  longTermMemory: string;
+}
 
-  const handleTextChange = (text: string) => {
-    setText(text);
+const StorageModal = ({ closeModal }: StorageModalProps) => {
+  // useForm 초기화
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { isDirty },
+  } = useForm<StorageFormValues>({
+    defaultValues: {
+      longTermMemory: "",
+    },
+  });
+
+  // 실시간 값 감시 (저장 버튼 활성화용)
+  const memoryValue = watch("longTermMemory");
+
+  // 제출 핸들러
+  const onSubmit = (data: StorageFormValues) => {
+    console.log("장기기억 저장 데이터:", data);
+    // API 호출 로직...
+    closeModal();
   };
 
   return (
     <ModalLayout
-      onClose={() => null}
+      onClose={closeModal}
       className="w-screen max-w-125 h-fit whitespace-nowrap top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-5"
     >
       <header className="pb-6">
@@ -40,36 +62,28 @@ const StorageModal = ({ closeModal }: StorageModalProps) => {
         </p>
       </header>
 
-      <form className="w-full">
+      <form onSubmit={handleSubmit(onSubmit)} className="w-full">
         <SmartInput
+          {...register("longTermMemory")}
+          value={memoryValue}
           maxLength={2000}
           maxLine={12}
           minLine={12}
-          value={text}
-          onChange={handleTextChange}
           type="textarea"
           isBorder={false}
           inputClassName="pb-7.25 bg-card rounded-2xl"
-          placeholder={`장기기억이 생성되려면 더 많은 대화가 쌓여야 해요.
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12`}
+          placeholder={`장기기억이 생성되려면 더 많은 대화가 쌓여야 해요...`}
         />
-      </form>
 
-      <ActiveButton
-        isActive={Boolean(text)}
-        text="저장"
-        className="rounded-xl w-25 mt-9 float-end"
-      />
+        <div className="flex justify-end mt-9">
+          <ActiveButton
+            type="submit" // 제출 버튼으로 설정
+            isActive={Boolean(memoryValue?.trim())} // 공백 제외 값이 있을 때만 활성화
+            text="저장"
+            className="rounded-xl w-25"
+          />
+        </div>
+      </form>
     </ModalLayout>
   );
 };
