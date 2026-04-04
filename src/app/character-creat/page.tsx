@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import React, { useState } from "react";
+import React, { JSX, useState } from "react";
 import Profile from "./_components/profile";
 import { CharacterCreateFormValues } from "@/type/character";
 import { FormProvider, useForm } from "react-hook-form";
@@ -8,9 +8,9 @@ import DetailInfo from "./_components/detail-info";
 import Asset from "./_components/asset";
 
 const TABS = [
-  { id: "profile", title: "프로필", component: <Profile /> },
-  { id: "details", title: "상세정보", component: <DetailInfo /> },
-  { id: "assets", title: "에셋", component: <Asset /> },
+  { id: "profile", title: "프로필", component: Profile },
+  { id: "details", title: "상세정보", component: DetailInfo },
+  { id: "assets", title: "에셋", component: Asset },
   { id: "scenario", title: "시나리오", component: null },
   { id: "settings", title: "설정", component: null },
 ] as const;
@@ -30,9 +30,13 @@ const CharacterCreatPage = () => {
       characterDetailSetting: "",
 
       // 에셋 탭
-      assetImage: "",
-      assetName: "",
-      assetSituation: "",
+      asset: [
+        {
+          assetImage: "/images/sample.png",
+          assetName: "행복",
+          assetSituation: "캐릭터가 행복이라는 감정을 느낄 떄",
+        },
+      ],
 
       // 시나리오 탭
       scenarioName: [],
@@ -46,23 +50,13 @@ const CharacterCreatPage = () => {
     },
   });
 
-  const [currentTab, setCurrentTab] = useState<{
-    id: string;
-    title: string;
-    component: React.ReactNode | null;
-  }>({
-    id: "profile",
-    title: "프로필",
-    component: <Profile />,
-  });
+  // 1. 상태를 문자열(ID)로만 관리
+  const [currentTabId, setCurrentTabId] =
+    useState<(typeof TABS)[number]["id"]>("profile");
 
-  const handleCurrentTab = (tab: {
-    id: string;
-    title: string;
-    component: React.ReactNode | null;
-  }) => {
-    setCurrentTab(tab);
-  };
+  // 2. 현재 선택된 탭 객체 찾기
+  const activeTab = TABS.find((tab) => tab.id === currentTabId);
+  const ActiveComponent = activeTab?.component;
   return (
     <section className="flex flex-col p-5 h-[calc(100vh-60px)]">
       <FormProvider {...methods}>
@@ -82,11 +76,11 @@ const CharacterCreatPage = () => {
             <nav className="flex gap-1 border-b-2 border-font-disabled mb-9">
               {TABS.map((tab) => (
                 <div
-                  onClick={() => handleCurrentTab(tab)}
+                  onClick={() => setCurrentTabId(tab.id)}
                   key={tab.id}
                   className={cn(
                     "text-sm text-font-2 p-2.5 cursor-pointer translate-y-0.5",
-                    currentTab.title === tab.title &&
+                    currentTabId === tab.id &&
                       "text-font-1 font-semibold border-b-2 border-brand",
                   )}
                 >
@@ -94,8 +88,7 @@ const CharacterCreatPage = () => {
                 </div>
               ))}
             </nav>
-
-            {currentTab.component}
+            {ActiveComponent ? <ActiveComponent /> : null}
           </section>
           <section className="flex-1"></section>
         </div>
