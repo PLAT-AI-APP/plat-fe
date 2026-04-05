@@ -1,18 +1,20 @@
 "use client";
 import { cn } from "@/lib/utils";
-import React, { JSX, useState } from "react";
+import React, { useState } from "react";
 import Profile from "./_components/profile";
 import { CharacterCreateFormValues } from "@/type/character";
 import { FormProvider, useForm } from "react-hook-form";
 import DetailInfo from "./_components/detail-info";
 import Asset from "./_components/asset";
+import Scenario from "./_components/scenario";
+import Setting from "./_components/setting";
 
 const TABS = [
   { id: "profile", title: "프로필", component: Profile },
   { id: "details", title: "상세정보", component: DetailInfo },
   { id: "assets", title: "에셋", component: Asset },
-  { id: "scenario", title: "시나리오", component: null },
-  { id: "settings", title: "설정", component: null },
+  { id: "scenario", title: "시나리오", component: Scenario },
+  { id: "settings", title: "설정", component: Setting },
 ] as const;
 
 const CharacterCreatPage = () => {
@@ -32,6 +34,7 @@ const CharacterCreatPage = () => {
       // 에셋 탭
       asset: [
         {
+          assetFile: null,
           assetImage: "/images/sample.png",
           assetName: "행복",
           assetSituation: "캐릭터가 행복이라는 감정을 느낄 떄",
@@ -39,12 +42,12 @@ const CharacterCreatPage = () => {
       ],
 
       // 시나리오 탭
-      scenarioName: [],
+      scenarioName: [{ name: "기본 시나리오" }],
 
       // 설정 탭
       isPublic: true,
       characterDescription: "",
-      tendency: "",
+      tendency: "전체",
       category: "",
       tagList: [],
     },
@@ -58,7 +61,7 @@ const CharacterCreatPage = () => {
   const activeTab = TABS.find((tab) => tab.id === currentTabId);
   const ActiveComponent = activeTab?.component;
   return (
-    <section className="flex flex-col p-5 h-[calc(100vh-60px)]">
+    <section className="flex flex-col flex-1 min-w-0 p-5 h-[calc(100vh-60px)]">
       <FormProvider {...methods}>
         <header className="flex items-center justify-between pb-4">
           <h2 className="text-[20px] font-medium">캐릭터 생성</h2>
@@ -71,8 +74,8 @@ const CharacterCreatPage = () => {
           </div>
         </header>
 
-        <div className="flex gap-4 flex-1 pb-5">
-          <section className="flex-1 h-full p-5 rounded-3xl bg-bg-darker border border-border-main">
+        <div className="flex gap-4 flex-1 min-w-0 pb-5">
+          <section className="flex-1 min-w-0 max-w-125 h-full p-5 rounded-3xl bg-bg-darker border border-border-main">
             <nav className="flex gap-1 border-b-2 border-font-disabled mb-9">
               {TABS.map((tab) => (
                 <div
@@ -90,7 +93,7 @@ const CharacterCreatPage = () => {
             </nav>
             {ActiveComponent ? <ActiveComponent /> : null}
           </section>
-          <section className="flex-1"></section>
+          <section className="flex-1 min-w-0"></section>
         </div>
       </FormProvider>
     </section>
