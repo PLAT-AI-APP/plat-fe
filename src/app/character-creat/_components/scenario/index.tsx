@@ -25,6 +25,7 @@ const Scenario = () => {
   const addScenario = () => {
     append({
       name: "다른 시나리오",
+      scenarioName: "",
     });
   };
 

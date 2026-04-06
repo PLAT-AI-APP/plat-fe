@@ -11,17 +11,20 @@ export interface CharacterCreateFormValues {
   characterDetailSetting: string;
 
   // 에셋 tab
-  assetImage: ImageData | string;
-  assetName: string;
-  assetSituation: string;
+  asset: {
+    assetFile: ImageData | null;
+    assetImage: string;
+    assetName: string;
+    assetSituation: string;
+  }[];
 
   // 시나리오 tab
-  scenarioName: string[];
+  scenarioName: { name: string; scenarioName: string }[];
 
   //설정 tab
   isPublic: boolean;
   characterDescription: string;
   tendency: string;
   category: string;
-  tagList: string[];
+  tagList: { name: string }[];
 }

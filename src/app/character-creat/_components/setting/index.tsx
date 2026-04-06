@@ -236,10 +236,10 @@ const Setting = () => {
           onChange={(e) => setTagInputValue(e.target.value)}
           required
           placeholder="태그를 등록해주세요."
+          label={`태그 등록(${tagList.length}/5)`}
           value={tagInputValue}
           inputClassName="placeholder:text-font-2"
         />
-
         <ul className="flex gap-1 pt-2">
           {tagList.map((tag, i) => (
             <li

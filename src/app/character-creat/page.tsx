@@ -8,6 +8,7 @@ import DetailInfo from "./_components/detail-info";
 import Asset from "./_components/asset";
 import Scenario from "./_components/scenario";
 import Setting from "./_components/setting";
+import CharacterPreview from "./_components/CharacterPreview";
 
 const TABS = [
   { id: "profile", title: "프로필", component: Profile },
@@ -42,7 +43,7 @@ const CharacterCreatPage = () => {
       ],
 
       // 시나리오 탭
-      scenarioName: [{ name: "기본 시나리오" }],
+      scenarioName: [{ name: "기본 시나리오", scenarioName: "" }],
 
       // 설정 탭
       isPublic: true,
@@ -53,11 +54,11 @@ const CharacterCreatPage = () => {
     },
   });
 
-  // 1. 상태를 문자열(ID)로만 관리
+  // 상태를 문자열(ID)로만 관리
   const [currentTabId, setCurrentTabId] =
     useState<(typeof TABS)[number]["id"]>("profile");
 
-  // 2. 현재 선택된 탭 객체 찾기
+  // 현재 선택된 탭 객체 찾기
   const activeTab = TABS.find((tab) => tab.id === currentTabId);
   const ActiveComponent = activeTab?.component;
   return (
@@ -93,7 +94,8 @@ const CharacterCreatPage = () => {
             </nav>
             {ActiveComponent ? <ActiveComponent /> : null}
           </section>
-          <section className="flex-1 min-w-0"></section>
+
+          <CharacterPreview />
         </div>
       </FormProvider>
     </section>
