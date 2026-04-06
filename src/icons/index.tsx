@@ -47,6 +47,7 @@ export { default as Sort } from "./Sort";
 export { default as Trash } from "./Trash";
 export { default as Dots } from "./Dots";
 export { default as Close } from "./Close";
+export { default as Asterisk } from "./Asterisk";
 
 // 7. 기타 UI 요소
 export { default as Eye } from "./Eye";
