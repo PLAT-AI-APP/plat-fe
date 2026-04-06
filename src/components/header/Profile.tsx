@@ -22,7 +22,7 @@ const Profile = () => {
   const triggerRef = useRef<HTMLImageElement>(null);
 
   return (
-    <div className="relative text-nowrap w-10 h-10">
+    <div className="relative text-nowrap w-8 h-8">
       <Image
         ref={triggerRef}
         src={ProfileImg}

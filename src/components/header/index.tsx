@@ -61,7 +61,12 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
             id="user-point-badge"
             className="flex cursor-pointer items-center gap-1 transition-all duration-200 ease-in-out hover:bg-btn-hover rounded-lg p-1.25 pr-2.5"
           >
-            <Star id="icon-point-star" fill="none" stroke="white" />
+            <Star
+              id="icon-point-star"
+              fill="none"
+              stroke="white"
+              className="w-5 h-5"
+            />
             <span id="user-point-value">1,100</span>
           </div>
 
@@ -73,7 +78,7 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
           >
             <BellOn
               id="icon-notification-bell"
-              className="text-font-2 w-8 h-8"
+              className="text-font-2 w-6 h-6"
             />
           </button>
         </div>
