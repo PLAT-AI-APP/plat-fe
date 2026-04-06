@@ -1,4 +1,5 @@
 "use client";
+import { ArrowDown, ArrowUp } from "@/icons";
 import { cn } from "@/lib/utils";
 import React, { forwardRef } from "react";
 
@@ -6,14 +7,17 @@ interface SmartInputProps extends React.InputHTMLAttributes<
   HTMLInputElement | HTMLTextAreaElement
 > {
   label?: string;
-  maxLength: number;
+  maxLength?: number;
   required?: boolean;
-  type?: "input" | "textarea";
+  type?: "input" | "textarea" | "modal";
+  isOpen?: boolean;
   inputClassName?: string;
   isBorder?: boolean;
   minLine?: number;
   maxLine?: number;
   description?: string;
+  modalComponents?: React.ReactNode;
+  toggleIsOpen?: () => void;
 }
 
 const SmartInput = forwardRef<
@@ -34,12 +38,16 @@ const SmartInput = forwardRef<
       description,
       className,
       value,
+      isOpen,
+      modalComponents,
+      toggleIsOpen,
       onChange,
       ...rest
     },
     ref,
   ) => {
     const isTextarea = type === "textarea";
+    const isModal = type === "modal";
 
     // 줄 수 제한 및 값 변경 핸들러
     const handleValueChange = (
@@ -57,7 +65,7 @@ const SmartInput = forwardRef<
       <div className={cn("flex flex-col flex-1 gap-2 w-full", className)}>
         {label && (
           <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-1 font-semibold text-sm">
+            <div className="flex items-center gap-1 font-medium text-sm">
               <span>{label}</span>
               {required && <span className="text-font-accents">*</span>}
             </div>
@@ -68,7 +76,8 @@ const SmartInput = forwardRef<
         )}
 
         <div className="relative group text-sm font-medium">
-          {isTextarea ? (
+          {/* 1. Textarea 타입 */}
+          {type === "textarea" && (
             <div
               className={cn(
                 "flex rounded-xl bg-bg-darkest",
@@ -89,7 +98,10 @@ const SmartInput = forwardRef<
                 maxLength={maxLength}
               />
             </div>
-          ) : (
+          )}
+
+          {/* 2. Input 타입 (기본값) */}
+          {(type === "input" || !type) && (
             <input
               {...(rest as React.InputHTMLAttributes<HTMLInputElement>)}
               ref={ref as React.ForwardedRef<HTMLInputElement>}
@@ -105,15 +117,38 @@ const SmartInput = forwardRef<
             />
           )}
 
-          {/* 글자 수 표시: value가 있을 때만 렌더링하거나 기본값 0 처리 */}
-          <div
-            className={cn(
-              "absolute right-4 text-xs text-font-2 pointer-events-none",
-              isTextarea ? "bottom-3" : "top-1/2 -translate-y-1/2",
-            )}
-          >
-            {String(value || "").length}/{maxLength}
-          </div>
+          {/* 3. Modal 타입 (대략적인 구현) */}
+          {type === "modal" && (
+            <div
+              onClick={toggleIsOpen}
+              className={cn(
+                "relative px-4 py-3 flex justify-between rounded-xl border border-border-main bg-bg-darkest text-sm font-medium cursor-pointer",
+              )}
+            >
+              <span className={cn(!value && "text-font-disabled")}>
+                {value || placeholder}
+              </span>
+              {isOpen ? (
+                <ArrowUp className="w-5 h-5 text-font-2" />
+              ) : (
+                <ArrowDown className="w-5 h-5 text-font-2" />
+              )}
+
+              {modalComponents}
+            </div>
+          )}
+
+          {/* 글자 수 표시: modal이 아닐 때만 렌더링 */}
+          {!isModal && maxLength && (
+            <div
+              className={cn(
+                "absolute right-4 text-xs text-font-2 pointer-events-none",
+                isTextarea ? "bottom-3" : "top-1/2 -translate-y-1/2",
+              )}
+            >
+              {String(value || "").length}/{maxLength}
+            </div>
+          )}
         </div>
       </div>
     );
