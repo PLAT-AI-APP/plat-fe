@@ -4,6 +4,7 @@ import React, { useRef, useState } from "react";
 import { ModalLayout } from "../ModalLayout";
 import Check from "@/icons/Check";
 import { cn } from "@/lib/utils";
+import { LANGUAGE_LIST } from "@/constants/language";
 
 const LanguageSelector = () => {
   const [isActive, setIsActive] = useState<boolean>(false);
@@ -13,15 +14,6 @@ const LanguageSelector = () => {
     setCurrentLanguage(code);
     setIsActive(!isActive);
   };
-
-  const LanguageArray = [
-    { code: "KR", name: "한국어", eng: "Korean" },
-    { code: "EN", name: "English", eng: "English" },
-    { code: "JP", name: "日本語", eng: "Japanese" },
-    { code: "CN", name: "中文", eng: "Chinese" },
-    { code: "TH", name: "ภาษาไทย", eng: "Thailand" },
-    { code: "VN", name: "Tiếng Việt", eng: "Vietnamese" },
-  ];
 
   const triggerRef = useRef<HTMLButtonElement>(null); // 버튼을 위한 ref
   return (
@@ -52,7 +44,7 @@ const LanguageSelector = () => {
         >
           {/* 언어 선택 목록 */}
           <ul className="flex flex-col list-none p-0 m-0 gap-1">
-            {LanguageArray.map((lang) => (
+            {LANGUAGE_LIST.map((lang) => (
               <li
                 key={lang.code}
                 role="option"
