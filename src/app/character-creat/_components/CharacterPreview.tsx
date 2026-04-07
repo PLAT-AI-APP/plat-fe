@@ -1,46 +1,125 @@
 import ActiveButton from "@/components/ActiveButton";
-import ChatForm from "@/components/chat/ChatForm";
 import MessageList from "@/components/chat/MessageList";
 import { useScrollTimeout } from "@/hooks/useScrollTiemout";
 import { Asterisk, ImageIcon, SendFill } from "@/icons";
 import { cn } from "@/lib/utils";
+import { CharacterCreateFormValues } from "@/type/character";
 import { ChatMessageType } from "@/type/chat";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
+import { useFormContext } from "react-hook-form";
 
-const INITIAL_MESSAGES: ChatMessageType[] = [
-  {
-    id: "1",
-    role: "assistant",
-    characterName: "윤아",
-    profileImage: "/images/sample.png",
-    // .plat 포맷 적용: 대사 + 이미지 + 지문
-    content: `"나 정말 기다렸어. 네가 오늘 꼭 올 줄 알았거든."\n\n{{img:/images/sample.png}}\n\n*그녀는 환하게 웃으며\n 내 소매를 살짝 잡아끌었다.*`,
-  },
-  {
-    id: "2",
-    role: "user",
-    // 유저 메시지도 대사 형식을 지켜주면 파서가 DIALOGUE 블록으로 인식합니다.
-    content: `"나 정말 기다렸어. 네가 오늘 꼭 올 줄 알았거든."`,
-  },
-];
-const CharacterPreview = () => {
-  const [messages, setMessages] = useState<ChatMessageType[]>(INITIAL_MESSAGES);
+interface CharacterPreviewProps {
+  activeScenarioIndex: number;
+}
+
+const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
+  const { watch, setValue, getValues } =
+    useFormContext<CharacterCreateFormValues>();
+  const scenarios = watch("scenarios");
+  const characterName = watch("name") || "캐릭터";
+  const messages = scenarios[activeScenarioIndex]?.messages || [];
+
+  const [role, setRole] = useState<"assistant" | "user">("assistant");
 
   const handleUpdateMessage = (id: string, newContent: string) => {
-    setMessages((prev) =>
-      prev.map((msg) =>
-        msg.id === id ? { ...msg, content: newContent } : msg,
-      ),
+    const updatedMessages = messages.map((msg) =>
+      msg.id === id ? { ...msg, content: newContent } : msg,
     );
+    setValue(`scenarios.${activeScenarioIndex}.messages`, updatedMessages, {
+      shouldValidate: true,
+    });
   };
 
   const handleDeleteMessage = (id: string) => {
-    setMessages((prev) => prev.filter((msg) => msg.id !== id));
+    const updatedMessages = messages.filter((msg) => msg.id !== id);
+    setValue(`scenarios.${activeScenarioIndex}.messages`, updatedMessages, {
+      shouldValidate: true,
+    });
   };
 
   const { isScrolling, onScroll } = useScrollTimeout();
 
   const [msg, setMsg] = useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!msg.trim()) return;
+
+    const newMessage: ChatMessageType =
+      role === "assistant"
+        ? {
+            id: Date.now().toString(),
+            role: "assistant",
+            characterName: characterName,
+            profileImage: "/images/sample.png", // 기본값
+            content: msg,
+          }
+        : {
+            id: Date.now().toString(),
+            role: "user",
+            content: msg,
+          };
+
+    const currentMessages =
+      getValues(`scenarios.${activeScenarioIndex}.messages`) || [];
+    setValue(
+      `scenarios.${activeScenarioIndex}.messages`,
+      [...currentMessages, newMessage],
+      { shouldValidate: true },
+    );
+    setMsg("");
+  };
+
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  // 상황(*) 삽입 함수
+  const handleInsertNarrative = () => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart; // 현재 커서 시작 위치
+    const end = textarea.selectionEnd; // 현재 커서 끝 위치
+    const text = msg;
+
+    // 커서 위치를 기준으로 "**" 삽입
+    const before = text.substring(0, start);
+    console.log(before);
+    const after = text.substring(end);
+    const newText = `${before}**${after}`;
+
+    setMsg(newText);
+
+    // React 상태 업데이트 후 DOM에 즉시 반영되지 않으므로 setTimeout을 사용하여 포커스 조정
+    setTimeout(() => {
+      textarea.focus();
+      // 커서 위치를 첫 번째 '*'와 두 번째 '*' 사이로 설정 (start + 1)
+      textarea.setSelectionRange(start + 1, start + 1);
+    }, 0);
+  };
+  // {user} 삽입 함수
+  const handleInsertUserToken = () => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart; // 현재 커서 시작 위치
+    const end = textarea.selectionEnd; // 현재 커서 끝 위치
+    const token = "{{user}}";
+    const text = msg;
+
+    // 현재 커서 위치에 {{user}} 삽입
+    const before = text.substring(0, start);
+    const after = text.substring(end);
+    const newText = `${before}${token}${after}`;
+
+    setMsg(newText);
+
+    // 렌더링 후 커서 위치 조정
+    setTimeout(() => {
+      textarea.focus();
+      // 커서를 삽입된 토큰 바로 뒤로 이동 (원래 위치 + 토큰 길이)
+      const newCursorPos = start + token.length;
+      textarea.setSelectionRange(newCursorPos, newCursorPos);
+    }, 0);
+  };
   return (
     <section className="flex flex-col justify-between flex-1 min-w-0 max-h-[calc(100vh-156px)]">
       <div
@@ -55,33 +134,54 @@ const CharacterPreview = () => {
           isEditable={true}
           onUpdateMessage={handleUpdateMessage}
           onDeleteMessage={handleDeleteMessage}
+          isAiSuggestedChat={false}
         />
       </div>
 
       <form
-        onSubmit={(e) => e.preventDefault()}
+        onSubmit={handleSubmit}
         className="shrink-0 px-3 py-3 mt-1.75 bg-bg-darkest rounded-4xl border border-border-main"
       >
         <div className="flex gap-1.5 text-sm text-font-2">
-          <button className="px-2.5 py-1.5 rounded-[20px] border border-border-main">
-            캐릭터명
+          <button
+            type="button"
+            onClick={() => setRole("assistant")}
+            className={cn(
+              "px-2.5 py-1.5 rounded-[20px] border",
+              role === "assistant"
+                ? "bg-font-1 text-bg-dark"
+                : "border-border-main bg-[#171D28]/50",
+            )}
+          >
+            {characterName}
           </button>
-          <button className="px-2.5 py-1.5 rounded-[20px] border border-border-main">
+          <button
+            type="button"
+            onClick={() => setRole("user")}
+            className={cn(
+              "px-2.5 py-1.5 rounded-[20px] border",
+              role === "user"
+                ? "bg-font-1 text-bg-dark"
+                : "border-border-main bg-[#171D28]/50",
+            )}
+          >
             사용자명
           </button>
         </div>
         <textarea
           rows={2}
+          ref={textareaRef}
           value={msg}
           onChange={(e) => setMsg(e.target.value)}
           placeholder="메시지 보내기"
-          className="mb-2 mt-3 w-full text-sm placeholder:text-font-disabled outline-none"
+          className="mb-2 mt-3 w-full text-sm placeholder:text-font-disabled outline-none bg-transparent"
         />
 
         <div className="flex justify-between">
           <div className="flex gap-2 text-sm text-font-2">
             <button
               type="button"
+              onClick={handleInsertNarrative}
               className="flex items-center gap-1.5 py-1.5 pl-2.5 pr-3 rounded-[100px] border border-border-main bg-[#171D28]/50 "
             >
               <Asterisk className="w-4 h-4" />
@@ -95,6 +195,7 @@ const CharacterPreview = () => {
             </button>
             <button
               type="button"
+              onClick={handleInsertUserToken}
               className="flex items-center gap-1.5 py-1.5 pl-2.5 pr-3 rounded-[100px] border border-border-main bg-[#171D28]/50 "
             >
               {`{user}`}

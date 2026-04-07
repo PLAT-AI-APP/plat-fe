@@ -1,3 +1,5 @@
+import { ChatMessageType } from "./chat";
+
 export interface CharacterCreateFormValues {
   // 프로필 tab
   representativeImage: ImageData | string;
@@ -19,7 +21,7 @@ export interface CharacterCreateFormValues {
   }[];
 
   // 시나리오 tab
-  scenarioName: { name: string; scenarioName: string }[];
+  scenarios: { name: string; messages: ChatMessageType[] }[];
 
   //설정 tab
   isPublic: boolean;

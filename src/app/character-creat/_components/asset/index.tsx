@@ -1,11 +1,12 @@
 import { CharacterCreateFormValues } from "@/type/character";
-import React from "react";
+import React, { useRef, ChangeEvent } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { DragDropContext, Droppable, DropResult } from "@hello-pangea/dnd";
 import AssetItem from "./AssetItem";
 
 const Asset = () => {
   const { control, watch } = useFormContext<CharacterCreateFormValues>();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { fields, append, remove, move, insert } = useFieldArray({
     control,
@@ -22,16 +23,41 @@ const Asset = () => {
     insert(index + 1, { ...target });
   };
 
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+    if (!allowedTypes.includes(file.type)) {
+      alert("jpg, png, webp 이미지 파일만 가능합니다.");
+      return;
+    }
+
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      alert("파일 용량은 최대 5MB까지 가능합니다.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      append({
+        assetFile: null,
+        assetName: file.name.split(".").slice(0, -1).join("."),
+        assetImage: reader.result as string,
+        assetSituation: "",
+      });
+    };
+    reader.readAsDataURL(file);
+
+    e.target.value = "";
+  };
+
   const addAsset = () => {
     if (fields.length + 1 > 50) {
       return;
     }
-    append({
-      assetFile: null,
-      assetName: "",
-      assetImage: "",
-      assetSituation: "",
-    });
+    fileInputRef.current?.click();
   };
 
   return (
@@ -76,6 +102,13 @@ const Asset = () => {
         >
           에셋 추가
         </button>
+        <input
+          ref={fileInputRef}
+          type="file"
+          className="hidden"
+          accept=".jpg,.jpeg,.png,.webp"
+          onChange={handleFileChange}
+        />
       </div>
     </section>
   );

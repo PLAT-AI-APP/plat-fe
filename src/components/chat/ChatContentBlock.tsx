@@ -50,12 +50,18 @@ const ChatContentBlock = ({
   if (isEditing) {
     return (
       <div className="flex gap-2 items-end">
-        <div className="flex flex-1 gap-2 bg-card p-2.5 rounded-[0px_16px_16px_16px]">
+        <div className="flex flex-1 h-fit gap-2 bg-card p-2.5 rounded-[0px_16px_16px_16px]">
           <textarea
-            className="w-full bg-card-hover p-2.5 rounded-[0px_16px_16px_16px] text-sm font-medium outline-none"
-            // rows={3}
+            ref={(el) => {
+              if (!el) return;
+              el.style.height = "auto"; // 초기화
+              el.style.height = el.scrollHeight + "px"; // 내용만큼 늘림
+            }}
+            className="w-full resize-none overflow-hidden bg-card-hover p-2.5 rounded-[0px_16px_16px_16px] text-sm font-medium outline-none"
             value={editedContent}
-            onChange={(e) => setEditedContent(e.target.value)}
+            onChange={(e) => {
+              setEditedContent(e.target.value);
+            }}
           />
         </div>
         <div className="flex shrink-0 gap-1 text-font-2 h-fit">

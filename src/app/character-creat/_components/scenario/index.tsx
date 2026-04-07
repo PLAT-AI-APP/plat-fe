@@ -5,27 +5,34 @@ import { CharacterCreateFormValues } from "@/type/character";
 import React, { useRef, useState } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 
-const Scenario = () => {
+interface ScenarioProps {
+  activeScenarioIndex: number;
+  setActiveScenarioIndex: (index: number) => void;
+}
+
+const Scenario = ({
+  activeScenarioIndex,
+  setActiveScenarioIndex,
+}: ScenarioProps) => {
   const { control, watch, register } =
     useFormContext<CharacterCreateFormValues>();
 
   const { fields, append } = useFieldArray({
     control,
-    name: "scenarioName",
+    name: "scenarios",
   });
   // 전체 시나리오 데이터를 watch 합니다.
-  const scenarios = watch("scenarioName");
-  const [activeId, setActiveId] = useState<string>(fields[0].id);
-  const currentIndex = fields.findIndex((f) => f.id === activeId);
-  const currentScenarioName = watch(`scenarioName.${currentIndex}.name`) || "";
+  const scenarios = watch("scenarios");
+  const currentIndex = activeScenarioIndex;
+  const currentScenarioName = watch(`scenarios.${currentIndex}.name`) || "";
 
-  const selectScenario = (id: string) => {
-    setActiveId(id);
+  const selectScenario = (index: number) => {
+    setActiveScenarioIndex(index);
   };
   const addScenario = () => {
     append({
       name: "다른 시나리오",
-      scenarioName: "",
+      messages: [],
     });
   };
 
@@ -74,10 +81,10 @@ const Scenario = () => {
             ) => (
               <li
                 key={id}
-                onClick={() => !isDrag && selectScenario(id)} // 드래그 중에는 클릭이 무시되도록 처리
+                onClick={() => !isDrag && selectScenario(i)} // 드래그 중에는 클릭이 무시되도록 처리
                 className={cn(
                   "px-3 py-1.5 bg-card text-sm rounded-[100px] shrink-0 transition-all",
-                  activeId === id
+                  activeScenarioIndex === i
                     ? "border border-font-1"
                     : "text-font-2 hover:bg-card-hover border border-transparent",
                 )}
@@ -98,7 +105,7 @@ const Scenario = () => {
       </div>
 
       <SmartInput
-        {...register(`scenarioName.${currentIndex}.name`, {
+        {...register(`scenarios.${currentIndex}.name`, {
           required: true,
         })}
         label="시나리오명"

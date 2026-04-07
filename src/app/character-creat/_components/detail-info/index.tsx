@@ -42,7 +42,6 @@ const DetailInfo = () => {
           required
           maxLine={15}
           minLine={15}
-          placeholder="예) 48kg"
           isBorder
           {...register("weight")}
           value={weightValue}

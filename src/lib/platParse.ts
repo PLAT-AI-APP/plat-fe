@@ -22,12 +22,11 @@ export type PlatBlock =
   | { type: "ASSET_BLOCK"; assetType: string; code: string };
 
 /**
- * 1. 인라인 토큰 파서 (NARRATIVE 내부용)
- * {{user}} 또는 {{type:code}} 패턴을 찾아 분리합니다.
+ * 인라인 토큰 파서 (NARRATIVE 내부용)
  */
 function parseInlineTokens(raw: string): PlatSegment[] {
   const segments: PlatSegment[] = [];
-  const tokenRegex = /\{\{([^}]+)\}\}/g;
+  const tokenRegex = /\{\{([^}]+)\\}\}/g;
   let lastIndex = 0;
   let match: RegExpExecArray | null;
 
@@ -35,9 +34,7 @@ function parseInlineTokens(raw: string): PlatSegment[] {
     if (match.index > lastIndex) {
       segments.push({ type: "TEXT", value: raw.slice(lastIndex, match.index) });
     }
-
     const inner = match[1];
-
     if (inner === "user") {
       segments.push({ type: "ASSET_USER" });
     } else if (inner.includes(":")) {
@@ -48,20 +45,16 @@ function parseInlineTokens(raw: string): PlatSegment[] {
     } else {
       segments.push({ type: "TEXT", value: match[0] });
     }
-
     lastIndex = tokenRegex.lastIndex;
   }
-
   if (lastIndex < raw.length) {
     segments.push({ type: "TEXT", value: raw.slice(lastIndex) });
   }
-
   return segments;
 }
 
 /**
- * 2. 개별 블록 파서
- * 텍스트 한 덩어리가 어떤 타입(대사, 지문, 에셋)인지 판별합니다.
+ * 개별 블록 파서
  */
 function parseBlock(raw: string): PlatBlock | null {
   const trimmed = raw.trim();
@@ -79,7 +72,7 @@ function parseBlock(raw: string): PlatBlock | null {
     return { type: "NARRATIVE", segments };
   }
 
-  // ASSET 블록: {{img:url}} (단독 라인)
+  // ASSET 블록: {{type:code}}
   const assetBlockRegex = /^\{\{([^}]+)\}\}$/;
   const assetMatch = assetBlockRegex.exec(trimmed);
   if (assetMatch) {
@@ -88,21 +81,17 @@ function parseBlock(raw: string): PlatBlock | null {
       const colonIdx = inner.indexOf(":");
       const assetType = inner.slice(0, colonIdx);
       const code = inner.slice(colonIdx + 1);
-
-      if (assetType === "img") {
-        return { type: "ASSET_IMG", code };
-      }
+      if (assetType === "img") return { type: "ASSET_IMG", code };
       return { type: "ASSET_BLOCK", assetType, code };
     }
   }
 
-  // 매칭되는 형식이 없으면 일반 텍스트를 NARRATIVE(지문)로 취급
+  // 매칭되는 형식이 없으면 일반 텍스트를 NARRATIVE로 처리
   return { type: "NARRATIVE", segments: [{ type: "TEXT", value: trimmed }] };
 }
 
 /**
- * 3. 메인 파서 (외부에서 호출)
- * 전체 문자열을 블록 단위로 쪼개어 PlatBlock 배열을 반환합니다.
+ * 메인 파서: 블록 구분자 없이 시작/끝 기호만으로 블록을 분리합니다.
  */
 export function parsePlat(source: string): PlatBlock[] {
   const blocks: PlatBlock[] = [];
@@ -110,36 +99,49 @@ export function parsePlat(source: string): PlatBlock[] {
   const len = source.length;
 
   while (i < len) {
-    // 앞선 줄바꿈 및 공백 스킵
-    while (i < len && (source[i] === "\n" || source[i] === " ")) i++;
+    // 1. 앞선 공백 및 줄바꿈 스킵
+    while (i < len && /\s/.test(source[i])) i++;
     if (i >= len) break;
 
     const start = i;
 
-    // NARRATIVE 블록 특수 처리 (*로 시작하면 닫는 *까지 줄바꿈 무시하고 읽음)
-    if (source[i] === "*") {
-      i++; // 여는 * 건너뜀
-      while (i < len && source[i] !== "*") i++;
-      if (i < len && source[i] === "*") i++; // 닫는 * 포함
+    // 2. 블록 타입 판별 및 끝 지점 찾기
 
-      const raw = source.slice(start, i);
-      const block = parseBlock(raw);
-      if (block) blocks.push(block);
+    // CASE A: NARRATIVE (*)
+    if (source[i] === "*") {
+      i++;
+      while (i < len && source[i] !== "*") i++;
+      if (i < len) i++; // 닫는 * 포함
     }
-    // 그 외 일반 블록 (대사, 에셋 등)
+    // CASE B: DIALOGUE (")
+    else if (source[i] === '"') {
+      i++;
+      while (i < len && source[i] !== '"') i++;
+      if (i < len) i++; // 닫는 " 포함
+    }
+    // CASE C: ASSET ({{)
+    else if (source[i] === "{" && source[i + 1] === "{") {
+      i += 2;
+      while (i < len && !(source[i] === "}" && source[i + 1] === "}")) i++;
+      if (i < len) i += 2; // 닫는 }} 포함
+    }
+    // CASE D: FALLBACK (기호 없는 일반 텍스트)
     else {
-      // \n\n(빈 줄)이 나타날 때까지 읽음
       while (i < len) {
-        if (source[i] === "\n" && source[i + 1] === "\n") break;
+        // 다음 블록의 시작 기호를 만나면 중단
+        if (
+          source[i] === "*" ||
+          source[i] === '"' ||
+          (source[i] === "{" && source[i + 1] === "{")
+        )
+          break;
         i++;
       }
-      const raw = source.slice(start, i);
-      const block = parseBlock(raw.trim());
-      if (block) blocks.push(block);
-
-      // 블록 구분자(\n\n) 건너뜀
-      if (i < len && source[i] === "\n") i += 2;
     }
+
+    const raw = source.slice(start, i);
+    const block = parseBlock(raw);
+    if (block) blocks.push(block);
   }
 
   return blocks;

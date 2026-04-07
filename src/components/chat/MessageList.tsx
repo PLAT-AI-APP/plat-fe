@@ -9,6 +9,7 @@ interface MessageListProps {
   isEditable?: boolean;
   onUpdateMessage?: (id: string, newContent: string) => void;
   onDeleteMessage?: (id: string) => void;
+  isAiSuggestedChat?: boolean;
 }
 const MessageList = memo(
   ({
@@ -16,6 +17,7 @@ const MessageList = memo(
     isEditable = false,
     onUpdateMessage,
     onDeleteMessage,
+    isAiSuggestedChat = true,
   }: MessageListProps) => {
     return (
       <section
@@ -39,7 +41,7 @@ const MessageList = memo(
                     }
                     onDelete={() => onDeleteMessage?.(msg.id)}
                   />
-                  {isLastMessage && <AiSuggestedChat />}
+                  {isLastMessage && isAiSuggestedChat && <AiSuggestedChat />}
                 </div>
               ) : (
                 <UserChatBubble

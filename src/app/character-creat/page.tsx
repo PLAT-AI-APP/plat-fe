@@ -43,7 +43,25 @@ const CharacterCreatPage = () => {
       ],
 
       // 시나리오 탭
-      scenarioName: [{ name: "기본 시나리오", scenarioName: "" }],
+      scenarios: [
+        {
+          name: "기본 시나리오",
+          messages: [
+            {
+              id: "1",
+              role: "assistant",
+              characterName: "윤아",
+              profileImage: "/images/sample.png",
+              content: `"나 정말 기다렸어. 네가 오늘 꼭 올 줄 알았거든."\n\n{{img:/images/sample.png}}\n\n*그녀는 환하게 웃으며\n내 소매를 살짝 잡아끌었다.*`,
+            },
+            {
+              id: "2",
+              role: "user",
+              content: "나 정말 기다렸어. 네가 오늘 꼭 올 줄 알았거든.",
+            },
+          ],
+        },
+      ],
 
       // 설정 탭
       isPublic: true,
@@ -57,6 +75,8 @@ const CharacterCreatPage = () => {
   // 상태를 문자열(ID)로만 관리
   const [currentTabId, setCurrentTabId] =
     useState<(typeof TABS)[number]["id"]>("profile");
+
+  const [activeScenarioIndex, setActiveScenarioIndex] = useState(0);
 
   // 현재 선택된 탭 객체 찾기
   const activeTab = TABS.find((tab) => tab.id === currentTabId);
@@ -92,10 +112,15 @@ const CharacterCreatPage = () => {
                 </div>
               ))}
             </nav>
-            {ActiveComponent ? <ActiveComponent /> : null}
+            {ActiveComponent && (
+              <ActiveComponent
+                activeScenarioIndex={activeScenarioIndex}
+                setActiveScenarioIndex={setActiveScenarioIndex}
+              />
+            )}
           </section>
 
-          <CharacterPreview />
+          <CharacterPreview activeScenarioIndex={activeScenarioIndex} />
         </div>
       </FormProvider>
     </section>
