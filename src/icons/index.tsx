@@ -16,6 +16,7 @@ export { default as Star } from "./Star";
 
 // 3. 미디어 및 입력
 export { default as Camera } from "./Camera";
+export { default as CameraFill } from "./CameraFill";
 export { default as Edit } from "./Edit";
 export { default as Pen } from "./Pen";
 export { default as PenSparkle } from "./PenSparkle";
