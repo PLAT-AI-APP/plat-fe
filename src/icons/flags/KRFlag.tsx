@@ -4,7 +4,7 @@ import { IconProps, IconWrapper } from "..";
 const KRFlag = (props: IconProps) => {
   return (
     <IconWrapper viewBox="0 0 30 20" {...props}>
-      <g clip-path="url(#clip0_1512_4887)">
+      <g clipPath="url(#clip0_1512_4887)">
         <path d="M30 0H0V20H30V0Z" fill="white" />
         <path
           d="M7.40444 1.91032L4.6167 6.02734L5.28274 6.47834L8.07048 2.36131L7.40444 1.91032Z"
