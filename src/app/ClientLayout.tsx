@@ -4,6 +4,8 @@ import { useState } from "react";
 import Header from "@/components/header";
 import Sidebar from "@/components/Sidebar";
 import { usePathname } from "next/navigation";
+import { useScrollTimeout } from "@/hooks/useScrollTiemout";
+import { cn } from "@/lib/utils";
 
 export default function ClientLayout({
   children,
@@ -30,6 +32,8 @@ export default function ClientLayout({
 
   const handleFoldToggle = () => setIsFolded((prev) => !prev);
 
+  const { isScrolling, onScroll } = useScrollTimeout();
+
   return (
     <>
       <Header handleFoldToggle={handleFoldToggle} />
@@ -38,7 +42,11 @@ export default function ClientLayout({
 
         <div
           id="page-content"
-          className="flex-1 overflow-y-auto overflow-x-hidden flex flex-col"
+          onScroll={onScroll}
+          className={cn(
+            "hide-scrollbar-on-idle flex-1 overflow-y-auto overflow-x-hidden flex flex-col",
+            isScrolling && "is-scrolling",
+          )}
         >
           {children}
         </div>
