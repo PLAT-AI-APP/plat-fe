@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import AuthInput from "./AuthInput";
@@ -8,50 +10,35 @@ import { EMAIL_REGEX } from "@/lib/regex";
 
 interface EmailOtpStepProps {
   title: string;
-  otpValues: string[];
-  isValid: boolean;
-  handleChange: (index: number, value: string) => void;
-  handleKeyDown: (
-    index: number,
-    e: React.KeyboardEvent<HTMLInputElement>,
-  ) => void;
-  inputRefs: React.MutableRefObject<(HTMLInputElement | null)[]>;
 }
 
-const EmailOtpStep = ({
-  title,
-  otpValues,
-  isValid,
-  inputRefs,
-  ...otpHandlers
-}: EmailOtpStepProps) => {
+const EmailOtpStep = ({ title }: EmailOtpStepProps) => {
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [otpError, setOtpError] = useState("");
+  const [enteredOtp, setEnteredOtp] = useState(""); // 최종 입력된 6자리 저장
 
   const {
     register,
     trigger,
-    watch,
     formState: { errors },
   } = useFormContext<AuthFormValues>();
 
-  // 타이머 상태 관리 (초 단위: 300초 = 5분)
   const [timeLeft, setTimeLeft] = useState(300);
-  // 타이머 구동 로직
-  useEffect(() => {
-    if (isOtpSent) {
-      if (timeLeft <= 0) return; // 0초면 중지
 
+  useEffect(() => {
+    if (isOtpSent && timeLeft > 0) {
       const timer = setInterval(() => {
         setTimeLeft((prev) => prev - 1);
       }, 1000);
-
       return () => clearInterval(timer);
     }
   }, [timeLeft, isOtpSent]);
 
-  const emailValue = watch("email");
-  const isEmailInputValid = EMAIL_REGEX.test(emailValue || "") && !errors.email;
+  // OTP 6자리가 모두 채워졌을 때 호출될 함수
+  const handleOtpComplete = (code: string) => {
+    setEnteredOtp(code);
+    setOtpError(""); // 번호가 완성되면 일단 에러 초기화
+  };
 
   const handleButtonClick = async (e: React.MouseEvent) => {
     if (!isOtpSent) {
@@ -59,21 +46,22 @@ const EmailOtpStep = ({
       const isEmailValid = await trigger("email");
       if (isEmailValid) {
         setIsOtpSent(true);
+        setTimeLeft(300); // 전송 시 타이머 리셋
       }
     } else {
-      // 실제로는 서버에서 전달된 코드로 검증하거나, API 호출을 수행해야 합니다.
-      const enteredCode = otpValues.join("");
-      const targetCode = "123456"; // 기존 입력해야 할 예시 코드
-
-      if (enteredCode !== targetCode) {
+      // 인증 완료 로직
+      const targetCode = "123456"; // 예시 코드
+      if (enteredOtp !== targetCode) {
         e.preventDefault();
         setOtpError("코드가 일치하지 않습니다.");
       } else {
         setOtpError("");
+        console.log("이메일 인증 성공!");
       }
     }
   };
 
+  console.log(enteredOtp);
   return (
     <section id="email-otp-auth-step" className="w-full">
       <h1
@@ -95,21 +83,18 @@ const EmailOtpStep = ({
               value: EMAIL_REGEX,
               message: "올바른 이메일 형식이 아닙니다.",
             },
-            onChange: () => {
-              trigger("email");
-            },
           })}
           error={errors.email?.message}
+          disabled={isOtpSent} // 번호 전송 후에는 이메일 수정 방지
         />
 
         {isOtpSent && (
           <div id="otp-input-group" className="flex flex-col gap-2">
             <OtpInput
-              code={otpValues}
-              inputRefs={inputRefs}
               timeLeft={timeLeft}
               error={otpError}
-              {...otpHandlers}
+              onComplete={handleOtpComplete}
+              onResend={() => setTimeLeft(300)}
             />
           </div>
         )}
@@ -118,7 +103,8 @@ const EmailOtpStep = ({
       <ActiveButton
         id="email-submit-button"
         text={isOtpSent ? "인증완료" : "인증번호 전송"}
-        isActive={isOtpSent ? isValid && timeLeft > 0 : isEmailInputValid}
+        // OTP가 6자리 다 찼고 시간이 남았을 때만 인증완료 버튼 활성화
+        isActive={enteredOtp.length === 6 && timeLeft > 0}
         onClick={handleButtonClick}
       />
     </section>

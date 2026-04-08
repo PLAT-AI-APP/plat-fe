@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useForm, FormProvider, useWatch } from "react-hook-form";
 import AuthLayout from "./AuthLayout";
 import { AuthFormValues } from "@/type/auth";
@@ -27,7 +27,6 @@ const FLOW_CONFIG = {
 export const AuthFlow = ({ type }: AuthFlowProps) => {
   const [step, setStep] = useState(1); // 1단계부터 시작
   const config = FLOW_CONFIG[type];
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   // Form Methods 초기화
   const methods = useForm<AuthFormValues>({
@@ -44,40 +43,12 @@ export const AuthFlow = ({ type }: AuthFlowProps) => {
     },
   });
 
-  const {
-    handleSubmit,
-    setValue,
-    control,
-    formState: { errors },
-  } = methods;
+  const { handleSubmit, control } = methods;
 
   // 데이터 통합 감시 (한 번의 useWatch로 정리)
   const formValues = useWatch({ control });
-  const { email, otp, nickname, gender, birthdate } = formValues;
+  const { nickname, gender, birthdate } = formValues;
 
-  // OTP 핸들러 로직 (부모에서 관리)
-  const handleChange = (index: number, value: string) => {
-    if (!/^\d*$/.test(value)) return;
-    const char = value.slice(-1);
-    setValue(`otp.${index}`, char, { shouldValidate: true });
-    if (char && index < 5) inputRefs.current[index + 1]?.focus();
-  };
-
-  const handleKeyDown = (
-    index: number,
-    e: React.KeyboardEvent<HTMLInputElement>,
-  ) => {
-    if (e.key === "Backspace" && !otp?.[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus();
-    }
-  };
-
-  // 단계별 유효성 검사 정립
-  const isStep1Valid = !!(
-    !!email &&
-    !errors.email &&
-    otp?.every((v) => v !== "")
-  );
   const isStep3Valid = !!nickname && !!gender && !!birthdate;
 
   const onSubmit = async (data: AuthFormValues) => {
@@ -101,22 +72,12 @@ export const AuthFlow = ({ type }: AuthFlowProps) => {
         >
           <AuthBgDecoration />
 
-          {step === 1 && (
-            <EmailOtpStep
-              title={config.titles[0]}
-              isValid={isStep1Valid}
-              otpValues={otp || []}
-              inputRefs={inputRefs}
-              handleChange={handleChange}
-              handleKeyDown={handleKeyDown}
-            />
-          )}
+          {step === 1 && <EmailOtpStep title={config.titles[0]} />}
 
           {step === 2 && (
             <PasswordStep
               title={config.titles[1]}
               buttonText={config.buttons[1]}
-              // isValid={isStep2Valid}
             />
           )}
 
