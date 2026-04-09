@@ -1,6 +1,8 @@
+import TagAddModal from "@/components/modal/TagAddModal";
 import { ModalLayout } from "@/components/ModalLayout";
 import SmartInput from "@/components/SmartInput";
 import { Close } from "@/icons";
+import TagIcon from "@/icons/Tag";
 import Check from "@/icons/Check";
 import { cn } from "@/lib/utils";
 import { CharacterCreateFormValues } from "@/type/character";
@@ -95,6 +97,10 @@ const Setting = () => {
 
   const TENDENCY_LIST = ["전체", "남성향", "여성향"] as const;
 
+  const [isTagModal, setIsTagModal] = useState(false);
+  const toggleIsTagModal = () => {
+    setIsTagModal((prev) => !prev);
+  };
   return (
     <section className="flex flex-col gap-6">
       {/* 공개여부 선택 */}
@@ -232,14 +238,18 @@ const Setting = () => {
 
       {/* 태그 추가 */}
       <form onSubmit={addTag}>
-        <SmartInput
-          onChange={(e) => setTagInputValue(e.target.value)}
-          required
-          placeholder="태그를 등록해주세요."
-          label={`태그 등록(${tagList.length}/5)`}
-          value={tagInputValue}
-          inputClassName="placeholder:text-font-2"
-        />
+        <div onClick={toggleIsTagModal}>
+          <SmartInput
+            onChange={(e) => setTagInputValue(e.target.value)}
+            required
+            type="modal"
+            placeholder="태그를 등록해주세요."
+            label={`태그 등록(${tagList.length}/5)`}
+            value={tagInputValue}
+            inputClassName="placeholder:text-font-2 cursor-pointer"
+          />
+        </div>
+
         <ul className="flex gap-1 pt-2">
           {tagList.map((tag, i) => (
             <li
@@ -255,6 +265,8 @@ const Setting = () => {
           ))}
         </ul>
       </form>
+
+      {isTagModal && <TagAddModal onClose={toggleIsTagModal} />}
     </section>
   );
 };

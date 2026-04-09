@@ -82,15 +82,22 @@ const SmartInput = forwardRef<
       onChange?.(e);
     };
 
-    // 우측 아이콘 렌더링 로직 분리 (가독성)
+    // "태그" 포함 여부 및 특정 레이블 체크 로직을 변수로 캡슐화
+    const isNavigationType =
+      label === "휴대폰" || label?.includes("태그 등록(0/5)");
+
+    // 우측 아이콘 렌더링 로직
     const renderRightIcon = () => {
-      if (label === "휴대폰") {
-        return <ArrowRight className="w-3 h-3 text-font-2" />;
+      if (isNavigationType) {
+        return (
+          <ArrowRight className="w-3 h-3 text-font-2" aria-hidden="true" />
+        );
       }
+
       return isOpen ? (
-        <ArrowUp className="w-5 h-5 text-font-2" />
+        <ArrowUp className="w-5 h-5 text-font-2" aria-hidden="true" />
       ) : (
-        <ArrowDown className="w-5 h-5 text-font-2" />
+        <ArrowDown className="w-5 h-5 text-font-2" aria-hidden="true" />
       );
     };
 
