@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ModalLayout } from "../ModalLayout";
-import { CameraFill, Close, Google, Kakao } from "@/icons";
+import { CameraFill, Close, Google, Kakao, PhoneFill } from "@/icons";
 import Image from "next/image";
 import SmartInput from "../SmartInput";
 import { FormProvider, useForm } from "react-hook-form";
@@ -32,12 +32,12 @@ const ProfileEditModal = ({ onClose }: ProfileEditModalProps) => {
     defaultValues: {
       profileImg: "",
       birthDate: "",
-      countryCode: "+82",
+      countryCode: "",
       email: "tmdi8635@gmail.com",
       gender: "male",
       introduce: "",
       nickname: "",
-      phoneNumber: "010 2911 4961",
+      phoneNumber: "",
       provider: "google",
     },
   });
@@ -193,16 +193,19 @@ const ProfileEditModal = ({ onClose }: ProfileEditModalProps) => {
                   value={formValue.phoneNumber}
                   placeholder="휴대폰 번호를 등록해보세요."
                   rightElement={
-                    formValue.countryCode &&
-                    (() => {
-                      const targetCountry = LANGUAGE_LIST.find(
-                        (v) => v.countryCode === formValue.countryCode,
-                      );
-                      if (targetCountry) {
-                        const { Icon } = targetCountry;
-                        return <Icon className="w-7.5 h-5 rounded-sm" />;
-                      }
-                    })()
+                    formValue.countryCode ? (
+                      (() => {
+                        const targetCountry = LANGUAGE_LIST.find(
+                          (v) => v.countryCode === formValue.countryCode,
+                        );
+                        if (targetCountry) {
+                          const { Icon } = targetCountry;
+                          return <Icon className="w-7.5 h-5 rounded-sm" />;
+                        }
+                      })()
+                    ) : (
+                      <PhoneFill className="w-5 h-5 text-font-2" />
+                    )
                   }
                 />
               </div>
