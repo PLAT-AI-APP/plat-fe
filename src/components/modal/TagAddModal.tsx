@@ -1,132 +1,168 @@
 import React, { useEffect, useState } from "react";
+import { useFormContext } from "react-hook-form";
+import { cn } from "@/lib/utils";
+import { CharacterCreateFormValues } from "@/type/character";
 import { ModalLayout } from "../ModalLayout";
 import Tag from "@/icons/Tag";
 import { ArrowRight, Close, Megaphone, Search } from "@/icons";
-import { cn } from "@/lib/utils";
 import ActiveButton from "../ActiveButton";
-import { useFormContext } from "react-hook-form";
-import { CharacterCreateFormValues } from "@/type/character";
+import TagSuggestionsModal from "./TagSuggestionsModal";
 
 interface TagAddModalProps {
   onClose: () => void;
 }
+
 const TagAddModal = ({ onClose }: TagAddModalProps) => {
   const { watch, setValue } = useFormContext<CharacterCreateFormValues>();
 
-  const [tagList, setTagList] = useState(TAG_LIST_MOCK);
+  // 초기 상태 설정 (선택된 태그는 맨 앞으로, 나머지는 사전순 정렬)
+  const [tagList, setTagList] = useState(() => {
+    const currentTags = watch("tagList") || [];
+    const baseTags = TAG_LIST_MOCK.map((tag) => ({
+      ...tag,
+      isSelected: currentTags.some((t) => t.name === tag.name),
+    }));
+
+    const selected = baseTags.filter((t) => t.isSelected);
+    const unselected = baseTags
+      .filter((t) => !t.isSelected)
+      .sort((a, b) => a.name.localeCompare(b.name, "ko"));
+
+    return [...selected, ...unselected];
+  });
+
   const [searchKeyword, setSearchKeyword] = useState("");
 
+  // 파생 데이터: 검색 필터링
   const filteredTags = tagList.filter((tag) =>
     tag.name.includes(searchKeyword),
   );
 
-  const handleSearch = (value: string) => {
-    setSearchKeyword(value);
-  };
-  const handleTagToggle = (name: string) => {
-    setTagList((prev) => {
-      const selectedTag = prev.find((v) => v.name === name);
-      if (!selectedTag) return prev;
-
-      const toggledTag = {
-        ...selectedTag,
-        isSelected: !selectedTag.isSelected,
-      };
-      const remainingTags = prev.filter((v) => v.name !== name);
-
-      // 해제 시: name 객체를 기준으로 사전순 정렬 복구
-      if (!toggledTag.isSelected) {
-        return [...remainingTags, toggledTag].sort(
-          (a, b) => a.name.localeCompare(b.name, "ko"), // 한글/영문 사전순 정렬
-        );
-      }
-
-      // 선택 시 최상단 이동
-      return [toggledTag, ...remainingTags];
-    });
-  };
-
+  // 폼 동기화 (isSelected가 true인 아이템만 객체 형태로 setValue)
   useEffect(() => {
     const selectedTagNames = tagList
       .filter((tag) => tag.isSelected)
       .map((tag) => ({ name: tag.name }));
+
     setValue("tagList", selectedTagNames);
   }, [tagList, setValue]);
 
+  const handleSearch = (value: string) => {
+    setSearchKeyword(value);
+  };
+
+  // 태그 토글 핸들러 (최대 5개 제한 및 정렬 로직 포함)
+  const handleTagToggle = (name: string) => {
+    setTagList((prev) => {
+      const targetTag = prev.find((v) => v.name === name);
+      if (!targetTag) return prev;
+
+      const selectedCount = prev.filter((t) => t.isSelected).length;
+
+      // 최대 5개 제한 체크 (현재 미선택 상태에서 선택하려고 할 때만 체크)
+      if (!targetTag.isSelected && selectedCount >= 5) {
+        alert("태그는 최대 5개까지만 선택할 수 있습니다.");
+        return prev;
+      }
+
+      // 전체 리스트에서 해당 태그의 isSelected 상태 반전
+      const updatedList = prev.map((tag) =>
+        tag.name === name ? { ...tag, isSelected: !tag.isSelected } : tag,
+      );
+
+      // 선택된 태그와 선택되지 않은 태그 분리
+      const selected = updatedList.filter((t) => t.isSelected);
+      const unselected = updatedList
+        .filter((t) => !t.isSelected)
+        .sort((a, b) => a.name.localeCompare(b.name, "ko")); // 나머지 태그만 사전순 정렬
+
+      // 선택된 태그를 맨 앞으로 배치하여 반환
+      return [...selected, ...unselected];
+    });
+  };
+
   const [isModal, setIsModal] = useState(false);
+  const toggleIsModal = () => {
+    setIsModal((prev) => !prev);
+  };
   return (
     <ModalLayout onClose={onClose} hasBackground className="p-5 w-112.5">
-      <div>
+      <div id="tag-manager-root" className="flex flex-col">
         <header className="flex items-center justify-between pb-6">
-          <div className="flex gap-3">
-            <Tag /> <h2 className="text-[20px] font-semibold">태그</h2>
+          <div className="flex gap-3 items-center">
+            <Tag aria-hidden="true" />
+            <h2 className="text-[20px] font-semibold">태그</h2>
           </div>
-
-          <Close onClick={onClose} className="w-3.5 h-3.5 cursor-pointer" />
+          <button type="button" onClick={onClose} aria-label="모달 닫기">
+            <Close className="w-3.5 h-3.5 cursor-pointer" />
+          </button>
         </header>
-      </div>
 
-      <form
-        id="search-bar-form"
-        role="search"
-        className="relative flex items-center group w-full pb-3"
-        onSubmit={(e) => e.preventDefault()}
-      >
-        <input
-          id="search-input"
-          type="text"
-          className="text-sm border cursor-pointer border-border-main w-full h-10 px-4 pl-10 rounded-xl focus:outline-none transition-all placeholder:text-font-disabled focus:cursor-text focus:border-font-1"
-          placeholder="검색어를 입력하세요"
-          onChange={(e) => handleSearch(e.target.value)}
-        />
-
-        {/* 아이콘 영역을 label로 감싸 클릭 시 input에 포커스가 가도록 개선 */}
-        <label
-          id="search-icon-wrapper"
-          htmlFor="search-input"
-          className="absolute left-4 cursor-pointer pointer-events-none"
+        <form
+          id="tag-search-form"
+          role="search"
+          className="relative flex items-center group w-full pb-3"
+          onSubmit={(e) => e.preventDefault()}
         >
-          <Search
-            id="icon-search-glass"
-            className="text-font-disabled w-4.5 h-4.5 "
+          <input
+            id="search-input"
+            type="text"
+            value={searchKeyword}
+            className="text-sm border cursor-pointer border-border-main w-full h-10 px-4 pl-10 rounded-xl focus:outline-none transition-all placeholder:text-font-disabled focus:cursor-text focus:border-font-1"
+            placeholder="검색어를 입력하세요"
+            onChange={(e) => handleSearch(e.target.value)}
           />
-        </label>
-      </form>
-
-      <ul className="flex gap-3 p-2.5 flex-wrap max-h-85 overflow-auto">
-        {filteredTags.map(({ id, isSelected, name }) => (
-          <li
-            key={id}
-            className={cn(
-              "px-1.25 py-0.5 mb-2 rounded-md bg-card text-xs cursor-pointer hover:bg-card-hover",
-              isSelected && "bg-brand-opacity text-brand",
-            )}
-            onClick={() => handleTagToggle(name)}
+          <label
+            htmlFor="search-input"
+            className="absolute left-4 cursor-pointer pointer-events-none"
           >
-            #{name}
-          </li>
-        ))}
-      </ul>
+            <Search className="text-font-disabled w-4.5 h-4.5" />
+          </label>
+        </form>
 
-      <footer className="flex gap-3 pt-4">
-        <button
-          type="button"
-          className="p-3 flex flex-1 items-center justify-between bg-card rounded-xl text-font-2 text-xs"
-        >
-          <div className="flex gap-2">
-            <Megaphone className="w-4 h-4" />
-            <span>원하는 해시태그가 없나요?</span>
+        <nav id="tag-list-wrapper">
+          <ul className="flex gap-3 p-2.5 flex-wrap max-h-85 overflow-auto">
+            {filteredTags.map(({ id, isSelected, name }) => (
+              <li key={id}>
+                <button
+                  type="button"
+                  className={cn(
+                    "px-1.25 py-0.5 rounded-md bg-card text-xs cursor-pointer hover:bg-card-hover transition-colors",
+                    isSelected && "bg-brand-opacity text-brand font-medium",
+                  )}
+                  onClick={() => handleTagToggle(name)}
+                >
+                  #{name}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
+        <footer className="flex gap-3 pt-4">
+          <button
+            type="button"
+            onClick={toggleIsModal}
+            className="p-3 flex flex-1 items-center justify-between bg-card rounded-xl text-font-2 text-xs hover:bg-card-hover transition-colors"
+          >
+            <div className="flex gap-2 items-center">
+              <Megaphone className="w-4 h-4" />
+              <span>원하는 해시태그가 없나요?</span>
+            </div>
+            <ArrowRight className="w-3 h-3" />
+          </button>
+
+          <div className="flex justify-end">
+            <ActiveButton
+              onClick={onClose}
+              text="완료"
+              isActive
+              className="px-5 py-2.5 w-fit rounded-xl text-sm font-medium"
+            />
           </div>
-
-          <ArrowRight className="w-3 h-3" />
-        </button>
-
-        <ActiveButton
-          text="완료"
-          isActive
-          className="px-5 py-2.5 w-fit rounded-xl text-sm font-medium"
-        />
-      </footer>
+        </footer>
+      </div>
+      {isModal && <TagSuggestionsModal onClose={toggleIsModal} />}
     </ModalLayout>
   );
 };
@@ -134,8 +170,8 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
 export default TagAddModal;
 
 export const TAG_LIST_MOCK = [
-  { id: "tag-1", name: "취미", isSelected: true },
-  { id: "tag-2", name: "여행", isSelected: true },
+  { id: "tag-1", name: "취미", isSelected: false },
+  { id: "tag-2", name: "여행", isSelected: false },
   { id: "tag-3", name: "요리", isSelected: false },
   { id: "tag-4", name: "운동", isSelected: false },
   { id: "tag-5", name: "공부", isSelected: false },

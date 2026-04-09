@@ -1,9 +1,9 @@
 "use client";
-import { cn } from "@/lib/utils";
 import React, { useState } from "react";
-import Profile from "./_components/profile";
-import { CharacterCreateFormValues } from "@/type/character";
 import { FormProvider, useForm } from "react-hook-form";
+import { cn } from "@/lib/utils";
+import { CharacterCreateFormValues } from "@/type/character";
+import Profile from "./_components/profile";
 import DetailInfo from "./_components/detail-info";
 import Asset from "./_components/asset";
 import Scenario from "./_components/scenario";
@@ -19,20 +19,16 @@ const TABS = [
 ] as const;
 
 const CharacterCreatPage = () => {
+  // 상태 및 초기값
   const methods = useForm<CharacterCreateFormValues>({
     defaultValues: {
-      // 프로필 탭
       representativeImage: "",
       title: "",
       name: "",
       characterIntroduce: "",
-
-      // 상세정보 탭
       height: "",
       weight: "",
       characterDetailSetting: "",
-
-      // 에셋 탭
       asset: [
         {
           assetFile: null,
@@ -41,8 +37,6 @@ const CharacterCreatPage = () => {
           assetSituation: "캐릭터가 행복이라는 감정을 느낄 떄",
         },
       ],
-
-      // 시나리오 탭
       scenarios: [
         {
           name: "기본 시나리오",
@@ -62,8 +56,6 @@ const CharacterCreatPage = () => {
           ],
         },
       ],
-
-      // 설정 탭
       isPublic: true,
       characterDescription: "",
       tendency: "전체",
@@ -72,17 +64,19 @@ const CharacterCreatPage = () => {
     },
   });
 
-  // 상태를 문자열(ID)로만 관리
   const [currentTabId, setCurrentTabId] =
     useState<(typeof TABS)[number]["id"]>("profile");
-
   const [activeScenarioIndex, setActiveScenarioIndex] = useState(0);
 
-  // 현재 선택된 탭 객체 찾기
+  // 파생 데이터
   const activeTab = TABS.find((tab) => tab.id === currentTabId);
   const ActiveComponent = activeTab?.component;
+
   return (
-    <section className="flex flex-col flex-1 min-w-0 p-5 h-[calc(100vh-60px)]">
+    <main
+      id="character-create-main"
+      className="flex flex-col flex-1 min-w-0 p-5 h-[calc(100vh-60px)]"
+    >
       <FormProvider {...methods}>
         <header className="flex items-center justify-between pb-4">
           <h2 className="text-[20px] font-medium">캐릭터 생성</h2>
@@ -99,17 +93,18 @@ const CharacterCreatPage = () => {
           <section className="flex-1 min-w-0 max-w-125 h-full p-5 rounded-3xl bg-bg-darker border border-border-main">
             <nav className="flex gap-1 border-b-2 border-font-disabled mb-9">
               {TABS.map((tab) => (
-                <div
-                  onClick={() => setCurrentTabId(tab.id)}
+                <button
+                  type="button"
                   key={tab.id}
+                  onClick={() => setCurrentTabId(tab.id)}
                   className={cn(
-                    "text-sm text-font-2 p-2.5 cursor-pointer translate-y-0.5",
+                    "text-sm text-font-2 p-2.5 cursor-pointer translate-y-0.5 outline-none",
                     currentTabId === tab.id &&
                       "text-font-1 font-semibold border-b-2 border-brand",
                   )}
                 >
                   {tab.title}
-                </div>
+                </button>
               ))}
             </nav>
             {ActiveComponent && (
@@ -123,7 +118,7 @@ const CharacterCreatPage = () => {
           <CharacterPreview activeScenarioIndex={activeScenarioIndex} />
         </div>
       </FormProvider>
-    </section>
+    </main>
   );
 };
 
