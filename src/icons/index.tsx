@@ -63,6 +63,8 @@ export { default as StorageFill } from "./StorageFill";
 export { default as Headphone } from "./Headphone";
 export { default as Finfill } from "./Finfill";
 export { default as Plus } from "./Plus";
+export { default as Phone } from "./Phone";
+export { default as PhoneFill } from "./PhoneFill";
 
 // 모든 아이콘이 공유할 타입
 export interface IconProps extends React.ComponentPropsWithoutRef<"svg"> {
