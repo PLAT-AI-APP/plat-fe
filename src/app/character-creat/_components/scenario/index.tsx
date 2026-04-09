@@ -1,5 +1,5 @@
 import SmartInput from "@/components/SmartInput";
-import { Plus } from "@/icons";
+import { Close, Plus } from "@/icons";
 import { cn } from "@/lib/utils";
 import { CharacterCreateFormValues } from "@/type/character";
 import React, { useRef, useState } from "react";
@@ -17,7 +17,7 @@ const Scenario = ({
   const { control, watch, register } =
     useFormContext<CharacterCreateFormValues>();
 
-  const { fields, append } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: "scenarios",
   });
@@ -30,10 +30,32 @@ const Scenario = ({
     setActiveScenarioIndex(index);
   };
   const addScenario = () => {
+    if (fields.length >= 5) return alert("최대 5개까지 추가 가능합니다.");
     append({
       name: "다른 시나리오",
       messages: [],
     });
+  };
+  const removeScenario = (e: React.MouseEvent, index: number) => {
+    e.stopPropagation(); // 삭제 버튼 클릭 시 시나리오가 선택되는 현상 방지
+
+    if (fields.length <= 1) {
+      return alert("최소 한 개의 시나리오는 있어야 합니다.");
+    }
+
+    // 삭제될 인덱스가 현재 활성화된 인덱스일 때의 처리
+    if (index === activeScenarioIndex) {
+      // 마지막 항목을 삭제하는 중이라면 이전 인덱스로, 아니면 유지(다음 항목이 올라옴)
+      if (index === fields.length - 1) {
+        setActiveScenarioIndex(index - 1);
+      }
+    }
+    // 삭제될 인덱스가 현재 활성화된 인덱스보다 앞에 있다면 인덱스 하나 감소
+    else if (index < activeScenarioIndex) {
+      setActiveScenarioIndex(activeScenarioIndex - 1);
+    }
+
+    remove(index);
   };
 
   // 스크롤 관련
@@ -83,7 +105,7 @@ const Scenario = ({
                 key={id}
                 onClick={() => !isDrag && selectScenario(i)} // 드래그 중에는 클릭이 무시되도록 처리
                 className={cn(
-                  "px-3 py-1.5 bg-card text-sm rounded-[100px] shrink-0 transition-all",
+                  "flex gap-1 items-center px-3 py-1.5 bg-card text-sm rounded-[100px] shrink-0 transition-all",
                   activeScenarioIndex === i
                     ? "border border-font-1"
                     : "text-font-2 hover:bg-card-hover border border-transparent",
@@ -91,6 +113,13 @@ const Scenario = ({
               >
                 {/* scenarios에서 해당 인덱스의 실시간 이름을 가져옵니다. */}
                 {scenarios[i]?.name}
+
+                {activeScenarioIndex === i && (
+                  <Close
+                    onClick={(e) => removeScenario(e, i)}
+                    className="w-3 h-3"
+                  />
+                )}
               </li>
             ),
           )}

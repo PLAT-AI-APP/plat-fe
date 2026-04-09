@@ -82,7 +82,6 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
 
     // 커서 위치를 기준으로 "**" 삽입
     const before = text.substring(0, start);
-    console.log(before);
     const after = text.substring(end);
     const newText = `${before}**${after}`;
 
