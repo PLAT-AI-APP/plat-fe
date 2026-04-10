@@ -65,6 +65,7 @@ export { default as Finfill } from "./Finfill";
 export { default as Plus } from "./Plus";
 export { default as Phone } from "./Phone";
 export { default as PhoneFill } from "./PhoneFill";
+export { default as Redo } from "./Redo";
 
 // 모든 아이콘이 공유할 타입
 export interface IconProps extends React.ComponentPropsWithoutRef<"svg"> {

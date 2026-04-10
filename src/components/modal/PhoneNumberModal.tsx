@@ -122,16 +122,18 @@ const PhoneNumberModal = ({ onClose }: PhoneNumberModalProps) => {
                 ref={triggerRef}
                 onClick={toggleIsCountryModal}
                 className={cn(
-                  "cursor-pointer relative flex gap-1 items-center px-1.75 py-3 bg-bg-darkest border border-border-main rounded-xl outline-none",
+                  "cursor-pointer relative flex gap-1 items-center px-1.75 py-3 min-w-15 bg-bg-darkest border border-border-main rounded-xl outline-none",
                 )}
               >
                 {renderFlagIcon()}
 
-                {isCountryModal ? (
-                  <ArrowUp className="w-3 h-3 text-font-2" />
-                ) : (
-                  <ArrowDown className="w-3 h-3 text-font-2" />
-                )}
+                <div className="ml-auto">
+                  {isCountryModal ? (
+                    <ArrowUp className="w-3 h-3 text-font-2" />
+                  ) : (
+                    <ArrowDown className="w-3 h-3 text-font-2" />
+                  )}
+                </div>
 
                 {isCountryModal && (
                   <ModalLayout
@@ -165,7 +167,7 @@ const PhoneNumberModal = ({ onClose }: PhoneNumberModalProps) => {
                 value={phoneNum}
                 readOnly={isOtpSent}
                 onChange={(e) => handlePhoneNum(e.target.value)}
-                placeholder="전화번호 입력"
+                placeholder="전화번호를 입력해주세요"
                 className={cn(
                   "flex-1 px-4 py-3 bg-bg-darkest border border-border-main rounded-xl outline-none placeholder:text-font-disabled",
                 )}
