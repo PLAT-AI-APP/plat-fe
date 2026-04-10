@@ -39,7 +39,7 @@ const Dialog = ({
 
         <div className="flex gap-3 pt-9 text-sm font-medium">
           <button
-            onClick={cancelFn}
+            onClick={onClose}
             type="button"
             className="flex-1 px-6.5 py-3.25 rounded-xl bg-card hover:bg-card-hover"
           >

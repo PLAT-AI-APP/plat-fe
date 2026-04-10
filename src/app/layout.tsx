@@ -5,6 +5,7 @@ import ReactQueryProvider from "@/providers/ReactQueryProvider";
 import ThemeProvider from "@/providers/ThemeProvider";
 import ClientLayout from "./ClientLayout";
 import "pretendard/dist/web/static/pretendard.css";
+import { NavigationGuardProvider } from "next-navigation-guard";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,7 +34,9 @@ export default function RootLayout({
       >
         <ReactQueryProvider>
           <ThemeProvider>
-            <ClientLayout>{children}</ClientLayout>
+            <NavigationGuardProvider>
+              <ClientLayout>{children}</ClientLayout>
+            </NavigationGuardProvider>
           </ThemeProvider>
         </ReactQueryProvider>
       </body>
