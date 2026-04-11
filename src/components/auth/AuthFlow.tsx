@@ -40,6 +40,7 @@ export const AuthFlow = ({ type }: AuthFlowProps) => {
       nickname: "",
       gender: "",
       birthdate: "",
+      emailVerifyToken: "",
     },
   });
 
@@ -72,7 +73,9 @@ export const AuthFlow = ({ type }: AuthFlowProps) => {
         >
           <AuthBgDecoration />
 
-          {step === 1 && <EmailOtpStep title={config.titles[0]} />}
+          {step === 1 && (
+            <EmailOtpStep title={config.titles[0]} onSubmit={onSubmit} />
+          )}
 
           {step === 2 && (
             <PasswordStep
