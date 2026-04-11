@@ -49,3 +49,17 @@ export const formatWithCommas = (value: number | string): string => {
 
   return new Intl.NumberFormat("ko-KR").format(num);
 };
+
+export const getOrCreateDeviceId = () => {
+  if (typeof window === "undefined") return ""; // SSR 환경 방지
+
+  let deviceId = localStorage.getItem("plat_device_id");
+
+  if (!deviceId) {
+    // 겹칠 확률이 거의 없는 고유 ID 생성 (UUID 방식)
+    deviceId = crypto.randomUUID();
+    localStorage.setItem("plat_device_id", deviceId);
+  }
+
+  return deviceId;
+};
