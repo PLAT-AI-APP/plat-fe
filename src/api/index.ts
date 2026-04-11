@@ -1,8 +1,9 @@
 import axios, { AxiosInstance } from "axios";
 
-// 1. 공통 설정 정의
+// 공통 설정 정의
 const BASE_CONFIG = {
-  baseURL: process.env.NEXT_PUBLIC_BASE_URI,
+  baseURL: "http://localhost:3000",
+  // baseURL: process.env.NEXT_PUBLIC_BASE_URI,
   timeout: 5000,
   headers: {
     "Content-Type": "application/json",
@@ -26,26 +27,20 @@ authAxios.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // 401 에러 발생 시 (Access Token 만료)
+    // 401 에러: Access Token 만료 상황
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       try {
-        // 1. 토큰 갱신 요청
-        // 쿠키(Refresh Token)는 자동으로 전송됩니다.
-        const res = await authAxios.post("/api/refresh");
+        // 토큰 갱신 요청
+        // 서버는 쿠키의 Refresh Token을 확인하고 새 Access Token을 다시 '쿠키'에 구워줍니다.
+        await authAxios.post("/api/refresh");
 
-        const newAccessToken = res.data.accessToken;
-
-        // 2. 새 토큰 저장 및 헤더 갱신
-        authAxios.defaults.headers.common["Authorization"] =
-          `Bearer ${newAccessToken}`;
-        originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
-
-        // 3. 원래 요청 재시도
+        // 새 토큰을 꺼낼 필요가 없음 (이미 쿠키에 들어있음)
+        // 원래 요청 재시도 (쿠키가 알아서 포함됨)
         return authAxios(originalRequest);
       } catch (refreshError) {
-        // 갱신 실패 시 (Refresh Token까지 만료) -> 로그아웃 처리
+        // Refresh Token까지 만료된 경우
         window.location.href = "/login";
         return Promise.reject(refreshError);
       }
@@ -53,3 +48,19 @@ authAxios.interceptors.response.use(
     return Promise.reject(error);
   },
 );
+
+// 요청 인터셉터: 모든 API 호출 전에 실행됨
+axiosInstance.interceptors.request.use((config) => {
+  if (typeof window !== "undefined") {
+    let deviceId = localStorage.getItem("plat_device_id");
+
+    if (!deviceId) {
+      deviceId = crypto.randomUUID();
+      localStorage.setItem("plat_device_id", deviceId);
+    }
+
+    // 모든 요청 헤더에 자동으로 주입
+    config.headers["X-Device-ID"] = deviceId;
+  }
+  return config;
+});

@@ -6,6 +6,7 @@ import ThemeProvider from "@/providers/ThemeProvider";
 import ClientLayout from "./ClientLayout";
 import "pretendard/dist/web/static/pretendard.css";
 import { NavigationGuardProvider } from "next-navigation-guard";
+import MSWProvider from "@/providers/MSWProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,13 +33,15 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ReactQueryProvider>
-          <ThemeProvider>
-            <NavigationGuardProvider>
-              <ClientLayout>{children}</ClientLayout>
-            </NavigationGuardProvider>
-          </ThemeProvider>
-        </ReactQueryProvider>
+        <MSWProvider>
+          <ReactQueryProvider>
+            <ThemeProvider>
+              <NavigationGuardProvider>
+                <ClientLayout>{children}</ClientLayout>
+              </NavigationGuardProvider>
+            </ThemeProvider>
+          </ReactQueryProvider>
+        </MSWProvider>
       </body>
     </html>
   );
