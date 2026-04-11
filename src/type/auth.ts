@@ -14,6 +14,8 @@ export interface AuthFormValues extends Partial<LoginFormValues> {
   nickname: string;
   gender: "MALE" | "FEMALE" | "";
   birthdate: string;
+
+  emailVerifyToken: string;
 }
 
 export interface LoginFormValues {
