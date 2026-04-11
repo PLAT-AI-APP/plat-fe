@@ -29,6 +29,7 @@ const EmailOtpStep = ({ title, onSubmit }: EmailOtpStepProps) => {
     watch,
     getFieldState,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useFormContext<AuthFormValues>();
 
@@ -78,7 +79,8 @@ const EmailOtpStep = ({ title, onSubmit }: EmailOtpStepProps) => {
     emailVerifyConfirm(
       { code: enteredOtp, email: emailValue },
       {
-        onSuccess: () => {
+        onSuccess: (data) => {
+          if (data.token) setValue("emailVerifyToken", data.token);
           alert("이메일 인증 성공");
           handleSubmit(onSubmit)();
         },

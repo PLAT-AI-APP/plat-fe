@@ -11,12 +11,16 @@ const PostemailVerifyConfirm = async ({
   email,
 }: PostemailVerifyConfirmProps) => {
   console.log(code);
-  const response = await axiosInstance.post<ApiSuccessResponse>(
-    "/auth/email/verify/confirm",
-    { email: email, code: code },
-  );
+  const response = await axiosInstance.post<
+    ApiSuccessResponse<{
+      emailVerifyToken: string;
+    }>
+  >("/auth/email/verify/confirm", { email: email, code: code });
 
-  return response.data;
+  return {
+    token: response.data.data?.emailVerifyToken,
+    serverMessage: response.data.message, // 서버에서 보내준 "인증에 성공하였습니다."
+  };
 };
 
 /** email 인증코드 확인 */
@@ -25,9 +29,7 @@ export const useEmailVerifyConfirmMutation = () => {
     mutationFn: ({ code, email }: PostemailVerifyConfirmProps) =>
       PostemailVerifyConfirm({ email, code }),
     onSuccess: (data) => {
-      if (data.result === "OK") {
-        alert(data.message || "인증번호가 발송되었습니다.");
-      }
+      alert(data.serverMessage || "인증번호가 발송되었습니다.");
     },
   });
 };
