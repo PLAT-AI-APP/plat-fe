@@ -11,5 +11,5 @@ export interface ApiErrorResponse {
 export interface ApiSuccessResponse<T = void> {
   result: "OK";
   message?: string;
-  data?: T;
+  data: T;
 }

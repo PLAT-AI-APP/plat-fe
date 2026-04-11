@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Form, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import AuthInput from "./AuthInput";
 import ActiveButton from "../ActiveButton";
 import { AuthFormValues } from "@/type/auth";
 import { PasswordToggle } from "./PasswordToggle";
 import { useTogglePassword } from "@/hooks/useTogglePassword";
+import { useEmailRegisterMutation } from "@/api/auth/emailRegister";
 
 interface PasswordStepProps {
   title: string;
@@ -16,20 +17,27 @@ const PasswordStep = ({ title, buttonText }: PasswordStepProps) => {
     trigger,
     register,
     watch,
+    setValue,
     formState: { errors },
   } = useFormContext<AuthFormValues>();
+
+  const { mutate: emailRegister } = useEmailRegisterMutation();
 
   // 에러 메시지 노출 여부를 제어하는 상태
   const [showErrors, setShowErrors] = useState(false);
 
-  const passwordValue = watch("password");
-  const passwordConfirmValue = watch("passwordConfirm");
+  const {
+    email = "",
+    password = "",
+    passwordConfirm = "",
+    emailVerifyToken = "",
+  } = watch();
 
   const isShowPw = useTogglePassword();
   const isShowConfirm = useTogglePassword();
 
   // 버튼 활성화 조건: 두 칸 모두 값이 존재할 때
-  const isBothFilled = !!passwordValue && !!passwordConfirmValue;
+  const isBothFilled = !!password && !!passwordConfirm;
 
   const handleButtonClick = async (e: React.MouseEvent) => {
     // 버튼을 클릭했을 때 비로소 에러를 보여주도록 설정
@@ -40,6 +48,20 @@ const PasswordStep = ({ title, buttonText }: PasswordStepProps) => {
     if (!isStepValid) {
       e.preventDefault();
     }
+
+    emailRegister(
+      {
+        email,
+        emailVerifyToken,
+        password,
+        passwordCheck: passwordConfirm,
+      },
+      {
+        onSuccess: (data) => {
+          setValue("emailVerifyToken", data!.signupToken);
+        },
+      },
+    );
   };
 
   return (
@@ -77,7 +99,7 @@ const PasswordStep = ({ title, buttonText }: PasswordStepProps) => {
           {...register("passwordConfirm", {
             required: "비밀번호 확인이 필요합니다.",
             validate: (value) =>
-              value === passwordValue || "비밀번호가 일치하지 않습니다.",
+              value === password || "비밀번호가 일치하지 않습니다.",
           })}
           rightElement={
             <PasswordToggle
@@ -88,7 +110,7 @@ const PasswordStep = ({ title, buttonText }: PasswordStepProps) => {
         />
       </div>
       {/* 에러 메시지 섹션: showErrors가 true일 때만 렌더링 */}
-      <div className="min-h-[24px] pt-3">
+      <div className="min-h-6 pt-3">
         {showErrors && (
           <>
             {errors.password ? (

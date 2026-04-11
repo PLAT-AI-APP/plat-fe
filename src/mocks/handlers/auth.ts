@@ -77,4 +77,24 @@ export const authHandlers = [
       });
     }
   }),
+
+  /** 회원가입 요청 */
+  http.post("*/auth/email/register", async ({ request }) => {
+    const { email, emailVerifyToken, password, passwordCheck } =
+      (await request.json()) as {
+        email: string;
+        password: string;
+        passwordCheck: string;
+        emailVerifyToken: string;
+      };
+
+    // 성공 응답
+    return HttpResponse.json({
+      result: "OK",
+      message: "이메일 회원가입 요청이 완료되었습니다.",
+      data: {
+        signupToken: "rtXXXXXXXXXXXXXXXXXXXXXXXX",
+      },
+    });
+  }),
 ];
