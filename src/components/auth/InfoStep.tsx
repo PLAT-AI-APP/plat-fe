@@ -111,7 +111,7 @@ const InfoStep = ({ title, buttonText, isValid }: InfoStepProps) => {
           id="input-birthdate"
           label="생년월일"
           type="date"
-          {...register("birthdate", {
+          {...register("birthDate", {
             required: "생년월일을 선택해주세요.",
           })}
           leftElement={
@@ -128,7 +128,7 @@ const InfoStep = ({ title, buttonText, isValid }: InfoStepProps) => {
             "appearance-none",
             "cursor-pointer",
           )}
-          error={errors.birthdate?.message}
+          error={errors.birthDate?.message}
         />
       </div>
 

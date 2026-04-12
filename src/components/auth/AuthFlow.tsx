@@ -44,7 +44,7 @@ export const AuthFlow = ({ type }: AuthFlowProps) => {
       passwordConfirm: "",
       nickname: "",
       gender: "",
-      birthdate: "",
+      birthDate: "",
       emailVerifyToken: "",
       signupToken: "",
     },
@@ -57,11 +57,11 @@ export const AuthFlow = ({ type }: AuthFlowProps) => {
   const {
     nickname = "",
     gender = "",
-    birthdate = "",
+    birthDate = "",
     signupToken = "",
   } = formValues;
 
-  const isStep3Valid = !!nickname && !!gender && !!birthdate;
+  const isStep3Valid = !!nickname && !!gender && !!birthDate;
 
   const onSubmit = async (data: AuthFormValues) => {
     if (step === 1) setStep(2);
@@ -70,14 +70,14 @@ export const AuthFlow = ({ type }: AuthFlowProps) => {
       else console.log("비밀번호 재설정 완료:", data);
     } else if (step === 3) {
       authRegister(
-        { birthDate: birthdate, gender, nickname, signupToken },
+        { birthDate, gender, nickname, signupToken },
         {
           onSuccess: () => {
             router.push("/login");
           },
           onError: (error) => {
             if (error) {
-              setError("birthdate", {
+              setError("birthDate", {
                 type: "server",
                 message: error.fields?.birthDate,
               });

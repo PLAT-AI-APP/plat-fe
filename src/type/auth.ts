@@ -13,7 +13,7 @@ export interface AuthFormValues extends Partial<LoginFormValues> {
   // Step3 필드
   nickname: string;
   gender: "MALE" | "FEMALE" | "";
-  birthdate: string;
+  birthDate: string;
 
   emailVerifyToken: string;
   signupToken: string;
