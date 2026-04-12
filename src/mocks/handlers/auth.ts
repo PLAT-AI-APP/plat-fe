@@ -149,4 +149,36 @@ export const authHandlers = [
       message: "회원가입이 완료되었습니다.",
     });
   }),
+
+  /** 이메일 로그인 요청 */
+  http.post("*/auth/email/login", async ({ request }) => {
+    const { email, password } = (await request.json()) as {
+      email: string;
+      password: string;
+    };
+
+    if (email != "taewok0205@gmail.com" || password != "test1234")
+      return HttpResponse.json(
+        {
+          result: "ERROR",
+          code: "MESSAGE",
+          message: "이메일 또는 비밀번호를 확인해 주세요",
+        },
+        { status: 401 },
+      );
+
+    return new HttpResponse(null, {
+      status: 200,
+      headers: [
+        [
+          "Set-Cookie",
+          "accessToken=mocked-token; HttpOnly; Path=/; Max-Age=1800",
+        ],
+        [
+          "Set-Cookie",
+          "refreshToken=mocked-token; HttpOnly; Path=/auth/refresh; Max-Age=2592000",
+        ],
+      ],
+    });
+  }),
 ];

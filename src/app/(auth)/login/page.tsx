@@ -1,4 +1,5 @@
 "use client";
+import { useEmailLoginMutation } from "@/api/auth/emailLogin";
 import ActiveButton from "@/components/ActiveButton";
 import AuthBgDecoration from "@/components/auth/AuthBgDecoration";
 import AuthInput from "@/components/auth/AuthInput";
@@ -8,10 +9,13 @@ import SocialLoginButton from "@/components/auth/SocialLoginButton";
 import { useTogglePassword } from "@/hooks/useTogglePassword";
 import { ChatFill, Google } from "@/icons";
 import { EMAIL_REGEX } from "@/lib/regex";
+import { useAuthStore } from "@/store/useAuthStore";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 const LoginPage = () => {
+  const router = useRouter();
   const isShowPw = useTogglePassword();
 
   const {
@@ -31,8 +35,18 @@ const LoginPage = () => {
   const email = watch("email");
   const pw = watch("pw");
 
+  const { mutate: emailLogin } = useEmailLoginMutation();
+  const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
   const onSubmit = (data: unknown) => {
-    console.log("로그인 시도:", data);
+    emailLogin(
+      { email, password: pw },
+      {
+        onSuccess: () => {
+          setLoggedIn(true);
+          router.push("/");
+        },
+      },
+    );
   };
   return (
     <AuthLayout>

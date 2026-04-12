@@ -28,5 +28,8 @@ export const useAuthRegisterMutation = () => {
     PostAuthRegisterProps
   >({
     mutationFn: PostAuthRegister,
+    onSuccess: (data) => {
+      alert(data.serverMessage);
+    },
   });
 };
