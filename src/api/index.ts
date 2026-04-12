@@ -1,3 +1,4 @@
+import { useAuthStore } from "@/store/useAuthStore";
 import { ApiErrorResponse } from "@/type/api";
 import axios, { AxiosInstance } from "axios";
 
@@ -29,13 +30,14 @@ authAxios.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // 1. 401 에러: 토큰 갱신 로직 (태욱님 기존 코드 유지)
+    // 401 에러: 토큰 갱신 로직 (태욱님 기존 코드 유지)
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
         await authAxios.post("/api/refresh");
         return authAxios(originalRequest);
       } catch (refreshError) {
+        useAuthStore.getState().logout();
         window.location.href = "/login";
         return Promise.reject(refreshError);
       }
