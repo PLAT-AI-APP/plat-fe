@@ -7,6 +7,8 @@ import EmailOtpStep from "./EmailOtpStep";
 import PasswordStep from "./PasswordStep";
 import InfoStep from "./InfoStep";
 import AuthBgDecoration from "./AuthBgDecoration";
+import { useAuthRegisterMutation } from "@/api/auth/authRegister";
+import { useRouter } from "next/navigation";
 
 interface AuthFlowProps {
   type: "SIGNUP" | "RESET_PASSWORD";
@@ -25,8 +27,11 @@ const FLOW_CONFIG = {
 };
 
 export const AuthFlow = ({ type }: AuthFlowProps) => {
+  const router = useRouter();
   const [step, setStep] = useState(1); // 1단계부터 시작
   const config = FLOW_CONFIG[type];
+
+  const { mutate: authRegister } = useAuthRegisterMutation();
 
   // Form Methods 초기화
   const methods = useForm<AuthFormValues>({
@@ -41,14 +46,20 @@ export const AuthFlow = ({ type }: AuthFlowProps) => {
       gender: "",
       birthdate: "",
       emailVerifyToken: "",
+      signupToken: "",
     },
   });
 
-  const { handleSubmit, control } = methods;
+  const { handleSubmit, control, setError } = methods;
 
   // 데이터 통합 감시 (한 번의 useWatch로 정리)
   const formValues = useWatch({ control });
-  const { nickname, gender, birthdate } = formValues;
+  const {
+    nickname = "",
+    gender = "",
+    birthdate = "",
+    signupToken = "",
+  } = formValues;
 
   const isStep3Valid = !!nickname && !!gender && !!birthdate;
 
@@ -58,7 +69,22 @@ export const AuthFlow = ({ type }: AuthFlowProps) => {
       if (type === "SIGNUP") setStep(3);
       else console.log("비밀번호 재설정 완료:", data);
     } else if (step === 3) {
-      console.log("회원가입 최종 완료:", data);
+      authRegister(
+        { birthDate: birthdate, gender, nickname, signupToken },
+        {
+          onSuccess: () => {
+            router.push("/login");
+          },
+          onError: (error) => {
+            if (error) {
+              setError("birthdate", {
+                type: "server",
+                message: error.fields?.birthDate,
+              });
+            }
+          },
+        },
+      );
     }
   };
 

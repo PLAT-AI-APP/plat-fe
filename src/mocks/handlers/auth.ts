@@ -97,4 +97,56 @@ export const authHandlers = [
       },
     });
   }),
+
+  /** 회원가입 요청 */
+  http.post("*/auth/register", async ({ request }) => {
+    const { signupToken, nickname, birthDate, gender } =
+      (await request.json()) as {
+        signupToken: string;
+        nickname: string;
+        birthDate: string;
+        gender: string;
+      };
+
+    // 1. 만 14세 미만 계산 로직
+    const checkIsUnder14 = (birthDateStr: string) => {
+      const today = new Date();
+      const birth = new Date(birthDateStr);
+
+      // 기본 연도 차이 계산
+      let age = today.getFullYear() - birth.getFullYear();
+      const monthDiff = today.getMonth() - birth.getMonth();
+
+      // 생일이 아직 안 지났으면 한 살 더 빼기 (만 나이 계산)
+      if (
+        monthDiff < 0 ||
+        (monthDiff === 0 && today.getDate() < birth.getDate())
+      ) {
+        age--;
+      }
+      return age < 14;
+    };
+
+    // 2. [400] 나이 제한 에러 처리
+    if (birthDate && checkIsUnder14(birthDate)) {
+      return HttpResponse.json(
+        {
+          result: "ERROR",
+          code: "FIELD_ERROR",
+          data: {
+            fields: {
+              birthDate: "이용 불가 연령입니다.",
+            },
+          },
+        },
+        { status: 400 },
+      );
+    }
+
+    // 성공 응답
+    return HttpResponse.json({
+      result: "OK",
+      message: "회원가입이 완료되었습니다.",
+    });
+  }),
 ];

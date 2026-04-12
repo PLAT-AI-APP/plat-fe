@@ -58,7 +58,7 @@ const PasswordStep = ({ title, buttonText }: PasswordStepProps) => {
       },
       {
         onSuccess: (data) => {
-          setValue("emailVerifyToken", data!.signupToken);
+          setValue("signupToken", data!.signupToken);
         },
       },
     );

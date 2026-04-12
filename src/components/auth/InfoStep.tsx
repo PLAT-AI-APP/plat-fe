@@ -128,6 +128,7 @@ const InfoStep = ({ title, buttonText, isValid }: InfoStepProps) => {
             "appearance-none",
             "cursor-pointer",
           )}
+          error={errors.birthdate?.message}
         />
       </div>
 

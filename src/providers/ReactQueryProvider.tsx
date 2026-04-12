@@ -21,8 +21,7 @@ export default function ReactQueryProvider({
         mutationCache: new MutationCache({
           onError: (error) => {
             const axiosError = error as AxiosError<ApiErrorResponse>;
-            const message =
-              axiosError.response?.data?.message || "오류가 발생했습니다.";
+            const message = axiosError.response?.data?.message;
             alert(message);
           },
         }),

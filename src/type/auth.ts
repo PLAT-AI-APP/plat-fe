@@ -16,6 +16,7 @@ export interface AuthFormValues extends Partial<LoginFormValues> {
   birthdate: string;
 
   emailVerifyToken: string;
+  signupToken: string;
 }
 
 export interface LoginFormValues {

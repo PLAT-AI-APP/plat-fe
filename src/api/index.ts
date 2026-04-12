@@ -1,3 +1,4 @@
+import { ApiErrorResponse } from "@/type/api";
 import axios, { AxiosInstance } from "axios";
 
 // 공통 설정 정의
@@ -7,6 +8,7 @@ const BASE_CONFIG = {
   timeout: 5000,
   headers: {
     "Content-Type": "application/json",
+    "X-Client-Type": "web",
   },
 };
 
@@ -27,24 +29,31 @@ authAxios.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // 401 에러: Access Token 만료 상황
+    // 1. 401 에러: 토큰 갱신 로직 (태욱님 기존 코드 유지)
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-
       try {
-        // 토큰 갱신 요청
-        // 서버는 쿠키의 Refresh Token을 확인하고 새 Access Token을 다시 '쿠키'에 구워줍니다.
         await authAxios.post("/api/refresh");
-
-        // 새 토큰을 꺼낼 필요가 없음 (이미 쿠키에 들어있음)
-        // 원래 요청 재시도 (쿠키가 알아서 포함됨)
         return authAxios(originalRequest);
       } catch (refreshError) {
-        // Refresh Token까지 만료된 경우
         window.location.href = "/login";
         return Promise.reject(refreshError);
       }
     }
+
+    // 서버가 정의한 에러 응답(FIELD_ERROR 등)이 있다면 가공해서 던짐
+    if (axios.isAxiosError<ApiErrorResponse>(error) && error.response?.data) {
+      const { code, data, message } = error.response.data;
+
+      // 여기서 throw 대신 Promise.reject를 사용합니다.
+      return Promise.reject({
+        code: code,
+        fields: data?.fields || {},
+        message: message,
+      });
+    }
+
+    // 그 외 시스템 에러 (네트워크 끊김 등)
     return Promise.reject(error);
   },
 );

@@ -13,3 +13,9 @@ export interface ApiSuccessResponse<T = void> {
   message?: string;
   data: T;
 }
+
+export interface AppError {
+  code: "MESSAGE" | "ALERT" | "FIELD_ERROR";
+  fields?: Record<string, string>;
+  message: string;
+}
