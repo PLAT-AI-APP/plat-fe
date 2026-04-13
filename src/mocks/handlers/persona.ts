@@ -1,7 +1,7 @@
 import { http, HttpResponse } from "msw";
 
 // 함수 외부에 가짜 DB 선언
-const mockPersonas = [
+let mockPersonas = [
   {
     personaId: 1,
     name: "김철수",
@@ -94,6 +94,27 @@ export const personaHandlers = [
       result: "OK",
       data: mockPersonas[index],
       message: "페르소나 정보가 수정되었습니다.",
+    });
+  }),
+
+  /** 페르소나 삭제 */
+  http.delete("*/users/me/personas/:personaId", async ({ params }) => {
+    const { personaId } = params;
+
+    const exists = mockPersonas.some((p) => p.personaId === Number(personaId));
+
+    if (!exists) {
+      return new HttpResponse(null, { status: 404 });
+    }
+
+    // 가짜 DB에서 해당 ID 제외 (삭제 처리)
+    mockPersonas = mockPersonas.filter(
+      (p) => p.personaId !== Number(personaId),
+    );
+
+    return HttpResponse.json({
+      result: "OK",
+      message: "페르소나가 삭제되었습니다.",
     });
   }),
 ];

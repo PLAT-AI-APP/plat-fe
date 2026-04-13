@@ -5,6 +5,7 @@ import CheckCircle from "@/icons/CheckCircle";
 import { Dots } from "@/icons";
 import { Persona } from "@/type/persona";
 import PersonaAddModal from "../PersonaAddModal";
+import { useDeletePersonaMutation } from "@/api/persona/deletePersona";
 
 interface PersonaItemProps {
   persona: Persona;
@@ -16,6 +17,8 @@ const PersonaItem = ({ persona, isActive, onSelect }: PersonaItemProps) => {
   const { name, description, isDefault } = persona;
 
   const [isEdit, setIsEdit] = useState(false);
+
+  const { mutate: deletePersona } = useDeletePersonaMutation();
 
   const toggleIsEdit = () => {
     setIsEdit(!isEdit);
@@ -77,7 +80,7 @@ const PersonaItem = ({ persona, isActive, onSelect }: PersonaItemProps) => {
                 수정하기
               </div>
               <div
-                onClick={toggleIsEdit}
+                onClick={() => deletePersona(persona.personaId)}
                 className="px-2.5 py-2 rounded-lg hover:bg-btn-hover"
               >
                 삭제하기
