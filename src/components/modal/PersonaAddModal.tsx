@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { ModalLayout } from "../ModalLayout";
 import { Close, Persona } from "@/icons";
 import SmartInput from "../SmartInput";
+import { useAddPersonaMutation } from "@/api/persona/addPersona";
 
 interface PersonaAddModalProps {
   toggleIsAddModal: () => void;
@@ -28,13 +29,13 @@ const PersonaAddModal = ({ toggleIsAddModal }: PersonaAddModalProps) => {
     },
   });
 
-  // 글자 수 실시간 표시를 위한 watch
-  const nameValue = watch("name");
-  const infoValue = watch("info");
+  const { mutate: addPersona } = useAddPersonaMutation();
+
+  const { info, name } = watch();
 
   const onSubmit = (data: PersonaFormValues) => {
     console.log("Persona Data:", data);
-    // TODO: 서버 통신 로직 추가
+    addPersona({ description: info, name });
     toggleIsAddModal();
   };
 
@@ -71,7 +72,7 @@ const PersonaAddModal = ({ toggleIsAddModal }: PersonaAddModalProps) => {
             required
             maxLength={20}
             placeholder="이름을 입력해주세요."
-            value={nameValue} // 글자 수 표시용
+            value={name} // 글자 수 표시용
             {...register("name", { required: true, maxLength: 20 })}
           />
 
@@ -84,7 +85,7 @@ const PersonaAddModal = ({ toggleIsAddModal }: PersonaAddModalProps) => {
             isBorder={true}
             inputClassName="max-h-30.25"
             placeholder={`나이, 성별 등을 자유롭게 입력해주세요.\n...`}
-            value={infoValue} // 글자 수 표시용
+            value={info} // 글자 수 표시용
             {...register("info", { maxLength: 200 })}
           />
         </div>
