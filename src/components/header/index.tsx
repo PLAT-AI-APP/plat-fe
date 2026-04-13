@@ -1,4 +1,4 @@
-import { BellOn, Fold, Star } from "@/icons";
+import { BellOn, Fold, Star, User } from "@/icons";
 import Image from "next/image";
 import React from "react";
 import logoImg from "../../../public/logo.png";
@@ -6,11 +6,13 @@ import { SearchBar } from "./SearchBar";
 import LanguageSelector from "./LanguageSelector";
 import Profile from "./Profile";
 import Link from "next/link";
+import { useAuthStore } from "@/store/useAuthStore";
 
 interface HeaderProps {
   handleFoldToggle: () => void;
 }
 const Header = ({ handleFoldToggle }: HeaderProps) => {
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   return (
     <header
       id="main-header"
@@ -57,36 +59,49 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
           <LanguageSelector />
 
           {/* 포인트 표시 영역 */}
-          <div
-            id="user-point-badge"
-            className="flex cursor-pointer items-center gap-1 transition-all duration-200 ease-in-out hover:bg-btn-hover rounded-lg p-1.25 pr-2.5"
-          >
-            <Star
-              id="icon-point-star"
-              fill="none"
-              stroke="white"
-              className="w-5 h-5"
-            />
-            <span id="user-point-value">1,100</span>
-          </div>
+          {isLoggedIn && (
+            <div
+              id="user-point-badge"
+              className="flex cursor-pointer items-center gap-1 transition-all duration-200 ease-in-out hover:bg-btn-hover rounded-lg p-1.25 pr-2.5"
+            >
+              <Star
+                id="icon-point-star"
+                fill="none"
+                stroke="white"
+                className="w-5 h-5"
+              />
+              <span id="user-point-value">1,100</span>
+            </div>
+          )}
 
           {/* 알림 버튼 */}
-          <button
-            id="header-notification-button"
-            type="button"
-            className="bg-transparent border-none p-0 cursor-pointer"
-          >
-            <BellOn
-              id="icon-notification-bell"
-              className="text-font-2 w-6 h-6"
-            />
-          </button>
+          {isLoggedIn && (
+            <button
+              id="header-notification-button"
+              type="button"
+              className="bg-transparent border-none p-0 cursor-pointer"
+            >
+              <BellOn
+                id="icon-notification-bell"
+                className="text-font-2 w-6 h-6"
+              />
+            </button>
+          )}
         </div>
 
         {/* 프로필 컴포넌트 */}
-        <div id="header-profile-wrapper">
-          <Profile />
-        </div>
+        {isLoggedIn && (
+          <div id="header-profile-wrapper">
+            <Profile />
+          </div>
+        )}
+
+        {/* 프로필 컴포넌트 */}
+        {!isLoggedIn && (
+          <Link href={"/login"} id="header-profile-wrapper">
+            <User className="w-6 h-6 text-font-2 cursor-pointer" />
+          </Link>
+        )}
       </div>
     </header>
   );
