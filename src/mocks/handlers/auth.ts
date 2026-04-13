@@ -78,7 +78,7 @@ export const authHandlers = [
     }
   }),
 
-  /** 회원가입 요청 */
+  /** 이메일 회원가입 요청 */
   http.post("*/auth/email/register", async ({ request }) => {
     const { email, emailVerifyToken, password, passwordCheck } =
       (await request.json()) as {
@@ -179,6 +179,14 @@ export const authHandlers = [
           "refreshToken=mocked-token; HttpOnly; Path=/auth/refresh; Max-Age=2592000",
         ],
       ],
+    });
+  }),
+
+  /** 로그아웃 */
+  http.post("*/auth/logout", async () => {
+    return HttpResponse.json({
+      result: "OK",
+      message: "로그아웃되었습니다.",
     });
   }),
 ];

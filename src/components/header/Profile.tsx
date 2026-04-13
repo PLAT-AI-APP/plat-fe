@@ -6,8 +6,11 @@ import Link from "next/link";
 import { Logout, Persona, Star, User } from "@/icons";
 import { ModalLayout } from "../ModalLayout";
 import { cn } from "@/lib/utils";
+import { useLogoutMutation } from "@/api/auth/logout";
 
 const Profile = () => {
+  const { mutate: logout } = useLogoutMutation();
+
   const [isActive, setIsActive] = useState<boolean>(false);
   const handleToggle = () => {
     setIsActive((prev) => !prev);
@@ -68,13 +71,13 @@ const Profile = () => {
           })}
           <hr className="text-border-main pb-2.5 mt-2.5" />
 
-          <Link
-            href="/logout"
-            className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-card-hover transition-colors text-font-2 hover:text-font-1 text-sm"
+          <div
+            onClick={() => logout()}
+            className="cursor-pointer flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-card-hover transition-colors text-font-2 hover:text-font-1 text-sm"
           >
             <Logout size={18} className="text-font-2 shrink-0" />
             로그아웃
-          </Link>
+          </div>
         </ModalLayout>
       )}
     </div>

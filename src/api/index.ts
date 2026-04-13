@@ -34,7 +34,7 @@ authAxios.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
-        await authAxios.post("/api/refresh");
+        await authAxios.post("/auth/refresh");
         return authAxios(originalRequest);
       } catch (refreshError) {
         useAuthStore.getState().logout();
