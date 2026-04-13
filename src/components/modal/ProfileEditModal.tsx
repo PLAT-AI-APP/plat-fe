@@ -14,6 +14,8 @@ import KakaoProvider from "@/icons/provider/KakaoProvider";
 import PlatProvider from "@/icons/provider/PlatProvider";
 import ActiveButton from "../ActiveButton";
 import PhoneNumberModal from "./PhoneNumberModal";
+import { useDebounce } from "@/hooks/useDebounce";
+import { useCheckNicknameQuery } from "@/api/auth/checkNickname";
 
 const PROVIDER_LOGOS: Record<string, React.ReactNode> = {
   google: <GoogleProvider />,
@@ -79,6 +81,14 @@ const ProfileEditModal = ({ onClose }: ProfileEditModalProps) => {
     setIsPhoneModal((prev) => !prev);
   };
 
+  const debouncedNickname = useDebounce({ value: nickname, delay: 500 });
+
+  // 디바운스된 값이 있을 때만 쿼리를 활성화
+  const { data } = useCheckNicknameQuery(debouncedNickname, {
+    enabled: debouncedNickname.length > 0, // 값이 있을 때만 실행
+    retry: false, // 실패 시 재시도 방지 (선택)
+  });
+
   return (
     <ModalLayout
       onClose={() => null}
@@ -131,7 +141,11 @@ const ProfileEditModal = ({ onClose }: ProfileEditModalProps) => {
                 value={formValue.nickname}
                 placeholder="닉네임을 입력해주세요."
                 maxLength={15}
-                error={errors.nickname}
+                error={
+                  errors.nickname ||
+                  (!data?.available && "이미 사용중인 닉네임입니다.") ||
+                  undefined
+                }
               />
 
               {/* 소개글 input */}

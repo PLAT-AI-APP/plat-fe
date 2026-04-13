@@ -20,7 +20,7 @@ interface SmartInputProps extends React.InputHTMLAttributes<
   description?: string;
   modalComponents?: React.ReactNode;
   toggleIsOpen?: () => void;
-  error?: FieldError;
+  error?: FieldError | string;
   rightElement?: React.ReactNode;
 }
 
@@ -207,7 +207,7 @@ const SmartInput = forwardRef<
           {/* 에러 메시지 */}
           {error && (
             <span className="pt-2 pl-2 text-font-accents text-xs block">
-              {error.message}
+              {typeof error === "string" ? error : error?.message}
             </span>
           )}
         </div>

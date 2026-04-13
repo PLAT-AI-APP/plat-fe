@@ -1,5 +1,8 @@
 import { http, HttpResponse } from "msw";
 
+// 가상의 기존 등록된 닉네임 리스트
+const existingNicknames = ["김철수", "마법사", "태욱", "admin"];
+
 export const authHandlers = [
   /** 이메일 인증번호 발송 */
   http.post("*/auth/email/verify", async ({ request }) => {
@@ -187,6 +190,34 @@ export const authHandlers = [
     return HttpResponse.json({
       result: "OK",
       message: "로그아웃되었습니다.",
+    });
+  }),
+
+  /** 닉네임 중복 조회 */
+  http.get("*/auth/nickname", ({ request }) => {
+    // URL에서 쿼리 파라미터(nickname) 추출
+    const url = new URL(request.url);
+    const nickname = url.searchParams.get("nickname");
+
+    // 닉네임이 전달되지 않았을 경우 처리
+    if (!nickname) {
+      return new HttpResponse(
+        JSON.stringify({
+          result: "FAIL",
+          message: "닉네임을 입력해주세요.",
+        }),
+        { status: 400 },
+      );
+    }
+
+    // 중복 여부 확인 (이미 존재하면 available: false)
+    const isAvailable = !existingNicknames.includes(nickname);
+
+    return HttpResponse.json({
+      result: "OK",
+      data: {
+        available: isAvailable,
+      },
     });
   }),
 ];

@@ -6,6 +6,8 @@ import { cn } from "@/lib/utils";
 import { AuthFormValues } from "@/type/auth";
 import { Date } from "@/icons";
 import { NICKNAME_REGEX } from "@/lib/regex";
+import { useDebounce } from "@/hooks/useDebounce";
+import { useCheckNicknameQuery } from "@/api/auth/checkNickname";
 
 interface InfoStepProps {
   title: string;
@@ -18,8 +20,6 @@ const InfoStep = ({ title, buttonText, isValid }: InfoStepProps) => {
     register,
     setValue,
     watch,
-    // setError,
-    // clearErrors,
     formState: { errors },
   } = useFormContext<AuthFormValues>();
 
@@ -27,12 +27,14 @@ const InfoStep = ({ title, buttonText, isValid }: InfoStepProps) => {
   const nickname = watch("nickname");
   const gender = watch("gender");
 
-  // nickname 값이 변하면 1초 뒤에 debouncedNickname이 업데이트됩니다.
-  // const debouncedNickname = useDebounce({ value: nickname, delay: 1000 });
+  // 사용자가 입력하는 nickname을 1000ms(1초) 동안 지켜봅니다.
+  const debouncedNickname = useDebounce({ value: nickname, delay: 500 });
 
-  // useEffect(() => {
-  //   console.log(debouncedNickname);
-  // }, [debouncedNickname]);
+  // 디바운스된 값이 있을 때만 쿼리를 활성화
+  const { data } = useCheckNicknameQuery(debouncedNickname, {
+    enabled: debouncedNickname.length > 0, // 값이 있을 때만 실행
+    retry: false, // 실패 시 재시도 방지 (선택)
+  });
 
   return (
     <section id="signup-info-step" className="w-full">
@@ -65,9 +67,10 @@ const InfoStep = ({ title, buttonText, isValid }: InfoStepProps) => {
           })}
           // 정립 포인트: 0자일 때는 에러 메시지를 숨김
           error={
-            nickname && nickname.length > 0
-              ? errors.nickname?.message
-              : undefined
+            errors.nickname?.message ||
+            (nickname && data?.available === false
+              ? "이미 사용중인 닉네임입니다."
+              : undefined)
           }
           placeholder="2 ~ 15자 이내, 특수문자 불가"
           InputClassName="text-font-2"
