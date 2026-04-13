@@ -1,13 +1,17 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { ModalLayout } from "../ModalLayout";
 import { Close, Persona } from "@/icons";
 import SmartInput from "../SmartInput";
 import { useAddPersonaMutation } from "@/api/persona/addPersona";
+import { useEditPersonaMutation } from "@/api/persona/editPersona";
+import { useDetailPersonaQuery } from "@/api/persona/detailPersons";
 
 interface PersonaAddModalProps {
   toggleIsAddModal: () => void;
+  isEditMode?: boolean;
+  personaId?: number;
 }
 
 interface PersonaFormValues {
@@ -15,11 +19,16 @@ interface PersonaFormValues {
   info: string;
 }
 
-const PersonaAddModal = ({ toggleIsAddModal }: PersonaAddModalProps) => {
+const PersonaAddModal = ({
+  toggleIsAddModal,
+  isEditMode = false,
+  personaId,
+}: PersonaAddModalProps) => {
   const {
     register,
     handleSubmit,
     watch,
+    reset,
     formState: { isValid },
   } = useForm<PersonaFormValues>({
     mode: "onChange",
@@ -29,18 +38,36 @@ const PersonaAddModal = ({ toggleIsAddModal }: PersonaAddModalProps) => {
     },
   });
 
+  const { data: personaDetail } = useDetailPersonaQuery(personaId as number, {
+    enabled: isEditMode && !!personaId,
+  });
+
+  useEffect(() => {
+    if (isEditMode && personaDetail) {
+      reset({
+        name: personaDetail.name,
+        info: personaDetail.description,
+      });
+    }
+  }, [isEditMode, personaDetail, reset]);
+
   const { mutate: addPersona } = useAddPersonaMutation();
+  const { mutate: editPersona } = useEditPersonaMutation();
 
   const { info, name } = watch();
 
-  const onSubmit = (data: PersonaFormValues) => {
-    console.log("Persona Data:", data);
-    addPersona({ description: info, name });
+  const onSubmit = () => {
+    if (isEditMode && personaId) {
+      editPersona({ personaId, description: info, name });
+    } else {
+      addPersona({ description: info, name });
+    }
     toggleIsAddModal();
   };
 
   return (
     <ModalLayout
+      hasBackground
       onClose={toggleIsAddModal} // 모달 외부 클릭 시 닫기
       className="z-30 w-screen max-w-100 h-fit whitespace-nowrap top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-5 bg-bg-dark border border-border-main rounded-3xl"
     >
@@ -48,7 +75,9 @@ const PersonaAddModal = ({ toggleIsAddModal }: PersonaAddModalProps) => {
         <div className="flex justify-between">
           <div className="flex items-center gap-3">
             <Persona className="w-6 h-6" />
-            <h2 className="text-[20px] font-semibold text-font-1">페르소나</h2>
+            <h2 className="text-[20px] font-semibold text-font-1">
+              페르소나 {isEditMode ? "수정" : "추가"}
+            </h2>
           </div>
           <button
             onClick={toggleIsAddModal}
@@ -101,7 +130,7 @@ const PersonaAddModal = ({ toggleIsAddModal }: PersonaAddModalProps) => {
                   : "bg-bg-darkest text-font-disabled border-border-main cursor-not-allowed"
               }`}
           >
-            페르소나 추가
+            페르소나 {isEditMode ? "수정" : "추가"}
           </button>
         </footer>
       </form>

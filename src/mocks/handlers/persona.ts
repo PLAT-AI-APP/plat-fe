@@ -67,4 +67,33 @@ export const personaHandlers = [
       { status: 201 },
     );
   }),
+
+  /** 페르소나 수정 */
+  http.patch("*/users/me/personas/:personaId", async ({ params, request }) => {
+    const { personaId } = params;
+
+    const updateData = (await request.json()) as {
+      name?: string;
+      description?: string;
+    };
+
+    const index = mockPersonas.findIndex(
+      (p) => p.personaId === Number(personaId),
+    );
+
+    if (index === -1) {
+      return new HttpResponse(null, { status: 404 });
+    }
+
+    mockPersonas[index] = {
+      ...mockPersonas[index],
+      ...updateData,
+    };
+
+    return HttpResponse.json({
+      result: "OK",
+      data: mockPersonas[index],
+      message: "페르소나 정보가 수정되었습니다.",
+    });
+  }),
 ];

@@ -1,10 +1,10 @@
 import React, { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { ModalLayout } from "../../ModalLayout";
-// import { Persona } from "@/type/user";
 import CheckCircle from "@/icons/CheckCircle";
 import { Dots } from "@/icons";
 import { Persona } from "@/type/persona";
+import PersonaAddModal from "../PersonaAddModal";
 
 interface PersonaItemProps {
   persona: Persona;
@@ -16,10 +16,16 @@ const PersonaItem = ({ persona, isActive, onSelect }: PersonaItemProps) => {
   const { name, description, isDefault } = persona;
 
   const [isEdit, setIsEdit] = useState(false);
+
   const toggleIsEdit = () => {
     setIsEdit(!isEdit);
   };
   const triggerRef = useRef(null);
+
+  const [isEditModal, setIsEditModal] = useState(false);
+  const toggleisEditModal = () => {
+    setIsEditModal(!isEditModal);
+  };
   return (
     <li
       onClick={() => onSelect(persona.personaId)}
@@ -28,6 +34,14 @@ const PersonaItem = ({ persona, isActive, onSelect }: PersonaItemProps) => {
         isActive && "border border-font-1",
       )}
     >
+      {isEditModal && (
+        <PersonaAddModal
+          personaId={persona.personaId}
+          toggleIsAddModal={toggleisEditModal}
+          isEditMode={true}
+        />
+      )}
+
       <div className="flex justify-between font-medium">
         <div className="flex items-center gap-3">
           {isDefault && (
@@ -54,7 +68,10 @@ const PersonaItem = ({ persona, isActive, onSelect }: PersonaItemProps) => {
               className="border border-border-main"
             >
               <div
-                onClick={toggleIsEdit}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleisEditModal();
+                }}
                 className="px-2.5 py-2 rounded-lg hover:bg-btn-hover"
               >
                 수정하기

@@ -2,14 +2,15 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { ApiSuccessResponse, AppError } from "@/type/api";
 
-interface PostAddPersonaProps {
+interface PatchEditPersonaProps {
+  personaId: number;
   name: string;
   description: string;
 }
 
-const PostAddPersona = async (props: PostAddPersonaProps) => {
-  const response = await authAxios.post<ApiSuccessResponse>(
-    "/users/me/personas",
+const PatchEditPersona = async (props: PatchEditPersonaProps) => {
+  const response = await authAxios.patch<ApiSuccessResponse>(
+    `/users/me/personas/${props.personaId}`,
     props,
   );
 
@@ -19,11 +20,15 @@ const PostAddPersona = async (props: PostAddPersonaProps) => {
 };
 
 /** 페르소나 추가 */
-export const useAddPersonaMutation = () => {
+export const useEditPersonaMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<{ serverMessage: string }, AppError, PostAddPersonaProps>({
-    mutationFn: PostAddPersona,
+  return useMutation<
+    { serverMessage: string },
+    AppError,
+    PatchEditPersonaProps
+  >({
+    mutationFn: PatchEditPersona,
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["me-persona-list"] });
     },
