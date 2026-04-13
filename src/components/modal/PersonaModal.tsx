@@ -1,50 +1,24 @@
 import React, { useState, useCallback } from "react";
-import { PersonaType } from "@/type/user";
 import PersonaHeader from "./persona/PersonaHeader";
 import PersonaItem from "./persona/PersonaItem";
 import PersonaFooter from "./persona/PersonaFooter";
 import { ModalLayout } from "../ModalLayout";
-
-const PERSONA_LIST: PersonaType[] = [
-  {
-    id: "persona-1",
-    name: "이름",
-    description:
-      "내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용...",
-    isDefault: true,
-    isSelected: false,
-  },
-  {
-    id: "persona-2",
-    name: "이름",
-    description:
-      "내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용...",
-    isDefault: false,
-    isSelected: false,
-  },
-  {
-    id: "persona-3",
-    name: "이름",
-    description:
-      "내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용...",
-    isDefault: false,
-    isSelected: true,
-  },
-];
+import { useMePersonasQuery } from "@/api/persona/mePersonas";
 
 interface PersonaModalProps {
   closeModal: () => void;
 }
 
 const PersonaModal = ({ closeModal }: PersonaModalProps) => {
-  const [currentPersona, setCurrentPersona] = useState<PersonaType>(
-    PERSONA_LIST[0],
-  );
+  const { data: personas } = useMePersonasQuery();
 
-  const handleCurrentPersona = useCallback((persona: PersonaType) => {
-    setCurrentPersona(persona);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+
+  const handleCurrentPersona = useCallback((personaId: number) => {
+    setSelectedId(personaId);
   }, []);
 
+  if (!personas) return;
   return (
     <ModalLayout
       onClose={() => null}
@@ -54,11 +28,11 @@ const PersonaModal = ({ closeModal }: PersonaModalProps) => {
 
       <div>
         <ul className="flex flex-col gap-4">
-          {PERSONA_LIST.map((persona) => (
+          {personas.map((persona) => (
             <PersonaItem
-              key={persona.id}
+              key={persona.personaId}
               persona={persona}
-              isActive={currentPersona.id === persona.id}
+              isActive={selectedId === persona.personaId}
               onSelect={handleCurrentPersona}
             />
           ))}

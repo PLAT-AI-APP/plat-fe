@@ -1,14 +1,15 @@
 import React, { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { ModalLayout } from "../../ModalLayout";
-import { PersonaType } from "@/type/user";
+// import { Persona } from "@/type/user";
 import CheckCircle from "@/icons/CheckCircle";
 import { Dots } from "@/icons";
+import { Persona } from "@/type/persona";
 
 interface PersonaItemProps {
-  persona: PersonaType;
+  persona: Persona;
   isActive: boolean;
-  onSelect: (persona: PersonaType) => void;
+  onSelect: (personaId: number) => void;
 }
 
 const PersonaItem = ({ persona, isActive, onSelect }: PersonaItemProps) => {
@@ -21,7 +22,7 @@ const PersonaItem = ({ persona, isActive, onSelect }: PersonaItemProps) => {
   const triggerRef = useRef(null);
   return (
     <li
-      onClick={() => onSelect(persona)}
+      onClick={() => onSelect(persona.personaId)}
       className={cn(
         "cursor-pointer w-full flex flex-col rounded-2xl gap-2 px-4 py-3 bg-card hover:bg-card-hover transition-colors",
         isActive && "border border-font-1",
