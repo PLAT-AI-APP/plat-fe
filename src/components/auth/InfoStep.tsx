@@ -4,10 +4,10 @@ import AuthInput from "./AuthInput";
 import ActiveButton from "../ActiveButton";
 import { cn } from "@/lib/utils";
 import { AuthFormValues } from "@/type/auth";
-import { Date } from "@/icons";
 import { NICKNAME_REGEX } from "@/lib/regex";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useCheckNicknameQuery } from "@/api/auth/checkNickname";
+import { BirthDateInput } from "../BirthDateInput";
 
 interface InfoStepProps {
   title: string;
@@ -26,6 +26,7 @@ const InfoStep = ({ title, buttonText, isValid }: InfoStepProps) => {
   // 실시간 UI 반영을 위해 값들을 감시합니다.
   const nickname = watch("nickname");
   const gender = watch("gender");
+  const birthDate = watch("birthDate");
 
   // 사용자가 입력하는 nickname을 1000ms(1초) 동안 지켜봅니다.
   const debouncedNickname = useDebounce({ value: nickname, delay: 500 });
@@ -109,29 +110,12 @@ const InfoStep = ({ title, buttonText, isValid }: InfoStepProps) => {
           </div>
         </fieldset>
 
-        {/* 생년월일 입력 */}
-        <AuthInput
-          id="input-birthdate"
-          label="생년월일"
-          type="date"
-          {...register("birthDate", {
-            required: "생년월일을 선택해주세요.",
-          })}
-          leftElement={
-            <Date
-              id="icon-birthdate-calendar"
-              className="w-5 h-5 text-font-2"
-            />
-          }
-          // 브라우저 기본 선택기 호출 최적화
-          onClick={(e) => e.currentTarget.showPicker?.()}
-          InputClassName={cn(
-            "text-font-2",
-            "[&::-webkit-calendar-picker-indicator]:hidden",
-            "appearance-none",
-            "cursor-pointer",
-          )}
-          error={errors.birthDate?.message}
+        {/* 생년월일 input */}
+        <BirthDateInput
+          // {...register("birthDate")}
+          value={birthDate}
+          isEditMode={true}
+          // handleBirthDate={handleBirthDate}
         />
       </div>
 

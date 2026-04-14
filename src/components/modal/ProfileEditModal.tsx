@@ -72,10 +72,13 @@ const ProfileEditModal = ({ onClose }: ProfileEditModalProps) => {
     !errors.gender &&
     !errors.birthDate;
 
-  // --- 3. 이벤트 핸들러 ---
-  const handleGender = (gender: "male" | "female") => {
-    setValue("gender", gender);
-  };
+  // const handleGender = (gender: "male" | "female") => {
+  //   setValue("gender", gender);
+  // };
+
+  // const handleBirthDate = (date: string) => {
+  //   setValue("birthDate", date);
+  // };
 
   const ToggleIsPhoneModal = () => {
     setIsPhoneModal((prev) => !prev);
@@ -162,7 +165,11 @@ const ProfileEditModal = ({ onClose }: ProfileEditModalProps) => {
               />
 
               {/* 생년월일 input */}
-              <BirthDateInput {...register("birthDate")} />
+              <BirthDateInput
+                // {...register("birthDate")}
+                value={birthDate}
+                // handleBirthDate={handleBirthDate}
+              />
 
               <div className={cn("flex flex-col flex-1 gap-2 w-full")}>
                 <div className="flex flex-col gap-1">
@@ -175,7 +182,7 @@ const ProfileEditModal = ({ onClose }: ProfileEditModalProps) => {
                 <div className="flex gap-2 text-sm">
                   <button
                     type="button"
-                    onClick={() => handleGender("male")}
+                    // onClick={() => handleGender("male")}
                     className={cn(
                       "flex-1 bg-bg-darkest border border-border-main rounded-xl py-3",
                       formValue.gender === "male" &&
@@ -186,7 +193,7 @@ const ProfileEditModal = ({ onClose }: ProfileEditModalProps) => {
                   </button>
                   <button
                     type="button"
-                    onClick={() => handleGender("female")}
+                    // onClick={() => handleGender("female")}
                     className={cn(
                       "flex-1 bg-bg-darkest border border-border-main rounded-xl py-3",
                       formValue.gender === "female" &&
