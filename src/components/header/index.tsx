@@ -1,18 +1,27 @@
-import { BellOn, Fold, Star, User } from "@/icons";
+import { Fold, User } from "@/icons";
 import Image from "next/image";
-import React from "react";
+import React, { useRef, useState } from "react";
 import logoImg from "../../../public/logo.png";
 import { SearchBar } from "./SearchBar";
-import LanguageSelector from "./LanguageSelector";
+// import LanguageSelector from "./LanguageSelector";
 import Profile from "./Profile";
 import Link from "next/link";
 import { useAuthStore } from "@/store/useAuthStore";
+import ProfileMdoal from "../modal/ProfileModal";
+import Melody from "@/icons/Melody";
 
 interface HeaderProps {
   handleFoldToggle: () => void;
 }
 const Header = ({ handleFoldToggle }: HeaderProps) => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+
+  const [isActive, setIsActive] = useState<boolean>(false);
+  const handleToggle = () => {
+    setIsActive((prev) => !prev);
+  };
+
+  const triggerRef = useRef<HTMLImageElement>(null);
   return (
     <header
       id="main-header"
@@ -56,7 +65,7 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
             <SearchBar />
           </div>
 
-          <LanguageSelector />
+          {/* <LanguageSelector /> */}
 
           {/* 포인트 표시 영역 */}
           {isLoggedIn && (
@@ -64,18 +73,13 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
               id="user-point-badge"
               className="flex cursor-pointer items-center gap-1 transition-all duration-200 ease-in-out hover:bg-btn-hover rounded-lg p-1.25 pr-2.5"
             >
-              <Star
-                id="icon-point-star"
-                fill="none"
-                stroke="white"
-                className="w-5 h-5"
-              />
+              <Melody className="w-5 h-5" />
               <span id="user-point-value">1,100</span>
             </div>
           )}
 
           {/* 알림 버튼 */}
-          {isLoggedIn && (
+          {/* {isLoggedIn && (
             <button
               id="header-notification-button"
               type="button"
@@ -86,22 +90,28 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
                 className="text-font-2 w-6 h-6"
               />
             </button>
-          )}
+          )} */}
         </div>
 
         {/* 프로필 컴포넌트 */}
-        {isLoggedIn && (
-          <div id="header-profile-wrapper">
-            <Profile />
-          </div>
-        )}
+        <div className="relative">
+          {isLoggedIn && (
+            <div id="header-profile-wrapper">
+              <Profile handleToggle={handleToggle} triggerRef={triggerRef} />
+            </div>
+          )}
 
-        {/* 프로필 컴포넌트 */}
-        {!isLoggedIn && (
-          <Link href={"/login"} id="header-profile-wrapper">
-            <User className="w-6 h-6 text-font-2 cursor-pointer" />
-          </Link>
-        )}
+          {/* 프로필 컴포넌트 */}
+          {!isLoggedIn && (
+            <div onClick={handleToggle}>
+              <User className="w-6 h-6 text-font-2 cursor-pointer" />
+            </div>
+          )}
+
+          {isActive && (
+            <ProfileMdoal onClose={handleToggle} triggerRef={triggerRef} />
+          )}
+        </div>
       </div>
     </header>
   );

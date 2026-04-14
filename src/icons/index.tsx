@@ -39,6 +39,7 @@ export { default as Global } from "./Global";
 export { default as Logout } from "./Logout";
 export { default as Google } from "./Google";
 export { default as Kakao } from "./Kakao";
+export { default as Setting } from "./Setting";
 
 // 6. 도구 및 데이터
 export { default as Search } from "./Search";
