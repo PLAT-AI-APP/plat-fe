@@ -16,6 +16,8 @@ interface CharacterPreviewProps {
 }
 
 const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
   const { watch, setValue, getValues } =
     useFormContext<CharacterCreateFormValues>();
   const scenarios = watch("scenarios");
@@ -72,6 +74,17 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
       { shouldValidate: true },
     );
     setMsg("");
+
+    // 브라우저가 새 요소를 렌더링한 후 실행되도록 보장
+    requestAnimationFrame(() => {
+      if (scrollContainerRef.current) {
+        const container = scrollContainerRef.current;
+        container.scrollTo({
+          top: container.scrollHeight, // 이제 새 요소 높이가 포함된 scrollHeight가 계산됨
+          behavior: "smooth",
+        });
+      }
+    });
   };
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -104,6 +117,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
     <section className="flex flex-col justify-between flex-1 max-w-152.25 min-w-0 max-h-[calc(100vh-156px)]">
       <div
         onScroll={onScroll}
+        ref={scrollContainerRef}
         className={cn(
           "flex-1 overflow-y-auto px-4 custom-scrollbar hide-scrollbar-on-idle",
           isScrolling && "is-scrolling",
@@ -130,7 +144,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
           value={msg}
           onChange={(e) => setMsg(e.target.value)}
           placeholder="메시지 보내기"
-          className="mb-2 mt-3 w-full text-sm placeholder:text-font-disabled outline-none bg-transparent"
+          className="mb-2 w-full text-sm placeholder:text-font-disabled outline-none bg-transparent"
         />
 
         <div className="flex justify-between">

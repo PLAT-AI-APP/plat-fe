@@ -33,7 +33,7 @@ const Scenario = ({
     if (fields.length >= 5) return alert("최대 5개까지 추가 가능합니다.");
     append({
       name: "다른 시나리오",
-      messages: [],
+      contents: [],
     });
   };
   const removeScenario = (e: React.MouseEvent, index: number) => {
