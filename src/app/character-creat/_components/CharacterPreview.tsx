@@ -19,7 +19,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
   const characterName = watch("name") || "캐릭터";
   const messages = scenarios[activeScenarioIndex]?.messages || [];
 
-  const [role, setRole] = useState<"assistant" | "user">("assistant");
+  // const [role, setRole] = useState<"assistant" | "user">("assistant");
 
   const handleUpdateMessage = (id: string, newContent: string) => {
     const updatedMessages = messages.map((msg) =>
@@ -45,20 +45,27 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
     e.preventDefault();
     if (!msg.trim()) return;
 
-    const newMessage: ChatMessageType =
-      role === "assistant"
-        ? {
-            id: Date.now().toString(),
-            role: "assistant",
-            characterName: characterName,
-            profileImage: "/images/sample.png", // 기본값
-            content: msg,
-          }
-        : {
-            id: Date.now().toString(),
-            role: "user",
-            content: msg,
-          };
+    // const newMessage: ChatMessageType =
+    //   role === "assistant"
+    //     ? {
+    //         id: Date.now().toString(),
+    //         role: "assistant",
+    //         characterName: characterName,
+    //         profileImage: "/images/sample.png", // 기본값
+    //         content: msg,
+    //       }
+    //     : {
+    //         id: Date.now().toString(),
+    //         role: "user",
+    //         content: msg,
+    //       };
+    const newMessage: ChatMessageType = {
+      id: Date.now().toString(),
+      role: "assistant",
+      characterName: characterName,
+      profileImage: "/images/sample.png", // 기본값
+      content: msg,
+    };
 
     const currentMessages =
       getValues(`scenarios.${activeScenarioIndex}.messages`) || [];
@@ -72,28 +79,29 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   // 상황(*) 삽입 함수
-  const handleInsertNarrative = () => {
-    const textarea = textareaRef.current;
-    if (!textarea) return;
+  // const handleInsertNarrative = () => {
+  //   const textarea = textareaRef.current;
+  //   if (!textarea) return;
 
-    const start = textarea.selectionStart; // 현재 커서 시작 위치
-    const end = textarea.selectionEnd; // 현재 커서 끝 위치
-    const text = msg;
+  //   const start = textarea.selectionStart; // 현재 커서 시작 위치
+  //   const end = textarea.selectionEnd; // 현재 커서 끝 위치
+  //   const text = msg;
 
-    // 커서 위치를 기준으로 "**" 삽입
-    const before = text.substring(0, start);
-    const after = text.substring(end);
-    const newText = `${before}**${after}`;
+  //   // 커서 위치를 기준으로 "**" 삽입
+  //   const before = text.substring(0, start);
+  //   const after = text.substring(end);
+  //   const newText = `${before}**${after}`;
 
-    setMsg(newText);
+  //   setMsg(newText);
 
-    // React 상태 업데이트 후 DOM에 즉시 반영되지 않으므로 setTimeout을 사용하여 포커스 조정
-    setTimeout(() => {
-      textarea.focus();
-      // 커서 위치를 첫 번째 '*'와 두 번째 '*' 사이로 설정 (start + 1)
-      textarea.setSelectionRange(start + 1, start + 1);
-    }, 0);
-  };
+  //   // React 상태 업데이트 후 DOM에 즉시 반영되지 않으므로 setTimeout을 사용하여 포커스 조정
+  //   setTimeout(() => {
+  //     textarea.focus();
+  //     // 커서 위치를 첫 번째 '*'와 두 번째 '*' 사이로 설정 (start + 1)
+  //     textarea.setSelectionRange(start + 1, start + 1);
+  //   }, 0);
+  // };
+
   // {user} 삽입 함수
   const handleInsertUserToken = () => {
     const textarea = textareaRef.current;
@@ -141,7 +149,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
         onSubmit={handleSubmit}
         className="shrink-0 px-3 py-3 mt-1.75 bg-bg-darkest rounded-4xl border border-border-main"
       >
-        <div className="flex gap-1.5 text-sm text-font-2">
+        {/* <div className="flex gap-1.5 text-sm text-font-2">
           <button
             type="button"
             onClick={() => setRole("assistant")}
@@ -166,7 +174,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
           >
             사용자명
           </button>
-        </div>
+        </div> */}
         <textarea
           rows={2}
           ref={textareaRef}
@@ -180,7 +188,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
           <div className="flex gap-2 text-sm text-font-2">
             <button
               type="button"
-              onClick={handleInsertNarrative}
+              // onClick={handleInsertNarrative}
               className="flex items-center gap-1.5 py-1.5 pl-2.5 pr-3 rounded-[100px] border border-border-main bg-[#171D28]/50 "
             >
               <Asterisk className="w-4 h-4" />

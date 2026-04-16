@@ -7,13 +7,14 @@ const DetailInfo = () => {
   const { register, watch } = useFormContext<CharacterCreateFormValues>();
 
   // 상태 및 데이터 관찰
-  const heightValue = watch("height");
-  const weightValue = watch("weight");
+  // const heightValue = watch("height");
+  // const weightValue = watch("weight");
+  const characterDetailSetting = watch("characterDetailSetting");
 
   return (
     <section className="flex flex-col gap-6">
       {/* 신체 정보 입력 영역 */}
-      <div id="physical-info-container" className="flex gap-6">
+      {/* <div id="physical-info-container" className="flex gap-6">
         <SmartInput
           label="키"
           maxLength={10}
@@ -30,7 +31,7 @@ const DetailInfo = () => {
           {...register("weight")}
           value={weightValue}
         />
-      </div>
+      </div> */}
 
       {/* 상세 설정 입력 영역 */}
       <article>
@@ -43,8 +44,8 @@ const DetailInfo = () => {
           maxLine={15}
           minLine={15}
           isBorder
-          {...register("weight")}
-          value={weightValue}
+          {...register("characterDetailSetting")}
+          value={characterDetailSetting}
         />
       </article>
     </section>

@@ -19,8 +19,8 @@ const Asset = () => {
   };
 
   const copyAsset = (index: number) => {
-    const target = watch(`asset.${index}`);
-    insert(index + 1, { ...target });
+    // const target = watch(`asset.${index}`);
+    // insert(index + 1, { ...target });
   };
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {

@@ -31,8 +31,8 @@ const CharacterCreatPage = () => {
       title: "",
       name: "",
       characterIntroduce: "",
-      height: "",
-      weight: "",
+      // height: "",
+      // weight: "",
       characterDetailSetting: "",
       asset: [
         {

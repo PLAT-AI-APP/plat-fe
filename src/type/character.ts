@@ -8,8 +8,8 @@ export interface CharacterCreateFormValues {
   characterIntroduce: string;
 
   // 상세정보 tab
-  height: string;
-  weight: string;
+  // height: string;
+  // weight: string;
   characterDetailSetting: string;
 
   // 에셋 tab
