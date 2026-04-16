@@ -2,15 +2,14 @@ version: "3.8"
 
 services:
   plat-app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: plat-fe-container
     ports:
       - "3000:3000"
-    volumes:
-      - .:/app # 로컬 코드 수정 시 컨테이너에 즉시 반영 (HMR)
-      - /app/node_modules # 로컬의 node_modules와 컨테이너 내부 분리
-      - /app/.next # 빌드 캐시 분리
+    # 배포 환경에서는 volumes를 삭제합니다. (이미지 내부 파일 사용)
     environment:
+      - NODE_ENV=production
       - NEXT_PUBLIC_BASE_URI=http://59.7.18.17:3000
-    stdin_open: true # 대화형 모드 활성화
-    tty: true # 터미널 활성화
+    restart: always

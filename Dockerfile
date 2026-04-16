@@ -1,18 +1,20 @@
-# Node.js v24 버전 사용
-FROM node:24-alpine
-
-# 작업 디렉토리 생성
+# --- 1단계: 빌드 환경 ---
+FROM node:24-alpine AS builder
 WORKDIR /app
-
-# 의존성 파일 복사 및 설치
-COPY package.json package-lock.json ./
+COPY package*.json ./
 RUN npm ci --legacy-peer-deps
-
-# 전체 소스 코드 복사
 COPY . .
+RUN npm run build
 
-# Next.js 기본 포트 노출
+# --- 2단계: 실행 환경 (최종 이미지) ---
+FROM node:24-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+
+# standalone 모드에 필요한 핵심 파일들만 빌드 단계에서 복사
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
+
 EXPOSE 3000
-
-# 개발 서버 실행
-CMD ["npm", "run", "dev"]
+CMD ["node", "server.js"]
