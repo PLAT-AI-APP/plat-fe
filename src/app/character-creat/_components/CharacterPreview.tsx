@@ -1,10 +1,13 @@
 import ActiveButton from "@/components/ActiveButton";
-import MessageList from "@/components/chat/MessageList";
+import CreatePreviewList from "./CreatePreviewList";
 import { useScrollTimeout } from "@/hooks/useScrollTiemout";
 import { Asterisk, ImageIcon, SendFill } from "@/icons";
 import { cn } from "@/lib/utils";
-import { CharacterCreateFormValues } from "@/type/character";
-import { ChatMessageType } from "@/type/chat";
+import {
+  CharacterCreateFormValues,
+  ScenarioContentItem,
+  ScenarioType,
+} from "@/type/character";
 import React, { useRef, useState } from "react";
 import { useFormContext } from "react-hook-form";
 
@@ -17,22 +20,32 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
     useFormContext<CharacterCreateFormValues>();
   const scenarios = watch("scenarios");
   const characterName = watch("name") || "캐릭터";
-  const messages = scenarios[activeScenarioIndex]?.messages || [];
+  const contents = scenarios[activeScenarioIndex]?.contents || [];
 
-  // const [role, setRole] = useState<"assistant" | "user">("assistant");
+  const [currentMode, setCurrentMode] = useState<ScenarioType>("chat");
+  const handleCurrentMode = (name: ScenarioType) => {
+    if (name === currentMode) return setCurrentMode("chat");
+    setCurrentMode(name);
+  };
 
-  const handleUpdateMessage = (id: string, newContent: string) => {
-    const updatedMessages = messages.map((msg) =>
-      msg.id === id ? { ...msg, content: newContent } : msg,
+  const handleUpdateContent = (id: number, newValue: string) => {
+    const updatedContents = contents.map((item) =>
+      item.id === id ? { ...item, value: newValue } : item,
     );
-    setValue(`scenarios.${activeScenarioIndex}.messages`, updatedMessages, {
+    setValue(`scenarios.${activeScenarioIndex}.contents`, updatedContents, {
       shouldValidate: true,
     });
   };
 
-  const handleDeleteMessage = (id: string) => {
-    const updatedMessages = messages.filter((msg) => msg.id !== id);
-    setValue(`scenarios.${activeScenarioIndex}.messages`, updatedMessages, {
+  const handleDeleteContent = (id: number) => {
+    const updatedContents = contents.filter((item) => item.id !== id);
+    setValue(`scenarios.${activeScenarioIndex}.contents`, updatedContents, {
+      shouldValidate: true,
+    });
+  };
+
+  const handleReorderContents = (newContents: ScenarioContentItem[]) => {
+    setValue(`scenarios.${activeScenarioIndex}.contents`, newContents, {
       shouldValidate: true,
     });
   };
@@ -45,63 +58,23 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
     e.preventDefault();
     if (!msg.trim()) return;
 
-    // const newMessage: ChatMessageType =
-    //   role === "assistant"
-    //     ? {
-    //         id: Date.now().toString(),
-    //         role: "assistant",
-    //         characterName: characterName,
-    //         profileImage: "/images/sample.png", // 기본값
-    //         content: msg,
-    //       }
-    //     : {
-    //         id: Date.now().toString(),
-    //         role: "user",
-    //         content: msg,
-    //       };
-    const newMessage: ChatMessageType = {
-      id: Date.now().toString(),
-      role: "assistant",
-      characterName: characterName,
-      profileImage: "/images/sample.png", // 기본값
-      content: msg,
+    const newContent = {
+      id: Date.now(),
+      type: currentMode,
+      value: msg,
     };
 
-    const currentMessages =
-      getValues(`scenarios.${activeScenarioIndex}.messages`) || [];
+    const currentContents =
+      getValues(`scenarios.${activeScenarioIndex}.contents`) || [];
     setValue(
-      `scenarios.${activeScenarioIndex}.messages`,
-      [...currentMessages, newMessage],
+      `scenarios.${activeScenarioIndex}.contents`,
+      [...currentContents, newContent],
       { shouldValidate: true },
     );
     setMsg("");
   };
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  // 상황(*) 삽입 함수
-  // const handleInsertNarrative = () => {
-  //   const textarea = textareaRef.current;
-  //   if (!textarea) return;
-
-  //   const start = textarea.selectionStart; // 현재 커서 시작 위치
-  //   const end = textarea.selectionEnd; // 현재 커서 끝 위치
-  //   const text = msg;
-
-  //   // 커서 위치를 기준으로 "**" 삽입
-  //   const before = text.substring(0, start);
-  //   const after = text.substring(end);
-  //   const newText = `${before}**${after}`;
-
-  //   setMsg(newText);
-
-  //   // React 상태 업데이트 후 DOM에 즉시 반영되지 않으므로 setTimeout을 사용하여 포커스 조정
-  //   setTimeout(() => {
-  //     textarea.focus();
-  //     // 커서 위치를 첫 번째 '*'와 두 번째 '*' 사이로 설정 (start + 1)
-  //     textarea.setSelectionRange(start + 1, start + 1);
-  //   }, 0);
-  // };
-
   // {user} 삽입 함수
   const handleInsertUserToken = () => {
     const textarea = textareaRef.current;
@@ -128,7 +101,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
     }, 0);
   };
   return (
-    <section className="flex flex-col justify-between flex-1 min-w-0 max-h-[calc(100vh-156px)]">
+    <section className="flex flex-col justify-between flex-1 max-w-152.25 min-w-0 max-h-[calc(100vh-156px)]">
       <div
         onScroll={onScroll}
         className={cn(
@@ -136,12 +109,14 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
           isScrolling && "is-scrolling",
         )}
       >
-        <MessageList
-          messages={messages}
+        <CreatePreviewList
+          contents={contents}
+          characterName={characterName}
+          profileImage="/images/sample.png"
           isEditable={true}
-          onUpdateMessage={handleUpdateMessage}
-          onDeleteMessage={handleDeleteMessage}
-          isAiSuggestedChat={false}
+          onUpdate={handleUpdateContent}
+          onDelete={handleDeleteContent}
+          onReorder={handleReorderContents}
         />
       </div>
 
@@ -149,32 +124,6 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
         onSubmit={handleSubmit}
         className="shrink-0 px-3 py-3 mt-1.75 bg-bg-darkest rounded-4xl border border-border-main"
       >
-        {/* <div className="flex gap-1.5 text-sm text-font-2">
-          <button
-            type="button"
-            onClick={() => setRole("assistant")}
-            className={cn(
-              "px-2.5 py-1.5 rounded-[20px] border",
-              role === "assistant"
-                ? "bg-font-1 text-bg-dark"
-                : "border-border-main bg-[#171D28]/50",
-            )}
-          >
-            {characterName}
-          </button>
-          <button
-            type="button"
-            onClick={() => setRole("user")}
-            className={cn(
-              "px-2.5 py-1.5 rounded-[20px] border",
-              role === "user"
-                ? "bg-font-1 text-bg-dark"
-                : "border-border-main bg-[#171D28]/50",
-            )}
-          >
-            사용자명
-          </button>
-        </div> */}
         <textarea
           rows={2}
           ref={textareaRef}
@@ -188,15 +137,22 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
           <div className="flex gap-2 text-sm text-font-2">
             <button
               type="button"
-              // onClick={handleInsertNarrative}
-              className="flex items-center gap-1.5 py-1.5 pl-2.5 pr-3 rounded-[100px] border border-border-main bg-[#171D28]/50 "
+              onClick={() => handleCurrentMode("action")}
+              className={cn(
+                "flex items-center gap-1.5 py-1.5 pl-2.5 pr-3 rounded-[100px] border border-border-main bg-[#171D28]/50",
+                currentMode === "action" && "text-brand border-brand",
+              )}
             >
               <Asterisk className="w-4 h-4" />
               상황
             </button>
             <button
               type="button"
-              className="flex items-center gap-1.5 py-1.5 pl-2.5 pr-3 rounded-[100px] border border-border-main bg-[#171D28]/50 "
+              onClick={() => handleCurrentMode("asset")}
+              className={cn(
+                "flex items-center gap-1.5 py-1.5 pl-2.5 pr-3 rounded-[100px] border border-border-main bg-[#171D28]/50",
+                currentMode === "asset" && "text-brand border-brand",
+              )}
             >
               <ImageIcon className="w-4 h-4" /> 에셋
             </button>

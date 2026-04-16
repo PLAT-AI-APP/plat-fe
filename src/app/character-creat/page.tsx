@@ -44,19 +44,54 @@ const CharacterCreatPage = () => {
       ],
       scenarios: [
         {
-          name: "기본 시나리오",
-          messages: [
+          name: "여신 아프로디테와의 만남",
+          contents: [
             {
-              id: "1",
-              role: "assistant",
-              characterName: "윤아",
-              profileImage: "/images/sample.png",
-              content: `"나 정말 기다렸어. 네가 오늘 꼭 올 줄 알았거든."\n\n{{img:/images/sample.png}}\n\n*그녀는 환하게 웃으며\n내 소매를 살짝 잡아끌었다.*`,
+              id: 1,
+              type: "asset",
+              value: "/images/sample.png",
             },
             {
-              id: "2",
-              role: "user",
-              content: "나 정말 기다렸어. 네가 오늘 꼭 올 줄 알았거든.",
+              id: 2,
+              type: "action",
+              value:
+                "눈앞에 눈부신 빛이 감돌며 아름다운 여신이 모습을 드러낸다.",
+            },
+            {
+              id: 3,
+              type: "chat",
+              value: "기다리고 있었습니다, 에버그린의 새로운 모험가여.",
+            },
+            {
+              id: 4,
+              type: "chat",
+              value: "당신은 이곳에서 어떤 운명을 개척하고 싶으신가요?",
+            },
+            {
+              id: 5,
+              type: "action",
+              value: "여신이 부드럽게 미소 지으며 당신에게 선택지를 제시한다.",
+            },
+          ],
+        },
+        {
+          name: "제우스와의 만남",
+          contents: [
+            {
+              id: 1,
+              type: "asset",
+              value: "/images/sample.png",
+            },
+            {
+              id: 2,
+              type: "action",
+              value:
+                "눈앞에 눈부신 빛이 감돌며 아름다운 여신이 모습을 드러낸다.",
+            },
+            {
+              id: 3,
+              type: "chat",
+              value: "기다리고 있었습니다, 에버그린의 새로운 모험가여.",
             },
           ],
         },
@@ -150,7 +185,7 @@ const CharacterCreatPage = () => {
   return (
     <section
       id="character-create-main"
-      className="flex flex-col flex-1 min-w-0 p-5 h-[calc(100vh-60px)]"
+      className="flex flex-col flex-1 w-full mx-auto max-w-300 min-w-0 p-5 h-[calc(100vh-60px)]"
     >
       {isSavedData && (
         <Dialog
