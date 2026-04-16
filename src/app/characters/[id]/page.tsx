@@ -1,26 +1,16 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import CharacterProfile from "./_components/CharacterProfile";
-import LanguageSelector from "./_components/LanguageSelector";
+// import LanguageSelector from "./_components/LanguageSelector";
 import CharacterBasicInfo from "./_components/CharacterBasicInfo";
 import ExpandableDescription from "./_components/ExpandableDescription";
 import CommentSection from "./_components/comment";
 import { ScenarioSection } from "./_components/scenario";
 import { ScenarioData } from "@/type/scenario";
 
-const Page = () => {
-  const SUPPORTED_LANGUAGES = [
-    "한국어",
-    "English",
-    "日本語",
-    "中文",
-    "ภาษาไทย",
-    "Tiếng Việt",
-  ];
+const GAME_INTRO_MARKDOWN = `# [가상 오픈 월드 판타지 RPG]
 
-  const GAME_INTRO_MARKDOWN = `# [가상 오픈 월드 판타지 RPG]
-
-현실감 넘치는 버추얼 온라인 게임 **'에버그린'**에 접속,
+현실감 넘치는 버추얼 온라인 게임 **'에버그린'**에 접속, 
 여신 **'아프로디테'**와 만나 직업을 얻고, 모험가가 되거나 일상생활을 즐겨봅시다.
 
 처음이라 어렵다면 먼저 **모험가 길드**에 들러보시는 게 어떨까요?
@@ -37,15 +27,22 @@ const Page = () => {
 * 🗡️ **대장간**: 무기를 구매/판매/강화/분해합니다.
 * 🧪 **포션상점**: 포션을 구매하거나 마법소재를 가공합니다. *(추후 마법상점 업데이트 예정)*
 * 📦 **잡화점**: 요리도구/재료, 낚시도구/재료 등 생활용품을 판매합니다.
-* 🛌 **여관**: 잠을 자서 체력을 회복하거나 식사를 할 수 있습니다.`
-    .split("\n")
-    .map((line) => (line.trim() === "" ? "&nbsp;" : line.trim())) // 빈 줄을 강제로 '공백 문자'로 채움
-    .join("\n");
+* 🛌 **여관**: 잠을 자서 체력을 회복하거나 식사를 할 수 있습니다.`;
 
-  const [currentLanguage, setCurrentLanguage] = useState("한국어");
-  const habdleCurrentLanguage = (text: string) => {
-    setCurrentLanguage(text);
-  };
+const Page = () => {
+  // const SUPPORTED_LANGUAGES = [
+  //   "한국어",
+  //   "English",
+  //   "日本語",
+  //   "中文",
+  //   "ภาษาไทย",
+  //   "Tiếng Việt",
+  // ];
+
+  // const [currentLanguage, setCurrentLanguage] = useState("한국어");
+  // const habdleCurrentLanguage = (text: string) => {
+  //   setCurrentLanguage(text);
+  // };
 
   const TAG_LIST = ["판타지", "일상", "학원", "순애"];
 
@@ -138,15 +135,15 @@ fsafasdf
         <section className="flex flex-col w-full max-w-186">
           <div className="flex flex-col gap-4">
             {/* 언어 선택 목록 */}
-            <LanguageSelector
+            {/* <LanguageSelector
               currentLanguage={currentLanguage}
               languages={SUPPORTED_LANGUAGES}
               onLanguageChange={habdleCurrentLanguage}
-            />
+            /> */}
 
             <CharacterBasicInfo
               chatCount={50000}
-              heartCount={3000}
+              // heartCount={3000}
               markdownContent={GAME_INTRO_MARKDOWN}
               tags={TAG_LIST}
               title="여사친이 자꾸 집에 쳐들어옴"

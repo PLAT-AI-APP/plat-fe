@@ -2,15 +2,15 @@ import React, { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import dayjs from "@/lib/dayjs";
-import { cn, formatStatCount } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { CommentType } from "@/type/comment";
 import { useLineOverflow } from "@/hooks/useOverflowText";
 import { ModalLayout } from "@/components/ModalLayout";
-import { CommentInput } from "./CommentInput";
-import ReplyItem from "../ReplyItem";
+// import { CommentInput } from "./CommentInput";
+// import ReplyItem from "../ReplyItem";
 import ReplyLine from "@/icons/ReplyLine";
 import PinFill from "@/icons/PinFill";
-import { ChatFill, Dots, Edit, Flag, Heart, Pin, Trash } from "@/icons";
+import { Dots, Edit, Flag, Pin, Trash } from "@/icons";
 
 interface Props {
   comment: CommentType;
@@ -22,18 +22,18 @@ const CommentItem = ({ comment }: Props) => {
 
   const [isExpanded, setIsExpanded] = useState(false);
   const [isCommentMenu, setIsCommentMenu] = useState(false);
-  const [isCommentInput, setIsCommentInput] = useState(false);
-  const [isReply, setIsReply] = useState(false);
+  // const [isCommentInput, setIsCommentInput] = useState(false);
+  // const [isReply, setIsReply] = useState(false);
 
   const isOverflown = useLineOverflow(textRef, 4, comment.content);
 
-  const toggleIsCommentInput = () => {
-    setIsCommentInput(!isCommentInput);
-  };
+  // const toggleIsCommentInput = () => {
+  //   setIsCommentInput(!isCommentInput);
+  // };
 
-  const toggleIsReply = () => {
-    setIsReply(!isReply);
-  };
+  // const toggleIsReply = () => {
+  //   setIsReply(!isReply);
+  // };
 
   return (
     <article className="flex flex-col gap-3">
@@ -126,7 +126,7 @@ const CommentItem = ({ comment }: Props) => {
               </button>
             )}
 
-            <footer className="pt-3 flex gap-2.5 text-font-2 text-sm">
+            {/* <footer className="pt-3 flex gap-2.5 text-font-2 text-sm">
               <div className="flex items-center gap-1">
                 <Heart className="w-4 h-4 cursor-pointer" />
                 {formatStatCount(3789)}
@@ -142,23 +142,23 @@ const CommentItem = ({ comment }: Props) => {
               >
                 답글
               </button>
-            </footer>
+            </footer> */}
           </div>
         </section>
       </div>
 
       {/* 답글 입력창 영역 */}
-      {isCommentInput && (
+      {/* {isCommentInput && (
         <CommentInput
           profileImage="/public/p1.png"
           formClassName="pl-9"
           isReplyMode
           toggleIsCommentInput={toggleIsCommentInput}
         />
-      )}
+      )} */}
 
       {/* 답글 리스트 영역 */}
-      {comment.replies && comment.replies.length > 0 && (
+      {/* {comment.replies && comment.replies.length > 0 && (
         <section className="flex flex-col gap-3" id="reply-list-area">
           {(isReply ? comment.replies : comment.replies.slice(0, 2)).map(
             (reply) => (
@@ -176,7 +176,7 @@ const CommentItem = ({ comment }: Props) => {
             </button>
           )}
         </section>
-      )}
+      )} */}
     </article>
   );
 };

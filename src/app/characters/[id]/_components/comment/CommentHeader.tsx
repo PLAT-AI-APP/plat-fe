@@ -1,25 +1,25 @@
-import { ModalLayout } from "@/components/ModalLayout";
-import { Sort } from "@/icons";
-import Check from "@/icons/Check";
-import { cn } from "@/lib/utils";
-import React, { useRef, useState } from "react";
+// import { ModalLayout } from "@/components/ModalLayout";
+// import { Sort } from "@/icons";
+// import Check from "@/icons/Check";
+// import { cn } from "@/lib/utils";
+// import React, { useRef, useState } from "react";
 
 const CommentHeader = ({
   count,
-  sort,
-  handleSort,
+  // sort,
+  // handleSort,
 }: {
   count: number;
   sort: string;
   handleSort: (val: string) => void;
 }) => {
-  const [isSortOpen, setIsSortOpen] = useState(false);
-  const triggerRef = useRef(null);
+  // const [isSortOpen, setIsSortOpen] = useState(false);
+  // const triggerRef = useRef(null);
 
   return (
     <header className="flex justify-between">
       <span>댓글 {count}개</span>
-      <button
+      {/* <button
         ref={triggerRef}
         onClick={() => setIsSortOpen(!isSortOpen)}
         className="relative flex items-center gap-1.5 text-sm"
@@ -54,7 +54,7 @@ const CommentHeader = ({
             </ul>
           </ModalLayout>
         )}
-      </button>
+      </button> */}
     </header>
   );
 };
