@@ -86,10 +86,10 @@ const CommentItem = ({ comment }: Props) => {
                       <Flag className="w-5 h-5" />
                       신고
                     </button>
-                    <button className="whitespace-nowrap flex gap-2 p-1.5 text-sm font-medium hover:bg-btn-hover rounded-lg">
+                    {/* <button className="whitespace-nowrap flex gap-2 p-1.5 text-sm font-medium hover:bg-btn-hover rounded-lg">
                       <Pin className="w-5 h-5" />
                       댓글 고정
-                    </button>
+                    </button> */}
                     <button className="whitespace-nowrap flex gap-2 p-1.5 text-sm font-medium hover:bg-btn-hover rounded-lg">
                       <Edit className="w-5 h-5" />
                       수정
