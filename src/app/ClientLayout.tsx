@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react"; // useEffect 추가
 import Header from "@/components/header";
 import Sidebar from "@/components/Sidebar";
 import { usePathname } from "next/navigation";
@@ -14,15 +14,31 @@ export default function ClientLayout({
 }) {
   const pathname = usePathname();
 
-  // 초기값 설정 단계에서 현재 경로를 즉시 반영
   const [isFolded, setIsFolded] = useState(
     () => !pathname?.startsWith("/chatting-room"),
   );
 
-  // 이전 경로를 저장하여 경로 변경을 감지
   const [prevPathname, setPrevPathname] = useState(pathname);
 
-  // 경로가 바뀌었을 때만 실행되는 로직
+  // 화면 너비에 따른 자동 폴딩 로직 추가
+  useEffect(() => {
+    // 1024px 미만인지 체크하는 매치 미디어
+    const mql = window.matchMedia("(max-width: 1023px)");
+
+    const handleSceneChange = (e: MediaQueryListEvent | MediaQueryList) => {
+      // 1024px 미만이면 fold(true), 이상이면 fold 해제(false)
+      setIsFolded(e.matches);
+    };
+
+    // 초기 실행
+    handleSceneChange(mql);
+
+    // 이벤트 리스너 등록
+    mql.addEventListener("change", handleSceneChange);
+    return () => mql.removeEventListener("change", handleSceneChange);
+  }, []);
+
+  // 경로 변경 감지 로직 (기존 유지)
   if (pathname !== prevPathname) {
     setPrevPathname(pathname);
     if (pathname?.startsWith("/chatting-room")) {
@@ -31,7 +47,6 @@ export default function ClientLayout({
   }
 
   const handleFoldToggle = () => setIsFolded((prev) => !prev);
-
   const { isScrolling, onScroll } = useScrollTimeout();
 
   return (
