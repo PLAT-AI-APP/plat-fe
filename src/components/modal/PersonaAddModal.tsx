@@ -72,7 +72,7 @@ const PersonaAddModal = ({
       className="z-30 w-screen max-w-100 h-fit whitespace-nowrap top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-5 bg-bg-dark border border-border-main rounded-3xl"
     >
       <header className="pb-6">
-        <div className="flex justify-between">
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Persona className="w-6 h-6" />
             <h2 className="text-[20px] font-semibold text-font-1">
@@ -82,10 +82,10 @@ const PersonaAddModal = ({
           <button
             onClick={toggleIsAddModal}
             type="button"
-            className="p-1 rounded-lg hover:bg-btn-hover transition-colors"
+            className="p-1 rounded-lg hover:bg-btn-hover transition-colors w-5.5 h-5.5"
             aria-label="닫기"
           >
-            <Close className="w-3.5 h-3.5 text-font-2" />
+            <Close className="w-3.5 h-3.5" />
           </button>
         </div>
         <p className="text-sm text-font-2 pt-2 whitespace-normal">

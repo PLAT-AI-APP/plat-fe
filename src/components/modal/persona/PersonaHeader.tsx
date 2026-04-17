@@ -8,7 +8,7 @@ interface PersonaHeaderProps {
 const PersonaHeader = ({ onClose }: PersonaHeaderProps) => {
   return (
     <header className="pb-6">
-      <div className="flex justify-between">
+      <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Persona className="w-6 h-6" />
           <h2 className="text-[20px] font-semibold">페르소나</h2>
@@ -16,7 +16,7 @@ const PersonaHeader = ({ onClose }: PersonaHeaderProps) => {
         <button
           onClick={onClose}
           type="button"
-          className="p-1 rounded-lg hover:bg-btn-hover"
+          className="p-1 rounded-lg hover:bg-btn-hover w-5.5 h-5.5"
           aria-label="닫기"
         >
           <Close className="w-3.5 h-3.5" />

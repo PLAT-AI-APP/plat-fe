@@ -67,22 +67,49 @@ const SmartInput = forwardRef<
       }
     }, [rightElement]);
 
-    // 1.5rem(24px) 기준으로 계산 시 오차를 줄이기 위해
-    // 실제 텍스트가 차지하는 높이(Line Height)를 20px~22px 정도로 정밀하게 계산하거나
-    // 여유 공간을 살짝 줄여서 스크롤이 더 빨리 반응하게 만듭니다.
-    const LINE_HEIGHT = 16; // 텍스트 한 줄의 대략적인 높이 (px)
-    const VERTICAL_PADDING = 24; // py-3 (12px * 2)
-    const BOTTOM_SPACING = 29; // pb-7.25 영역 (글자수 표시용)
+    // 1. 내부에서 textarea 엘리먼트에 직접 접근하기 위한 ref
+    const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+
+    // 2. 외부 ref와 내부 ref를 합쳐주는 함수
+    const handleRef = (node: HTMLTextAreaElement) => {
+      textareaRef.current = node;
+      if (typeof ref === "function") ref(node);
+      else if (ref)
+        (ref as React.MutableRefObject<HTMLTextAreaElement>).current = node;
+    };
+
+    const LINE_HEIGHT = 16;
+    const VERTICAL_PADDING = 24;
+    const BOTTOM_SPACING = 29;
+
+    // 3. 높이를 계산하고 적용하는 핵심 함수
+    const adjustHeight = () => {
+      const textarea = textareaRef.current;
+      if (!textarea || !isTextarea) return;
+
+      // 높이를 초기화해서 정확한 scrollHeight를 측정할 수 있게 함
+      textarea.style.height = "auto";
+
+      // 내용의 전체 높이(scrollHeight)를 실제 height에 대입
+      // 이때 CSS의 minHeight와 maxHeight가 범위를 제한해줍니다.
+      textarea.style.height = `${textarea.scrollHeight}px`;
+    };
+
+    // 4. value가 바뀌거나 처음 렌더링될 때 높이 조절
+    // useEffect(() => {
+    //   if (isTextarea) {
+    //     adjustHeight();
+    //   }
+    // }, [value, isTextarea]);
 
     const textareaStyle: React.CSSProperties = {
       paddingLeft: `${paddingLeft}px`,
-      // 줄바꿈이 생기자마자 스크롤이 생기도록 max-height를 조금 더 타이트하게 잡습니다 (-4px)
       minHeight: isTextarea
         ? `${minLine * LINE_HEIGHT + VERTICAL_PADDING + BOTTOM_SPACING}px`
         : undefined,
       maxHeight:
         isTextarea && maxLine
-          ? `${maxLine * LINE_HEIGHT + VERTICAL_PADDING + BOTTOM_SPACING - 4}px`
+          ? `${maxLine * LINE_HEIGHT + VERTICAL_PADDING + BOTTOM_SPACING}px`
           : undefined,
     };
 
@@ -90,6 +117,8 @@ const SmartInput = forwardRef<
       e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
     ) => {
       onChange?.(e);
+      // 5. 입력할 때마다 즉시 높이 조절
+      if (isTextarea) adjustHeight();
     };
 
     const isNavigationType =
@@ -145,7 +174,7 @@ const SmartInput = forwardRef<
               >
                 <textarea
                   {...(rest as React.TextareaHTMLAttributes<HTMLTextAreaElement>)}
-                  ref={ref as React.ForwardedRef<HTMLTextAreaElement>}
+                  ref={handleRef} // 합성된 ref 사용
                   style={textareaStyle}
                   className={cn(
                     "w-full px-4 py-3 pb-7.25 bg-transparent outline-none resize-none placeholder:text-font-disabled overflow-y-auto custom-scrollbar",

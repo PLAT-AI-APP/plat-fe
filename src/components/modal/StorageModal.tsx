@@ -43,7 +43,7 @@ const StorageModal = ({ closeModal }: StorageModalProps) => {
       className="w-screen max-w-125 h-fit whitespace-nowrap top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-5"
     >
       <header className="pb-6">
-        <div className="flex justify-between">
+        <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Storage className="w-6 h-6" />
             <h2 className="text-[20px] font-semibold">장기기억</h2>
@@ -51,7 +51,7 @@ const StorageModal = ({ closeModal }: StorageModalProps) => {
           <button
             onClick={closeModal}
             type="button"
-            className="p-1 rounded-lg hover:bg-btn-hover"
+            className="p-1 rounded-lg hover:bg-btn-hover w-5.5 h-5.5"
             aria-label="닫기"
           >
             <Close className="w-3.5 h-3.5" />
