@@ -82,10 +82,8 @@ const CreatePreviewList = ({
                 index={index}
               >
                 {(provided) => (
-                  <div>
+                  <div ref={provided.innerRef} {...provided.draggableProps}>
                     <article
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
                       className={cn(
                         "relative group w-full",
                         item.type === "action" &&
@@ -103,7 +101,10 @@ const CreatePreviewList = ({
 
                       {editingId === item.id ? (
                         /* 수정 모드 */
-                        <div className="flex flex-col gap-2">
+                        <div
+                          id="edit-form-container"
+                          className="flex flex-col gap-2"
+                        >
                           {item.type === "chat" ? (
                             <div className="flex gap-2">
                               <Image
@@ -168,6 +169,7 @@ const CreatePreviewList = ({
                       ) : (
                         /* 뷰 모드 */
                         <div
+                          id="view-content-container"
                           className={cn(
                             `flex `,
                             item.type === "action"
@@ -203,10 +205,10 @@ const CreatePreviewList = ({
                           {/* 편집 버튼 세트 */}
                           {isEditable && (
                             <div
-                              className={`
-                              flex gap-1 transition-opacity shrink-0
-                              ${item.type === "action" ? "pl-12 mt-2" : "mb-1"} 
-                            `}
+                              className={cn(
+                                "flex gap-1 transition-opacity shrink-0",
+                                item.type === "action" ? "pl-12 mt-2" : "mb-1",
+                              )}
                             >
                               {/* 수정 버튼 (chat, action 등에서 노출) */}
                               {item.type !== "asset" && (

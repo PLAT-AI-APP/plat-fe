@@ -1,11 +1,14 @@
 "use client";
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import CharacterCard from "./CharacterCard";
 import SkeletonCharacterCard from "../skeleton/SkeletonCard";
 
 interface CharacterGridProps {
   lineCount: number;
   cardHeight: number;
+  // 가로, 세로 간격을 위한 props 추가
+  columnGap?: number;
+  rowGap?: number;
   isNew?: boolean;
   isOfficial?: boolean;
   char: {
@@ -23,12 +26,14 @@ const CharacterGrid = ({
   char,
   lineCount,
   cardHeight,
+  columnGap = 20, // 기본 가로 간격 20px
+  rowGap = 20, // 기본 세로 간격 20px
   isNew = false,
   isOfficial = false,
   // title,
   // TitleLogo,
 }: CharacterGridProps) => {
-  const gap = 20;
+  // const gap = 20; // 기존 고정 변수 대신 props 사용
   // 공식: (줄 수 * 카드 높이) + ((줄 수 - 1) * 간격)
   // const totalHeight = lineCount * cardHeight + (lineCount - 1) * gap;
   const [isLoading, setIsLoading] = useState(true);
@@ -43,7 +48,13 @@ const CharacterGrid = ({
   }, []);
 
   return (
-    <div className="grid grid-cols-[repeat(auto-fill,178px)] gap-5 justify-center w-full">
+    <div
+      className="grid grid-cols-[repeat(auto-fill,178px)] justify-center w-full"
+      style={{
+        columnGap: `${columnGap}px`,
+        rowGap: `${rowGap}px`,
+      }}
+    >
       {/* {title && (
         <h2
           id="today-pick-title"
@@ -58,7 +69,7 @@ const CharacterGrid = ({
           char.map((_, index) => (
             <SkeletonCharacterCard
               key={`skeleton-${index}`}
-              cardHeight={cardHeight} // 200 대신 실제 카드 높이와 일치시킵니다.
+              cardHeight={cardHeight}
             />
           ))
         : // 로딩 완료 시: 실제 카드 배치

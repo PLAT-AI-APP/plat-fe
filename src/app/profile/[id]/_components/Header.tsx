@@ -4,7 +4,7 @@ import ProfileEditModal from "@/components/modal/ProfileEditModal";
 import { FollowModal } from "@/components/modal/FollowModal";
 
 const Header = () => {
-  const [isProfileEditodal, setIsProfileEditodal] = useState(true);
+  const [isProfileEditodal, setIsProfileEditodal] = useState(false);
   const [isFollowModal, setIsFollowModal] = useState(false);
 
   const toggleIsProfileEditodal = () => {
@@ -29,27 +29,36 @@ const Header = () => {
             />
           </aside>
 
-          <div className="flex flex-col">
-            <h1 className="text-lg font-medium">고리타분한멸치</h1>
+          <div className="flex items-start gap-6">
+            <div className="flex flex-col">
+              <h1 className="text-lg font-medium">고리타분한멸치</h1>
 
-            <nav className="flex gap-4">
-              <button
-                onClick={toggleIsFollowModal}
-                className="flex gap-1 text-sm cursor-pointer"
-                type="button"
-              >
-                <span className="text-font-2">팔로워</span>
-                <strong>12</strong>
-              </button>
-              <button
-                onClick={toggleIsFollowModal}
-                className="flex gap-1 text-sm cursor-pointer"
-                type="button"
-              >
-                <span className="text-font-2">팔로잉</span>
-                <strong>1,232</strong>
-              </button>
-            </nav>
+              <nav className="flex gap-4">
+                <button
+                  onClick={toggleIsFollowModal}
+                  className="flex gap-1 text-sm cursor-pointer"
+                  type="button"
+                >
+                  <span className="text-font-2">팔로워</span>
+                  <strong>12</strong>
+                </button>
+                <button
+                  onClick={toggleIsFollowModal}
+                  className="flex gap-1 text-sm cursor-pointer"
+                  type="button"
+                >
+                  <span className="text-font-2">팔로잉</span>
+                  <strong>1,232</strong>
+                </button>
+              </nav>
+            </div>
+
+            <button
+              type="button"
+              className="px-3.5 py-1.5 bg-font-1 text-bg-dark text-xs rounded-[100px]"
+            >
+              팔로우
+            </button>
           </div>
         </div>
 

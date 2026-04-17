@@ -44,7 +44,7 @@ export default function ClientLayout({
           id="page-content"
           onScroll={onScroll}
           className={cn(
-            "hide-scrollbar-on-idle flex-1 overflow-y-auto overflow-x-hidden flex flex-col",
+            "max-w-300 w-full mx-auto hide-scrollbar-on-idle flex-1 overflow-y-auto overflow-x-hidden flex flex-col",
             isScrolling && "is-scrolling",
           )}
         >
