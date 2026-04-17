@@ -21,30 +21,18 @@ const TendencySettingModal = ({ onClose }: TendencySettingModalProps) => {
     setCurrentTendency(name);
   };
   return (
-    <ModalLayout onClose={onClose} className="rounded-3xl p-5 w-70 cursor-auto">
+    <ModalLayout
+      onClose={onClose}
+      className="right-full top-0 mr-4 rounded-3xl p-4 w-50 cursor-auto"
+    >
       <div onClick={(e) => e.stopPropagation()}>
-        <header className="pb-6 flex items-center justify-between text-font-1">
-          <div className="flex gap-3 items-center">
-            <Setting className="w-6 h-6 " />
-            <span className="text-[20px] font-medium">콘텐츠 설정</span>
-          </div>
-
-          <button
-            onClick={onClose}
-            type="button"
-            className="p-1 rounded-lg hover:bg-btn-hover"
-          >
-            <Close className="w-3.5 h-3.5 cursor-pointer" />
-          </button>
-        </header>
-
         <ul className="flex flex-col gap-2">
           {tendencyArray.map(({ color, name }) => (
             <li
               key={name}
               onClick={() => handleCurrentTendency(name)}
               className={cn(
-                "cursor-pointer flex justify-between p-3 rounded-2xl border border-border-main bg-card",
+                "cursor-pointer flex justify-between px-3.5 py-2.5 rounded-2xl border border-border-main bg-card",
                 cureentTendency === name
                   ? "border-brand bg-brand-opacity"
                   : "hover:bg-card-hover",
