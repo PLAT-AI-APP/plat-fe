@@ -7,6 +7,15 @@ import { usePathname } from "next/navigation";
 import { useScrollTimeout } from "@/hooks/useScrollTiemout";
 import { cn } from "@/lib/utils";
 
+// 사이드바를 아예 보여주지 않을 경로 리스트
+const HIDE_SIDEBAR_PATHS = ["/character-creat"];
+
+// 헤더를 아예 보여주지 않을 경로 리스트
+const HIDE_HEADER_PATHS = ["/character-creat"];
+
+// 사이드바를 기본으로 접어둘 경로 리스트
+const FOLD_SIDEBAR_PATHS = ["/chatting-room"];
+
 export default function ClientLayout({
   children,
 }: {
@@ -14,8 +23,17 @@ export default function ClientLayout({
 }) {
   const pathname = usePathname();
 
-  const [isFolded, setIsFolded] = useState(
-    () => !pathname?.startsWith("/chatting-room"),
+  // 현재 경로가 사이드바 숨김 대상인지 확인
+  const isSidebarHidden = HIDE_SIDEBAR_PATHS.some((path) =>
+    pathname?.startsWith(path),
+  );
+  // 현재 경로가 헤더 숨김 대상인지 확인
+  const isHeaderHidden = HIDE_HEADER_PATHS.some((path) =>
+    pathname?.startsWith(path),
+  );
+
+  const [isFolded, setIsFolded] = useState(() =>
+    FOLD_SIDEBAR_PATHS.some((path) => pathname?.startsWith(path)),
   );
 
   const [prevPathname, setPrevPathname] = useState(pathname);
@@ -51,9 +69,16 @@ export default function ClientLayout({
 
   return (
     <>
-      <Header handleFoldToggle={handleFoldToggle} />
-      <main id="main-container" className="flex h-[calc(100vh-60px)]">
-        <Sidebar isFolded={isFolded} />
+      {!isHeaderHidden && <Header handleFoldToggle={handleFoldToggle} />}
+      <main
+        id="main-container"
+        className={cn(
+          "flex",
+          // 수정된 로직: 헤더가 숨겨졌을 때(true) 전체 높이, 헤더가 있을 때(false) 60px 차감
+          isHeaderHidden ? "h-screen" : "h-[calc(100vh-60px)]",
+        )}
+      >
+        {!isSidebarHidden && <Sidebar isFolded={isFolded} />}
 
         <div
           id="page-content"

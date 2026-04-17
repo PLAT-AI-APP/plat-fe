@@ -50,6 +50,14 @@ const AssetItem = ({ id, index, remove, copyAsset }: AssetItemProps) => {
     reader.readAsDataURL(file);
   };
 
+  const handleCopy = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (error) {
+      console.error("복사 실패:", error);
+    }
+  };
+
   return (
     <Draggable draggableId={id} index={index}>
       {(provided) => (
@@ -91,9 +99,11 @@ const AssetItem = ({ id, index, remove, copyAsset }: AssetItemProps) => {
                 />
               </label>
 
-              <span className="text-sm font-medium">
+              <p className="flex gap-1 text-sm font-medium">
                 {assetName || "에셋이름"}
-              </span>
+                {/* 추후 백엔드가 넘겨주는 에셋의 코드 */}
+                <span className="text-font-disabled">#3Eabde</span>
+              </p>
             </div>
 
             <div className="flex gap-2 text-font-2">
@@ -130,12 +140,13 @@ const AssetItem = ({ id, index, remove, copyAsset }: AssetItemProps) => {
                 label="에셋명"
                 required
                 placeholder="에셋명을 입력해주세요."
-                maxLength={20}
+                maxLength={15}
                 value={assetName}
               />
               <SmartInput
                 {...register(`asset.${index}.assetSituation` as const)}
                 label="상황 설명"
+                type="textarea"
                 required
                 placeholder="이미지와 어울리는 상황을 설명해주세요."
                 maxLength={50}

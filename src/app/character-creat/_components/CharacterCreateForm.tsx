@@ -13,6 +13,7 @@ import CreateModals from "./CreateModals";
 const CharacterCreateForm = () => {
   const router = useRouter();
   const methods = useForm<CharacterCreateFormValues>({
+    mode: "onChange",
     defaultValues: {
       representativeImage: "",
       title: "",
@@ -152,7 +153,7 @@ const CharacterCreateForm = () => {
 
       <CreateHeader onSave={handleSave} onDraftClick={handleDraftClick} />
 
-      <div className="flex gap-4 flex-1 min-w-0 pb-5">
+      <div className="flex gap-4 flex-1 min-w-0">
         <CreateTabs
           currentTabId={currentTabId}
           setCurrentTabId={setCurrentTabId}

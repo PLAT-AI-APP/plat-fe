@@ -2,6 +2,10 @@
 
 import React from "react";
 import { Redo } from "@/icons";
+import ArrowLineLeft from "@/icons/ArrowLineLeft";
+import ActiveButton from "@/components/ActiveButton";
+import { useFormContext } from "react-hook-form";
+import { CharacterCreateFormValues } from "@/type/character";
 
 interface CreateHeaderProps {
   onSave: () => void;
@@ -9,11 +13,18 @@ interface CreateHeaderProps {
 }
 
 const CreateHeader = ({ onSave, onDraftClick }: CreateHeaderProps) => {
+  const {
+    formState: { isValid },
+  } = useFormContext<CharacterCreateFormValues>();
+
   return (
     <header className="flex items-center justify-between pb-4">
-      <h2 className="text-[20px] font-medium">캐릭터 생성</h2>
+      <h2 className="flex items-center gap-2 text-[20px] font-medium">
+        <ArrowLineLeft className="w-6 h-6 text-font-2" />
+        캐릭터 생성
+      </h2>
 
-      <div className="flex gap-4 whitespace-nowrap">
+      <div className="flex gap-4 whitespace-nowrap text-sm">
         <div className="flex gap-2">
           <button
             onClick={onSave}
@@ -28,7 +39,11 @@ const CreateHeader = ({ onSave, onDraftClick }: CreateHeaderProps) => {
             <Redo className="w-4 h-4" />
           </button>
         </div>
-        <button className="px-5 py-2 bg-brand rounded-xl">등록</button>
+        <ActiveButton
+          isActive={isValid}
+          text="등록"
+          className="px-4 py-2 rounded-xl font-medium h-9"
+        />
       </div>
     </header>
   );

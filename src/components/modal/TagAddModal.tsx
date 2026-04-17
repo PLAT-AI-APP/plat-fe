@@ -93,12 +93,17 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
             <Tag aria-hidden="true" />
             <h2 className="text-[20px] font-semibold">태그</h2>
           </div>
-          <button type="button" onClick={onClose} aria-label="모달 닫기">
-            <Close className="w-3.5 h-3.5 cursor-pointer" />
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="모달 닫기"
+            className="p-1 flex items-center justify-center w-5.5 h-5.5 rounded-lg hover:bg-btn-hover"
+          >
+            <Close className="w-3.5 h-3.5" />
           </button>
         </header>
 
-        <form
+        <div
           id="tag-search-form"
           role="search"
           className="relative flex items-center group w-full pb-3"
@@ -108,7 +113,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
             id="search-input"
             type="text"
             value={searchKeyword}
-            className="text-sm border cursor-pointer border-border-main w-full h-10 px-4 pl-10 rounded-xl focus:outline-none transition-all placeholder:text-font-disabled focus:cursor-text focus:border-font-1"
+            className="bg-bg-darker text-sm border cursor-pointer border-border-main w-full h-10 px-4 pl-10 rounded-xl focus:outline-none transition-all placeholder:text-font-disabled focus:cursor-text focus:border-font-1"
             placeholder="검색어를 입력하세요"
             onChange={(e) => handleSearch(e.target.value)}
           />
@@ -118,16 +123,16 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
           >
             <Search className="text-font-disabled w-4.5 h-4.5" />
           </label>
-        </form>
+        </div>
 
         <nav id="tag-list-wrapper">
-          <ul className="flex gap-3 p-2.5 flex-wrap max-h-85 overflow-auto">
+          <ul className="bg-bg-darker rounded-xl flex gap-y-2 gap-x-2.5 p-2.5 flex-wrap max-h-85 min-h-85 overflow-auto">
             {filteredTags.map(({ id, isSelected, name }) => (
               <li key={id}>
                 <button
                   type="button"
                   className={cn(
-                    "px-1.25 py-0.5 rounded-md bg-card text-xs cursor-pointer hover:bg-card-hover transition-colors",
+                    "px-0.75 py-1.5 rounded-md bg-card text-xs cursor-pointer hover:bg-card-hover transition-colors",
                     isSelected && "bg-brand-opacity text-brand font-medium",
                   )}
                   onClick={() => handleTagToggle(name)}
@@ -139,7 +144,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
           </ul>
         </nav>
 
-        <footer className="flex gap-3 pt-4">
+        <footer className="flex gap-3 mt-4 h-10.25">
           <button
             type="button"
             onClick={toggleIsModal}
@@ -152,14 +157,12 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
             <ArrowRight className="w-3 h-3" />
           </button>
 
-          <div className="flex justify-end">
-            <ActiveButton
-              onClick={onClose}
-              text="완료"
-              isActive
-              className="px-5 py-2.5 w-fit rounded-xl text-sm font-medium"
-            />
-          </div>
+          <ActiveButton
+            onClick={onClose}
+            text="완료"
+            isActive
+            className="h-full px-5 py-2.25 w-fit rounded-xl text-sm"
+          />
         </footer>
       </div>
       {isModal && <TagSuggestionsModal onClose={toggleIsModal} />}

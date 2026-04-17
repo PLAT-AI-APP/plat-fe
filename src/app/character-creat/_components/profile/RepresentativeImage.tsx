@@ -1,9 +1,13 @@
 import { Close, ImageIcon } from "@/icons";
+import { CharacterCreateFormValues } from "@/type/character";
 import Image from "next/image";
-import React, { useState, ChangeEvent } from "react";
+import React, { ChangeEvent } from "react";
+import { useFormContext } from "react-hook-form";
 
 const RepresentativeImage = () => {
-  const [preview, setPreview] = useState<string | null>(null);
+  const { setValue, getValues } = useFormContext<CharacterCreateFormValues>();
+  // const [preview, setValue] = useState<string | null>(null);
+  const preview = getValues("representativeImage");
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -28,13 +32,13 @@ const RepresentativeImage = () => {
     // 프리뷰 생성
     const reader = new FileReader();
     reader.onloadend = () => {
-      setPreview(reader.result as string);
+      setValue("representativeImage", reader.result as string);
     };
     reader.readAsDataURL(file);
   };
 
   const previewRemove = () => {
-    setPreview("");
+    setValue("representativeImage", "");
   };
 
   return (
@@ -86,7 +90,7 @@ const RepresentativeImage = () => {
         <div className="flex gap-1 h-9">
           <label
             htmlFor="image"
-            className="flex items-center justify-center whitespace-nowrap flex-1 cursor-pointer w-full text-center border border-border-main rounded-xl bg-bg-darkest px-auto py-2"
+            className="flex text-sm items-center justify-center whitespace-nowrap flex-1 cursor-pointer w-full text-center border border-border-main rounded-xl bg-bg-darkest px-auto py-2"
           >
             업로드
           </label>

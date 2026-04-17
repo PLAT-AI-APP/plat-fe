@@ -114,7 +114,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
     }, 0);
   };
   return (
-    <section className="flex flex-col justify-between flex-1 max-w-152.25 min-w-0 max-h-[calc(100vh-156px)]">
+    <section className="flex flex-col justify-between flex-1">
       <div
         onScroll={onScroll}
         ref={scrollContainerRef}

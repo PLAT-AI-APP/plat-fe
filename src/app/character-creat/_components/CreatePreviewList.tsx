@@ -86,8 +86,7 @@ const CreatePreviewList = ({
                     <article
                       className={cn(
                         "relative group w-full",
-                        item.type === "action" &&
-                          "bg-btn-hover rounded-2xl p-2 pt-0",
+                        item.type === "action" && "rounded-2xl p-2 pt-0",
                         editingId === item.id && "bg-transparent p-0",
                       )}
                     >

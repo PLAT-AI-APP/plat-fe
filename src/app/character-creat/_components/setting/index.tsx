@@ -2,11 +2,10 @@ import TagAddModal from "@/components/modal/TagAddModal";
 import { ModalLayout } from "@/components/ModalLayout";
 import SmartInput from "@/components/SmartInput";
 import { Close } from "@/icons";
-import TagIcon from "@/icons/Tag";
 import Check from "@/icons/Check";
 import { cn } from "@/lib/utils";
 import { CharacterCreateFormValues } from "@/type/character";
-import React, { useState } from "react";
+import React, { useState, useRef, MouseEvent } from "react"; // useRef 추가
 import { useFieldArray, useFormContext } from "react-hook-form";
 
 const CATEGORIES = [
@@ -33,12 +32,18 @@ const Setting = () => {
   });
   const tagList = watch("tagList");
 
+  // 트리거 Ref 생성 시작
+  const publicTriggerRef = useRef(null);
+  const tendencyTriggerRef = useRef(null);
+  const categoryTriggerRef = useRef(null);
+
   const [tagInputValue, setTagInputValue] = useState("");
 
   // modal 제어
   const [isPublic, setIsPublic] = useState(false);
   const [isTendency, setIsTendency] = useState(false);
   const [iscategory, setIscategory] = useState(false);
+
   const toggleIsPublic = () => {
     setIsPublic((prev) => !prev);
   };
@@ -56,7 +61,7 @@ const Setting = () => {
 
   // 공개여부 change
   const handleIsPublic = (ispublic: boolean) => {
-    setValue("isPublic", ispublic); // 전달받은 boolean 값을 그대로 설정
+    setValue("isPublic", ispublic);
     setIsPublic(false);
   };
   // 성향 change
@@ -74,20 +79,16 @@ const Setting = () => {
     e.preventDefault();
     const trimmedValue = tagInputValue.trim();
 
-    // 빈 값 방지
     if (!trimmedValue) return;
-    // 최대 5개 제한
     if (fields.length >= 5) {
       alert("태그는 최대 5개까지 등록 가능합니다.");
       return;
     }
-    // 중복 방지
     if (fields.some((tag) => tag.name === trimmedValue)) {
       alert("이미 등록된 태그입니다.");
       return;
     }
 
-    // 배열에 추가 및 입력창 초기화
     append({ name: trimmedValue });
     setTagInputValue("");
   };
@@ -98,13 +99,16 @@ const Setting = () => {
   const TENDENCY_LIST = ["전체", "남성향", "여성향"] as const;
 
   const [isTagModal, setIsTagModal] = useState(false);
-  const toggleIsTagModal = () => {
+  const toggleIsTagModal = (e?: MouseEvent) => {
+    e?.stopPropagation();
     setIsTagModal((prev) => !prev);
   };
+
   return (
     <section className="flex flex-col gap-6">
       {/* 공개여부 선택 */}
       <SmartInput
+        ref={publicTriggerRef} // 트리거 Ref 적용
         type="modal"
         label="공개 여부"
         required
@@ -113,33 +117,37 @@ const Setting = () => {
         toggleIsOpen={toggleIsPublic}
         modalComponents={
           isPublic && (
-            <ModalLayout onClose={toggleIsPublic} className="w-full">
+            <ModalLayout
+              onClose={toggleIsPublic}
+              triggerRef={publicTriggerRef} // ModalLayout에 전달
+              className="w-full"
+            >
               <div
                 onClick={(e) => e.stopPropagation()}
                 className="flex flex-col gap-1"
               >
-                {/* '공개' 선택 영역 */}
                 <div
                   onClick={() => handleIsPublic(true)}
                   className={cn(
-                    "flex justify-between px-2.5 py-2 rounded-lg cursor-pointer",
-                    !isPublic && "hover:bg-btn-hover",
+                    "hover:bg-btn-hover flex justify-between px-2.5 py-2 rounded-lg cursor-pointer",
                   )}
                 >
                   <span>공개</span>
-                  {isPublic && <Check className="w-4.5 h-4.5 text-brand" />}
+                  {isPublicWatch && (
+                    <Check className="w-4.5 h-4.5 text-brand" />
+                  )}
                 </div>
 
-                {/* '비공개' 선택 영역 */}
                 <div
                   onClick={() => handleIsPublic(false)}
                   className={cn(
-                    "flex justify-between px-2.5 py-2 rounded-lg cursor-pointer",
-                    isPublic && "hover:bg-btn-hover",
+                    "hover:bg-btn-hover flex justify-between px-2.5 py-2 rounded-lg cursor-pointer",
                   )}
                 >
                   <span>비공개</span>
-                  {!isPublic && <Check className="w-4.5 h-4.5 text-brand" />}
+                  {!isPublicWatch && (
+                    <Check className="w-4.5 h-4.5 text-brand" />
+                  )}
                 </div>
               </div>
             </ModalLayout>
@@ -162,6 +170,7 @@ const Setting = () => {
 
       {/* 성향 선택 */}
       <SmartInput
+        ref={tendencyTriggerRef} // 트리거 Ref 적용
         type="modal"
         label="성향"
         required
@@ -170,7 +179,11 @@ const Setting = () => {
         toggleIsOpen={toggleisTendency}
         modalComponents={
           isTendency && (
-            <ModalLayout onClose={toggleisTendency} className="w-full">
+            <ModalLayout
+              onClose={toggleisTendency}
+              triggerRef={tendencyTriggerRef} // ModalLayout에 전달
+              className="w-full"
+            >
               <div
                 onClick={(e) => e.stopPropagation()}
                 className="flex flex-col gap-1"
@@ -180,8 +193,7 @@ const Setting = () => {
                     key={tendency}
                     onClick={() => handleTendency(tendency)}
                     className={cn(
-                      "flex justify-between px-2.5 py-2 rounded-lg cursor-pointer",
-                      tendencyWatch !== tendency && "hover:bg-btn-hover",
+                      "hover:bg-btn-hover flex justify-between px-2.5 py-2 rounded-lg cursor-pointer",
                     )}
                   >
                     <span>{tendency}</span>
@@ -198,6 +210,7 @@ const Setting = () => {
 
       {/* 카테고리 선택 */}
       <SmartInput
+        ref={categoryTriggerRef} // 트리거 Ref 적용
         type="modal"
         label="카테고리"
         required
@@ -209,6 +222,7 @@ const Setting = () => {
           iscategory && (
             <ModalLayout
               onClose={toggleiscategory}
+              triggerRef={categoryTriggerRef} // ModalLayout에 전달
               className="w-full right-0 bottom-full top-auto -translate-y-2.5"
             >
               <div
@@ -220,8 +234,7 @@ const Setting = () => {
                     key={category}
                     onClick={() => handlecategory(category)}
                     className={cn(
-                      "flex justify-between px-2.5 py-2 rounded-lg cursor-pointer",
-                      categoryWatch !== category && "hover:bg-btn-hover",
+                      "hover:bg-btn-hover flex justify-between px-2.5 py-2 rounded-lg cursor-pointer",
                     )}
                   >
                     <span>{category}</span>

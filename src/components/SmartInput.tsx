@@ -2,7 +2,7 @@
 
 import { ArrowDown, ArrowRight, ArrowUp } from "@/icons";
 import { cn } from "@/lib/utils";
-import React, { forwardRef, useEffect, useRef, useState } from "react";
+import React, { forwardRef, Ref, useEffect, useRef, useState } from "react";
 import { FieldError } from "react-hook-form";
 
 interface SmartInputProps extends React.InputHTMLAttributes<
@@ -38,7 +38,7 @@ const SmartInput = forwardRef<
       inputClassName,
       isBorder = true,
       maxLine,
-      minLine,
+      minLine = 1,
       description,
       className,
       value,
@@ -55,38 +55,46 @@ const SmartInput = forwardRef<
     const isTextarea = type === "textarea";
     const isModal = type === "modal";
 
-    // 아이콘 넓이를 측정하기 위한 Ref와 State
     const iconRef = useRef<HTMLDivElement>(null);
-    const [paddingLeft, setPaddingLeft] = useState<number>(16); // 기본값 16px (pl-4)
+    const [paddingLeft, setPaddingLeft] = useState<number>(16);
 
     useEffect(() => {
       if (rightElement && iconRef.current) {
-        // 아이콘의 실제 넓이 측정 (offsetWidth)
-        // 패딩 공식: 왼쪽 기본 여백(16px) + 아이콘 넓이 + 추가 간격(12px)
         const iconWidth = iconRef.current.offsetWidth;
         setPaddingLeft(16 + iconWidth + 12);
       } else {
-        setPaddingLeft(16); // 아이콘이 없으면 기본 패딩
+        setPaddingLeft(16);
       }
-    }, [rightElement]); // 아이콘 컴포넌트가 바뀔 때마다 다시 계산
+    }, [rightElement]);
 
-    const dynamicPaddingLeft = { paddingLeft: `${paddingLeft}px` };
+    // 1.5rem(24px) 기준으로 계산 시 오차를 줄이기 위해
+    // 실제 텍스트가 차지하는 높이(Line Height)를 20px~22px 정도로 정밀하게 계산하거나
+    // 여유 공간을 살짝 줄여서 스크롤이 더 빨리 반응하게 만듭니다.
+    const LINE_HEIGHT = 16; // 텍스트 한 줄의 대략적인 높이 (px)
+    const VERTICAL_PADDING = 24; // py-3 (12px * 2)
+    const BOTTOM_SPACING = 29; // pb-7.25 영역 (글자수 표시용)
+
+    const textareaStyle: React.CSSProperties = {
+      paddingLeft: `${paddingLeft}px`,
+      // 줄바꿈이 생기자마자 스크롤이 생기도록 max-height를 조금 더 타이트하게 잡습니다 (-4px)
+      minHeight: isTextarea
+        ? `${minLine * LINE_HEIGHT + VERTICAL_PADDING + BOTTOM_SPACING}px`
+        : undefined,
+      maxHeight:
+        isTextarea && maxLine
+          ? `${maxLine * LINE_HEIGHT + VERTICAL_PADDING + BOTTOM_SPACING - 4}px`
+          : undefined,
+    };
 
     const handleValueChange = (
       e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
     ) => {
-      if (isTextarea && maxLine) {
-        const lineCount = e.target.value.split("\n").length;
-        if (lineCount > maxLine) return;
-      }
       onChange?.(e);
     };
 
-    // "태그" 포함 여부 및 특정 레이블 체크 로직을 변수로 캡슐화
     const isNavigationType =
       label === "휴대폰" || label?.includes("태그 등록(0/5)");
 
-    // 우측 아이콘 렌더링 로직
     const renderRightIcon = () => {
       if (isNavigationType) {
         return (
@@ -116,8 +124,7 @@ const SmartInput = forwardRef<
         )}
 
         <div className="group text-sm font-medium">
-          <div className="relative">
-            {/* 아이콘 영역: z-index를 주어 텍스트 위로 오도록 설정 */}
+          <div className={cn("relative")}>
             {rightElement && (
               <div
                 ref={iconRef}
@@ -139,12 +146,11 @@ const SmartInput = forwardRef<
                 <textarea
                   {...(rest as React.TextareaHTMLAttributes<HTMLTextAreaElement>)}
                   ref={ref as React.ForwardedRef<HTMLTextAreaElement>}
-                  style={dynamicPaddingLeft}
+                  style={textareaStyle}
                   className={cn(
-                    "w-full h-fit px-4 py-3 pb-7.25 bg-transparent outline-none resize-none placeholder:text-font-disabled",
+                    "w-full px-4 py-3 pb-7.25 bg-transparent outline-none resize-none placeholder:text-font-disabled overflow-y-auto custom-scrollbar",
                     inputClassName,
                   )}
-                  rows={minLine}
                   placeholder={placeholder}
                   value={value}
                   onChange={handleValueChange}
@@ -158,7 +164,7 @@ const SmartInput = forwardRef<
               <input
                 {...(rest as React.InputHTMLAttributes<HTMLInputElement>)}
                 ref={ref as React.ForwardedRef<HTMLInputElement>}
-                style={dynamicPaddingLeft}
+                style={{ paddingLeft: `${paddingLeft}px` }}
                 type="text"
                 className={cn(
                   "w-full px-4 py-3 bg-bg-darkest border border-border-main rounded-xl outline-none placeholder:text-font-disabled",
@@ -175,8 +181,9 @@ const SmartInput = forwardRef<
             {/* 3. Modal 타입 */}
             {type === "modal" && (
               <div
+                ref={ref as Ref<HTMLDivElement> | undefined}
                 onClick={toggleIsOpen}
-                style={dynamicPaddingLeft}
+                style={{ paddingLeft: `${paddingLeft}px` }}
                 className={cn(
                   "relative px-4 py-3 flex items-center justify-between rounded-xl border border-border-main bg-bg-darkest text-sm font-medium cursor-pointer",
                   error && "border-font-accents",
@@ -191,7 +198,6 @@ const SmartInput = forwardRef<
               </div>
             )}
 
-            {/* 글자 수 표시 */}
             {!isModal && maxLength && (
               <div
                 className={cn(
@@ -204,7 +210,6 @@ const SmartInput = forwardRef<
             )}
           </div>
 
-          {/* 에러 메시지 */}
           {error && (
             <span className="pt-2 pl-2 text-font-accents text-xs block">
               {typeof error === "string" ? error : error?.message}

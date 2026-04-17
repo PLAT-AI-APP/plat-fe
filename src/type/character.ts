@@ -25,7 +25,7 @@ export interface CharacterAsset {
 // 메인 폼 스키마
 export interface CharacterCreateFormValues {
   // 프로필
-  representativeImage: File | string;
+  representativeImage: string;
   title: string;
   name: string;
   characterIntroduce: string;
