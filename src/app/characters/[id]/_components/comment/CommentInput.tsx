@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { useState } from "react";
 
 interface CommentInputProps {
   profileImage: string;
@@ -13,8 +14,12 @@ export const CommentInput = ({
   isReplyMode = false,
   toggleIsCommentInput,
 }: CommentInputProps) => {
+  const [text, setText] = useState("");
   return (
-    <form className={cn("flex flex-col gap-2.5", formClassName)}>
+    <form
+      onSubmit={(e) => e.preventDefault()}
+      className={cn("flex flex-col gap-2.5", formClassName)}
+    >
       <div id="comment-input-wrapper" className="flex gap-2">
         <Image
           id="user-profile-thumbnail"
@@ -29,6 +34,8 @@ export const CommentInput = ({
             "text-sm px-3 py-2 h-19 bg-card rounded-2xl resize-none flex-1",
             isReplyMode && "max-h-14",
           )}
+          onChange={(e) => setText(e.target.value)}
+          value={text}
           placeholder="댓글을 입력하세요..."
         />
       </div>
@@ -46,7 +53,11 @@ export const CommentInput = ({
 
         <button
           type="submit"
-          className="text-font-disabled w-fit px-4 py-1.5 hover:bg-card-hover transition-all bg-btn-hover rounded-[100px]"
+          disabled={Boolean(!text)}
+          className={cn(
+            "text-font-disabled w-fit px-4 py-1.5 hover:bg-card-hover transition-all bg-btn-hover rounded-[100px]",
+            text && "bg-card-hover",
+          )}
         >
           {isReplyMode ? "답글" : "등록"}
         </button>

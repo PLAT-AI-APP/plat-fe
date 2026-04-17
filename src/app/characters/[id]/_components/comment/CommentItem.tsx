@@ -81,7 +81,7 @@ const CommentItem = ({ comment }: Props) => {
                   {/* 추후 본인 댓글일때: 수정, 삭제
                       다른사람이 작성한 댓글일때: 신고
                       크리에이터일때: 신고, 댓글고정, 삭제 */}
-                  <menu className="flex flex-col gap-1">
+                  <menu className="flex flex-col gap-1 min-w-37.5">
                     <button className="whitespace-nowrap flex gap-2 p-1.5 text-sm font-medium hover:bg-btn-hover rounded-lg">
                       <Flag className="w-5 h-5" />
                       신고

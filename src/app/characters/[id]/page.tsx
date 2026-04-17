@@ -123,7 +123,7 @@ fsafasdf
     setIsScenario(false);
   };
   return (
-    <article className="px-5 pt-7.5 flex justify-center w-full">
+    <article className="px-5 pt-7.5 pb-25 flex justify-center w-full">
       <div className="flex gap-6.5">
         <CharacterProfile
           creatorImage="/p1.png"
