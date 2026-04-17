@@ -90,6 +90,7 @@ const CreatePreviewList = ({
                         "relative group w-full",
                         item.type === "action" &&
                           "bg-btn-hover rounded-2xl p-2 pt-0",
+                        editingId === item.id && "bg-transparent p-0",
                       )}
                     >
                       {/* 드래그 핸들 */}
@@ -101,19 +102,54 @@ const CreatePreviewList = ({
                       </div>
 
                       {editingId === item.id ? (
-                        /* 수정 모드 (기존 유지) */
+                        /* 수정 모드 */
                         <div className="flex flex-col gap-2">
-                          <div className="flex flex-1 h-fit gap-2 bg-card p-2.5 rounded-2xl">
-                            <textarea
-                              autoFocus
-                              className="w-full resize-none bg-bg-darker p-2.5 rounded-xl text-sm font-medium outline-none"
-                              value={editedValue}
-                              onChange={(e) => setEditedValue(e.target.value)}
-                              rows={3}
-                            />
-                          </div>
+                          {item.type === "chat" ? (
+                            <div className="flex gap-2">
+                              <Image
+                                src={profileImage}
+                                alt={`${characterName} 프로필 이미지`}
+                                width={40}
+                                height={40}
+                                className="rounded-full w-10 h-10"
+                              />
+                              <div className="flex-1 text-sm font-medium">
+                                <span className="block">{characterName}</span>
+                                <div className="mt-1.5 px-3 py-2 bg-card rounded-[0px_16px_16px_16px]">
+                                  <textarea
+                                    autoFocus
+                                    className="w-full resize-none bg-bg-darker px-4 py-3 rounded-xl text-sm font-medium outline-none"
+                                    value={editedValue}
+                                    onChange={(e) =>
+                                      setEditedValue(e.target.value)
+                                    }
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          ) : (
+                            <div
+                              className={cn(
+                                "flex flex-1 h-fit gap-2 p-2.5 rounded-2xl",
+                                "bg-card",
+                              )}
+                            >
+                              <textarea
+                                autoFocus
+                                className="w-full resize-none bg-bg-darker p-2.5 rounded-xl text-sm font-medium outline-none"
+                                value={editedValue}
+                                onChange={(e) => setEditedValue(e.target.value)}
+                              />
+                            </div>
+                          )}
+
                           {item.type !== "action" && (
-                            <div className="flex shrink-0 gap-1 text-font-2 h-fit">
+                            <div
+                              className={cn(
+                                "flex shrink-0 gap-1 text-font-2 h-fit",
+                                item.type === "chat" && "pl-12",
+                              )}
+                            >
                               <button
                                 onClick={handleCancel}
                                 className="p-1.5 rounded-lg hover:bg-btn-hover"
