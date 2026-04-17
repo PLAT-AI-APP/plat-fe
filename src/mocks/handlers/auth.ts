@@ -160,7 +160,8 @@ export const authHandlers = [
       password: string;
     };
 
-    if (email != "taewok0205@gmail.com" || password != "test1234")
+    // 로그인 실패 케이스
+    if (email !== "taewok0205@gmail.com" || password !== "test1234") {
       return HttpResponse.json(
         {
           result: "ERROR",
@@ -169,20 +170,26 @@ export const authHandlers = [
         },
         { status: 401 },
       );
+    }
 
-    return new HttpResponse(null, {
-      status: 200,
-      headers: [
-        [
-          "Set-Cookie",
-          "accessToken=mocked-token; HttpOnly; Path=/; Max-Age=1800",
-        ],
-        [
-          "Set-Cookie",
-          "refreshToken=mocked-token; HttpOnly; Path=/auth/refresh; Max-Age=2592000",
-        ],
-      ],
-    });
+    // 로그인 성공 케이스
+    return HttpResponse.json(
+      {
+        // AccessToken은 메모리 보관을 위해 JSON Body로 전달합니다.
+        data: {
+          accessToken: "mocked-access-token-12345",
+        },
+      },
+      {
+        status: 200,
+        headers: {
+          // RefreshToken만 HttpOnly 쿠키로 설정합니다.
+          // Path를 /auth/refresh로 제한하면 보안이 더 강화됩니다.
+          "Set-Cookie":
+            "refreshToken=mocked-refresh-token-67890; HttpOnly; Path=/; Max-Age=2592000; SameSite=Lax",
+        },
+      },
+    );
   }),
 
   /** 로그아웃 */

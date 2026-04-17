@@ -1,77 +1,72 @@
 import { useAuthStore } from "@/store/useAuthStore";
 import { ApiErrorResponse } from "@/type/api";
-import axios, { AxiosInstance } from "axios";
+import axios, { InternalAxiosRequestConfig } from "axios";
 
-// 공통 설정 정의
 const BASE_CONFIG = {
   baseURL: "http://localhost:3000",
-  // baseURL: process.env.NEXT_PUBLIC_BASE_URI,
   timeout: 5000,
-  headers: {
-    "Content-Type": "application/json",
-    "X-Client-Type": "web",
-  },
+  headers: { "Content-Type": "application/json", "X-Client-Type": "web" },
 };
 
-// 기본 인스턴스 (인증 불필요한 API용)
-export const axiosInstance: AxiosInstance = axios.create(BASE_CONFIG);
-
-// 인증 인스턴스 (쿠키 포함, 토큰 갱신 필요 API용)
-export const authAxios: AxiosInstance = axios.create({
+// 인스턴스 생성
+export const axiosInstance = axios.create(BASE_CONFIG);
+export const authAxios = axios.create({
   ...BASE_CONFIG,
   withCredentials: true,
 });
 
-/**
- * 응답 인터셉터: 토큰 자동 갱신 로직
- */
-authAxios.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
+// 요청 인터셉터 공통 로직
+const onRequest = (config: InternalAxiosRequestConfig, addAuth = false) => {
+  if (typeof window === "undefined") return config;
 
-    // 401 에러: 토큰 갱신 로직 (태욱님 기존 코드 유지)
-    if (error.response?.status === 401 && !originalRequest._retry) {
+  // Device ID 주입
+  const deviceId =
+    localStorage.getItem("plat_device_id") || crypto.randomUUID();
+  if (!localStorage.getItem("plat_device_id"))
+    localStorage.setItem("plat_device_id", deviceId);
+  config.headers["X-Device-ID"] = deviceId;
+
+  // 인증 토큰 주입 (선택적)
+  const token = useAuthStore.getState().accessToken;
+  if (addAuth && token) config.headers.Authorization = `Bearer ${token}`;
+
+  return config;
+};
+
+axiosInstance.interceptors.request.use((c) => onRequest(c));
+authAxios.interceptors.request.use((c) => onRequest(c, true));
+
+// 응답 인터셉터 (authAxios 전용)
+authAxios.interceptors.response.use(
+  (res) => res,
+  async (err) => {
+    const originalRequest = err.config;
+    const { logout, setAccessToken } = useAuthStore.getState();
+
+    // 토큰 갱신 로직
+    if (err.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
-        await authAxios.post("/auth/refresh");
+        const { data } = await axios.post(
+          `${BASE_CONFIG.baseURL}/auth/refresh`,
+          {},
+          { withCredentials: true },
+        );
+        setAccessToken(data.accessToken);
+        originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
         return authAxios(originalRequest);
-      } catch (refreshError) {
-        useAuthStore.getState().logout();
-        window.location.href = "/login";
-        return Promise.reject(refreshError);
+      } catch {
+        logout();
+        if (typeof window !== "undefined") window.location.href = "/login";
+        return Promise.reject(err);
       }
     }
 
-    // 서버가 정의한 에러 응답(FIELD_ERROR 등)이 있다면 가공해서 던짐
-    if (axios.isAxiosError<ApiErrorResponse>(error) && error.response?.data) {
-      const { code, data, message } = error.response.data;
-
-      // 여기서 throw 대신 Promise.reject를 사용합니다.
-      return Promise.reject({
-        code: code,
-        fields: data?.fields || {},
-        message: message,
-      });
+    // 에러 포맷팅
+    if (axios.isAxiosError<ApiErrorResponse>(err) && err.response?.data) {
+      const { code, data, message } = err.response.data;
+      return Promise.reject({ code, fields: data?.fields || {}, message });
     }
-
-    // 그 외 시스템 에러 (네트워크 끊김 등)
-    return Promise.reject(error);
+    return Promise.reject(err);
   },
 );
-
-// 요청 인터셉터: 모든 API 호출 전에 실행됨
-axiosInstance.interceptors.request.use((config) => {
-  if (typeof window !== "undefined") {
-    let deviceId = localStorage.getItem("plat_device_id");
-
-    if (!deviceId) {
-      deviceId = crypto.randomUUID();
-      localStorage.setItem("plat_device_id", deviceId);
-    }
-
-    // 모든 요청 헤더에 자동으로 주입
-    config.headers["X-Device-ID"] = deviceId;
-  }
-  return config;
-});
