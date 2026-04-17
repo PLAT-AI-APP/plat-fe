@@ -71,7 +71,8 @@ const StorageModal = ({ closeModal }: StorageModalProps) => {
           minLine={12}
           type="textarea"
           isBorder={false}
-          inputClassName="pb-7.25 bg-card rounded-2xl"
+          inputClassName="bg-card"
+          inputBoxClassName="bg-card"
           placeholder={`장기기억이 생성되려면 더 많은 대화가 쌓여야 해요...`}
         />
 

@@ -63,14 +63,14 @@ const UserNoteModal = ({ closeModal }: UserNoteModalProps) => {
           {...register("userNote", { required: true })}
           value={noteValue} // 실시간 글자 수 반영을 위해 watch 값 전달
           maxLength={500}
-          inputClassName="bg-card border-none rounded-2xl pb-7.25 min-h-[165px]"
+          inputClassName="bg-card border-none"
+          inputBoxClassName="bg-card"
           type="textarea"
           maxLine={10}
           minLine={6}
           isBorder={false}
           placeholder={`잊으면 안되는 중요한 내용, 추가하고 싶은 설정 등\n...`}
         />
-
         <ActiveButton
           type="submit"
           isActive={Boolean(noteValue?.trim())} // 공백 제외 내용이 있을 때만 활성

@@ -14,6 +14,7 @@ interface SmartInputProps extends React.InputHTMLAttributes<
   type?: "input" | "textarea" | "modal";
   isOpen?: boolean;
   inputClassName?: string;
+  inputBoxClassName?: string;
   isBorder?: boolean;
   minLine?: number;
   maxLine?: number;
@@ -36,6 +37,7 @@ const SmartInput = forwardRef<
       required = false,
       type = "input",
       inputClassName,
+      inputBoxClassName,
       isBorder = true,
       maxLine,
       minLine = 1,
@@ -67,10 +69,10 @@ const SmartInput = forwardRef<
       }
     }, [rightElement]);
 
-    // 1. 내부에서 textarea 엘리먼트에 직접 접근하기 위한 ref
+    // 내부에서 textarea 엘리먼트에 직접 접근하기 위한 ref
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);
 
-    // 2. 외부 ref와 내부 ref를 합쳐주는 함수
+    // 외부 ref와 내부 ref를 합쳐주는 함수
     const handleRef = (node: HTMLTextAreaElement) => {
       textareaRef.current = node;
       if (typeof ref === "function") ref(node);
@@ -78,11 +80,11 @@ const SmartInput = forwardRef<
         (ref as React.MutableRefObject<HTMLTextAreaElement>).current = node;
     };
 
-    const LINE_HEIGHT = 16;
+    const LINE_HEIGHT = 20;
     const VERTICAL_PADDING = 24;
-    const BOTTOM_SPACING = 29;
+    const BOTTOM_SPACING = 0;
 
-    // 3. 높이를 계산하고 적용하는 핵심 함수
+    // 높이를 계산하고 적용하는 핵심 함수
     const adjustHeight = () => {
       const textarea = textareaRef.current;
       if (!textarea || !isTextarea) return;
@@ -96,21 +98,17 @@ const SmartInput = forwardRef<
     };
 
     // 4. value가 바뀌거나 처음 렌더링될 때 높이 조절
-    // useEffect(() => {
-    //   if (isTextarea) {
-    //     adjustHeight();
-    //   }
-    // }, [value, isTextarea]);
+    useEffect(() => {
+      if (isTextarea) {
+        adjustHeight();
+      }
+    }, [value, isTextarea]);
 
     const textareaStyle: React.CSSProperties = {
-      paddingLeft: `${paddingLeft}px`,
-      minHeight: isTextarea
-        ? `${minLine * LINE_HEIGHT + VERTICAL_PADDING + BOTTOM_SPACING}px`
-        : undefined,
+      // paddingLeft: `${paddingLeft}px`,
+      minHeight: isTextarea ? `${minLine * LINE_HEIGHT}px` : undefined,
       maxHeight:
-        isTextarea && maxLine
-          ? `${maxLine * LINE_HEIGHT + VERTICAL_PADDING + BOTTOM_SPACING}px`
-          : undefined,
+        isTextarea && maxLine ? `${maxLine * LINE_HEIGHT}px` : undefined,
     };
 
     const handleValueChange = (
@@ -167,9 +165,10 @@ const SmartInput = forwardRef<
             {type === "textarea" && (
               <div
                 className={cn(
-                  "flex rounded-xl bg-bg-darkest",
+                  "relative flex rounded-xl bg-bg-darker px-4 py-3 pb-7.25",
                   isBorder && "border border-border-main",
                   error && "border-font-accents",
+                  inputBoxClassName,
                 )}
               >
                 <textarea
@@ -177,7 +176,7 @@ const SmartInput = forwardRef<
                   ref={handleRef} // 합성된 ref 사용
                   style={textareaStyle}
                   className={cn(
-                    "w-full px-4 py-3 pb-7.25 bg-transparent outline-none resize-none placeholder:text-font-disabled overflow-y-auto custom-scrollbar",
+                    "w-full outline-none resize-none placeholder:text-font-disabled overflow-y-auto custom-scrollbar",
                     inputClassName,
                   )}
                   placeholder={placeholder}
@@ -185,6 +184,15 @@ const SmartInput = forwardRef<
                   onChange={handleValueChange}
                   maxLength={maxLength}
                 />
+
+                <div
+                  className={cn(
+                    "absolute right-4 text-xs text-font-2 pointer-events-none",
+                    isTextarea ? "bottom-3" : "top-1/2 -translate-y-1/2",
+                  )}
+                >
+                  {String(value || "").length}/{maxLength}
+                </div>
               </div>
             )}
 
@@ -216,6 +224,7 @@ const SmartInput = forwardRef<
                 className={cn(
                   "relative px-4 py-3 flex items-center justify-between rounded-xl border border-border-main bg-bg-darkest text-sm font-medium cursor-pointer",
                   error && "border-font-accents",
+                  inputBoxClassName,
                 )}
               >
                 <span className={cn(!value && "text-font-disabled")}>
@@ -227,7 +236,7 @@ const SmartInput = forwardRef<
               </div>
             )}
 
-            {!isModal && maxLength && (
+            {!isModal && maxLength && type !== "textarea" && (
               <div
                 className={cn(
                   "absolute right-4 text-xs text-font-2 pointer-events-none",
