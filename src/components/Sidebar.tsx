@@ -205,7 +205,6 @@ const Sidebar = ({ isFolded }: SidebarProps) => {
                   layout
                   className={cn(
                     "flex items-center p-1.5 rounded-lg hover:bg-card-hover cursor-pointer overflow-hidden",
-                    !isFolded && "bg-card ",
                   )}
                 >
                   {/* 이미지 영역: flex-none으로 크기 고정 */}
