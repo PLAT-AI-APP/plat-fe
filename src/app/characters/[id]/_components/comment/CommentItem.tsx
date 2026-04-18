@@ -82,20 +82,20 @@ const CommentItem = ({ comment }: Props) => {
                       다른사람이 작성한 댓글일때: 신고
                       크리에이터일때: 신고, 댓글고정, 삭제 */}
                   <menu className="flex flex-col gap-1 min-w-37.5">
-                    <button className="whitespace-nowrap flex gap-2 p-1.5 text-sm font-medium hover:bg-btn-hover rounded-lg">
-                      <Flag className="w-5 h-5" />
+                    <button className="items-center whitespace-nowrap flex gap-2 p-1.5 text-sm font-medium hover:bg-btn-hover rounded-lg">
+                      <Flag className="w-4 h-4" />
                       신고
                     </button>
-                    {/* <button className="whitespace-nowrap flex gap-2 p-1.5 text-sm font-medium hover:bg-btn-hover rounded-lg">
-                      <Pin className="w-5 h-5" />
+                    {/* <button className="items-center whitespace-nowrap flex gap-2 p-1.5 text-sm font-medium hover:bg-btn-hover rounded-lg">
+                      <Pin className="w-4 h-4" />
                       댓글 고정
                     </button> */}
-                    <button className="whitespace-nowrap flex gap-2 p-1.5 text-sm font-medium hover:bg-btn-hover rounded-lg">
-                      <Edit className="w-5 h-5" />
+                    <button className="items-center whitespace-nowrap flex gap-2 p-1.5 text-sm font-medium hover:bg-btn-hover rounded-lg">
+                      <Edit className="w-4 h-4" />
                       수정
                     </button>
-                    <button className="whitespace-nowrap text-font-accents flex gap-2 p-1.5 text-sm font-medium hover:bg-btn-hover rounded-lg">
-                      <Trash className="w-5 h-5 " />
+                    <button className="items-center whitespace-nowrap text-font-accents flex gap-2 p-1.5 text-sm font-medium hover:bg-btn-hover rounded-lg">
+                      <Trash className="w-4 h-4 " />
                       삭제
                     </button>
                   </menu>
