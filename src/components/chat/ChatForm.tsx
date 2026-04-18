@@ -7,12 +7,12 @@ import AiModelSelect from "./AiModeSelect";
 
 const ChatForm = () => {
   const [currentAi, setCurrentAi] = useState<AIModelType>({
-    id: "gemini-3.1-pro",
-    name: "Gemini 3.1 Pro",
+    id: "Gemini 3.1 Pro",
+    name: "3.1 Pro",
     description: "향상된 성능과 표현력을 갖춘 최신 AI 모델",
     price: 1.2,
     unit: "채팅",
-    icon: "/ai-logo/chatgpt.png",
+    icon: "/ai-logo/gemini.png",
   });
   const [msg, setMsg] = useState("");
 

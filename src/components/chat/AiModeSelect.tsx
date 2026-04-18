@@ -14,66 +14,70 @@ const AiModelSelect = ({ currentAi, handleCurrentAi }: AiModelSelectProps) => {
 
   const AI_MODELS: AIModelType[] = [
     {
-      id: "gemini-3.1-pro",
-      name: "Gemini 3.1 Pro",
+      id: "Gemini 3.1 Pro",
+      name: "3.1 Pro",
       description: "향상된 성능과 표현력을 갖춘 최신 AI 모델",
       price: 1.2,
       unit: "채팅",
-      icon: "/ai-logo/chatgpt.png",
+      icon: "/ai-logo/gemini.png",
     },
     {
-      id: "gemini-2.5-pro",
-      name: "Gemini 2.5 Pro",
+      id: "Gemini 3.0 Pro",
+      name: "3.0 Pro",
+      description: "몰입도 있는 대화를 즐길 수 있는 최신 AI 모델",
+      price: 1,
+      originalPrice: 1.2,
+      discountRate: 17,
+      unit: "채팅",
+      icon: "/ai-logo/gemini.png",
+    },
+    {
+      id: "Gemini 2.5 Pro",
+      name: "2.5 Pro",
       description: "최신 고성능 AI 모델로 장문의 대화에 적합",
       price: 1,
       unit: "채팅",
-      icon: "/ai-logo/chatgpt.png",
+      icon: "/ai-logo/gemini.png",
     },
     {
-      id: "gemini-3-flash",
-      name: "Gemini 3 Flash",
+      id: "Gemini 3 Flash",
+      name: "3 Flash",
       description: "빠른 응답과 풍부한 지식을 갖춘 모델",
       price: 0.4,
       unit: "채팅",
-      icon: "/ai-logo/chatgpt.png",
+      icon: "/ai-logo/gemini.png",
     },
     {
-      id: "claude-opus-4.6",
-      name: "Claude Opus 4.6",
+      id: "Claude Opus 4.6",
+      name: "Opus 4.6",
       description: "최고 수준의 지능과 창의적인 대화를 제공하는 프리미엄 모델",
       price: 2,
       unit: "채팅",
-      icon: "/ai-logo/chatgpt.png",
+      icon: "/ai-logo/claude.png",
     },
     {
-      id: "gemini-3.0-pro",
-      name: "Gemini 3.0 Pro",
-      description: "몰입도 있는 대화를 즐길 수 있는 최신 AI 모델",
-      price: 1,
-      originalPrice: 1.2,
-      discountRate: 17,
+      id: "Claude Sonnet 4.6",
+      name: "Sonnet 4.6",
+      description: "자연스럽고 창의적인 대화를 제공하는 고급 모델",
+      price: 1.2,
+      unit: "채팅",
+      icon: "/ai-logo/claude.png",
+    },
+    {
+      id: "GPT-5.1",
+      name: "GPT-5.1",
+      description: "풍부한 감정선과 섬세한 표현이 강점인 모델",
+      price: 1.1,
       unit: "채팅",
       icon: "/ai-logo/chatgpt.png",
     },
     {
-      id: "gemini-4.0-pro",
-      name: "Gemini 3.0 Pro",
-      description: "몰입도 있는 대화를 즐길 수 있는 최신 AI 모델",
-      price: 1,
-      originalPrice: 1.2,
-      discountRate: 17,
+      id: "Free",
+      name: "Free",
+      description: "균형잡힌 속도와 이해도를 가진 안전한 대화 모델",
+      price: 0, // '무료'이므로 0으로 설정
       unit: "채팅",
-      icon: "/ai-logo/chatgpt.png",
-    },
-    {
-      id: "gemini-5.0-pro",
-      name: "Gemini 3.0 Pro",
-      description: "몰입도 있는 대화를 즐길 수 있는 최신 AI 모델",
-      price: 1,
-      originalPrice: 1.2,
-      discountRate: 17,
-      unit: "채팅",
-      icon: "/ai-logo/chatgpt.png",
+      icon: "/ai-logo/free.png",
     },
   ];
 
@@ -122,14 +126,14 @@ const AiModelSelect = ({ currentAi, handleCurrentAi }: AiModelSelectProps) => {
                       />
                       <div className="flex-1">
                         <div className="text-sm flex items-center gap-2 pb-0.5">
-                          <strong className="font-semibold">{ai.name}</strong>
+                          <strong className="font-semibold">{ai.id}</strong>
                           {ai.discountRate && (
                             <span className="px-1.5 py-0.5 rounded-lg text-[12px] text-brand border border-brand bg-brand-opacity">
                               {ai.discountRate}%
                             </span>
                           )}
                         </div>
-                        <div className="flex gap-1 text-xs">
+                        <div className="flex items-center gap-1">
                           {ai.originalPrice && (
                             <span className="text-font-disabled line-through">
                               {ai.originalPrice}
@@ -138,7 +142,9 @@ const AiModelSelect = ({ currentAi, handleCurrentAi }: AiModelSelectProps) => {
                           <span className="text-brand font-medium">
                             {ai.price}코인
                           </span>
-                          <span className="text-font-2">/ {ai.unit}</span>
+                          <span className="text-font-2 text-xs">
+                            / {ai.unit}
+                          </span>
                         </div>
                       </div>
                     </header>
