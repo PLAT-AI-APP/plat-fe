@@ -2,6 +2,7 @@ import CharacterGrid from "@/components/character/CharacterGrid";
 import Footer from "@/components/Footer";
 import { MainBannerCarousel } from "@/components/MainBannerCarousel";
 import MenuTab from "./_components/MenuTab";
+import { cn } from "@/lib/utils";
 
 const CharArray = [
   {
@@ -64,7 +65,15 @@ const CharArray = [
 
 export default function Home() {
   return (
-    <article id="home-container" className="flex flex-col w-full flex-1">
+    <article
+      id="home-container"
+      className={cn(
+        "flex flex-col w-full flex-1 mx-auto max-w-[1200px]", // 중앙 정렬 및 최대 너비
+        "px-5", // 기본 패딩 (모바일: 768px 미만일 때)
+        "md:px-6", // 768px 이상일 때: padding 24px
+        "lg:px-8", // 1024px 이상일 때: padding 32px
+      )}
+    >
       <div className="flex flex-col gap-7.5 w-full">
         {/* 메인 비주얼/슬라이드 영역 */}
         <MainBannerCarousel />
@@ -84,8 +93,10 @@ export default function Home() {
             >
               <CharacterGrid
                 char={CharArray}
-                lineCount={2}
-                cardHeight={277}
+                // lineCount={2}
+                cardHeight={281}
+                columnGap={12}
+                rowGap={12}
                 // title="오늘의 PICK"
               />
             </section>

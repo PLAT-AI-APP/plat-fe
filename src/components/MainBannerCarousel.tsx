@@ -51,7 +51,16 @@ export function MainBannerCarousel() {
 
   return (
     // 전체 컨테이너 높이를 366px로 고정
-    <section className="relative w-full h-91.5 mx-auto overflow-hidden rounded-4xl">
+    <section
+      className={cn(
+        "relative w-full mx-auto overflow-hidden rounded-4xl",
+        // 반응형 높이 설정
+        "h-30", // 기본 (640px 미만)
+        "sm:h-37.5", // 640px 이상
+        "md:h-50", // 768px 이상
+        "xl:h-62.5", // 1280px 이상
+      )}
+    >
       {/* --- 메인 슬라이드 영역 --- */}
       <div className="h-full" ref={emblaRef}>
         <div className="flex h-full">
