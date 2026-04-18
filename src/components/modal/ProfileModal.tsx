@@ -5,7 +5,9 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import {
   ArrowRight,
+  Google,
   Headphone,
+  Kakao,
   Logout,
   Megaphone,
   Persona,
@@ -14,7 +16,8 @@ import {
 import { useLogoutMutation } from "@/api/auth/logout";
 import { useAuthStore } from "@/store/useAuthStore";
 import Melody from "@/icons/Melody";
-import TendencySettingModal from "./TendencySettingModal";
+// import TendencySettingModal from "./TendencySettingModal";
+import Check from "@/icons/Check";
 
 const activityArray = [
   { name: "내 페르소나", link: "/persona", icon: Persona },
@@ -23,6 +26,11 @@ const activityArray = [
 const supportArray = [
   { name: "공지사항", link: "/customer-service", icon: Megaphone },
   { name: "고객센터", link: "/customer-service", icon: Headphone },
+];
+const tendencyArray = [
+  { name: "전체", color: "#AA8BD8" },
+  { name: "남성향", color: "#60A5FA" },
+  { name: "여성향", color: "#F472B6" },
 ];
 interface ProfileModalProps {
   onClose: () => void;
@@ -33,6 +41,11 @@ const ProfileModal = ({ onClose, triggerRef }: ProfileModalProps) => {
   const { mutate: logout } = useLogoutMutation();
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
+  const [isTendency, setIsTendency] = useState(false);
+  const toggleIstendency = () => {
+    setIsTendency((prev) => !prev);
+  };
+
   // isLoggedIn이 false일 때 "내 페르소나"를 필터링
   const filteredActivityArray = activityArray.filter((item) => {
     if (item.name === "내 페르소나") {
@@ -41,21 +54,40 @@ const ProfileModal = ({ onClose, triggerRef }: ProfileModalProps) => {
     return true; // 나머지 아이템은 항상 표시
   });
 
-  const [isModal, setIsModal] = useState(false);
-  const toggleIsModal = () => {
-    setIsModal((prev) => !prev);
+  // const [isModal, setIsModal] = useState(false);
+  // const toggleIsModal = () => {
+  //   setIsModal((prev) => !prev);
+  // };
+
+  const [cureentTendency, setCurrentTendency] =
+    useState<(typeof tendencyArray)[number]["name"]>("전체");
+
+  const handleCurrentTendency = (name: string) => {
+    setCurrentTendency(name);
+  };
+
+  const handleLoginBtn = (name: "KAKAO" | "GOOGLE" | "LOGIN") => {
+    if (name === "LOGIN") {
+      onClose(); // 먼저 상태를 변경하고
+      window.location.href = "/login"; // 이동합니다.
+      return;
+    }
+    window.location.href =
+      process.env.NEXT_PUBLIC_BASE_URI + name === "KAKAO"
+        ? "/oauth2/authorization/kakao"
+        : "/oauth2/authorization/google";
   };
   return (
     <ModalLayout
       triggerRef={triggerRef || null}
       onClose={onClose}
-      className="w-60"
+      className="w-75"
     >
-      <Link
-        href={"/profile/1"}
-        className="flex p-2 items-center justify-between hover:bg-btn-hover rounded-lg cursor-pointer"
-      >
-        {isLoggedIn ? (
+      {isLoggedIn ? (
+        <Link
+          href={"/profile/1"}
+          className="flex p-2 items-center justify-between hover:bg-btn-hover rounded-lg cursor-pointer"
+        >
           <div className="flex gap-3">
             <Image
               src={"/p1.png"}
@@ -70,15 +102,38 @@ const ProfileModal = ({ onClose, triggerRef }: ProfileModalProps) => {
                 <Melody className="w-4 h-4" /> 1100
               </span>
             </div>
-          </div>
-        ) : (
-          <Link href={"/login"} onClick={onClose} className="py-2 text-font-2">
-            로그인을 해주세요.
-          </Link>
-        )}
 
-        <ArrowRight className="w-2.5 h-2.5 text-font-disabled" />
-      </Link>
+            <ArrowRight className="w-2.5 h-2.5 text-font-disabled" />
+          </div>
+        </Link>
+      ) : (
+        <div className="p-2 flex flex-col gap-3 text-sm font-medium">
+          <div
+            // href={"/login"}
+            onClick={() => handleLoginBtn("KAKAO")}
+            className="flex cursor-pointer items-center justify-center relative text-center h-11.5 rounded-lg bg-[#FEE500] w-full py-2 text-bg-darkest"
+          >
+            <Kakao className="absolute w-5.5 h-5.5 top-1/2 left-7.5 -translate-y-1/2" />
+            카카오 계정으로 시작하기
+          </div>
+          <div
+            // href={"/login"}
+            onClick={() => handleLoginBtn("GOOGLE")}
+            className="flex cursor-pointer items-center justify-center relative text-center h-11.5 rounded-lg bg-card w-full py-2 text-font-1"
+          >
+            <Google className="absolute w-5.5 h-5.5 top-1/2 left-7.5 -translate-y-1/2" />
+            구글 계정으로 시작하기
+          </div>
+          <div
+            // href={"/login"}
+            onClick={() => handleLoginBtn("LOGIN")}
+            className="flex cursor-pointer items-center justify-center relative text-center h-11.5 rounded-lg bg-card w-full py-2 text-font-2"
+          >
+            {/* <Kakao className="absolute w-5.5 h-5.5 top-1/2 left-7.5 -translate-y-1/2" /> */}
+            다른 방법으로 로그인하기
+          </div>
+        </div>
+      )}
 
       <hr className="text-border-main pb-2.5 mt-2.5" />
 
@@ -91,24 +146,62 @@ const ProfileModal = ({ onClose, triggerRef }: ProfileModalProps) => {
           return (
             <div
               key={tab.name}
-              onClick={tab.name === "콘텐츠 설정" ? toggleIsModal : undefined}
-              className="relative cursor-pointer flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg hover:bg-btn-hover transition-colors text-font-1 hover:text-font-1 text-sm"
+              onClick={
+                tab.name === "콘텐츠 설정" ? toggleIstendency : undefined
+              }
+              // className="relative cursor-pointer flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg hover:bg-btn-hover transition-colors text-font-1 hover:text-font-1 text-sm"
             >
-              <div className="flex items-center gap-2">
-                <Icon
-                  size={18}
-                  strokeWidth={0.5}
-                  className={cn("shrink-0  text-font-2")}
-                />
-                {tab.name}
+              <div className="relative cursor-pointer flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg hover:bg-btn-hover transition-colors text-font-1 hover:text-font-1 text-sm">
+                <div className="flex items-center gap-2">
+                  <Icon
+                    size={18}
+                    strokeWidth={0.5}
+                    className={cn("shrink-0  text-font-2")}
+                  />
+                  {tab.name}
+                </div>
+
+                <div className="flex items-center gap-1">
+                  <span className="text-[13px] text-font-1">
+                    {cureentTendency}
+                  </span>
+                  <ArrowRight
+                    className={cn(
+                      "w-2.5 h-2.5 text-font-disabled",
+                      isTendency && "rotate-90",
+                    )}
+                  />
+                </div>
               </div>
 
-              <div className="flex items-center gap-1">
-                <span className="text-[13px] text-font-1">남성향</span>
-                <ArrowRight className="w-2.5 h-2.5 text-font-disabled" />
-              </div>
+              {isTendency && (
+                <div onClick={(e) => e.stopPropagation()}>
+                  <ul className="flex flex-col gap-1 p-2.5">
+                    {tendencyArray.map(({ color, name }) => (
+                      <li
+                        key={name}
+                        onClick={() => handleCurrentTendency(name)}
+                        className={cn(
+                          "text-xs cursor-pointer flex justify-between px-3.5 py-2.5 rounded-2xl hover:bg-btn-hover",
+                        )}
+                      >
+                        <div className="flex items-center gap-2">
+                          <div
+                            className={`w-2.5 h-2.5 rounded-full`}
+                            style={{ backgroundColor: color }}
+                          />
+                          {name}
+                        </div>
 
-              {isModal && <TendencySettingModal onClose={toggleIsModal} />}
+                        {cureentTendency === name && (
+                          <Check className="w-4 h-4 text-brand" />
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {/* {isModal && <TendencySettingModal onClose={toggleIstendency} />} */}
             </div>
           );
 
