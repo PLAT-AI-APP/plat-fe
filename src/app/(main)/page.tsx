@@ -68,7 +68,7 @@ export default function Home() {
     <article
       id="home-container"
       className={cn(
-        "flex flex-col w-full flex-1 mx-auto max-w-[1200px]", // 중앙 정렬 및 최대 너비
+        "flex flex-col w-full flex-1 mx-auto max-w-300", // 중앙 정렬 및 최대 너비
         "px-5", // 기본 패딩 (모바일: 768px 미만일 때)
         "md:px-6", // 768px 이상일 때: padding 24px
         "lg:px-8", // 1024px 이상일 때: padding 32px
