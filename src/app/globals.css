@@ -3,6 +3,7 @@
 
 :root {
   --brand: #ff7a00;
+  --brand-dark: #ff9a3c;
   --brand-opacity: rgba(255, 122, 0, 0.1); /* 10% 투명도 적용 */
   --font-accents: #ed1c24;
 
@@ -54,6 +55,7 @@ input:-webkit-autofill:active {
   --color-btn-hover: var(--button-dark-hover);
   --color-btn-selected: var(--button-dark-selected);
   --color-brand: var(--brand);
+  --color-brand-dark: var(--brand-dark);
   --color-brand-opacity: var(--brand-opacity);
   --color-font-accents: var(--font-accents);
 }
