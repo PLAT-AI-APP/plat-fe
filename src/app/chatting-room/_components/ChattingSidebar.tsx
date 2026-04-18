@@ -62,10 +62,10 @@ const ChattingSidebar = ({ toggleIsSidebar }: ChattingSidebarProps) => {
   return (
     <aside className="fixed flex justify-end top-0 right-0 font-medium bg-black/50 w-screen h-screen z-20">
       <div id="sidebar-container" className="bg-bg-dark p-5 w-fit h-screen">
-        <header className="pb-9 flex justify-end">
+        <header className="pb-6 flex justify-end">
           <button
             onClick={toggleIsSidebar}
-            className="p-1 hover:bg-btn-hover rounded-lg"
+            className="p-1 w-6 h-6 flex items-center justify-center hover:bg-btn-hover rounded-lg"
           >
             <Close className="w-3.5 h-3.5" />
           </button>
