@@ -2,9 +2,10 @@
 import React, { useEffect, useState } from "react";
 import CharacterCard from "./CharacterCard";
 import SkeletonCharacterCard from "../skeleton/SkeletonCard";
+import { cn } from "@/lib/utils";
 
 interface CharacterGridProps {
-  lineCount: number;
+  // lineCount: number;
   cardHeight: number;
   // 가로, 세로 간격을 위한 props 추가
   columnGap?: number;
@@ -24,7 +25,7 @@ interface CharacterGridProps {
 
 const CharacterGrid = ({
   char,
-  lineCount,
+  // lineCount,
   cardHeight,
   columnGap = 20, // 기본 가로 간격 20px
   rowGap = 20, // 기본 세로 간격 20px
@@ -49,7 +50,17 @@ const CharacterGrid = ({
 
   return (
     <div
-      className="grid grid-cols-[repeat(auto-fill,178px)] justify-center w-full"
+      className={cn(
+        "grid w-full justify-center",
+        // 362px 미만일 때 기본 1열 (또는 필요에 따라 2열)
+        "grid-cols-1",
+        // 구간별 열 개수 설정
+        "min-[362px]:grid-cols-2", // 362px ~ 548px
+        "min-[549px]:grid-cols-3", // 549px ~ 735px
+        "min-[736px]:grid-cols-4", // 736px ~ 922px
+        "min-[923px]:grid-cols-5", // 923px ~ 1109px
+        "min-[1110px]:grid-cols-6", // 1110px 이상
+      )}
       style={{
         columnGap: `${columnGap}px`,
         rowGap: `${rowGap}px`,
@@ -77,7 +88,7 @@ const CharacterGrid = ({
             <CharacterCard
               key={`${character.name}-${index}`}
               char={character}
-              cardHeight={cardHeight}
+              // cardHeight={cardHeight}
               isNew={isNew}
               isOfficial={isOfficial}
             />

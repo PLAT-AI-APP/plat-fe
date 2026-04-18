@@ -5,9 +5,9 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import TagList from "./TagList";
+import { cn } from "@/lib/utils";
 
 interface CharacterCardProps {
-  cardHeight: number;
   isNew?: boolean;
   isOfficial?: boolean;
   char: {
@@ -21,20 +21,22 @@ interface CharacterCardProps {
 
 const CharacterCard = ({
   char,
-  cardHeight,
+  // cardHeight,
   isNew = false,
   isOfficial = false,
 }: CharacterCardProps) => {
   return (
     <Link
       href={`/characters/${char.name}`}
-      style={{ height: `${cardHeight}px` }}
-      className="group hover:cursor-pointer overflow-hidden bg-card rounded-xl w-44.5 flex flex-col shrink-0"
+      className={cn(
+        "group hover:cursor-pointer overflow-hidden rounded-xl flex flex-col shrink-0 transition-all duration-200 ease-in-out",
+        "w-full min-w-43.75",
+      )}
     >
       {/* 이미지 영역 */}
-      <div className="relative w-full h-45 shrink-0 overflow-hidden rounded-t-xl">
+      <div className="relative w-full aspect-square shrink-0 overflow-hidden rounded-xl">
         <Image src={char.img} alt={char.name} fill className="object-cover" />
-        <div className="absolute inset-0 bg-linear-to-t from-card to-transparent via-card/0.5" />
+        {/* <div className="absolute inset-0 bg-linear-to-t from-card to-transparent via-card/0.5" /> */}
         <div className="bg-[rgba(0,0,0,0.6)] justify-center absolute right-2 gap-0.5 bottom-2 py-0.5 pl-1 pr-2 rounded-md flex text-font-2 items-center">
           <ChatFill className="w-4 h-4 translate-y-px" />
           <span className="text-sm">{char.chatCount}</span>
@@ -48,11 +50,13 @@ const CharacterCard = ({
       </div>
 
       {/* 텍스트 영역 */}
-      <div className="p-3 pt-2 flex flex-col gap-1.5 flex-1 group-hover:bg-border-main transition-all duration-200 ease-in-out">
+      <div className="px-1 pt-2 flex flex-col gap-1 flex-1 transition-all duration-200 ease-in-out">
         <p className="text-font-1 text-sm font-medium truncate">{char.name}</p>
         <p className="text-font-2 text-xs line-clamp-2">{char.dec}</p>
 
         <TagList list={char.tag} />
+
+        <p className="text-xs text-font-disabled">@흐물쟁이</p>
       </div>
     </Link>
   );

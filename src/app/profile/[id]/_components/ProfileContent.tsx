@@ -156,7 +156,7 @@ export default function ProfileContent({ id }: { id: string }) {
         >
           <CharacterGrid
             char={CharArray}
-            lineCount={2}
+            // lineCount={2}
             cardHeight={277}
             rowGap={8}
             columnGap={10}
