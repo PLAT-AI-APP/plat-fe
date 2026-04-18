@@ -1,14 +1,13 @@
 "use client";
 import { useState } from "react";
-import { useForm, FormProvider, useWatch } from "react-hook-form";
+import { useForm, FormProvider, SubmitHandler } from "react-hook-form";
 import AuthLayout from "./AuthLayout";
 import { AuthFormValues } from "@/type/auth";
 import EmailOtpStep from "./EmailOtpStep";
 import PasswordStep from "./PasswordStep";
-import InfoStep from "./InfoStep";
 import AuthBgDecoration from "./AuthBgDecoration";
-import { useAuthRegisterMutation } from "@/api/auth/authRegister";
 import { useRouter } from "next/navigation";
+import { useEmailRegisterMutation } from "@/api/auth/emailRegister";
 
 interface AuthFlowProps {
   type: "SIGNUP" | "RESET_PASSWORD";
@@ -31,8 +30,6 @@ export const AuthFlow = ({ type }: AuthFlowProps) => {
   const [step, setStep] = useState(1); // 1단계부터 시작
   const config = FLOW_CONFIG[type];
 
-  const { mutate: authRegister } = useAuthRegisterMutation();
-
   // Form Methods 초기화
   const methods = useForm<AuthFormValues>({
     mode: "onSubmit",
@@ -42,49 +39,28 @@ export const AuthFlow = ({ type }: AuthFlowProps) => {
       otp: Array(6).fill(""),
       password: "",
       passwordConfirm: "",
-      nickname: "",
-      gender: "",
-      birthDate: "",
       emailVerifyToken: "",
       signupToken: "",
     },
   });
 
-  const { handleSubmit, control, setError } = methods;
+  const { mutate: emailRegister } = useEmailRegisterMutation();
 
-  // 데이터 통합 감시 (한 번의 useWatch로 정리)
-  const formValues = useWatch({ control });
-  const {
-    nickname = "",
-    gender = "",
-    birthDate = "",
-    signupToken = "",
-  } = formValues;
+  const { handleSubmit, watch } = methods;
+  const signupToken = watch("signupToken");
 
-  const isStep3Valid = !!nickname && !!gender && !!birthDate;
+  const handleRegisterSuccess = async (token?: string) => {
+    const query = token ? `?signupToken=${token}` : "";
+    router.push(`/signup/details${query}`);
+  };
 
-  const onSubmit = async (data: AuthFormValues) => {
-    if (step === 1) setStep(2);
-    else if (step === 2) {
-      if (type === "SIGNUP") setStep(3);
-      else console.log("비밀번호 재설정 완료:", data);
-    } else if (step === 3) {
-      authRegister(
-        { birthDate, gender, nickname, signupToken },
-        {
-          onSuccess: () => {
-            router.push("/login");
-          },
-          onError: (error) => {
-            if (error) {
-              setError("birthDate", {
-                type: "server",
-                message: error.fields?.birthDate,
-              });
-            }
-          },
-        },
-      );
+  const onSubmit: SubmitHandler<AuthFormValues> = async (data) => {
+    if (step === 1) {
+      setStep(2);
+    } else if (step === 2) {
+      if (type === "RESET_PASSWORD") {
+        console.log("비밀번호 재설정 로직 수행", data);
+      }
     }
   };
 
@@ -107,16 +83,17 @@ export const AuthFlow = ({ type }: AuthFlowProps) => {
             <PasswordStep
               title={config.titles[1]}
               buttonText={config.buttons[1]}
+              handleRegisterSuccess={handleRegisterSuccess}
             />
           )}
 
-          {step === 3 && type === "SIGNUP" && (
+          {/* {step === 3 && type === "SIGNUP" && (
             <InfoStep
               title={config.titles[2]}
               buttonText={config.buttons[2]}
               isValid={isStep3Valid || false}
             />
-          )}
+          )} */}
         </form>
       </FormProvider>
     </AuthLayout>

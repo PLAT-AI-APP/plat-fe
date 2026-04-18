@@ -10,14 +10,18 @@ import { useEmailRegisterMutation } from "@/api/auth/emailRegister";
 interface PasswordStepProps {
   title: string;
   buttonText: string;
+  handleRegisterSuccess: (token: string) => void;
 }
 
-const PasswordStep = ({ title, buttonText }: PasswordStepProps) => {
+const PasswordStep = ({
+  title,
+  buttonText,
+  handleRegisterSuccess,
+}: PasswordStepProps) => {
   const {
     trigger,
     register,
     watch,
-    setValue,
     formState: { errors },
   } = useFormContext<AuthFormValues>();
 
@@ -48,7 +52,6 @@ const PasswordStep = ({ title, buttonText }: PasswordStepProps) => {
     if (!isStepValid) {
       e.preventDefault();
     }
-
     emailRegister(
       {
         email,
@@ -58,7 +61,7 @@ const PasswordStep = ({ title, buttonText }: PasswordStepProps) => {
       },
       {
         onSuccess: (data) => {
-          setValue("signupToken", data!.signupToken);
+          handleRegisterSuccess(data!.signupToken);
         },
       },
     );

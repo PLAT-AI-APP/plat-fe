@@ -10,12 +10,14 @@ export interface AuthFormValues extends Partial<LoginFormValues> {
   // Step2 필드
   passwordConfirm?: string;
 
-  // Step3 필드
+  emailVerifyToken: string;
+  signupToken: string;
+}
+
+export interface UserDetailFormValues {
   nickname: string;
   gender: "MALE" | "FEMALE" | "";
   birthDate: string;
-
-  emailVerifyToken: string;
   signupToken: string;
 }
 

@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+"use client";
+import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { ArrowLeft, ArrowRight, Date as DateIcon } from "@/icons";
 import Calendar from "react-calendar";
 import dayjs from "dayjs";
 import { useFormContext } from "react-hook-form";
-import { AuthFormValues } from "@/type/auth";
+import { UserDetailFormValues } from "@/type/auth";
 
 interface BirthDateInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: boolean;
@@ -16,7 +17,7 @@ export const BirthDateInput = React.forwardRef<
   HTMLInputElement,
   BirthDateInputProps
 >(({ className, error, onChange, isEditMode = false, ...rest }, ref) => {
-  const { setValue, watch } = useFormContext<AuthFormValues>();
+  const { setValue, watch } = useFormContext<UserDetailFormValues>();
   const birthDate = watch("birthDate");
 
   const [showCalendar, setShowCalendar] = useState(false);
@@ -72,7 +73,7 @@ export const BirthDateInput = React.forwardRef<
     >
       <header className="flex items-center gap-1 font-medium text-sm text-white">
         <span>생년월일</span>
-        <span className="text-font-accents">*</span>
+        {/* <span className="text-font-accents">*</span> */}
       </header>
 
       <div className="relative">
@@ -114,6 +115,7 @@ export const BirthDateInput = React.forwardRef<
                     ? dayjs(birthDate as string).toDate()
                     : new Date()
                 }
+                onChange={(value) => handleDateSelect(value as Date)}
                 showNeighboringMonth={true}
                 formatMonth={(locale, date) => dayjs(date).format("M")}
                 formatYear={(locale, date) => dayjs(date).format("YYYY")}
