@@ -12,7 +12,35 @@ const CharArray = [
   {
     name: "옆자리 불량학생",
     chatCount: 123,
-    dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
+    dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을",
+    tag: ["학교", "일상", "친구"],
+    img: "https://picsum.photos/200/300",
+  },
+  {
+    name: "옆자리 불량학생",
+    chatCount: 123,
+    dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을",
+    tag: ["학교", "일상", "친구", "친구", "친구"],
+    img: "https://picsum.photos/200/300",
+  },
+  {
+    name: "옆자리 불량학생",
+    chatCount: 123,
+    dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을",
+    tag: ["학교", "일상", "친구", "친구", "친구", "친구"],
+    img: "https://picsum.photos/200/300",
+  },
+  {
+    name: "옆자리 불량학생",
+    chatCount: 123,
+    dec: "매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
+    tag: ["학교", "일상"],
+    img: "https://picsum.photos/200/300",
+  },
+  {
+    name: "옆자리 불량학생",
+    chatCount: 123,
+    dec: "기해주는 채팅입니다.",
     tag: ["학교", "일상", "친구", "친구", "친구", "친구"],
     img: "https://picsum.photos/200/300",
   },
@@ -20,49 +48,21 @@ const CharArray = [
     name: "옆자리 불량학생",
     chatCount: 123,
     dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
+    tag: ["학교", "일상", "친구", "친구"],
+    img: "https://picsum.photos/200/300",
+  },
+  {
+    name: "옆자리 불량학생",
+    chatCount: 123,
+    dec: "옆자리 불량학생이채팅입니다.",
     tag: ["학교", "일상", "친구", "친구", "친구", "친구"],
     img: "https://picsum.photos/200/300",
   },
   {
     name: "옆자리 불량학생",
     chatCount: 123,
-    dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
-    tag: ["학교", "일상", "친구", "친구", "친구", "친구"],
-    img: "https://picsum.photos/200/300",
-  },
-  {
-    name: "옆자리 불량학생",
-    chatCount: 123,
-    dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
-    tag: ["학교", "일상", "친구", "친구", "친구", "친구"],
-    img: "https://picsum.photos/200/300",
-  },
-  {
-    name: "옆자리 불량학생",
-    chatCount: 123,
-    dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
-    tag: ["학교", "일상", "친구", "친구", "친구", "친구"],
-    img: "https://picsum.photos/200/300",
-  },
-  {
-    name: "옆자리 불량학생",
-    chatCount: 123,
-    dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
-    tag: ["학교", "일상", "친구", "친구", "친구", "친구"],
-    img: "https://picsum.photos/200/300",
-  },
-  {
-    name: "옆자리 불량학생",
-    chatCount: 123,
-    dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
-    tag: ["학교", "일상", "친구", "친구", "친구", "친구"],
-    img: "https://picsum.photos/200/300",
-  },
-  {
-    name: "옆자리 불량학생",
-    chatCount: 123,
-    dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
-    tag: ["학교", "일상", "친구", "친구", "친구", "친구"],
+    dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을",
+    tag: ["학교", "일상", "친구", "친구"],
     img: "https://picsum.photos/200/300",
   },
 ];
@@ -157,9 +157,9 @@ export default function ProfileContent({ id }: { id: string }) {
           <CharacterGrid
             char={CharArray}
             // lineCount={2}
-            cardHeight={277}
-            rowGap={8}
-            columnGap={10}
+            cardHeight={280.67}
+            rowGap={12}
+            columnGap={12}
           />
         </section>
       </section>
