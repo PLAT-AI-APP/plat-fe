@@ -86,9 +86,10 @@ const ProfileModal = ({ onClose, triggerRef }: ProfileModalProps) => {
       {isLoggedIn ? (
         <Link
           href={"/profile/1"}
+          onClick={onClose}
           className="flex p-2 items-center justify-between hover:bg-btn-hover rounded-lg cursor-pointer"
         >
-          <div className="flex gap-3">
+          <div className="flex items-center gap-3">
             <Image
               src={"/p1.png"}
               alt="profile image"
@@ -102,9 +103,8 @@ const ProfileModal = ({ onClose, triggerRef }: ProfileModalProps) => {
                 <Melody className="w-4 h-4" /> 1100
               </span>
             </div>
-
-            <ArrowRight className="w-2.5 h-2.5 text-font-disabled" />
           </div>
+          <ArrowRight className="w-2.5 h-2.5 text-font-disabled" />
         </Link>
       ) : (
         <div className="p-2 flex flex-col gap-3 text-sm font-medium">
