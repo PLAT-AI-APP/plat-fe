@@ -2,7 +2,7 @@ import PersonaModal from "@/components/modal/PersonaModal";
 import StorageModal from "@/components/modal/StorageModal";
 import UserNoteModal from "@/components/modal/UserNoteModal";
 import { Close, Persona, Storage } from "@/icons";
-import Adjust from "@/icons/Adjust";
+// import Adjust from "@/icons/Adjust";
 import Note from "@/icons/Note";
 import React, { useCallback, useMemo, useState } from "react";
 
@@ -27,7 +27,7 @@ const MENU_LIST: MenuItem[] = [
   { id: "storage", title: "장기기억", icon: Storage },
   { id: "persona", title: "페르소나", icon: Persona },
   { id: "note", title: "유저노트", icon: Note },
-  { id: "adjust", title: "출력량", icon: Adjust, text: "x1.0" },
+  // { id: "adjust", title: "출력량", icon: Adjust, text: "x1.0" },
 ];
 
 const ChattingSidebar = ({ toggleIsSidebar }: ChattingSidebarProps) => {
