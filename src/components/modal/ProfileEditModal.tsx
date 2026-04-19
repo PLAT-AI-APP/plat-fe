@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { ModalLayout } from "../ModalLayout";
 import { CameraFill, Close, Google, Kakao, PhoneFill } from "@/icons";
 import Image from "next/image";
@@ -56,29 +56,17 @@ const ProfileEditModal = ({ onClose }: ProfileEditModalProps) => {
 
   // --- 2. 데이터 가공 및 파생 변수 ---
   const formValue = watch();
-  const [nickname, gender, birthDate] = watch([
+  const [nickname, gender, birthDate, profileImg] = watch([
     "nickname",
     "gender",
     "birthDate",
+    "profileImg",
   ]);
 
   const LoginLogo = PROVIDER_LOGOS[formValue.provider];
 
   const isRequiredFieldsValid =
-    !!nickname &&
-    !!gender &&
-    !!birthDate &&
-    !errors.nickname &&
-    !errors.gender &&
-    !errors.birthDate;
-
-  // const handleGender = (gender: "male" | "female") => {
-  //   setValue("gender", gender);
-  // };
-
-  // const handleBirthDate = (date: string) => {
-  //   setValue("birthDate", date);
-  // };
+    !!nickname && !!gender && !errors.nickname && !errors.gender;
 
   const ToggleIsPhoneModal = () => {
     setIsPhoneModal((prev) => !prev);
@@ -91,6 +79,38 @@ const ProfileEditModal = ({ onClose }: ProfileEditModalProps) => {
     enabled: debouncedNickname.length > 0, // 값이 있을 때만 실행
     retry: false, // 실패 시 재시도 방지 (선택)
   });
+
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // 파일 형식 검사
+    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+    if (!allowedTypes.includes(file.type)) {
+      alert("jpg, png, webp 이미지 파일만 가능합니다.");
+      e.target.value = ""; // 선택 초기화
+      return;
+    }
+
+    // 파일 용량 검사 (5MB)
+    const maxSize = 5 * 1024 * 1024;
+    if (file.size > maxSize) {
+      alert("파일 용량은 최대 5MB까지 가능합니다.");
+      e.target.value = ""; // 선택 초기화
+      return;
+    }
+
+    // 프리뷰 생성
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setValue("profileImg", reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // const previewRemove = () => {
+  //   setValue("profileImg", "");
+  // };
 
   return (
     <ModalLayout
@@ -113,16 +133,25 @@ const ProfileEditModal = ({ onClose }: ProfileEditModalProps) => {
               id="profile-image-section"
               className="relative w-fit h-fit mx-auto"
             >
-              <Image
-                src={"/p1.png"}
-                alt="user 프로필 이미지"
-                width={80}
-                height={80}
-                className="w-20 h-20 rounded-full"
+              <input
+                id="profile-image-select"
+                onChange={handleImageChange}
+                className="hidden"
+                accept=".jpg,.jpeg,.png,.webp"
+                type="file"
               />
-              <span className="absolute bottom-0 right-0 bg-border-main flex items-center justify-center w-7.5 h-7.5 rounded-full">
-                <CameraFill className="w-4.5 h-4.5" />
-              </span>
+              <label htmlFor="profile-image-select" className="cursor-pointer">
+                <Image
+                  src={profileImg ? profileImg : "/p1.png"}
+                  alt="user 프로필 이미지"
+                  width={80}
+                  height={80}
+                  className="w-20 h-20 rounded-full"
+                />
+                <span className="absolute bottom-0 right-0 bg-border-main flex items-center justify-center w-7.5 h-7.5 rounded-full">
+                  <CameraFill className="w-4.5 h-4.5" />
+                </span>
+              </label>
             </div>
 
             <div className="flex flex-col gap-6">
@@ -168,6 +197,7 @@ const ProfileEditModal = ({ onClose }: ProfileEditModalProps) => {
               <BirthDateInput
                 // {...register("birthDate")}
                 value={birthDate}
+                disabled
                 // handleBirthDate={handleBirthDate}
               />
 
