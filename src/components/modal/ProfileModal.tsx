@@ -19,6 +19,7 @@ import Melody from "@/icons/Melody";
 // import TendencySettingModal from "./TendencySettingModal";
 import Check from "@/icons/Check";
 import { useUserStore } from "@/store/useUserStore";
+import { motion, AnimatePresence } from "framer-motion";
 
 const activityArray = [
   { name: "내 페르소나", link: "/persona", icon: Persona },
@@ -180,33 +181,42 @@ const ProfileModal = ({ onClose, triggerRef }: ProfileModalProps) => {
                 </div>
               </div>
 
-              {isTendency && (
-                <div onClick={(e) => e.stopPropagation()}>
-                  <ul className="flex flex-col gap-1 p-2.5">
-                    {tendencyArray.map(({ color, name }) => (
-                      <li
-                        key={name}
-                        onClick={() => handleCurrentTendency(name)}
-                        className={cn(
-                          "text-xs cursor-pointer flex justify-between px-3.5 py-2.5 rounded-2xl hover:bg-btn-hover transition-colors duration-300 ease-in-out",
-                        )}
-                      >
-                        <div className="flex items-center gap-2">
-                          <div
-                            className={`w-2.5 h-2.5 rounded-full`}
-                            style={{ backgroundColor: color }}
-                          />
-                          {name}
-                        </div>
+              <AnimatePresence>
+                {isTendency && (
+                  <motion.div
+                    onClick={(e) => e.stopPropagation()}
+                    initial={{ height: 0, opacity: 0 }} // 시작 상태: 높이 0, 투명도 0
+                    animate={{ height: "auto", opacity: 1 }} // 펼쳐진 상태: 높이 자동, 투명도 1
+                    exit={{ height: 0, opacity: 0 }} // 닫힐 때 상태
+                    transition={{ duration: 0.3, ease: "easeInOut" }} // 애니메이션 속도 및 곡선
+                    className="overflow-hidden" // 필수: 펼쳐지는 동안 내부 내용이 가려져야 함
+                  >
+                    <ul className="flex flex-col gap-1 p-2.5">
+                      {tendencyArray.map(({ color, name }) => (
+                        <li
+                          key={name}
+                          onClick={() => handleCurrentTendency(name)}
+                          className={cn(
+                            "text-xs cursor-pointer flex justify-between px-3.5 py-2.5 rounded-2xl hover:bg-btn-hover transition-colors duration-300 ease-in-out",
+                          )}
+                        >
+                          <div className="flex items-center gap-2">
+                            <div
+                              className={`w-2.5 h-2.5 rounded-full`}
+                              style={{ backgroundColor: color }}
+                            />
+                            {name}
+                          </div>
 
-                        {cureentTendency === name && (
-                          <Check className="w-4 h-4 text-brand" />
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
+                          {cureentTendency === name && (
+                            <Check className="w-4 h-4 text-brand" />
+                          )}
+                        </li>
+                      ))}
+                    </ul>
+                  </motion.div>
+                )}
+              </AnimatePresence>
               {/* {isModal && <TendencySettingModal onClose={toggleIstendency} />} */}
             </div>
           );
