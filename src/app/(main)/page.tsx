@@ -68,17 +68,16 @@ export default function Home() {
     <article
       id="home-container"
       className={cn(
-        "flex flex-col w-full flex-1 mx-auto max-w-300", // 중앙 정렬 및 최대 너비
-        "px-5", // 기본 패딩 (모바일: 768px 미만일 때)
-        "md:px-6", // 768px 이상일 때: padding 24px
-        "lg:px-8", // 1024px 이상일 때: padding 32px
+        "@container w-full mx-auto max-w-300", // flex-1 제거
+        "px-5 md:px-6 lg:px-8",
+        "flex flex-col", // 내부 배치를 위해 flex는 유지하되 높이 강제 X
       )}
     >
       <div className="flex flex-col gap-7.5 w-full">
         {/* 메인 비주얼/슬라이드 영역 */}
         <MainBannerCarousel />
 
-        <div className="max-w-300 w-full flex flex-col px-4 mx-auto gap-6.5 items-center">
+        <div className="max-w-300 w-full flex flex-col mx-auto gap-6.5 items-center">
           {/* 카테고리 필터 영역 */}
           <MenuTab />
 

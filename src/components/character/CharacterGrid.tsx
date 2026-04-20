@@ -54,12 +54,11 @@ const CharacterGrid = ({
         "grid w-full justify-center",
         // 362px 미만일 때 기본 1열 (또는 필요에 따라 2열)
         "grid-cols-1",
-        // 구간별 열 개수 설정
-        "min-[362px]:grid-cols-2", // 362px ~ 548px
-        "min-[549px]:grid-cols-3", // 549px ~ 735px
-        "min-[736px]:grid-cols-4", // 736px ~ 922px
-        "min-[923px]:grid-cols-5", // 923px ~ 1109px
-        "min-[1110px]:grid-cols-6", // 1110px 이상
+        "@[362px]:grid-cols-2",
+        "@[549px]:grid-cols-3",
+        "@[736px]:grid-cols-4",
+        "@[923px]:grid-cols-5",
+        "@[1110px]:grid-cols-6",
       )}
       style={{
         columnGap: `${columnGap}px`,
