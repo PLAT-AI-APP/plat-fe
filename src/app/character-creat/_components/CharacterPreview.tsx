@@ -136,7 +136,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
 
       <form
         onSubmit={handleSubmit}
-        className="shrink-0 px-3 py-3 mt-1.75 bg-bg-darkest rounded-4xl border border-border-main"
+        className="shrink-0 p-4 pb-3 mt-1.75 bg-bg-darkest rounded-4xl border border-border-main"
       >
         <textarea
           rows={2}
