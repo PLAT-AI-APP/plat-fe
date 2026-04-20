@@ -24,7 +24,7 @@ const ChattingRoomSection = () => {
         >
           <ChattingRoomHeader
             characterName="윤아"
-            onBack={() => console.log("go back")}
+            // onBack={() => console.log("go back")}
           />
           <ChattingRoomNotice />
           <MessageList messages={MESSAGES_LIST} />
