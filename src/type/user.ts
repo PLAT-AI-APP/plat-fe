@@ -12,7 +12,7 @@ export interface ProfileEditFormType {
   birthDate: string;
 
   /** 성별 */
-  gender: "male" | "female";
+  gender: "MALE" | "FEMALE" | "OTHER";
 
   /** 휴대폰 번호 (국가코드 포함) */
   countryCode?: string;

@@ -16,6 +16,7 @@ import ActiveButton from "../ActiveButton";
 import PhoneNumberModal from "./PhoneNumberModal";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useCheckNicknameQuery } from "@/api/auth/checkNickname";
+import { useUserStore } from "@/store/useUserStore";
 
 const PROVIDER_LOGOS: Record<string, React.ReactNode> = {
   google: <GoogleProvider />,
@@ -28,18 +29,26 @@ interface ProfileEditModalProps {
 }
 
 const ProfileEditModal = ({ onClose }: ProfileEditModalProps) => {
+  const profileImage = useUserStore((state) => state.user?.profileImage);
+  const nicknameStore = useUserStore((state) => state.user?.nickname);
+  const birth = useUserStore((state) => state.user?.birth);
+  const bio = useUserStore((state) => state.user?.bio);
+  const genderStore = useUserStore((state) => state.user?.gender);
+  const countryCode = useUserStore((state) => state.user?.phone.countryCode);
+  const number = useUserStore((state) => state.user?.phone.number);
+
   // --- 1. 상태 및 폼 정의 ---
   const methods = useForm<ProfileEditFormType>({
     mode: "onChange",
     defaultValues: {
-      profileImg: "",
-      birthDate: "",
-      countryCode: "",
+      profileImg: profileImage,
+      birthDate: birth,
+      countryCode: countryCode,
       email: "tmdi8635@gmail.com",
-      gender: "male",
-      introduce: "",
-      nickname: "",
-      phoneNumber: "",
+      gender: genderStore,
+      introduce: bio,
+      nickname: nicknameStore,
+      phoneNumber: number,
       provider: "google",
     },
   });
@@ -74,10 +83,12 @@ const ProfileEditModal = ({ onClose }: ProfileEditModalProps) => {
 
   const debouncedNickname = useDebounce({ value: nickname, delay: 500 });
 
+  // 디바운스된 값이 있고, 공백을 제거했을 때도 내용이 있는 경우에만 실행
+  const isEnabled = !!debouncedNickname && debouncedNickname.trim().length > 0;
   // 디바운스된 값이 있을 때만 쿼리를 활성화
-  const { data } = useCheckNicknameQuery(debouncedNickname, {
-    enabled: debouncedNickname.length > 0, // 값이 있을 때만 실행
-    retry: false, // 실패 시 재시도 방지 (선택)
+  const { data, isFetching } = useCheckNicknameQuery(debouncedNickname, {
+    enabled: isEnabled,
+    retry: false,
   });
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -162,11 +173,11 @@ const ProfileEditModal = ({ onClose }: ProfileEditModalProps) => {
                     value: NICKNAME_REGEX,
                     message: "닉네임 형식이 올바르지 않습니다.",
                   },
-                  onChange: () => {
-                    setError("nickname", {
-                      message: "중복된 닉네임입니다.",
-                    });
-                  },
+                  // onChange: () => {
+                  //   setError("nickname", {
+                  //     message: "중복된 닉네임입니다.",
+                  //   });
+                  // },
                 })}
                 label="닉네임"
                 required
@@ -174,9 +185,12 @@ const ProfileEditModal = ({ onClose }: ProfileEditModalProps) => {
                 placeholder="닉네임을 입력해주세요."
                 maxLength={15}
                 error={
-                  errors.nickname ||
-                  (!data?.available && "이미 사용중인 닉네임입니다.") ||
-                  undefined
+                  // 1순위: RHF 자체 형식 에러 (Regex 등)
+                  errors.nickname?.message ||
+                  // 2순위: API 중복 에러 (로딩 중이 아닐 때만, 명확하게 false인지 확인)
+                  (!isFetching && data?.available === false
+                    ? "이미 사용중인 닉네임입니다."
+                    : undefined)
                 }
               />
 
@@ -191,6 +205,8 @@ const ProfileEditModal = ({ onClose }: ProfileEditModalProps) => {
                 minLine={2}
                 maxLength={50}
                 error={errors.introduce}
+                inputClassName="bg-bg-darkest"
+                inputBoxClassName="bg-bg-darkest"
               />
 
               {/* 생년월일 input */}
@@ -215,7 +231,7 @@ const ProfileEditModal = ({ onClose }: ProfileEditModalProps) => {
                     // onClick={() => handleGender("male")}
                     className={cn(
                       "flex-1 bg-bg-darkest border border-border-main rounded-xl py-3",
-                      formValue.gender === "male" &&
+                      formValue.gender === "MALE" &&
                         "text-brand font-medium bg-brand-opacity",
                     )}
                   >
@@ -226,7 +242,7 @@ const ProfileEditModal = ({ onClose }: ProfileEditModalProps) => {
                     // onClick={() => handleGender("female")}
                     className={cn(
                       "flex-1 bg-bg-darkest border border-border-main rounded-xl py-3",
-                      formValue.gender === "female" &&
+                      formValue.gender === "FEMALE" &&
                         "text-brand font-medium bg-brand-opacity",
                     )}
                   >

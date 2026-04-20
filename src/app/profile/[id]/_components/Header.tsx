@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import ProfileEditModal from "@/components/modal/ProfileEditModal";
 import { FollowModal } from "@/components/modal/FollowModal";
+import { useUserStore } from "@/store/useUserStore";
 
 const Header = () => {
   const [isProfileEditodal, setIsProfileEditodal] = useState(false);
@@ -15,13 +16,16 @@ const Header = () => {
     setIsFollowModal((prev) => !prev);
   };
 
+  const profileImage = useUserStore((state) => state.user?.profileImage);
+  const nickname = useUserStore((state) => state.user?.nickname);
+
   return (
     <header id="profile-header" className="flex flex-col gap-4">
       <section id="profile-info-summary" className="flex justify-between">
         <div className="flex gap-5.25">
           <aside className="shrink-0">
             <Image
-              src={"/p1.png"}
+              src={profileImage || "/p1.png"}
               alt="프로필 이미지"
               width={60}
               height={60}
@@ -31,7 +35,7 @@ const Header = () => {
 
           <div className="flex items-start gap-6">
             <div className="flex flex-col">
-              <h1 className="text-lg font-medium">고리타분한멸치</h1>
+              <h1 className="text-lg font-medium">{nickname}</h1>
 
               <nav className="flex gap-4">
                 <button

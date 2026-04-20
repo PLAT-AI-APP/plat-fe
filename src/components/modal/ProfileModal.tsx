@@ -18,6 +18,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import Melody from "@/icons/Melody";
 // import TendencySettingModal from "./TendencySettingModal";
 import Check from "@/icons/Check";
+import { useUserStore } from "@/store/useUserStore";
 
 const activityArray = [
   { name: "내 페르소나", link: "/persona", icon: Persona },
@@ -77,28 +78,33 @@ const ProfileModal = ({ onClose, triggerRef }: ProfileModalProps) => {
         ? "/oauth2/authorization/kakao"
         : "/oauth2/authorization/google";
   };
+
+  const profileImage = useUserStore((state) => state.user?.profileImage);
+  const nickname = useUserStore((state) => state.user?.nickname);
+  const userId = useUserStore((state) => state.user?.id);
+
   return (
     <ModalLayout
       triggerRef={triggerRef || null}
       onClose={onClose}
-      className="w-75"
+      className="w-75 transition-colors"
     >
       {isLoggedIn ? (
         <Link
-          href={"/profile/1"}
+          href={`/profile/${userId}`}
           onClick={onClose}
           className="flex p-2 items-center justify-between hover:bg-btn-hover rounded-lg cursor-pointer"
         >
           <div className="flex items-center gap-3">
             <Image
-              src={"/p1.png"}
+              src={profileImage || "/p1.png"}
               alt="profile image"
               width={40}
               height={40}
-              className="w-10 h-10"
+              className="w-10 h-10 rounded-full"
             />
             <div className="flex flex-col gap-0.5">
-              <span className="text-sm text-font-1">내혹한춤꾼</span>
+              <span className="text-sm text-font-1">{nickname}</span>
               <span className="flex items-center gap-0.5 text-sm text-font-1">
                 <Melody className="w-4 h-4" /> 1100
               </span>
@@ -151,7 +157,7 @@ const ProfileModal = ({ onClose, triggerRef }: ProfileModalProps) => {
               }
               // className="relative cursor-pointer flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg hover:bg-btn-hover transition-colors text-font-1 hover:text-font-1 text-sm"
             >
-              <div className="relative cursor-pointer flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg hover:bg-btn-hover transition-colors text-font-1 hover:text-font-1 text-sm">
+              <div className="relative cursor-pointer flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg hover:bg-btn-hover transition-colors duration-300 ease-in-out text-font-1 hover:text-font-1 text-sm">
                 <div className="flex items-center gap-2">
                   <Icon
                     size={18}
@@ -182,7 +188,7 @@ const ProfileModal = ({ onClose, triggerRef }: ProfileModalProps) => {
                         key={name}
                         onClick={() => handleCurrentTendency(name)}
                         className={cn(
-                          "text-xs cursor-pointer flex justify-between px-3.5 py-2.5 rounded-2xl hover:bg-btn-hover",
+                          "text-xs cursor-pointer flex justify-between px-3.5 py-2.5 rounded-2xl hover:bg-btn-hover transition-colors duration-300 ease-in-out",
                         )}
                       >
                         <div className="flex items-center gap-2">
@@ -209,7 +215,7 @@ const ProfileModal = ({ onClose, triggerRef }: ProfileModalProps) => {
           <Link
             key={tab.name}
             href={tab.link}
-            className="relative cursor-pointer flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg hover:bg-btn-hover transition-colors text-font-1 hover:text-font-1 text-sm"
+            className="relative cursor-pointer flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg hover:bg-btn-hover transition-colors duration-300 ease-in-out text-font-1 hover:text-font-1 text-sm"
           >
             <div className="flex items-center gap-2">
               <Icon
@@ -251,7 +257,7 @@ const ProfileModal = ({ onClose, triggerRef }: ProfileModalProps) => {
           <hr className="text-border-main pb-2.5 mt-2.5" />
           <div
             onClick={() => logout()}
-            className="cursor-pointer flex items-center gap-2 px-3 py-2.5 rounded-xl hover:bg-card-hover transition-colors text-font-1 hover:text-font-1 text-sm"
+            className="cursor-pointer flex items-center gap-2 px-3 py-2.5 rounded-xl hover:bg-btn-hover transition-colors duration-300 ease-in-out text-font-1 hover:text-font-1 text-sm"
           >
             <Logout size={18} className="text-font-2 shrink-0" />
             로그아웃

@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useAuthStore } from "@/store/useAuthStore";
 import ProfileMdoal from "../modal/ProfileModal";
 import Melody from "@/icons/Melody";
+import { useUserStore } from "@/store/useUserStore";
 
 interface HeaderProps {
   handleFoldToggle: () => void;
@@ -22,6 +23,8 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
   };
 
   const triggerRef = useRef<HTMLImageElement>(null);
+
+  const profileImage = useUserStore((state) => state.user?.profileImage);
   return (
     <header
       id="main-header"
@@ -97,7 +100,11 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
         <div className="relative">
           {isLoggedIn && (
             <div id="header-profile-wrapper">
-              <Profile handleToggle={handleToggle} triggerRef={triggerRef} />
+              <Profile
+                profileImg={profileImage || "/p1.png"}
+                handleToggle={handleToggle}
+                triggerRef={triggerRef}
+              />
             </div>
           )}
 

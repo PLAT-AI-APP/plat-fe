@@ -6,6 +6,7 @@ import Sidebar from "@/components/Sidebar";
 import { usePathname } from "next/navigation";
 import { useScrollTimeout } from "@/hooks/useScrollTiemout";
 import { cn } from "@/lib/utils";
+import { useMyInfoQuery } from "@/api/user/myInfo";
 
 // 사이드바를 아예 보여주지 않을 경로 리스트
 const HIDE_SIDEBAR_PATHS = ["/character-creat"];
@@ -22,6 +23,8 @@ export default function ClientLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+
+  useMyInfoQuery();
 
   // 현재 경로가 사이드바 숨김 대상인지 확인
   const isSidebarHidden = HIDE_SIDEBAR_PATHS.some((path) =>

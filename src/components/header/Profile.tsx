@@ -1,20 +1,22 @@
 "use client";
 import Image from "next/image";
-import ProfileImg from "../../../public/p1.png";
 import { Ref } from "react";
 
 interface ProfileProps {
   triggerRef: Ref<HTMLImageElement | null> | undefined;
   handleToggle: () => void;
+  profileImg: string;
 }
-const Profile = ({ triggerRef, handleToggle }: ProfileProps) => {
+const Profile = ({ triggerRef, handleToggle, profileImg }: ProfileProps) => {
   return (
     <div className="relative text-nowrap w-8 h-8">
       <Image
         ref={triggerRef}
-        src={ProfileImg}
+        src={profileImg}
         alt="profile image"
-        className="w-full h-full cursor-pointer shrink-0"
+        width={32}
+        height={32}
+        className="w-full h-full cursor-pointer rounded-full shrink-0"
         onClick={handleToggle}
       />
     </div>
