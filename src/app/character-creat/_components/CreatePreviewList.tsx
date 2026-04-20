@@ -81,21 +81,26 @@ const CreatePreviewList = ({
                 draggableId={item.id.toString()}
                 index={index}
               >
-                {(provided) => (
+                {(provided, snapshot) => (
                   <div ref={provided.innerRef} {...provided.draggableProps}>
                     <article
                       className={cn(
-                        "relative group w-full",
-                        item.type === "action" && "rounded-2xl p-2 pt-0",
+                        "relative group w-full rounded-2xl",
+                        item.type === "action" && "px-2 pt-0",
                         editingId === item.id && "bg-transparent p-0",
                       )}
+                      style={{
+                        background: snapshot.isDragging ? "#181C2E" : "",
+                      }}
                     >
                       {/* 드래그 핸들 */}
-                      <div
-                        {...provided.dragHandleProps}
-                        className="flex items-center justify-center h-3 pb-1 cursor-grab"
-                      >
-                        <Dots className="text-font-disabled w-5.75" />
+                      <div className="flex justify-center">
+                        <div
+                          {...provided.dragHandleProps}
+                          className="flex items-center h-4 justify-center p-1.5 rounded-[100px] hover:bg-card cursor-grab"
+                        >
+                          <Dots className="text-font-disabled w-5.75" />
+                        </div>
                       </div>
 
                       {editingId === item.id ? (
@@ -170,7 +175,7 @@ const CreatePreviewList = ({
                         <div
                           id="view-content-container"
                           className={cn(
-                            `flex `,
+                            `flex pb-2`,
                             item.type === "action"
                               ? "flex-col"
                               : "items-end gap-2",
