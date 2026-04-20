@@ -165,7 +165,7 @@ const SmartInput = forwardRef<
             {type === "textarea" && (
               <div
                 className={cn(
-                  "relative flex rounded-xl bg-bg-darker px-4 py-3 pb-7.25",
+                  "relative flex rounded-xl bg-bg-darkest px-4 py-3 pb-7.25",
                   isBorder && "border border-border-main",
                   error && "border-font-accents",
                   inputBoxClassName,
@@ -176,7 +176,7 @@ const SmartInput = forwardRef<
                   ref={handleRef} // 합성된 ref 사용
                   style={textareaStyle}
                   className={cn(
-                    "w-full outline-none resize-none placeholder:text-font-disabled overflow-y-auto custom-scrollbar",
+                    "w-full bg-bg-darkest outline-none resize-none placeholder:text-font-disabled overflow-y-auto custom-scrollbar",
                     inputClassName,
                   )}
                   placeholder={placeholder}
