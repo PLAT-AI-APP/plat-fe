@@ -11,7 +11,7 @@ export default function MSWProvider({
 
   useEffect(() => {
     // 1. 이미 준비되었거나 개발 환경이 아니면 종료
-    if (mswReady || process.env.NODE_ENV !== "development") {
+    if (mswReady) {
       setMswReady(true);
       return;
     }
@@ -43,7 +43,7 @@ export default function MSWProvider({
   if (typeof window === "undefined") return null;
 
   // 개발 환경에서 MSW 준비 전까지 로딩 처리 (준비 안 되면 null 반환으로 렌더링 지연)
-  if (!mswReady && process.env.NODE_ENV === "development") {
+  if (!mswReady) {
     return null;
   }
 
