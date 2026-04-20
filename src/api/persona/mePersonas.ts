@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { ApiSuccessResponse, AppError } from "@/type/api";
 import { Persona } from "@/type/persona";
@@ -18,10 +18,13 @@ const GetMePersonas = async () => {
 };
 
 /** 페르소나 목록 조회 */
-export const useMePersonasQuery = () => {
+export const useMePersonasQuery = (
+  // UseQueryOptions를 사용하여 표준 옵션들을 전달받을 수 있게 설정합니다.
+  options?: Partial<UseQueryOptions<MePersonasResponse, AppError, Persona[]>>,
+) => {
   return useQuery<MePersonasResponse, AppError, Persona[]>({
     queryKey: ["me-persona-list"],
-    // select: (response) => response.data,
     queryFn: GetMePersonas,
+    ...options, // 외부에서 넘어온 옵션으로 덮어씌우거나 추가합니다.
   });
 };
