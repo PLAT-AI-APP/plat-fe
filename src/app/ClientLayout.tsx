@@ -42,7 +42,7 @@ export default function ClientLayout({
   const [prevPathname, setPrevPathname] = useState(pathname);
 
   // 초기값은 무조건 false (어떤 경로든, 어떤 화면 크기든 첫 로딩은 펴짐)
-  const [isFolded, setIsFolded] = useState(true);
+  const [isFolded, setIsFolded] = useState(false);
 
   useEffect(() => {
     const isFoldPath = FOLD_SIDEBAR_PATHS.some((path) =>
