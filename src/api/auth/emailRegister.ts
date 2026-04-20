@@ -16,7 +16,7 @@ const PostEmailRegister = async ({
 }: PostEmailRegisterProps) => {
   const response = await axiosInstance.post<
     ApiSuccessResponse<{ signupToken: string }>
-  >("/auth/email/register", {
+  >("/auth/email/signup", {
     email: email,
     emailVerifyToken: emailVerifyToken,
     password: password,

@@ -82,7 +82,7 @@ export const authHandlers = [
   }),
 
   /** 이메일 회원가입 요청 */
-  http.post("*/auth/email/register", async ({ request }) => {
+  http.post("*/auth/email/signup", async ({ request }) => {
     const { email, emailVerifyToken, password, passwordCheck } =
       (await request.json()) as {
         email: string;
@@ -102,7 +102,7 @@ export const authHandlers = [
   }),
 
   /** 회원가입 요청 */
-  http.post("*/auth/register", async ({ request }) => {
+  http.post("*/auth/signup", async ({ request }) => {
     const { signupToken, nickname, birthDate, gender } =
       (await request.json()) as {
         signupToken: string;

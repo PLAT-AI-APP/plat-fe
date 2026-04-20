@@ -11,7 +11,7 @@ interface PostAuthRegisterProps {
 
 const PostAuthRegister = async (props: PostAuthRegisterProps) => {
   const response = await axiosInstance.post<ApiSuccessResponse>(
-    "/auth/register",
+    "/auth/signup",
     props,
   );
 
