@@ -66,6 +66,7 @@ const ProfileModal = ({ onClose, triggerRef }: ProfileModalProps) => {
 
   const handleCurrentTendency = (name: string) => {
     setCurrentTendency(name);
+    toggleIstendency();
   };
 
   const handleLoginBtn = (name: "KAKAO" | "GOOGLE" | "LOGIN") => {
