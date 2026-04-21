@@ -26,7 +26,6 @@ interface CharacterGridProps {
 const CharacterGrid = ({
   char,
   // lineCount,
-  cardHeight,
   columnGap = 20, // 기본 가로 간격 20px
   rowGap = 20, // 기본 세로 간격 20px
   isNew = false,
@@ -77,17 +76,13 @@ const CharacterGrid = ({
       {isLoading
         ? // 로딩 중일 때: 실제 데이터 개수만큼 스켈레톤을 그리드 안에 배치
           char.map((_, index) => (
-            <SkeletonCharacterCard
-              key={`skeleton-${index}`}
-              cardHeight={cardHeight}
-            />
+            <SkeletonCharacterCard key={`skeleton-${index}`} />
           ))
         : // 로딩 완료 시: 실제 카드 배치
           char.map((character, index) => (
             <CharacterCard
               key={`${character.name}-${index}`}
               char={character}
-              // cardHeight={cardHeight}
               isNew={isNew}
               isOfficial={isOfficial}
             />
