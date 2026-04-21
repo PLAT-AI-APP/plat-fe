@@ -1,13 +1,13 @@
 import React, { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ChatFill, Dots, Edit, Flag, Heart, Pin, Trash } from "@/icons";
+import { ChatFill, Dots, Heart } from "@/icons";
 import { CommentType } from "@/type/comment";
 import { formatStatCount } from "@/lib/utils";
-import { ModalLayout } from "@/components/ModalLayout";
 import { useLineOverflow } from "@/hooks/useOverflowText";
 import ReplyLine from "@/icons/ReplyLine";
 import dayjs from "@/lib/dayjs";
+import CommentMenuPopover from "@/components/popover/CommentMenuPopover";
 
 const ReplyItem = ({ reply }: { reply: CommentType }) => {
   const textRef = useRef<HTMLParagraphElement>(null);
@@ -51,29 +51,14 @@ const ReplyItem = ({ reply }: { reply: CommentType }) => {
               className="w-6 h-6 p-1"
             />
             {isCommentMenu && (
-              <ModalLayout
-                onClose={() => setIsCommentMenu(!isCommentMenu)}
+              <CommentMenuPopover
+                onClose={() => setIsCommentMenu(false)}
                 triggerRef={triggerRef}
-              >
-                <menu className="flex flex-col gap-1">
-                  <button className="whitespace-nowrap flex gap-2 p-1.5 text-sm font-medium hover:bg-btn-hover rounded-lg">
-                    <Flag className="w-5 h-5" />
-                    신고
-                  </button>
-                  <button className="whitespace-nowrap flex gap-2 p-1.5 text-sm font-medium hover:bg-btn-hover rounded-lg">
-                    <Pin className="w-5 h-5" />
-                    댓글 고정
-                  </button>
-                  <button className="whitespace-nowrap flex gap-2 p-1.5 text-sm font-medium hover:bg-btn-hover rounded-lg">
-                    <Edit className="w-5 h-5" />
-                    수정
-                  </button>
-                  <button className="whitespace-nowrap text-font-accents flex gap-2 p-1.5 text-sm font-medium hover:bg-btn-hover rounded-lg">
-                    <Trash className="w-5 h-5 " />
-                    삭제
-                  </button>
-                </menu>
-              </ModalLayout>
+                isMine
+                onDelete={() => null}
+                onEdit={() => null}
+                onReport={() => null}
+              />
             )}
           </div>
         </header>

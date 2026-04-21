@@ -5,12 +5,12 @@ import dayjs from "@/lib/dayjs";
 import { cn } from "@/lib/utils";
 import { CommentType } from "@/type/comment";
 import { useLineOverflow } from "@/hooks/useOverflowText";
-import { ModalLayout } from "@/components/ModalLayout";
 // import { CommentInput } from "./CommentInput";
 // import ReplyItem from "../ReplyItem";
 import ReplyLine from "@/icons/ReplyLine";
-import PinFill from "@/icons/PinFill";
-import { Dots, Edit, Flag, Pin, Trash } from "@/icons";
+// import PinFill from "@/icons/PinFill";
+import { Dots } from "@/icons";
+import CommentMenuPopover from "@/components/popover/CommentMenuPopover";
 
 interface Props {
   comment: CommentType;
@@ -51,12 +51,12 @@ const CommentItem = ({ comment }: Props) => {
         </aside>
 
         <section className="flex flex-col flex-1 h-fit">
-          {comment.isPinned && (
+          {/* {comment.isPinned && (
             <p className="flex gap-1 pb-1.5 text-font-2 text-[12px]">
               <PinFill className="w-3.5 h-3.5 fill-font-2" />
               크리에이터님이 고정함
             </p>
-          )}
+          )} */}
 
           <header className="flex justify-between pb-3">
             <div className="flex gap-3 font-medium items-center">
@@ -74,32 +74,14 @@ const CommentItem = ({ comment }: Props) => {
                 className="w-6 h-6 p-1"
               />
               {isCommentMenu && (
-                <ModalLayout
-                  onClose={() => setIsCommentMenu(!isCommentMenu)}
+                <CommentMenuPopover
+                  onClose={() => setIsCommentMenu(false)}
                   triggerRef={triggerRef}
-                >
-                  {/* 추후 본인 댓글일때: 수정, 삭제
-                      다른사람이 작성한 댓글일때: 신고
-                      크리에이터일때: 신고, 댓글고정, 삭제 */}
-                  <menu className="flex flex-col gap-1 min-w-37.5">
-                    <button className="items-center whitespace-nowrap flex gap-2 p-1.5 text-sm font-medium hover:bg-btn-hover rounded-lg">
-                      <Flag className="w-4 h-4" />
-                      신고
-                    </button>
-                    {/* <button className="items-center whitespace-nowrap flex gap-2 p-1.5 text-sm font-medium hover:bg-btn-hover rounded-lg">
-                      <Pin className="w-4 h-4" />
-                      댓글 고정
-                    </button> */}
-                    <button className="items-center whitespace-nowrap flex gap-2 p-1.5 text-sm font-medium hover:bg-btn-hover rounded-lg">
-                      <Edit className="w-4 h-4" />
-                      수정
-                    </button>
-                    <button className="items-center whitespace-nowrap text-font-accents flex gap-2 p-1.5 text-sm font-medium hover:bg-btn-hover rounded-lg">
-                      <Trash className="w-4 h-4 " />
-                      삭제
-                    </button>
-                  </menu>
-                </ModalLayout>
+                  isMine
+                  onDelete={() => null}
+                  onEdit={() => null}
+                  onReport={() => null}
+                />
               )}
             </div>
           </header>
