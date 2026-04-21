@@ -1,15 +1,13 @@
 version: "3.8"
-
 services:
-  plat-app:
+  plat-fe:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: plat-fe-container
+    container_name: plat-fe-prod
     ports:
       - "3000:3000"
-    # 배포 환경에서는 volumes를 삭제합니다. (이미지 내부 파일 사용)
     environment:
       - NODE_ENV=production
-      - NEXT_PUBLIC_BASE_URI=http://59.7.18.17:3000
+      - NEXT_PUBLIC_BASE_URI=https://api.plat.so # 운영 API 주소
     restart: always

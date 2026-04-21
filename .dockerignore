@@ -1,8 +1,4 @@
-node_modules
-.next
-out
-build
-.git
-.env.local
-.env.production
-npm-debug.log
+node_modules.next;
+out;
+build.git.env.local.env.production;
+npm - debug.log;

@@ -1,0 +1,19 @@
+version: "3.8"
+services:
+  plat-fe-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: plat-fe-dev
+    ports:
+      - "3000:3000"
+    # 소스 코드 실시간 동기화
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    # 운영용 CMD ["node", "server.js"]를 덮어쓰고 개발 모드로 실행
+    command: npm run dev
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_BASE_URI=http://localhost:3000 # 로컬 테스트용 주소
