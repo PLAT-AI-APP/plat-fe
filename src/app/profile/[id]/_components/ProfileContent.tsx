@@ -82,7 +82,7 @@ export default function ProfileContent({ id }: { id: string }) {
   };
 
   return (
-    <main className="flex flex-col gap-11.5 px-10 pt-7.5">
+    <article className="@container flex flex-col gap-11.5 px-10 pt-7.5">
       {/* 사용자 프로필 정보 요약 영역 */}
       <Header />
 
@@ -163,6 +163,6 @@ export default function ProfileContent({ id }: { id: string }) {
           />
         </section>
       </section>
-    </main>
+    </article>
   );
 }
