@@ -1,7 +1,13 @@
+import { Metadata } from "next";
 import React from "react";
+import StudioContents from "./_conponents/StudioContents";
+
+export const metadata: Metadata = {
+  title: "스튜디오",
+};
 
 const StudioPage = () => {
-  return <div>StudioPage</div>;
+  return <StudioContents />;
 };
 
 export default StudioPage;

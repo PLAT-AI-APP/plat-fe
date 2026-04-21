@@ -50,6 +50,8 @@ export { default as Trash } from "./Trash";
 export { default as Dots } from "./Dots";
 export { default as Close } from "./Close";
 export { default as Asterisk } from "./Asterisk";
+export { default as ViewGrid } from "./ViewGrid";
+export { default as ViewList } from "./ViewList";
 
 // 7. 기타 UI 요소
 export { default as Eye } from "./Eye";

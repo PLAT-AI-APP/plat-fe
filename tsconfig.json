@@ -35,7 +35,8 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts",
-    "src/mocks/handlers/auth.js"
+    "src/mocks/handlers/auth.js",
+    "src/app/studio/[id]/_conponents/CharacterList"
   ],
   "exclude": [
     "node_modules"

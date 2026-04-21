@@ -1,10 +1,17 @@
+"use client";
 import React, { useState } from "react";
 import Image from "next/image";
 import ProfileEditModal from "@/components/modal/ProfileEditModal";
 import { FollowModal } from "@/components/modal/FollowModal";
 import { useUserStore } from "@/store/useUserStore";
+import { ArrowRight } from "@/icons";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 const Header = () => {
+  const params = useSearchParams();
+  const id = params.get("id");
+
   const [isProfileEditodal, setIsProfileEditodal] = useState(false);
   const [isFollowModal, setIsFollowModal] = useState(false);
 
@@ -21,8 +28,11 @@ const Header = () => {
   const bio = useUserStore((state) => state.user?.bio);
 
   return (
-    <header id="profile-header" className="flex flex-col gap-4">
-      <section id="profile-info-summary" className="flex justify-between">
+    <header
+      id="profile-header"
+      className="flex justify-between items-center gap-4 w-full"
+    >
+      <section id="profile-info-summary" className="flex flex-col gap-4">
         <div className="flex gap-5.25">
           <aside className="shrink-0">
             <Image
@@ -57,26 +67,20 @@ const Header = () => {
                 </button>
               </nav>
             </div>
-
-            <button
-              type="button"
-              className="px-3.5 py-1.5 bg-font-1 text-bg-dark text-xs rounded-[100px]"
-            >
-              팔로우
-            </button>
           </div>
         </div>
 
-        <button
-          onClick={toggleIsProfileEditodal}
-          type="button"
-          className="h-fit px-4 py-2 text-sm bg-bg-darkest rounded-xl border border-border-main"
-        >
-          프로필 수정
-        </button>
+        <p className="text-sm text-font-2">{bio}</p>
       </section>
 
-      <p className="text-sm text-font-2">{bio}</p>
+      <Link
+        href={`/profile/${id}`}
+        onClick={toggleIsProfileEditodal}
+        type="button"
+        className="inline p-1 w-fit h-fit rounded-lg hover:bg-btn-hover"
+      >
+        <ArrowRight className="w-4 h-4 text-font-2" />
+      </Link>
 
       {/* 모달 레이어 */}
       {isProfileEditodal && (
