@@ -1,10 +1,10 @@
 import React, { useState, useCallback, useEffect } from "react";
-import PersonaHeader from "./persona/PersonaHeader";
-import PersonaItem from "./persona/PersonaItem";
-import PersonaFooter from "./persona/PersonaFooter";
-import { ModalLayout } from "../ModalLayout";
+import PersonaHeader from "./PersonaHeader";
+import PersonaItem from "./PersonaItem";
+import PersonaFooter from "./PersonaFooter";
+import { ModalLayout } from "../../ModalLayout";
 import { useMePersonasQuery } from "@/api/persona/mePersonas";
-import SkeletonPersona from "../skeleton/SkeletonPersona";
+import SkeletonPersona from "../../skeleton/SkeletonPersona";
 
 interface PersonaModalProps {
   closeModal: () => void;

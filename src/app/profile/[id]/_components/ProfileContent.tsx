@@ -1,12 +1,10 @@
 "use client";
-
 import { cn } from "@/lib/utils";
 import React, { useRef, useState } from "react";
 import Header from "./Header";
 import CharacterGrid from "@/components/character/CharacterGrid";
-import { ModalLayout } from "@/components/ModalLayout";
 import { Sort } from "@/icons";
-import Check from "@/icons/Check";
+import CharacterSortPopover from "@/components/popover/CharacterSortPopover";
 
 const CharArray = [
   {
@@ -67,19 +65,11 @@ const CharArray = [
   },
 ];
 
-const SORT_OPTIONS = ["최신순", "채팅순"] as const;
-
 export default function ProfileContent({ id }: { id: string }) {
   // 상태 및 참조 변수
-  const [sort, setSort] = useState<string>("최신순");
+  const [sort, setSort] = useState<"최신순" | "채팅순">("최신순");
   const [isSortOpen, setIsSortOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
-
-  // 정렬 선택 처리 함수
-  const handleSort = (text: string) => {
-    setSort(text);
-    setIsSortOpen(false);
-  };
 
   return (
     <article className="@container flex flex-col gap-11.5 px-10 pt-7.5">
@@ -111,41 +101,12 @@ export default function ProfileContent({ id }: { id: string }) {
             </button>
 
             {isSortOpen && (
-              <ModalLayout
+              <CharacterSortPopover
+                onChange={setSort}
                 onClose={() => setIsSortOpen(false)}
-                triggerRef={triggerRef}
-              >
-                <nav>
-                  <ul
-                    className="flex flex-col gap-1 text-nowrap"
-                    role="listbox"
-                  >
-                    {SORT_OPTIONS.map((option) => {
-                      const isSelected = sort === option;
-                      return (
-                        <li
-                          key={option}
-                          role="option"
-                          aria-selected={isSelected}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleSort(option);
-                          }}
-                          className={cn(
-                            "w-33.5 text-sm flex items-center justify-between px-2.5 py-2 rounded-lg cursor-pointer",
-                            isSelected ? "font-medium" : "hover:bg-btn-hover",
-                          )}
-                        >
-                          {option}
-                          {isSelected && (
-                            <Check className="w-4 h-4 text-brand" />
-                          )}
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </nav>
-              </ModalLayout>
+                triggerRef={triggerRef as React.RefObject<HTMLButtonElement>}
+                value={sort}
+              />
             )}
           </div>
         </header>

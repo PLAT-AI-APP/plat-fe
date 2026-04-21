@@ -1,4 +1,4 @@
-import PersonaModal from "@/components/modal/PersonaModal";
+import PersonaModal from "@/components/modal/persona";
 import StorageModal from "@/components/modal/StorageModal";
 import UserNoteModal from "@/components/modal/UserNoteModal";
 import { Close, Persona, Storage } from "@/icons";
