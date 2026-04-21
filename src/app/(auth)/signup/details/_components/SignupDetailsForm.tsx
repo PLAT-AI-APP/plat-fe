@@ -20,7 +20,7 @@ const SignupDetailsForm = ({ signupToekn }: SignupDetailsFormProps) => {
     defaultValues: {
       nickname: "",
       gender: "",
-      birthDate: "",
+      birth: "",
       signupToken: signupToekn,
     },
   });
@@ -33,7 +33,7 @@ const SignupDetailsForm = ({ signupToekn }: SignupDetailsFormProps) => {
 
   const gender = watch("gender");
   const nickname = watch("nickname");
-  const birthDate = watch("birthDate");
+  const birth = watch("birth");
 
   const debouncedNickname = useDebounce({ value: nickname, delay: 500 });
   const { data: checkData } = useCheckNicknameQuery(debouncedNickname, {
@@ -44,7 +44,12 @@ const SignupDetailsForm = ({ signupToekn }: SignupDetailsFormProps) => {
 
   const onSubmit = (data: UserDetailFormValues) => {
     if (checkData?.available === false) return;
-    authRegister(data);
+    authRegister({
+      birthDate: data.birth,
+      gender: data.gender,
+      nickname: data.nickname,
+      signupToken: data.signupToken,
+    });
   };
 
   return (
@@ -67,13 +72,13 @@ const SignupDetailsForm = ({ signupToekn }: SignupDetailsFormProps) => {
 
           <GenderField />
 
-          <BirthDateInput value={birthDate} isEditMode={true} />
+          <BirthDateInput value={birth} isEditMode={true} />
         </div>
 
         <ActiveButton
           type="submit"
           text="가입 완료"
-          isActive={Boolean(gender && nickname && birthDate)}
+          isActive={Boolean(gender && nickname && birth)}
         />
       </form>
     </FormProvider>

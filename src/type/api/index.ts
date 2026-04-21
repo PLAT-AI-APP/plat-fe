@@ -14,8 +14,8 @@ export interface ApiSuccessResponse<T = void> {
   data: T;
 }
 
-export interface AppError {
+export interface AppError<T = Record<string, string>> {
   code: "MESSAGE" | "ALERT" | "FIELD_ERROR";
-  fields?: Record<string, string>;
+  fields?: Partial<Record<keyof T, string>>; // T의 키값들만 허용
   message: string;
 }

@@ -18,6 +18,7 @@ const Header = () => {
 
   const profileImage = useUserStore((state) => state.user?.profileImage);
   const nickname = useUserStore((state) => state.user?.nickname);
+  const bio = useUserStore((state) => state.user?.bio);
 
   return (
     <header id="profile-header" className="flex flex-col gap-4">
@@ -75,9 +76,7 @@ const Header = () => {
         </button>
       </section>
 
-      <p className="text-sm text-font-2">
-        어쩌구저쩌구 자기소개ㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁ·
-      </p>
+      <p className="text-sm text-font-2">{bio}</p>
 
       {/* 모달 레이어 */}
       {isProfileEditodal && (

@@ -18,7 +18,7 @@ export const BirthDateInput = React.forwardRef<
   BirthDateInputProps
 >(({ className, error, onChange, isEditMode = false, ...rest }, ref) => {
   const { setValue, watch } = useFormContext<UserDetailFormValues>();
-  const birthDate = watch("birthDate");
+  const birth = watch("birth");
 
   const [showCalendar, setShowCalendar] = useState(false);
   const [viewDate, setViewDate] = useState(new Date());
@@ -35,7 +35,7 @@ export const BirthDateInput = React.forwardRef<
 
     // 값 업데이트
     e.target.value = formatted;
-    setValue("birthDate", formatted);
+    setValue("birth", formatted);
 
     // 값이 10자리가 완료되었을 때만 캘린더 뷰 이동
     if (formatted.length === 10) {
@@ -51,7 +51,7 @@ export const BirthDateInput = React.forwardRef<
   // 날짜 선택 시 로직
   const handleDateSelect = (date: Date) => {
     const formattedDate = dayjs(date).format("YYYY-MM-DD");
-    setValue("birthDate", formattedDate);
+    setValue("birth", formattedDate);
     setShowCalendar(false);
   };
 
@@ -86,7 +86,7 @@ export const BirthDateInput = React.forwardRef<
           {...rest}
           ref={ref}
           type="text"
-          value={birthDate}
+          value={birth}
           onChange={handleValueChange}
           maxLength={10}
           placeholder="YYYY-MM-DD"
@@ -111,8 +111,8 @@ export const BirthDateInput = React.forwardRef<
                 onActiveStartDateChange={handleActiveStartDateChange}
                 activeStartDate={viewDate} // input에 의해 업데이트된 viewDate 반영                onChange={(val) => handleDateSelect(val as Date)}
                 value={
-                  birthDate && dayjs(birthDate as string).isValid()
-                    ? dayjs(birthDate as string).toDate()
+                  birth && dayjs(birth as string).isValid()
+                    ? dayjs(birth as string).toDate()
                     : new Date()
                 }
                 onChange={(value) => handleDateSelect(value as Date)}

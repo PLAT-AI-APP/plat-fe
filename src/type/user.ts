@@ -6,10 +6,10 @@ export interface ProfileEditFormType {
   nickname: string;
 
   /** 소개글 (최대 50자) */
-  introduce?: string;
+  bio?: string;
 
   /** 생년월일 (YYYY-MM-DD 형식) */
-  birthDate: string;
+  birth: string;
 
   /** 성별 */
   gender: "MALE" | "FEMALE" | "OTHER";
