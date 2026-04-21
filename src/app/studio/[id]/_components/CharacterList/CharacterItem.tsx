@@ -1,8 +1,8 @@
 import React, { useRef, useState } from "react";
 import Image from "next/image";
-import { ModalLayout } from "@/components/ModalLayout";
-import { ChatFill, Dots, Edit, Global, HeartFill, Trash } from "@/icons";
+import { ChatFill, Dots } from "@/icons";
 import { formatStatCount } from "@/lib/utils";
+import CharacterMenuPopover from "@/components/popover/CharacterMenuPopover";
 
 interface CharacterItemProps {
   chatCount: number;
@@ -62,26 +62,12 @@ const CharacterItem = ({
               </button>
 
               {isModal && (
-                <ModalLayout
+                <CharacterMenuPopover
+                  onClose={() => setIsModal(false)}
                   triggerRef={triggerRef}
-                  onClose={toggleIsModal}
-                  className="whitespace-nowrap w-37.5"
-                >
-                  <menu className="flex flex-col gap-1">
-                    <button
-                      type="button"
-                      className="flex items-center gap-2 text-left text-sm px-2.5 py-2 rounded-lg hover:bg-btn-hover"
-                    >
-                      <Edit className="w-4 h-4" /> 수정
-                    </button>
-                    <button
-                      type="button"
-                      className="flex items-center gap-2 text-font-accents text-sm text-left px-2.5 py-2 rounded-lg hover:bg-btn-hover"
-                    >
-                      <Trash className="w-4 h-4 text-font-accents" /> 삭제
-                    </button>
-                  </menu>
-                </ModalLayout>
+                  onDelete={() => null}
+                  onEdit={() => null}
+                />
               )}
             </div>
           </header>
