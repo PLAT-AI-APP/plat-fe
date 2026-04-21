@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import React from "react";
-import StudioContents from "./_conponents/StudioContents";
+import StudioContents from "./_components/StudioContents";
 
 export const metadata: Metadata = {
   title: "스튜디오",
