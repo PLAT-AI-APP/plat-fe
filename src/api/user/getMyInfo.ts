@@ -1,4 +1,4 @@
-"use client"; // 1. Next.js 환경이라면 필수입니다.
+"use client";
 import { useQuery } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { ApiSuccessResponse, AppError } from "@/type/api";
