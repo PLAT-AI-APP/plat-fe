@@ -1,11 +1,11 @@
 import React, { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
-import { ModalLayout } from "../../ModalLayout";
 import CheckCircle from "@/icons/CheckCircle";
 import { Dots } from "@/icons";
 import { Persona } from "@/type/persona";
 import PersonaAddModal from "../PersonaAddModal";
 import { useDeletePersonaMutation } from "@/api/persona/deletePersona";
+import PersonaMenuPopover from "@/components/popover/PersonaMenuPopover";
 
 interface PersonaItemProps {
   persona: Persona;
@@ -65,27 +65,12 @@ const PersonaItem = ({ persona, isActive, onSelect }: PersonaItemProps) => {
           />
 
           {isEdit && (
-            <ModalLayout
-              onClose={toggleIsEdit}
+            <PersonaMenuPopover
+              onClose={() => setIsEdit(false)}
               triggerRef={triggerRef}
-              className="border border-border-main"
-            >
-              <div
-                onClick={(e) => {
-                  e.stopPropagation();
-                  toggleisEditModal();
-                }}
-                className="px-2.5 py-2 rounded-lg hover:bg-btn-hover"
-              >
-                수정하기
-              </div>
-              <div
-                onClick={() => deletePersona(persona.personaId)}
-                className="px-2.5 py-2 rounded-lg hover:bg-btn-hover"
-              >
-                삭제하기
-              </div>
-            </ModalLayout>
+              onDelete={() => deletePersona(persona.personaId)}
+              onEdit={() => setIsEditModal(true)}
+            />
           )}
         </div>
       </div>
