@@ -3,10 +3,11 @@ import React, { useEffect, useState } from "react";
 import CharacterCard from "./CharacterCard";
 import SkeletonCharacterCard from "../skeleton/SkeletonCard";
 import { cn } from "@/lib/utils";
+import { ClassValue } from "clsx";
 
 interface CharacterGridProps {
   // lineCount: number;
-  cardHeight: number;
+  cardHeight?: number;
   // 가로, 세로 간격을 위한 props 추가
   columnGap?: number;
   rowGap?: number;
@@ -19,6 +20,8 @@ interface CharacterGridProps {
     tag: string[];
     img: string;
   }[];
+  gridClassName?: ClassValue;
+  cardClassName?: ClassValue;
   // title?: string;
   // TitleLogo?: React.ReactNode;
 }
@@ -30,6 +33,8 @@ const CharacterGrid = ({
   rowGap = 20, // 기본 세로 간격 20px
   isNew = false,
   isOfficial = false,
+  gridClassName,
+  cardClassName,
   // title,
   // TitleLogo,
 }: CharacterGridProps) => {
@@ -58,6 +63,7 @@ const CharacterGrid = ({
         "@[736px]:grid-cols-4",
         "@[923px]:grid-cols-5",
         "@[1110px]:grid-cols-6",
+        gridClassName,
       )}
       style={{
         columnGap: `${columnGap}px`,
@@ -85,6 +91,7 @@ const CharacterGrid = ({
               char={character}
               isNew={isNew}
               isOfficial={isOfficial}
+              className={cardClassName}
             />
           ))}
     </div>

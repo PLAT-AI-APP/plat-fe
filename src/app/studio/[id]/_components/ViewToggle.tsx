@@ -1,15 +1,17 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { ViewGrid, ViewList } from "@/icons";
 
-const ViewToggle = () => {
-  const [viewMode, setViewMode] = useState<"list" | "grid">("list");
-
+interface ViewToggleProps {
+  viewMode: "list" | "grid";
+  setViewMode: React.Dispatch<React.SetStateAction<"list" | "grid">>;
+}
+const ViewToggle = ({ viewMode, setViewMode }: ViewToggleProps) => {
   const toggleViewMode = () => {
-    setViewMode((prev) => (prev === "list" ? "grid" : "list"));
+    setViewMode(viewMode === "list" ? "grid" : "list");
   };
 
   return (

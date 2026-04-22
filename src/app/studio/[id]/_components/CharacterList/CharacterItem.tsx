@@ -3,10 +3,11 @@ import Image from "next/image";
 import { ChatFill, Dots } from "@/icons";
 import { formatStatCount } from "@/lib/utils";
 import CharacterMenuPopover from "@/components/popover/CharacterMenuPopover";
+import { useRouter } from "next/navigation";
 
 interface CharacterItemProps {
   chatCount: number;
-  id: string;
+  id: number;
   isPublic: boolean;
   tagList: string[];
   // likeCount: number;
@@ -25,17 +26,30 @@ const CharacterItem = ({
   title,
   description,
 }: CharacterItemProps) => {
+  const router = useRouter();
+
   // 상태 및 참조 변수
   const triggerRef = useRef(null);
   const [isModal, setIsModal] = useState(false);
 
   // 로직 및 핸들러
-  const toggleIsModal = () => {
+  const toggleIsModal = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
     setIsModal((prev) => !prev);
   };
 
+  const handleCardClick = () => {
+    if (!isModal) {
+      router.push(`/characters/${id}`);
+    }
+  };
   return (
-    <article className="flex gap-2 cursor-pointer px-3 py-2.5 rounded-2xl hover:bg-card">
+    <article
+      onClick={handleCardClick}
+      // href={`/characters/${id}`}
+      className="flex gap-2 cursor-pointer px-3 py-2.5 rounded-2xl hover:bg-card"
+    >
       <Image
         src={thumbnail}
         alt={`${title} 대표 이미지`}
@@ -62,12 +76,14 @@ const CharacterItem = ({
               </button>
 
               {isModal && (
-                <CharacterMenuPopover
-                  onClose={() => setIsModal(false)}
-                  triggerRef={triggerRef}
-                  onDelete={() => null}
-                  onEdit={() => null}
-                />
+                <div onClick={(e) => e.stopPropagation()}>
+                  <CharacterMenuPopover
+                    onClose={() => setIsModal(false)}
+                    triggerRef={triggerRef}
+                    onDelete={() => null}
+                    onEdit={() => null}
+                  />
+                </div>
               )}
             </div>
           </header>

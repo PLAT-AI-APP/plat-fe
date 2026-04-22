@@ -6,6 +6,7 @@ import Link from "next/link";
 import React from "react";
 import TagList from "./TagList";
 import { cn } from "@/lib/utils";
+import { ClassValue } from "clsx";
 
 interface CharacterCardProps {
   isNew?: boolean;
@@ -17,6 +18,7 @@ interface CharacterCardProps {
     tag: string[];
     img: string;
   };
+  className?: ClassValue;
 }
 
 const CharacterCard = ({
@@ -24,6 +26,7 @@ const CharacterCard = ({
   // cardHeight,
   isNew = false,
   isOfficial = false,
+  className,
 }: CharacterCardProps) => {
   return (
     <Link
@@ -31,6 +34,7 @@ const CharacterCard = ({
       className={cn(
         "group hover:cursor-pointer overflow-hidden rounded-xl flex flex-col shrink-0 transition-all duration-200 ease-in-out",
         "w-full min-w-43.75",
+        className,
       )}
     >
       {/* 이미지 영역 */}

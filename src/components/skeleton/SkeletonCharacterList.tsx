@@ -1,0 +1,21 @@
+import React from "react";
+
+const SkeletonCharacterList = () => {
+  return (
+    <article className="flex gap-2 cursor-pointer px-3 py-2.5 rounded-2xl hover:bg-card">
+      <div className="w-20.5 h-20.5 rounded-xl bg-card-hover" />
+
+      <div className="flex flex-col justify-between">
+        <div className="flex flex-col gap-2">
+          <div className="h-5 w-33.75 rounded-[100px] bg-card-hover"></div>
+
+          <p className="h-5 w-62.5 rounded-[100px] bg-card-hover"></p>
+        </div>
+
+        <div className="h-5 w-20 rounded-[100px] bg-card-hover"></div>
+      </div>
+    </article>
+  );
+};
+
+export default SkeletonCharacterList;
