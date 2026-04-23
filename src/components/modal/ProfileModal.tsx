@@ -127,7 +127,7 @@ const ProfileModal = ({ onClose, triggerRef }: ProfileModalProps) => {
           <div
             // href={"/login"}
             onClick={() => handleLoginBtn("GOOGLE")}
-            className="flex cursor-pointer items-center justify-center relative text-center h-11.5 rounded-lg bg-card w-full py-2 text-font-1"
+            className="flex cursor-pointer items-center justify-center relative text-center h-11.5 rounded-lg bg-white w-full py-2 text-black"
           >
             <Google className="absolute w-5.5 h-5.5 top-1/2 left-7.5 -translate-y-1/2" />
             구글 계정으로 시작하기

@@ -74,7 +74,7 @@ export default function ProfileContent({ id }: { id: string }) {
   return (
     <article className="@container flex flex-col gap-11.5 px-10 pt-7.5">
       {/* 사용자 프로필 정보 요약 영역 */}
-      <Header />
+      <Header userId={id} />
 
       {/* 탭 메뉴 및 콘텐츠 영역 */}
       <section

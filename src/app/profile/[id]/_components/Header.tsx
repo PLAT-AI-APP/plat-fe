@@ -3,8 +3,15 @@ import Image from "next/image";
 import ProfileEditModal from "@/components/modal/ProfileEditModal";
 import { FollowModal } from "@/components/modal/FollowModal";
 import { useUserStore } from "@/store/useUserStore";
+import { useFollowCountQuery } from "@/api/follow/getFollow";
 
-const Header = () => {
+interface HeaderProps {
+  userId: string;
+}
+const Header = ({ userId }: HeaderProps) => {
+  const { data: followCount } = useFollowCountQuery(userId);
+  const { followerCount = 0, followingCount = 0 } = followCount ?? {};
+
   const [isProfileEditodal, setIsProfileEditodal] = useState(false);
   const [isFollowModal, setIsFollowModal] = useState(false);
 
@@ -45,7 +52,7 @@ const Header = () => {
                   type="button"
                 >
                   <span className="text-font-2">팔로워</span>
-                  <span>12</span>
+                  <span>{followerCount}</span>
                 </button>
                 <button
                   onClick={toggleIsFollowModal}
@@ -53,7 +60,7 @@ const Header = () => {
                   type="button"
                 >
                   <span className="text-font-2">팔로잉</span>
-                  <span>1,232</span>
+                  <span>{followingCount}</span>
                 </button>
               </nav>
             </div>
