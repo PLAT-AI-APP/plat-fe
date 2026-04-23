@@ -3,7 +3,7 @@ import Image from "next/image";
 import ProfileEditModal from "@/components/modal/ProfileEditModal";
 import { FollowModal } from "@/components/modal/FollowModal";
 import { useUserStore } from "@/store/useUserStore";
-import { useFollowCountQuery } from "@/api/follow/getFollow";
+import { useFollowCountQuery } from "@/api/follow/getFollowCount";
 
 interface HeaderProps {
   userId: string;
@@ -89,7 +89,9 @@ const Header = ({ userId }: HeaderProps) => {
       {isProfileEditodal && (
         <ProfileEditModal onClose={toggleIsProfileEditodal} />
       )}
-      {isFollowModal && <FollowModal onClose={toggleIsFollowModal} />}
+      {isFollowModal && (
+        <FollowModal onClose={toggleIsFollowModal} userId={userId} />
+      )}
     </header>
   );
 };

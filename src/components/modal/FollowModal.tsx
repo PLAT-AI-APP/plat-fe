@@ -1,111 +1,98 @@
-import React, { useState } from "react";
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { ModalLayout } from "@/components/ModalLayout";
 import { Close } from "@/icons";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-
-export const USER_SOCIAL_MOCK = {
-  followers: [
-    {
-      id: "u1",
-      name: "새벽안개_04",
-      avatar: "/public/p1.png",
-      isFollowing: false,
-    },
-    {
-      id: "u2",
-      name: "루시_Lucie",
-      avatar: "/public/p1.png",
-      isFollowing: false,
-    },
-    {
-      id: "u3",
-      name: "코딩하는고양이",
-      avatar: "/public/p1.png",
-      isFollowing: false,
-    },
-    {
-      id: "u4",
-      name: "StarGazer",
-      avatar: "/public/p1.png",
-      isFollowing: false,
-    },
-    {
-      id: "u5",
-      name: "민트초코단장",
-      avatar: "/public/p1.png",
-      isFollowing: false,
-    },
-    {
-      id: "u6",
-      name: "오늘도배고파",
-      avatar: "/public/p1.png",
-      isFollowing: false,
-    },
-    {
-      id: "u7",
-      name: "오늘도배고파",
-      avatar: "/public/p1.png",
-      isFollowing: false,
-    },
-    {
-      id: "u8",
-      name: "오늘도배고파",
-      avatar: "/public/p1.png",
-      isFollowing: false,
-    },
-  ],
-  following: [
-    {
-      id: "u7",
-      name: "김철수_KR",
-      avatar: "/public/p1.png",
-      isFollowing: true,
-    },
-    {
-      id: "u8",
-      name: "Winter_Forest",
-      avatar: "/public/p1.png",
-      isFollowing: true,
-    },
-    {
-      id: "u9",
-      name: "레벨업마스터",
-      avatar: "/public/p1.png",
-      isFollowing: true,
-    },
-  ],
-};
+import { useFollowingListQuery } from "@/api/follow/getFollowingList";
+import { useFollowerListQuery } from "@/api/follow/getFollowerList";
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+import { useFollowMutation } from "@/api/follow/postFollow";
+import { useUnFollowMutation } from "@/api/follow/deleteFollow";
+import { useQueryClient } from "@tanstack/react-query";
 
 const TABS = [
   { id: "followers", title: "팔로워" },
   { id: "following", title: "팔로잉" },
 ] as const;
 
-export const FollowModal = ({ onClose }: { onClose: () => void }) => {
-  // 'follower' 또는 'following' 탭 상태 관리
+interface FollowModalProps {
+  onClose: () => void;
+  userId: string;
+}
+export const FollowModal = ({ onClose, userId }: FollowModalProps) => {
+  const queryClient = useQueryClient();
+
   const [activeTab, setActiveTab] = useState<"followers" | "following">(
     "followers",
   );
 
-  // 데이터를 상태로 관리 (추후 react-query 도입 시 이 부분이 useMutation 등으로 대체됩니다)
-  const [socialData, setSocialData] = useState(USER_SOCIAL_MOCK);
-  // 팔로우 상태 토글 함수
-  const handleFollowToggle = (userId: string) => {
-    setSocialData((prev) => ({
-      ...prev,
-      // 현재 탭뿐만 아니라 반대쪽 탭에도 같은 유저가 있다면 함께 업데이트하기 위해 둘 다 맵핑
-      followers: prev.followers.map((user) =>
-        user.id === userId ? { ...user, isFollowing: !user.isFollowing } : user,
-      ),
-      following: prev.following.map((user) =>
-        user.id === userId ? { ...user, isFollowing: !user.isFollowing } : user,
-      ),
-    }));
+  const [followChangeIds, setFollowChangeIds] = useState<number[]>([]);
+  const handleFollowChangeId = (id: number) => {
+    setFollowChangeIds((prev) => {
+      // 이미 배열에 해당 ID가 있는지 체크 (중복 방지용 선택 사항)
+      if (prev.includes(id)) {
+        return prev.filter((v) => v !== id);
+      }
 
-    // TODO: 여기서 바로 서버 API 호출 (react-query mutation)
-    // 리스트에서 바로 사라지지 않게 하려면, 필터링 로직 없이 데이터의 속성값만 바꿉니다.
+      // 이전 배열을 복사하고 새 ID를 추가하여 리턴합니다.
+      return [...prev, id];
+    });
   };
+  const { mutate: follow } = useFollowMutation();
+  const { mutate: unFollow } = useUnFollowMutation();
+
+  // 탭 변경 시: 조용히 데이터 새로고침 (Invalidate)
+  useEffect(() => {
+    // 사용자가 탭을 바꿀 때, 지금까지 수행한 변경사항을 실제 데이터에 반영
+    return () => {
+      // 이전에 보던 탭의 데이터를 백그라운드에서 최신화
+      queryClient.invalidateQueries({
+        queryKey: ["get-following-list", userId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["get-follower-list", userId],
+      });
+    };
+  }, [activeTab, queryClient, userId]);
+
+  const ulRef = useRef<HTMLUListElement>(null);
+  useLayoutEffect(() => {
+    if (ulRef.current) {
+      ulRef.current.scrollTop = 0;
+    }
+  }, [activeTab]);
+
+  // 현재 탭이 'following'일 때만 팔로잉 쿼리 활성화
+  const followingQuery = useFollowingListQuery(
+    userId,
+    activeTab === "following",
+  );
+  // 현재 탭이 'followers'일 때만 팔로워 쿼리 활성화
+  const followerQuery = useFollowerListQuery(userId, activeTab === "followers");
+
+  // 현재 활성화된 탭의 데이터 및 상태 추출
+  const activeQuery =
+    activeTab === "following" ? followingQuery : followerQuery;
+
+  // 모든 페이지의 content를 하나로 합침 (중요!)
+  const listData = useMemo(
+    () => activeQuery.data?.pages.flatMap((page) => page.content) ?? [],
+    [activeQuery.data, activeTab],
+  );
+
+  const { targetRef } = useIntersectionObserver({
+    onIntersect: activeQuery.fetchNextPage,
+    enabled: !!activeQuery.hasNextPage && !activeQuery.isFetchingNextPage,
+    rootMargin: "200px",
+  });
+
+  if (activeQuery.isLoading) return <div>로딩 중...</div>;
   return (
     <ModalLayout
       onClose={onClose}
@@ -143,36 +130,67 @@ export const FollowModal = ({ onClose }: { onClose: () => void }) => {
       {/* User List */}
       <ul className="flex flex-col gap-1 h-95 overflow-y-auto custom-scrollbar">
         {/* socialData 상태값을 기반으로 렌더링 */}
-        {socialData[activeTab].map((user) => (
-          <li
-            key={user.id}
-            className="cursor-pointer flex items-center justify-between rounded-2xl hover:bg-btn-hover p-2.5"
-          >
-            <div className="flex items-center gap-4">
-              <Image
-                src={user.avatar}
-                alt="유저 프로필 이미지"
-                width={40}
-                height={40}
-                className="w-10 h-10 rounded-full"
-              />
-              <span className="text-sm text-white">{user.name}</span>
-            </div>
+        {listData?.map((user, index) => {
+          // 1. 이 유저의 최종 팔로우 상태 계산
+          // 팔로워 탭: 클릭 안 했을 때(팔로우), 클릭 했을 때(팔로잉)
+          // 팔로잉 탭: 클릭 안 했을 때(팔로잉), 클릭 했을 때(팔로우)
+          const isToggled = followChangeIds.includes(user.userId);
 
-            {/* 팔로우/팔로잉 버튼 - 클릭 이벤트 연결 */}
-            <button
-              onClick={() => handleFollowToggle(user.id)}
-              className={cn(
-                "px-2.5 py-1 rounded-[100px] text-xs transition-colors",
-                user.isFollowing
-                  ? "bg-card" // 팔로잉 중인 상태
-                  : "bg-font-1 text-bg-dark", // 팔로우 전 상태
-              )}
+          // 만약 API에서 user.isFollowing 정보를 준다면 그걸 기준으로 삼는 게 가장 정확합니다.
+          // 정보가 없다면 아래처럼 탭 기준으로 임시 판별합니다.
+          const isFollowing =
+            activeTab === "followers"
+              ? isToggled // 팔로워 탭에선 클릭하면 팔로잉 중
+              : !isToggled; // 팔로잉 탭에선 클릭하면 팔로우 해제(즉, 안 함)
+          return (
+            <li
+              key={index + user.userId}
+              className="cursor-pointer flex items-center justify-between rounded-2xl hover:bg-btn-hover p-2.5"
             >
-              {user.isFollowing ? "팔로잉" : "팔로우"}
-            </button>
-          </li>
-        ))}
+              <div className="flex items-center gap-4">
+                <Image
+                  src={user.profileImage || ""}
+                  alt="유저 프로필 이미지"
+                  width={40}
+                  height={40}
+                  className="w-10 h-10 rounded-full"
+                />
+                <span className="text-sm text-white">{user.nickname}</span>
+              </div>
+
+              {/* 팔로우/팔로잉 버튼 - 클릭 이벤트 연결 */}
+              <button
+                onClick={() => {
+                  handleFollowChangeId(user.userId);
+                  if (isFollowing) {
+                    unFollow({ userId: user.userId });
+                  } else {
+                    follow({ userId: user.userId });
+                  }
+                }}
+                className={cn(
+                  "px-2.5 py-1 rounded-[100px] text-xs transition-colors",
+                  isFollowing
+                    ? "bg-card text-font-2" // 팔로잉 중인 상태 (차분한 색)
+                    : "bg-font-1 text-bg-dark", // 팔로우 전 상태 (눈에 띄는 색)
+                )}
+              >
+                {isFollowing ? "팔로잉" : "팔로우"}
+              </button>
+            </li>
+          );
+        })}
+
+        {/* 무한 스크롤 감지 및 추가 로딩 표시 */}
+        <div ref={targetRef} className="py-0.5 text-center">
+          {activeQuery.isFetchingNextPage ? (
+            <span className="text-xs text-font-2 animate-pulse">
+              목록을 더 가져오는 중...
+            </span>
+          ) : activeQuery.hasNextPage ? (
+            <div className="h-4" /> // 감지용 여백
+          ) : null}
+        </div>
       </ul>
     </ModalLayout>
   );
