@@ -6,11 +6,14 @@ import { FollowModal } from "@/components/modal/FollowModal";
 import { useUserStore } from "@/store/useUserStore";
 import { ArrowRight } from "@/icons";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useFollowCountQuery } from "@/api/follow/getFollowCount";
 
-const Header = () => {
-  const params = useSearchParams();
-  const id = params.get("id");
+interface HeaderProps {
+  id: string;
+}
+const Header = ({ id }: HeaderProps) => {
+  const { data: followCount } = useFollowCountQuery(id);
+  const { followerCount = 0, followingCount = 0 } = followCount ?? {};
 
   const [isProfileEditodal, setIsProfileEditodal] = useState(false);
   const [isFollowModal, setIsFollowModal] = useState(false);
@@ -55,7 +58,7 @@ const Header = () => {
                   type="button"
                 >
                   <span className="text-font-2">팔로워</span>
-                  <span>12</span>
+                  <span>{followerCount}</span>
                 </button>
                 <button
                   onClick={toggleIsFollowModal}
@@ -63,7 +66,7 @@ const Header = () => {
                   type="button"
                 >
                   <span className="text-font-2">팔로잉</span>
-                  <span>1,232</span>
+                  <span>{followingCount}</span>
                 </button>
               </nav>
             </div>
@@ -86,7 +89,9 @@ const Header = () => {
       {isProfileEditodal && (
         <ProfileEditModal onClose={toggleIsProfileEditodal} />
       )}
-      {isFollowModal && <FollowModal onClose={toggleIsFollowModal} />}
+      {isFollowModal && (
+        <FollowModal onClose={toggleIsFollowModal} userId={id} />
+      )}
     </header>
   );
 };

@@ -27,7 +27,6 @@ const getFollowerList = async ({
   pageParam = 0,
   //   size = 20,
 }: GetFollowerListProps) => {
-  console.log(pageParam);
   const response = await authAxios.get<
     ApiSuccessResponse<GetFollowerListResponse>
   >(`/follow/${userId}/followers`, {

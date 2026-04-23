@@ -84,7 +84,10 @@ const CharArray = [
   },
 ];
 
-const StudioContents = () => {
+interface StudioContentsProps {
+  id: string;
+}
+const StudioContents = ({ id }: StudioContentsProps) => {
   const [sort, setSort] = useState<"최신순" | "채팅순">("최신순");
   const [isSortOpen, setIsSortOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -96,7 +99,7 @@ const StudioContents = () => {
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-3">
           <div className="flex flex-col gap-3 p-5 rounded-3xl border border-border-main bg-bg-darker">
-            <Header />
+            <Header id={id} />
             <hr className="text-border-main" />
             <StudioStats />
           </div>

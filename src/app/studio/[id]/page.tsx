@@ -6,8 +6,14 @@ export const metadata: Metadata = {
   title: "스튜디오",
 };
 
-const StudioPage = () => {
-  return <StudioContents />;
+interface Props {
+  params: Promise<{ id: string }>; // URL 경로에 있는 id
+}
+
+const StudioPage = async ({ params }: Props) => {
+  const { id } = await params;
+
+  return <StudioContents id={id} />;
 };
 
 export default StudioPage;

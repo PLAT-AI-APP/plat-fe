@@ -110,8 +110,8 @@ const CharacterItem = ({
         <aside className="flex items-center gap-1.5 text-font-2">
           {/* <Global className="w-3.5 h-3.5" aria-label="지원 언어" /> */}
           <ul className="flex gap-0.5">
-            {tagList.map((tag) => (
-              <li key={tag} className="text-[11px] text-brand-dark">
+            {tagList.map((tag, index) => (
+              <li key={index} className="text-[11px] text-brand-dark">
                 #{tag}
               </li>
             ))}

@@ -28,19 +28,21 @@ const CharacterList = ({ char }: CharacterListProps) => {
     <ul className="flex flex-col gap-3">
       {isLoading
         ? char.map((_, index) => <SkeletonCharacterList key={index} />)
-        : char.map(({ chatCount, id, isPublic, dec, img, name, tag }) => (
-            <li key={id}>
-              <CharacterItem
-                description={dec}
-                chatCount={chatCount}
-                id={id}
-                isPublic={isPublic}
-                tagList={tag || []}
-                thumbnail={img}
-                title={name}
-              />
-            </li>
-          ))}
+        : char.map(
+            ({ chatCount, id, isPublic, dec, img, name, tag }, index) => (
+              <li key={index}>
+                <CharacterItem
+                  description={dec}
+                  chatCount={chatCount}
+                  id={id}
+                  isPublic={isPublic}
+                  tagList={tag || []}
+                  thumbnail={img}
+                  title={name}
+                />
+              </li>
+            ),
+          )}
     </ul>
   );
 };
