@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { ModalLayout } from "../ModalLayout";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,6 +20,7 @@ import Melody from "@/icons/Melody";
 import Check from "@/icons/Check";
 import { useUserStore } from "@/store/useUserStore";
 import { motion, AnimatePresence } from "framer-motion";
+import LoginModal from "./LoginModal";
 
 const activityArray = [
   { name: "내 페르소나", link: "/persona", icon: Persona },
@@ -56,11 +57,6 @@ const ProfileModal = ({ onClose, triggerRef }: ProfileModalProps) => {
     return true; // 나머지 아이템은 항상 표시
   });
 
-  // const [isModal, setIsModal] = useState(false);
-  // const toggleIsModal = () => {
-  //   setIsModal((prev) => !prev);
-  // };
-
   const [cureentTendency, setCurrentTendency] =
     useState<(typeof tendencyArray)[number]["name"]>("전체");
 
@@ -69,16 +65,29 @@ const ProfileModal = ({ onClose, triggerRef }: ProfileModalProps) => {
     toggleIstendency();
   };
 
+  const loginModalBtnRef = useRef(null);
+  const [isLoginModal, setIsLoginModal] = useState(false);
+  const toggleIsLoginModal = () => {
+    setIsLoginModal((prev) => !prev);
+  };
   const handleLoginBtn = (name: "KAKAO" | "GOOGLE" | "LOGIN") => {
     if (name === "LOGIN") {
-      onClose(); // 먼저 상태를 변경하고
-      window.location.href = "/login"; // 이동합니다.
+      // onClose(); // 먼저 상태를 변경하고
+      // window.location.href = "/login"; // 이동합니다.
+      toggleIsLoginModal();
       return;
     }
     window.location.href =
       process.env.NEXT_PUBLIC_BASE_URI + name === "KAKAO"
         ? "/oauth2/authorization/kakao"
         : "/oauth2/authorization/google";
+  };
+  const handleProfileModalClose = () => {
+    // 로그인 모달이 켜져 있다면, 어떤 바깥 클릭이 들어와도 프로필 모달은 무시
+    if (isLoginModal) {
+      return;
+    }
+    onClose();
   };
 
   const profileImage = useUserStore((state) => state.user?.profileImage);
@@ -87,8 +96,8 @@ const ProfileModal = ({ onClose, triggerRef }: ProfileModalProps) => {
 
   return (
     <ModalLayout
-      triggerRef={triggerRef || null}
-      onClose={onClose}
+      triggerRef={triggerRef}
+      onClose={handleProfileModalClose} // 가드 로직이 포함된 핸들러
       className="w-75 transition-colors"
     >
       {isLoggedIn ? (
@@ -134,6 +143,7 @@ const ProfileModal = ({ onClose, triggerRef }: ProfileModalProps) => {
           </div>
           <div
             // href={"/login"}
+            ref={loginModalBtnRef}
             onClick={() => handleLoginBtn("LOGIN")}
             className="flex cursor-pointer items-center justify-center relative text-center h-11.5 rounded-lg bg-card w-full py-2 text-font-2"
           >
@@ -274,6 +284,13 @@ const ProfileModal = ({ onClose, triggerRef }: ProfileModalProps) => {
             로그아웃
           </div>
         </>
+      )}
+
+      {isLoginModal && (
+        <LoginModal
+          onClose={toggleIsLoginModal}
+          triggerRef={loginModalBtnRef}
+        />
       )}
     </ModalLayout>
   );

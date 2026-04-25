@@ -111,6 +111,7 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
           {/* 프로필 컴포넌트 */}
           {!isLoggedIn && (
             <div
+              ref={triggerRef}
               onClick={handleToggle}
               className="flex items-center justify-center w-10 h-10"
             >
