@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, useWatch } from "react-hook-form";
 import { cn } from "@/lib/utils";
 import { CharacterCreateFormValues } from "@/type/character";
 import { ModalLayout } from "../ModalLayout";
@@ -14,11 +14,12 @@ interface TagAddModalProps {
 }
 
 const TagAddModal = ({ onClose }: TagAddModalProps) => {
-  const { watch, setValue } = useFormContext<CharacterCreateFormValues>();
+  const { control, setValue } = useFormContext<CharacterCreateFormValues>();
 
+  const currentTagsWatch = useWatch({ control, name: "tagList" });
   // 1. 모달 내부 임시 상태 (문자열 배열)
   const [localSelectedNames, setLocalSelectedNames] = useState<string[]>(() => {
-    const currentTags = watch("tagList") || [];
+    const currentTags = currentTagsWatch || [];
     return currentTags.map((t) => t.name);
   });
 

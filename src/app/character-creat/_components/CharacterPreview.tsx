@@ -8,8 +8,8 @@ import {
   ScenarioContentItem,
   ScenarioType,
 } from "@/type/character";
-import React, { useRef, useState } from "react";
-import { useFormContext } from "react-hook-form";
+import React, { useRef, useState, memo } from "react";
+import { useFormContext, useWatch } from "react-hook-form";
 
 interface CharacterPreviewProps {
   activeScenarioIndex: number;
@@ -18,11 +18,21 @@ interface CharacterPreviewProps {
 const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  const { watch, setValue, getValues } =
+  const { control, setValue, getValues } =
     useFormContext<CharacterCreateFormValues>();
-  const scenarios = watch("scenarios");
-  const characterName = watch("name") || "캐릭터";
-  const contents = scenarios[activeScenarioIndex]?.contents || [];
+
+  const scenarios = useWatch({
+    control,
+    name: "scenarios",
+  });
+
+  const name = useWatch({
+    control,
+    name: "name",
+  });
+
+  const characterName = name || "캐릭터";
+  const contents = scenarios?.[activeScenarioIndex]?.contents || [];
 
   const [currentMode, setCurrentMode] = useState<ScenarioType>("chat");
   const handleCurrentMode = (name: ScenarioType) => {
@@ -193,4 +203,4 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
   );
 };
 
-export default CharacterPreview;
+export default React.memo(CharacterPreview);

@@ -6,7 +6,7 @@ import Check from "@/icons/Check";
 import { cn } from "@/lib/utils";
 import { CharacterCreateFormValues } from "@/type/character";
 import React, { useState, useRef, MouseEvent } from "react"; // useRef 추가
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
 
 const CATEGORIES = [
   "시뮬레이션",
@@ -24,13 +24,13 @@ const CATEGORIES = [
 ];
 
 const Setting = () => {
-  const { watch, setValue, register, control } =
+  const { setValue, register, control } =
     useFormContext<CharacterCreateFormValues>();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "tagList",
   });
-  const tagList = watch("tagList");
+  const tagList = useWatch({ control, name: "tagList" });
 
   // 트리거 Ref 생성 시작
   const publicTriggerRef = useRef(null);
@@ -54,10 +54,13 @@ const Setting = () => {
     setIscategory((prev) => !prev);
   };
 
-  const isPublicWatch = watch("isPublic");
-  const characterDescription = watch("characterDescription");
-  const tendencyWatch = watch("tendency");
-  const categoryWatch = watch("category");
+  const isPublicWatch = useWatch({ control, name: "isPublic" });
+  const characterDescription = useWatch({
+    control,
+    name: "characterDescription",
+  });
+  const tendencyWatch = useWatch({ control, name: "tendency" });
+  const categoryWatch = useWatch({ control, name: "category" });
 
   // 공개여부 change
   const handleIsPublic = (ispublic: boolean) => {

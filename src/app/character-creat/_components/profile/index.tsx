@@ -1,17 +1,20 @@
 import React from "react";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, useWatch } from "react-hook-form";
 import RepresentativeImage from "./RepresentativeImage";
 import SmartInput from "@/components/SmartInput";
 import { CharacterCreateFormValues } from "@/type/character";
 import StatusWarning from "@/icons/StatusWarning";
 
 const Profile = () => {
-  const { register, watch } = useFormContext<CharacterCreateFormValues>();
+  const { register, control } = useFormContext<CharacterCreateFormValues>();
 
   // 상태 관찰 데이터
-  const titleValue = watch("title");
-  const nameValue = watch("name");
-  const characterIntroduceValue = watch("characterIntroduce");
+  const titleValue = useWatch({ control, name: "title" });
+  const nameValue = useWatch({ control, name: "name" });
+  const characterIntroduceValue = useWatch({
+    control,
+    name: "characterIntroduce",
+  });
 
   return (
     <section className="flex flex-col gap-6">

@@ -5,7 +5,7 @@ import { DragDropContext, Droppable, DropResult } from "@hello-pangea/dnd";
 import AssetItem from "./AssetItem";
 
 const Asset = () => {
-  const { control, watch } = useFormContext<CharacterCreateFormValues>();
+  const { control } = useFormContext<CharacterCreateFormValues>();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { fields, append, remove, move, insert } = useFieldArray({

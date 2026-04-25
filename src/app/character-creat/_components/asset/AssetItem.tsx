@@ -1,7 +1,7 @@
 import React, { useState, ChangeEvent } from "react";
 import { Draggable } from "@hello-pangea/dnd";
 import Image from "next/image";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, useWatch } from "react-hook-form";
 import SmartInput from "@/components/SmartInput";
 import { ArrowDown, Dots, Trash, ImageIcon } from "@/icons";
 import CopyFill from "@/icons/CopyFill";
@@ -15,13 +15,16 @@ interface AssetItemProps {
 }
 
 const AssetItem = ({ id, index, remove, copyAsset }: AssetItemProps) => {
-  const { register, setValue, watch } =
+  const { register, setValue, control } =
     useFormContext<CharacterCreateFormValues>();
   const [isActive, setIsActive] = useState(false);
 
-  const assetImage = watch(`asset.${index}.assetImage`);
-  const assetName = watch(`asset.${index}.assetName`);
-  const assetSituation = watch(`asset.${index}.assetSituation`);
+  const assetImage = useWatch({ control, name: `asset.${index}.assetImage` });
+  const assetName = useWatch({ control, name: `asset.${index}.assetName` });
+  const assetSituation = useWatch({
+    control,
+    name: `asset.${index}.assetSituation`,
+  });
 
   const toggleActive = () => setIsActive((prev) => !prev);
 

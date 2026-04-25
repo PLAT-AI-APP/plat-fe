@@ -3,7 +3,7 @@ import { Close, Plus } from "@/icons";
 import { cn } from "@/lib/utils";
 import { CharacterCreateFormValues } from "@/type/character";
 import React, { useRef, useState } from "react";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
 
 interface ScenarioProps {
   activeScenarioIndex: number;
@@ -22,9 +22,10 @@ const Scenario = ({
     name: "scenarios",
   });
   // 전체 시나리오 데이터를 watch 합니다.
-  const scenarios = watch("scenarios");
+  const scenarios = useWatch({ control, name: "scenarios" });
   const currentIndex = activeScenarioIndex;
-  const currentScenarioName = watch(`scenarios.${currentIndex}.name`) || "";
+  const currentScenarioName =
+    useWatch({ control, name: `scenarios.${currentIndex}.name` }) || "";
 
   const selectScenario = (index: number) => {
     setActiveScenarioIndex(index);

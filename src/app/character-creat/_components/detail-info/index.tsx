@@ -1,15 +1,18 @@
 import SmartInput from "@/components/SmartInput";
 import { CharacterCreateFormValues } from "@/type/character";
 import React from "react";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, useWatch } from "react-hook-form";
 
 const DetailInfo = () => {
-  const { register, watch } = useFormContext<CharacterCreateFormValues>();
+  const { register, control } = useFormContext<CharacterCreateFormValues>();
 
   // 상태 및 데이터 관찰
   // const heightValue = watch("height");
   // const weightValue = watch("weight");
-  const characterDetailSetting = watch("characterDetailSetting");
+  const characterDetailSetting = useWatch({
+    control,
+    name: "characterDetailSetting",
+  });
 
   return (
     <section className="flex flex-col gap-6">

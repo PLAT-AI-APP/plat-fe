@@ -2,7 +2,7 @@ import React from "react";
 import { ModalLayout } from "../ModalLayout";
 import { Close, Megaphone } from "@/icons";
 import SmartInput from "../SmartInput";
-import { Form, useForm } from "react-hook-form";
+import { Form, useForm, useWatch } from "react-hook-form";
 import ActiveButton from "../ActiveButton";
 
 interface TagFormValues {
@@ -16,7 +16,7 @@ interface TagSuggestionsModalProps {
 const TagSuggestionsModal = ({ onClose }: TagSuggestionsModalProps) => {
   const {
     register,
-    watch,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<TagFormValues>({
@@ -26,8 +26,8 @@ const TagSuggestionsModal = ({ onClose }: TagSuggestionsModalProps) => {
     },
   });
 
-  const hashTagValue = watch("hashTag");
-  const opinionValue = watch("opinion");
+  const hashTagValue = useWatch({ control, name: "hashTag" });
+  const opinionValue = useWatch({ control, name: "opinion" });
 
   const onSubmit = (data: TagFormValues) => {
     console.log(data.hashTag);
