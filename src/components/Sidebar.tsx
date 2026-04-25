@@ -75,14 +75,18 @@ const Sidebar = ({ isFolded = false }: SidebarProps) => {
     // { name: "고객센터", link: "/help", icon: Headphone },
   ];
 
+  const sidebarWidth = isFolded ? "70px" : "240px";
   return (
     // aside 자체를 motion으로 만들고 너비를 animate로 관리합니다.
     <motion.aside
       id="main-sidebar"
-      initial={false}
-      animate={{ width: isFolded ? "70px" : "240px" }}
+      // initial={false} 대신 실제 너비를 초기값으로 전달
+      initial={{ width: sidebarWidth }}
+      animate={{ width: sidebarWidth }}
+      // 브라우저가 JS 로드 전에도 이 너비를 유지하도록 style 추가
+      style={{ width: sidebarWidth }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      className="sticky top-0 flex flex-col pt-4 pl-4 pr-2 gap-2 h-fit bg-background"
+      className="sticky top-0 flex flex-col pt-4 pl-4 pr-2 gap-2 h-fit bg-background overflow-hidden"
     >
       <nav
         id="sidebar-navigation"
@@ -135,7 +139,7 @@ const Sidebar = ({ isFolded = false }: SidebarProps) => {
                     </motion.div>
 
                     {/* 텍스트 영역 */}
-                    <AnimatePresence mode="wait">
+                    <AnimatePresence mode="wait" initial={isFolded}>
                       {!isFolded && (
                         <motion.span
                           id={`text-${menu.name}`}

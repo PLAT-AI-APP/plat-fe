@@ -35,25 +35,14 @@ export default function ClientLayout({
     pathname?.startsWith(path),
   );
 
-  // const [isFolded, setIsFolded] = useState(() =>
-  //   FOLD_SIDEBAR_PATHS.some((path) => pathname?.startsWith(path)),
-  // );
-
   const [prevPathname, setPrevPathname] = useState(pathname);
 
   // 초기값은 무조건 false (어떤 경로든, 어떤 화면 크기든 첫 로딩은 펴짐)
-  const [isFolded, setIsFolded] = useState(false);
+  const [isFolded, setIsFolded] = useState(
+    FOLD_SIDEBAR_PATHS.some((path) => pathname?.startsWith(path)),
+  );
 
   useEffect(() => {
-    const isFoldPath = FOLD_SIDEBAR_PATHS.some((path) =>
-      pathname?.startsWith(path),
-    );
-
-    // 현재 상태가 false일 때만 true로 변경 (불필요한 동기적 setState 방지)
-    if (isFoldPath && !isFolded) {
-      setIsFolded(true);
-    }
-
     const mql = window.matchMedia("(max-width: 1023px)");
     const handleSceneChange = (e: MediaQueryListEvent) => {
       setIsFolded(e.matches);
@@ -61,7 +50,7 @@ export default function ClientLayout({
 
     mql.addEventListener("change", handleSceneChange);
     return () => mql.removeEventListener("change", handleSceneChange);
-  }, [pathname, isFolded]); // isFolded를 의존성에 추가하여 최신 상태 확인
+  }, [pathname]); // isFolded를 의존성에 추가하여 최신 상태 확인
 
   // 경로 변경 감지 로직 (기존 유지)
   if (pathname !== prevPathname) {
