@@ -78,7 +78,7 @@ const CharacterCreateForm = () => {
       characterDescription: "",
       tendency: "전체",
       category: "",
-      tagList: [{ name: "취미" }, { name: "여행" }],
+      tagList: [],
     },
   });
 
