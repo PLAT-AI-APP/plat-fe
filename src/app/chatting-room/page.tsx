@@ -1,8 +1,13 @@
 "use client";
+import { Metadata } from "next";
 // import React, { useCallback, useState } from "react";
 // import ChattingListSection from "./_components/ChattingListSection";
 // import { ChatListItemType } from "@/type/chat";
 import ChattingRoomSection from "./_components/chatting-room-section";
+
+export const metadata: Metadata = {
+  title: "채팅중",
+};
 
 const ChattingRoomPage = () => {
   // const [currentChat, setCurrentChat] = useState<ChatListItemType>({

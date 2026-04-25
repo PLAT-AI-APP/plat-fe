@@ -51,7 +51,7 @@ export const ModalLayout = ({
         />
       )}
 
-      <section
+      <div
         ref={modalRef}
         role="dialog"
         aria-modal="true"
@@ -65,7 +65,7 @@ export const ModalLayout = ({
         )}
       >
         {children}
-      </section>
+      </div>
     </>
   );
 

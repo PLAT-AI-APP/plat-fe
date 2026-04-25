@@ -1,5 +1,10 @@
 import React from "react";
 import CharacterCreateForm from "./_components/CharacterCreateForm";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "캐릭터 생성",
+};
 
 const CharacterCreatPage = () => {
   return (
