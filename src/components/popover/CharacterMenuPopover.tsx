@@ -37,9 +37,10 @@ const CharacterMenuPopover = ({
         <button
           onClick={() => handleAction(onDelete)}
           type="button"
-          className="flex items-center gap-2 text-font-accents text-sm text-left px-2.5 py-2 rounded-lg hover:bg-btn-hover"
+          className="font-extrabold flex items-center gap-2 text-font-accents text-sm text-left px-2.5 py-2 rounded-lg hover:bg-btn-hover"
         >
-          <Trash className="w-4 h-4 text-font-accents" /> 삭제
+          <Trash className="w-4 h-4 text-font-accents" />
+          삭제
         </button>
       </menu>
     </ModalLayout>

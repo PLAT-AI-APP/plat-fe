@@ -1,9 +1,4 @@
-"use client";
-import { Dots, User } from "@/icons";
-import dayjs from "@/lib/dayjs";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import React from "react";
+import ChattingItem from "./ChattingItem";
 
 const PERSONA_LIST_MOCK = [
   {
@@ -45,51 +40,20 @@ const PERSONA_LIST_MOCK = [
 ];
 
 const ChattingList = () => {
-  const router = useRouter();
-  const chattingItemOnClick = () => {
-    router.push(`chatting-room`);
-  };
   return (
     <section>
       <ul className="flex flex-col gap-2">
         {PERSONA_LIST_MOCK.map(
           ({ creator, description, id, thumbnail, title, updatedAt }) => (
-            <li
-              onClick={chattingItemOnClick}
+            <ChattingItem
               key={id}
-              className="cursor-pointer flex gap-2 px-4 py-3 rounded-lg hover:bg-btn-hover"
-            >
-              <Image
-                src={thumbnail}
-                width={60}
-                height={60}
-                alt=""
-                className="w-15 h-15 rounded-full"
-              />
-
-              <div className="flex gap-3">
-                <div>
-                  <p className="font-medium">{title}</p>
-                  <p className="mb-2 mt-1.5 text-sm text-font-2 line-clamp-1 whitespace-break-spaces">
-                    {description}
-                  </p>
-                  <div className="flex gap-1.5 text-font-2">
-                    <User className="w-4 h-4" />
-                    <span className="text-[13px]">{creator}</span>
-                  </div>
-                </div>
-
-                <div className="flex flex-col justify-between items-end">
-                  <button type="button" className="max-w-7 p-1 rounded-lg">
-                    <Dots className="w-5 h-5 text-font-2" />
-                  </button>
-
-                  <span className="text-xs text-font-2 text-nowrap">
-                    {dayjs(updatedAt).fromNow()}
-                  </span>
-                </div>
-              </div>
-            </li>
+              creator={creator}
+              description={description}
+              id={id}
+              thumbnail={thumbnail}
+              title={title}
+              updatedAt={updatedAt}
+            />
           ),
         )}
       </ul>
