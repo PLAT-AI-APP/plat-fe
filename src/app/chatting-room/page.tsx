@@ -1,4 +1,3 @@
-"use client";
 import { Metadata } from "next";
 // import React, { useCallback, useState } from "react";
 // import ChattingListSection from "./_components/ChattingListSection";
