@@ -58,7 +58,7 @@ export const ModalLayout = ({
         onClick={(e) => e.stopPropagation()}
         onMouseDown={(e) => e.stopPropagation()}
         className={cn(
-          "px-2 py-3 right-0 top-full translate-y-2.5 absolute z-101 bg-bg-dark rounded-xl shadow-card-heavy",
+          "px-2 py-3 right-0 top-full translate-y-2.5 absolute z-101 bg-bg-dark rounded-xl shadow-card-heavy border border-border-main",
           hasBackground &&
             "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 right-auto",
           className,
