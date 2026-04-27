@@ -72,13 +72,13 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
 
           {/* 포인트 표시 영역 */}
           {isLoggedIn && (
-            <div
-              id="user-point-badge"
+            <Link
+              href={`/token-charge`}
               className="flex cursor-pointer items-center gap-1 transition-all duration-200 ease-in-out hover:bg-btn-hover rounded-lg p-1.25 pr-2.5"
             >
               <Melody className="w-5 h-5" />
               <span id="user-point-value">1,100</span>
-            </div>
+            </Link>
           )}
 
           {/* 알림 버튼 */}
@@ -96,7 +96,7 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
           )} */}
         </div>
 
-        {/* 프로필 컴포넌트 */}
+        {/* 로그인 프로필 */}
         <div className="relative">
           {isLoggedIn && (
             <div id="header-profile-wrapper">
@@ -108,7 +108,7 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
             </div>
           )}
 
-          {/* 프로필 컴포넌트 */}
+          {/* 비로그인 프로필 */}
           {!isLoggedIn && (
             <div
               ref={triggerRef}
