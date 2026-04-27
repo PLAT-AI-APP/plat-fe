@@ -26,7 +26,7 @@ const CharacterMenuPopover = ({
       onClose={onClose}
       className="whitespace-nowrap w-37.5"
     >
-      <menu className="flex flex-col gap-1">
+      <menu className="flex flex-col gap-1 font-medium ">
         <button
           onClick={() => handleAction(onEdit)}
           type="button"
@@ -37,7 +37,7 @@ const CharacterMenuPopover = ({
         <button
           onClick={() => handleAction(onDelete)}
           type="button"
-          className="font-extrabold flex items-center gap-2 text-font-accents text-sm text-left px-2.5 py-2 rounded-lg hover:bg-btn-hover"
+          className="flex items-center gap-2 text-font-accents text-sm text-left px-2.5 py-2 rounded-lg hover:bg-btn-hover"
         >
           <Trash className="w-4 h-4 text-font-accents" />
           삭제
