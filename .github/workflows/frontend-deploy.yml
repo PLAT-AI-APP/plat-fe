@@ -1,0 +1,82 @@
+name: Frontend Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - develop
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'package*.json'
+      - 'next.config.ts'
+      - 'tsconfig.json'
+      - 'Dockerfile'
+      - 'docker-compose.dev.yml'
+      - 'docker-compose.prod.yml'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ github.ref == 'refs/heads/main' && 'prod' || 'dev' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set profile
+        run: |
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            echo "PROFILE=prod" >> $GITHUB_ENV
+            echo "IMAGE_TAG=prod-${{ github.sha }}" >> $GITHUB_ENV
+            echo "API_URL=https://api.plat.so" >> $GITHUB_ENV
+          else
+            echo "PROFILE=dev" >> $GITHUB_ENV
+            echo "IMAGE_TAG=dev-${{ github.sha }}" >> $GITHUB_ENV
+            echo "API_URL=https://api-dev.plat.so" >> $GITHUB_ENV
+          fi
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build & Push Docker image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          ECR_IMAGE=$ECR_REGISTRY/${{ secrets.ECR_REPOSITORY }}:$IMAGE_TAG
+          docker build \
+            --build-arg NEXT_PUBLIC_API_URL=$API_URL \
+            -t $ECR_IMAGE .
+          docker push $ECR_IMAGE
+          echo "ECR_IMAGE=$ECR_IMAGE" >> $GITHUB_ENV
+
+      - name: Copy compose file to EC2
+        run: |
+          echo "${{ secrets.EC2_KEY }}" > key.pem
+          chmod 400 key.pem
+          scp -i key.pem -o StrictHostKeyChecking=no \
+            docker-compose.$PROFILE.yml \
+            ubuntu@${{ secrets.EC2_HOST }}:/home/ubuntu/app/docker-compose.$PROFILE.yml
+          rm key.pem
+
+      - name: Deploy to EC2
+        run: |
+          echo "${{ secrets.EC2_KEY }}" > key.pem
+          chmod 400 key.pem
+          ssh -i key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.EC2_HOST }} << EOF
+            set -e
+            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | \
+              docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+            cd /home/ubuntu/app
+            ECR_IMAGE=$ECR_IMAGE \
+            docker compose -f docker-compose.$PROFILE.yml up -d --pull always
+            docker image prune -f
+          EOF
+          rm key.pem

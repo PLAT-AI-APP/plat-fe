@@ -1,7 +1,7 @@
 services:
   app:
     image: ${ECR_IMAGE}
-    container_name: plat_fe_dev
+    container_name: plat_fe_prod
     restart: always
     ports:
       - "3000:3000"
