@@ -52,7 +52,7 @@ export const MOCK_PRODUCTS: ProductItem[] = [
 
 const TokenChargeContents = () => {
   return (
-    <section className="mx-auto max-w-160 w-full pt-5">
+    <section className="mx-auto max-w-160 w-full pt-5 px-9">
       <div className="flex flex-col gap-2 mb-9 py-4 px-5 bg-bg-darker border border-border-main rounded-3xl">
         <span className="text-sm text-font-2">내 토큰</span>
         <div className="flex items-center gap-2 text-[20px] font-medium">
