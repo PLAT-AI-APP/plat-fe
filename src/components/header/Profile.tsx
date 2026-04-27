@@ -12,7 +12,7 @@ const Profile = ({ triggerRef, handleToggle, profileImg }: ProfileProps) => {
     <div className="relative text-nowrap w-8 h-8">
       <Image
         ref={triggerRef}
-        src={profileImg}
+        src={profileImg || ""}
         alt="profile image"
         width={32}
         height={32}

@@ -39,7 +39,7 @@ const Header = ({ id }: HeaderProps) => {
         <div className="flex gap-5.25">
           <aside className="shrink-0">
             <Image
-              src={profileImage || "/p1.png"}
+              src={profileImage || ""}
               alt="프로필 이미지"
               width={60}
               height={60}
