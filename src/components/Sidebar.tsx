@@ -13,7 +13,7 @@ export const RECENT_CHATS_MOCK = [
     name: "사이버펑크 해커 리온",
     lastMessage:
       "네온 사인이 깜빡이는 뒷골목. 어떤 정보를 찾으러 왔어? 내 보안망은 아무나 못 뚫을 텐데.",
-    thumbnail: "/images/leon.png", // 이미지의 해커 아바타
+    thumbnail: "/images/sample.png", // 이미지의 해커 아바타
     tendency: "남성향",
     unreadCount: 2,
     updatedAt: "10분 전",
@@ -23,7 +23,7 @@ export const RECENT_CHATS_MOCK = [
     name: "판타지 엘프 마법사",
     lastMessage:
       "고대 숲의 깊은 곳. 은빛 머리카락이 흩날리는 그녀가 당신에게 조용히 손을 내밉니다.",
-    thumbnail: "/images/elf.png", // 이미지의 엘프 아바타
+    thumbnail: "/images/sample.png", // 이미지의 해커 아바타
     tendency: "전체",
     unreadCount: 0,
     updatedAt: "1시간 전",
@@ -33,7 +33,7 @@ export const RECENT_CHATS_MOCK = [
     name: "냉혹한 춤꾼",
     lastMessage:
       "음악이 멈추면 모든 게 끝나는 거야. 마지막 춤을 출 준비는 됐어?",
-    thumbnail: "/p1.png",
+    thumbnail: "/images/sample.png", // 이미지의 해커 아바타
     tendency: "여성향",
     unreadCount: 5,
     updatedAt: "3시간 전",
@@ -43,7 +43,7 @@ export const RECENT_CHATS_MOCK = [
     name: "우주 정거장 AI 안나",
     lastMessage:
       "현재 산소 포화도 98%입니다. 사령관님, 다음 목적지인 화성까지의 궤도를 수정할까요?",
-    thumbnail: "/images/ana.png",
+    thumbnail: "/images/sample.png", // 이미지의 해커 아바타
     tendency: "전체",
     unreadCount: 0,
     updatedAt: "어제",
@@ -53,7 +53,7 @@ export const RECENT_CHATS_MOCK = [
     name: "조선 시대 무사 강혁",
     lastMessage:
       "이 칼 끝은 오직 정의만을 향한다. 네가 찾는 도적이 정말 이곳에 숨어 있다고 생각하느냐?",
-    thumbnail: "/images/kang.png",
+    thumbnail: "/images/sample.png", // 이미지의 해커 아바타
     tendency: "남성향",
     unreadCount: 0,
     updatedAt: "2026.04.14",

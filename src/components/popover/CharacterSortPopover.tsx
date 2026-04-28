@@ -42,8 +42,8 @@ const CharacterSortPopover = ({
                   handleSort(option);
                 }}
                 className={cn(
-                  "w-33.5 text-sm flex items-center justify-between px-2.5 py-2 rounded-lg cursor-pointer",
-                  isSelected ? "font-medium text-brand" : "hover:bg-btn-hover",
+                  "hover:bg-btn-hover w-33.5 text-sm flex items-center justify-between px-2.5 py-2 rounded-lg cursor-pointer",
+                  isSelected && "font-medium text-brand",
                 )}
               >
                 {option}

@@ -58,7 +58,7 @@ const CharacterBasicInfo = ({
         </ReactMarkdown>
       </div>
 
-      <TagList list={tags} />
+      <TagList list={tags} className="text-xs" />
     </article>
   );
 };

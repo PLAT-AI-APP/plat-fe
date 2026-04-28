@@ -35,7 +35,7 @@ const CreateTabs = ({
   const ActiveComponent = activeTab?.component;
 
   return (
-    <section className="flex-1 h-full p-5 rounded-3xl bg-bg-darker border border-border-main">
+    <section className="max-w-125 flex-1 h-full p-5 rounded-3xl bg-bg-darker border border-border-main">
       <nav className="flex gap-1 border-b-2 border-font-disabled mb-9">
         {TABS.map((tab) => (
           <button
@@ -52,6 +52,7 @@ const CreateTabs = ({
           </button>
         ))}
       </nav>
+
       {ActiveComponent && (
         <ActiveComponent
           activeScenarioIndex={activeScenarioIndex}
