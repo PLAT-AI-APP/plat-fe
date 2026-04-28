@@ -5,16 +5,15 @@ import ActiveButton from "@/components/ActiveButton";
 import AuthInput from "@/components/auth/AuthInput";
 import OtpInput from "@/components/auth/OtpInput";
 import { Email } from "@/icons";
-import ArrowLineLeft from "@/icons/ArrowLineLeft";
 import { EMAIL_REGEX } from "@/lib/regex";
-import { AuthFormValues } from "@/type/auth";
+import { PasswordResetFormValues } from "@/type/auth";
 import React, { useEffect, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 
 interface EmailAuthFormProps {
-  onBack: () => void;
+  onNextStep: () => void;
 }
-const EmailAuthForm = ({ onBack }: EmailAuthFormProps) => {
+const EmailAuthForm = ({ onNextStep }: EmailAuthFormProps) => {
   const [isOtpSent, setIsOtpSent] = useState(false);
   const [otpError, setOtpError] = useState("");
   const [enteredOtp, setEnteredOtp] = useState("");
@@ -30,7 +29,7 @@ const EmailAuthForm = ({ onBack }: EmailAuthFormProps) => {
     setValue,
     handleSubmit,
     register,
-  } = useFormContext<AuthFormValues>();
+  } = useFormContext<PasswordResetFormValues>();
 
   const email = useWatch({ control, name: "email" });
 
@@ -82,7 +81,8 @@ const EmailAuthForm = ({ onBack }: EmailAuthFormProps) => {
         onSuccess: (data) => {
           if (data.token) setValue("emailVerifyToken", data.token);
           alert("이메일 인증 성공");
-          handleSubmit(() => null)();
+          onNextStep();
+          // handleSubmit(() => null)();
         },
       },
     );
@@ -106,15 +106,12 @@ const EmailAuthForm = ({ onBack }: EmailAuthFormProps) => {
     <section className="py-9 px-6 w-screen max-w-97 rounded-3xl border border-border-main bg-bg-darker">
       <header className="flex flex-col gap-1.5 pb-9">
         <div className="flex gap-3">
-          <button type="button" onClick={onBack}>
-            <ArrowLineLeft className="w-7 h-7" />
-          </button>
           <h1 id="auth-step-title" className="text-[22px] font-medium">
-            이메일 인증
+            비밀번호 재설정
           </h1>
         </div>
         <p className="text-font-2 text-sm">
-          입력하신 이메일로 인증 메일을 보냈습니다.
+          이메일 인증을 통해 비밀번호를 재설정할 수 있습니다.
         </p>
       </header>
 
@@ -136,7 +133,7 @@ const EmailAuthForm = ({ onBack }: EmailAuthFormProps) => {
           error={errors.email?.message}
           disabled={isOtpSent || isPending}
           inputClassName={isOtpSent ? "bg-card text-font-2" : ""}
-          leftElement={<Email className="w-5 h-5 text-font-2" />}
+          leftElement={isOtpSent && <Email className="w-5 h-5 text-font-2" />}
         />
 
         {/* OTP 입력 필드 (발송 성공 시에만 노출) */}
@@ -159,11 +156,7 @@ const EmailAuthForm = ({ onBack }: EmailAuthFormProps) => {
       <ActiveButton
         id="email-submit-button"
         text={
-          isPending
-            ? "전송 중..."
-            : isOtpSent
-              ? "회원가입 완료"
-              : "인증번호 전송"
+          isPending ? "전송 중..." : isOtpSent ? "인증 확인" : "인증번호 전송"
         }
         isActive={
           isOtpSent

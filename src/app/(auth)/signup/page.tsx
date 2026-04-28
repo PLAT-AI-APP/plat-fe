@@ -2,8 +2,8 @@
 import { AuthFormValues } from "@/type/auth";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import EmailAuthForm from "./_components/EmailAuthForm";
 import SignupForm from "./_components/SignupForm";
+import EmailAuthForm from "./_components/EmailAuthForm";
 
 const SignupPage = () => {
   const [step, setStep] = useState(1);

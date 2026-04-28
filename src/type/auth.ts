@@ -1,13 +1,20 @@
+/** 로그인 form */
 export interface LoginFormValues {
   email: string;
   password: string;
 }
 
-export interface AuthFormValues extends LoginFormValues {
-  nickname: string;
+/** 비밀번호 재설정 page form */
+export interface PasswordResetFormValues extends LoginFormValues {
   otp: string[];
   passwordConfirm?: string;
   emailVerifyToken: string;
+}
+
+/** 회원가입 page form */
+export interface AuthFormValues extends PasswordResetFormValues {
+  nickname: string;
+
   signupToken: string;
   isTermsAgreed: boolean;
   isPrivacyAgreed: boolean;
@@ -18,11 +25,6 @@ export interface UserDetailFormValues {
   gender: "MALE" | "FEMALE" | "";
   birth: string;
   signupToken: string;
-}
-
-export interface LoginFormValues {
-  email: string;
-  password: string;
 }
 
 export type AuthMode = "SIGNUP" | "RESET_PASSWORD";

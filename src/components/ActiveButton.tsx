@@ -24,7 +24,7 @@ const ActiveButton = ({
       type={type}
       disabled={!isActive}
       className={cn(
-        "w-full h-11.5 font-semibold rounded-lg border border-white/10 transition-all",
+        "w-full h-11.5 font-medium rounded-lg border border-white/10 transition-all",
         isActive
           ? "bg-brand text-white cursor-pointer"
           : "bg-font-disabled text-font-1 cursor-not-allowed",
