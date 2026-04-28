@@ -3,15 +3,14 @@ export interface LoginFormValues {
   password: string;
 }
 
-export interface AuthFormValues extends Partial<LoginFormValues> {
-  // Step1 필드
+export interface AuthFormValues extends LoginFormValues {
+  nickname: string;
   otp: string[];
-
-  // Step2 필드
   passwordConfirm?: string;
-
   emailVerifyToken: string;
   signupToken: string;
+  isTermsAgreed: boolean;
+  isPrivacyAgreed: boolean;
 }
 
 export interface UserDetailFormValues {

@@ -73,7 +73,7 @@ export const AuthFlow = ({ type }: AuthFlowProps) => {
           onSubmit={handleSubmit(onSubmit)}
           className="relative overflow-hidden w-88 px-6 pt-6 pb-9 rounded-3xl border border-border-main bg-[#0B0E14]/60"
         >
-          <AuthBgDecoration />
+          {/* <AuthBgDecoration /> */}
 
           {step === 1 && (
             <EmailOtpStep title={config.titles[0]} onSubmit={onSubmit} />
