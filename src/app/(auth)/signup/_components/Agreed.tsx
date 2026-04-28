@@ -8,6 +8,7 @@ import { AuthFormValues } from "@/type/auth";
 import Checkbox from "@/icons/Checkbox";
 import CheckboxEmpty from "@/icons/CheckboxEmpty";
 import CheckboxFill from "@/icons/CheckboxFill";
+import { ArrowRight } from "@/icons";
 
 const Agreed = () => {
   const { control, setValue } = useFormContext<AuthFormValues>();
@@ -67,13 +68,22 @@ const Agreed = () => {
         {agreementList.map(({ checked, id, title }) => (
           <div
             key={id}
-            className="flex gap-2 items-center cursor-pointer"
+            className="flex justify-between items-center"
             onClick={() => toggleItem(id)}
           >
-            <button type="button" aria-label={title}>
-              {checked ? <Checkbox /> : <CheckboxEmpty />}
+            <div className="flex gap-2 items-center">
+              <button type="button" aria-label={title}>
+                {checked ? <Checkbox /> : <CheckboxEmpty />}
+              </button>
+              <span className="text-sm">{title}</span>
+            </div>
+
+            <button
+              type="button"
+              className="p-0.5 rounded-lg hover:bg-btn-hover"
+            >
+              <ArrowRight className="h-3 w-3 text-font-2" />
             </button>
-            <span className="text-sm">{title}</span>
           </div>
         ))}
       </div>
