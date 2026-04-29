@@ -26,6 +26,17 @@ const Header = ({ id }: HeaderProps) => {
     setIsFollowModal((prev) => !prev);
   };
 
+  // 상태 타입 정의 (기본값은 'followers')
+  const [activeFollowTab, setActiveFollowTab] = useState<
+    "followers" | "following"
+  >("followers");
+
+  // 모달을 열 때 탭 종류를 인자로 받음
+  const openFollowModal = (tab: "followers" | "following") => {
+    setActiveFollowTab(tab);
+    setIsFollowModal(true);
+  };
+
   const profileImage = useUserStore((state) => state.user?.profileImage);
   const nickname = useUserStore((state) => state.user?.nickname);
   const bio = useUserStore((state) => state.user?.bio);
@@ -53,7 +64,7 @@ const Header = ({ id }: HeaderProps) => {
 
               <nav className="flex gap-4">
                 <button
-                  onClick={toggleIsFollowModal}
+                  onClick={() => openFollowModal("followers")}
                   className="flex gap-1 text-sm cursor-pointer"
                   type="button"
                 >
@@ -61,7 +72,7 @@ const Header = ({ id }: HeaderProps) => {
                   <span>{followerCount}</span>
                 </button>
                 <button
-                  onClick={toggleIsFollowModal}
+                  onClick={() => openFollowModal("following")}
                   className="flex gap-1 text-sm cursor-pointer"
                   type="button"
                 >
@@ -90,7 +101,11 @@ const Header = ({ id }: HeaderProps) => {
         <ProfileEditModal onClose={toggleIsProfileEditodal} />
       )}
       {isFollowModal && (
-        <FollowModal onClose={toggleIsFollowModal} userId={id} />
+        <FollowModal
+          onClose={toggleIsFollowModal}
+          userId={id}
+          activeTab={activeFollowTab}
+        />
       )}
     </header>
   );

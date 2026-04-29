@@ -24,12 +24,17 @@ const TABS = [
 interface FollowModalProps {
   onClose: () => void;
   userId: string;
+  activeTab: "followers" | "following";
 }
-export const FollowModal = ({ onClose, userId }: FollowModalProps) => {
+export const FollowModal = ({
+  onClose,
+  userId,
+  activeTab = "followers",
+}: FollowModalProps) => {
   const queryClient = useQueryClient();
 
-  const [activeTab, setActiveTab] = useState<"followers" | "following">(
-    "followers",
+  const [activeTabs, setActiveTabs] = useState<"followers" | "following">(
+    activeTab,
   );
 
   const [followChangeIds, setFollowChangeIds] = useState<number[]>([]);
@@ -59,31 +64,34 @@ export const FollowModal = ({ onClose, userId }: FollowModalProps) => {
         queryKey: ["get-follower-list", userId],
       });
     };
-  }, [activeTab, queryClient, userId]);
+  }, [activeTabs, queryClient, userId]);
 
   const ulRef = useRef<HTMLUListElement>(null);
   useLayoutEffect(() => {
     if (ulRef.current) {
       ulRef.current.scrollTop = 0;
     }
-  }, [activeTab]);
+  }, [activeTabs]);
 
   // 현재 탭이 'following'일 때만 팔로잉 쿼리 활성화
   const followingQuery = useFollowingListQuery(
     userId,
-    activeTab === "following",
+    activeTabs === "following",
   );
   // 현재 탭이 'followers'일 때만 팔로워 쿼리 활성화
-  const followerQuery = useFollowerListQuery(userId, activeTab === "followers");
+  const followerQuery = useFollowerListQuery(
+    userId,
+    activeTabs === "followers",
+  );
 
   // 현재 활성화된 탭의 데이터 및 상태 추출
   const activeQuery =
-    activeTab === "following" ? followingQuery : followerQuery;
+    activeTabs === "following" ? followingQuery : followerQuery;
 
   // 모든 페이지의 content를 하나로 합침 (중요!)
   const listData = useMemo(
     () => activeQuery.data?.pages.flatMap((page) => page.content) ?? [],
-    [activeQuery.data, activeTab],
+    [activeQuery.data, activeTabs],
   );
 
   const { targetRef } = useIntersectionObserver({
@@ -107,10 +115,10 @@ export const FollowModal = ({ onClose, userId }: FollowModalProps) => {
               <button
                 type="button"
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
+                onClick={() => setActiveTabs(tab.id)}
                 className={cn(
                   "text-font-disabled px-7.25 py-2.75 cursor-pointer translate-y-0.5",
-                  activeTab === tab.id &&
+                  activeTabs === tab.id &&
                     "text-font-1 font-medium border-b-2 border-brand",
                 )}
               >
@@ -139,7 +147,7 @@ export const FollowModal = ({ onClose, userId }: FollowModalProps) => {
           // 만약 API에서 user.isFollowing 정보를 준다면 그걸 기준으로 삼는 게 가장 정확합니다.
           // 정보가 없다면 아래처럼 탭 기준으로 임시 판별합니다.
           const isFollowing =
-            activeTab === "followers"
+            activeTabs === "followers"
               ? isToggled // 팔로워 탭에선 클릭하면 팔로잉 중
               : !isToggled; // 팔로잉 탭에선 클릭하면 팔로우 해제(즉, 안 함)
           return (
