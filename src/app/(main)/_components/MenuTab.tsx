@@ -1,49 +1,65 @@
 "use client";
+import Logo from "@/icons/Logo";
+import New from "@/icons/New";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import React from "react";
 
 const categoryArray = [
   {
+    id: "all",
     name: "홈",
-    link: "/",
   },
-  // {
-  //   name: "랭킹",
-  //   link: "/ranking",
-  // },
-  // {
-  //   name: "신작",
-  //   link: "/new",
-  //   icon: New,
-  // },
   {
+    id: "ranking",
+    name: "랭킹",
+  },
+  {
+    id: "new",
+    name: "신작",
+    icon: New,
+  },
+  {
+    id: "official",
+    name: "공식",
+    icon: Logo,
+  },
+  {
+    id: "categories",
     name: "카테고리",
-    link: "/?categories=",
   },
 ];
-const MenuTab = () => {
-  const pathname = usePathname();
+
+interface MenuTabProps {
+  currentTab: string;
+}
+const MenuTab = ({ currentTab }: MenuTabProps) => {
   return (
     <nav
       id="category-navigation"
       aria-label="캐릭터 카테고리"
       className="w-full flex gap-2 font-medium"
     >
-      {categoryArray.map((category) => (
-        <Link
-          key={category.name}
-          id={`category-link-${category.name}`} // 각 링크에도 고유 ID 부여 (트래킹 용이)
-          href={category.link}
-          className={`px-2.5 py-2 flex gap-1 items-center justify-center text-sm
-          ${pathname.startsWith(category.link) ? "text-font-1 box-border border-b-2 border-brand" : "font-normal text-font-2 hover:text-font-1"}`}
-        >
-          {category.name}
-          {/* {category.icon && (
-                  <category.icon className="w-4.5 h-4.5 inline text-white" />
-                )} */}
-        </Link>
-      ))}
+      {categoryArray.map(({ id, name, icon: Icon }) => {
+        const isActive = currentTab === id;
+        return (
+          <Link
+            key={name}
+            id={`category-link-${name}`} // 각 링크에도 고유 ID 부여 (트래킹 용이)
+            href={{ pathname: "/", query: { tab: id } }}
+            // scroll={false}
+            className={`relative px-2.5 py-2 flex gap-1 items-center justify-center
+          ${isActive ? "text-font-1" : "text-font-2 hover:text-font-1"}`}
+          >
+            {name}
+            {Icon && <Icon className="w-4.5 h-4.5 inline text-white" />}
+
+            {isActive && (
+              <div className="absolute bottom-0 left-0 w-full box-border border-b-2 border-brand" />
+            )}
+          </Link>
+        );
+      })}
     </nav>
   );
 };

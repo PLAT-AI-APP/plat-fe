@@ -28,7 +28,7 @@ const PeriodTab = () => {
 
   return (
     <header className="flex items-center justify-between">
-      {/* 실시간, 일간, 주간, 월갑 기준 sort tab */}
+      {/* 실시간, 일간, 주간, 월간 기준 sort tab */}
       <nav>
         <ul className="flex gap-2">
           {PeriodTabArray.map(({ id, name }) => {

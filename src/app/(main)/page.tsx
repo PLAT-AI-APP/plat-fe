@@ -1,69 +1,33 @@
-import CharacterGrid from "@/components/character/CharacterGrid";
 import Footer from "@/components/Footer";
-import { MainBannerCarousel } from "@/components/MainBannerCarousel";
+import { MainBannerCarousel } from "@/app/(main)/_components/MainBannerCarousel";
 import MenuTab from "./_components/MenuTab";
 import { cn } from "@/lib/utils";
+import { Metadata } from "next";
+import HomeTabContents from "./_components/home-tab-contents";
+import RankingTabContents from "./_components/ranking-tab-contents";
+import { CHARACTERS_DUMMY } from "@/mocks/dummyData";
 
-const CharArray = [
-  {
-    name: "옆자리 불량학생",
-    chatCount: 123,
-    dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
-    tag: ["학교", "일상", "친구", "친구", "친구", "친구"],
-    img: "https://picsum.photos/200/300",
-  },
-  {
-    name: "옆자리 불량학생",
-    chatCount: 123,
-    dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
-    tag: ["학교", "일상", "친구", "친구", "친구", "친구"],
-    img: "https://picsum.photos/200/300",
-  },
-  {
-    name: "옆자리 불량학생",
-    chatCount: 123,
-    dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
-    tag: ["학교", "일상", "친구", "친구", "친구", "친구"],
-    img: "https://picsum.photos/200/300",
-  },
-  {
-    name: "옆자리 불량학생",
-    chatCount: 123,
-    dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
-    tag: ["학교", "일상", "친구", "친구", "친구", "친구"],
-    img: "https://picsum.photos/200/300",
-  },
-  {
-    name: "옆자리 불량학생",
-    chatCount: 123,
-    dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
-    tag: ["학교", "일상", "친구", "친구", "친구", "친구"],
-    img: "https://picsum.photos/200/300",
-  },
-  {
-    name: "옆자리 불량학생",
-    chatCount: 123,
-    dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
-    tag: ["학교", "일상", "친구", "친구", "친구", "친구"],
-    img: "https://picsum.photos/200/300",
-  },
-  {
-    name: "옆자리 불량학생",
-    chatCount: 123,
-    dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
-    tag: ["학교", "일상", "친구", "친구", "친구", "친구"],
-    img: "https://picsum.photos/200/300",
-  },
-  {
-    name: "옆자리 불량학생",
-    chatCount: 123,
-    dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
-    tag: ["학교", "일상", "친구", "친구", "친구", "친구"],
-    img: "https://picsum.photos/200/300",
-  },
-];
+export const metadata: Metadata = {
+  title: "home",
+};
 
-export default function Home() {
+interface HomePageProps {
+  searchParams: { [key: string]: string | string[] | undefined };
+}
+const Home = async ({ searchParams }: HomePageProps) => {
+  const params = await searchParams;
+  // 쿼리스트링 'tab' 값을 가져옵니다. (기본값: 'all')
+  const currentTab =
+    (params.tab as "all" | "ranking" | "new" | "official" | "categories") ||
+    "all";
+
+  const TabComponents: { [key: string]: React.ReactNode } = {
+    all: <HomeTabContents charArray={CHARACTERS_DUMMY} />,
+    ranking: <RankingTabContents />,
+    // new: <NewContent />,
+    // official: <OfficialContent />,
+  };
+
   return (
     <article
       id="home-container"
@@ -79,53 +43,13 @@ export default function Home() {
 
         <div className="max-w-300 w-full flex flex-col mx-auto gap-6.5 items-center">
           {/* 카테고리 필터 영역 */}
-          <MenuTab />
+          <MenuTab currentTab={currentTab} />
 
           <div
             id="contents-wrapper"
             className="flex flex-col gap-15 w-full mx-auto"
           >
-            {/* 오늘의 PICK 섹션 */}
-            <section
-              id="today-pick-section"
-              className="w-full h-auto max-w-300 flex flex-col gap-4 justify-center"
-            >
-              <CharacterGrid
-                char={CharArray}
-                // lineCount={2}
-                cardHeight={281}
-                columnGap={12}
-                rowGap={12}
-                // title="오늘의 PICK"
-              />
-            </section>
-
-            {/* 추천 신작 섹션 */}
-            {/* <section id="trending-new-section" className="flex flex-col gap-4">
-              <CharacterGrid
-                char={CharArray}
-                lineCount={1}
-                cardHeight={277}
-                isNew={true}
-                title="떠오르는 추천 신작"
-                TitleLogo={<New className="w-4.5 h-4.5" />}
-              />
-            </section> */}
-
-            {/* 공식 캐릭터 섹션 */}
-            {/* <section
-              id="official-characters-section"
-              className="flex flex-col gap-4"
-            >
-              <CharacterGrid
-                char={CharArray}
-                lineCount={1}
-                cardHeight={277}
-                isOfficial={true}
-                title="플랫의 공식 캐릭터"
-                TitleLogo={<Logo className="w-4.5 h-4.5" />}
-              />
-            </section> */}
+            {TabComponents[currentTab]}
           </div>
         </div>
       </div>
@@ -133,4 +57,6 @@ export default function Home() {
       <Footer />
     </article>
   );
-}
+};
+
+export default Home;
