@@ -8,6 +8,7 @@ import { ArrowRight, Close, Megaphone, Search } from "@/icons";
 import ActiveButton from "../ActiveButton";
 import TagSuggestionsModal from "./TagSuggestionsModal";
 import { useHashtagListQuery } from "@/api/hashtag/getHashtagList";
+import useModal from "@/hooks/useModal";
 
 interface TagAddModalProps {
   onClose: () => void;
@@ -71,8 +72,9 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
     onClose();
   };
 
-  const [isModal, setIsModal] = useState(false);
-  const toggleIsModal = () => setIsModal((prev) => !prev);
+  // const [isModal, setIsModal] = useState(false);
+  // const toggleIsModal = () => setIsModal((prev) => !prev);
+  const tagSuggestionsModal = useModal();
 
   return (
     <ModalLayout onClose={onClose} hasBackground className="p-5 w-112.5">
@@ -138,7 +140,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
         <footer className="flex gap-3 mt-4 h-10.25">
           <button
             type="button"
-            onClick={toggleIsModal}
+            onClick={tagSuggestionsModal.toggle}
             className="p-3 flex flex-1 items-center justify-between bg-card rounded-xl text-font-2 text-xs hover:bg-card-hover transition-colors"
           >
             <div className="flex gap-2 items-center">
@@ -156,7 +158,9 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
           />
         </footer>
       </div>
-      {isModal && <TagSuggestionsModal onClose={toggleIsModal} />}
+      {tagSuggestionsModal.isOpen && (
+        <TagSuggestionsModal onClose={tagSuggestionsModal.toggle} />
+      )}
     </ModalLayout>
   );
 };

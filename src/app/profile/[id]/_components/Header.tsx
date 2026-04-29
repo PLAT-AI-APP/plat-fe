@@ -4,6 +4,7 @@ import ProfileEditModal from "@/components/modal/ProfileEditModal";
 import { FollowModal } from "@/components/modal/FollowModal";
 import { useUserStore } from "@/store/useUserStore";
 import { useFollowCountQuery } from "@/api/follow/getFollowCount";
+import useModal from "@/hooks/useModal";
 
 interface HeaderProps {
   userId: string;
@@ -12,16 +13,19 @@ const Header = ({ userId }: HeaderProps) => {
   const { data: followCount } = useFollowCountQuery(userId);
   const { followerCount = 0, followingCount = 0 } = followCount ?? {};
 
-  const [isProfileEditodal, setIsProfileEditodal] = useState(false);
-  const [isFollowModal, setIsFollowModal] = useState(false);
+  const profileEditodal = useModal();
+  const followModal = useModal();
 
-  const toggleIsProfileEditodal = () => {
-    setIsProfileEditodal((prev) => !prev);
-  };
+  // const [profileEditodal.open, setIsProfileEditodal] = useState(false);
+  // const [isFollowModal, setIsFollowModal] = useState(false);
 
-  const toggleIsFollowModal = () => {
-    setIsFollowModal((prev) => !prev);
-  };
+  // const toggleIsProfileEditodal = () => {
+  //   setIsProfileEditodal((prev) => !prev);
+  // };
+
+  // const toggleIsFollowModal = () => {
+  //   setIsFollowModal((prev) => !prev);
+  // };
 
   // 상태 타입 정의 (기본값은 'followers')
   const [activeFollowTab, setActiveFollowTab] = useState<
@@ -31,7 +35,7 @@ const Header = ({ userId }: HeaderProps) => {
   // 모달을 열 때 탭 종류를 인자로 받음
   const openFollowModal = (tab: "followers" | "following") => {
     setActiveFollowTab(tab);
-    setIsFollowModal(true);
+    followModal.open();
   };
 
   const profileImage = useUserStore((state) => state.user?.profileImage);
@@ -86,7 +90,7 @@ const Header = ({ userId }: HeaderProps) => {
         </div>
 
         <button
-          onClick={toggleIsProfileEditodal}
+          onClick={profileEditodal.toggle}
           type="button"
           className="h-fit px-4 py-2 text-sm bg-bg-darkest rounded-xl border border-border-main"
         >
@@ -97,12 +101,12 @@ const Header = ({ userId }: HeaderProps) => {
       <p className="text-sm text-font-2">{bio}</p>
 
       {/* 모달 레이어 */}
-      {isProfileEditodal && (
-        <ProfileEditModal onClose={toggleIsProfileEditodal} />
+      {profileEditodal.isOpen && (
+        <ProfileEditModal onClose={profileEditodal.toggle} />
       )}
-      {isFollowModal && (
+      {followModal.isOpen && (
         <FollowModal
-          onClose={toggleIsFollowModal}
+          onClose={followModal.toggle}
           userId={userId}
           activeTab={activeFollowTab}
         />

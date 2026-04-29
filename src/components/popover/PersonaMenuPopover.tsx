@@ -24,7 +24,7 @@ const PersonaMenuPopover = ({
     <ModalLayout
       onClose={onClose}
       triggerRef={triggerRef}
-      className="border border-border-main"
+      className="border border-border-main w-37.5"
     >
       <menu className="flex flex-col gap-1">
         <button

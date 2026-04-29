@@ -1,10 +1,11 @@
 "use client";
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import Image from "next/image";
 import { ChatFill, Dots } from "@/icons";
 import { formatStatCount } from "@/lib/utils";
 import CharacterMenuPopover from "@/components/popover/CharacterMenuPopover";
 import { useRouter } from "next/navigation";
+import useModal from "@/hooks/useModal";
 
 interface CharacterItemProps {
   chatCount: number;
@@ -30,17 +31,11 @@ const CharacterItem = ({
 
   // 상태 및 참조 변수
   const triggerRef = useRef(null);
-  const [isModal, setIsModal] = useState(false);
 
-  // 로직 및 핸들러
-  const toggleIsModal = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    e.preventDefault();
-    setIsModal((prev) => !prev);
-  };
+  const { isOpen, toggle } = useModal();
 
   const handleCardClick = () => {
-    if (!isModal) {
+    if (!isOpen) {
       router.push(`/characters/${id}`);
     }
   };
@@ -69,17 +64,17 @@ const CharacterItem = ({
               <button
                 ref={triggerRef}
                 type="button"
-                onClick={toggleIsModal}
+                onClick={toggle}
                 aria-label="더보기 메뉴"
               >
                 <Dots className="w-3.5 h-3.5 text-font-2" />
               </button>
 
               {/* 캐릭터 수정/삭제 popover */}
-              {isModal && (
+              {isOpen && (
                 <div onClick={(e) => e.stopPropagation()}>
                   <CharacterMenuPopover
-                    onClose={() => setIsModal(false)}
+                    onClose={toggle}
                     triggerRef={triggerRef}
                     onDelete={() => null}
                     onEdit={() => null}

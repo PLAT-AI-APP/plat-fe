@@ -10,6 +10,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import ProfileMdoal from "../modal/ProfileModal";
 import Melody from "@/icons/Melody";
 import { useUserStore } from "@/store/useUserStore";
+import useModal from "@/hooks/useModal";
 
 interface HeaderProps {
   handleFoldToggle: () => void;
@@ -17,10 +18,7 @@ interface HeaderProps {
 const Header = ({ handleFoldToggle }: HeaderProps) => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
-  const [isActive, setIsActive] = useState<boolean>(false);
-  const handleToggle = () => {
-    setIsActive((prev) => !prev);
-  };
+  const profileModal = useModal();
 
   const triggerRef = useRef<HTMLImageElement>(null);
 
@@ -102,7 +100,7 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
             <div id="header-profile-wrapper">
               <Profile
                 profileImg={profileImage || "/p1.png"}
-                handleToggle={handleToggle}
+                handleToggle={profileModal.toggle}
                 triggerRef={triggerRef}
               />
             </div>
@@ -112,15 +110,18 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
           {!isLoggedIn && (
             <div
               ref={triggerRef}
-              onClick={handleToggle}
+              onClick={profileModal.toggle}
               className="flex items-center justify-center w-10 h-10"
             >
               <User className="w-6 h-6 text-font-2 cursor-pointer" />
             </div>
           )}
 
-          {isActive && (
-            <ProfileMdoal onClose={handleToggle} triggerRef={triggerRef} />
+          {profileModal.isOpen && (
+            <ProfileMdoal
+              onClose={profileModal.toggle}
+              triggerRef={triggerRef}
+            />
           )}
         </div>
       </div>

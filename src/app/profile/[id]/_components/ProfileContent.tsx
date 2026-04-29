@@ -5,6 +5,7 @@ import Header from "./Header";
 import CharacterGrid from "@/components/character/CharacterGrid";
 import { Sort } from "@/icons";
 import CharacterSortPopover from "@/components/popover/CharacterSortPopover";
+import useModal from "@/hooks/useModal";
 
 const CharArray = [
   {
@@ -68,7 +69,7 @@ const CharArray = [
 export default function ProfileContent({ id }: { id: string }) {
   // 상태 및 참조 변수
   const [sort, setSort] = useState<"최신순" | "채팅순">("최신순");
-  const [isSortOpen, setIsSortOpen] = useState(false);
+  const { isOpen, toggle } = useModal();
   const triggerRef = useRef<HTMLButtonElement>(null);
 
   return (
@@ -91,19 +92,19 @@ export default function ProfileContent({ id }: { id: string }) {
             <button
               ref={triggerRef}
               type="button"
-              onClick={() => setIsSortOpen(!isSortOpen)}
+              onClick={toggle}
               className="flex items-center gap-1.5 text-xs font-medium cursor-pointer"
               aria-haspopup="listbox"
-              aria-expanded={isSortOpen}
+              aria-expanded={isOpen}
             >
               <Sort className="w-3.5 h-3.5" />
               {sort}
             </button>
 
-            {isSortOpen && (
+            {isOpen && (
               <CharacterSortPopover
                 onChange={setSort}
-                onClose={() => setIsSortOpen(false)}
+                onClose={toggle}
                 triggerRef={triggerRef as React.RefObject<HTMLButtonElement>}
                 value={sort}
               />

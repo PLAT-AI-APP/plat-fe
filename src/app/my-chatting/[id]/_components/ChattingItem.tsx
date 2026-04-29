@@ -1,11 +1,12 @@
 "use client";
 
 import { Dots, User } from "@/icons";
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import dayjs from "@/lib/dayjs";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import MyChattingMenuPopover from "@/components/popover/MyChattingMenuPopover";
+import useModal from "@/hooks/useModal";
 
 interface ChattingItemProps {
   creator: string;
@@ -24,19 +25,15 @@ const ChattingItem = ({
   title,
   updatedAt,
 }: ChattingItemProps) => {
-  // 상태 및 Ref 선언
-  const [isPopover, setIsPopover] = useState<boolean>(false);
-  const triggerRef = useRef(null);
   const router = useRouter();
+
+  const { isOpen, toggle } = useModal();
+  const triggerRef = useRef(null);
 
   // 비즈니스 로직 및 이벤트 핸들러
   const chattingItemOnClick = () => {
     console.log("채팅방 이동");
     router.push(`/chatting-room`);
-  };
-
-  const toggleIsPopover = () => {
-    setIsPopover((prev) => !prev);
   };
 
   return (
@@ -67,21 +64,14 @@ const ChattingItem = ({
 
         <div className="flex flex-col justify-between items-end">
           <span ref={triggerRef} className="relative flex">
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                toggleIsPopover();
-              }}
-              type="button"
-              className=" p-1 rounded-lg"
-            >
+            <button onClick={toggle} type="button" className=" p-1 rounded-lg">
               <Dots className="w-5 h-5 text-font-2" />
             </button>
 
-            {isPopover && (
+            {isOpen && (
               <MyChattingMenuPopover
                 triggerRef={triggerRef}
-                onClose={toggleIsPopover}
+                onClose={toggle}
                 onDelete={() => null}
                 onEdit={() => null}
               />

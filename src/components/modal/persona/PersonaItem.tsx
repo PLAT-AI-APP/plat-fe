@@ -6,6 +6,7 @@ import { Persona } from "@/type/persona";
 import PersonaAddModal from "../PersonaAddModal";
 import { useDeletePersonaMutation } from "@/api/persona/deletePersona";
 import PersonaMenuPopover from "@/components/popover/PersonaMenuPopover";
+import useModal from "@/hooks/useModal";
 
 interface PersonaItemProps {
   persona: Persona;
@@ -25,10 +26,8 @@ const PersonaItem = ({ persona, isActive, onSelect }: PersonaItemProps) => {
   };
   const triggerRef = useRef(null);
 
-  const [isEditModal, setIsEditModal] = useState(false);
-  const toggleisEditModal = () => {
-    setIsEditModal(!isEditModal);
-  };
+  const { isOpen, close, open, toggle } = useModal();
+
   return (
     <li
       onClick={() => onSelect(persona.personaId)}
@@ -37,10 +36,10 @@ const PersonaItem = ({ persona, isActive, onSelect }: PersonaItemProps) => {
         isActive && "border border-font-1",
       )}
     >
-      {isEditModal && (
+      {isEdit && (
         <PersonaAddModal
           personaId={persona.personaId}
-          toggleIsAddModal={toggleisEditModal}
+          toggleIsAddModal={toggleIsEdit}
           isEditMode={true}
         />
       )}
@@ -58,18 +57,15 @@ const PersonaItem = ({ persona, isActive, onSelect }: PersonaItemProps) => {
         <div ref={triggerRef} className="relative">
           <Dots
             className="w-6 h-6 text-font-2 cursor-pointer hover:text-font-1"
-            onClick={(e) => {
-              e.stopPropagation();
-              toggleIsEdit();
-            }}
+            onClick={toggle}
           />
 
-          {isEdit && (
+          {isOpen && (
             <PersonaMenuPopover
-              onClose={() => setIsEdit(false)}
+              onClose={close}
               triggerRef={triggerRef}
               onDelete={() => deletePersona(persona.personaId)}
-              onEdit={() => setIsEditModal(true)}
+              onEdit={toggleIsEdit}
             />
           )}
         </div>

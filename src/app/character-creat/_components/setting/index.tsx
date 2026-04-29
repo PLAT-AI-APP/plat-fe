@@ -1,6 +1,7 @@
 import TagAddModal from "@/components/modal/TagAddModal";
 import { ModalLayout } from "@/components/ModalLayout";
 import SmartInput from "@/components/SmartInput";
+import useModal from "@/hooks/useModal";
 import { Close } from "@/icons";
 import Check from "@/icons/Check";
 import { cn } from "@/lib/utils";
@@ -40,19 +41,23 @@ const Setting = () => {
   const [tagInputValue, setTagInputValue] = useState("");
 
   // modal 제어
-  const [isPublic, setIsPublic] = useState(false);
-  const [isTendency, setIsTendency] = useState(false);
-  const [iscategory, setIscategory] = useState(false);
+  // const [isPublic, setIsPublic] = useState(false);
+  // const [isTendency, setIsTendency] = useState(false);
+  // const [iscategory, setIscategory] = useState(false);
 
-  const toggleIsPublic = () => {
-    setIsPublic((prev) => !prev);
-  };
-  const toggleisTendency = () => {
-    setIsTendency((prev) => !prev);
-  };
-  const toggleiscategory = () => {
-    setIscategory((prev) => !prev);
-  };
+  const publicModal = useModal();
+  const tendencyModal = useModal();
+  const categoryModal = useModal();
+
+  // const toggleIsPublic = () => {
+  //   setIsPublic((prev) => !prev);
+  // };
+  // const toggleisTendency = () => {
+  //   setIsTendency((prev) => !prev);
+  // };
+  // const toggleiscategory = () => {
+  //   setIscategory((prev) => !prev);
+  // };
 
   const isPublicWatch = useWatch({ control, name: "isPublic" });
   const characterDescription = useWatch({
@@ -65,17 +70,17 @@ const Setting = () => {
   // 공개여부 change
   const handleIsPublic = (ispublic: boolean) => {
     setValue("isPublic", ispublic);
-    setIsPublic(false);
+    publicModal.close();
   };
   // 성향 change
   const handleTendency = (tendency: string) => {
     setValue("tendency", tendency);
-    setIsTendency(false);
+    tendencyModal.close();
   };
   // 카테고리 change
   const handlecategory = (category: string) => {
     setValue("category", category);
-    setIscategory(false);
+    categoryModal.close();
   };
   // tab 추가
   const addTag = (e: React.FormEvent) => {
@@ -116,12 +121,12 @@ const Setting = () => {
         label="공개 여부"
         required
         value={isPublicWatch ? "공개" : "비공개"}
-        isOpen={isPublic}
-        toggleIsOpen={toggleIsPublic}
+        isOpen={publicModal.isOpen}
+        toggleIsOpen={publicModal.toggle}
         modalComponents={
-          isPublic && (
+          publicModal.isOpen && (
             <ModalLayout
-              onClose={toggleIsPublic}
+              onClose={publicModal.toggle}
               triggerRef={publicTriggerRef} // ModalLayout에 전달
               className="w-full"
             >
@@ -178,12 +183,12 @@ const Setting = () => {
         label="성향"
         required
         value={tendencyWatch}
-        isOpen={isTendency}
-        toggleIsOpen={toggleisTendency}
+        isOpen={tendencyModal.isOpen}
+        toggleIsOpen={tendencyModal.toggle}
         modalComponents={
-          isTendency && (
+          tendencyModal.isOpen && (
             <ModalLayout
-              onClose={toggleisTendency}
+              onClose={tendencyModal.toggle}
               triggerRef={tendencyTriggerRef} // ModalLayout에 전달
               className="w-full"
             >
@@ -219,12 +224,12 @@ const Setting = () => {
         required
         value={categoryWatch}
         placeholder={categoryWatch || "[선택 없음]"}
-        isOpen={iscategory}
-        toggleIsOpen={toggleiscategory}
+        isOpen={categoryModal.isOpen}
+        toggleIsOpen={categoryModal.toggle}
         modalComponents={
-          iscategory && (
+          categoryModal.isOpen && (
             <ModalLayout
-              onClose={toggleiscategory}
+              onClose={categoryModal.close}
               triggerRef={categoryTriggerRef} // ModalLayout에 전달
               className="w-full right-0 bottom-full top-auto -translate-y-2.5"
             >

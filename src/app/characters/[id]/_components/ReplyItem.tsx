@@ -8,6 +8,7 @@ import { useLineOverflow } from "@/hooks/useOverflowText";
 import ReplyLine from "@/icons/ReplyLine";
 import dayjs from "@/lib/dayjs";
 import CommentMenuPopover from "@/components/popover/CommentMenuPopover";
+import useModal from "@/hooks/useModal";
 
 const ReplyItem = ({ reply }: { reply: CommentType }) => {
   const textRef = useRef<HTMLParagraphElement>(null);
@@ -18,7 +19,7 @@ const ReplyItem = ({ reply }: { reply: CommentType }) => {
 
   const triggerRef = useRef(null);
 
-  const [isCommentMenu, setIsCommentMenu] = useState(false);
+  const { isOpen, toggle } = useModal();
   return (
     <article className="flex gap-2 pl-9 items-stretch">
       <div
@@ -46,13 +47,10 @@ const ReplyItem = ({ reply }: { reply: CommentType }) => {
             </time>
           </div>
           <div className="relative cursor-pointer" ref={triggerRef}>
-            <Dots
-              onClick={() => setIsCommentMenu(!isCommentMenu)}
-              className="w-6 h-6 p-1"
-            />
-            {isCommentMenu && (
+            <Dots onClick={toggle} className="w-6 h-6 p-1" />
+            {isOpen && (
               <CommentMenuPopover
-                onClose={() => setIsCommentMenu(false)}
+                onClose={toggle}
                 triggerRef={triggerRef}
                 isMine
                 onDelete={() => null}

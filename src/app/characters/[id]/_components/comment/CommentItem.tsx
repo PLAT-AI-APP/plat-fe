@@ -11,6 +11,7 @@ import ReplyLine from "@/icons/ReplyLine";
 // import PinFill from "@/icons/PinFill";
 import { Dots } from "@/icons";
 import CommentMenuPopover from "@/components/popover/CommentMenuPopover";
+import useModal from "@/hooks/useModal";
 
 interface Props {
   comment: CommentType;
@@ -21,7 +22,8 @@ const CommentItem = ({ comment }: Props) => {
   const triggerRef = useRef(null);
 
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isCommentMenu, setIsCommentMenu] = useState(false);
+  const { isOpen, toggle } = useModal();
+  // const [isCommentMenu, setIsCommentMenu] = useState(false);
   // const [isCommentInput, setIsCommentInput] = useState(false);
   // const [isReply, setIsReply] = useState(false);
 
@@ -69,13 +71,10 @@ const CommentItem = ({ comment }: Props) => {
             </div>
 
             <div className="relative cursor-pointer" ref={triggerRef}>
-              <Dots
-                onClick={() => setIsCommentMenu(!isCommentMenu)}
-                className="w-6 h-6 p-1"
-              />
-              {isCommentMenu && (
+              <Dots onClick={toggle} className="w-6 h-6 p-1" />
+              {isOpen && (
                 <CommentMenuPopover
-                  onClose={() => setIsCommentMenu(false)}
+                  onClose={toggle}
                   triggerRef={triggerRef}
                   isMine
                   onDelete={() => null}
