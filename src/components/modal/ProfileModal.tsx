@@ -27,7 +27,7 @@ const activityArray = [
   { name: "콘텐츠 설정", icon: Setting },
 ];
 const supportArray = [
-  { name: "공지사항", link: "/customer-service", icon: Megaphone },
+  { name: "공지사항", link: "/notification", icon: Megaphone },
   { name: "고객센터", link: "/customer-service", icon: Headphone },
 ];
 const tendencyArray = [
@@ -261,6 +261,7 @@ const ProfileModal = ({ onClose, triggerRef }: ProfileModalProps) => {
           <Link
             key={tab.name}
             href={tab.link}
+            onClick={onClose}
             className="flex items-center gap-2 px-3 py-2.5 rounded-lg hover:bg-btn-hover transition-colors text-font-1 hover:text-font-1 text-sm"
           >
             <Icon

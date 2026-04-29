@@ -1,72 +1,91 @@
 import { ArrowRight, Clock } from "@/icons";
 import { cn } from "@/lib/utils";
-import dayjs from "dayjs";
+import { NOTICE_DUMMY } from "@/mocks/dummyData";
+import dayjs from "@/lib/dayjs";
 import React from "react";
+import FilterTab from "./_components/FilterTab";
+import Link from "next/link";
 
-export const NOTICE_MOCK_DATA = [
-  {
-    id: 1,
-    category: "공지",
-    title: "서비스 이용 약관 변경 안내",
-    createdAt: "2026-02-03T09:00:00.000Z", // 서버에서 오는 날것의 데이터
+const NotificationColorConfig: Record<string, { bg: string; color: string }> = {
+  공지: {
+    bg: "bg-[#0088FF26]",
+    color: "text-[#0088FF]",
   },
-  {
-    id: 2,
-    category: "점검",
-    title: "2월 정기 점검 안내 (2/3 02:00~06:00)",
-    createdAt: "2026-02-01T15:00:00.000Z",
+  업데이트: {
+    bg: "bg-[#34C75926]",
+    color: "text-[#34C759]",
   },
-  {
-    id: 3,
-    category: "일반",
-    title: "서비스 이용 가이드 업데이트",
-    createdAt: "2026-01-21T10:20:00.000Z",
+  이벤트: {
+    bg: "bg-[#FFCC0026]",
+    color: "text-[#FFCC00]",
   },
-  {
-    id: 4,
-    category: "이벤트",
-    title: "신년 맞이 출석 이벤트 당첨자 발표",
-    createdAt: "2026-01-10T18:45:00.000Z",
-  },
-];
+};
 
-const NotificationPage = () => {
+interface NotificationPageProps {
+  searchParams: { [key: string]: string | string[] | undefined };
+}
+
+const NotificationPage = async ({ searchParams }: NotificationPageProps) => {
+  // 상태 및 데이터 처리
+  const sParams = await searchParams;
+  const currentFilter =
+    (sParams.filter as "ALL" | "NOTICE" | "UPDATE" | "EVENT") || "ALL";
+
   return (
-    <section className="flex flex-col items-center">
-      <h2 className="py-4 text-white text-[20px] font-semibold text-center">
-        공지사항
-      </h2>
+    <section className="flex flex-col gap-9 max-w-155 w-full mx-auto">
+      <header>
+        <h2 className="text-2xl font-medium">공지사항</h2>
+      </header>
 
-      <ul className="flex flex-col gap-1.5 max-w-155 w-11/12">
-        {NOTICE_MOCK_DATA.map(({ category, createdAt, id, title }) => (
-          <li
-            key={id}
-            className="flex justify-between items-center p-4 cursor-pointer"
-          >
-            <div className="flex flex-col gap-1">
-              <p className="flex gap-2 font-medium">
-                <span
-                  className={cn(
-                    "text-white",
-                    category === "공지"
-                      ? "text-font-accents"
-                      : category === "점검" && "text-brand",
-                  )}
+      <div id="notice-content-area" className="flex flex-col gap-4">
+        {/* 전체/공지/업데이트/이벤트 filter tab */}
+        <nav>
+          <FilterTab currentFilter={currentFilter} />
+        </nav>
+
+        <ul>
+          {NOTICE_DUMMY.map(
+            ({ category, categoryName, createdAt, id, title }) => {
+              // 루프 내 변수 배치
+              const colorStyle = NotificationColorConfig[categoryName];
+
+              return (
+                <li
+                  key={id}
+                  className="hover:bg-btn-hover cursor-pointer border-b border-border-main"
                 >
-                  {`[${category}]`}
-                </span>
-                {title}
-              </p>
-              <span className="flex items-center gap-1 text-font-2 text-[13px]">
-                <Clock className="w-3.5 h-3.5" />
-                {dayjs(createdAt).format("YYYY. MM. DD")}
-              </span>
-            </div>
+                  <Link
+                    href={"/"}
+                    className="flex justify-between pt-3.75 px-2.5 pb-5"
+                  >
+                    <div className="flex flex-col gap-1.5 font-medium">
+                      {/* 공지사항 분류 공지/업데이트/이벤트 */}
+                      <span
+                        className={cn(
+                          "rounded-md py-1 px-2 w-fit text-[13px]",
+                          colorStyle.bg,
+                          colorStyle.color,
+                        )}
+                      >
+                        {categoryName}
+                      </span>
 
-            <ArrowRight className="w-4.5 h-4.5" />
-          </li>
-        ))}
-      </ul>
+                      {/* 공지사항 제목 */}
+                      <p className="text-sm">{title}</p>
+                    </div>
+                    <time
+                      dateTime={dayjs(createdAt).format("YYYY-MM-DD")}
+                      className="text-[13px] text-font-2"
+                    >
+                      {dayjs(createdAt).format("YYYY-MM-DD")}
+                    </time>
+                  </Link>
+                </li>
+              );
+            },
+          )}
+        </ul>
+      </div>
     </section>
   );
 };

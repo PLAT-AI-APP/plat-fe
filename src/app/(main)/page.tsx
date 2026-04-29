@@ -32,7 +32,7 @@ const Home = async ({ searchParams }: HomePageProps) => {
     <article
       id="home-container"
       className={cn(
-        "@container w-full mx-auto max-w-300", // flex-1 제거
+        "@container w-full mx-auto max-w-300",
         "px-5 md:px-6 lg:px-8",
         "flex flex-col", // 내부 배치를 위해 flex는 유지하되 높이 강제 X
       )}
