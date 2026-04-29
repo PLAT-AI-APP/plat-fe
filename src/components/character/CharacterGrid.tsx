@@ -5,6 +5,7 @@ import SkeletonCharacterCard from "../skeleton/SkeletonCard";
 import { cn } from "@/lib/utils";
 import { ClassValue } from "clsx";
 import ArrowLineRight from "@/icons/ArrowLineRight";
+import Link from "next/link";
 
 interface CharacterGridProps {
   cardHeight?: number;
@@ -25,6 +26,7 @@ interface CharacterGridProps {
 
   title?: string;
   TitleLogo?: React.ReactNode;
+  moreLink?: string;
 }
 
 const CharacterGrid = ({
@@ -37,6 +39,7 @@ const CharacterGrid = ({
   cardClassName,
   TitleLogo,
   title,
+  moreLink = "",
 }: CharacterGridProps) => {
   // const gap = 20; // 기존 고정 변수 대신 props 사용
   // 공식: (줄 수 * 카드 높이) + ((줄 수 - 1) * 간격)
@@ -59,9 +62,19 @@ const CharacterGrid = ({
             {title} {TitleLogo && TitleLogo}
           </h2>
 
-          <button className="py-1.5 pr-2.5 pl-3.5 rounded-[100px] hover:bg-btn-hover flex gap-1 items-center text-sm text-font-2">
-            더보기 <ArrowLineRight className="w-3.5 h-3.5" />
-          </button>
+          {moreLink && (
+            <Link
+              // href={`/${moreLink}`}
+              href={{
+                query: {
+                  tab: moreLink,
+                },
+              }}
+              className="py-1.5 pr-2.5 pl-3.5 rounded-[100px] hover:bg-btn-hover flex gap-1 items-center text-sm text-font-2"
+            >
+              더보기 <ArrowLineRight className="w-3.5 h-3.5" />
+            </Link>
+          )}
         </header>
       )}
 

@@ -14,7 +14,7 @@ interface HomeTabContentsProps {
 }
 const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
   return (
-    <div>
+    <div className="flex flex-col gap-15">
       {/* 오늘의 PICK 섹션 */}
       <section
         id="today-pick-section"
@@ -26,7 +26,7 @@ const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
           cardHeight={281}
           columnGap={12}
           rowGap={12}
-          // title="오늘의 PICK"
+          title="오늘의 PICK"
         />
       </section>
 
@@ -39,6 +39,7 @@ const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
           //   isNew={true}
           title="떠오르는 추천 신작"
           TitleLogo={<New className="w-4.5 h-4.5" />}
+          moreLink="new"
         />
       </section>
 
@@ -51,6 +52,7 @@ const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
           //   isOfficial={true}
           title="플랫의 공식 캐릭터"
           TitleLogo={<Logo className="w-4.5 h-4.5" />}
+          moreLink="official"
         />
       </section>
     </div>
