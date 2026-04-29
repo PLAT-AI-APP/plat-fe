@@ -1,10 +1,14 @@
-import { ArrowRight, Clock } from "@/icons";
 import { cn } from "@/lib/utils";
 import { NOTICE_DUMMY } from "@/mocks/dummyData";
 import dayjs from "@/lib/dayjs";
 import React from "react";
 import FilterTab from "./_components/FilterTab";
 import Link from "next/link";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "공지사항",
+};
 
 const NotificationColorConfig: Record<string, { bg: string; color: string }> = {
   공지: {
