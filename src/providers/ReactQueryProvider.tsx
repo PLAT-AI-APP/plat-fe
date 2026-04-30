@@ -18,6 +18,14 @@ export default function ReactQueryProvider({
   const [queryClient] = useState(
     () =>
       new QueryClient({
+        defaultOptions: {
+          queries: {
+            // 클라이언트에서 하이드레이션 직후 데이터를 다시 가져오는 것을 방지
+            staleTime: 1000 * 60 * 5,
+            // 창 포커스 시 재요청 비활성화 (개발 중 콘솔 중복 방지)
+            refetchOnWindowFocus: false,
+          },
+        },
         mutationCache: new MutationCache({
           onError: (error) => {
             const axiosError = error as AxiosError<ApiErrorResponse>;
