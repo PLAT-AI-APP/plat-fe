@@ -21,16 +21,12 @@ const CreateHeader = ({ onSave, onDraftClick }: CreateHeaderProps) => {
   } = useFormContext<CharacterCreateFormValues>();
 
   const handleSafeBack = (fallbackPath: string = "/") => {
-    // 브라우저 세션 히스토리에 쌓인 페이지가 1개보다 많고,
-    // 이전 주소가 우리 서비스 도메인일 때만 뒤로 가기 수행
-    const isInternalNavigation = document.referrer.includes(
-      window.location.host,
-    );
-    const hasHistory = window.history.length > 1;
-
-    if (isInternalNavigation && hasHistory) {
+    // 우리 사이트에서 이동 기록이 있다면 이전으로
+    if (window.history.state.__next_navigation_guard_stack_index > 0) {
       router.back();
-    } else {
+    }
+    // 이전 경로가 우리 사이트가 아니라면 그냥 home으로
+    else {
       router.push(fallbackPath);
     }
   };
