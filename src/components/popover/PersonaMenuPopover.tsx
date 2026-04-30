@@ -1,6 +1,6 @@
 import React from "react";
-import { ModalLayout } from "../ModalLayout";
 import { Edit, Trash } from "@/icons";
+import { PopoverLayout } from "./layout";
 
 interface PersonaMenuPopoverProps {
   /** 각 액션 발생 시 실행될 콜백 함수들 */
@@ -21,11 +21,7 @@ const PersonaMenuPopover = ({
     onClose();
   };
   return (
-    <ModalLayout
-      onClose={onClose}
-      triggerRef={triggerRef}
-      className="border border-border-main w-37.5"
-    >
+    <PopoverLayout onClose={onClose} triggerRef={triggerRef}>
       <menu className="flex flex-col gap-1">
         <button
           onClick={() => handleAction(onEdit)}
@@ -43,7 +39,7 @@ const PersonaMenuPopover = ({
           삭제
         </button>
       </menu>
-    </ModalLayout>
+    </PopoverLayout>
   );
 };
 

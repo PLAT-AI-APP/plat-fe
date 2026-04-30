@@ -1,6 +1,6 @@
 import React from "react";
-import { ModalLayout } from "../ModalLayout";
 import { Edit, Flag, Trash } from "@/icons";
+import { PopoverLayout } from "./layout";
 
 interface CommentMenuPopoverProps {
   /** 댓글 작성자 본인 여부 (본인이면 수정/삭제, 아니면 신고 노출) */
@@ -28,7 +28,7 @@ const CommentMenuPopover = ({
   };
 
   return (
-    <ModalLayout onClose={onClose} triggerRef={triggerRef}>
+    <PopoverLayout onClose={onClose} triggerRef={triggerRef}>
       <menu className="flex flex-col gap-1 min-w-32">
         {/* 본인이 아닐 때만 '신고' 노출 */}
         {!isMine && (
@@ -61,7 +61,7 @@ const CommentMenuPopover = ({
           </>
         )}
       </menu>
-    </ModalLayout>
+    </PopoverLayout>
   );
 };
 

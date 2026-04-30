@@ -1,6 +1,6 @@
 import React from "react";
-import { ModalLayout } from "../ModalLayout";
 import { PenSparkle, Trash } from "@/icons";
+import { PopoverLayout } from "./layout";
 
 interface MyChattingMenuPopoverProps {
   onClose: () => void;
@@ -22,11 +22,7 @@ const MyChattingMenuPopover = ({
   };
 
   return (
-    <ModalLayout
-      onClose={onClose}
-      triggerRef={triggerRef}
-      className="py-3 px-2 w-37.5"
-    >
+    <PopoverLayout onClose={onClose} triggerRef={triggerRef}>
       <nav
         id="chat-menu-nav"
         className="antialiased flex flex-col gap-1 whitespace-nowrap font-medium text-sm"
@@ -52,7 +48,7 @@ const MyChattingMenuPopover = ({
           </li>
         </ul>
       </nav>
-    </ModalLayout>
+    </PopoverLayout>
   );
 };
 

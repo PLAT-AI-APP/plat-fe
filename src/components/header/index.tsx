@@ -1,16 +1,16 @@
 import { Fold, User } from "@/icons";
 import Image from "next/image";
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import logoImg from "../../../public/logo.png";
 import { SearchBar } from "./SearchBar";
 // import LanguageSelector from "./LanguageSelector";
 import Profile from "./Profile";
 import Link from "next/link";
 import { useAuthStore } from "@/store/useAuthStore";
-import ProfileMdoal from "../modal/ProfileModal";
 import Melody from "@/icons/Melody";
 import { useUserStore } from "@/store/useUserStore";
 import useModal from "@/hooks/useModal";
+import ProfilePopover from "../popover/ProfilePopover";
 
 interface HeaderProps {
   handleFoldToggle: () => void;
@@ -118,7 +118,7 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
           )}
 
           {profileModal.isOpen && (
-            <ProfileMdoal
+            <ProfilePopover
               onClose={profileModal.toggle}
               triggerRef={triggerRef}
             />

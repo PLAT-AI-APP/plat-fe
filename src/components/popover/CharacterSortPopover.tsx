@@ -1,7 +1,7 @@
 import React from "react";
-import { ModalLayout } from "../ModalLayout";
 import { cn } from "@/lib/utils";
 import Check from "@/icons/Check";
+import { PopoverLayout } from "./layout";
 
 const SORT_OPTIONS = ["최신순", "채팅순"] as const;
 
@@ -27,7 +27,7 @@ const CharacterSortPopover = ({
   };
 
   return (
-    <ModalLayout onClose={onClose} triggerRef={triggerRef}>
+    <PopoverLayout onClose={onClose} triggerRef={triggerRef}>
       <nav>
         <ul className="flex flex-col gap-1 text-nowrap" role="listbox">
           {SORT_OPTIONS.map((option) => {
@@ -53,7 +53,7 @@ const CharacterSortPopover = ({
           })}
         </ul>
       </nav>
-    </ModalLayout>
+    </PopoverLayout>
   );
 };
 
