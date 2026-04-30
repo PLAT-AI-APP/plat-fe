@@ -1,5 +1,4 @@
 import React, { useRef, useState } from "react";
-import { ModalLayout } from "../ModalLayout";
 import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -20,7 +19,9 @@ import Melody from "@/icons/Melody";
 import Check from "@/icons/Check";
 import { useUserStore } from "@/store/useUserStore";
 import { motion, AnimatePresence } from "framer-motion";
-import LoginModal from "./LoginModal";
+import LoginModal from "../modal/LoginModal";
+import { PopoverLayout } from "./layout";
+import { useRouter } from "next/navigation";
 
 const activityArray = [
   { name: "내 페르소나", link: "/persona", icon: Persona },
@@ -35,12 +36,14 @@ const tendencyArray = [
   { name: "남성향", color: "#60A5FA" },
   { name: "여성향", color: "#F472B6" },
 ];
-interface ProfileModalProps {
+interface ProfilePopoverProps {
   onClose: () => void;
   triggerRef: React.RefObject<HTMLElement | null>;
 }
 
-const ProfileModal = ({ onClose, triggerRef }: ProfileModalProps) => {
+const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
+  const router = useRouter();
+
   const { mutate: logout } = useLogoutMutation();
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
@@ -82,7 +85,7 @@ const ProfileModal = ({ onClose, triggerRef }: ProfileModalProps) => {
         ? "/oauth2/authorization/kakao"
         : "/oauth2/authorization/google";
   };
-  const handleProfileModalClose = () => {
+  const handleProfilePopoverClose = () => {
     // 로그인 모달이 켜져 있다면, 어떤 바깥 클릭이 들어와도 프로필 모달은 무시
     if (isLoginModal) {
       return;
@@ -94,16 +97,20 @@ const ProfileModal = ({ onClose, triggerRef }: ProfileModalProps) => {
   const nickname = useUserStore((state) => state.user?.nickname);
   const userId = useUserStore((state) => state.user?.id);
 
+  const handleRouterPush = () => {
+    router.push(`/profile/${userId}`);
+    onClose();
+  };
   return (
-    <ModalLayout
+    <PopoverLayout
       triggerRef={triggerRef}
-      onClose={handleProfileModalClose} // 가드 로직이 포함된 핸들러
+      onClose={handleProfilePopoverClose} // 가드 로직이 포함된 핸들러
       className="w-75 transition-colors"
     >
       {isLoggedIn ? (
         <Link
+          onClick={handleRouterPush}
           href={`/profile/${userId}`}
-          onClick={onClose}
           className="flex p-2 items-center justify-between hover:bg-btn-hover rounded-lg cursor-pointer"
         >
           <div className="flex items-center gap-3">
@@ -293,8 +300,8 @@ const ProfileModal = ({ onClose, triggerRef }: ProfileModalProps) => {
           triggerRef={loginModalBtnRef}
         />
       )}
-    </ModalLayout>
+    </PopoverLayout>
   );
 };
 
-export default ProfileModal;
+export default ProfilePopover;
