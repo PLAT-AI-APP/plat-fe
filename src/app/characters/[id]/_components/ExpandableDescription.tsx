@@ -1,21 +1,33 @@
+"use client";
+import React, { useEffect, useRef, useState } from "react";
 import { ArrowDown } from "@/icons";
 import { cn } from "@/lib/utils";
 
 interface ExpandableDescriptionProps {
   content: string;
-  isExpanded: boolean;
-  setIsExpanded: (val: boolean) => void;
-  shouldShowExpand: boolean;
-  textRef: React.RefObject<HTMLParagraphElement | null>;
 }
 
 export const ExpandableDescription = ({
   content,
-  isExpanded,
-  setIsExpanded,
-  shouldShowExpand,
-  textRef,
 }: ExpandableDescriptionProps) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [shouldShowExpand, setShouldShowExpand] = useState(false);
+  const textRef = useRef<HTMLParagraphElement>(null);
+
+  useEffect(() => {
+    if (!textRef.current) return;
+
+    const observer = new ResizeObserver((entries) => {
+      const actualHeight = entries[0].target.scrollHeight;
+      requestAnimationFrame(() => {
+        setShouldShowExpand(actualHeight > 88);
+      });
+    });
+
+    observer.observe(textRef.current);
+    return () => observer.disconnect();
+  }, [content]);
+
   return (
     <section className="flex flex-col gap-3">
       <h3 className="text-font-1 font-medium">캐릭터 정보</h3>

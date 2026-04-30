@@ -1,3 +1,4 @@
+"use client";
 import { CommentType } from "@/type/comment";
 import React, { useState } from "react";
 import CommentItem from "./CommentItem";

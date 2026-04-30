@@ -1,24 +1,29 @@
+"use client";
+import React, { useState, useRef } from "react";
 import { ScenarioData } from "@/type/scenario";
 import { ScenarioPreview } from "./ScenarioPreview";
 import { ScenarioSelect } from "./ScenarioSelect";
-import { RefObject } from "react";
 
 interface ScenarioSectionProps {
-  currentScenario: ScenarioData;
-  handleCurrentScenario: (scenario: ScenarioData) => void;
-  isScenario: boolean;
   scenarioList: ScenarioData[];
-  toggleIsScenario: () => void;
-  triggerRef: RefObject<HTMLButtonElement | null>;
 }
-export const ScenarioSection = ({
-  currentScenario,
-  handleCurrentScenario,
-  isScenario,
-  scenarioList,
-  toggleIsScenario,
-  triggerRef,
-}: ScenarioSectionProps) => {
+
+export const ScenarioSection = ({ scenarioList }: ScenarioSectionProps) => {
+  const [isScenario, setIsScenario] = useState(false);
+  const [currentScenario, setCurrentScenario] = useState<ScenarioData>(
+    scenarioList[0],
+  );
+  const triggerRef = useRef<HTMLButtonElement>(null);
+
+  const toggleIsScenario = () => {
+    setIsScenario(!isScenario);
+  };
+
+  const handleCurrentScenario = (scenario: ScenarioData) => {
+    setCurrentScenario(scenario);
+    setIsScenario(false);
+  };
+
   return (
     <section className="flex flex-col gap-3">
       <p className="text-font-1 font-medium">시나리오</p>
