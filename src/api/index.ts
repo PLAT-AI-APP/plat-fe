@@ -17,7 +17,7 @@ export const authAxios = axios.create({
 
 // 요청 인터셉터 공통 로직
 const onRequest = (config: InternalAxiosRequestConfig, addAuth = false) => {
-  if (typeof window === "undefined") return config;
+  // if (typeof window === "undefined") return config;
 
   // Device ID 주입
   const deviceId =
