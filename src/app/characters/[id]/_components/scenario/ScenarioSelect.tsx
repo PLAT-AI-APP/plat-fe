@@ -1,4 +1,5 @@
 import { ModalLayout } from "@/components/ModalLayout";
+import ScenarioSelectPopover from "@/components/popover/ScenarioSelectPopover";
 import { ArrowDown, ArrowUp } from "@/icons";
 import Check from "@/icons/Check";
 import { cn } from "@/lib/utils";
@@ -36,36 +37,13 @@ export const ScenarioSelect = ({
     )}
 
     {isScenario && (
-      <ModalLayout
-        triggerRef={triggerRef}
+      <ScenarioSelectPopover
+        currentScenario={currentScenario}
+        handleCurrentScenario={handleCurrentScenario}
         onClose={toggleIsScenario}
-        className="w-full"
-      >
-        <ul className="flex flex-col gap-1">
-          {scenarioList.map((scenario) => {
-            const isActive = currentScenario.id === scenario.id;
-
-            return (
-              <li
-                key={scenario.id}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleCurrentScenario(scenario);
-                }}
-                className={cn(
-                  "px-2.5 py-2 rounded-lg flex justify-between items-center text-sm cursor-pointer",
-                  isActive
-                    ? "font-medium text-brand bg-btn-hover/50"
-                    : "text-font-2 hover:bg-btn-hover",
-                )}
-              >
-                {scenario.title}
-                {isActive && <Check className="w-4 h-4 text-brand" />}
-              </li>
-            );
-          })}
-        </ul>
-      </ModalLayout>
+        scenarioList={scenarioList}
+        triggerRef={triggerRef}
+      />
     )}
   </button>
 );

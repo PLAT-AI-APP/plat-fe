@@ -72,7 +72,13 @@ fsafasdf
 export const metadata: Metadata = {
   title: "캐릭터 정보",
 };
-const CharacterDetailPage = () => {
+const CharacterDetailPage = async ({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) => {
+  const { id } = await params;
+  console.log(id);
   return (
     <article className="px-5 pt-7.5 pb-25 flex justify-center w-full">
       <div className="flex gap-6.5">

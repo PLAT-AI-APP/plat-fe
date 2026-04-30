@@ -3,25 +3,23 @@ import React, { useState, useRef } from "react";
 import { ScenarioData } from "@/type/scenario";
 import { ScenarioPreview } from "./ScenarioPreview";
 import { ScenarioSelect } from "./ScenarioSelect";
+import useToggle from "@/hooks/useToggle";
 
 interface ScenarioSectionProps {
   scenarioList: ScenarioData[];
 }
 
 export const ScenarioSection = ({ scenarioList }: ScenarioSectionProps) => {
-  const [isScenario, setIsScenario] = useState(false);
+  // const [isScenario, setIsScenario] = useState(false);
+  const scenarioPopover = useToggle();
   const [currentScenario, setCurrentScenario] = useState<ScenarioData>(
     scenarioList[0],
   );
   const triggerRef = useRef<HTMLButtonElement>(null);
 
-  const toggleIsScenario = () => {
-    setIsScenario(!isScenario);
-  };
-
   const handleCurrentScenario = (scenario: ScenarioData) => {
     setCurrentScenario(scenario);
-    setIsScenario(false);
+    scenarioPopover.close();
   };
 
   return (
@@ -29,8 +27,8 @@ export const ScenarioSection = ({ scenarioList }: ScenarioSectionProps) => {
       <p className="text-font-1 font-medium">시나리오</p>
       <div className="flex flex-col gap-6.5">
         <ScenarioSelect
-          isScenario={isScenario}
-          toggleIsScenario={toggleIsScenario}
+          isScenario={scenarioPopover.isOpen}
+          toggleIsScenario={scenarioPopover.toggle}
           currentScenario={currentScenario}
           scenarioList={scenarioList}
           handleCurrentScenario={handleCurrentScenario}

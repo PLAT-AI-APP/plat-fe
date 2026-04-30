@@ -24,6 +24,7 @@ interface SmartInputProps extends React.InputHTMLAttributes<
   error?: FieldError | string;
   leftElement?: React.ReactNode;
   rightElement?: React.ReactNode;
+  fontSize?: "md" | "lg";
 }
 
 const SmartInput = forwardRef<
@@ -52,6 +53,7 @@ const SmartInput = forwardRef<
       error = undefined,
       leftElement,
       rightElement,
+      fontSize = "md",
       ...rest
     },
     ref,
@@ -142,12 +144,26 @@ const SmartInput = forwardRef<
       <div className={cn("flex flex-col flex-1 gap-2 w-full", className)}>
         {label && (
           <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-1 font-medium text-sm">
+            <div
+              className={cn(
+                "flex items-center gap-1 font-medium",
+                fontSize === "md" && "text-sm",
+                fontSize === "lg" && "text-[16px]",
+              )}
+            >
               <span>{label}</span>
               {required && <span className="text-font-accents">*</span>}
             </div>
             {description && (
-              <p className="text-xs text-font-2">{description}</p>
+              <p
+                className={cn(
+                  "text-xs text-font-2",
+                  fontSize === "md" && "text-xs",
+                  fontSize === "lg" && "text-sm",
+                )}
+              >
+                {description}
+              </p>
             )}
           </div>
         )}

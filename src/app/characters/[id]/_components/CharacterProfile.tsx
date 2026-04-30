@@ -1,4 +1,7 @@
+"use client";
 import ActiveButton from "@/components/ActiveButton";
+import ChattingStartModal from "@/components/modal/ChattingStartModal";
+import useToggle from "@/hooks/useToggle";
 import { Heart } from "@/icons";
 import { formatStatCount } from "@/lib/utils";
 import Image from "next/image";
@@ -17,6 +20,7 @@ const CharacterProfile = ({
   creatorName,
   followerCount,
 }: CharacterProfileProps) => {
+  const { isOpen, toggle } = useToggle();
   return (
     <section className="flex flex-col gap-4 max-w-100">
       <Image
@@ -33,6 +37,7 @@ const CharacterProfile = ({
           text="대화하기"
           isActive
           className="rounded-xl font-normal"
+          onClick={toggle}
         />
         <button className="flex rounded-xl justify-center items-center bg-card hover:bg-card-hover cursor-pointer w-11.5 aspect-square">
           <Heart className="text-font-2" />
@@ -62,6 +67,8 @@ const CharacterProfile = ({
           팔로우
         </button>
       </div>
+
+      {isOpen && <ChattingStartModal onClose={toggle} />}
     </section>
   );
 };
