@@ -250,7 +250,7 @@ const SmartInput = forwardRef<
                 </span>
                 {renderRightIcon()}
 
-                {modalComponents}
+                {isOpen && modalComponents}
               </div>
             )}
 
