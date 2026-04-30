@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import SmartInput from "../SmartInput";
 import { Close } from "@/icons";
 import Note from "@/icons/Note";
@@ -17,14 +17,14 @@ interface UserNoteFormValues {
 }
 
 const UserNoteModal = ({ closeModal }: UserNoteModalProps) => {
-  const { register, handleSubmit, watch } = useForm<UserNoteFormValues>({
+  const { register, handleSubmit, control } = useForm<UserNoteFormValues>({
     defaultValues: {
       userNote: "",
     },
   });
 
   // 실시간 값 감시 (글자 수 표시 및 버튼 활성화용)
-  const noteValue = watch("userNote");
+  const noteValue = useWatch({ control, name: "userNote" });
 
   // 제출 핸들러
   const onSubmit = (data: UserNoteFormValues) => {

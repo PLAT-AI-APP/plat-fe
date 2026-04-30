@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { ArrowLeft, ArrowRight, Date as DateIcon } from "@/icons";
-import Calendar from "react-calendar";
+import Calendar, { OnArgs } from "react-calendar";
 import dayjs from "dayjs";
 import { useFormContext } from "react-hook-form";
 import { UserDetailFormValues } from "@/type/auth";
@@ -21,7 +21,7 @@ export const BirthDateInput = React.forwardRef<
   const birth = watch("birth");
 
   const [showCalendar, setShowCalendar] = useState(false);
-  const [viewDate, setViewDate] = useState(new Date());
+  const [viewDate, setViewDate] = useState<Date | null>(new Date());
   const [slideClassName, setSlideClassName] = useState("");
 
   const handleValueChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -56,7 +56,7 @@ export const BirthDateInput = React.forwardRef<
   };
 
   // 이전달/다음달 클릭 시 애니메이션 클래스 제어
-  const handleActiveStartDateChange = ({ activeStartDate, action }: any) => {
+  const handleActiveStartDateChange = ({ activeStartDate, action }: OnArgs) => {
     // 1. 방향 설정
     const nextClass = action === "next" ? "slide-next" : "slide-prev";
     setSlideClassName(nextClass);
@@ -100,16 +100,16 @@ export const BirthDateInput = React.forwardRef<
           <>
             {/* 딤드 배경 */}
             <div
-              className="fixed inset-0 bg-black/50 z-[9998] backdrop-blur-[2px]"
+              className="fixed inset-0 bg-black/50 z-9998 backdrop-blur-[2px]"
               onClick={() => setShowCalendar(false)}
             />
 
             {/* 캘린더 모달 */}
-            <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[9999]">
+            <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-9999">
               <Calendar
                 className={slideClassName} // 애니메이션 클래스 주입
                 onActiveStartDateChange={handleActiveStartDateChange}
-                activeStartDate={viewDate} // input에 의해 업데이트된 viewDate 반영                onChange={(val) => handleDateSelect(val as Date)}
+                activeStartDate={viewDate || new Date()} // input에 의해 업데이트된 viewDate 반영                onChange={(val) => handleDateSelect(val as Date)}
                 value={
                   birth && dayjs(birth as string).isValid()
                     ? dayjs(birth as string).toDate()

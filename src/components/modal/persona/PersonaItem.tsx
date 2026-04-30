@@ -26,7 +26,7 @@ const PersonaItem = ({ persona, isActive, onSelect }: PersonaItemProps) => {
   };
   const triggerRef = useRef(null);
 
-  const { isOpen, close, open, toggle } = useToggle();
+  const { isOpen, close, toggle } = useToggle();
 
   return (
     <li
