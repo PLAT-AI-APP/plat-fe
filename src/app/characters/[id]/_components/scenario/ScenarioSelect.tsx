@@ -1,49 +1,47 @@
-import { ModalLayout } from "@/components/ModalLayout";
+"use client";
+import React, { useRef } from "react";
 import ScenarioSelectPopover from "@/components/popover/ScenarioSelectPopover";
 import { ArrowDown, ArrowUp } from "@/icons";
-import Check from "@/icons/Check";
-import { cn } from "@/lib/utils";
-import { ScenarioData } from "@/type/scenario";
+import useToggle from "@/hooks/useToggle";
+import { CharacterScenario } from "@/type/character";
 
 interface ScenarioSelectProps {
-  isScenario: boolean;
-  toggleIsScenario: () => void;
-  currentScenario: ScenarioData;
-  scenarioList: ScenarioData[];
-  handleCurrentScenario: (scenario: ScenarioData) => void;
-  triggerRef: React.RefObject<HTMLButtonElement | null>;
+  setCurrentScenario: (scenario: CharacterScenario) => void;
+  scenarioList: CharacterScenario[];
+  currentScenario: CharacterScenario | undefined;
 }
-
 export const ScenarioSelect = ({
-  isScenario,
-  toggleIsScenario,
   currentScenario,
+  setCurrentScenario,
   scenarioList,
-  handleCurrentScenario,
-  triggerRef,
-}: ScenarioSelectProps) => (
-  <button
-    ref={triggerRef}
-    type="button"
-    onClick={toggleIsScenario}
-    className="relative flex justify-between px-4 py-2.5 bg-card hover:bg-card-hover border border-border-main rounded-xl w-full text-left"
-  >
-    <span className="text-sm text-font-1">{currentScenario.title}</span>
+}: ScenarioSelectProps) => {
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
-    {isScenario ? (
-      <ArrowUp className="w-5 h-5 text-font-2" />
-    ) : (
-      <ArrowDown className="w-5 h-5 text-font-2" />
-    )}
+  const { isOpen, toggle, close } = useToggle();
 
-    {isScenario && (
-      <ScenarioSelectPopover
-        currentScenario={currentScenario}
-        handleCurrentScenario={handleCurrentScenario}
-        onClose={toggleIsScenario}
-        scenarioList={scenarioList}
-        triggerRef={triggerRef}
-      />
-    )}
-  </button>
-);
+  if (!currentScenario) return null;
+  return (
+    <button
+      ref={triggerRef}
+      type="button"
+      onClick={toggle}
+      className="relative flex justify-between px-4 py-2.5 bg-card hover:bg-card-hover border border-border-main rounded-xl w-full text-left"
+    >
+      <span className="text-sm text-font-1">{currentScenario.name}</span>
+      {isOpen ? (
+        <ArrowUp className="w-5 h-5 text-font-2" />
+      ) : (
+        <ArrowDown className="w-5 h-5 text-font-2" />
+      )}
+      {isOpen && (
+        <ScenarioSelectPopover
+          currentScenario={currentScenario}
+          handleCurrentScenario={setCurrentScenario}
+          onClose={close}
+          scenarioList={scenarioList}
+          triggerRef={triggerRef}
+        />
+      )}
+    </button>
+  );
+};

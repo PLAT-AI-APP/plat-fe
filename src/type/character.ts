@@ -44,3 +44,11 @@ export interface CharacterCreateFormValues {
   tendency: string;
   category: string;
 }
+
+export interface CharacterScenario {
+  scenarioId: number;
+  name: string;
+  situation: string;
+  firstDialogue: string;
+  lang: string;
+}
