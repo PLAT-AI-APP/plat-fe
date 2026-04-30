@@ -9,8 +9,9 @@ import Link from "next/link";
 import { useAuthStore } from "@/store/useAuthStore";
 import Melody from "@/icons/Melody";
 import { useUserStore } from "@/store/useUserStore";
-import useModal from "@/hooks/useModal";
+// import useToggle from "@/hooks/useToggle";
 import ProfilePopover from "../popover/ProfilePopover";
+import useToggle from "@/hooks/useToggle";
 
 interface HeaderProps {
   handleFoldToggle: () => void;
@@ -18,7 +19,7 @@ interface HeaderProps {
 const Header = ({ handleFoldToggle }: HeaderProps) => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
-  const profileModal = useModal();
+  const profileModal = useToggle();
 
   const triggerRef = useRef<HTMLImageElement>(null);
 

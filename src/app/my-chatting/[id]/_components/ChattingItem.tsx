@@ -6,7 +6,7 @@ import dayjs from "@/lib/dayjs";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import MyChattingMenuPopover from "@/components/popover/MyChattingMenuPopover";
-import useModal from "@/hooks/useModal";
+import useToggle from "@/hooks/useToggle";
 
 interface ChattingItemProps {
   creator: string;
@@ -27,7 +27,7 @@ const ChattingItem = ({
 }: ChattingItemProps) => {
   const router = useRouter();
 
-  const { isOpen, toggle } = useModal();
+  const { isOpen, toggle } = useToggle();
   const triggerRef = useRef(null);
 
   // 비즈니스 로직 및 이벤트 핸들러

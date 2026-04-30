@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const useModal = () => {
+const useToggle = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const open = (e?: React.BaseSyntheticEvent) => {
@@ -31,4 +31,4 @@ const useModal = () => {
   };
 };
 
-export default useModal;
+export default useToggle;

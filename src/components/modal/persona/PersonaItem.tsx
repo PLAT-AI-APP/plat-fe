@@ -6,7 +6,7 @@ import { Persona } from "@/type/persona";
 import PersonaAddModal from "../PersonaAddModal";
 import { useDeletePersonaMutation } from "@/api/persona/deletePersona";
 import PersonaMenuPopover from "@/components/popover/PersonaMenuPopover";
-import useModal from "@/hooks/useModal";
+import useToggle from "@/hooks/useToggle";
 
 interface PersonaItemProps {
   persona: Persona;
@@ -26,7 +26,7 @@ const PersonaItem = ({ persona, isActive, onSelect }: PersonaItemProps) => {
   };
   const triggerRef = useRef(null);
 
-  const { isOpen, close, open, toggle } = useModal();
+  const { isOpen, close, open, toggle } = useToggle();
 
   return (
     <li

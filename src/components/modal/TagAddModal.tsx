@@ -8,7 +8,7 @@ import { ArrowRight, Close, Megaphone, Search } from "@/icons";
 import ActiveButton from "../ActiveButton";
 import TagSuggestionsModal from "./TagSuggestionsModal";
 import { useHashtagListQuery } from "@/api/hashtag/getHashtagList";
-import useModal from "@/hooks/useModal";
+import useToggle from "@/hooks/useToggle";
 
 interface TagAddModalProps {
   onClose: () => void;
@@ -74,7 +74,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
 
   // const [isModal, setIsModal] = useState(false);
   // const toggleIsModal = () => setIsModal((prev) => !prev);
-  const tagSuggestionsModal = useModal();
+  const tagSuggestionsModal = useToggle();
 
   return (
     <ModalLayout onClose={onClose} hasBackground className="p-5 w-112.5">

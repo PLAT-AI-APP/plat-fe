@@ -5,7 +5,7 @@ import Header from "./Header";
 import CharacterGrid from "@/components/character/CharacterGrid";
 import { Sort } from "@/icons";
 import CharacterSortPopover from "@/components/popover/CharacterSortPopover";
-import useModal from "@/hooks/useModal";
+import useToggle from "@/hooks/useToggle";
 
 const CharArray = [
   {
@@ -69,7 +69,7 @@ const CharArray = [
 export default function ProfileContent({ id }: { id: string }) {
   // 상태 및 참조 변수
   const [sort, setSort] = useState<"최신순" | "채팅순">("최신순");
-  const { isOpen, toggle } = useModal();
+  const { isOpen, toggle } = useToggle();
   const triggerRef = useRef<HTMLButtonElement>(null);
 
   return (

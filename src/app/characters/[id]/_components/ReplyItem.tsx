@@ -8,7 +8,7 @@ import { useLineOverflow } from "@/hooks/useOverflowText";
 import ReplyLine from "@/icons/ReplyLine";
 import dayjs from "@/lib/dayjs";
 import CommentMenuPopover from "@/components/popover/CommentMenuPopover";
-import useModal from "@/hooks/useModal";
+import useToggle from "@/hooks/useToggle";
 
 const ReplyItem = ({ reply }: { reply: CommentType }) => {
   const textRef = useRef<HTMLParagraphElement>(null);
@@ -19,7 +19,7 @@ const ReplyItem = ({ reply }: { reply: CommentType }) => {
 
   const triggerRef = useRef(null);
 
-  const { isOpen, toggle } = useModal();
+  const { isOpen, toggle } = useToggle();
   return (
     <article className="flex gap-2 pl-9 items-stretch">
       <div

@@ -5,7 +5,7 @@ import { ChatFill, Dots } from "@/icons";
 import { formatStatCount } from "@/lib/utils";
 import CharacterMenuPopover from "@/components/popover/CharacterMenuPopover";
 import { useRouter } from "next/navigation";
-import useModal from "@/hooks/useModal";
+import useToggle from "@/hooks/useToggle";
 
 interface CharacterItemProps {
   chatCount: number;
@@ -32,7 +32,7 @@ const CharacterItem = ({
   // 상태 및 참조 변수
   const triggerRef = useRef(null);
 
-  const { isOpen, toggle } = useModal();
+  const { isOpen, toggle } = useToggle();
 
   const handleCardClick = () => {
     if (!isOpen) {

@@ -1,9 +1,9 @@
 import React from "react";
 import PersonaAddModal from "../PersonaAddModal";
-import useModal from "@/hooks/useModal";
+import useToggle from "@/hooks/useToggle";
 
 const PersonaFooter = () => {
-  const personaAddModal = useModal();
+  const personaAddModal = useToggle();
 
   return (
     <footer className="pt-9 font-medium">

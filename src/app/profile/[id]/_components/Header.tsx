@@ -4,7 +4,7 @@ import ProfileEditModal from "@/components/modal/ProfileEditModal";
 import { FollowModal } from "@/components/modal/FollowModal";
 import { useUserStore } from "@/store/useUserStore";
 import { useFollowCountQuery } from "@/api/follow/getFollowCount";
-import useModal from "@/hooks/useModal";
+import useToggle from "@/hooks/useToggle";
 
 interface HeaderProps {
   userId: string;
@@ -13,8 +13,8 @@ const Header = ({ userId }: HeaderProps) => {
   const { data: followCount } = useFollowCountQuery(userId);
   const { followerCount = 0, followingCount = 0 } = followCount ?? {};
 
-  const profileEditodal = useModal();
-  const followModal = useModal();
+  const profileEditodal = useToggle();
+  const followModal = useToggle();
 
   // const [profileEditodal.open, setIsProfileEditodal] = useState(false);
   // const [isFollowModal, setIsFollowModal] = useState(false);

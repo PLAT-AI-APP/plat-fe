@@ -11,7 +11,7 @@ import ReplyLine from "@/icons/ReplyLine";
 // import PinFill from "@/icons/PinFill";
 import { Dots } from "@/icons";
 import CommentMenuPopover from "@/components/popover/CommentMenuPopover";
-import useModal from "@/hooks/useModal";
+import useToggle from "@/hooks/useToggle";
 
 interface Props {
   comment: CommentType;
@@ -22,7 +22,7 @@ const CommentItem = ({ comment }: Props) => {
   const triggerRef = useRef(null);
 
   const [isExpanded, setIsExpanded] = useState(false);
-  const { isOpen, toggle } = useModal();
+  const { isOpen, toggle } = useToggle();
   // const [isCommentMenu, setIsCommentMenu] = useState(false);
   // const [isCommentInput, setIsCommentInput] = useState(false);
   // const [isReply, setIsReply] = useState(false);

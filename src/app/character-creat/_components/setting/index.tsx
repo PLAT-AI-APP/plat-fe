@@ -1,7 +1,7 @@
 import TagAddModal from "@/components/modal/TagAddModal";
 import { ModalLayout } from "@/components/ModalLayout";
 import SmartInput from "@/components/SmartInput";
-import useModal from "@/hooks/useModal";
+import useToggle from "@/hooks/useToggle";
 import { Close } from "@/icons";
 import Check from "@/icons/Check";
 import { cn } from "@/lib/utils";
@@ -45,9 +45,9 @@ const Setting = () => {
   // const [isTendency, setIsTendency] = useState(false);
   // const [iscategory, setIscategory] = useState(false);
 
-  const publicModal = useModal();
-  const tendencyModal = useModal();
-  const categoryModal = useModal();
+  const publicModal = useToggle();
+  const tendencyModal = useToggle();
+  const categoryModal = useToggle();
 
   // const toggleIsPublic = () => {
   //   setIsPublic((prev) => !prev);
