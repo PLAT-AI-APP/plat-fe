@@ -105,6 +105,7 @@ const CharacterGrid = ({
               <CharacterCard
                 key={`${character.name}-${index}`}
                 char={character}
+                id={index + 1}
                 // isNew={isNew}
                 // isOfficial={isOfficial}
                 className={cardClassName}

@@ -19,6 +19,7 @@ interface CharacterCardProps {
     img: string;
   };
   className?: ClassValue;
+  id: number;
 }
 
 const CharacterCard = ({
@@ -27,10 +28,11 @@ const CharacterCard = ({
   isNew = false,
   isOfficial = false,
   className,
+  id,
 }: CharacterCardProps) => {
   return (
     <Link
-      href={`/characters/${char.name}`}
+      href={`/characters/${id}`}
       className={cn(
         "group hover:cursor-pointer overflow-hidden rounded-xl flex flex-col shrink-0 transition-all duration-200 ease-in-out",
         "w-full min-w-43.75",
