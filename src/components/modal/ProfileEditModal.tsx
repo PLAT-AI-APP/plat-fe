@@ -268,7 +268,7 @@ const ProfileEditModal = ({ onClose }: ProfileEditModalProps) => {
                   label="휴대폰"
                   value={phoneNumber}
                   placeholder="휴대폰 번호를 등록해보세요."
-                  rightElement={(() => {
+                  leftElement={(() => {
                     const target = LANGUAGE_LIST.find(
                       (v) => v.countryCode === countryCode,
                     );
@@ -287,7 +287,7 @@ const ProfileEditModal = ({ onClose }: ProfileEditModalProps) => {
                 label="계정"
                 disabled
                 value={watch("email")}
-                rightElement={PROVIDER_LOGOS[provider]}
+                leftElement={PROVIDER_LOGOS[provider]}
               />
             </div>
 

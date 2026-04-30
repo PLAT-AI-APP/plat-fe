@@ -22,6 +22,7 @@ interface SmartInputProps extends React.InputHTMLAttributes<
   modalComponents?: React.ReactNode;
   toggleIsOpen?: () => void;
   error?: FieldError | string;
+  leftElement?: React.ReactNode;
   rightElement?: React.ReactNode;
 }
 
@@ -49,6 +50,7 @@ const SmartInput = forwardRef<
       toggleIsOpen,
       onChange,
       error = undefined,
+      leftElement,
       rightElement,
       ...rest
     },
@@ -61,13 +63,13 @@ const SmartInput = forwardRef<
     const [paddingLeft, setPaddingLeft] = useState<number>(16);
 
     useEffect(() => {
-      if (rightElement && iconRef.current) {
+      if (leftElement && iconRef.current) {
         const iconWidth = iconRef.current.offsetWidth;
         setPaddingLeft(16 + iconWidth + 12);
       } else {
         setPaddingLeft(16);
       }
-    }, [rightElement]);
+    }, [leftElement]);
 
     // 내부에서 textarea 엘리먼트에 직접 접근하기 위한 ref
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);
@@ -152,12 +154,12 @@ const SmartInput = forwardRef<
 
         <div className="group text-sm font-medium">
           <div className={cn("relative")}>
-            {rightElement && (
+            {leftElement && (
               <div
                 ref={iconRef}
                 className="absolute top-1/2 left-4 -translate-y-1/2 z-10 flex items-center justify-center"
               >
-                {rightElement}
+                {leftElement}
               </div>
             )}
 
@@ -244,6 +246,12 @@ const SmartInput = forwardRef<
                 )}
               >
                 {String(value || "").length}/{maxLength}
+              </div>
+            )}
+
+            {rightElement && (
+              <div className="absolute top-1/2 right-4 -translate-y-1/2 z-10 flex items-center justify-center">
+                {rightElement}
               </div>
             )}
           </div>
