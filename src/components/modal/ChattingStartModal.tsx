@@ -1,16 +1,28 @@
-import React from "react";
+import React, { useRef } from "react";
 import { ModalLayout } from "../ModalLayout";
 import { Close, Message, User } from "@/icons";
 import ActiveButton from "../ActiveButton";
 import SmartInput from "../SmartInput";
 import useToggle from "@/hooks/useToggle";
 import ScenarioSelectPopover from "../popover/ScenarioSelectPopover";
+import { CharacterScenario } from "@/type/character";
 
 interface ChattingStartModalProps {
   onClose: () => void;
+  scenarioList: CharacterScenario[];
+  setCurrentScenario: (scenario: CharacterScenario) => void;
+  currentScenario: CharacterScenario | undefined;
 }
-const ChattingStartModal = ({ onClose }: ChattingStartModalProps) => {
-  const { isOpen, open, toggle } = useToggle();
+const ChattingStartModal = ({
+  onClose,
+  scenarioList,
+  currentScenario,
+  setCurrentScenario,
+}: ChattingStartModalProps) => {
+  const { isOpen, close, toggle } = useToggle();
+
+  const triggerRef = useRef(null);
+
   return (
     <ModalLayout
       onClose={onClose}
@@ -43,6 +55,7 @@ const ChattingStartModal = ({ onClose }: ChattingStartModalProps) => {
             </button>
           }
           disabled
+          value={"윤아"}
         />
 
         <SmartInput
@@ -52,14 +65,18 @@ const ChattingStartModal = ({ onClose }: ChattingStartModalProps) => {
           type="modal"
           isOpen={isOpen}
           toggleIsOpen={toggle}
-          // leftElement={<User className="w-5 h-5 text-font-2" />}
-          // rightElement={
-          //   <button className="text-xs text-font-2 rounded-sm py-1 px-3 bg-card hover:bg-card-hover">
-          //     변경
-          //   </button>
-          // }
+          ref={triggerRef}
+          value={currentScenario?.name}
           disabled
-          // modalComponents={<ScenarioSelectPopover />}
+          modalComponents={
+            <ScenarioSelectPopover
+              scenarioList={scenarioList}
+              currentScenario={currentScenario}
+              handleCurrentScenario={setCurrentScenario}
+              onClose={close}
+              triggerRef={triggerRef}
+            />
+          }
         />
       </section>
 

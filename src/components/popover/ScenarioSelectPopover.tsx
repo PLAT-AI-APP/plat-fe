@@ -1,16 +1,16 @@
 import React from "react";
 import { PopoverLayout } from "./layout";
-import { ScenarioData } from "@/type/scenario";
 import { cn } from "@/lib/utils";
 import Check from "@/icons/Check";
+import { CharacterScenario } from "@/type/character";
 
 interface ScenarioSelectPopoverProps {
   onClose: () => void;
-  handleCurrentScenario: (scenario: ScenarioData) => void;
+  handleCurrentScenario: (scenario: CharacterScenario) => void;
 
   triggerRef: React.RefObject<HTMLElement | null>;
-  scenarioList: ScenarioData[];
-  currentScenario: ScenarioData;
+  scenarioList: CharacterScenario[];
+  currentScenario: CharacterScenario | undefined;
 }
 const ScenarioSelectPopover = ({
   onClose,
@@ -23,23 +23,22 @@ const ScenarioSelectPopover = ({
     <PopoverLayout triggerRef={triggerRef} onClose={onClose} className="w-full">
       <ul className="flex flex-col gap-1">
         {scenarioList.map((scenario) => {
-          const isActive = currentScenario.id === scenario.id;
+          const isActive = currentScenario?.scenarioId === scenario.scenarioId;
 
           return (
             <li
-              key={scenario.id}
+              key={scenario.scenarioId}
               onClick={(e) => {
                 e.stopPropagation();
+                onClose();
                 handleCurrentScenario(scenario);
               }}
               className={cn(
-                "px-2.5 py-2 rounded-lg flex justify-between items-center text-sm cursor-pointer",
-                isActive
-                  ? "font-medium text-brand bg-btn-hover/50"
-                  : "text-font-2 hover:bg-btn-hover",
+                "px-2.5 py-2 hover:bg-btn-hover rounded-lg flex justify-between items-center text-sm cursor-pointer",
+                isActive ? "font-medium bg-btn-hover/50" : "font-normal",
               )}
             >
-              {scenario.title}
+              {scenario.name}
               {isActive && <Check className="w-4 h-4 text-brand" />}
             </li>
           );
