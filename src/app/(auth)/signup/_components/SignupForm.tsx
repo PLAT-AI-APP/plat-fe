@@ -5,16 +5,32 @@ import AuthInput from "@/components/auth/AuthInput";
 import { PasswordToggle } from "@/components/auth/PasswordToggle";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useTogglePassword } from "@/hooks/useTogglePassword";
-import { NICKNAME_REGEX } from "@/lib/regex";
+import { EMAIL_REGEX, NICKNAME_REGEX } from "@/lib/regex";
 import { AuthFormValues } from "@/type/auth";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Form, useFormContext, useWatch } from "react-hook-form";
 import Agreed from "./Agreed";
+import { cn } from "@/lib/utils";
+import { useEmailVerifyMutation } from "@/api/auth/emailVerify";
+import { useEmailVerifyConfirmMutation } from "@/api/auth/emailVerifyConfirm";
+import { useCountdown } from "@/hooks/useCountdown";
+import { motion, AnimatePresence } from "framer-motion";
 
-interface SignupFormProps {
-  onNextStep: () => void;
-}
-const SignupForm = ({ onNextStep }: SignupFormProps) => {
+const SignupForm = () => {
+  const [isOtpSent, setIsOtpSent] = useState(false);
+  const [otpError, setOtpError] = useState("");
+
+  const { mutate: emailVerify } = useEmailVerifyMutation();
+  const { mutate: emailVerifyConfirm } = useEmailVerifyConfirmMutation();
+
+  // 카운트다운 훅 초기화 (5분 = 300초)
+  const {
+    timeLeft,
+    startTimer,
+    formatTime,
+    isActive: isTimerActive,
+  } = useCountdown(300);
+
   const {
     register,
     control,
@@ -22,6 +38,7 @@ const SignupForm = ({ onNextStep }: SignupFormProps) => {
     setError,
     clearErrors,
     trigger,
+    setValue,
   } = useFormContext<AuthFormValues>();
 
   const {
@@ -31,8 +48,9 @@ const SignupForm = ({ onNextStep }: SignupFormProps) => {
     passwordConfirm = "",
     isPrivacyAgreed = "",
     isTermsAgreed = "",
+    otp = "",
+    emailVerifyToken = "",
   } = useWatch({ control });
-  console.log(password);
 
   // 모든 조건이 충족되었는지 확인하는 변수
   const isFormValid =
@@ -74,8 +92,61 @@ const SignupForm = ({ onNextStep }: SignupFormProps) => {
   const { mutate: authRegister } = useAuthRegisterMutation();
 
   const onSubmit = (data: AuthFormValues) => {
-    onNextStep();
+    // authRegister();
   };
+
+  /** 이메일 인증번호 발송 요청 함수 */
+  const handleRequestOtp = async () => {
+    const isEmailValid = await trigger("email");
+    if (!isEmailValid || !email) return;
+
+    setValue("otp", "");
+    setValue("emailVerifyToken", "");
+    emailVerify(email, {
+      onSuccess: (data) => {
+        if (data.result === "OK") {
+          setIsOtpSent(true);
+          startTimer(); // 2. 인증번호 발송 성공 시 타이머 시작/재시작
+        }
+      },
+    });
+  };
+
+  /** 입력한 OTP 코드 검증 함수 */
+  const handleVerifyOtp = () => {
+    // timeLeft가 0이면 인증 불가 처리
+    if (timeLeft <= 0) {
+      setOtpError("인증 시간이 만료되었습니다. 다시 시도해주세요.");
+      return;
+    }
+    if (!email) {
+      alert("이메일 정보가 없습니다. 다시 시도해주세요.");
+      return;
+    }
+
+    emailVerifyConfirm(
+      { code: String(otp) || "", email: email },
+      {
+        onSuccess: (data) => {
+          if (data.token) setValue("emailVerifyToken", data.token);
+          alert("이메일 인증 성공");
+          setIsOtpSent(false);
+        },
+        onError: () => {
+          setOtpError("인증번호가 일치하지 않습니다.");
+        },
+      },
+    );
+  };
+
+  // const emailConfirmBtnOnClick = (e: React.MouseEvent) => {
+  //   e.preventDefault();
+  //   if (isOtpSent) {
+  //     handleVerifyOtp();
+  //   } else {
+  //     handleRequestOtp();
+  //   }
+  // };
   return (
     <Form
       control={control}
@@ -110,13 +181,111 @@ const SignupForm = ({ onNextStep }: SignupFormProps) => {
         />
 
         {/* 이메일 input */}
-        <AuthInput
-          label="이메일"
-          placeholder="example@gmail.com"
-          {...register("email", {
-            required: "이메일을 입력해주세요.",
-          })}
-        />
+        <div className="flex flex-col gap-2">
+          <label className="text-sm font-medium">이메일</label>
+
+          <div>
+            <div className="flex gap-2">
+              <input
+                {...register("email", {
+                  required: "이메일을 입력해주세요.",
+                  pattern: {
+                    value: EMAIL_REGEX,
+                    message: "올바른 이메일 형식이 아닙니다.",
+                  },
+                  onChange: async () => {
+                    await trigger("email");
+                  },
+                })}
+                placeholder="example@gmail.com"
+                className={cn(
+                  // 기본 스타일
+                  "w-full h-11 border border-border-main bg-black/20 rounded-lg px-4 py-3 text-sm text-font-1",
+                  "placeholder:text-font-2/50 focus:outline-none focus:border-brand transition-all",
+                  // 에러 발생 시 스타일
+                  false && "border-font-accents focus:border-font-accents",
+                  emailVerifyToken && "bg-card",
+                )}
+                disabled={Boolean(emailVerifyToken)}
+              />
+
+              <ActiveButton
+                type="button"
+                isActive={!!email && !errors.email}
+                text={
+                  isOtpSent ? "재전송" : emailVerifyToken ? "변경" : "인증요청"
+                }
+                className={cn(
+                  "px-4 py-3 text-sm w-fit max-h-11 text-nowrap",
+                  emailVerifyToken && "border border-border-main bg-bg-darker",
+                )}
+                onClick={(e) => (!emailVerifyToken ? handleRequestOtp() : null)}
+              />
+            </div>
+            {errors.email?.message && (
+              <span
+                role="alert"
+                className="pl-2 pt-1.5 text-font-accents text-xs"
+              >
+                {errors.email?.message}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* 인증번호 입력 input */}
+        <AnimatePresence>
+          {isOtpSent && (
+            <motion.div
+              initial={{ opacity: 0, height: 0, marginTop: 0 }}
+              animate={{ opacity: 1, height: "auto" }} // gap-5.25 대신 간격 조정
+              exit={{ opacity: 0, height: 0, marginTop: 0 }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
+              className="overflow-hidden" // 스르륵 효과를 위해 필수
+            >
+              <div className="flex flex-col gap-2">
+                <label className="text-sm font-medium">인증번호</label>
+                <div>
+                  <div className="flex gap-2">
+                    <div className="relative flex-1">
+                      <input
+                        {...register("otp", {
+                          required: "인증번호를 입력해주세요",
+                          maxLength: 6,
+                        })}
+                        maxLength={6}
+                        placeholder="000000"
+                        className={cn(
+                          "w-full h-11 border border-border-main bg-black/20 rounded-lg px-4 py-3 text-sm text-font-1",
+                          "placeholder:text-font-2/50 focus:outline-none focus:border-brand transition-all",
+                          (errors.otp || otpError) &&
+                            "border-font-accents focus:border-font-accents",
+                        )}
+                      />
+                      {/* 카운트다운 표시 (input 내부 우측 정렬 예시) */}
+                      <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm">
+                        {formatTime()}
+                      </span>
+                    </div>
+
+                    <ActiveButton
+                      type="button"
+                      isActive={otp.length >= 6 && timeLeft > 0}
+                      text="인증확인"
+                      onClick={handleVerifyOtp}
+                      className="px-4 py-3 text-sm w-fit max-h-11 text-nowrap"
+                    />
+                  </div>
+                  {!isTimerActive && (
+                    <span className="pl-2 pt-1.5 text-font-accents text-xs">
+                      인증번호 유효시간 초과
+                    </span>
+                  )}
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* 비밀번호 input */}
         <AuthInput

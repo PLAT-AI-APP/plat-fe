@@ -22,6 +22,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import LoginModal from "../modal/LoginModal";
 import { PopoverLayout } from "./layout";
 import { useRouter } from "next/navigation";
+import useRouteEffect from "@/hooks/useRouteEffect";
 
 const activityArray = [
   { name: "내 페르소나", link: "/persona", icon: Persona },
@@ -101,6 +102,9 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
     router.push(`/profile/${userId}`);
     onClose();
   };
+
+  useRouteEffect(onClose);
+
   return (
     <PopoverLayout
       triggerRef={triggerRef}
