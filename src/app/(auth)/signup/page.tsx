@@ -1,26 +1,27 @@
 "use client";
-import { AuthFormValues } from "@/type/auth";
+
+import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { AuthFormValues } from "@/type/auth";
 import SignupForm from "./_components/SignupForm";
 
 const SignupPage = () => {
   const methods = useForm<AuthFormValues>({
-    mode: "onSubmit",
-    reValidateMode: "onSubmit",
+    mode: "onChange", // 인터랙티브한 반응을 위해 onChange 권장
+    reValidateMode: "onChange",
     defaultValues: {
       nickname: "",
       email: "",
       otp: "",
       password: "",
       passwordConfirm: "",
-
       emailVerifyToken: "",
       signupToken: "",
-
       isPrivacyAgreed: false,
       isTermsAgreed: false,
     },
   });
+
   return (
     <FormProvider {...methods}>
       <SignupForm />
