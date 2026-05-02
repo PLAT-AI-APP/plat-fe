@@ -7,7 +7,7 @@ export interface LoginFormValues {
 /** 비밀번호 재설정 page form */
 export interface PasswordResetFormValues extends LoginFormValues {
   otp: string[] | string;
-  passwordCheck?: string;
+  passwordCheck: string;
   emailVerifyToken: string;
 }
 

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Form, useFormContext, useWatch } from "react-hook-form";
+import { useFormContext, useWatch } from "react-hook-form";
 import { AuthFormValues } from "@/type/auth";
 import { useAuthRegisterMutation } from "@/api/auth/authRegister";
 import ActiveButton from "@/components/ActiveButton";
@@ -14,7 +14,8 @@ import { useFormServerError } from "@/hooks/useFormServerError";
 const SignupForm = () => {
   const {
     control,
-    formState: { errors, isValid },
+    formState: { errors },
+    handleSubmit,
   } = useFormContext<AuthFormValues>();
 
   const {
@@ -25,7 +26,6 @@ const SignupForm = () => {
     isPrivacyAgreed = "",
     isTermsAgreed = "",
     emailVerifyToken = "",
-    otp = "",
   } = useWatch({ control });
 
   // 폼 유효성 검사 로직 (추가적인 커스텀 검증이 필요한 경우)
@@ -48,14 +48,15 @@ const SignupForm = () => {
   const onSubmit = (data: AuthFormValues) => {
     authRegister(
       {
-        email,
-        code: String(otp),
-        nickname,
-        password,
-        passwordCheck,
+        email: data.email,
+        code: String(data.otp),
+        nickname: data.nickname,
+        password: data.password,
+        passwordCheck: data.passwordCheck,
       },
       {
         onError: (error) => {
+          // 서버에서 온 필드 에러들을 폼에 매핑
           setFieldErrors(error.fields);
         },
       },
@@ -63,10 +64,9 @@ const SignupForm = () => {
   };
 
   return (
-    <Form
-      control={control}
+    <form
       id="signup-form"
-      onSubmit={({ data }) => onSubmit(data)}
+      onSubmit={handleSubmit(onSubmit)}
       className="flex flex-col gap-9 py-9 px-6 w-screen max-w-112.5 rounded-3xl border border-border-main bg-bg-darker"
     >
       <header className="flex flex-col gap-1.5 font-medium">
@@ -84,13 +84,8 @@ const SignupForm = () => {
 
       <Agreed />
 
-      <ActiveButton
-        form="signup-form"
-        type="submit"
-        text="다음"
-        isActive={isFormValid}
-      />
-    </Form>
+      <ActiveButton text="다음" type="submit" isActive={isFormValid} />
+    </form>
   );
 };
 

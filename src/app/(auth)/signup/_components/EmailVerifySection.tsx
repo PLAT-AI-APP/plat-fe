@@ -121,7 +121,7 @@ const EmailVerifySection = () => {
           />
           <ActiveButton
             type="button"
-            isActive={!!email && !errors.email}
+            isActive={!!email}
             text={isOtpSent ? "재전송" : emailVerifyToken ? "변경" : "인증요청"}
             className={cn(
               "px-4 py-3 text-sm w-fit max-h-11 text-nowrap",

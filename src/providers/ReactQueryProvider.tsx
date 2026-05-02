@@ -1,12 +1,6 @@
 "use client";
 
-import { ApiErrorResponse } from "@/type/api";
-import {
-  MutationCache,
-  QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query";
-import { AxiosError } from "axios";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 
 export default function ReactQueryProvider({
@@ -26,13 +20,6 @@ export default function ReactQueryProvider({
             refetchOnWindowFocus: false,
           },
         },
-        mutationCache: new MutationCache({
-          onError: (error) => {
-            const axiosError = error as AxiosError<ApiErrorResponse>;
-            const message = axiosError.response?.data?.message;
-            alert(message);
-          },
-        }),
       }),
   );
   return (
