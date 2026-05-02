@@ -3,6 +3,7 @@ import { persist } from "zustand/middleware";
 
 // 성별 유니온 타입 정의
 export type Gender = "MALE" | "FEMALE" | "OTHER";
+export type Provider = "google" | "kakao" | "plat";
 
 // 유저 데이터 인터페이스 정의
 export interface UserInfo {
@@ -16,6 +17,8 @@ export interface UserInfo {
     countryCode: string;
     number: string;
   };
+  provider: Provider;
+  email: string;
 }
 
 interface UserState {
@@ -30,15 +33,17 @@ export const useUserStore = create<UserState>()(
     (set) => ({
       user: {
         id: 0,
-        nickname: "string",
-        bio: "string",
-        profileImage: "string",
-        birth: "string",
+        nickname: "",
+        bio: "",
+        profileImage: "",
+        birth: "",
         gender: "MALE",
         phone: {
-          countryCode: "string",
-          number: "string",
+          countryCode: "",
+          number: "",
         },
+        provider: "plat",
+        email: "",
       },
 
       // 전체 유저 정보 저장
