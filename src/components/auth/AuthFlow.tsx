@@ -38,7 +38,7 @@ export const AuthFlow = ({ type }: AuthFlowProps) => {
       email: "",
       otp: Array(6).fill(""),
       password: "",
-      passwordConfirm: "",
+      passwordCheck: "",
       emailVerifyToken: "",
       signupToken: "",
     },

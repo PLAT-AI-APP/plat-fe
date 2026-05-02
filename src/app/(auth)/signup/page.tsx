@@ -14,7 +14,7 @@ const SignupPage = () => {
       email: "",
       otp: "",
       password: "",
-      passwordConfirm: "",
+      passwordCheck: "",
       emailVerifyToken: "",
       signupToken: "",
       isPrivacyAgreed: false,

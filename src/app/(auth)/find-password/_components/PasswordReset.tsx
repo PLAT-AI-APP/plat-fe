@@ -55,15 +55,15 @@ const PasswordReset = () => {
           label="비밀번호 확인"
           type={isShowConfirm.inputType}
           placeholder="비밀번호를 다시 입력해주세요"
-          {...register("passwordConfirm", {
+          {...register("passwordCheck", {
             required: "비밀번호 확인이 필요합니다.",
             validate: (value) =>
               value === password || "비밀번호가 일치하지 않습니다.",
             onChange: async () => {
-              await trigger("passwordConfirm");
+              await trigger("passwordCheck");
             },
           })}
-          error={errors.passwordConfirm?.message}
+          error={errors.passwordCheck?.message}
           rightElement={
             <PasswordToggle
               isVisible={isShowConfirm.isVisible}

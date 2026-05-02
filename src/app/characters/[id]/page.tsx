@@ -52,7 +52,7 @@ export default async function CharacterDetailPage({ id }: { id: string }) {
 
   // 서버에서 데이터를 미리 가져옴
   await queryClient.prefetchQuery({
-    queryKey: ["get-character-scenario-list", id],
+    queryKey: ["prefetchQuery-get-character-scenario-list", id],
     queryFn: () => getCharacterScenarioList(id),
   });
   return (

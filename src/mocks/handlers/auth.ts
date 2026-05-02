@@ -103,50 +103,82 @@ export const authHandlers = [
 
   /** 회원가입 요청 */
   http.post("*/auth/signup", async ({ request }) => {
-    const { signupToken, nickname, birthDate, gender } =
-      (await request.json()) as {
-        signupToken: string;
-        nickname: string;
-        birthDate: string;
-        gender: string;
-      };
+    const body = await request.json();
 
-    // 1. 만 14세 미만 계산 로직
-    const checkIsUnder14 = (birthDateStr: string) => {
-      const today = new Date();
-      const birth = new Date(birthDateStr);
+    // 명세서에 따른 Request Body 추출
+    const { email, nickname, password, passwordCheck, code } = body as any;
 
-      // 기본 연도 차이 계산
-      let age = today.getFullYear() - birth.getFullYear();
-      const monthDiff = today.getMonth() - birth.getMonth();
+    // 1. [400] MethodArgumentNotValidException (필수 필드 및 이메일 형식 누락)
+    const fields: Record<string, string> = {};
+    if (!email || !email.includes("@"))
+      fields.email = "올바른 이메일 형식이 아닙니다.";
+    if (!password) fields.password = "비밀번호를 입력해 주세요.";
+    if (!code) fields.code = "인증코드를 입력해 주세요.";
 
-      // 생일이 아직 안 지났으면 한 살 더 빼기 (만 나이 계산)
-      if (
-        monthDiff < 0 ||
-        (monthDiff === 0 && today.getDate() < birth.getDate())
-      ) {
-        age--;
-      }
-      return age < 14;
-    };
-
-    // 2. [400] 나이 제한 에러 처리
-    if (birthDate && checkIsUnder14(birthDate)) {
+    if (Object.keys(fields).length > 0) {
       return HttpResponse.json(
         {
           result: "ERROR",
           code: "FIELD_ERROR",
-          data: {
-            fields: {
-              birthDate: "이용 불가 연령입니다.",
-            },
-          },
+          data: { fields },
         },
         { status: 400 },
       );
     }
 
-    // 성공 응답
+    // 2. [400] IllegalArgumentException (비밀번호 형식 및 불일치)
+    // 비밀번호 정규식: 특수문자 포함 8자 이상
+    const passwordRegex = /^(?=.*[!@#$%^&*()-_=+\[\]{}';:"|,.<>/?]).{8,}$/;
+
+    if (!passwordRegex.test(password)) {
+      return HttpResponse.json(
+        {
+          result: "ERROR",
+          code: "MESSAGE",
+          message: "비밀번호 형식 불일치 (8자 미만 또는 특수문자 미포함)",
+        },
+        { status: 400 },
+      );
+    }
+
+    if (password !== passwordCheck) {
+      return HttpResponse.json(
+        {
+          result: "ERROR",
+          code: "MESSAGE",
+          message: "비밀번호 & 확인 불일치",
+        },
+        { status: 400 },
+      );
+    }
+
+    // 3. [404] NoSuchElementException (인증코드 만료 - 테스트용 예시)
+    // 특정 코드(예: '000000') 입력 시 만료 에러 발생 시뮬레이션
+    if (code === "000000") {
+      return HttpResponse.json(
+        {
+          result: "ERROR",
+          code: "MESSAGE",
+          message: "인증코드가 만료되었습니다. 인증코드를 재전송해주세요.",
+        },
+        { status: 404 },
+      );
+    }
+
+    // 4. [429] VerifyCodeAttemptExceededException (횟수 초과 - 테스트용 예시)
+    if (code === "999999") {
+      return HttpResponse.json(
+        {
+          result: "ERROR",
+          code: "ALERT",
+          message:
+            "인증코드 인증 5회 초과되었습니다. 인증코드를 재전송해주세요.",
+        },
+        { status: 429 },
+      );
+    }
+
+    // 5. 성공 응답
     return HttpResponse.json({
       result: "OK",
       message: "회원가입이 완료되었습니다.",

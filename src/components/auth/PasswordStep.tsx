@@ -33,7 +33,7 @@ const PasswordStep = ({
   const {
     email = "",
     password = "",
-    passwordConfirm = "",
+    passwordCheck = "",
     emailVerifyToken = "",
   } = watch();
 
@@ -41,13 +41,13 @@ const PasswordStep = ({
   const isShowConfirm = useTogglePassword();
 
   // 버튼 활성화 조건: 두 칸 모두 값이 존재할 때
-  const isBothFilled = !!password && !!passwordConfirm;
+  const isBothFilled = !!password && !!passwordCheck;
 
   const handleButtonClick = async (e: React.MouseEvent) => {
     // 버튼을 클릭했을 때 비로소 에러를 보여주도록 설정
     setShowErrors(true);
 
-    const isStepValid = await trigger(["password", "passwordConfirm"]);
+    const isStepValid = await trigger(["password", "passwordCheck"]);
 
     if (!isStepValid) {
       e.preventDefault();
@@ -57,7 +57,7 @@ const PasswordStep = ({
         email,
         emailVerifyToken,
         password,
-        passwordCheck: passwordConfirm,
+        passwordCheck: passwordCheck,
       },
       {
         onSuccess: (data) => {
@@ -99,7 +99,7 @@ const PasswordStep = ({
           label="비밀번호 확인"
           type={isShowConfirm.inputType}
           placeholder="비밀번호를 다시 입력해주세요"
-          {...register("passwordConfirm", {
+          {...register("passwordCheck", {
             required: "비밀번호 확인이 필요합니다.",
             validate: (value) =>
               value === password || "비밀번호가 일치하지 않습니다.",
@@ -120,9 +120,9 @@ const PasswordStep = ({
               <p className="text-font-accents text-[12px] text-center animate-in fade-in duration-200">
                 {errors.password.message}
               </p>
-            ) : errors.passwordConfirm ? (
+            ) : errors.passwordCheck ? (
               <p className="text-font-accents text-[12px] text-center animate-in fade-in duration-200">
-                {errors.passwordConfirm.message}
+                {errors.passwordCheck.message}
               </p>
             ) : null}
           </>

@@ -3,10 +3,11 @@ import { axiosInstance } from "..";
 import { ApiSuccessResponse, AppError } from "@/type/api";
 
 interface PostAuthRegisterProps {
-  signupToken: string;
+  email: string;
   nickname: string;
-  birthDate: string;
-  gender: string;
+  password: string;
+  passwordCheck: string;
+  code: string;
 }
 
 const PostAuthRegister = async (props: PostAuthRegisterProps) => {

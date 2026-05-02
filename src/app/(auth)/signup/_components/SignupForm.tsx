@@ -17,25 +17,40 @@ const SignupForm = () => {
   } = useFormContext<AuthFormValues>();
 
   const {
-    nickname,
-    email,
-    password,
-    passwordConfirm,
-    isPrivacyAgreed,
-    isTermsAgreed,
-    emailVerifyToken,
+    nickname = "",
+    email = "",
+    password = "",
+    passwordCheck = "",
+    isPrivacyAgreed = "",
+    isTermsAgreed = "",
+    emailVerifyToken = "",
+    otp = "",
   } = useWatch({ control });
 
   // 폼 유효성 검사 로직 (추가적인 커스텀 검증이 필요한 경우)
-  const isFormValid = 
-    !!(nickname && email && password && passwordConfirm && isPrivacyAgreed && isTermsAgreed && emailVerifyToken) &&
+  const isFormValid =
+    !!(
+      nickname &&
+      email &&
+      password &&
+      passwordCheck &&
+      isPrivacyAgreed &&
+      isTermsAgreed &&
+      emailVerifyToken
+    ) &&
     Object.keys(errors).length === 0 &&
-    password === passwordConfirm;
+    password === passwordCheck;
 
   const { mutate: authRegister } = useAuthRegisterMutation();
 
   const onSubmit = (data: AuthFormValues) => {
-    // authRegister(data);
+    authRegister({
+      email,
+      code: String(otp),
+      nickname,
+      password,
+      passwordCheck,
+    });
   };
 
   return (

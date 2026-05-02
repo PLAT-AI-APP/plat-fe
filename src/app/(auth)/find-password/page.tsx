@@ -19,7 +19,7 @@ const FindPasswordPage = () => {
       email: "",
       otp: Array(6).fill(""),
       password: "",
-      passwordConfirm: "",
+      passwordCheck: "",
       emailVerifyToken: "",
     },
   });
