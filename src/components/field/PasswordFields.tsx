@@ -1,12 +1,11 @@
 "use client";
 
+import { useTogglePassword } from "@/hooks/useTogglePassword";
 import React from "react";
 import { useFormContext, useWatch } from "react-hook-form";
-import { AuthFormValues } from "@/type/auth";
-import AuthInput from "@/components/auth/AuthInput";
-import { PasswordToggle } from "@/components/auth/PasswordToggle";
-import { useTogglePassword } from "@/hooks/useTogglePassword";
+import AuthInput from "../auth/AuthInput";
 import { PASSWORD_REGEX } from "@/lib/regex";
+import { PasswordToggle } from "../auth/PasswordToggle";
 
 const PasswordFields = () => {
   const {
@@ -14,7 +13,7 @@ const PasswordFields = () => {
     control,
     formState: { errors },
     trigger,
-  } = useFormContext<AuthFormValues>();
+  } = useFormContext();
 
   const password = useWatch({ control, name: "password" });
 
@@ -35,7 +34,7 @@ const PasswordFields = () => {
             message: "특수문자를 포함하여 8자 이상 입력해주세요.",
           },
         })}
-        error={errors.password?.message}
+        error={errors.password?.message as string}
         rightElement={
           <PasswordToggle
             isVisible={isShowPw.isVisible}
@@ -56,7 +55,7 @@ const PasswordFields = () => {
             await trigger("passwordCheck");
           },
         })}
-        error={errors.passwordCheck?.message}
+        error={errors.passwordCheck?.message as string}
         rightElement={
           <PasswordToggle
             isVisible={isShowConfirm.isVisible}

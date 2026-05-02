@@ -6,10 +6,11 @@ import { AuthFormValues } from "@/type/auth";
 import { useAuthRegisterMutation } from "@/api/auth/authRegister";
 import ActiveButton from "@/components/ActiveButton";
 import Agreed from "./Agreed";
-import NicknameField from "./NicknameField";
 import EmailVerifySection from "./EmailVerifySection";
-import PasswordFields from "./PasswordFields";
 import { useFormServerError } from "@/hooks/useFormServerError";
+import NicknameField from "@/components/field/NicknameField";
+import PasswordField from "@/components/field/PasswordField";
+import PasswordCheckField from "@/components/field/PasswordCheckField";
 
 const SignupForm = () => {
   const {
@@ -79,7 +80,8 @@ const SignupForm = () => {
       <fieldset className="flex flex-col gap-5.25">
         <NicknameField />
         <EmailVerifySection />
-        <PasswordFields />
+        <PasswordField />
+        <PasswordCheckField />
       </fieldset>
 
       <Agreed />
