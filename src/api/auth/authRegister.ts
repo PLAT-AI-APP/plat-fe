@@ -30,7 +30,6 @@ export const useAuthRegisterMutation = () => {
   >({
     mutationFn: PostAuthRegister,
     onSuccess: (data) => {
-      alert(data.serverMessage);
       window.location.href = "/";
     },
   });

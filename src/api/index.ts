@@ -1,6 +1,34 @@
 import { useAuthStore } from "@/store/useAuthStore";
-import { ApiErrorResponse } from "@/type/api";
-import axios, { InternalAxiosRequestConfig } from "axios";
+import axios, {
+  InternalAxiosRequestConfig,
+  AxiosInstance,
+  AxiosError,
+  AxiosResponse,
+} from "axios";
+
+/** 1. Axios 모듈 확장: _retry 속성 정의 */
+declare module "axios" {
+  interface InternalAxiosRequestConfig {
+    _retry?: boolean;
+  }
+}
+
+/** 서버 공통 응답 규격 */
+interface ApiErrorResponse {
+  result: string;
+  code: string;
+  message: string;
+  data?: {
+    fields?: Record<string, string>;
+  };
+}
+
+/** 최종 에러 객체 타입 */
+export interface AppError {
+  code: string;
+  fields: Record<string, string>;
+  message: string;
+}
 
 const BASE_CONFIG = {
   baseURL: process.env.NEXT_PUBLIC_BASE_URI,
@@ -8,65 +36,102 @@ const BASE_CONFIG = {
   headers: { "Content-Type": "application/json", "X-Client-Type": "web" },
 };
 
-// 인스턴스 생성
-export const axiosInstance = axios.create(BASE_CONFIG);
-export const authAxios = axios.create({
+export const axiosInstance: AxiosInstance = axios.create(BASE_CONFIG);
+export const authAxios: AxiosInstance = axios.create({
   ...BASE_CONFIG,
   withCredentials: true,
 });
 
-// 요청 인터셉터 공통 로직
-const onRequest = (config: InternalAxiosRequestConfig, addAuth = false) => {
-  // if (typeof window === "undefined") return config;
+/** 요청 인터셉터 */
+const onRequest = (
+  config: InternalAxiosRequestConfig,
+  addAuth = false,
+): InternalAxiosRequestConfig => {
+  if (typeof window !== "undefined") {
+    const deviceId =
+      localStorage.getItem("plat_device_id") || crypto.randomUUID();
+    if (!localStorage.getItem("plat_device_id")) {
+      localStorage.setItem("plat_device_id", deviceId);
+    }
+    config.headers["X-Device-ID"] = deviceId;
+  }
 
-  // Device ID 주입
-  const deviceId =
-    localStorage.getItem("plat_device_id") || crypto.randomUUID();
-  if (!localStorage.getItem("plat_device_id"))
-    localStorage.setItem("plat_device_id", deviceId);
-  config.headers["X-Device-ID"] = deviceId;
-
-  // 인증 토큰 주입 (선택적)
   const token = useAuthStore.getState().accessToken;
-  if (addAuth && token) config.headers.Authorization = `Bearer ${token}`;
+  if (addAuth && token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
 
   return config;
 };
 
-axiosInstance.interceptors.request.use((c) => onRequest(c));
-authAxios.interceptors.request.use((c) => onRequest(c, true));
+/** 응답 에러 처리 (완전한 타입 지원) */
+const onResponseError = async (
+  err: AxiosError<ApiErrorResponse>,
+  instance: AxiosInstance,
+): Promise<AxiosResponse | never> => {
+  const originalRequest = err.config;
+  const { logout, setAccessToken } = useAuthStore.getState();
 
-// 응답 인터셉터 (authAxios 전용)
+  // [A] 토큰 갱신 로직 (401 에러 시)
+  if (
+    err.response?.status === 401 &&
+    originalRequest &&
+    !originalRequest._retry
+  ) {
+    originalRequest._retry = true;
+
+    try {
+      const { data } = await axios.post<{ accessToken: string }>(
+        `${BASE_CONFIG.baseURL}/auth/refresh`,
+        {},
+        { withCredentials: true },
+      );
+
+      const newAccessToken = data.accessToken;
+      setAccessToken(newAccessToken);
+
+      originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+
+      // 인스턴스 재실행 시 타입 단언 없이 실행 가능
+      return instance(originalRequest);
+    } catch (refreshError) {
+      logout();
+      if (typeof window !== "undefined") {
+        window.location.href = "/login";
+      }
+      return Promise.reject(refreshError);
+    }
+  }
+
+  // [B] 에러 포맷팅
+  if (err.response?.data) {
+    const { code, data, message } = err.response.data;
+
+    const formattedError: AppError = {
+      code: code || "UNKNOWN_ERROR",
+      fields: data?.fields || {},
+      message: message || "알 수 없는 에러가 발생했습니다.",
+    };
+
+    if (code === "MESSAGE" || code === "ALERT") {
+      alert(formattedError.message);
+    }
+
+    return Promise.reject(formattedError);
+  }
+
+  return Promise.reject(err);
+};
+
+// 인터셉터 연결
+axiosInstance.interceptors.request.use((c) => onRequest(c));
+axiosInstance.interceptors.response.use(
+  (res) => res,
+  (err: AxiosError<ApiErrorResponse>) => onResponseError(err, axiosInstance),
+);
+
+authAxios.interceptors.request.use((c) => onRequest(c, true));
 authAxios.interceptors.response.use(
   (res) => res,
-  async (err) => {
-    const originalRequest = err.config;
-    const { logout, setAccessToken } = useAuthStore.getState();
-
-    // 토큰 갱신 로직
-    if (err.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      try {
-        const { data } = await axios.post(
-          `${BASE_CONFIG.baseURL}/auth/refresh`,
-          {},
-          { withCredentials: true },
-        );
-        setAccessToken(data.accessToken);
-        originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
-        return authAxios(originalRequest);
-      } catch {
-        logout();
-        if (typeof window !== "undefined") window.location.href = "/login";
-        return Promise.reject(err);
-      }
-    }
-
-    // 에러 포맷팅
-    if (axios.isAxiosError<ApiErrorResponse>(err) && err.response?.data) {
-      const { code, data, message } = err.response.data;
-      return Promise.reject({ code, fields: data?.fields || {}, message });
-    }
-    return Promise.reject(err);
-  },
+  (err: AxiosError<ApiErrorResponse>) => onResponseError(err, authAxios),
 );
