@@ -186,14 +186,15 @@ export const authHandlers = [
   }),
 
   /** 이메일 로그인 요청 */
-  http.post("*/auth/email/login", async ({ request }) => {
-    const { email, password } = (await request.json()) as {
-      email: string;
+  http.post("*/auth/login", async ({ request }) => {
+    // 1. Request Body 필드명 수정 (email -> username)
+    const { username, password } = (await request.json()) as {
+      username: string;
       password: string;
     };
 
-    // 로그인 실패 케이스
-    if (email !== "taewok0205@gmail.com" || password !== "test1234") {
+    // 2. 로그인 실패 케이스 (InvalidCredentialsException)
+    if (username !== "user@example.com" || password !== "password123!") {
       return HttpResponse.json(
         {
           result: "ERROR",
@@ -204,10 +205,11 @@ export const authHandlers = [
       );
     }
 
-    // 로그인 성공 케이스
+    // 3. 로그인 성공 케이스
     return HttpResponse.json(
       {
-        // AccessToken은 메모리 보관을 위해 JSON Body로 전달합니다.
+        result: "OK", // 명세서 기준 추가
+        message: "로그인 성공", // 명세서 기준 추가
         data: {
           accessToken: "mocked-access-token-12345",
         },
@@ -215,10 +217,9 @@ export const authHandlers = [
       {
         status: 200,
         headers: {
-          // RefreshToken만 HttpOnly 쿠키로 설정합니다.
-          // Path를 /auth/refresh로 제한하면 보안이 더 강화됩니다.
+          // 명세서에 명시된 Path=/auth/refresh 적용
           "Set-Cookie":
-            "refreshToken=mocked-refresh-token-67890; HttpOnly; Path=/; Max-Age=2592000; SameSite=Lax",
+            "refreshToken=mocked-refresh-token-67890; HttpOnly; Path=/auth/refresh; Max-Age=2592000; SameSite=Lax",
         },
       },
     );
