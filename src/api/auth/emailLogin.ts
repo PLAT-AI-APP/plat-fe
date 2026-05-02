@@ -4,7 +4,7 @@ import { ApiSuccessResponse, AppError } from "@/type/api";
 import { useAuthStore } from "@/store/useAuthStore";
 
 interface PostEmailLoginProps {
-  email: string;
+  username: string;
   password: string;
 }
 
@@ -30,6 +30,7 @@ export const useEmailLoginMutation = () => {
     mutationFn: PostEmailLogin,
     onSuccess: (data) => {
       setAccessToken(data.token);
+      window.location.reload();
     },
   });
 };

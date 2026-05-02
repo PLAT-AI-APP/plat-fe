@@ -194,7 +194,7 @@ export const authHandlers = [
     };
 
     // 2. 로그인 실패 케이스 (InvalidCredentialsException)
-    if (username !== "user@example.com" || password !== "password123!") {
+    if (username !== "taewok0205@gmail.com" || password !== "test1234") {
       return HttpResponse.json(
         {
           result: "ERROR",

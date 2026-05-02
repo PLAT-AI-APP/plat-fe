@@ -26,7 +26,7 @@ const Profile = () => {
         <SmartInput
           label="제목"
           required={true}
-          maxLength={12}
+          maxLength={20}
           placeholder="제목을 입력해주세요."
           isBorder
           {...register("title", { required: true })}

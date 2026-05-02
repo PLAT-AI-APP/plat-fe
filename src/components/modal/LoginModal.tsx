@@ -47,7 +47,7 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
 
   const onSubmit = () => {
     emailLogin(
-      { email, password: pw },
+      { username: email, password: pw },
       {
         onSuccess: () => {
           setLoggedIn(true);
@@ -64,11 +64,8 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
       onClose={onClose}
       hasBackground
       triggerRef={triggerRef}
-      //   className="overflow-hidden relative w-full max-w-112.5 p-8 pt-10 flex flex-col rounded-3xl border border-border-main bg-[#0B0E14]/60"
       className="w-112.5 p-6 pt-9 h-fit top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
     >
-      {/* <AuthBgDecoration /> */}
-
       {/* 헤더: 로그인의 목적과 제목 정의 */}
       <header id="login-card-header" className="pb-9">
         <h1
