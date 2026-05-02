@@ -83,6 +83,16 @@ const EmailVerifySection = () => {
     );
   };
 
+  const handleEmailbtn = () => {
+    if (!emailVerifyToken) {
+      handleRequestOtp();
+    } else {
+      // 두 값을 동시에 초기화
+      setValue("emailVerifyToken", "");
+      setValue("email", "");
+    }
+  };
+
   return (
     <section id="email-auth-container" className="flex flex-col gap-5.25">
       {/* 이메일 입력 영역 */}
@@ -117,11 +127,7 @@ const EmailVerifySection = () => {
               "px-4 py-3 text-sm w-fit max-h-11 text-nowrap",
               emailVerifyToken && "border border-border-main bg-bg-darker",
             )}
-            onClick={() =>
-              !emailVerifyToken
-                ? handleRequestOtp()
-                : setValue("emailVerifyToken", "")
-            }
+            onClick={handleEmailbtn}
           />
         </div>
         {errors.email?.message && (

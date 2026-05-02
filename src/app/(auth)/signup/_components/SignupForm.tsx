@@ -9,6 +9,7 @@ import Agreed from "./Agreed";
 import NicknameField from "./NicknameField";
 import EmailVerifySection from "./EmailVerifySection";
 import PasswordFields from "./PasswordFields";
+import { useFormServerError } from "@/hooks/useFormServerError";
 
 const SignupForm = () => {
   const {
@@ -43,14 +44,22 @@ const SignupForm = () => {
 
   const { mutate: authRegister } = useAuthRegisterMutation();
 
+  const { setFieldErrors } = useFormServerError<AuthFormValues>();
   const onSubmit = (data: AuthFormValues) => {
-    authRegister({
-      email,
-      code: String(otp),
-      nickname,
-      password,
-      passwordCheck,
-    });
+    authRegister(
+      {
+        email,
+        code: String(otp),
+        nickname,
+        password,
+        passwordCheck,
+      },
+      {
+        onError: (error) => {
+          setFieldErrors(error.fields);
+        },
+      },
+    );
   };
 
   return (
