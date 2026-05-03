@@ -1,13 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 
 import { ModalLayout } from "../ModalLayout";
 import { Close } from "@/icons";
 import { BirthDateInput } from "../BirthDateInput";
 import ActiveButton from "../ActiveButton";
-import PhoneNumberModal from "./PhoneNumberModal";
 
 import { ProfileEditFormType } from "@/type/user";
 import { useUserStore } from "@/store/useUserStore";
@@ -18,7 +17,7 @@ import ProfileImageField from "../field/ProfileImageField";
 import NicknameField from "../field/NicknameField";
 import BioField from "../field/BioField";
 import GenderField from "../field/GenderField";
-import PhoneField from "../field/PhoneField";
+// import PhoneField from "../field/PhoneField";
 import AccountField from "../field/AccountField";
 
 interface ProfileEditModalProps {
@@ -29,7 +28,7 @@ const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
   const { handleSubmit, watch } = useFormContext<ProfileEditFormType>();
   const { mutate: updateMyInfo } = useUpdateMyInfoMutation();
   const { setFieldErrors } = useFormServerError<ProfileEditFormType>();
-  const [isPhoneModal, setIsPhoneModal] = useState(false);
+  // const [isPhoneModal, setIsPhoneModal] = useState(false);
 
   const birth = watch("birth");
 
@@ -73,7 +72,7 @@ const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
           <BioField />
           <BirthDateInput value={birth} disabled />
           <GenderField />
-          <PhoneField onOpenModal={() => setIsPhoneModal(true)} />
+          {/* <PhoneField onOpenModal={() => setIsPhoneModal(true)} /> */}
           <AccountField />
         </div>
 
@@ -93,9 +92,9 @@ const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
           className="rounded-xl mt-10 mb-5"
         />
       </section>
-      {isPhoneModal && (
+      {/* {isPhoneModal && (
         <PhoneNumberModal onClose={() => setIsPhoneModal(false)} />
-      )}
+      )} */}
     </form>
   );
 };
