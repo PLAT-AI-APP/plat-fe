@@ -1,7 +1,10 @@
-import { http, HttpResponse } from "msw";
+import { delay, http, HttpResponse } from "msw";
 
 // 가상의 기존 등록된 닉네임 리스트
 const existingNicknames = ["김철수", "마법사", "태욱", "admin"];
+// 임시 토큰 생성 함수 (실제 구현 시에는 더 복잡한 문자열 사용 가능)
+const generateToken = (type: "access" | "refresh") =>
+  `new_${type}_token_${Math.random().toString(36).substring(7)}`;
 
 export const authHandlers = [
   /** 이메일 인증번호 발송 */
@@ -259,5 +262,96 @@ export const authHandlers = [
         available: isAvailable,
       },
     });
+  }),
+
+  /** jwt 토큰 갱신 */
+  http.post("*/auth/refresh", async ({ request, cookies }) => {
+    const clientType = request.headers.get("X-Client-Type");
+
+    // 1. 유효하지 않은 클라이언트 타입 처리
+    if (!clientType || (clientType !== "app" && clientType !== "web")) {
+      return HttpResponse.json(
+        {
+          result: "ERROR",
+          code: "INVALID_CLIENT_TYPE",
+          message: "올바른 X-Client-Type 헤더가 필요합니다.",
+        },
+        { status: 400 },
+      );
+    }
+
+    await delay(500); // 네트워크 지연 시뮬레이션
+
+    // --- WEB 클라이언트 로직 (Cookie 기반) ---
+    if (clientType === "web") {
+      const refreshToken = cookies.REFRESH_TOKEN;
+
+      // 쿠키에 토큰이 없거나 무효한 경우 (Exception 상황)
+      if (!refreshToken || refreshToken === "invalid_token") {
+        return HttpResponse.json(
+          {
+            result: "ERROR",
+            code: "MESSAGE",
+            message: "로그인 세션이 만료되었습니다.",
+          },
+          { status: 401 },
+        );
+      }
+
+      const newAccessToken = generateToken("access");
+      const newRefreshToken = generateToken("refresh");
+
+      return HttpResponse.json(
+        {
+          result: "OK",
+          message: "토큰이 갱신되었습니다.",
+          data: {
+            accessToken: newAccessToken,
+          },
+        },
+        {
+          status: 200,
+          headers: [
+            // 명세서대로 쿠키도 구워줌
+            [
+              "Set-Cookie",
+              `accessToken=${newAccessToken}; HttpOnly; Path=/; Max-Age=1800`,
+            ],
+            [
+              "Set-Cookie",
+              `refreshToken=${newRefreshToken}; HttpOnly; Path=/api/v1/auth/refresh; Max-Age=2592000`,
+            ],
+          ],
+        },
+      );
+    }
+
+    // --- APP 클라이언트 로직 (Body 기반) ---
+    if (clientType === "app") {
+      const body = (await request.json()) as { refreshToken?: string };
+      const refreshToken = body.refreshToken;
+
+      if (!refreshToken || refreshToken === "invalid_token") {
+        return HttpResponse.json(
+          {
+            result: "ERROR",
+            code: "MESSAGE",
+            message: "로그인 세션이 만료되었습니다.",
+          },
+          { status: 401 },
+        );
+      }
+
+      return HttpResponse.json(
+        {
+          result: "OK",
+          data: {
+            accessToken: generateToken("access"),
+            refreshToken: generateToken("refresh"), // RTR 적용
+          },
+        },
+        { status: 200 },
+      );
+    }
   }),
 ];

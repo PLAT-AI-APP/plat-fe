@@ -5,6 +5,7 @@ import axios, {
   AxiosError,
   AxiosResponse,
 } from "axios";
+import { postRefresh } from "./auth/postRefresh";
 
 /** 1. Axios 모듈 확장: _retry 속성 정의 */
 declare module "axios" {
@@ -81,15 +82,11 @@ const onResponseError = async (
     originalRequest._retry = true;
 
     try {
-      const { data } = await axios.post<{ accessToken: string }>(
-        `${BASE_CONFIG.baseURL}/auth/refresh`,
-        {},
-        { withCredentials: true },
-      );
-
+      const data = await postRefresh();
       const newAccessToken = data.accessToken;
-      setAccessToken(newAccessToken);
 
+      setAccessToken(newAccessToken);
+      // 기존 요청 재시도 (새 토큰 주입)
       originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
 
       // 인스턴스 재실행 시 타입 단언 없이 실행 가능
