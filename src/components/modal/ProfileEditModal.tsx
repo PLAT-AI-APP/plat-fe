@@ -19,6 +19,7 @@ import BioField from "../field/BioField";
 import GenderField from "../field/GenderField";
 // import PhoneField from "../field/PhoneField";
 import AccountField from "../field/AccountField";
+import Link from "next/link";
 
 interface ProfileEditModalProps {
   onClose: () => void;
@@ -76,11 +77,14 @@ const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
           <AccountField />
         </div>
 
-        <footer className="flex justify-center">
-          <button
-            type="button"
-            className="underline text-sm text-font-2 mx-auto mt-9"
+        <footer className="flex gap-9 justify-center mt-9">
+          <Link
+            href={"/find-password"}
+            className="underline text-sm text-font-2 w-fit"
           >
+            비밀번호 변경
+          </Link>
+          <button type="button" className="underline text-sm text-font-2 w-fit">
             회원탈퇴
           </button>
         </footer>
