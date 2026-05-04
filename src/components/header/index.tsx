@@ -111,7 +111,7 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
           {!isLoggedIn && (
             <div
               ref={triggerRef}
-              onClick={profileModal.toggle}
+              onClick={profileModal.open}
               className="flex items-center justify-center w-10 h-10"
             >
               <User className="w-6 h-6 text-font-2 cursor-pointer" />
