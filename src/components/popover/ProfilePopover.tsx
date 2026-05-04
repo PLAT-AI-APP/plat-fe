@@ -22,7 +22,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import LoginModal from "../modal/LoginModal";
 import { PopoverLayout } from "./layout";
 import { useRouter } from "next/navigation";
-import useRouteEffect from "@/hooks/useRouteEffect";
+import useToggle from "@/hooks/useToggle";
 
 const activityArray = [
   { name: "내 페르소나", link: "/persona", icon: Persona },
@@ -70,15 +70,17 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
   };
 
   const loginModalBtnRef = useRef(null);
-  const [isLoginModal, setIsLoginModal] = useState(false);
-  const toggleIsLoginModal = () => {
-    setIsLoginModal((prev) => !prev);
-  };
+  const loginModal = useToggle();
+  // const [isLoginModal, setIsLoginModal] = useState(false);
+  // const toggleIsLoginModal = () => {
+  //   setIsLoginModal((prev) => !prev);
+  // };
   const handleLoginBtn = (name: "KAKAO" | "GOOGLE" | "LOGIN") => {
     if (name === "LOGIN") {
       // onClose(); // 먼저 상태를 변경하고
       // window.location.href = "/login"; // 이동합니다.
-      toggleIsLoginModal();
+      console.log("d");
+      loginModal.open();
       return;
     }
     window.location.href =
@@ -88,7 +90,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
   };
   const handleProfilePopoverClose = () => {
     // 로그인 모달이 켜져 있다면, 어떤 바깥 클릭이 들어와도 프로필 모달은 무시
-    if (isLoginModal) {
+    if (loginModal.isOpen) {
       return;
     }
     onClose();
@@ -102,8 +104,6 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
     router.push(`/profile/${userId}`);
     onClose();
   };
-
-  useRouteEffect(onClose);
 
   return (
     <PopoverLayout
@@ -298,11 +298,8 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
         </>
       )}
 
-      {isLoginModal && (
-        <LoginModal
-          onClose={toggleIsLoginModal}
-          triggerRef={loginModalBtnRef}
-        />
+      {loginModal.isOpen && (
+        <LoginModal onClose={loginModal.toggle} triggerRef={loginModalBtnRef} />
       )}
     </PopoverLayout>
   );

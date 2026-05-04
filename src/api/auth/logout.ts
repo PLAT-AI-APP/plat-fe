@@ -20,7 +20,7 @@ export const useLogoutMutation = () => {
     mutationFn: PostLogout,
     onSuccess: () => {
       logout();
-      router.push("/login");
+      router.push("/");
     },
   });
 };

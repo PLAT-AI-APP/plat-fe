@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import SocialLoginButton from "../auth/SocialLoginButton";
 import { ChatFill, Google } from "@/icons";
 import Link from "next/link";
@@ -12,15 +12,13 @@ import { useEmailLoginMutation } from "@/api/auth/emailLogin";
 import { useAuthStore } from "@/store/useAuthStore";
 import { EMAIL_REGEX } from "@/lib/regex";
 import { ModalLayout } from "../ModalLayout";
-import { usePathname, useRouter } from "next/navigation";
-import useRouteEffect from "@/hooks/useRouteEffect";
+import { useRouter } from "next/navigation";
 
 interface LoginModalProps {
   onClose: () => void;
   triggerRef: React.RefObject<HTMLElement | null> | undefined;
 }
 const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
-  const pathname = usePathname();
   const router = useRouter();
 
   const isShowPw = useTogglePassword();
@@ -56,8 +54,6 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
       },
     );
   };
-
-  useRouteEffect(onClose);
 
   return (
     <ModalLayout

@@ -111,7 +111,12 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
           {!isLoggedIn && (
             <div
               ref={triggerRef}
-              onClick={profileModal.open}
+              onClick={(e) => {
+                // profileModal.open 내부에서 이미 stopPropagation을 하고 있지만
+                // 여기서 한 번 더 명시적으로 막아주는 것이 안전합니다.
+                e.stopPropagation();
+                profileModal.toggle(e);
+              }}
               className="flex items-center justify-center w-10 h-10"
             >
               <User className="w-6 h-6 text-font-2 cursor-pointer" />
