@@ -22,6 +22,7 @@ import { PopoverLayout } from "./layout";
 import { useRouter } from "next/navigation";
 import useToggle from "@/hooks/useToggle";
 import { useModalStore } from "@/store/useModalStore";
+import useRouteEffect from "@/hooks/useRouteEffect";
 
 const supportArray = [
   { name: "공지사항", link: "/notification", icon: Megaphone },
@@ -78,9 +79,9 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
       return;
     }
     window.location.href =
-      "https://api-dev.plat.so" + name === "KAKAO"
-        ? "/oauth2/authorization/kakao"
-        : "/oauth2/authorization/google";
+      name === "KAKAO"
+        ? "https://api-dev.plat.so/oauth2/authorization/kakao"
+        : "https://api-dev.plat.so/oauth2/authorization/google";
   };
   const handleProfilePopoverClose = () => {
     // 로그인 모달이 켜져 있다면, 어떤 바깥 클릭이 들어와도 프로필 모달은 무시
@@ -98,6 +99,8 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
     router.push(`/profile/${userId}`);
     onClose();
   };
+
+  useRouteEffect(onClose);
 
   return (
     <PopoverLayout

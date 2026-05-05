@@ -13,6 +13,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { EMAIL_REGEX } from "@/lib/regex";
 import { ModalLayout } from "../ModalLayout";
 import { useRouter } from "next/navigation";
+import useRouteEffect from "@/hooks/useRouteEffect";
 
 import { LoginModalProps } from "@/type/modal";
 
@@ -52,6 +53,8 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
       },
     );
   };
+
+  useRouteEffect(onClose);
 
   return (
     <ModalLayout
