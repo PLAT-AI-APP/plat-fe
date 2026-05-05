@@ -78,7 +78,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
       return;
     }
     window.location.href =
-      process.env.NEXT_PUBLIC_BASE_URI + name === "KAKAO"
+      "https://api-dev.plat.so" + name === "KAKAO"
         ? "/oauth2/authorization/kakao"
         : "/oauth2/authorization/google";
   };
