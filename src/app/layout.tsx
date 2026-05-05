@@ -97,15 +97,15 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <MSWProvider>
-          <ReactQueryProvider>
-            <ThemeProvider>
-              <NavigationGuardProvider>
-                <ClientLayout>{children}</ClientLayout>
-              </NavigationGuardProvider>
-            </ThemeProvider>
-          </ReactQueryProvider>
-        </MSWProvider>
+        {/* <MSWProvider> */}
+        <ReactQueryProvider>
+          <ThemeProvider>
+            <NavigationGuardProvider>
+              <ClientLayout>{children}</ClientLayout>
+            </NavigationGuardProvider>
+          </ThemeProvider>
+        </ReactQueryProvider>
+        {/* </MSWProvider> */}
       </body>
     </html>
   );
