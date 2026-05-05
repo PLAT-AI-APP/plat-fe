@@ -1,10 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
-import { axiosInstance } from "..";
+import { plainAxios } from "..";
 import { ApiSuccessResponse } from "@/type/api";
 import { useAuthStore } from "@/store/useAuthStore";
 
 export const postRefresh = async () => {
-  const response = await axiosInstance.post<
+  const response = await plainAxios.post<
     ApiSuccessResponse<{
       accessToken: string;
     }>

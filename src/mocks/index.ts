@@ -4,6 +4,7 @@ import { userHandlers } from "./handlers/user";
 import { followHandlers } from "./handlers/follow";
 import { hashtagHandlers } from "./handlers/hashtag";
 import { characterHandlers } from "./handlers/character";
+import { noticeHandlers } from "./handlers/notice";
 
 /**
  * 모든 핸들러를 하나의 배열로 통합합니다.
@@ -16,4 +17,5 @@ export const handlers = [
   ...userHandlers,
   ...hashtagHandlers,
   ...characterHandlers,
+  ...noticeHandlers,
 ];

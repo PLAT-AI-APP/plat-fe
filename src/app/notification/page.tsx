@@ -1,28 +1,13 @@
 import { cn } from "@/lib/utils";
 import { NOTICE_DUMMY } from "@/mocks/dummyData";
-import dayjs from "@/lib/dayjs";
 import React from "react";
 import FilterTab from "./_components/FilterTab";
 import Link from "next/link";
 import { Metadata } from "next";
+import NoticeList from "./_components/NoticeList";
 
 export const metadata: Metadata = {
   title: "공지사항",
-};
-
-const NotificationColorConfig: Record<string, { bg: string; color: string }> = {
-  공지: {
-    bg: "bg-[#0088FF26]",
-    color: "text-[#0088FF]",
-  },
-  업데이트: {
-    bg: "bg-[#34C75926]",
-    color: "text-[#34C759]",
-  },
-  이벤트: {
-    bg: "bg-[#FFCC0026]",
-    color: "text-[#FFCC00]",
-  },
 };
 
 interface NotificationPageProps {
@@ -47,48 +32,7 @@ const NotificationPage = async ({ searchParams }: NotificationPageProps) => {
           <FilterTab currentFilter={currentFilter} />
         </nav>
 
-        <ul>
-          {NOTICE_DUMMY.map(
-            ({ category, categoryName, createdAt, id, title }) => {
-              // 루프 내 변수 배치
-              const colorStyle = NotificationColorConfig[categoryName];
-
-              return (
-                <li
-                  key={id}
-                  className="hover:bg-btn-hover cursor-pointer border-b border-border-main"
-                >
-                  <Link
-                    href={"/"}
-                    className="flex justify-between pt-3.75 px-2.5 pb-5"
-                  >
-                    <div className="flex flex-col gap-1.5 font-medium">
-                      {/* 공지사항 분류 공지/업데이트/이벤트 */}
-                      <span
-                        className={cn(
-                          "rounded-md py-1 px-2 w-fit text-[13px]",
-                          colorStyle.bg,
-                          colorStyle.color,
-                        )}
-                      >
-                        {categoryName}
-                      </span>
-
-                      {/* 공지사항 제목 */}
-                      <p className="text-sm">{title}</p>
-                    </div>
-                    <time
-                      dateTime={dayjs(createdAt).format("YYYY-MM-DD")}
-                      className="text-[13px] text-font-2"
-                    >
-                      {dayjs(createdAt).format("YYYY-MM-DD")}
-                    </time>
-                  </Link>
-                </li>
-              );
-            },
-          )}
-        </ul>
+        <NoticeList />
       </div>
     </section>
   );

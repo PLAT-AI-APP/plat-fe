@@ -32,11 +32,14 @@ export interface AppError {
 }
 
 const BASE_CONFIG = {
-  baseURL: "https://api-dev.plat.so",
-  // baseURL: process.env.NEXT_PUBLIC_BASE_URI,
+  // baseURL: "https://api-dev.plat.so",
+  baseURL: process.env.NEXT_PUBLIC_BASE_URI,
   timeout: 5000,
   headers: { "Content-Type": "application/json", "X-Client-Type": "web" },
 };
+
+// 인터셉터 없는 순수 axios
+export const plainAxios = axios.create(BASE_CONFIG);
 
 export const axiosInstance: AxiosInstance = axios.create(BASE_CONFIG);
 export const authAxios: AxiosInstance = axios.create({
@@ -104,7 +107,6 @@ const onResponseError = async (
   // [B] 에러 포맷팅
   if (err.response?.data) {
     const { code, data, message } = err.response.data;
-    console.log(err.response.data);
     const formattedError: AppError = {
       code: code || "UNKNOWN_ERROR",
       fields: data?.fields || {},
@@ -125,11 +127,28 @@ const onResponseError = async (
 axiosInstance.interceptors.request.use((c) => onRequest(c));
 axiosInstance.interceptors.response.use(
   (res) => res,
-  (err: AxiosError<ApiErrorResponse>) => onResponseError(err, axiosInstance),
+  (err: AxiosError<ApiErrorResponse>) => {
+    // 1. 콘솔에 백엔드 에러 출력
+    if (err.response?.data) {
+      const { code, data, message } = err.response.data;
+      console.error(`❌ [axiosInstance Error] ${code}: ${message}`, data);
+    }
+    // 2. 기존 에러 처리 함수 실행
+    return onResponseError(err, axiosInstance);
+  },
 );
 
+// 인증이 필요한 API용 인터셉터
 authAxios.interceptors.request.use((c) => onRequest(c, true));
 authAxios.interceptors.response.use(
   (res) => res,
-  (err: AxiosError<ApiErrorResponse>) => onResponseError(err, authAxios),
+  (err: AxiosError<ApiErrorResponse>) => {
+    // 1. 콘솔에 백엔드 에러 출력
+    if (err.response?.data) {
+      const { code, data, message } = err.response.data;
+      console.error(`🔒 [authAxios Error] ${code}: ${message}`, data);
+    }
+    // 2. 기존 에러 처리 함수 실행
+    return onResponseError(err, authAxios);
+  },
 );

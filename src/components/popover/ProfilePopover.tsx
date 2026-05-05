@@ -267,7 +267,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
           <Link
             key={tab.name}
             href={tab.link}
-            onClick={onClose}
+            // onClick={onClose}
             className="flex items-center gap-2 px-3 py-2.5 rounded-lg hover:bg-btn-hover transition-colors text-font-1 hover:text-font-1 text-sm"
           >
             <Icon
