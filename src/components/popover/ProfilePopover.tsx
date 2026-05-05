@@ -15,19 +15,14 @@ import {
 import { useLogoutMutation } from "@/api/auth/logout";
 import { useAuthStore } from "@/store/useAuthStore";
 import Melody from "@/icons/Melody";
-// import TendencySettingModal from "./TendencySettingModal";
 import Check from "@/icons/Check";
 import { useUserStore } from "@/store/useUserStore";
 import { motion, AnimatePresence } from "framer-motion";
-import LoginModal from "../modal/LoginModal";
 import { PopoverLayout } from "./layout";
 import { useRouter } from "next/navigation";
 import useToggle from "@/hooks/useToggle";
+import { useModalStore } from "@/store/useModalStore";
 
-const activityArray = [
-  { name: "내 페르소나", link: "/persona", icon: Persona },
-  { name: "콘텐츠 설정", icon: Setting },
-];
 const supportArray = [
   { name: "공지사항", link: "/notification", icon: Megaphone },
   { name: "고객센터", link: "/customer-service", icon: Headphone },
@@ -48,10 +43,11 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
   const { mutate: logout } = useLogoutMutation();
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
-  const [isTendency, setIsTendency] = useState(false);
-  const toggleIstendency = () => {
-    setIsTendency((prev) => !prev);
-  };
+  const tendency = useToggle();
+  const activityArray = [
+    { name: "내 페르소나", link: "/persona", icon: Persona },
+    { name: "콘텐츠 설정", icon: Setting, onclick: tendency.toggle },
+  ];
 
   // isLoggedIn이 false일 때 "내 페르소나"를 필터링
   const filteredActivityArray = activityArray.filter((item) => {
@@ -66,21 +62,19 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
 
   const handleCurrentTendency = (name: string) => {
     setCurrentTendency(name);
-    toggleIstendency();
+    tendency.toggle();
   };
 
   const loginModalBtnRef = useRef(null);
   const loginModal = useToggle();
-  // const [isLoginModal, setIsLoginModal] = useState(false);
-  // const toggleIsLoginModal = () => {
-  //   setIsLoginModal((prev) => !prev);
-  // };
+
+  const { openModal } = useModalStore();
+
   const handleLoginBtn = (name: "KAKAO" | "GOOGLE" | "LOGIN") => {
     if (name === "LOGIN") {
-      // onClose(); // 먼저 상태를 변경하고
-      // window.location.href = "/login"; // 이동합니다.
-      console.log("d");
-      loginModal.open();
+      openModal("LOGIN", {
+        triggerRef,
+      });
       return;
     }
     window.location.href =
@@ -175,9 +169,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
           return (
             <div
               key={tab.name}
-              onClick={
-                tab.name === "콘텐츠 설정" ? toggleIstendency : undefined
-              }
+              onClick={tab.name === "콘텐츠 설정" ? tendency.toggle : undefined}
               // className="relative cursor-pointer flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg hover:bg-btn-hover transition-colors text-font-1 hover:text-font-1 text-sm"
             >
               <div className="relative cursor-pointer flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg hover:bg-btn-hover transition-colors duration-300 ease-in-out text-font-1 hover:text-font-1 text-sm">
@@ -197,14 +189,14 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
                   <ArrowRight
                     className={cn(
                       "w-2.5 h-2.5 text-font-disabled",
-                      isTendency && "rotate-90",
+                      tendency.isOpen && "rotate-90",
                     )}
                   />
                 </div>
               </div>
 
               <AnimatePresence>
-                {isTendency && (
+                {tendency.isOpen && (
                   <motion.div
                     onClick={(e) => e.stopPropagation()}
                     initial={{ height: 0, opacity: 0 }} // 시작 상태: 높이 0, 투명도 0
@@ -296,10 +288,6 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
             로그아웃
           </div>
         </>
-      )}
-
-      {loginModal.isOpen && (
-        <LoginModal onClose={loginModal.toggle} triggerRef={loginModalBtnRef} />
       )}
     </PopoverLayout>
   );

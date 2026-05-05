@@ -8,11 +8,7 @@ import { useAddPersonaMutation } from "@/api/persona/addPersona";
 import { useEditPersonaMutation } from "@/api/persona/editPersona";
 import { useDetailPersonaQuery } from "@/api/persona/detailPersons";
 
-interface PersonaAddModalProps {
-  toggleIsAddModal: () => void;
-  isEditMode?: boolean;
-  personaId?: number;
-}
+import { PersonaAddModalProps } from "@/type/modal";
 
 interface PersonaFormValues {
   name: string;
@@ -20,7 +16,7 @@ interface PersonaFormValues {
 }
 
 const PersonaAddModal = ({
-  toggleIsAddModal,
+  onClose,
   isEditMode = false,
   personaId,
 }: PersonaAddModalProps) => {
@@ -62,13 +58,13 @@ const PersonaAddModal = ({
     } else {
       addPersona({ description: info, name });
     }
-    toggleIsAddModal();
+    onClose();
   };
 
   return (
     <ModalLayout
       hasBackground
-      onClose={toggleIsAddModal} // 모달 외부 클릭 시 닫기
+      onClose={onClose} // 모달 외부 클릭 시 닫기
       className="w-screen max-w-100 h-fit whitespace-nowrap top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-5 bg-bg-dark border border-border-main rounded-3xl"
     >
       <header className="pb-6">
@@ -80,7 +76,7 @@ const PersonaAddModal = ({
             </h2>
           </div>
           <button
-            onClick={toggleIsAddModal}
+            onClick={onClose}
             type="button"
             className="p-1 rounded-lg hover:bg-btn-hover transition-colors w-5.5 h-5.5"
             aria-label="닫기"

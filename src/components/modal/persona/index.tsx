@@ -6,11 +6,9 @@ import { ModalLayout } from "../../ModalLayout";
 import { useMePersonasQuery } from "@/api/persona/mePersonas";
 import SkeletonPersona from "../../skeleton/SkeletonPersona";
 
-interface PersonaModalProps {
-  closeModal: () => void;
-}
+import { PersonaModalProps } from "@/type/modal";
 
-const PersonaModal = ({ closeModal }: PersonaModalProps) => {
+const PersonaModal = ({ onClose }: PersonaModalProps) => {
   const [shouldFetch, setShouldFetch] = useState(false);
 
   useEffect(() => {
@@ -38,10 +36,10 @@ const PersonaModal = ({ closeModal }: PersonaModalProps) => {
 
   return (
     <ModalLayout
-      onClose={closeModal}
+      onClose={onClose}
       className="w-screen max-w-125 h-fit whitespace-nowrap top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-5 bg-bg-dark"
     >
-      <PersonaHeader onClose={closeModal} />
+      <PersonaHeader onClose={onClose} />
 
       <div className="mt-4">
         {isDataLoading ? (

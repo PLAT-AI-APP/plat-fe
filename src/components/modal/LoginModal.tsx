@@ -14,10 +14,8 @@ import { EMAIL_REGEX } from "@/lib/regex";
 import { ModalLayout } from "../ModalLayout";
 import { useRouter } from "next/navigation";
 
-interface LoginModalProps {
-  onClose: () => void;
-  triggerRef: React.RefObject<HTMLElement | null> | undefined;
-}
+import { LoginModalProps } from "@/type/modal";
+
 const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
   const router = useRouter();
 
@@ -172,6 +170,7 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
         <Link
           id="link-to-signup"
           href="/signup"
+          onClick={onClose}
           className="text-sm text-brand font-semibold hover:underline"
         >
           회원가입

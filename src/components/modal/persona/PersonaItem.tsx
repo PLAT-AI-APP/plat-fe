@@ -7,6 +7,7 @@ import PersonaAddModal from "../PersonaAddModal";
 import { useDeletePersonaMutation } from "@/api/persona/deletePersona";
 import PersonaMenuPopover from "@/components/popover/PersonaMenuPopover";
 import useToggle from "@/hooks/useToggle";
+import { useModalStore } from "@/store/useModalStore";
 
 interface PersonaItemProps {
   persona: Persona;
@@ -17,17 +18,13 @@ interface PersonaItemProps {
 const PersonaItem = ({ persona, isActive, onSelect }: PersonaItemProps) => {
   const { name, description, isDefault } = persona;
 
-  const [isEdit, setIsEdit] = useState(false);
-
   const { mutate: deletePersona } = useDeletePersonaMutation();
 
-  const toggleIsEdit = () => {
-    setIsEdit(!isEdit);
-  };
   const triggerRef = useRef(null);
 
   const { isOpen, close, toggle } = useToggle();
 
+  const { openModal } = useModalStore();
   return (
     <li
       onClick={() => onSelect(persona.personaId)}
@@ -36,14 +33,6 @@ const PersonaItem = ({ persona, isActive, onSelect }: PersonaItemProps) => {
         isActive && "border border-font-1",
       )}
     >
-      {isEdit && (
-        <PersonaAddModal
-          personaId={persona.personaId}
-          toggleIsAddModal={toggleIsEdit}
-          isEditMode={true}
-        />
-      )}
-
       <div className="flex justify-between font-medium">
         <div className="flex items-center gap-3">
           {isDefault && (
@@ -65,7 +54,7 @@ const PersonaItem = ({ persona, isActive, onSelect }: PersonaItemProps) => {
               onClose={close}
               triggerRef={triggerRef}
               onDelete={() => deletePersona(persona.personaId)}
-              onEdit={toggleIsEdit}
+              onEdit={() => openModal("PERSONA_ADD")}
             />
           )}
         </div>

@@ -21,11 +21,8 @@ const TABS = [
   { id: "following", title: "팔로잉" },
 ] as const;
 
-interface FollowModalProps {
-  onClose: () => void;
-  userId: string;
-  activeTab: "followers" | "following";
-}
+import { FollowModalProps } from "@/type/modal";
+
 export const FollowModal = ({
   onClose,
   userId,

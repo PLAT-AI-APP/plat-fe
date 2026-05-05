@@ -1,10 +1,9 @@
 "use client";
 import { useCharacterScenarioListQuery } from "@/api/character/getCharacterScenarioList";
 import ActiveButton from "@/components/ActiveButton";
-import ChattingStartModal from "@/components/modal/ChattingStartModal";
-import useToggle from "@/hooks/useToggle";
 import { Heart } from "@/icons";
 import { formatStatCount } from "@/lib/utils";
+import { useModalStore } from "@/store/useModalStore";
 import { CharacterScenario } from "@/type/character";
 import Image from "next/image";
 import Link from "next/link";
@@ -41,12 +40,21 @@ const CharacterProfile = ({
     setCurrentScenario(scenarios[0]);
   }
 
-  const { isOpen, toggle } = useToggle();
+  // const { isOpen, toggle } = useToggle();
+  const { openModal } = useModalStore();
 
   // 데이터가 아예 없을 때의 방어 로직
   if (!scenarios || scenarios.length === 0) {
     return <div>등록된 시나리오가 없습니다.</div>;
   }
+
+  const handleChattingStartBtn = () => {
+    openModal("CHATTING_START", {
+      scenarioList: scenarios,
+      currentScenario: currentScenario,
+      setCurrentScenario: setCurrentScenario,
+    });
+  };
 
   return (
     <section className="flex flex-col gap-4 max-w-100">
@@ -64,7 +72,7 @@ const CharacterProfile = ({
           text="대화하기"
           isActive
           className="rounded-xl font-normal"
-          onClick={toggle}
+          onClick={handleChattingStartBtn}
         />
         <button className="flex rounded-xl justify-center items-center bg-card hover:bg-card-hover cursor-pointer w-11.5 aspect-square">
           <Heart className="text-font-2" />
@@ -94,15 +102,6 @@ const CharacterProfile = ({
           팔로우
         </button>
       </div>
-
-      {isOpen && (
-        <ChattingStartModal
-          onClose={toggle}
-          scenarioList={scenarios}
-          currentScenario={currentScenario}
-          setCurrentScenario={setCurrentScenario}
-        />
-      )}
     </section>
   );
 };

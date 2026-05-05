@@ -1,28 +1,28 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { ModalLayout } from "../ModalLayout";
 import { Close, Message, User } from "@/icons";
 import ActiveButton from "../ActiveButton";
 import SmartInput from "../SmartInput";
 import useToggle from "@/hooks/useToggle";
 import ScenarioSelectPopover from "../popover/ScenarioSelectPopover";
+import { ChattingStartModalProps } from "@/type/modal";
 import { CharacterScenario } from "@/type/character";
 
-interface ChattingStartModalProps {
-  onClose: () => void;
-  scenarioList: CharacterScenario[];
-  setCurrentScenario: (scenario: CharacterScenario) => void;
-  currentScenario: CharacterScenario | undefined;
-}
 const ChattingStartModal = ({
   onClose,
   scenarioList,
   currentScenario,
   setCurrentScenario,
 }: ChattingStartModalProps) => {
+  const [localScenario, setLocalScenario] = useState(currentScenario);
   const { isOpen, close, toggle } = useToggle();
 
   const triggerRef = useRef(null);
 
+  const handleSelect = (scenario: CharacterScenario) => {
+    setLocalScenario(scenario); // 모달 UI 즉시 반영
+    setCurrentScenario(scenario); // 부모(원본) 상태 반영
+  };
   return (
     <ModalLayout
       onClose={onClose}
@@ -66,13 +66,13 @@ const ChattingStartModal = ({
           isOpen={isOpen}
           toggleIsOpen={toggle}
           ref={triggerRef}
-          value={currentScenario?.name}
+          value={localScenario?.name}
           disabled
           modalComponents={
             <ScenarioSelectPopover
               scenarioList={scenarioList}
-              currentScenario={currentScenario}
-              handleCurrentScenario={setCurrentScenario}
+              currentScenario={localScenario}
+              handleCurrentScenario={handleSelect}
               onClose={close}
               triggerRef={triggerRef}
             />

@@ -30,8 +30,8 @@ const ScenarioSelectPopover = ({
               key={scenario.scenarioId}
               onClick={(e) => {
                 e.stopPropagation();
-                onClose();
                 handleCurrentScenario(scenario);
+                onClose();
               }}
               className={cn(
                 "px-2.5 py-2 hover:bg-btn-hover rounded-lg flex justify-between items-center text-sm cursor-pointer",

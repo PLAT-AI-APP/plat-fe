@@ -1,9 +1,8 @@
 import React from "react";
-import PersonaAddModal from "../PersonaAddModal";
-import useToggle from "@/hooks/useToggle";
+import { useModalStore } from "@/store/useModalStore";
 
 const PersonaFooter = () => {
-  const personaAddModal = useToggle();
+  const { openModal } = useModalStore();
 
   return (
     <footer className="pt-9 font-medium">
@@ -12,16 +11,12 @@ const PersonaFooter = () => {
       </p>
 
       <button
-        onClick={personaAddModal.toggle}
+        onClick={() => openModal("PERSONA_ADD")}
         type="button"
         className="mt-3 py-3 w-full rounded-xl bg-bg-darkest border border-border-main hover:bg-btn-hover transition-colors"
       >
         페르소나 추가
       </button>
-
-      {personaAddModal.isOpen && (
-        <PersonaAddModal toggleIsAddModal={personaAddModal.toggle} />
-      )}
     </footer>
   );
 };

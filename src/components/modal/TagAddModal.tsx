@@ -6,13 +6,9 @@ import { ModalLayout } from "../ModalLayout";
 import Tag from "@/icons/Tag";
 import { ArrowRight, Close, Megaphone, Search } from "@/icons";
 import ActiveButton from "../ActiveButton";
-import TagSuggestionsModal from "./TagSuggestionsModal";
 import { useHashtagListQuery } from "@/api/hashtag/getHashtagList";
-import useToggle from "@/hooks/useToggle";
-
-interface TagAddModalProps {
-  onClose: () => void;
-}
+import { TagAddModalProps } from "@/type/modal";
+import { useModalStore } from "@/store/useModalStore";
 
 const TagAddModal = ({ onClose }: TagAddModalProps) => {
   const { control, setValue } = useFormContext<CharacterCreateFormValues>();
@@ -72,10 +68,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
     onClose();
   };
 
-  // const [isModal, setIsModal] = useState(false);
-  // const toggleIsModal = () => setIsModal((prev) => !prev);
-  const tagSuggestionsModal = useToggle();
-
+  const { openModal } = useModalStore();
   return (
     <ModalLayout onClose={onClose} hasBackground className="p-5 w-112.5">
       <div id="tag-manager-root" className="flex flex-col">
@@ -140,7 +133,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
         <footer className="flex gap-3 mt-4 h-10.25">
           <button
             type="button"
-            onClick={tagSuggestionsModal.toggle}
+            onClick={() => openModal("TAG_SUGGESTIONS", {})}
             className="p-3 flex flex-1 items-center justify-between bg-card rounded-xl text-font-2 text-xs hover:bg-card-hover transition-colors"
           >
             <div className="flex gap-2 items-center">
@@ -158,9 +151,6 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
           />
         </footer>
       </div>
-      {tagSuggestionsModal.isOpen && (
-        <TagSuggestionsModal onClose={tagSuggestionsModal.toggle} />
-      )}
     </ModalLayout>
   );
 };

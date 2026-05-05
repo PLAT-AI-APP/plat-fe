@@ -6,15 +6,13 @@ import { Close, Storage } from "@/icons";
 import ActiveButton from "../ActiveButton";
 import SmartInput from "../SmartInput";
 
-interface StorageModalProps {
-  closeModal: () => void;
-}
+import { StorageModalProps } from "@/type/modal";
 
 interface StorageFormValues {
   longTermMemory: string;
 }
 
-const StorageModal = ({ closeModal }: StorageModalProps) => {
+const StorageModal = ({ onClose }: StorageModalProps) => {
   // useForm 초기화
   const {
     register,
@@ -34,12 +32,12 @@ const StorageModal = ({ closeModal }: StorageModalProps) => {
   const onSubmit = (data: StorageFormValues) => {
     console.log("장기기억 저장 데이터:", data);
     // API 호출 로직...
-    closeModal();
+    onClose();
   };
 
   return (
     <ModalLayout
-      onClose={closeModal}
+      onClose={onClose}
       className="w-screen max-w-125 h-fit whitespace-nowrap top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-5"
     >
       <header className="pb-6">
@@ -49,7 +47,7 @@ const StorageModal = ({ closeModal }: StorageModalProps) => {
             <h2 className="text-[20px] font-semibold">장기기억</h2>
           </div>
           <button
-            onClick={closeModal}
+            onClick={onClose}
             type="button"
             className="p-1 rounded-lg hover:bg-btn-hover w-5.5 h-5.5"
             aria-label="닫기"

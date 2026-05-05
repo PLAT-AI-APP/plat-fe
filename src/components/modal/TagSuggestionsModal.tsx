@@ -10,9 +10,8 @@ interface TagFormValues {
   opinion: string;
 }
 
-interface TagSuggestionsModalProps {
-  onClose: () => void;
-}
+import { TagSuggestionsModalProps } from "@/type/modal";
+
 const TagSuggestionsModal = ({ onClose }: TagSuggestionsModalProps) => {
   const {
     register,

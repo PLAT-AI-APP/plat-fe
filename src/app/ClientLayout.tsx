@@ -3,10 +3,12 @@
 import { useState, useEffect } from "react"; // useEffect 추가
 import Header from "@/components/header";
 import Sidebar from "@/components/Sidebar";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useScrollTimeout } from "@/hooks/useScrollTiemout";
 import { cn } from "@/lib/utils";
 import { useMyInfoQuery } from "@/api/user/getMyInfo";
+import { ModalManager } from "@/components/modal/ModalManager";
+// import { useAuthStore } from "@/store/useAuthStore";
 
 // 사이드바를 아예 보여주지 않을 경로 리스트
 const HIDE_SIDEBAR_PATHS = ["/character-creat"];
@@ -63,6 +65,15 @@ export default function ClientLayout({
   const handleFoldToggle = () => setIsFolded((prev) => !prev);
   const { isScrolling, onScroll } = useScrollTimeout();
 
+  // const { accessToken } = useAuthStore();
+  // const router = useRouter();
+
+  // useEffect(() => {
+  //   // 마이페이지 진입 시 토큰이 없으면 홈으로
+  //   if (pathname.startsWith("/mypage") && !accessToken) {
+  //     router.replace("/");
+  //   }
+  // }, [accessToken, pathname, router]);
   return (
     <>
       {!isHeaderHidden && <Header handleFoldToggle={handleFoldToggle} />}
@@ -85,6 +96,7 @@ export default function ClientLayout({
           )}
         >
           {children}
+          <ModalManager />
         </div>
       </main>
     </>

@@ -103,7 +103,7 @@ const onResponseError = async (
   // [B] 에러 포맷팅
   if (err.response?.data) {
     const { code, data, message } = err.response.data;
-
+    console.log(err.response.data);
     const formattedError: AppError = {
       code: code || "UNKNOWN_ERROR",
       fields: data?.fields || {},

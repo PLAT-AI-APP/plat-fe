@@ -1,40 +1,20 @@
-import PersonaModal from "@/components/modal/persona";
-import StorageModal from "@/components/modal/StorageModal";
-import UserNoteModal from "@/components/modal/UserNoteModal";
 import { Close, Persona, Storage } from "@/icons";
 import Note from "@/icons/Note";
-import React, { useState } from "react";
+import { useModalStore } from "@/store/useModalStore";
+import React from "react";
 
 interface ChattingSidebarProps {
   toggleIsSidebar: () => void;
 }
 
-type ModalState = {
-  storage: boolean;
-  persona: boolean;
-  note: boolean;
-};
-
 const MENU_LIST = [
-  { id: "storage", title: "장기기억", icon: Storage },
-  { id: "persona", title: "페르소나", icon: Persona },
-  { id: "note", title: "유저노트", icon: Note },
+  { id: "STORAGE", title: "장기기억", icon: Storage },
+  { id: "PERSONA", title: "페르소나", icon: Persona },
+  { id: "USER_NOTE", title: "유저노트", icon: Note },
 ] as const;
 
 const ChattingSidebar = ({ toggleIsSidebar }: ChattingSidebarProps) => {
-  const [activeModalId, setActiveModalId] = useState<keyof ModalState | null>(
-    null,
-  );
-
-  const openModal = (id: keyof ModalState) => setActiveModalId(id);
-  const closeModal = () => setActiveModalId(null);
-
-  // 채팅방에서 사용되는 sidebar의 mdoal 컴포넌트들
-  const MODAL_COMPONENTS = {
-    storage: <StorageModal closeModal={closeModal} />,
-    persona: <PersonaModal closeModal={closeModal} />,
-    note: <UserNoteModal closeModal={closeModal} />,
-  };
+  const { openModal } = useModalStore();
 
   return (
     <aside className="fixed flex justify-end top-0 right-0 font-medium bg-black/50 w-screen h-screen z-20">
@@ -67,18 +47,6 @@ const ChattingSidebar = ({ toggleIsSidebar }: ChattingSidebarProps) => {
           </menu>
         </nav>
       </div>
-
-      {activeModalId && (
-        <div
-          id="modal-overlay"
-          className="fixed inset-0 flex items-center justify-center z-20"
-        >
-          <div className="absolute inset-0" />
-          <article className="relative">
-            {MODAL_COMPONENTS[activeModalId]}
-          </article>
-        </div>
-      )}
     </aside>
   );
 };

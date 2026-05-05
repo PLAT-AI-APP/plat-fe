@@ -7,16 +7,14 @@ import Note from "@/icons/Note";
 import { ModalLayout } from "../ModalLayout";
 import ActiveButton from "../ActiveButton";
 
-interface UserNoteModalProps {
-  closeModal: () => void;
-}
+import { UserNoteModalProps } from "@/type/modal";
 
 // 폼 데이터 타입 정의
 interface UserNoteFormValues {
   userNote: string;
 }
 
-const UserNoteModal = ({ closeModal }: UserNoteModalProps) => {
+const UserNoteModal = ({ onClose }: UserNoteModalProps) => {
   const { register, handleSubmit, control } = useForm<UserNoteFormValues>({
     defaultValues: {
       userNote: "",
@@ -30,12 +28,12 @@ const UserNoteModal = ({ closeModal }: UserNoteModalProps) => {
   const onSubmit = (data: UserNoteFormValues) => {
     console.log("저장할 데이터:", data);
     // TODO: API 전송 로직
-    closeModal();
+    onClose();
   };
 
   return (
     <ModalLayout
-      onClose={closeModal}
+      onClose={onClose}
       className="w-screen max-w-112.5 h-fit whitespace-nowrap top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-5"
     >
       <header className="pb-6">
@@ -45,7 +43,7 @@ const UserNoteModal = ({ closeModal }: UserNoteModalProps) => {
             <h2 className="text-[20px] font-semibold">유저노트</h2>
           </div>
           <button
-            onClick={closeModal}
+            onClick={onClose}
             type="button"
             className="p-1 rounded-lg hover:bg-btn-hover w-5.5 h-5.5"
             aria-label="닫기"

@@ -6,7 +6,9 @@ import ActiveButton from "../ActiveButton";
 import Check from "@/icons/Check";
 import { cn } from "@/lib/utils";
 
-const AddLanguageModal = ({ onClose }: { onClose: () => void }) => {
+import { AddLanguageModalProps } from "@/type/modal";
+
+const AddLanguageModal = ({ onClose }: AddLanguageModalProps) => {
   // 선택된 언어 코드들을 저장할 상태 (중복 선택을 위해 배열 사용)
   const [selectedCodes, setSelectedCodes] = useState<string[]>([]);
 

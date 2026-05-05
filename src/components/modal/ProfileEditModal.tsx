@@ -21,9 +21,7 @@ import GenderField from "../field/GenderField";
 import AccountField from "../field/AccountField";
 import Link from "next/link";
 
-interface ProfileEditModalProps {
-  onClose: () => void;
-}
+import { ProfileEditModalProps } from "@/type/modal";
 
 const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
   const { handleSubmit, watch } = useFormContext<ProfileEditFormType>();

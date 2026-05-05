@@ -1,10 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
-import ProfileEditModal from "@/components/modal/ProfileEditModal";
-import { FollowModal } from "@/components/modal/FollowModal";
 import { useUserStore } from "@/store/useUserStore";
 import { useFollowCountQuery } from "@/api/follow/getFollowCount";
-import useToggle from "@/hooks/useToggle";
+import { useModalStore } from "@/store/useModalStore";
 
 interface HeaderProps {
   userId: string;
@@ -13,35 +11,20 @@ const Header = ({ userId }: HeaderProps) => {
   const { data: followCount } = useFollowCountQuery(userId);
   const { followerCount = 0, followingCount = 0 } = followCount ?? {};
 
-  const profileEditodal = useToggle();
-  const followModal = useToggle();
-
-  // const [profileEditodal.open, setIsProfileEditodal] = useState(false);
-  // const [isFollowModal, setIsFollowModal] = useState(false);
-
-  // const toggleIsProfileEditodal = () => {
-  //   setIsProfileEditodal((prev) => !prev);
-  // };
-
-  // const toggleIsFollowModal = () => {
-  //   setIsFollowModal((prev) => !prev);
-  // };
-
-  // 상태 타입 정의 (기본값은 'followers')
-  const [activeFollowTab, setActiveFollowTab] = useState<
-    "followers" | "following"
-  >("followers");
+  const { openModal } = useModalStore();
 
   // 모달을 열 때 탭 종류를 인자로 받음
   const openFollowModal = (tab: "followers" | "following") => {
-    setActiveFollowTab(tab);
-    followModal.open();
+    openModal("FOLLOW", { activeTab: tab, userId });
   };
 
   const profileImage = useUserStore((state) => state.user?.profileImage);
   const nickname = useUserStore((state) => state.user?.nickname);
   const bio = useUserStore((state) => state.user?.bio);
 
+  const handleProfileEditBtn = () => {
+    openModal("PROFILE_EDIT");
+  };
   return (
     <header id="profile-header" className="flex flex-col gap-4">
       <section id="profile-info-summary" className="flex justify-between">
@@ -90,7 +73,7 @@ const Header = ({ userId }: HeaderProps) => {
         </div>
 
         <button
-          onClick={profileEditodal.toggle}
+          onClick={handleProfileEditBtn}
           type="button"
           className="h-fit px-4 py-2 text-sm bg-bg-darkest rounded-xl border border-border-main"
         >
@@ -101,16 +84,16 @@ const Header = ({ userId }: HeaderProps) => {
       <p className="text-sm text-font-2">{bio}</p>
 
       {/* 모달 레이어 */}
-      {profileEditodal.isOpen && (
+      {/* {profileEditodal.isOpen && (
         <ProfileEditModal onClose={profileEditodal.toggle} />
-      )}
-      {followModal.isOpen && (
+      )} */}
+      {/* {followModal.isOpen && (
         <FollowModal
           onClose={followModal.toggle}
           userId={userId}
           activeTab={activeFollowTab}
         />
-      )}
+      )} */}
     </header>
   );
 };

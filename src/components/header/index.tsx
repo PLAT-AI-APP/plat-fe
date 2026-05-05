@@ -3,13 +3,11 @@ import Image from "next/image";
 import React, { useRef } from "react";
 import logoImg from "../../../public/logo.png";
 import { SearchBar } from "./SearchBar";
-// import LanguageSelector from "./LanguageSelector";
 import Profile from "./Profile";
 import Link from "next/link";
 import { useAuthStore } from "@/store/useAuthStore";
 import Melody from "@/icons/Melody";
 import { useUserStore } from "@/store/useUserStore";
-// import useToggle from "@/hooks/useToggle";
 import ProfilePopover from "../popover/ProfilePopover";
 import useToggle from "@/hooks/useToggle";
 
@@ -115,7 +113,7 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
                 // profileModal.open 내부에서 이미 stopPropagation을 하고 있지만
                 // 여기서 한 번 더 명시적으로 막아주는 것이 안전합니다.
                 e.stopPropagation();
-                profileModal.toggle(e);
+                profileModal.open(e);
               }}
               className="flex items-center justify-center w-10 h-10"
             >
