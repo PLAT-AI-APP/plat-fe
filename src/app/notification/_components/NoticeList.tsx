@@ -1,4 +1,5 @@
 "use client";
+
 import { useNoticeListInfiniteQuery } from "@/api/notice/getNoticeList";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
