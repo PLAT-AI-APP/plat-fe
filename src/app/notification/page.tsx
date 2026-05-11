@@ -1,8 +1,5 @@
-import { cn } from "@/lib/utils";
-import { NOTICE_DUMMY } from "@/mocks/dummyData";
 import React from "react";
 import FilterTab from "./_components/FilterTab";
-import Link from "next/link";
 import { Metadata } from "next";
 import NoticeList from "./_components/NoticeList";
 

@@ -19,17 +19,15 @@ export interface GetFollowerListResponse {
 }
 
 interface GetFollowerListProps {
-  userId: string;
   pageParam: number;
 }
 const getFollowerList = async ({
-  userId,
   pageParam = 0,
   //   size = 20,
 }: GetFollowerListProps) => {
   const response = await authAxios.get<
     ApiSuccessResponse<GetFollowerListResponse>
-  >(`/follow/${userId}/followers`, {
+  >(`/follow/followers`, {
     params: {
       page: pageParam,
     },
@@ -39,19 +37,19 @@ const getFollowerList = async ({
 };
 
 /** 사용자의 팔로워 목록 조회 */
-export const useFollowerListQuery = (userId: string, enabled: boolean) => {
+export const useFollowerListQuery = (enabled: boolean) => {
   return useInfiniteQuery<GetFollowerListResponse, AppError>({
-    queryKey: ["get-follower-list", userId],
+    queryKey: ["get-follower-list"],
     initialPageParam: 0,
 
     // pageParam을 가져와서 page라는 이름으로 별칭(Alias) 지정
     queryFn: ({ pageParam }) =>
-      getFollowerList({ userId, pageParam: pageParam as number }),
+      getFollowerList({ pageParam: pageParam as number }),
 
     getNextPageParam: (lastPage) => {
       return lastPage.last ? null : lastPage.number + 1;
     },
     staleTime: 1000 * 60 * 5,
-    enabled: !!userId && enabled,
+    enabled: enabled,
   });
 };

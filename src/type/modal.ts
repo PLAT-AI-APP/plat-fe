@@ -17,7 +17,7 @@ export interface ChattingStartModalProps {
 
 export interface FollowModalProps {
   onClose: () => void;
-  userId: string;
+  // userId: string;
   activeTab: "followers" | "following";
 }
 

@@ -103,7 +103,7 @@ const Header = ({ id }: HeaderProps) => {
       {isFollowModal && (
         <FollowModal
           onClose={toggleIsFollowModal}
-          userId={id}
+          // userId={id}
           activeTab={activeFollowTab}
         />
       )}

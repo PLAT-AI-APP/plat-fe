@@ -15,7 +15,7 @@ const Header = ({ userId }: HeaderProps) => {
 
   // 모달을 열 때 탭 종류를 인자로 받음
   const openFollowModal = (tab: "followers" | "following") => {
-    openModal("FOLLOW", { activeTab: tab, userId });
+    openModal("FOLLOW", { activeTab: tab });
   };
 
   const profileImage = useUserStore((state) => state.user?.profileImage);

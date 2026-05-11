@@ -25,7 +25,7 @@ import { FollowModalProps } from "@/type/modal";
 
 export const FollowModal = ({
   onClose,
-  userId,
+  // userId,
   activeTab = "followers",
 }: FollowModalProps) => {
   const queryClient = useQueryClient();
@@ -55,13 +55,13 @@ export const FollowModal = ({
     return () => {
       // 이전에 보던 탭의 데이터를 백그라운드에서 최신화
       queryClient.invalidateQueries({
-        queryKey: ["get-following-list", userId],
+        queryKey: ["get-following-list"],
       });
       queryClient.invalidateQueries({
-        queryKey: ["get-follower-list", userId],
+        queryKey: ["get-follower-list"],
       });
     };
-  }, [activeTabs, queryClient, userId]);
+  }, [activeTabs, queryClient]);
 
   const ulRef = useRef<HTMLUListElement>(null);
   useLayoutEffect(() => {
@@ -71,15 +71,9 @@ export const FollowModal = ({
   }, [activeTabs]);
 
   // 현재 탭이 'following'일 때만 팔로잉 쿼리 활성화
-  const followingQuery = useFollowingListQuery(
-    userId,
-    activeTabs === "following",
-  );
+  const followingQuery = useFollowingListQuery(activeTabs === "following");
   // 현재 탭이 'followers'일 때만 팔로워 쿼리 활성화
-  const followerQuery = useFollowerListQuery(
-    userId,
-    activeTabs === "followers",
-  );
+  const followerQuery = useFollowerListQuery(activeTabs === "followers");
 
   // 현재 활성화된 탭의 데이터 및 상태 추출
   const activeQuery =

@@ -39,35 +39,22 @@ export const followHandlers = [
     });
   }),
 
-  /** 유저의 팔로잉 목록 조회 */
-  http.get("*/follow/:userId/following", ({ params, request }) => {
-    const { userId } = params;
+  /** 팔로잉 목록 조회 핸들러 */
+  http.get("*/follow/following", ({ request }) => {
     const url = new URL(request.url);
 
-    // Query String 추출 및 기본값 설정
+    // 1. Query String 추출 (userId는 더 이상 추출하지 않음)
     const page = parseInt(url.searchParams.get("page") || "0", 10);
     const size = parseInt(url.searchParams.get("size") || "20", 10);
 
-    // 2. Exception 처리: 존재하지 않는 유저 (ID가 999인 경우 에러 발생 가정)
-    if (userId === "999") {
-      return HttpResponse.json(
-        {
-          result: "ERROR",
-          code: "MESSAGE",
-          message: "존재하지 않는 유저입니다.",
-        },
-        { status: 404 },
-      );
-    }
-
-    // 3. 페이지네이션 계산 로직
+    // 2. 페이지네이션 계산 로직
     const totalElements = MOCK_FOLLOWINGS.length;
     const totalPages = Math.ceil(totalElements / size);
     const start = page * size;
     const end = start + size;
     const content = MOCK_FOLLOWINGS.slice(start, end);
 
-    // 4. 성공 응답 (명세서 Body 구조 준수)
+    // 3. 성공 응답
     return HttpResponse.json({
       result: "OK",
       data: {
@@ -82,35 +69,22 @@ export const followHandlers = [
     });
   }),
 
-  // 유저의 팔로워 목록 조회
-  http.get("*/follow/:userId/followers", ({ params, request }) => {
-    const { userId } = params;
+  /** 팔로워 목록 조회 핸들러 */
+  http.get("*/follow/followers", ({ request }) => {
     const url = new URL(request.url);
 
-    // Query String 파싱 (기본값 설정)
+    // 1. Query String 파싱
     const page = parseInt(url.searchParams.get("page") || "0", 10);
     const size = parseInt(url.searchParams.get("size") || "20", 10);
 
-    // 2. Exception: 존재하지 않는 유저 (ID가 999일 때 404 에러 시뮬레이션)
-    if (userId === "999") {
-      return HttpResponse.json(
-        {
-          result: "ERROR",
-          code: "MESSAGE",
-          message: "존재하지 않는 유저입니다.",
-        },
-        { status: 404 },
-      );
-    }
-
-    // 3. 페이지네이션 로직
+    // 2. 페이지네이션 로직
     const totalElements = MOCK_FOLLOWERS.length;
     const totalPages = Math.ceil(totalElements / size);
     const start = page * size;
     const end = start + size;
     const content = MOCK_FOLLOWERS.slice(start, end);
 
-    // 4. Response Body (명세서 구조와 100% 일치)
+    // 3. Response Body
     return HttpResponse.json({
       result: "OK",
       data: {
