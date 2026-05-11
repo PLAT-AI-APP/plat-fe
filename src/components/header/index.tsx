@@ -6,10 +6,10 @@ import { SearchBar } from "./SearchBar";
 import Profile from "./Profile";
 import Link from "next/link";
 import { useAuthStore } from "@/store/useAuthStore";
-import Melody from "@/icons/Melody";
 import { useUserStore } from "@/store/useUserStore";
 import ProfilePopover from "../popover/ProfilePopover";
 import useToggle from "@/hooks/useToggle";
+import Token from "@/icons/Token";
 
 interface HeaderProps {
   handleFoldToggle: () => void;
@@ -73,7 +73,7 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
               href={`/token-charge`}
               className="flex cursor-pointer items-center gap-1 transition-all duration-200 ease-in-out hover:bg-btn-hover rounded-lg p-1.25 pr-2.5"
             >
-              <Melody className="w-5 h-5" />
+              <Token className="w-5 h-5" />
               <span id="user-point-value">1,100</span>
             </Link>
           )}

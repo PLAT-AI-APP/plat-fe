@@ -14,7 +14,6 @@ import {
 } from "@/icons";
 import { useLogoutMutation } from "@/api/auth/logout";
 import { useAuthStore } from "@/store/useAuthStore";
-import Melody from "@/icons/Melody";
 import Check from "@/icons/Check";
 import { useUserStore } from "@/store/useUserStore";
 import { motion, AnimatePresence } from "framer-motion";
@@ -23,6 +22,7 @@ import { useRouter } from "next/navigation";
 import useToggle from "@/hooks/useToggle";
 import { useModalStore } from "@/store/useModalStore";
 import useRouteEffect from "@/hooks/useRouteEffect";
+import Token from "@/icons/Token";
 
 const supportArray = [
   { name: "공지사항", link: "/notification", icon: Megaphone },
@@ -125,7 +125,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
             <div className="flex flex-col gap-0.5">
               <span className="text-sm text-font-1">{nickname}</span>
               <span className="flex items-center gap-0.5 text-sm text-font-1">
-                <Melody className="w-4 h-4" /> 1100
+                <Token className="w-4 h-4" /> 1100
               </span>
             </div>
           </div>
