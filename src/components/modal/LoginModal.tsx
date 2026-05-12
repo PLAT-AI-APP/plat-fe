@@ -48,7 +48,7 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
       {
         onSuccess: () => {
           setLoggedIn(true);
-          router.push("/");
+          // router.push("/");
         },
       },
     );

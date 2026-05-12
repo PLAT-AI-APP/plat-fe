@@ -1,21 +1,11 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { authAxios } from "..";
-import { ApiSuccessResponse, AppError } from "@/type/api";
+import { ApiSuccessResponse, AppError, PageResponse } from "@/type/api";
 
-export interface FollowerUser {
+export interface GetFollowerListResponse {
   userId: number;
   profileImage: string | null;
   nickname: string;
-}
-
-export interface GetFollowerListResponse {
-  content: FollowerUser[];
-  totalElements: number;
-  totalPages: number;
-  number: number;
-  size: number;
-  first: boolean;
-  last: boolean;
 }
 
 interface GetFollowerListProps {
@@ -26,7 +16,7 @@ const getFollowerList = async ({
   //   size = 20,
 }: GetFollowerListProps) => {
   const response = await authAxios.get<
-    ApiSuccessResponse<GetFollowerListResponse>
+    ApiSuccessResponse<PageResponse<GetFollowerListResponse>>
   >(`/follow/followers`, {
     params: {
       page: pageParam,
@@ -38,7 +28,7 @@ const getFollowerList = async ({
 
 /** 사용자의 팔로워 목록 조회 */
 export const useFollowerListQuery = (enabled: boolean) => {
-  return useInfiniteQuery<GetFollowerListResponse, AppError>({
+  return useInfiniteQuery<PageResponse<GetFollowerListResponse>, AppError>({
     queryKey: ["get-follower-list"],
     initialPageParam: 0,
 
