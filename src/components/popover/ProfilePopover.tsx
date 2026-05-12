@@ -80,8 +80,8 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
     }
     window.location.href =
       name === "KAKAO"
-        ? "https://api-dev.plat.so/oauth2/authorization/kakao"
-        : "https://api-dev.plat.so/oauth2/authorization/google";
+        ? `${process.env.NEXT_PUBLIC_BASE_URI}/oauth2/authorization/kakao`
+        : `${process.env.NEXT_PUBLIC_BASE_URI}/oauth2/authorization/google`;
   };
   const handleProfilePopoverClose = () => {
     // 로그인 모달이 켜져 있다면, 어떤 바깥 클릭이 들어와도 프로필 모달은 무시

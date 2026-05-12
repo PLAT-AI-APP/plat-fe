@@ -155,11 +155,17 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
             id="link-kakao-login"
             icon={<ChatFill />}
             label="카카오톡으로 시작하기"
+            onClick={() =>
+              (window.location.href = `${process.env.NEXT_PUBLIC_BASE_URI}/oauth2/authorization/kakao`)
+            }
           />
           <SocialLoginButton
             id="link-google-login"
             icon={<Google />}
             label="구글로 시작하기"
+            onClick={() =>
+              (window.location.href = `${process.env.NEXT_PUBLIC_BASE_URI}/oauth2/authorization/google`)
+            }
           />
         </nav>
       </section>
