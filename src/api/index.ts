@@ -85,20 +85,21 @@ const onResponseError = async (
     originalRequest._retry = true;
 
     try {
+      // 1. 공통으로 분리한 postRefresh 사용
       const data = await postRefresh();
       const newAccessToken = data.accessToken;
 
+      // 2. Zustand 스토어 업데이트
       setAccessToken(newAccessToken);
-      // 기존 요청 재시도 (새 토큰 주입)
+
+      // 3. 실패했던 기존 요청의 헤더를 새 토큰으로 교체
       originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
 
-      // 인스턴스 재실행 시 타입 단언 없이 실행 가능
+      // 4. 원래의 요청 재시도
       return instance(originalRequest);
     } catch (refreshError) {
+      // 리프레시 실패 시 로그아웃 처리
       logout();
-      if (typeof window !== "undefined") {
-        // window.location.href = "/login";
-      }
       return Promise.reject(refreshError);
     }
   }
@@ -145,7 +146,7 @@ authAxios.interceptors.response.use(
     // 1. 콘솔에 백엔드 에러 출력
     if (err.response?.data) {
       const { code, data, message } = err.response.data;
-      console.error(`🔒 [authAxios Error] ${code}: ${message}`, data);
+      // console.error(`🔒 [authAxios Error] ${code}: ${message}`, data);
     }
     // 2. 기존 에러 처리 함수 실행
     return onResponseError(err, authAxios);
