@@ -290,8 +290,8 @@ export const authHandlers = [
     // 3. 로그인 성공 케이스
     return HttpResponse.json(
       {
-        result: "OK", // 명세서 기준 추가
-        message: "로그인 성공", // 명세서 기준 추가
+        result: "OK",
+        message: "로그인 성공",
         data: {
           accessToken: "mocked-access-token-12345",
         },
@@ -299,9 +299,10 @@ export const authHandlers = [
       {
         status: 200,
         headers: {
-          // 명세서에 명시된 Path=/auth/refresh 적용
+          // Path를 / 로 변경하여 모든 경로에서 보이게 함
+          // 테스트를 위해 HttpOnly를 제거하면 document.cookie에서도 보입니다.
           "Set-Cookie":
-            "refreshToken=mocked-refresh-token-67890; HttpOnly; Path=/auth/refresh; Max-Age=2592000; SameSite=Lax",
+            "refreshToken=mocked-refresh-token-67890; Path=/; Max-Age=2592000; SameSite=Lax",
         },
       },
     );
@@ -347,25 +348,13 @@ export const authHandlers = [
   http.post("*/auth/refresh", async ({ request, cookies }) => {
     const clientType = request.headers.get("X-Client-Type");
 
-    // 1. 유효하지 않은 클라이언트 타입 처리
-    if (!clientType || (clientType !== "app" && clientType !== "web")) {
-      return HttpResponse.json(
-        {
-          result: "ERROR",
-          code: "INVALID_CLIENT_TYPE",
-          message: "올바른 X-Client-Type 헤더가 필요합니다.",
-        },
-        { status: 400 },
-      );
-    }
-
     await delay(500); // 네트워크 지연 시뮬레이션
 
     // --- WEB 클라이언트 로직 (Cookie 기반) ---
     if (clientType === "web") {
-      const refreshToken = cookies.REFRESH_TOKEN;
+      const refreshToken = cookies.refreshToken; // 쿠키 키값 소문자 확인 필요
 
-      // 쿠키에 토큰이 없거나 무효한 경우 (Exception 상황)
+      // 쿠키에 토큰이 없거나 무효한 경우
       if (!refreshToken || refreshToken === "invalid_token") {
         return HttpResponse.json(
           {
@@ -377,30 +366,23 @@ export const authHandlers = [
         );
       }
 
-      const newAccessToken = generateToken("access");
-      const newRefreshToken = generateToken("refresh");
+      const newAccessToken = "at_" + Math.random().toString(36).substring(2);
+      const newRefreshToken = "rt_" + Math.random().toString(36).substring(2);
 
       return HttpResponse.json(
         {
           result: "OK",
           message: "토큰이 갱신되었습니다.",
           data: {
-            accessToken: newAccessToken,
+            accessToken: newAccessToken, // Body에 담아서 내려줌
           },
         },
         {
           status: 200,
-          headers: [
-            // 명세서대로 쿠키도 구워줌
-            [
-              "Set-Cookie",
-              `accessToken=${newAccessToken}; HttpOnly; Path=/; Max-Age=1800`,
-            ],
-            [
-              "Set-Cookie",
-              `refreshToken=${newRefreshToken}; HttpOnly; Path=/api/v1/auth/refresh; Max-Age=2592000`,
-            ],
-          ],
+          headers: {
+            // AccessToken은 Body로 가므로 쿠키에서는 제거, RefreshToken만 구워줌
+            "Set-Cookie": `refreshToken=${newRefreshToken}; HttpOnly; Path=/; Max-Age=2592000; SameSite=Lax`,
+          },
         },
       );
     }
@@ -425,8 +407,8 @@ export const authHandlers = [
         {
           result: "OK",
           data: {
-            accessToken: generateToken("access"),
-            refreshToken: generateToken("refresh"), // RTR 적용
+            accessToken: "at_" + Math.random().toString(36).substring(2),
+            refreshToken: "rt_" + Math.random().toString(36).substring(2), // RTR 적용
           },
         },
         { status: 200 },
