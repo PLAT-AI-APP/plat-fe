@@ -78,6 +78,113 @@ button {
   cursor: pointer;
 }
 
+/* Display */
+@utility display-1 {
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.24px;
+}
+@utility display-2 {
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.216px;
+}
+
+/* Heading */
+@utility heading-1 {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+@utility heading-2 {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+@utility heading-3 {
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+/* Title */
+@utility title-1 {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+@utility title-2 {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+@utility title-3 {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+@utility title-4 {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+@utility title-5 {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+@utility title-6 {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+/* Body */
+@utility body-1 {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+@utility body-2 {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+@utility body-3 {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+@utility body-4 {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+@utility body-5 {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+@utility body-6 {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+/* Caption */
+@utility caption-1 {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+@utility caption-2 {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
 /* 1. 전체 스크롤바 공통 설정 (기본 틀) */
 ::-webkit-scrollbar {
   width: 10px;
