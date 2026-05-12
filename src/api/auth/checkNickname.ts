@@ -7,7 +7,6 @@ const GetCheckNickname = async (nickname: string) => {
     ApiSuccessResponse<{ available: boolean }>
   >(`/auth/nickname?nickname=${nickname}`);
 
-  console.log(response.data.data);
   return response.data.data;
 };
 

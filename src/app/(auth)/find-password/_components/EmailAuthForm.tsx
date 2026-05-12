@@ -26,8 +26,6 @@ const EmailAuthForm = ({ onNextStep }: EmailAuthFormProps) => {
     trigger,
     control,
     getFieldState,
-    setValue,
-    handleSubmit,
     register,
   } = useFormContext<PasswordResetFormValues>();
 
@@ -78,8 +76,8 @@ const EmailAuthForm = ({ onNextStep }: EmailAuthFormProps) => {
     emailVerifyConfirm(
       { code: enteredOtp, email: email },
       {
-        onSuccess: (data) => {
-          if (data.token) setValue("emailVerifyToken", data.token);
+        onSuccess: () => {
+          // if (data.token) setValue("emailVerifyToken", data.token);
           alert("이메일 인증 성공");
           onNextStep();
           // handleSubmit(() => null)();

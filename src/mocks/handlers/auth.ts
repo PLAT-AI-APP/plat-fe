@@ -78,31 +78,110 @@ export const authHandlers = [
         result: "OK",
         message: "인증에 성공하였습니다.",
         data: {
-          emailVerifyToken: "evt_test_token_123456",
+          // emailVerifyToken: "evt_test_token_123456",
         },
       });
     }
   }),
 
-  /** 이메일 회원가입 요청 */
-  http.post("*/auth/email/signup", async ({ request }) => {
-    const { email, emailVerifyToken, password, passwordCheck } =
-      (await request.json()) as {
-        email: string;
-        password: string;
-        passwordCheck: string;
-        emailVerifyToken: string;
-      };
+  /** 이메일 회원가입 요청 핸들러 */
+  // http.post("*/auth/signup", async ({ request }) => {
+  //   const { email, nickname, password, passwordCheck, code } =
+  //     (await request.json()) as any;
 
-    // 성공 응답
-    return HttpResponse.json({
-      result: "OK",
-      message: "이메일 회원가입 요청이 완료되었습니다.",
-      data: {
-        signupToken: "rtXXXXXXXXXXXXXXXXXXXXXXXX",
-      },
-    });
-  }),
+  //   // 1. MethodArgumentNotValidException (Field Error) 시뮬레이션
+  //   // 예: 이메일 형식이 아니거나 필수 값이 누락된 경우
+  //   if (!email || !password) {
+  //     return HttpResponse.json(
+  //       {
+  //         result: "ERROR",
+  //         code: "FIELD_ERROR",
+  //         data: {
+  //           fields: {
+  //             email: !email
+  //               ? "이메일을 입력해 주세요."
+  //               : "올바른 이메일 형식이 아닙니다.",
+  //             password: !password ? "비밀번호를 입력해 주세요." : "",
+  //           },
+  //         },
+  //       },
+  //       { status: 400 },
+  //     );
+  //   }
+
+  //   // 2. IllegalArgumentException 시뮬레이션
+  //   // 비밀번호 형식 불일치 (특수문자 포함 8자 이상 정규식)
+  //   const passwordRegex = /^(?=.*[!@#$%^&*()-_=+\[\]{}';:"|,.<>\/?]).{8,}$/;
+
+  //   if (!passwordRegex.test(password)) {
+  //     return HttpResponse.json(
+  //       {
+  //         result: "ERROR",
+  //         code: "MESSAGE",
+  //         message: "비밀번호 형식 불일치 (8자 이상, 특수문자 포함)",
+  //       },
+  //       { status: 400 },
+  //     );
+  //   }
+
+  //   // 비밀번호 & 확인 불일치
+  //   if (password !== passwordCheck) {
+  //     return HttpResponse.json(
+  //       {
+  //         result: "ERROR",
+  //         code: "MESSAGE",
+  //         message: "비밀번호가 일치하지 않습니다.",
+  //       },
+  //       { status: 400 },
+  //     );
+  //   }
+
+  //   // 이미 가입된 이메일 예시 (테스트용)
+  //   if (email === "already@example.com") {
+  //     return HttpResponse.json(
+  //       {
+  //         result: "ERROR",
+  //         code: "MESSAGE",
+  //         message: "이미 가입된 이메일입니다.",
+  //       },
+  //       { status: 400 },
+  //     );
+  //   }
+
+  //   // 3. NoSuchElementException (404) - 인증코드 만료
+  //   if (code === "000000") {
+  //     return HttpResponse.json(
+  //       {
+  //         result: "ERROR",
+  //         code: "MESSAGE",
+  //         message: "인증코드가 만료되었습니다. 인증코드를 재전송해주세요.",
+  //       },
+  //       { status: 404 },
+  //     );
+  //   }
+
+  //   // 4. VerifyCodeAttemptExceededException (429) - 5회 초과
+  //   if (code === "999999") {
+  //     return HttpResponse.json(
+  //       {
+  //         result: "ERROR",
+  //         code: "ALERT",
+  //         message:
+  //           "인증코드 인증 5회 초과되었습니다. 인증코드를 재전송해주세요.",
+  //       },
+  //       { status: 429 },
+  //     );
+  //   }
+
+  //   // 5. 성공 응답 (OK)
+  //   return HttpResponse.json(
+  //     {
+  //       result: "OK",
+  //       message: "회원가입이 완료되었습니다.",
+  //     },
+  //     { status: 200 },
+  //   );
+  // }),
 
   /** 회원가입 요청 */
   http.post("*/auth/signup", async ({ request }) => {

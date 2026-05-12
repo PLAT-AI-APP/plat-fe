@@ -12,10 +12,10 @@ const SignupPage = () => {
     defaultValues: {
       nickname: "",
       email: "",
-      otp: "",
+      code: "",
       password: "",
       passwordCheck: "",
-      emailVerifyToken: "",
+      // emailVerifyToken: "",
       signupToken: "",
       isPrivacyAgreed: false,
       isTermsAgreed: false,

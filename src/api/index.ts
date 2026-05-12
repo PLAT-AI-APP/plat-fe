@@ -32,10 +32,10 @@ export interface AppError {
 }
 
 const BASE_CONFIG = {
-  // baseURL: "https://api-dev.plat.so",
-  baseURL: process.env.NEXT_PUBLIC_BASE_URI,
+  baseURL: "https://api-dev.plat.so",
+  // baseURL: process.env.NEXT_PUBLIC_BASE_URI,
   timeout: 5000,
-  headers: { "Content-Type": "application/json", "X-Client-Type": "web" },
+  headers: { "Content-Type": "application/json" },
 };
 
 // 인터셉터 없는 순수 axios

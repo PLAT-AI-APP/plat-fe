@@ -79,8 +79,8 @@ const EmailOtpStep = ({ title, onSubmit }: EmailOtpStepProps) => {
     emailVerifyConfirm(
       { code: enteredOtp, email: emailValue },
       {
-        onSuccess: (data) => {
-          if (data.token) setValue("emailVerifyToken", data.token);
+        onSuccess: () => {
+          // if (data.token) setValue("emailVerifyToken", data.token);
           alert("이메일 인증 성공");
           handleSubmit(onSubmit)();
         },

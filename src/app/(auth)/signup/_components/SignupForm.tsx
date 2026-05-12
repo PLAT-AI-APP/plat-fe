@@ -26,19 +26,21 @@ const SignupForm = () => {
     passwordCheck = "",
     isPrivacyAgreed = "",
     isTermsAgreed = "",
-    emailVerifyToken = "",
+    // emailVerifyToken = "",
   } = useWatch({ control });
 
   // 폼 유효성 검사 로직 (추가적인 커스텀 검증이 필요한 경우)
   const isFormValid =
     !!(
-      nickname &&
-      email &&
-      password &&
-      passwordCheck &&
-      isPrivacyAgreed &&
-      isTermsAgreed &&
-      emailVerifyToken
+      (
+        nickname &&
+        email &&
+        password &&
+        passwordCheck &&
+        isPrivacyAgreed &&
+        isTermsAgreed
+      )
+      // && emailVerifyToken
     ) &&
     Object.keys(errors).length === 0 &&
     password === passwordCheck;
@@ -50,7 +52,7 @@ const SignupForm = () => {
     authRegister(
       {
         email: data.email,
-        code: String(data.otp),
+        code: data.code,
         nickname: data.nickname,
         password: data.password,
         passwordCheck: data.passwordCheck,

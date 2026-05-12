@@ -10,15 +10,12 @@ const PostemailVerifyConfirm = async ({
   code,
   email,
 }: PostemailVerifyConfirmProps) => {
-  console.log(code);
-  const response = await axiosInstance.post<
-    ApiSuccessResponse<{
-      emailVerifyToken: string;
-    }>
-  >("/auth/email/verify/confirm", { email: email, code: code });
+  const response = await axiosInstance.post<ApiSuccessResponse>(
+    "/auth/email/verify/confirm",
+    { email: email, code: code },
+  );
 
   return {
-    token: response.data.data?.emailVerifyToken,
     serverMessage: response.data.message, // 서버에서 보내준 "인증에 성공하였습니다."
   };
 };
