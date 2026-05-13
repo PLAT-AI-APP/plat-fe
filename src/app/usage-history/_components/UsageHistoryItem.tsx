@@ -23,7 +23,10 @@ const UsageHistoryItem = ({ item }: { item: UsageHistoryItemType }) => {
 
   return (
     <li
-      className="cursor-pointer px-5 py-3 rounded-2xl hover:bg-btn-hover transition-colors"
+      className={cn(
+        "cursor-pointer px-5 py-3 rounded-2xl hover:bg-btn-hover transition-colors",
+        isOpen && "bg-btn-hover",
+      )}
       onClick={() => setIsOpen(!isOpen)}
     >
       <header className="flex justify-between">
