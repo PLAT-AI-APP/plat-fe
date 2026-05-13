@@ -32,16 +32,28 @@ interface NoticeListProps {
   currentFilter: "NOTICE" | "UPDATE" | "EVENT" | null | undefined;
 }
 const NoticeList = ({ currentFilter }: NoticeListProps) => {
-  const { data: noticeListData, fetchNextPage } = useNoticeListInfiniteQuery({
+  const {
+    data: noticeListData,
+    fetchNextPage,
+    hasNextPage, // 다음 페이지 존재 여부
+    isFetchingNextPage, // 추가 데이터 로딩 중 상태
+  } = useNoticeListInfiniteQuery({
     type: currentFilter,
   });
-  const noticeList = noticeListData?.pages[0].content;
 
-  const { targetRef } = useIntersectionObserver({ onIntersect: fetchNextPage });
+  const noticeList =
+    noticeListData?.pages.flatMap((page) => page.content) ?? [];
+
+  const { targetRef } = useIntersectionObserver({
+    onIntersect: () => {
+      if (hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    },
+  });
   return (
     <ul>
       {noticeList?.map(({ createdAt, isPinned, noticeId, title, type }) => {
-        // 루프 내 변수 배치
         const colorStyle = NotificationConfig[type];
 
         return (
@@ -53,7 +65,7 @@ const NoticeList = ({ currentFilter }: NoticeListProps) => {
             )}
           >
             <Link
-              href={"/"}
+              href={`/notification/${noticeId}`}
               className="flex justify-between pt-3.75 px-2.5 pb-5"
             >
               <div className="flex flex-col gap-1.5 font-medium">
@@ -93,7 +105,7 @@ const NoticeList = ({ currentFilter }: NoticeListProps) => {
         );
       })}
 
-      <div ref={targetRef} />
+      <div ref={targetRef} className="h-0.5"></div>
     </ul>
   );
 };

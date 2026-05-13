@@ -20,7 +20,10 @@ const FilterTab = ({ currentFilter }: FilterTabProps) => {
     <nav>
       <ul className="flex gap-2">
         {FilterTabArray.map(({ id, name }) => {
-          const isActive = currentFilter === id;
+          // 1. currentFilter가 id와 정확히 일치하거나,
+          const isActive =
+            currentFilter === id || (id === "ALL" && !currentFilter);
+
           return (
             <li
               key={id}
@@ -31,11 +34,13 @@ const FilterTab = ({ currentFilter }: FilterTabProps) => {
             >
               <Link
                 href={{
-                  query: {
-                    filter: id,
-                  },
+                  // "전체"를 클릭했을 때는 쿼리 파라미터를 비워두는 것이 깔끔합니다.
+                  query: id === "ALL" ? { filter: id } : { filter: id },
                 }}
-                className={cn("text-sm text-font-2", isActive && "text-font-1")}
+                className={cn(
+                  "text-sm text-font-2 transition-colors",
+                  isActive && "text-font-1 font-bold", // 가독성을 위해 font-bold 추가 권장
+                )}
               >
                 {name}
               </Link>

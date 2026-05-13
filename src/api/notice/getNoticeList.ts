@@ -38,7 +38,7 @@ export const useNoticeListInfiniteQuery = (
   params: GetNoticeListParams = {},
 ) => {
   return useInfiniteQuery<PageResponse<NoticeListResponseData>, AppError>({
-    queryKey: ["get-notice-list", params.type],
+    queryKey: ["get-notice-list", params],
     queryFn: ({ pageParam }) => getNoticeList(params, pageParam as number),
     initialPageParam: 0,
     getNextPageParam: (lastPage) => {

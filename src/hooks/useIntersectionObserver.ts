@@ -9,7 +9,7 @@ interface UseIntersectionObserverProps {
 
 export const useIntersectionObserver = ({
   onIntersect,
-  rootMargin = "100px", // 바닥에 닿기 100px 전에 미리 불러오기 (자연스러운 사용자 경험)
+  rootMargin = "200px",
   threshold = 0.1,
   enabled = true,
 }: UseIntersectionObserverProps) => {
