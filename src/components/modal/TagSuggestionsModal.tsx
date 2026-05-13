@@ -2,15 +2,16 @@ import React from "react";
 import { ModalLayout } from "../ModalLayout";
 import { Close, Megaphone } from "@/icons";
 import SmartInput from "../SmartInput";
-import { Form, useForm, useWatch } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import ActiveButton from "../ActiveButton";
 
 interface TagFormValues {
-  hashTag: string;
+  name: string;
   opinion: string;
 }
 
 import { TagSuggestionsModalProps } from "@/type/modal";
+import { useHashtagSuggestMutation } from "@/api/hashtag/postHashtagSuggest";
 
 const TagSuggestionsModal = ({ onClose }: TagSuggestionsModalProps) => {
   const {
@@ -20,16 +21,19 @@ const TagSuggestionsModal = ({ onClose }: TagSuggestionsModalProps) => {
     formState: { errors },
   } = useForm<TagFormValues>({
     defaultValues: {
-      hashTag: "",
+      name: "",
       opinion: "",
     },
   });
 
-  const hashTagValue = useWatch({ control, name: "hashTag" });
+  const nameValue = useWatch({ control, name: "name" });
   const opinionValue = useWatch({ control, name: "opinion" });
 
+  const { mutate: hashtagSuggest } = useHashtagSuggestMutation();
+
   const onSubmit = (data: TagFormValues) => {
-    console.log(data.hashTag);
+    const { name, opinion } = data;
+    hashtagSuggest({ name, opinion });
     onClose();
   };
   return (
@@ -46,13 +50,13 @@ const TagSuggestionsModal = ({ onClose }: TagSuggestionsModalProps) => {
         </header>
         <div className="flex flex-col gap-6">
           <SmartInput
-            {...register("hashTag", {
+            {...register("name", {
               required: {
                 value: true,
                 message: "해시태그를 입력해주세요.",
               },
             })}
-            value={hashTagValue}
+            value={nameValue}
             label="해시태그"
             maxLength={10}
             placeholder="제안할 해시태그를 입력해주세요."
@@ -77,7 +81,7 @@ const TagSuggestionsModal = ({ onClose }: TagSuggestionsModalProps) => {
         </div>
         <ActiveButton
           type="submit"
-          isActive={Boolean(opinionValue && hashTagValue)}
+          isActive={Boolean(opinionValue && nameValue)}
           text="전송"
           className="rounded-xl text-sm font-medium mt-6.5"
         />

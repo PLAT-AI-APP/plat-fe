@@ -120,4 +120,34 @@ export const hashtagHandlers = [
       },
     });
   }),
+
+  http.post("*/hashtag/suggest", async ({ request }) => {
+    const { name, opinion } = await request.json();
+
+    // 1. 헤더 검증 (선택 사항)
+    const authHeader = request.headers.get("Authorization");
+    if (!authHeader) {
+      return new HttpResponse(null, { status: 401 });
+    }
+
+    // 2. 중복 제안 및 기존 태그 체크 (409 Conflict)
+    if (TAG_LIST_MOCK.map((v) => v.name).includes(name)) {
+      return HttpResponse.json(
+        {
+          result: "FAIL",
+          message: "이미 존재하거나 제안 중인 태그입니다.",
+        },
+        { status: 409 },
+      );
+    }
+
+    // 3. 성공 응답 (200 OK)
+    return HttpResponse.json(
+      {
+        result: "OK",
+        message: "해시태그 제안이 접수되었습니다. 검수 후 반영됩니다.",
+      },
+      { status: 200 },
+    );
+  }),
 ];
