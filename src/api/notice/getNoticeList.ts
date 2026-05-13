@@ -22,16 +22,13 @@ const getNoticeList = async (
 ) => {
   const response = await axiosInstance.get<
     ApiSuccessResponse<PageResponse<NoticeListResponseData>>
-  >(
-    `/notice`, // 앞서 정의한 공지사항 엔드포인트 규격 반영
-    {
-      params: {
-        page: pageParam,
-        size: params.size ?? 20,
-        ...(params.type && { type: params.type }), // type이 있을 때만 쿼리 스트링에 포함
-      },
+  >(`/notice`, {
+    params: {
+      page: pageParam,
+      size: params.size ?? 20,
+      ...(params.type && { type: params.type }), // type이 있을 때만 쿼리 스트링에 포함
     },
-  );
+  });
 
   return response.data.data;
 };

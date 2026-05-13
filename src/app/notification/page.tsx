@@ -14,8 +14,12 @@ interface NotificationPageProps {
 const NotificationPage = async ({ searchParams }: NotificationPageProps) => {
   // 상태 및 데이터 처리
   const sParams = await searchParams;
-  const currentFilter =
-    (sParams.filter as "ALL" | "NOTICE" | "UPDATE" | "EVENT") || "ALL";
+  const currentFilter = sParams.filter as
+    | "NOTICE"
+    | "UPDATE"
+    | "EVENT"
+    | null
+    | undefined;
 
   return (
     <section className="flex flex-col gap-9 max-w-155 w-full mx-auto">
@@ -29,7 +33,7 @@ const NotificationPage = async ({ searchParams }: NotificationPageProps) => {
           <FilterTab currentFilter={currentFilter} />
         </nav>
 
-        <NoticeList />
+        <NoticeList currentFilter={currentFilter} />
       </div>
     </section>
   );

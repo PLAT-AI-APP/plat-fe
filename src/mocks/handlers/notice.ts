@@ -1,127 +1,103 @@
 import { http, HttpResponse } from "msw";
 
-// 공지사항 아이템 타입 정의
+// 타입 정의
 interface NoticeItem {
   noticeId: number;
   type: "NOTICE" | "UPDATE" | "EVENT";
   title: string;
   createdAt: string;
-  isPinned: boolean; // JSON 구조에 명시된 상단 고정 여부 추가
+  isPinned: boolean;
 }
-// 목데이터 (Mock Data) 생성
-const mockNotices: NoticeItem[] = [
-  {
-    noticeId: 5,
-    type: "NOTICE",
-    title: "PLAT 서비스 오픈 안내",
-    createdAt: "2026-04-29T09:00:00",
-    isPinned: true,
-  },
-  {
-    noticeId: 4,
-    type: "UPDATE",
-    title: "정기 업데이트 안내 (v1.1.0)",
-    createdAt: "2026-04-28T14:00:00",
-    isPinned: false,
-  },
-  {
-    noticeId: 3,
-    type: "EVENT",
-    title: "오픈 기념 포인트 지급 이벤트 🎉",
-    createdAt: "2026-04-27T10:00:00",
-    isPinned: false,
-  },
-  {
-    noticeId: 2,
-    type: "NOTICE",
-    title: "개인정보처리방침 개정 안내",
-    createdAt: "2026-04-25T11:00:00",
-    isPinned: false,
-  },
-  {
-    noticeId: 1,
-    type: "UPDATE",
-    title: "버그 수정 및 UI/UX 개선 작업 완료",
-    createdAt: "2026-04-24T18:30:00",
-    isPinned: false,
-  },
-];
 
-// 공지사항 상세 데이터 타입 정의
-interface NoticeDetail {
-  noticeId: number;
-  type: "NOTICE" | "UPDATE" | "EVENT";
-  title: string;
+interface NoticeDetail extends NoticeItem {
   content: string;
-  createdAt: string;
-  updatedAt: string | null; // JSON 구조에 명시된 nullable 대응
+  updatedAt: string | null;
 }
-// 목데이터 (이전 목록 API와 ID를 맞춰두면 테스트하기 좋습니다)
-const mockNoticeDetails: Record<number, NoticeDetail> = {
-  1: {
-    noticeId: 1,
-    type: "UPDATE",
-    title: "버그 수정 및 UI/UX 개선 작업 완료",
-    content:
-      "안녕하세요, PLAT 팀입니다.\n\n사용자 제보를 바탕으로 일부 레이아웃 깨짐 현상 수정 및 컴포넌트 최적화를 진행했습니다.",
-    createdAt: "2026-04-24T18:30:00",
-    updatedAt: "2026-04-24T18:30:00",
-  },
-  5: {
-    noticeId: 5,
-    type: "NOTICE",
-    title: "PLAT 서비스 오픈 안내",
-    content:
-      "안녕하세요, PLAT 팀입니다.\n\n오늘부터 정식 서비스를 시작합니다. 많은 관심 부탁드립니다!",
-    createdAt: "2026-04-29T09:00:00",
-    updatedAt: "2026-04-29T09:00:00",
-  },
+
+// 1. 100개의 목 데이터 생성 (목록용 + 상세용)
+const generateMockData = () => {
+  const types: ("NOTICE" | "UPDATE" | "EVENT")[] = [
+    "NOTICE",
+    "UPDATE",
+    "EVENT",
+  ];
+  const list: NoticeItem[] = [];
+  const details: Record<number, NoticeDetail> = {};
+
+  for (let i = 100; i >= 1; i--) {
+    const type = types[i % 3];
+    const isPinned = i > 97; // 최신 3개는 상단 고정 테스트용
+    const date = new Date(2026, 3, i).toISOString(); // 날짜 분산
+
+    const item: NoticeItem = {
+      noticeId: i,
+      type,
+      title: `${type === "NOTICE" ? "공지" : type === "UPDATE" ? "업데이트" : "이벤트"} - ${i}번째 게시글입니다.`,
+      createdAt: date,
+      isPinned,
+    };
+
+    list.push(item);
+
+    // 상세 데이터 매핑
+    details[i] = {
+      ...item,
+      content: `안녕하세요, PLAT 팀입니다.\n\n이것은 ${i}번 게시물의 상세 내용입니다.\n\n서비스 이용에 참고 부탁드립니다.`,
+      updatedAt: date,
+    };
+  }
+  return { list, details };
 };
+
+const { list: mockNotices, details: mockNoticeDetails } = generateMockData();
 
 export const noticeHandlers = [
   // 공지사항 목록 조회 API
   http.get("*/notice", ({ request }) => {
     const url = new URL(request.url);
-
-    // Query String 파싱 및 기본값 설정
     const page = parseInt(url.searchParams.get("page") || "0", 10);
     const size = parseInt(url.searchParams.get("size") || "20", 10);
     const type = url.searchParams.get("type");
 
-    // 1. 타입 필터링 (NOTICE / UPDATE / EVENT)
+    // 1. 필터링
     let filteredNotices = [...mockNotices];
     if (type && ["NOTICE", "UPDATE", "EVENT"].includes(type)) {
       filteredNotices = filteredNotices.filter((item) => item.type === type);
     }
 
-    // 2. 페이지네이션 연산
+    // 2. 상단 고정(isPinned) 처리 (고정글 우선, 그 다음 최신순)
+    filteredNotices.sort((a, b) => {
+      if (a.isPinned !== b.isPinned) return a.isPinned ? -1 : 1;
+      return b.noticeId - a.noticeId;
+    });
+
+    // 3. 페이지네이션
     const totalElements = filteredNotices.length;
+    const totalPages = Math.ceil(totalElements / size);
     const startIndex = page * size;
     const endIndex = startIndex + size;
     const paginatedContent = filteredNotices.slice(startIndex, endIndex);
-    const last = endIndex >= totalElements;
 
-    // 명세서 규격에 맞춘 Response 반환
     return HttpResponse.json({
       result: "OK",
       data: {
         content: paginatedContent,
-        page,
-        size,
         totalElements,
-        last,
+        totalPages,
+        number: page,
+        size,
+        first: page === 0,
+        last: page >= totalPages - 1 || totalPages === 0,
       },
     });
   }),
 
-  // 공지사항 상세 조회 API
+  // 공지사항 상세 조회 API (100개 데이터 모두 연동)
   http.get("*/notice/:noticeId", ({ params }) => {
     const { noticeId } = params;
     const id = parseInt(noticeId as string, 10);
-
     const notice = mockNoticeDetails[id];
 
-    // 명세서 Exception 처리: 존재하지 않는 공지사항일 경우 404 반환
     if (!notice) {
       return new HttpResponse(null, {
         status: 404,
@@ -129,7 +105,6 @@ export const noticeHandlers = [
       });
     }
 
-    // 성공 시 Response 규격 반환
     return HttpResponse.json({
       result: "OK",
       data: notice,

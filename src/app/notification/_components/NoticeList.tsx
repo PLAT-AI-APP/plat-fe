@@ -4,36 +4,53 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import React from "react";
 import dayjs from "@/lib/dayjs";
+import PinFill from "@/icons/PinFill";
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 
-const NotificationColorConfig: Record<string, { bg: string; color: string }> = {
+const NotificationConfig: Record<
+  string,
+  { bg: string; color: string; label: string }
+> = {
   NOTICE: {
     bg: "bg-[#0088FF26]",
     color: "text-[#0088FF]",
+    label: "공지",
   },
   UPDATE: {
     bg: "bg-[#34C75926]",
     color: "text-[#34C759]",
+    label: "업데이트",
   },
   EVENT: {
     bg: "bg-[#FFCC0026]",
     color: "text-[#FFCC00]",
+    label: "이벤트",
   },
 };
 
-const NoticeList = () => {
-  const { data: noticeListData } = useNoticeListInfiniteQuery();
+interface NoticeListProps {
+  currentFilter: "NOTICE" | "UPDATE" | "EVENT" | null | undefined;
+}
+const NoticeList = ({ currentFilter }: NoticeListProps) => {
+  const { data: noticeListData, fetchNextPage } = useNoticeListInfiniteQuery({
+    type: currentFilter,
+  });
   const noticeList = noticeListData?.pages[0].content;
-  //   const b = a?.map(({ content }) => content);
+
+  const { targetRef } = useIntersectionObserver({ onIntersect: fetchNextPage });
   return (
     <ul>
       {noticeList?.map(({ createdAt, isPinned, noticeId, title, type }) => {
         // 루프 내 변수 배치
-        const colorStyle = NotificationColorConfig[type];
+        const colorStyle = NotificationConfig[type];
 
         return (
           <li
             key={noticeId}
-            className="hover:bg-btn-hover cursor-pointer border-b border-border-main"
+            className={cn(
+              "hover:bg-btn-hover cursor-pointer border-b border-border-main",
+              isPinned && "bg-btn-hover",
+            )}
           >
             <Link
               href={"/"}
@@ -41,15 +58,26 @@ const NoticeList = () => {
             >
               <div className="flex flex-col gap-1.5 font-medium">
                 {/* 공지사항 분류 공지/업데이트/이벤트 */}
-                <span
-                  className={cn(
-                    "rounded-md py-1 px-2 w-fit text-[13px]",
-                    colorStyle.bg,
-                    colorStyle.color,
+                <div className="flex gap-1.5">
+                  {isPinned && (
+                    <span
+                      className={cn(
+                        "flex items-center rounded-md py-1 px-2 w-fit bg-brand-opacity",
+                      )}
+                    >
+                      <PinFill className="w-3.5 h-3.5 text-brand" />
+                    </span>
                   )}
-                >
-                  {type}
-                </span>
+                  <span
+                    className={cn(
+                      "rounded-md py-1 px-2 w-fit text-[13px]",
+                      colorStyle.bg,
+                      colorStyle.color,
+                    )}
+                  >
+                    {colorStyle.label}
+                  </span>
+                </div>
 
                 {/* 공지사항 제목 */}
                 <p className="text-sm">{title}</p>
@@ -64,6 +92,8 @@ const NoticeList = () => {
           </li>
         );
       })}
+
+      <div ref={targetRef} />
     </ul>
   );
 };

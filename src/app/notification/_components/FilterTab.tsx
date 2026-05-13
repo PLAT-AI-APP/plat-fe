@@ -13,12 +13,9 @@ const FilterTabArray = [
 ];
 
 interface FilterTabProps {
-  currentFilter: string;
+  currentFilter: "NOTICE" | "UPDATE" | "EVENT" | null | undefined;
 }
 const FilterTab = ({ currentFilter }: FilterTabProps) => {
-  {
-    /* 실시간, 일간, 주간, 월간 기준 sort tab */
-  }
   return (
     <nav>
       <ul className="flex gap-2">
