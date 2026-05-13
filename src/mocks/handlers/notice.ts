@@ -92,7 +92,7 @@ export const noticeHandlers = [
     });
   }),
 
-  // 공지사항 상세 조회 API (100개 데이터 모두 연동)
+  // 공지사항 상세 조회 API (요청하신 대로 data 래핑 제거)
   http.get("*/notice/:noticeId", ({ params }) => {
     const { noticeId } = params;
     const id = parseInt(noticeId as string, 10);
@@ -105,9 +105,17 @@ export const noticeHandlers = [
       });
     }
 
+    // result: "OK" 없이 데이터 객체만 바로 반환
     return HttpResponse.json({
       result: "OK",
-      data: notice,
+      data: {
+        noticeId: notice.noticeId,
+        type: notice.type,
+        title: notice.title,
+        content: notice.content,
+        createdAt: notice.createdAt,
+        updatedAt: notice.updatedAt,
+      },
     });
   }),
 ];
