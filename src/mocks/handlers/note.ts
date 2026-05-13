@@ -24,7 +24,7 @@ export const noteHandler = [
     // 3. Mock 데이터 생성을 위한 타입 정의
     const types = ["USE", "CHARGE", "REFUND", "EVENT", "ADMIN_GRANT", "EXPIRE"];
 
-    const mockData = Array.from({ length: size }).map((_, index) => {
+    const mockData = Array.from({ length: 100 }).map((_, index) => {
       const overallIndex = page * size + index;
       const transactionId = 9999 - overallIndex;
       const type = types[overallIndex % types.length];

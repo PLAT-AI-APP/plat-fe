@@ -2,6 +2,7 @@
 import { useUsageHistoryListQuery } from "@/api/note/getUsageHistoryList";
 import React from "react";
 import UsageHistoryItem from "./UsageHistoryItem";
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 
 const UsageHistoryContents = () => {
   // 상태 및 데이터
@@ -9,7 +10,18 @@ const UsageHistoryContents = () => {
     data: usageHistoryListData,
     isLoading,
     isError,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
   } = useUsageHistoryListQuery({ size: 20 });
+
+  const { targetRef } = useIntersectionObserver({
+    onIntersect: () => {
+      if (hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    },
+  });
 
   const usageHistoryList = usageHistoryListData?.pages[0].content;
 
@@ -23,6 +35,8 @@ const UsageHistoryContents = () => {
         {usageHistoryList?.map((item) => {
           return <UsageHistoryItem key={item.transactionId} item={item} />;
         })}
+
+        <div ref={targetRef}></div>
       </ul>
     </section>
   );
