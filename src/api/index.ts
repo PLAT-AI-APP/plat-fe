@@ -128,11 +128,6 @@ axiosInstance.interceptors.request.use((c) => onRequest(c));
 axiosInstance.interceptors.response.use(
   (res) => res,
   (err: AxiosError<ApiErrorResponse>) => {
-    // 1. 콘솔에 백엔드 에러 출력
-    if (err.response?.data) {
-      const { code, data, message } = err.response.data;
-      console.error(`❌ [axiosInstance Error] ${code}: ${message}`, data);
-    }
     // 2. 기존 에러 처리 함수 실행
     return onResponseError(err, axiosInstance);
   },
