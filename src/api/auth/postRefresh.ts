@@ -7,10 +7,6 @@ export const postRefresh = async () => {
     "/auth/refresh", // 이 경로가 핸들러에 등록된 경로와 토씨 하나 안 틀리고 같아야 합니다.
     {},
     {
-      headers: {
-        "X-Client-Type": "web",
-        "Content-Type": "application/json",
-      },
       withCredentials: true,
     },
   );
