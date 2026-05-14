@@ -9,17 +9,17 @@ import Image from "next/image";
 const bannerData = [
   {
     id: 1,
-    src: "/images/banner-1.png",
+    src: "/public/images/sample.png",
     alt: "이벤트 1",
   },
   {
     id: 2,
-    src: "/images/banner-2.png",
+    src: "/public/images/sample.png",
     alt: "이벤트 2",
   },
   {
     id: 3,
-    src: "/images/banner-3.png",
+    src: "/public/images/sample.png",
     alt: "이벤트 3",
   },
 ];

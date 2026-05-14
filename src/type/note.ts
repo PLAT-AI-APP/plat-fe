@@ -1,7 +1,7 @@
 /** 노트 사용내역 item 타입정의 */
 export interface UsageHistoryItemType {
   type: "USE" | "PURCHASE" | "REFUND" | "EVENT" | "ADMIN_GRANT" | "EXPIRE";
-  transactionId: number;
+  transactionId: string;
   transactionHash: string;
   amount: number;
   balanceAfter: number;

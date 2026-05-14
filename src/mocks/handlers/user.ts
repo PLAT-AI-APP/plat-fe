@@ -1,7 +1,7 @@
 import { http, HttpResponse } from "msw";
 // 1. 유저 정보 인터페이스 정의 (profileImage에 null 허용)
 interface MockUser {
-  id: number;
+  id: string;
   nickname: string;
   bio: string;
   profileImage: string | null; // 핵심: string 또는 null 가능
@@ -15,7 +15,7 @@ interface MockUser {
 
 // 1. 초기 사용자 데이터를 핸들러 외부에 선언 (메모리에 저장됨)
 let mockUser: MockUser = {
-  id: 1234567890123456789,
+  id: "1234567890123456789",
   nickname: "깜귀봉",
   bio: "앞으로가 더 찬란할 크리에이터",
   profileImage: "/images/sample.png",
