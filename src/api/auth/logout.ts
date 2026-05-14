@@ -1,11 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
-import { axiosInstance } from "..";
+import { authAxios } from "..";
 import { ApiSuccessResponse, AppError } from "@/type/api";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
 
 const PostLogout = async () => {
-  const response = await axiosInstance.post<ApiSuccessResponse>("/auth/logout");
+  const response = await authAxios.post<ApiSuccessResponse>("/auth/logout");
 
   return {
     serverMessage: response.data.message ?? "",
