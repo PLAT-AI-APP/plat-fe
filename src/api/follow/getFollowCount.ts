@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { authAxios } from "..";
+import { axiosInstance } from "..";
 import { ApiSuccessResponse, AppError } from "@/type/api";
 import { useAuthStore } from "@/store/useAuthStore";
 
@@ -9,7 +9,7 @@ export interface GetFollowCountResponse {
 }
 
 const getFollowCount = async (userId: string) => {
-  const response = await authAxios.get<
+  const response = await axiosInstance.get<
     ApiSuccessResponse<GetFollowCountResponse>
   >(`/follow/${userId}/count`);
 
