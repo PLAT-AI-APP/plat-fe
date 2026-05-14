@@ -15,7 +15,7 @@ import Check from "@/icons/Check";
 import { cn } from "@/lib/utils";
 
 interface ContentItem {
-  id: number;
+  id: string;
   type: "chat" | "action" | "asset";
   value: string;
 }
@@ -25,8 +25,8 @@ interface CreatePreviewListProps {
   characterName: string;
   profileImage: string;
   isEditable?: boolean;
-  onUpdate?: (id: number, newValue: string) => void;
-  onDelete?: (id: number) => void;
+  onUpdate?: (id: string, newValue: string) => void;
+  onDelete?: (id: string) => void;
   onReorder?: (newContents: ContentItem[]) => void;
 }
 
@@ -39,7 +39,7 @@ const CreatePreviewList = ({
   onDelete,
   onReorder,
 }: CreatePreviewListProps) => {
-  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [editedValue, setEditedValue] = useState("");
 
   const handleDragEnd = (result: DropResult) => {
@@ -57,7 +57,7 @@ const CreatePreviewList = ({
     setEditedValue(item.value);
   };
 
-  const handleUpdate = (id: number) => {
+  const handleUpdate = (id: string) => {
     onUpdate?.(id, editedValue);
     setEditingId(null);
   };

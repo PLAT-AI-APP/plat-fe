@@ -25,9 +25,9 @@ const PersonaModal = ({ onClose }: PersonaModalProps) => {
     enabled: shouldFetch,
   });
 
-  const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  const handleCurrentPersona = useCallback((personaId: number) => {
+  const handleCurrentPersona = useCallback((personaId: string) => {
     setSelectedId(personaId);
   }, []);
 

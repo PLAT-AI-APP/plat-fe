@@ -3,7 +3,7 @@ import { authAxios } from "..";
 import { ApiSuccessResponse, AppError } from "@/type/api";
 
 interface PatchEditPersonaProps {
-  personaId: number;
+  personaId: string;
   name: string;
   description: string;
 }
@@ -29,7 +29,7 @@ export const useEditPersonaMutation = () => {
     PatchEditPersonaProps
   >({
     mutationFn: PatchEditPersona,
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["me-persona-list"] });
     },
   });

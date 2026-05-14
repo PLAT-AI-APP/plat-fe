@@ -14,12 +14,7 @@ import { TagSuggestionsModalProps } from "@/type/modal";
 import { useHashtagSuggestMutation } from "@/api/hashtag/postHashtagSuggest";
 
 const TagSuggestionsModal = ({ onClose }: TagSuggestionsModalProps) => {
-  const {
-    register,
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<TagFormValues>({
+  const { register, control, handleSubmit } = useForm<TagFormValues>({
     defaultValues: {
       name: "",
       opinion: "",

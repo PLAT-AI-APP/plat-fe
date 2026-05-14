@@ -1,9 +1,8 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { cn } from "@/lib/utils";
 import CheckCircle from "@/icons/CheckCircle";
 import { Dots } from "@/icons";
 import { Persona } from "@/type/persona";
-import PersonaAddModal from "../PersonaAddModal";
 import { useDeletePersonaMutation } from "@/api/persona/deletePersona";
 import PersonaMenuPopover from "@/components/popover/PersonaMenuPopover";
 import useToggle from "@/hooks/useToggle";
@@ -12,7 +11,7 @@ import { useModalStore } from "@/store/useModalStore";
 interface PersonaItemProps {
   persona: Persona;
   isActive: boolean;
-  onSelect: (personaId: number) => void;
+  onSelect: (personaId: string) => void;
 }
 
 const PersonaItem = ({ persona, isActive, onSelect }: PersonaItemProps) => {

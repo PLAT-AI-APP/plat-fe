@@ -2,10 +2,10 @@ import Token from "@/icons/Token";
 import React from "react";
 import PolicyGuide from "./PolicyGuide";
 import Badge from "./Badge";
-import { cn, formatStatCount, formatWithCommas } from "@/lib/utils";
+import { cn, formatWithCommas } from "@/lib/utils";
 
 export interface ProductItem {
-  id: number;
+  id: string;
   title: number; // 상품명 (예: "5,000 노트")
   bonus?: string; // 추가 증정 문구 (예: "+500개")
   price: number; // 현재 판매가
@@ -16,25 +16,25 @@ export interface ProductItem {
 
 export const MOCK_PRODUCTS: ProductItem[] = [
   {
-    id: 1,
+    id: "1",
     title: 5000,
     price: 4900,
   },
   {
-    id: 2,
+    id: "2",
     title: 10000,
     bonus: "+500",
     price: 9900,
   },
   {
-    id: 3,
+    id: "3",
     title: 20000,
     bonus: "+2,500",
     price: 19900,
     badges: ["firstCharge", "popular"],
   },
   {
-    id: 4,
+    id: "4",
     title: 46000,
     bonus: "+5,000",
     price: 30900,
@@ -43,7 +43,7 @@ export const MOCK_PRODUCTS: ProductItem[] = [
     badges: ["firstCharge"],
   },
   {
-    id: 5,
+    id: "5",
     title: 90000,
     bonus: "+11,000",
     price: 89900,

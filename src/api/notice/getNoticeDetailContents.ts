@@ -3,7 +3,7 @@ import { axiosInstance } from "..";
 import { ApiSuccessResponse, AppError } from "@/type/api";
 
 export interface NoticeListResponseData {
-  noticeId: number;
+  noticeId: string;
   type: "NOTICE" | "EVENT" | "UPDATE";
   title: string;
   content: string;

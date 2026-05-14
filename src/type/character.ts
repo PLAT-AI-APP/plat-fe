@@ -3,7 +3,7 @@ export type ScenarioType = "chat" | "action" | "asset";
 
 // 개별 콘텐츠 아이템 정의
 export interface ScenarioContentItem {
-  id: number;
+  id: string;
   type: ScenarioType;
   value: string;
 }
@@ -46,7 +46,7 @@ export interface CharacterCreateFormValues {
 }
 
 export interface CharacterScenario {
-  scenarioId: number;
+  scenarioId: string;
   name: string;
   situation: string;
   firstDialogue: string;

@@ -19,7 +19,7 @@ interface CharacterCardProps {
     img: string;
   };
   className?: ClassValue;
-  id: number;
+  id: string;
 }
 
 const CharacterCard = ({

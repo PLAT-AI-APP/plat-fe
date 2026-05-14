@@ -3,7 +3,7 @@ import { authAxios } from "..";
 import { ApiSuccessResponse, AppError, PageResponse } from "@/type/api";
 
 export interface GetFollowerListResponse {
-  userId: number;
+  userId: string;
   profileImage: string | null;
   nickname: string;
 }

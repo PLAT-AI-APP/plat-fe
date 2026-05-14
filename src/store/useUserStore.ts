@@ -7,7 +7,7 @@ export type Provider = "google" | "kakao" | "plat";
 
 // 유저 데이터 인터페이스 정의
 export interface UserInfo {
-  id: number;
+  id: string;
   nickname: string;
   bio: string;
   profileImage: string;
@@ -32,7 +32,7 @@ export const useUserStore = create<UserState>()(
   persist(
     (set) => ({
       user: {
-        id: 0,
+        id: "0",
         nickname: "",
         bio: "",
         profileImage: "",

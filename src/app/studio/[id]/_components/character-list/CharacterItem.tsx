@@ -9,7 +9,7 @@ import useToggle from "@/hooks/useToggle";
 
 interface CharacterItemProps {
   chatCount: number;
-  id: number;
+  id: string;
   isPublic: boolean;
   tagList: string[];
   thumbnail: string;

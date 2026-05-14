@@ -5,7 +5,7 @@ import SkeletonCharacterList from "@/components/skeleton/SkeletonCharacterList";
 
 interface CharacterListProps {
   char: {
-    id: number;
+    id: string;
     name: string;
     chatCount: number;
     dec: string;

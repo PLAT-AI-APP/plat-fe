@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { ApiSuccessResponse, AppError } from "@/type/api";
 
-const postFollow = async (userId: number) => {
+const postFollow = async (userId: string) => {
   const response = await authAxios.post<ApiSuccessResponse<null>>(
     `/follow/${userId}`,
   );
@@ -11,7 +11,7 @@ const postFollow = async (userId: number) => {
 
 /** 팔로우 api */
 export const useFollowMutation = () => {
-  return useMutation<ApiSuccessResponse<null>, AppError, { userId: number }>({
+  return useMutation<ApiSuccessResponse<null>, AppError, { userId: string }>({
     mutationKey: ["post-follow"],
     mutationFn: ({ userId }) => postFollow(userId),
   });

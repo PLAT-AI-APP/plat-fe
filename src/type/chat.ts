@@ -1,6 +1,6 @@
 /** 내가 대화했던 방 목록의 간략 버전 type */
 export interface ChatListItemType {
-  id: number;
+  id: string;
   title: string;
   scenario: string;
   time: string;

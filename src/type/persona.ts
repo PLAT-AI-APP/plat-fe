@@ -1,5 +1,5 @@
 export interface Persona {
-  personaId: number;
+  personaId: string;
   name: string;
   description: string;
   isDefault: boolean;

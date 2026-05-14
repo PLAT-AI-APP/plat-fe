@@ -40,7 +40,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
     setCurrentMode(name);
   };
 
-  const handleUpdateContent = (id: number, newValue: string) => {
+  const handleUpdateContent = (id: string, newValue: string) => {
     const updatedContents = contents.map((item) =>
       item.id === id ? { ...item, value: newValue } : item,
     );
@@ -49,7 +49,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
     });
   };
 
-  const handleDeleteContent = (id: number) => {
+  const handleDeleteContent = (id: string) => {
     const updatedContents = contents.filter((item) => item.id !== id);
     setValue(`scenarios.${activeScenarioIndex}.contents`, updatedContents, {
       shouldValidate: true,
@@ -71,7 +71,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
     if (!msg.trim()) return;
 
     const newContent = {
-      id: Date.now(),
+      id: String(Date.now()),
       type: currentMode,
       value: msg,
     };

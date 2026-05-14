@@ -34,8 +34,8 @@ export const FollowModal = ({
     activeTab,
   );
 
-  const [followChangeIds, setFollowChangeIds] = useState<number[]>([]);
-  const handleFollowChangeId = (id: number) => {
+  const [followChangeIds, setFollowChangeIds] = useState<string[]>([]);
+  const handleFollowChangeId = (id: string) => {
     setFollowChangeIds((prev) => {
       // 이미 배열에 해당 ID가 있는지 체크 (중복 방지용 선택 사항)
       if (prev.includes(id)) {

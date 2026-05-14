@@ -11,7 +11,7 @@ import useToggle from "@/hooks/useToggle";
 interface ChattingItemProps {
   creator: string;
   description: string;
-  id: number;
+  id: string;
   thumbnail: string;
   title: string;
   updatedAt: string;
