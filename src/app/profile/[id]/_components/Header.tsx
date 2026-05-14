@@ -22,8 +22,11 @@ const Header = ({ userId }: HeaderProps) => {
   const nickname = useUserStore((state) => state.user?.nickname);
   const bio = useUserStore((state) => state.user?.bio);
 
+  const { user } = useUserStore();
   const handleProfileEditBtn = () => {
-    openModal("PROFILE_EDIT");
+    if (user?.id === userId) {
+      openModal("PROFILE_EDIT");
+    }
   };
   return (
     <header id="profile-header" className="flex flex-col gap-4">
