@@ -128,7 +128,7 @@ const EmailOtpStep = ({ title, onSubmit }: EmailOtpStepProps) => {
               await trigger("email");
             },
           })}
-          error={errors.email?.message}
+          error={errors.email}
           disabled={isOtpSent || isPending}
         />
 

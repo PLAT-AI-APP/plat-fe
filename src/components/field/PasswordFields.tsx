@@ -2,7 +2,7 @@
 
 import { useTogglePassword } from "@/hooks/useTogglePassword";
 import React from "react";
-import { useFormContext, useWatch } from "react-hook-form";
+import { FieldError, useFormContext, useWatch } from "react-hook-form";
 import AuthInput from "../auth/AuthInput";
 import { PASSWORD_REGEX } from "@/lib/regex";
 import { PasswordToggle } from "../auth/PasswordToggle";
@@ -34,7 +34,7 @@ const PasswordFields = () => {
             message: "특수문자를 포함하여 8자 이상 입력해주세요.",
           },
         })}
-        error={errors.password?.message as string}
+        error={errors.password as FieldError}
         rightElement={
           <PasswordToggle
             isVisible={isShowPw.isVisible}
@@ -55,7 +55,7 @@ const PasswordFields = () => {
             await trigger("passwordCheck");
           },
         })}
-        error={errors.passwordCheck?.message as string}
+        error={errors.passwordCheck as FieldError}
         rightElement={
           <PasswordToggle
             isVisible={isShowConfirm.isVisible}

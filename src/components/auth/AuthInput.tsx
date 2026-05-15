@@ -2,10 +2,11 @@
 
 import React, { forwardRef } from "react";
 import { cn } from "@/lib/utils";
+import { FieldError } from "react-hook-form";
 
 interface AuthInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
-  error?: string;
+  error?: FieldError;
   isLabel?: boolean;
   boxClassName?: string;
   inputClassName?: string;
@@ -84,7 +85,7 @@ const AuthInput = forwardRef<HTMLInputElement, AuthInputProps>(
               role="alert"
               className="pl-2 pt-1.5 text-font-accents text-xs"
             >
-              {error}
+              {error.message}
             </span>
           )}
         </div>

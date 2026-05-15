@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useFormContext } from "react-hook-form";
+import { FieldError, useFormContext } from "react-hook-form";
 import AuthInput from "@/components/auth/AuthInput";
 import { PasswordToggle } from "@/components/auth/PasswordToggle";
 import { useTogglePassword } from "@/hooks/useTogglePassword";
@@ -28,7 +28,7 @@ const PasswordField = () => {
           message: "특수문자를 포함하여 8자 이상 입력해주세요.",
         },
       })}
-      error={errors.password?.message as string}
+      error={errors.password as FieldError}
       rightElement={
         <PasswordToggle
           isVisible={isShowPw.isVisible}

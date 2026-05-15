@@ -63,7 +63,7 @@ const PasswordReset = () => {
               await trigger("passwordCheck");
             },
           })}
-          error={errors.passwordCheck?.message}
+          error={errors.passwordCheck}
           rightElement={
             <PasswordToggle
               isVisible={isShowConfirm.isVisible}

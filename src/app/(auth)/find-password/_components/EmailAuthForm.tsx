@@ -128,7 +128,7 @@ const EmailAuthForm = ({ onNextStep }: EmailAuthFormProps) => {
             },
             onChange: () => trigger("email"),
           })}
-          error={errors.email?.message}
+          error={errors.email}
           disabled={isOtpSent || isPending}
           inputClassName={isOtpSent ? "bg-card text-font-2" : ""}
           leftElement={isOtpSent && <Email className="w-5 h-5 text-font-2" />}

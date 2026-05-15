@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useFormContext, useWatch } from "react-hook-form";
+import { FieldError, useFormContext, useWatch } from "react-hook-form";
 import AuthInput from "@/components/auth/AuthInput";
 import { PasswordToggle } from "@/components/auth/PasswordToggle";
 import { useTogglePassword } from "@/hooks/useTogglePassword";
@@ -30,7 +30,7 @@ const PasswordCheckField = () => {
           await trigger("passwordCheck");
         },
       })}
-      error={errors.passwordCheck?.message as string}
+      error={errors.passwordCheck as FieldError}
       rightElement={
         <PasswordToggle
           isVisible={isShowConfirm.isVisible}
