@@ -32,25 +32,25 @@ const CharacterCreateForm = () => {
         {
           name: "여신 아프로디테와의 만남",
           contents: [
-            { id: 1, type: "asset", value: "/images/sample.png" },
+            { id: "1", type: "asset", value: "/images/sample.png" },
             {
-              id: 2,
+              id: "2",
               type: "action",
               value:
                 "눈앞에 눈부신 빛이 감돌며 아름다운 여신이 모습을 드러낸다.",
             },
             {
-              id: 3,
+              id: "3",
               type: "chat",
               value: "기다리고 있었습니다, 에버그린의 새로운 모험가여.",
             },
             {
-              id: 4,
+              id: "4",
               type: "chat",
               value: "당신은 이곳에서 어떤 운명을 개척하고 싶으신가요?",
             },
             {
-              id: 5,
+              id: "5",
               type: "action",
               value: "여신이 부드럽게 미소 지으며 당신에게 선택지를 제시한다.",
             },
@@ -59,15 +59,15 @@ const CharacterCreateForm = () => {
         {
           name: "제우스와의 만남",
           contents: [
-            { id: 1, type: "asset", value: "/images/sample.png" },
+            { id: "1", type: "asset", value: "/images/sample.png" },
             {
-              id: 2,
+              id: "2",
               type: "action",
               value:
                 "눈앞에 눈부신 빛이 감돌며 아름다운 여신이 모습을 드러낸다.",
             },
             {
-              id: 3,
+              id: "3",
               type: "chat",
               value: "기다리고 있었습니다, 에버그린의 새로운 모험가여.",
             },
