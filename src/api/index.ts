@@ -76,11 +76,17 @@ const onResponseError = async (
   const originalRequest = err.config;
   const { logout, setAccessToken } = useAuthStore.getState();
 
+  // 현재 에러가 발생한 API의 URL 경로를 추출합니다.
+  const requestUrl = originalRequest?.url || "";
+
   // [A] 토큰 갱신 로직 (401 에러 시)
   if (
     err.response?.status === 401 &&
     originalRequest &&
-    !originalRequest._retry
+    !originalRequest._retry &&
+    // ✨ [수정 포인트] 로그인 실패(/auth/login) 시에는 토큰 재발급(리프레시) 루프를 타지 않고 즉시 에러를 반환합니다.
+    !requestUrl.includes("/auth/login") &&
+    !requestUrl.includes("/auth/refresh")
   ) {
     originalRequest._retry = true;
 
@@ -113,7 +119,7 @@ const onResponseError = async (
       message: message || "알 수 없는 에러가 발생했습니다.",
     };
 
-    if (code === "MESSAGE" || code === "ALERT") {
+    if (code === "ALERT") {
       alert(formattedError.message);
     }
 
