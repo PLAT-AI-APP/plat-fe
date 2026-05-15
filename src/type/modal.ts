@@ -29,7 +29,7 @@ export interface LoginModalProps {
 export interface PersonaAddModalProps {
   onClose: () => void;
   isEditMode?: boolean;
-  personaId?: number;
+  personaId?: string;
 }
 
 export interface ProfileEditModalProps {

@@ -122,7 +122,10 @@ export const hashtagHandlers = [
   }),
 
   http.post("*/hashtag/suggest", async ({ request }) => {
-    const { name, opinion } = await request.json();
+    const { name, opinion } = (await request.json()) as {
+      name: string;
+      opinion: string;
+    };
 
     // 1. 헤더 검증 (선택 사항)
     const authHeader = request.headers.get("Authorization");

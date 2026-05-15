@@ -34,7 +34,7 @@ const PersonaAddModal = ({
     },
   });
 
-  const { data: personaDetail } = useDetailPersonaQuery(personaId as number, {
+  const { data: personaDetail } = useDetailPersonaQuery(personaId as string, {
     enabled: isEditMode && !!personaId,
   });
 
