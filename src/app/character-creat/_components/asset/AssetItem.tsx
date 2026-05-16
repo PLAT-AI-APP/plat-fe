@@ -2,10 +2,10 @@ import React, { useState, ChangeEvent } from "react";
 import { Draggable } from "@hello-pangea/dnd";
 import Image from "next/image";
 import { useFormContext, useWatch } from "react-hook-form";
-import SmartInput from "@/components/SmartInput";
 import { ArrowDown, Dots, Trash, ImageIcon } from "@/icons";
 import CopyFill from "@/icons/CopyFill";
 import { CharacterCreateFormValues } from "@/type/character";
+import SmartInput from "@/components/smart-input";
 
 interface AssetItemProps {
   id: string;

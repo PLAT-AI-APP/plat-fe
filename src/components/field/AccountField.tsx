@@ -2,15 +2,15 @@
 
 import React from "react";
 import { useFormContext, useWatch } from "react-hook-form";
-import SmartInput from "../SmartInput";
 import GoogleProvider from "@/icons/provider/GoogleProvider";
 import KakaoProvider from "@/icons/provider/KakaoProvider";
 import PlatProvider from "@/icons/provider/PlatProvider";
+import SmartInput from "../smart-input";
 
 const PROVIDER_LOGOS: Record<string, React.ReactNode> = {
-  google: <GoogleProvider />,
-  kakao: <KakaoProvider />,
-  plat: <PlatProvider />,
+  GOOGLE: <GoogleProvider />,
+  KAKAO: <KakaoProvider />,
+  EMAIL: <PlatProvider />,
 };
 
 const AccountField = () => {

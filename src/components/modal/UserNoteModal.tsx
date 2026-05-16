@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useForm, useWatch } from "react-hook-form";
-import SmartInput from "../SmartInput";
+import SmartInput from "@/components/smart-input";
 import { Close } from "@/icons";
 import Note from "@/icons/Note";
 import { ModalLayout } from "../ModalLayout";

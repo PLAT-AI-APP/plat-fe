@@ -1,7 +1,7 @@
 import React from "react";
 import { ModalLayout } from "../ModalLayout";
 import { Close, Megaphone } from "@/icons";
-import SmartInput from "../SmartInput";
+import SmartInput from "@/components/smart-input";
 import { useForm, useWatch } from "react-hook-form";
 import ActiveButton from "../ActiveButton";
 

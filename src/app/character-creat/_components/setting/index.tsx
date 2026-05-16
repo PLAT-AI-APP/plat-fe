@@ -1,6 +1,6 @@
 import TagAddModal from "@/components/modal/TagAddModal";
 import { ModalLayout } from "@/components/ModalLayout";
-import SmartInput from "@/components/SmartInput";
+import SmartInput from "@/components/smart-input";
 import useToggle from "@/hooks/useToggle";
 import { Close } from "@/icons";
 import Check from "@/icons/Check";

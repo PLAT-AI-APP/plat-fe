@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { ModalLayout } from "../ModalLayout";
 import { Close, Storage } from "@/icons";
 import ActiveButton from "../ActiveButton";
-import SmartInput from "../SmartInput";
+import SmartInput from "@/components/smart-input";
 
 import { StorageModalProps } from "@/type/modal";
 

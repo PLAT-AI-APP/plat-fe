@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { ModalLayout } from "../ModalLayout";
 import { Close, Persona } from "@/icons";
-import SmartInput from "../SmartInput";
+import SmartInput from "@/components/smart-input";
 import { useAddPersonaMutation } from "@/api/persona/addPersona";
 import { useEditPersonaMutation } from "@/api/persona/editPersona";
 import { useDetailPersonaQuery } from "@/api/persona/detailPersons";

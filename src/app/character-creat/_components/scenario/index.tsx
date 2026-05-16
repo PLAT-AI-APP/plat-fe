@@ -1,4 +1,4 @@
-import SmartInput from "@/components/SmartInput";
+import SmartInput from "@/components/smart-input";
 import { Close, Plus } from "@/icons";
 import { cn } from "@/lib/utils";
 import { CharacterCreateFormValues } from "@/type/character";

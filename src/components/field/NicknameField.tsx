@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useFormContext, useWatch } from "react-hook-form";
-import SmartInput from "../SmartInput";
+import SmartInput from "@/components/smart-input";
 import { NICKNAME_REGEX } from "@/lib/regex";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useCheckNicknameQuery } from "@/api/auth/checkNickname";

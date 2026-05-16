@@ -1,4 +1,4 @@
-import SmartInput from "@/components/SmartInput";
+import SmartInput from "@/components/smart-input";
 import { CharacterCreateFormValues } from "@/type/character";
 import React from "react";
 import { useFormContext, useWatch } from "react-hook-form";

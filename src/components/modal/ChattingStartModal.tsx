@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { ModalLayout } from "../ModalLayout";
 import { Close, Message, User } from "@/icons";
 import ActiveButton from "../ActiveButton";
-import SmartInput from "../SmartInput";
+import SmartInput from "@/components/smart-input";
 import useToggle from "@/hooks/useToggle";
 import ScenarioSelectPopover from "../popover/ScenarioSelectPopover";
 import { ChattingStartModalProps } from "@/type/modal";

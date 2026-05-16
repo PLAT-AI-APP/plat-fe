@@ -2,7 +2,7 @@
 
 import React from "react";
 import { FieldValues, Path, useFormContext, useWatch } from "react-hook-form";
-import SmartInput from "../SmartInput";
+import SmartInput from "@/components/smart-input";
 
 interface BioFieldProps<T extends FieldValues> {
   name?: Path<T>;
