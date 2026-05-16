@@ -37,11 +37,12 @@ const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
         bio: data.bio || "",
         birth: data.birth,
         gender: data.gender,
-        phone: {
-          countryCode: data.countryCode || "",
-          number: data.phoneNumber || "",
-        },
-        profileImage: data.profileImg || "",
+        // phone: {
+        //   countryCode: data.countryCode || "",
+        //   number: data.phoneNumber || "",
+        // },
+        // profileImage: data.profileImg || "",
+        profileImgFile: data.profileImgFile || "",
         nickname: data.nickname,
       },
       {
@@ -69,7 +70,7 @@ const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
         <div className="flex flex-col gap-6">
           <NicknameField />
           <BioField />
-          <BirthDateInput value={birth} disabled />
+          <BirthDateInput value={birth} />
           <GenderField />
           {/* <PhoneField onOpenModal={() => setIsPhoneModal(true)} /> */}
           <AccountField />
@@ -109,13 +110,13 @@ const ProfileEditModal = ({ onClose }: ProfileEditModalProps) => {
     defaultValues: {
       profileImg: user?.profileImage || "",
       birth: user?.birth || "",
-      countryCode: user?.phone.countryCode || "",
+      // countryCode: user?.phone?.countryCode || "",
       email: user?.email || "",
-      gender: user?.gender || "MALE",
+      gender: user?.gender || "",
       bio: user?.bio || "",
       nickname: user?.nickname || "",
-      phoneNumber: user?.phone.number || "",
-      provider: user?.provider || "plat",
+      // phoneNumber: user?.phone?.number || "",
+      provider: user?.provider || "EMAIL",
     },
   });
 

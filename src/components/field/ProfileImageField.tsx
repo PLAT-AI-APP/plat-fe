@@ -2,33 +2,47 @@
 
 import React, { ChangeEvent } from "react";
 import Image from "next/image";
-import { useFormContext, useWatch, FieldValues, Path, PathValue } from "react-hook-form";
+import { useFormContext, useWatch } from "react-hook-form";
 import { CameraFill } from "@/icons";
+import { ProfileEditFormType } from "@/type/user";
 
-interface ProfileImageFieldProps<T extends FieldValues> {
-  name?: Path<T>;
+// 제네릭 관련 타입 충돌을 방지하기 위해 이 컴포넌트가 제어할 대상 타입을 명시합니다.
+interface ProfileImageFieldProps {
+  name?: "profileImg"; // 혹은 keyof ProfileEditFormType
 }
 
-const ProfileImageField = <T extends FieldValues>({
-  name = "profileImg" as Path<T>,
-}: ProfileImageFieldProps<T>) => {
-  const { setValue, control } = useFormContext<T>();
+const ProfileImageField = ({ name = "profileImg" }: ProfileImageFieldProps) => {
+  // useFormContext에 프로필 폼 타입을 주입하여 내부 setValue들의 타입 안정성을 확보합니다.
+  const { setValue, control } = useFormContext<ProfileEditFormType>();
   const profileImg = useWatch({ control, name });
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+    if (
+      !["image/jpeg", "image/jpg", "image/png", "image/webp"].includes(
+        file.type,
+      )
+    ) {
       return alert("jpg, png, webp 이미지 파일만 가능합니다.");
     }
     if (file.size > 5 * 1024 * 1024) {
       return alert("파일 용량은 최대 5MB까지 가능합니다.");
     }
 
+    // 파일 객체 저장 (ProfileEditFormType에 선언된 키값에 맞게 매핑)
+    setValue("profileImgFile", file, { shouldValidate: true });
+
+    // FileReader의 결과(string)를 타입 단언(as string)을 통해
+    // ProfileEditFormType["profileImg"] 구조(string)와 일치시켜 할당합니다.
     const reader = new FileReader();
     reader.onloadend = () => {
-      setValue(name, reader.result as PathValue<T, Path<T>>, { shouldValidate: true });
+      if (typeof reader.result === "string") {
+        setValue(name, reader.result, {
+          shouldValidate: true,
+        });
+      }
     };
     reader.readAsDataURL(file);
   };

@@ -27,6 +27,7 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
     handleSubmit,
     watch,
     formState: { errors },
+    setError,
   } = useForm({
     mode: "onSubmit",
     reValidateMode: "onSubmit",
@@ -49,6 +50,20 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
         onSuccess: () => {
           setLoggedIn(true);
           // router.push("/");
+        },
+        onError: (err) => {
+          console.log(err);
+
+          // 2. 서버 에러 메시지를 'pw' 또는 'email' 필드의 에러로 전달합니다.
+          // 일반적으로 로그인 실패는 보안상 이메일/비밀번호 중 무엇이 틀렸는지 모호하게 표현하므로
+          // 아래 비밀번호 인풋 하단에 에러를 노출시키는 것이 UI 안정성에 좋습니다.
+          setError("pw", {
+            type: "server",
+            message: err.message || "이메일 또는 비밀번호를 다시 확인해주세요.",
+          });
+
+          // 만약 이메일 인풋 쪽에 에러를 띄우고 싶다면 아래 주석을 해제하세요.
+          setError("email", { type: "server", message: "" });
         },
       },
     );
@@ -100,7 +115,7 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
                   message: "올바른 이메일 형식이 아닙니다.",
                 },
               })}
-              error={errors.email?.message}
+              error={errors.email}
             />
 
             <div id="password-input-group" className="flex flex-col gap-2">
@@ -123,7 +138,7 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
                     message: "최소 8자 이상이어야 합니다.",
                   },
                 })}
-                error={errors.pw?.message}
+                error={errors.pw}
               />
 
               {/* 비밀번호 재설정 page 이동 link */}

@@ -2,8 +2,8 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 // 성별 유니온 타입 정의
-export type Gender = "MALE" | "FEMALE" | "OTHER";
-export type Provider = "google" | "kakao" | "plat";
+export type Gender = "MALE" | "FEMALE" | "";
+export type Provider = "KAKAO" | "GOOGLE" | "EMAIL";
 
 // 유저 데이터 인터페이스 정의
 export interface UserInfo {
@@ -42,7 +42,7 @@ export const useUserStore = create<UserState>()(
           countryCode: "",
           number: "",
         },
-        provider: "plat",
+        provider: "EMAIL",
         email: "",
       },
 

@@ -1,6 +1,7 @@
 export interface ProfileEditFormType {
   /** 프로필 이미지 */
   profileImg: string;
+  profileImgFile: File | "";
 
   /** 닉네임 (최대 15자) */
   nickname: string;
@@ -12,13 +13,13 @@ export interface ProfileEditFormType {
   birth: string;
 
   /** 성별 */
-  gender: "MALE" | "FEMALE" | "OTHER";
+  gender: "MALE" | "FEMALE" | "";
 
   /** 휴대폰 번호 (국가코드 포함) */
-  countryCode?: string;
-  phoneNumber?: string;
+  // countryCode?: string;
+  // phoneNumber?: string;
 
   /** 계정 이메일 (Read-only인 경우가 많지만 폼 타입에는 포함) */
   email: string;
-  provider: "google" | "kakao" | "plat"; // 로그인 제공자 추가
+  provider: "KAKAO" | "GOOGLE" | "EMAIL"; // 로그인 제공자 추가
 }

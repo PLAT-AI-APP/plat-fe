@@ -7,11 +7,12 @@ interface PatchMyInfoProps {
   bio: string;
   birth: string;
   gender: string;
-  profileImage: File | string;
-  phone: {
-    countryCode: string;
-    number: string;
-  };
+  // profileImg: string;
+  profileImgFile: File | string;
+  // phone: {
+  //   countryCode: string;
+  //   number: string;
+  // };
 }
 
 const PatchMyInfo = async (data: PatchMyInfoProps) => {
@@ -22,16 +23,16 @@ const PatchMyInfo = async (data: PatchMyInfoProps) => {
   formData.append("birth", data.birth);
   formData.append("gender", data.gender);
 
-  formData.append("phone.countryCode", data.phone.countryCode || "");
-  formData.append("phone.number", data.phone.number || "");
+  // formData.append("phone.countryCode", data.phone.countryCode || "+82");
+  // formData.append("phone.number", data.phone.number || "01029114961");
 
   // 만약 profileImg가 File 객체라면 파일 전송
-  if (data.profileImage instanceof File) {
-    formData.append("profileImage", data.profileImage);
+  if (data.profileImgFile instanceof File) {
+    formData.append("profileImage", data.profileImgFile);
     formData.append("removeImage", "false");
   }
   // 만약 profileImg가 아예 없거나 빈 값이라면 이미지 삭제 처리
-  else if (!data.profileImage) {
+  else if (!data.profileImgFile) {
     formData.append("removeImage", "true");
   }
   // 기존 URL(string) 유지 시

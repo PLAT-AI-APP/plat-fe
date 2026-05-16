@@ -13,7 +13,7 @@ const GenderField = () => {
       <div className="flex flex-col gap-1">
         <div className="flex items-center gap-1 font-medium text-sm">
           <span>성별</span>
-          <span className="text-font-accents">*</span>
+          {/* <span className="text-font-accents">*</span> */}
         </div>
       </div>
 
@@ -23,7 +23,7 @@ const GenderField = () => {
             key={g}
             type="button"
             onClick={() =>
-              setValue("gemder", g, {
+              setValue("gender", g, {
                 shouldValidate: true,
               })
             }
