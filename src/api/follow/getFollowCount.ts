@@ -21,7 +21,7 @@ export const useFollowCountQuery = (userId: string) => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
   return useQuery<GetFollowCountResponse, AppError>({
-    queryKey: ["get-follow-count"],
+    queryKey: ["get-follow-count", userId],
     queryFn: () => getFollowCount(userId),
     staleTime: 1000 * 60 * 5,
     enabled: isLoggedIn,
