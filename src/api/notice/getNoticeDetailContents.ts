@@ -31,7 +31,7 @@ export const useNoticeDetailContentsQuery = ({
   noticeId,
 }: GetNoticeDetailContentsProps) => {
   return useQuery<NoticeListResponseData, AppError>({
-    queryKey: ["get-notice-detail-contents"],
+    queryKey: ["get-notice-detail-contents", noticeId],
     queryFn: () => getNoticeDetailContents({ noticeId }),
     staleTime: 1000 * 60 * 5,
   });
