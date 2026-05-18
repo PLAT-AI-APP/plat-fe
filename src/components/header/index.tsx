@@ -1,7 +1,7 @@
 import { Fold, User } from "@/icons";
 import Image from "next/image";
 import React, { useRef } from "react";
-import logoImg from "../../../public/logo.png";
+import logoImg from "../../../public/logo.svg";
 import { SearchBar } from "./SearchBar";
 import Profile from "./Profile";
 import Link from "next/link";
@@ -43,10 +43,11 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
           <Image
             id="header-logo-image"
             src={logoImg}
-            width={89}
+            width={122}
+            height={29}
             priority
             alt="plat logo"
-            className="min-w-22.25 h-6.5 shrink-0"
+            className="min-w-30.5 h-7.25 shrink-0"
           />
         </Link>
       </div>
