@@ -78,6 +78,12 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
       });
       return;
     }
+
+    if (typeof window !== "undefined") {
+      const currentPath = window.location.pathname + window.location.search;
+      localStorage.setItem("prevPath", currentPath);
+    }
+
     window.location.href =
       name === "KAKAO"
         ? `${process.env.NEXT_PUBLIC_BASE_URI}/oauth2/authorization/kakao`

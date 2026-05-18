@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import AuthClient from "./_components/AuthClient";
 
 interface PageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -16,13 +17,7 @@ const AuthPage = async ({ searchParams }: PageProps) => {
     return <div>유효하지 않은 접근입니다.</div>;
   }
 
-  // const data = await verifyCode(code);
-
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <h1 className="text-xl font-bold">인증을 처리하고 있습니다.</h1>
-    </div>
-  );
+  return <AuthClient code={code} />;
 };
 
 export default AuthPage;
