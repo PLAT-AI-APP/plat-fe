@@ -22,12 +22,15 @@ import AccountField from "../field/AccountField";
 import Link from "next/link";
 
 import { ProfileEditModalProps } from "@/type/modal";
+import { useDeleteUserMutation } from "@/api/user/deleteUser";
 
 const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
   const { handleSubmit, watch } = useFormContext<ProfileEditFormType>();
   const { mutate: updateMyInfo } = useUpdateMyInfoMutation();
   const { setFieldErrors } = useFormServerError<ProfileEditFormType>();
   // const [isPhoneModal, setIsPhoneModal] = useState(false);
+
+  const { mutate: deleteUser } = useDeleteUserMutation();
 
   const birth = watch("birth");
 
@@ -83,7 +86,11 @@ const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
           >
             비밀번호 변경
           </Link>
-          <button type="button" className="underline text-sm text-font-2 w-fit">
+          <button
+            onClick={() => deleteUser}
+            type="button"
+            className="underline text-sm text-font-2 w-fit"
+          >
             회원탈퇴
           </button>
         </footer>
