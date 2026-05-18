@@ -8,6 +8,7 @@ import { useScrollTimeout } from "@/hooks/useScrollTiemout";
 import { cn } from "@/lib/utils";
 import { useMyInfoQuery } from "@/api/user/getMyInfo";
 import { ModalManager } from "@/components/modal/ModalManager";
+import { useAuthStore } from "@/store/useAuthStore";
 // import { useAuthStore } from "@/store/useAuthStore";
 
 // 사이드바를 아예 보여주지 않을 경로 리스트
@@ -65,15 +66,24 @@ export default function ClientLayout({
   const handleFoldToggle = () => setIsFolded((prev) => !prev);
   const { isScrolling, onScroll } = useScrollTimeout();
 
-  // const { accessToken } = useAuthStore();
-  // const router = useRouter();
+  const { accessToken } = useAuthStore();
+  const router = useRouter();
 
-  // useEffect(() => {
-  //   // 마이페이지 진입 시 토큰이 없으면 홈으로
-  //   if (pathname.startsWith("/mypage") && !accessToken) {
-  //     router.replace("/");
-  //   }
-  // }, [accessToken, pathname, router]);
+  useEffect(() => {
+    // 인증(로그인)이 꼭 필요한 보호 경로 목록 정의
+    const protectedRoutes = ["/mypage", "/studio"];
+
+    // 현재 접속한 pathname이 보호 경로 중 하나로 시작하는지 검사
+    const isProtectedRoute = protectedRoutes.some((route) =>
+      pathname.startsWith(route),
+    );
+
+    // 보호된 경로인데 토큰이 없다면 홈으로 튕겨내기
+    if (isProtectedRoute && !accessToken) {
+      alert("로그인이 필요한 서비스입니다.");
+      router.replace("/");
+    }
+  }, [accessToken, pathname, router]);
   return (
     <>
       {!isHeaderHidden && <Header handleFoldToggle={handleFoldToggle} />}
