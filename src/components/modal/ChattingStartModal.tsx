@@ -47,7 +47,7 @@ const ChattingStartModal = ({
         <SmartInput
           label="내 페르소나"
           description="대화 속에서 당신은 어떤 인물인가요? 당신의 이름, 직업, 특징을 설정해 보세요."
-          fontSize="lg"
+          // fontSize="lg"
           leftElement={<User className="w-5 h-5 text-font-2" />}
           rightElement={
             <button className="text-xs text-font-2 rounded-sm py-1 px-3 bg-card hover:bg-card-hover">
@@ -61,7 +61,7 @@ const ChattingStartModal = ({
         <SmartInput
           label="시나리오"
           description="어떤 테마로 대화를 시작할까요? 준비된 시나리오 중 하나를 골라보세요."
-          fontSize="lg"
+          // fontSize="lg"
           type="modal"
           isOpen={isOpen}
           toggleIsOpen={toggle}
