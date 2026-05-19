@@ -9,7 +9,7 @@ const TagList = ({ list, className }: TagListProps) => {
   return (
     <ul
       className={cn(
-        "flex gap-0.5 w-full overflow-hidden flex-wrap text-xs",
+        "flex gap-0.5 w-full overflow-hidden flex-wrap body-6",
         className,
       )}
     >

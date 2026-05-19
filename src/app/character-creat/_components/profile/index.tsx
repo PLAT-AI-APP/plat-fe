@@ -60,7 +60,7 @@ const Profile = () => {
       </div>
 
       {/* 운영 정책 안내 */}
-      <footer className="text-xs flex items-center gap-2 text-font-2 p-3 pr-5 rounded-xl bg-card">
+      <footer className="body-6 flex items-center gap-2 text-font-2 p-3 pr-5 rounded-xl bg-card">
         <StatusWarning className="w-5 h-5" />
         <p>
           폭력, 혐오, 성적묘사 등의 표현 및 이미지는 규정에 따라 영구적으로

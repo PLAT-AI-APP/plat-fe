@@ -37,7 +37,7 @@ const TagSuggestionsModal = ({ onClose }: TagSuggestionsModalProps) => {
         <header className="flex items-center justify-between pb-6">
           <div className="flex gap-3 items-center">
             <Megaphone aria-hidden="true" />
-            <h2 className="text-[20px] font-semibold">해시태그 제안하기</h2>
+            <h2 className="title-1">해시태그 제안하기</h2>
           </div>
           <button type="button" onClick={onClose} aria-label="모달 닫기">
             <Close className="w-3.5 h-3.5 cursor-pointer" />
@@ -78,7 +78,7 @@ const TagSuggestionsModal = ({ onClose }: TagSuggestionsModalProps) => {
           type="submit"
           isActive={Boolean(opinionValue && nameValue)}
           text="전송"
-          className="rounded-xl text-sm font-medium mt-6.5"
+          className="rounded-xl mt-6.5"
         />
       </form>
     </ModalLayout>

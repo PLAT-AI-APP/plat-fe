@@ -11,7 +11,7 @@ const PersonaHeader = ({ onClose }: PersonaHeaderProps) => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Persona className="w-6 h-6" />
-          <h2 className="text-[20px] font-semibold">페르소나</h2>
+          <h2 className="title-1">페르소나</h2>
         </div>
         <button
           onClick={onClose}
@@ -22,7 +22,7 @@ const PersonaHeader = ({ onClose }: PersonaHeaderProps) => {
           <Close className="w-3.5 h-3.5" />
         </button>
       </div>
-      <p className="text-sm text-font-2 pt-2">
+      <p className="body-4 text-font-2 pt-2">
         페르소나로 설정한 역할에 맞춰 캐릭터와 대화할 수 있어요.
       </p>
     </header>

@@ -28,16 +28,14 @@ const Dialog = ({
         <div className="flex flex-col gap-2">
           {/* label이 문자열이면 p태그로 래핑, 아니면 그대로 렌더링 */}
           {typeof label === "string" ? (
-            <p className="text-white text-lg font-medium text-center">
-              {label}
-            </p>
+            <p className="text-font-0 title-2 text-center">{label}</p>
           ) : (
             label
           )}
-          <p className="text-sm text-font-2 text-center">{description}</p>
+          <p className="body-4 text-font-2 text-center">{description}</p>
         </div>
 
-        <div className="flex gap-3 pt-9 text-sm font-medium">
+        <div className="flex gap-3 pt-9 title-5">
           <button
             onClick={onClose}
             type="button"

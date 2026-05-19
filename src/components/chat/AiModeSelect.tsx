@@ -100,7 +100,7 @@ const AiModelSelect = ({ currentAi, handleCurrentAi }: AiModelSelectProps) => {
           height={24}
           className="min-w-6 h-6 rounded-full"
         />
-        <span className="text-sm font-medium">{currentAi.name}</span>
+        <span className="body-4">{currentAi.name}</span>
 
         {isAiModelSelect && (
           <ModalLayout
@@ -126,7 +126,7 @@ const AiModelSelect = ({ currentAi, handleCurrentAi }: AiModelSelectProps) => {
                       />
                       <div className="flex-1">
                         <div className="text-sm flex items-center gap-2 pb-0.5">
-                          <strong className="font-semibold">{ai.id}</strong>
+                          <strong className="body-4">{ai.id}</strong>
                           {ai.discountRate && (
                             <span className="px-1.5 py-0.5 rounded-lg text-[12px] text-brand border border-brand bg-brand-opacity">
                               {ai.discountRate}%
@@ -135,20 +135,20 @@ const AiModelSelect = ({ currentAi, handleCurrentAi }: AiModelSelectProps) => {
                         </div>
                         <div className="flex items-center gap-1">
                           {ai.originalPrice && (
-                            <span className="text-font-disabled line-through">
+                            <span className="text-font-disabled body-2 line-through">
                               {ai.originalPrice}
                             </span>
                           )}
-                          <span className="text-brand font-medium">
+                          <span className="text-brand title-3">
                             {ai.price}코인
                           </span>
-                          <span className="text-font-2 text-xs">
+                          <span className="text-font-2 body-6">
                             / {ai.unit}
                           </span>
                         </div>
                       </div>
                     </header>
-                    <p className="mt-1 text-font-2 text-sm leading-snug">
+                    <p className="mt-1 text-font-2 body-6 leading-snug">
                       {ai.description}
                     </p>
                   </article>

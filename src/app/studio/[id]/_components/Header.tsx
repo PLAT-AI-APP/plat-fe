@@ -2,40 +2,40 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import ProfileEditModal from "@/components/modal/ProfileEditModal";
-import { FollowModal } from "@/components/modal/FollowModal";
+// import { FollowModal } from "@/components/modal/FollowModal";
 import { useUserStore } from "@/store/useUserStore";
 import { ArrowRight } from "@/icons";
 import Link from "next/link";
-import { useFollowCountQuery } from "@/api/follow/getFollowCount";
+// import { useFollowCountQuery } from "@/api/follow/getFollowCount";
 
 interface HeaderProps {
   id: string;
 }
 const Header = ({ id }: HeaderProps) => {
-  const { data: followCount } = useFollowCountQuery(id);
-  const { followerCount = 0, followingCount = 0 } = followCount ?? {};
+  // const { data: followCount } = useFollowCountQuery(id);
+  // const { followerCount = 0, followingCount = 0 } = followCount ?? {};
 
   const [isProfileEditodal, setIsProfileEditodal] = useState(false);
-  const [isFollowModal, setIsFollowModal] = useState(false);
+  // const [isFollowModal, setIsFollowModal] = useState(false);
 
   const toggleIsProfileEditodal = () => {
     setIsProfileEditodal((prev) => !prev);
   };
 
-  const toggleIsFollowModal = () => {
-    setIsFollowModal((prev) => !prev);
-  };
+  // const toggleIsFollowModal = () => {
+  //   setIsFollowModal((prev) => !prev);
+  // };
 
   // 상태 타입 정의 (기본값은 'followers')
-  const [activeFollowTab, setActiveFollowTab] = useState<
-    "followers" | "following"
-  >("followers");
+  // const [activeFollowTab, setActiveFollowTab] = useState<
+  //   "followers" | "following"
+  // >("followers");
 
   // 모달을 열 때 탭 종류를 인자로 받음
-  const openFollowModal = (tab: "followers" | "following") => {
-    setActiveFollowTab(tab);
-    setIsFollowModal(true);
-  };
+  // const openFollowModal = (tab: "followers" | "following") => {
+  //   setActiveFollowTab(tab);
+  //   setIsFollowModal(true);
+  // };
 
   const profileImage = useUserStore((state) => state.user?.profileImage);
   const nickname = useUserStore((state) => state.user?.nickname);
@@ -60,9 +60,9 @@ const Header = ({ id }: HeaderProps) => {
 
           <div className="flex items-start gap-6">
             <div className="flex flex-col">
-              <h1 className="text-lg font-medium">{nickname}</h1>
+              <h1 className="title-2">{nickname}</h1>
 
-              <nav className="flex gap-4">
+              {/* <nav className="flex gap-4">
                 <button
                   onClick={() => openFollowModal("followers")}
                   className="flex gap-1 text-sm cursor-pointer"
@@ -79,12 +79,12 @@ const Header = ({ id }: HeaderProps) => {
                   <span className="text-font-2">팔로잉</span>
                   <span>{followingCount}</span>
                 </button>
-              </nav>
+              </nav> */}
             </div>
           </div>
         </div>
 
-        <p className="text-sm text-font-2">{bio}</p>
+        <p className="body-4 text-font-2">{bio}</p>
       </section>
 
       <Link
@@ -100,13 +100,13 @@ const Header = ({ id }: HeaderProps) => {
       {isProfileEditodal && (
         <ProfileEditModal onClose={toggleIsProfileEditodal} />
       )}
-      {isFollowModal && (
+      {/* {isFollowModal && (
         <FollowModal
           onClose={toggleIsFollowModal}
           // userId={id}
           activeTab={activeFollowTab}
         />
-      )}
+      )} */}
     </header>
   );
 };

@@ -32,14 +32,14 @@ const PersonaItem = ({ persona, isActive, onSelect }: PersonaItemProps) => {
         isActive && "border border-font-1",
       )}
     >
-      <div className="flex justify-between font-medium">
+      <div className="flex justify-between">
         <div className="flex items-center gap-3">
           {isDefault && (
-            <span className="px-1.5 py-0.75 bg-brand-opacity rounded-lg text-[12px] text-brand border border-brand">
+            <span className="caption-2 px-1.5 py-0.75 bg-brand-opacity rounded-lg text-brand border border-brand">
               기본
             </span>
           )}
-          <span>{name}</span>
+          <span className="title-3">{name}</span>
           {isActive && <CheckCircle className="-ml-2" />}
         </div>
         <div ref={triggerRef} className="relative">
@@ -58,7 +58,7 @@ const PersonaItem = ({ persona, isActive, onSelect }: PersonaItemProps) => {
           )}
         </div>
       </div>
-      <p className="line-clamp-1 whitespace-break-spaces text-sm text-font-2">
+      <p className="line-clamp-1 whitespace-break-spaces body-4 text-font-2">
         {description}
       </p>
     </li>

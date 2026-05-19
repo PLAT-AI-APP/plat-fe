@@ -68,7 +68,7 @@ const NoticeList = ({ currentFilter }: NoticeListProps) => {
               href={`/notification/${noticeId}`}
               className="flex justify-between pt-3.75 px-2.5 pb-5"
             >
-              <div className="flex flex-col gap-1.5 font-medium">
+              <div className="flex flex-col gap-1.5">
                 {/* 공지사항 분류 공지/업데이트/이벤트 */}
                 <div className="flex gap-1.5">
                   {isPinned && (
@@ -82,7 +82,7 @@ const NoticeList = ({ currentFilter }: NoticeListProps) => {
                   )}
                   <span
                     className={cn(
-                      "rounded-md py-1 px-2 w-fit text-[13px]",
+                      "rounded-md py-1 px-2 w-fit caption-2",
                       colorStyle.bg,
                       colorStyle.color,
                     )}
@@ -92,11 +92,11 @@ const NoticeList = ({ currentFilter }: NoticeListProps) => {
                 </div>
 
                 {/* 공지사항 제목 */}
-                <p className="text-sm">{title}</p>
+                <p className="title-5">{title}</p>
               </div>
               <time
                 dateTime={dayjs(createdAt).format("YYYY-MM-DD")}
-                className="text-[13px] text-font-2"
+                className="body-5 text-font-2"
               >
                 {dayjs(createdAt).format("YYYY-MM-DD")}
               </time>

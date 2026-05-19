@@ -39,7 +39,7 @@ const AuthInput = forwardRef<HTMLInputElement, AuthInputProps>(
       <section className={cn("flex flex-col gap-2", boxClassName)}>
         {/* 라벨 영역 */}
         {isLabel && (
-          <label htmlFor={inputId} className="text-sm font-medium text-font-1">
+          <label htmlFor={inputId} className="title-5 text-font-1">
             {label}
           </label>
         )}
@@ -60,7 +60,7 @@ const AuthInput = forwardRef<HTMLInputElement, AuthInputProps>(
               {...props}
               className={cn(
                 // 기본 스타일
-                "w-full h-11 border border-border-main bg-black/20 rounded-lg px-4 py-3 text-sm text-font-1",
+                "w-full h-11 border border-border-main bg-black/20 rounded-lg px-4 py-3 body-4 text-font-1",
                 "placeholder:text-font-2/50 focus:outline-none focus:border-brand transition-all",
                 // 아이콘 유무에 따른 여백 조절
                 leftElement && "pl-11",
@@ -81,10 +81,7 @@ const AuthInput = forwardRef<HTMLInputElement, AuthInputProps>(
 
           {/* 에러 메시지 영역 */}
           {error && (
-            <span
-              role="alert"
-              className="pl-2 pt-1.5 text-font-accents text-xs"
-            >
+            <span role="alert" className="pl-2 pt-1.5 text-font-accents body-6">
               {error.message}
             </span>
           )}

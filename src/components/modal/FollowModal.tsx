@@ -108,9 +108,9 @@ export const FollowModal = ({
                 key={tab.id}
                 onClick={() => setActiveTabs(tab.id)}
                 className={cn(
-                  "text-font-disabled px-7.25 py-2.75 cursor-pointer translate-y-0.5",
+                  "body-2 text-font-disabled px-7.25 py-2.75 cursor-pointer translate-y-0.5",
                   activeTabs === tab.id &&
-                    "text-font-1 font-medium border-b-2 border-brand",
+                    "text-font-1 title-3 border-b-2 border-brand",
                 )}
               >
                 {tab.title}
@@ -154,7 +154,7 @@ export const FollowModal = ({
                   height={40}
                   className="w-10 h-10 rounded-full"
                 />
-                <span className="text-sm text-white">{user.nickname}</span>
+                <span className="body-4 text-white">{user.nickname}</span>
               </div>
 
               {/* 팔로우/팔로잉 버튼 - 클릭 이벤트 연결 */}
@@ -168,7 +168,7 @@ export const FollowModal = ({
                   }
                 }}
                 className={cn(
-                  "px-2.5 py-1 rounded-[100px] text-xs transition-colors",
+                  "px-2.5 py-1 rounded-[100px] body-6 transition-colors",
                   isFollowing
                     ? "bg-card text-font-2" // 팔로잉 중인 상태 (차분한 색)
                     : "bg-font-1 text-bg-dark", // 팔로우 전 상태 (눈에 띄는 색)

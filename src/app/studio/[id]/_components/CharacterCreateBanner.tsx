@@ -10,16 +10,16 @@ const CharacterCreateBanner = () => {
         "@max-[400px]:flex-col @max-[400px]:gap-6",
       )}
     >
-      <div className="flex flex-col gap-1 font-medium">
-        <span>캐릭터 제작</span>
-        <span className="text-xs text-font-2">
+      <div className="flex flex-col gap-1">
+        <span className="title-3">캐릭터 제작</span>
+        <span className="body-4 text-font-2">
           나만의 캐릭터를 직접 만들고 공유해 보세요
         </span>
       </div>
       <Link
         href={`/character-creat`}
         className={cn(
-          "flex items-center h-10 text-sm text-brand font-medium py-2.5 pr-5 pl-4 rounded-xl bg-brand-opacity border border-brand",
+          "flex items-center h-10 title-5 text-brand py-2.5 pr-5 pl-4 rounded-xl bg-brand-opacity border border-brand",
           "justify-center",
         )}
       >

@@ -102,7 +102,7 @@ const AssetItem = ({ id, index, remove, copyAsset }: AssetItemProps) => {
                 />
               </label>
 
-              <p className="flex gap-1 text-sm font-medium">
+              <p className="flex gap-1 body-4">
                 {assetName || "에셋이름"}
                 {/* 추후 백엔드가 넘겨주는 에셋의 코드 */}
                 <span className="text-font-disabled">#3Eabde</span>
@@ -145,17 +145,21 @@ const AssetItem = ({ id, index, remove, copyAsset }: AssetItemProps) => {
                 placeholder="에셋명을 입력해주세요."
                 maxLength={15}
                 value={assetName}
+                labelFontSize="title-5"
               />
               <SmartInput
                 {...register(`asset.${index}.assetSituation` as const)}
-                label="상황 설명"
+                label="상황"
                 type="textarea"
                 required
                 placeholder="이미지와 어울리는 상황을 설명해주세요."
                 maxLength={50}
                 maxLine={3}
                 minLine={3}
+                description="작성하신 상황이 되면 이미지를 띄워드려요."
                 value={assetSituation}
+                labelFontSize="title-5"
+                descFontSize="body-6"
               />
             </div>
           )}

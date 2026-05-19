@@ -62,11 +62,11 @@ const CommentItem = ({ comment }: Props) => {
           )} */}
 
           <header className="flex justify-between pb-3">
-            <div className="flex gap-3 font-medium items-center">
-              <Link href={"/"} className={cn("text-sm hover:underline")}>
+            <div className="flex gap-3 items-center">
+              <Link href={"/"} className={cn("title-6 hover:underline")}>
                 {comment.author.name}
               </Link>
-              <time className="text-[12px] text-font-2">
+              <time className="body-6 text-font-2">
                 {dayjs(comment.createdAt).fromNow()}
               </time>
             </div>
@@ -86,13 +86,10 @@ const CommentItem = ({ comment }: Props) => {
             </div>
           </header>
 
-          <div
-            className="flex flex-col h-fit text-sm font-medium"
-            id="comment-text-container"
-          >
+          <div className="flex flex-col h-fit" id="comment-text-container">
             <p
               ref={textRef}
-              className={`transition-all font-normal ${
+              className={`transition-all body-4 ${
                 !isExpanded ? "line-clamp-4" : ""
               } overflow-hidden whitespace-pre-wrap`}
             >
@@ -102,7 +99,7 @@ const CommentItem = ({ comment }: Props) => {
             {isOverflown && !isExpanded && (
               <button
                 onClick={() => setIsExpanded(true)}
-                className="text-font-2 w-fit mt-1 hover:underline"
+                className="text-font-2 body-6 w-fit mt-1 hover:underline"
               >
                 자세히 보기
               </button>

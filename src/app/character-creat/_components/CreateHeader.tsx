@@ -32,7 +32,7 @@ const CreateHeader = ({ onSave, onDraftClick }: CreateHeaderProps) => {
   };
   return (
     <header className="flex items-center justify-between pb-4">
-      <h2 className="flex items-center gap-2 text-[20px] font-medium">
+      <h2 className="flex items-center gap-2 title-1">
         <ArrowLineLeft
           onClick={() => handleSafeBack("/")}
           className="w-6 h-6 text-font-2 cursor-pointer"
@@ -40,7 +40,7 @@ const CreateHeader = ({ onSave, onDraftClick }: CreateHeaderProps) => {
         캐릭터 생성
       </h2>
 
-      <div className="flex gap-4 whitespace-nowrap text-sm">
+      <div className="flex gap-4 whitespace-nowrap body-4">
         <div className="flex gap-2">
           <button
             onClick={onSave}
@@ -58,7 +58,7 @@ const CreateHeader = ({ onSave, onDraftClick }: CreateHeaderProps) => {
         <ActiveButton
           isActive={isValid}
           text="등록"
-          className="px-4 py-2 rounded-xl font-medium h-9"
+          className="px-4 py-2 rounded-xl h-9"
         />
       </div>
     </header>

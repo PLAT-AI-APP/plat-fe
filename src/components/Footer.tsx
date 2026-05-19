@@ -34,7 +34,7 @@ const Footer = () => {
               <Link
                 id={`footer-link-${menu.text}`}
                 href={menu.link}
-                className="text-sm text-font-1 hover:underline"
+                className="body-4 text-font-1 hover:underline"
               >
                 {menu.text}
               </Link>
@@ -46,7 +46,7 @@ const Footer = () => {
       {/* 사업자 정보 영역: 주소 및 연락처 정보 */}
       <address
         id="footer-business-info"
-        className="not-italic flex flex-wrap gap-3 text-sm text-font-disabled"
+        className="not-italic flex flex-wrap gap-3 body-4 text-font-disabled"
       >
         <span id="footer-company-name">(주)오비트랩</span>|
         <span id="footer-representative">대표 김승우</span>|
@@ -58,7 +58,7 @@ const Footer = () => {
       </address>
 
       {/* 저작권 표시 영역 */}
-      <p id="footer-copyright" className="text-sm text-font-disabled">
+      <p id="footer-copyright" className="body-4 text-font-disabled">
         © 2025 Wrtn. All rights reserved.
       </p>
     </footer>

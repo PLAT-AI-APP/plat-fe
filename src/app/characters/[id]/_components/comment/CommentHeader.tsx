@@ -6,7 +6,7 @@ interface CommentHeaderProps {
 const CommentHeader = ({ commentCount }: CommentHeaderProps) => {
   return (
     <header className="flex justify-between">
-      <span>댓글 {commentCount}개</span>
+      <span className="body-2">댓글 {commentCount}개</span>
     </header>
   );
 };

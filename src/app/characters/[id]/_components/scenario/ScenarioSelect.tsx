@@ -27,7 +27,7 @@ export const ScenarioSelect = ({
       onClick={toggle}
       className="relative flex justify-between px-4 py-2.5 bg-card hover:bg-card-hover border border-border-main rounded-xl w-full text-left"
     >
-      <span className="text-sm text-font-1">{currentScenario.name}</span>
+      <span className="title-5 text-font-1">{currentScenario.name}</span>
       {isOpen ? (
         <ArrowUp className="w-5 h-5 text-font-2" />
       ) : (

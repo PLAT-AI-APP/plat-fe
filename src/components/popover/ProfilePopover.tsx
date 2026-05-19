@@ -129,8 +129,8 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
               className="w-10 h-10 rounded-full"
             />
             <div className="flex flex-col gap-0.5">
-              <span className="text-sm text-font-1">{nickname}</span>
-              <span className="flex items-center gap-0.5 text-sm text-font-1">
+              <span className="title-5 text-font-1">{nickname}</span>
+              <span className="flex items-center gap-0.5 body-4 text-font-1">
                 <Token className="w-4 h-4" /> 1100
               </span>
             </div>
@@ -142,7 +142,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
           <div
             // href={"/login"}
             onClick={() => handleLoginBtn("KAKAO")}
-            className="flex cursor-pointer items-center justify-center relative text-center h-11.5 rounded-lg bg-[#FEE500] w-full py-2 text-bg-darkest"
+            className="flex cursor-pointer items-center justify-center relative body-4 text-center h-11.5 rounded-lg bg-[#FEE500] w-full py-2 text-bg-darkest"
           >
             <Kakao className="absolute w-5.5 h-5.5 top-1/2 left-7.5 -translate-y-1/2" />
             카카오 계정으로 시작하기
@@ -150,7 +150,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
           <div
             // href={"/login"}
             onClick={() => handleLoginBtn("GOOGLE")}
-            className="flex cursor-pointer items-center justify-center relative text-center h-11.5 rounded-lg bg-white w-full py-2 text-black"
+            className="flex cursor-pointer items-center justify-center relative body-4 text-center h-11.5 rounded-lg bg-white w-full py-2 text-black"
           >
             <Google className="absolute w-5.5 h-5.5 top-1/2 left-7.5 -translate-y-1/2" />
             구글 계정으로 시작하기
@@ -159,7 +159,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
             // href={"/login"}
             ref={loginModalBtnRef}
             onClick={() => handleLoginBtn("LOGIN")}
-            className="flex cursor-pointer items-center justify-center relative text-center h-11.5 rounded-lg bg-card w-full py-2 text-font-2"
+            className="flex cursor-pointer items-center justify-center relative body-4 text-center h-11.5 rounded-lg bg-card w-full py-2 text-font-2"
           >
             {/* <Kakao className="absolute w-5.5 h-5.5 top-1/2 left-7.5 -translate-y-1/2" /> */}
             다른 방법으로 로그인하기
@@ -169,7 +169,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
 
       <hr className="text-border-main pb-2.5 mt-2.5" />
 
-      <h3 className="pb-1.5 pl-2.5 text-xs text-font-2 font-medium">활동</h3>
+      <h3 className="pb-1.5 pl-2.5 caption-1 text-font-2 font-medium">활동</h3>
       {filteredActivityArray.map((tab) => {
         const Icon = tab.icon;
 
@@ -181,8 +181,8 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
               onClick={tab.name === "콘텐츠 설정" ? tendency.toggle : undefined}
               // className="relative cursor-pointer flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg hover:bg-btn-hover transition-colors text-font-1 hover:text-font-1 text-sm"
             >
-              <div className="relative cursor-pointer flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg hover:bg-btn-hover transition-colors duration-300 ease-in-out text-font-1 hover:text-font-1 text-sm">
-                <div className="flex items-center gap-2">
+              <div className="relative cursor-pointer flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg hover:bg-btn-hover transition-colors duration-300 ease-in-out text-font-1 hover:text-font-1">
+                <div className="flex items-center gap-2 body-4">
                   <Icon
                     size={18}
                     strokeWidth={0.5}
@@ -192,9 +192,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
                 </div>
 
                 <div className="flex items-center gap-1">
-                  <span className="text-[13px] text-font-1">
-                    {cureentTendency}
-                  </span>
+                  <span className="title-6 text-font-1">{cureentTendency}</span>
                   <ArrowRight
                     className={cn(
                       "w-2.5 h-2.5 text-font-disabled",
@@ -220,7 +218,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
                           key={name}
                           onClick={() => handleCurrentTendency(name)}
                           className={cn(
-                            "text-xs cursor-pointer flex justify-between px-3.5 py-2.5 rounded-2xl hover:bg-btn-hover transition-colors duration-300 ease-in-out",
+                            "body-5 cursor-pointer flex justify-between px-3.5 py-2.5 rounded-2xl hover:bg-btn-hover transition-colors duration-300 ease-in-out",
                           )}
                         >
                           <div className="flex items-center gap-2">
@@ -264,9 +262,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
 
       <hr className="text-border-main pb-2.5 mt-2.5" />
 
-      <h3 className="pb-1.5 pl-2.5 text-xs text-font-2 font-medium">
-        문의 및 설정
-      </h3>
+      <h3 className="pb-1.5 pl-2.5 caption-1 text-font-2">문의 및 설정</h3>
       {supportArray.map((tab) => {
         const Icon = tab.icon;
         return (
@@ -274,7 +270,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
             key={tab.name}
             href={tab.link}
             // onClick={onClose}
-            className="flex items-center gap-2 px-3 py-2.5 rounded-lg hover:bg-btn-hover transition-colors text-font-1 hover:text-font-1 text-sm"
+            className="flex items-center gap-2 px-3 py-2.5 rounded-lg hover:bg-btn-hover transition-colors text-font-1 hover:text-font-1 body-4"
           >
             <Icon
               size={18}
@@ -291,7 +287,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
           <hr className="text-border-main pb-2.5 mt-2.5" />
           <div
             onClick={() => logout()}
-            className="cursor-pointer flex items-center gap-2 px-3 py-2.5 rounded-xl hover:bg-btn-hover transition-colors duration-300 ease-in-out text-font-1 hover:text-font-1 text-sm"
+            className="cursor-pointer flex items-center gap-2 px-3 py-2.5 rounded-xl hover:bg-btn-hover transition-colors duration-300 ease-in-out text-font-1 hover:text-font-1 body-4"
           >
             <Logout size={18} className="text-font-2 shrink-0" />
             로그아웃

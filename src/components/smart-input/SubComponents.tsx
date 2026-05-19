@@ -2,25 +2,26 @@ import React from "react";
 import { FieldError } from "react-hook-form";
 import { cn } from "@/lib/utils";
 
-export const LabelSection = ({ 
-  label, 
-  required, 
-  description, 
-  fontSize 
-}: { 
-  label?: string; 
-  required?: boolean; 
-  description?: string; 
-  fontSize: "md" | "lg" 
+export const LabelSection = ({
+  label,
+  required,
+  description,
+  labelFontSize,
+  descFontSize,
+}: {
+  label?: string;
+  required?: boolean;
+  description?: string;
+  labelFontSize?: "title-3" | "title-5";
+  descFontSize?: "body-4" | "body-5" | "body-6";
 }) => {
   if (!label) return null;
   return (
     <div className="flex flex-col gap-1">
       <div
         className={cn(
-          "flex items-center gap-1 font-medium",
-          fontSize === "md" && "text-sm",
-          fontSize === "lg" && "text-[16px]",
+          "flex items-center gap-1",
+          labelFontSize, // 넘겨받은 클래스명을 그대로 적용 (예: "title-5" 또는 "title-3")
         )}
       >
         <span>{label}</span>
@@ -29,9 +30,8 @@ export const LabelSection = ({
       {description && (
         <p
           className={cn(
-            "text-xs text-font-2",
-            fontSize === "md" && "text-xs",
-            fontSize === "lg" && "text-sm",
+            "text-font-2",
+            descFontSize, // 넘겨받은 클래스명을 그대로 적용 (예: "body-5", "body-4" 등)
           )}
         >
           {description}
@@ -41,20 +41,20 @@ export const LabelSection = ({
   );
 };
 
-export const CharacterCounter = ({ 
-  currentLength, 
-  maxLength, 
-  isTextarea 
-}: { 
-  currentLength: number; 
-  maxLength?: number; 
-  isTextarea?: boolean 
+export const CharacterCounter = ({
+  currentLength,
+  maxLength,
+  isTextarea,
+}: {
+  currentLength: number;
+  maxLength?: number;
+  isTextarea?: boolean;
 }) => {
   if (!maxLength) return null;
   return (
     <div
       className={cn(
-        "absolute right-4 text-xs text-font-2 pointer-events-none",
+        "absolute right-4 body-6 text-font-2 pointer-events-none",
         isTextarea ? "bottom-3" : "top-1/2 -translate-y-1/2",
       )}
     >
@@ -68,8 +68,6 @@ export const ErrorMessage = ({ error }: { error?: FieldError | string }) => {
   const message = typeof error === "string" ? error : error?.message;
   if (!message) return null;
   return (
-    <span className="pt-2 pl-2 text-font-accents text-xs block">
-      {message}
-    </span>
+    <span className="pt-2 pl-2 text-font-accents body-6 block">{message}</span>
   );
 };

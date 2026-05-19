@@ -75,7 +75,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
         <header className="flex items-center justify-between pb-6">
           <div className="flex gap-3 items-center">
             <Tag aria-hidden="true" />
-            <h2 className="text-[20px] font-semibold">태그</h2>
+            <h2 className="title-1">태그</h2>
           </div>
           <button
             type="button"
@@ -91,7 +91,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
             id="search-input"
             type="text"
             value={searchKeyword}
-            className="bg-bg-darker text-sm border border-border-main w-full h-10 px-4 pl-10 rounded-xl focus:outline-none transition-all placeholder:text-font-disabled focus:border-font-1"
+            className="bg-bg-darker body-4 border border-border-main w-full h-10 px-4 pl-10 rounded-xl focus:outline-none transition-all placeholder:text-font-disabled focus:border-font-1"
             placeholder="검색어를 입력하세요"
             onChange={(e) => setSearchKeyword(e.target.value)}
           />
@@ -138,7 +138,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
           >
             <div className="flex gap-2 items-center">
               <Megaphone className="w-4 h-4" />
-              <span>원하는 해시태그가 없나요?</span>
+              <span className="body-6">원하는 해시태그가 없나요?</span>
             </div>
             <ArrowRight className="w-3 h-3" />
           </button>
@@ -147,7 +147,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
             onClick={handleComplete}
             text="완료"
             isActive
-            className="h-full px-5 py-2.25 w-fit rounded-xl text-sm"
+            className="h-full px-5 py-2.25 w-fit"
           />
         </footer>
       </div>

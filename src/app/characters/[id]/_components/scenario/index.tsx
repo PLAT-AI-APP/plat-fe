@@ -33,7 +33,7 @@ export const ScenarioSection = ({ characterId }: ScenarioSectionProps) => {
 
   return (
     <section className="flex flex-col gap-3">
-      <p className="text-font-1 font-medium">시나리오</p>
+      <p className="title-3">시나리오</p>
       <div className="flex flex-col gap-6.5">
         <ScenarioSelect
           currentScenario={currentScenario}

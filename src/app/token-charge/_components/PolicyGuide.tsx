@@ -12,14 +12,11 @@ const PolicyGuide = () => {
   ];
 
   return (
-    <section className="flex flex-col gap-1 pt-12 text-font-disabled">
-      <h3 className="font-semibold text-xs">환불 정책 및 노트 이용 안내</h3>
+    <section className="flex flex-col gap-1 pt-12 text-font-disabled title-6">
+      <h3>환불 정책 및 노트 이용 안내</h3>
       <ul className="flex flex-col gap-1.5">
         {policies.map((policy, index) => (
-          <li
-            key={index}
-            className="text-xs leading-relaxed flex items-center gap-2"
-          >
+          <li key={index} className="leading-relaxed flex items-center gap-2">
             {/* 불렛 포인트를 위한 점(dot) */}
             <span className="ml-2 w-0.5 h-0.5 rounded-full bg-font-disabled" />
 

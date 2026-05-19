@@ -29,7 +29,7 @@ const AiSuggestedChat = () => {
         {MOCK_AI_RESPONSES.map((res) => (
           <li
             key={res.id}
-            className="cursor-pointer rounded-2xl text-sm font-medium px-3 py-4 bg-btn-hover hover:bg-btn-selected"
+            className="cursor-pointer rounded-2xl body-4 px-3 py-4 bg-btn-hover hover:bg-btn-selected"
           >
             <span>{res.fullText}</span>{" "}
             <span className="text-font-2"> {`${res.narration}`}</span>

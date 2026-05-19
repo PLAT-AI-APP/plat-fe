@@ -149,7 +149,7 @@ const Sidebar = ({ isFolded = false }: SidebarProps) => {
                           exit={{ opacity: 0, x: -10 }}
                           transition={{ duration: 0.2 }}
                           className={cn(
-                            "ml-1 whitespace-nowrap text-sm",
+                            "ml-1 whitespace-nowrap title-3",
                             isActive ? "font-medium text-brand" : "text-font-2",
                           )}
                         >
@@ -196,7 +196,7 @@ const Sidebar = ({ isFolded = false }: SidebarProps) => {
                   },
                 }}
                 // 3. 텍스트가 꺾이지 않도록 방어
-                className="text-font-2 text-sm pl-2 overflow-hidden whitespace-nowrap mb-1"
+                className="text-font-2 body-4 pl-2 overflow-hidden whitespace-nowrap mb-1"
               >
                 최근 대화
               </motion.p>
@@ -251,10 +251,10 @@ const Sidebar = ({ isFolded = false }: SidebarProps) => {
                         }}
                         className="flex flex-col overflow-hidden whitespace-nowrap ml-3 flex-1 min-w-0"
                       >
-                        <p className="font-medium text-sm text-font-1 truncate">
+                        <p className="font-medium body-4 text-font-1 truncate">
                           {chat.name}
                         </p>
-                        <p className="text-font-2 text-xs truncate">
+                        <p className="text-font-2 body-5 truncate">
                           {chat.lastMessage}
                         </p>
                       </motion.div>

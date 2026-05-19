@@ -41,9 +41,9 @@ const CreateTabs = ({
             key={tab.id}
             onClick={() => setCurrentTabId(tab.id)}
             className={cn(
-              "text-sm text-font-2 p-2.5 cursor-pointer translate-y-0.5 outline-none",
+              "body-4 text-font-2 p-2.5 cursor-pointer translate-y-0.5 outline-none",
               currentTabId === tab.id &&
-                "text-font-1 font-semibold border-b-2 border-brand",
+                "text-font-1 title-5 border-b-2 border-brand",
             )}
           >
             {tab.title}

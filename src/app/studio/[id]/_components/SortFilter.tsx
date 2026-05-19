@@ -26,7 +26,7 @@ const SortFilter = ({ currentSort }: SortFilterProps) => {
         ref={triggerRef}
         type="button"
         onClick={() => setIsSortOpen(!isSortOpen)}
-        className="flex items-center py-1 px-1.5 gap-1.5 text-sm text-font-2 font-medium cursor-pointer"
+        className="flex items-center py-1 px-1.5 gap-1.5 title-5 text-font-2 cursor-pointer"
         aria-haspopup="listbox"
         aria-expanded={isSortOpen}
       >

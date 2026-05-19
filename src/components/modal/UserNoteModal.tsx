@@ -40,7 +40,7 @@ const UserNoteModal = ({ onClose }: UserNoteModalProps) => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Note className="w-6 h-6" />
-            <h2 className="text-[20px] font-semibold">유저노트</h2>
+            <h2 className="title-1">유저노트</h2>
           </div>
           <button
             onClick={onClose}
@@ -51,7 +51,7 @@ const UserNoteModal = ({ onClose }: UserNoteModalProps) => {
             <Close className="w-3.5 h-3.5" />
           </button>
         </div>
-        <p className="text-sm text-font-2 pt-2">
+        <p className="body-4 text-font-2 pt-2">
           대화내역이 자동으로 요약되어 캐릭터가 더 오래 기억할 수 있어요.
         </p>
       </header>

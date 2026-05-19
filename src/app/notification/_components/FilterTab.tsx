@@ -38,8 +38,8 @@ const FilterTab = ({ currentFilter }: FilterTabProps) => {
                   query: id === "ALL" ? { filter: id } : { filter: id },
                 }}
                 className={cn(
-                  "text-sm text-font-2 transition-colors",
-                  isActive && "text-font-1 font-bold", // 가독성을 위해 font-bold 추가 권장
+                  "body-4 text-font-2 transition-colors",
+                  isActive && "text-font-1", // 가독성을 위해 font-bold 추가 권장
                 )}
               >
                 {name}

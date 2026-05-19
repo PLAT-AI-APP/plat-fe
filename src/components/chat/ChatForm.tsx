@@ -1,5 +1,5 @@
 "use client";
-import { PenSparkle, SendFill } from "@/icons";
+import { Asterisk, PenSparkle, SendFill } from "@/icons";
 import { AIModelType } from "@/type/chat";
 import React, { useCallback, useState } from "react";
 import ActiveButton from "../ActiveButton";
@@ -47,9 +47,17 @@ const ChatForm = () => {
             />
             <button
               type="button"
-              className="hover:bg-btn-hover rounded-full border border-border-main aspect-square"
+              className="text-font-2 body-4 flex gap-1.5 items-center justify-center py-1.5 h-fit pl-2.5 pr-3 hover:bg-btn-hover border border-border-main rounded-[100px]"
             >
-              <PenSparkle className="text-font-2 w-[18.7px] h-[18.7px] mx-auto" />
+              <Asterisk className="w-4 h-4" />
+              상황
+            </button>
+            <button
+              type="button"
+              className="text-font-2 body-4 flex gap-2.5 items-center justify-center py-1.5 pl-2.5 pr-3 hover:bg-btn-hover border border-border-main rounded-[100px]"
+            >
+              <PenSparkle className="w-4 h-4 mx-auto" />
+              추천답변
             </button>
           </div>
 

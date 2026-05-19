@@ -106,9 +106,9 @@ const Scenario = ({
                 key={id}
                 onClick={() => !isDrag && selectScenario(i)} // 드래그 중에는 클릭이 무시되도록 처리
                 className={cn(
-                  "flex gap-1 items-center px-3 py-1.5 bg-card text-sm rounded-[100px] shrink-0 transition-all",
+                  "flex gap-1 items-center px-3 py-1.5 bg-card body-4 rounded-[100px] shrink-0 transition-all",
                   activeScenarioIndex === i
-                    ? "border border-font-1"
+                    ? "border border-font-1 title-5"
                     : "text-font-2 hover:bg-card-hover border border-transparent",
                 )}
               >

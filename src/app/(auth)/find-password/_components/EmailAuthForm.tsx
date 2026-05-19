@@ -104,11 +104,11 @@ const EmailAuthForm = ({ onNextStep }: EmailAuthFormProps) => {
     <section className="py-9 px-6 w-screen max-w-97 rounded-3xl border border-border-main bg-bg-darker">
       <header className="flex flex-col gap-1.5 pb-9">
         <div className="flex gap-3">
-          <h1 id="auth-step-title" className="text-[22px] font-medium">
+          <h1 id="auth-step-title" className="heading-3">
             비밀번호 재설정
           </h1>
         </div>
-        <p className="text-font-2 text-sm">
+        <p className="text-font-2 body-4">
           이메일 인증을 통해 비밀번호를 재설정할 수 있습니다.
         </p>
       </header>
@@ -162,6 +162,7 @@ const EmailAuthForm = ({ onNextStep }: EmailAuthFormProps) => {
             : isEmailPerfect && !isPending
         }
         onClick={handleButtonClick}
+        className="rounded-xl"
       />
     </section>
   );

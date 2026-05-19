@@ -18,7 +18,7 @@ const SocialLoginButton = ({ icon, label, onClick }: SocialButtonProps) => (
     >
       {icon}
     </span>
-    <span id="social-label" className="text-sm text-font-1 font-semibold">
+    <span id="social-label" className="title-5 text-font-1 font-semibold">
       {label}
     </span>
   </button>

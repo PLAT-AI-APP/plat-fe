@@ -33,7 +33,7 @@ const CharacterBasicInfo = ({
   return (
     <article className="flex flex-col gap-4">
       <header className="flex flex-col gap-1.5">
-        <h2 className="font-semibold text-[20px] text-font-1">{title}</h2>
+        <h2 className="title-1 text-font-1">{title}</h2>
         <div className="flex gap-3">
           <span className="flex items-center gap-1 text-sm text-font-2">
             <ChatFill className="h-4 w-4" />
@@ -48,7 +48,7 @@ const CharacterBasicInfo = ({
 
       <div
         id="character-introduction"
-        className="flex flex-col gap-0.5 text-sm text-font-2"
+        className="flex flex-col gap-0.5 body-4 text-font-2"
       >
         <ReactMarkdown
           remarkPlugins={[remarkGfm, remarkBreaks]}
@@ -58,7 +58,7 @@ const CharacterBasicInfo = ({
         </ReactMarkdown>
       </div>
 
-      <TagList list={tags} className="text-xs" />
+      <TagList list={tags} className="caption-2" />
     </article>
   );
 };

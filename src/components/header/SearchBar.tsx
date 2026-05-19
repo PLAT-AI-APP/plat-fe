@@ -33,7 +33,7 @@ export const SearchBar = () => {
       <input
         id="search-input"
         type="text"
-        className="text-sm border cursor-pointer border-border-main w-full h-10 px-4 pl-10 rounded-xl focus:outline-none transition-all placeholder:text-font-disabled focus:cursor-text focus:border-font-1"
+        className="text-sm border cursor-pointer border-border-main w-full h-10 px-4 pl-10 rounded-xl focus:outline-none transition-all placeholder:body-4 placeholder:text-font-disabled focus:cursor-text focus:border-font-1"
         placeholder="검색어를 입력하세요"
         // 포커스 시 활성화
         onFocus={() => setIsActive(true)}
@@ -61,10 +61,10 @@ export const SearchBar = () => {
           {keywords.length > 0 && (
             <section className="flex flex-col gap-4">
               <header className="flex justify-between">
-                <h1 className="text-font-1">최근 검색어</h1>
+                <h1 className="text-font-1 title-3">최근 검색어</h1>
                 <button
                   onClick={clearAll}
-                  className="cursor-pointer text-font-2 hover:underline text-[12px]"
+                  className="cursor-pointer text-font-2 hover:underline body-6"
                 >
                   전체삭제
                 </button>
@@ -75,7 +75,7 @@ export const SearchBar = () => {
                   <li
                     key={keyword}
                     className={cn(
-                      "flex gap-2 items-center text-sm rounded-[100px] border border-border-main justify-between py-1.5 pl-3 pr-2 transition-colors cursor-pointer",
+                      "flex gap-2 items-center body-4 rounded-[100px] border border-border-main justify-between py-1.5 pl-3 pr-2 transition-colors cursor-pointer",
                       "[&:not(:has(.close-btn:hover))]:hover:bg-btn-hover",
                     )}
                   >
@@ -95,7 +95,7 @@ export const SearchBar = () => {
 
           {/* 인기 검색어 영역 */}
           <section className="flex flex-col gap-4">
-            <h1 id="popular-search-title" className="text-font-1">
+            <h1 id="popular-search-title" className="text-font-1 title-3">
               인기 검색어
             </h1>
 
@@ -108,8 +108,8 @@ export const SearchBar = () => {
                     {/* 순위 숫자 */}
                     <span
                       className={cn(
-                        "w-3.75 text-sm",
-                        isTopThree ? "text-brand" : "text-font-2",
+                        "w-3.75 body-4",
+                        isTopThree ? "text-brand title-5" : "text-font-2",
                       )}
                     >
                       {index + 1}
@@ -117,8 +117,8 @@ export const SearchBar = () => {
                     {/* 검색어 키워드 */}
                     <span
                       className={cn(
-                        "text-sm cursor-pointer hover:underline",
-                        isTopThree ? "text-font-1" : "text-font-2",
+                        "body-4 cursor-pointer hover:underline",
+                        isTopThree ? "text-font-1 title-5" : "text-font-2",
                       )}
                     >
                       {item}

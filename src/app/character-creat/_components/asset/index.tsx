@@ -63,10 +63,10 @@ const Asset = () => {
   return (
     <section className="flex flex-col gap-5.25">
       <header className="flex flex-col">
-        <div className="flex items-center gap-1 font-semibold text-sm">
+        <div className="flex items-center gap-1 title-3">
           <span>에셋 등록 ({fields.length}/50)</span>
         </div>
-        <p className="text-xs text-font-2">
+        <p className="body-5 text-font-2">
           상황에 어울리는 이미지를 등록해보세요. 최대 5MB
         </p>
       </header>
@@ -98,7 +98,7 @@ const Asset = () => {
         <button
           type="button"
           onClick={addAsset}
-          className="text-sm font-medium py-2.5 mt-2 rounded-xl bg-bg-darkest border border-border-main hover:bg-card"
+          className="body-4 py-2.5 mt-2 rounded-xl bg-bg-darkest border border-border-main hover:bg-card"
         >
           에셋 추가
         </button>

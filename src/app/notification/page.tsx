@@ -24,7 +24,7 @@ const NotificationPage = async ({ searchParams }: NotificationPageProps) => {
   return (
     <section className="flex flex-col gap-9 max-w-155 w-full mx-auto">
       <header>
-        <h2 className="text-2xl font-medium">공지사항</h2>
+        <h2 className="heading-2">공지사항</h2>
       </header>
 
       <div id="notice-content-area" className="flex flex-col gap-4">

@@ -11,13 +11,13 @@ const GenderField = () => {
   return (
     <div className={cn("flex flex-col flex-1 gap-2 w-full")}>
       <div className="flex flex-col gap-1">
-        <div className="flex items-center gap-1 font-medium text-sm">
+        <div className="flex items-center gap-1 title-5">
           <span>성별</span>
           {/* <span className="text-font-accents">*</span> */}
         </div>
       </div>
 
-      <div className="flex gap-2 text-sm">
+      <div className="flex gap-2">
         {(["MALE", "FEMALE"] as const).map((g) => (
           <button
             key={g}
@@ -28,8 +28,8 @@ const GenderField = () => {
               })
             }
             className={cn(
-              "flex-1 bg-bg-darkest border border-border-main rounded-xl py-3 transition-colors",
-              gender === g && "text-brand font-medium bg-brand-opacity",
+              "flex-1 bg-bg-darkest body-4 border border-border-main rounded-xl py-3 transition-colors",
+              gender === g && "text-brand title-5 bg-brand-opacity",
             )}
           >
             {g === "MALE" ? "남자" : "여자"}

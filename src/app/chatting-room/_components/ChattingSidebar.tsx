@@ -28,14 +28,14 @@ const ChattingSidebar = ({ toggleIsSidebar }: ChattingSidebarProps) => {
           </button>
         </header>
 
-        <nav>
-          <h2 className="pb-3 text-font-2 text-base">채팅방 설정</h2>
+        <nav className="body-4">
+          <h2 className="pb-3 text-font-2">채팅방 설정</h2>
           <menu className="flex flex-col gap-2">
             {MENU_LIST.map(({ id, icon: Icon, title }) => (
               <li
                 key={title}
                 onClick={() => openModal(id)}
-                className="w-50 p-2 flex items-center text-sm justify-between list-none cursor-pointer hover:bg-btn-hover rounded-lg"
+                className="w-50 p-2 flex items-center justify-between list-none cursor-pointer hover:bg-btn-hover rounded-lg"
               >
                 <div className="flex items-center gap-3">
                   <Icon className="w-6 h-6 text-font-2" />

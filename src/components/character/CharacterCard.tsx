@@ -45,7 +45,7 @@ const CharacterCard = ({
         {/* <div className="absolute inset-0 bg-linear-to-t from-card to-transparent via-card/0.5" /> */}
         <div className="bg-[rgba(0,0,0,0.6)] justify-center absolute right-2 gap-0.5 bottom-2 py-0.5 pl-1 pr-2 rounded-md flex text-font-2 items-center">
           <ChatFill className="w-4 h-4 translate-y-px" />
-          <span className="text-sm">{char.chatCount}</span>
+          <span className="body-4">{char.chatCount}</span>
         </div>
         {isNew && (
           <New className="absolute top-2 left-2 opacity-80 rounded-md w-7.5 h-7.5" />
@@ -58,14 +58,14 @@ const CharacterCard = ({
       {/* 텍스트 영역 */}
       <div className="px-1 pt-2 flex flex-col justify-between gap-1 flex-1 transition-all duration-200 ease-in-out">
         <div className="flex flex-col gap-1">
-          <p className="text-font-1 font-medium truncate">{char.name}</p>
-          <p className="text-font-2 text-sm line-clamp-2">{char.dec}</p>
+          <p className="text-font-1 title-3 truncate">{char.name}</p>
+          <p className="text-font-2 body-4 line-clamp-2">{char.dec}</p>
         </div>
 
         <div className="flex flex-col gap-1">
           <TagList list={char.tag} />
 
-          <p className="text-xs text-font-disabled">@흐물쟁이</p>
+          <p className="body-6 text-font-disabled">@흐물쟁이</p>
         </div>
       </div>
     </Link>

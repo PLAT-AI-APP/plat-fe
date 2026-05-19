@@ -137,7 +137,8 @@ const Setting = () => {
                 <div
                   onClick={() => handleIsPublic(true)}
                   className={cn(
-                    "hover:bg-btn-hover flex justify-between px-2.5 py-2 rounded-lg cursor-pointer",
+                    "hover:bg-btn-hover body-4 flex justify-between px-2.5 py-2 rounded-lg cursor-pointer",
+                    isPublicWatch && "title-5",
                   )}
                 >
                   <span>공개</span>
@@ -149,7 +150,8 @@ const Setting = () => {
                 <div
                   onClick={() => handleIsPublic(false)}
                   className={cn(
-                    "hover:bg-btn-hover flex justify-between px-2.5 py-2 rounded-lg cursor-pointer",
+                    "hover:bg-btn-hover body-4 flex justify-between px-2.5 py-2 rounded-lg cursor-pointer",
+                    !isPublicWatch && "title-5",
                   )}
                 >
                   <span>비공개</span>
@@ -196,20 +198,22 @@ const Setting = () => {
                 onClick={(e) => e.stopPropagation()}
                 className="flex flex-col gap-1"
               >
-                {TENDENCY_LIST.map((tendency) => (
-                  <div
-                    key={tendency}
-                    onClick={() => handleTendency(tendency)}
-                    className={cn(
-                      "hover:bg-btn-hover flex justify-between px-2.5 py-2 rounded-lg cursor-pointer",
-                    )}
-                  >
-                    <span>{tendency}</span>
-                    {tendencyWatch === tendency && (
-                      <Check className="w-4.5 h-4.5 text-brand" />
-                    )}
-                  </div>
-                ))}
+                {TENDENCY_LIST.map((tendency) => {
+                  const isActive = tendencyWatch === tendency;
+                  return (
+                    <div
+                      key={tendency}
+                      onClick={() => handleTendency(tendency)}
+                      className={cn(
+                        "hover:bg-btn-hover body-4 flex justify-between px-2.5 py-2 rounded-lg cursor-pointer",
+                        isActive && "title-5",
+                      )}
+                    >
+                      <span>{tendency}</span>
+                      {isActive && <Check className="w-4.5 h-4.5 text-brand" />}
+                    </div>
+                  );
+                })}
               </div>
             </ModalLayout>
           )
@@ -237,20 +241,22 @@ const Setting = () => {
                 onClick={(e) => e.stopPropagation()}
                 className="flex flex-col gap-1 "
               >
-                {CATEGORIES.map((category) => (
-                  <div
-                    key={category}
-                    onClick={() => handlecategory(category)}
-                    className={cn(
-                      "hover:bg-btn-hover flex justify-between px-2.5 py-2 rounded-lg cursor-pointer",
-                    )}
-                  >
-                    <span>{category}</span>
-                    {categoryWatch === category && (
-                      <Check className="w-4.5 h-4.5 text-brand" />
-                    )}
-                  </div>
-                ))}
+                {CATEGORIES.map((category) => {
+                  const isActive = categoryWatch === category;
+                  return (
+                    <div
+                      key={category}
+                      onClick={() => handlecategory(category)}
+                      className={cn(
+                        "hover:bg-btn-hover body-4 flex justify-between px-2.5 py-2 rounded-lg cursor-pointer",
+                        isActive && "title-5",
+                      )}
+                    >
+                      <span>{category}</span>
+                      {isActive && <Check className="w-4.5 h-4.5 text-brand" />}
+                    </div>
+                  );
+                })}
               </div>
             </ModalLayout>
           )
@@ -277,7 +283,7 @@ const Setting = () => {
               key={i}
               className="px-1.25 py-0.5 flex items-center gap-1 rounded-md bg-card"
             >
-              <span className="text-xs text-brand">#{tag.name}</span>
+              <span className="body-6 text-brand">#{tag.name}</span>
               <Close
                 onClick={() => removeTag(i)}
                 className="w-2 h-2 text-font-2 cursor-pointer"

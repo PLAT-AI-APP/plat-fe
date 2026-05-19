@@ -30,7 +30,9 @@ export const ExpandableDescription = ({
 
   return (
     <section className="flex flex-col gap-3">
-      <h3 className="text-font-1 font-medium">캐릭터 정보</h3>
+      <h3 className="text-font-1 title-3">
+        캐릭터 정보 | <span className="title-5">이윤아</span>
+      </h3>
       <div
         id="description-body"
         className={cn(
@@ -43,7 +45,7 @@ export const ExpandableDescription = ({
         <p
           ref={textRef}
           className={cn(
-            "whitespace-pre-wrap text-sm text-font-2 leading-relaxed overflow-hidden transition-all duration-500",
+            "whitespace-pre-wrap body-4 text-font-2 leading-relaxed overflow-hidden transition-all duration-500",
             shouldShowExpand && !isExpanded ? "max-h-22" : "",
           )}
         >
@@ -55,7 +57,7 @@ export const ExpandableDescription = ({
         <button
           onClick={() => setIsExpanded(!isExpanded)}
           aria-expanded={isExpanded}
-          className="flex justify-center items-center gap-1 p-1 pl-2 text-[12px] text-font-2 hover:text-white transition-colors z-10"
+          className="flex justify-center items-center gap-1 p-1 pl-2 body-6 text-font-2 hover:text-white transition-colors z-10"
         >
           {isExpanded ? "접기" : "펼치기"}
           <ArrowDown

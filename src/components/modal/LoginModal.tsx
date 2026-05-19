@@ -80,10 +80,7 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
     >
       {/* 헤더: 로그인의 목적과 제목 정의 */}
       <header id="login-card-header" className="pb-9">
-        <h1
-          id="login-welcome-title"
-          className="font-medium text-[22px] text-font-1"
-        >
+        <h1 id="login-welcome-title" className="heading-3 text-font-1">
           지금 로그인하고 <br />
           모든 서비스를 경험해보세요.
         </h1>
@@ -145,7 +142,7 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
               <Link
                 id="btn-forgot-password"
                 href={"find-password"}
-                className="cursor-pointer w-fit pl-1 text-font-2 text-xs hover:text-font-1 transition-colors"
+                className="cursor-pointer w-fit pl-1 text-font-2 body-6 hover:text-font-1 transition-colors"
               >
                 비밀번호를 잊으셨나요?
               </Link>
@@ -157,7 +154,7 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
             text="로그인"
             type="submit"
             isActive={email.length > 0 && pw.length > 0}
-            className="mt-2 h-12 font-semibold rounded-lg"
+            className="mt-2 h-12 rounded-lg"
           />
         </form>
         {/* 소셜 로그인 섹션 */}
@@ -190,12 +187,12 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
         id="login-card-footer"
         className="flex items-center justify-center gap-3 pt-7"
       >
-        <p className="text-xs text-font-2">아직 회원이 아니신가요?</p>
+        <p className="body-6 text-font-2">아직 회원이 아니신가요?</p>
         <Link
           id="link-to-signup"
           href="/signup"
           onClick={onClose}
-          className="text-sm text-brand font-semibold hover:underline"
+          className="title-5 text-brand hover:underline"
         >
           회원가입
         </Link>

@@ -38,7 +38,7 @@ const MenuTab = ({ currentTab }: MenuTabProps) => {
     <nav
       id="category-navigation"
       aria-label="캐릭터 카테고리"
-      className="w-full flex gap-2 font-medium"
+      className="w-full flex gap-2"
     >
       {categoryArray.map(({ id, name, icon: Icon }) => {
         const isActive = currentTab === id;
@@ -49,7 +49,7 @@ const MenuTab = ({ currentTab }: MenuTabProps) => {
             href={{ pathname: "/", query: { tab: id } }}
             // scroll={false}
             className={`relative px-2.5 py-2 flex gap-1 items-center justify-center
-          ${isActive ? "text-font-1" : "text-font-2 hover:text-font-1"}`}
+          ${isActive ? "text-font-1 title-2" : "body-1 text-font-2 hover:text-font-1"}`}
           >
             {name}
             {Icon && <Icon className="w-4.5 h-4.5 inline text-white" />}

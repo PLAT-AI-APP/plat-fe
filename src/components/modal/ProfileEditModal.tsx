@@ -60,7 +60,7 @@ const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
   return (
     <form onSubmit={handleSubmit(onSave)} className="flex flex-col">
       <header className="flex items-center justify-between pb-8">
-        <h2 className="text-[20px] font-medium">프로필 수정</h2>
+        <h2 className="title-1">프로필 수정</h2>
         <Close onClick={onClose} className="w-5 h-5 cursor-pointer" />
       </header>
 
@@ -80,16 +80,13 @@ const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
         </div>
 
         <footer className="flex gap-9 justify-center mt-9">
-          <Link
-            href={"/find-password"}
-            className="underline text-sm text-font-2 w-fit"
-          >
+          <Link href={"/find-password"} className="body-4 text-font-2 w-fit">
             비밀번호 변경
           </Link>
           <button
             onClick={() => deleteUser}
             type="button"
-            className="underline text-sm text-font-2 w-fit"
+            className="body-4 text-font-2 w-fit"
           >
             회원탈퇴
           </button>

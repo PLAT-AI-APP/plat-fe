@@ -52,19 +52,19 @@ const ChattingItem = ({
 
       <article id="chat-item-content" className="flex flex-1 justify-between">
         <div className="flex-1 pr-3 ">
-          <h3 className="font-medium">{title}</h3>
-          <p className="mb-2 mt-1.5 text-sm text-font-2 line-clamp-1 whitespace-break-spaces">
+          <h3 className="title-3">{title}</h3>
+          <p className="mb-2 mt-1.5 body-4 text-font-2 line-clamp-1 whitespace-break-spaces">
             {description}
           </p>
           <footer className="flex gap-1.5 text-font-2">
             <User className="w-4 h-4" />
-            <span className="text-[13px]">{creator}</span>
+            <span className="body-5">{creator}</span>
           </footer>
         </div>
 
         <div className="flex flex-col justify-between items-end">
           <span ref={triggerRef} className="relative flex">
-            <button onClick={toggle} type="button" className=" p-1 rounded-lg">
+            <button onClick={toggle} type="button" className="p-1 rounded-lg">
               <Dots className="w-5 h-5 text-font-2" />
             </button>
 
@@ -78,7 +78,7 @@ const ChattingItem = ({
             )}
           </span>
 
-          <time className="text-xs text-font-2 text-nowrap">
+          <time className="body-6 text-font-2 text-nowrap">
             {dayjs(updatedAt).fromNow()}
           </time>
         </div>

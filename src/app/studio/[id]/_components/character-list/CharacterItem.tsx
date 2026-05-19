@@ -59,7 +59,7 @@ const CharacterItem = ({
       >
         <section className="flex flex-col">
           <header className="flex items-center justify-between">
-            <h3 className="text-sm font-medium">{title}</h3>
+            <h3 className="title-3">{title}</h3>
             <div className="relative">
               <button
                 ref={triggerRef}
@@ -85,12 +85,12 @@ const CharacterItem = ({
           </header>
 
           {/* 캐릭터의 설명 */}
-          <p className="pr-5.5 text-xs text-font-2 whitespace-pre-line line-clamp-1">
+          <p className="pr-5.5 body-6 text-font-2 whitespace-pre-line line-clamp-1">
             {description}
           </p>
 
           {/* 채팅 갯수, 공개/비공개 여부 */}
-          <footer className="flex pt-1 pb-0.5 gap-1 text-xs text-font-2">
+          <footer className="flex pt-1 pb-0.5 gap-1 body-6 text-font-2">
             <span className="flex items-center gap-1">
               <ChatFill className="w-3.5 h-3.5" />
               {formatStatCount(chatCount)}

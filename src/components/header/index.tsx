@@ -75,7 +75,9 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
               className="flex cursor-pointer items-center gap-1 transition-all duration-200 ease-in-out hover:bg-btn-hover rounded-lg p-1.25 pr-2.5"
             >
               <Token className="w-5 h-5" />
-              <span id="user-point-value">1,100</span>
+              <span id="user-point-value" className="body-2">
+                1,100
+              </span>
             </Link>
           )}
 

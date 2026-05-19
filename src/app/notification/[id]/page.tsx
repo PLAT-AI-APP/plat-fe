@@ -26,19 +26,19 @@ const NotificationDetailPage = ({ params }: PageProps) => {
     >
       <header className="flex flex-col gap-1">
         {/* 공지사항 제목 text */}
-        <h2 className="text-[20px] font-medium">{title}</h2>
+        <h2 className="title-1">{title}</h2>
 
         {/* 공지사항 업로드 시간 */}
         <time className="flex items-center gap-1.5 text-font-2">
           <Clock className="w-4 h-4" />
-          <span className="text-sm">
+          <span className="body-4">
             {dayjs(updatedAt).format("YYYY-MM-DD HH:mm:ss")}
           </span>
         </time>
       </header>
 
       {/* 공지사항 내용 text */}
-      <section className="whitespace-pre-wrap">
+      <section className="whitespace-pre-wrap body-2">
         <p>{content}</p>
       </section>
     </article>

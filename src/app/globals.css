@@ -27,7 +27,7 @@ input:-webkit-autofill:active {
   --font-0: #f5f5f5;
   --font-1: #ecedf5;
   --font-2: #989db8;
-  --font-3-disabled: #292a2c;
+  --font-3-disabled: #5c6180;
   --font-4: #0d0e11;
   --font-accents: #ed1c24;
   --border: #2a2f4a;
@@ -44,9 +44,11 @@ input:-webkit-autofill:active {
 @theme inline {
   --shadow-card-heavy: 0 10px 40px 0 rgba(0, 0, 0, 0.5);
 
+  --color-font-0: var(--font-0);
   --color-font-1: var(--font-1);
   --color-font-2: var(--font-2);
   --color-font-disabled: var(--font-3-disabled);
+  --color-font-4: var(--font-4);
   --color-border-main: var(--border);
   --color-bg-dark: var(--bg-dark);
   --color-bg-darker: var(--bg-darker);

@@ -71,7 +71,7 @@ const PersonaAddModal = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Persona className="w-6 h-6" />
-            <h2 className="text-[20px] font-semibold text-font-1">
+            <h2 className="title-1 text-font-1">
               페르소나 {isEditMode ? "수정" : "추가"}
             </h2>
           </div>
@@ -84,7 +84,7 @@ const PersonaAddModal = ({
             <Close className="w-3.5 h-3.5" />
           </button>
         </div>
-        <p className="text-sm text-font-2 pt-2 whitespace-normal">
+        <p className="body-4 text-font-2 pt-2 whitespace-normal">
           페르소나로 설정한 역할에 맞춰 캐릭터와 대화할 수 있어요.
         </p>
       </header>
@@ -115,11 +115,11 @@ const PersonaAddModal = ({
           />
         </div>
 
-        <footer className="pt-9 font-medium">
+        <footer className="pt-9">
           <button
             type="submit"
             disabled={!isValid} // 필수값이 없거나 에러 시 비활성화
-            className={`py-3 w-full rounded-xl border transition-all
+            className={`py-3 w-full title-3 rounded-xl border transition-all
               ${
                 isValid
                   ? "bg-brand text-white border-transparent hover:brightness-110"

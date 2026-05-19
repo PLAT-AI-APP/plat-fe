@@ -73,8 +73,8 @@ const SignupForm = () => {
       className="flex flex-col gap-9 py-9 px-6 w-screen max-w-112.5 rounded-3xl border border-border-main bg-bg-darker"
     >
       <header className="flex flex-col gap-1.5 font-medium">
-        <h1 className="text-[22px]">회원가입</h1>
-        <p className="text-sm text-font-2">
+        <h1 className="heading-3">회원가입</h1>
+        <p className="body-4 text-font-2">
           다양한 매력을 가진 캐릭터들이 당신을 기다리고 있어요.
         </p>
       </header>

@@ -51,7 +51,7 @@ const UserChatBubble = ({
 
         <div className="flex flex-1 gap-2 bg-card p-2.5 rounded-[16px_0px_16px_16px]">
           <textarea
-            className="w-full bg-card-hover p-2.5 rounded-[16px_0px_16px_16px] text-sm font-medium outline-none"
+            className="w-full bg-card-hover p-2.5 rounded-[16px_0px_16px_16px] body-4 outline-none"
             rows={2}
             value={editedText}
             onChange={(e) => setEditedText(e.target.value)}
@@ -80,7 +80,7 @@ const UserChatBubble = ({
         </div>
       )}
       <div className="flex justify-end">
-        <span className="text-sm bg-brand px-3 py-2 rounded-[16px_0px_16px_16px]">
+        <span className="body-4 bg-brand px-3 py-2 rounded-[16px_0px_16px_16px]">
           {text}
         </span>
       </div>

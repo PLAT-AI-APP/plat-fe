@@ -32,7 +32,8 @@ const SmartInput = forwardRef<
     error = undefined,
     leftElement,
     rightElement,
-    fontSize = "md",
+    labelFontSize = "title-3",
+    descFontSize = "body-5",
     ...rest
   } = props;
 
@@ -86,10 +87,11 @@ const SmartInput = forwardRef<
         label={label}
         required={required}
         description={description}
-        fontSize={fontSize}
+        labelFontSize={labelFontSize}
+        descFontSize={descFontSize}
       />
 
-      <div className="group text-sm font-medium">
+      <div className="group body-4">
         <div className="relative">
           {leftElement && (
             <div
@@ -160,7 +162,7 @@ const SmartInput = forwardRef<
               onClick={toggleIsOpen}
               style={{ paddingLeft: `${paddingLeft}px` }}
               className={cn(
-                "relative px-4 py-3 flex items-center justify-between rounded-xl border border-border-main bg-bg-darkest text-sm font-medium cursor-pointer",
+                "relative body-4 px-4 py-3 flex items-center justify-between rounded-xl border border-border-main bg-bg-darkest cursor-pointer",
                 error && "border-font-accents",
                 inputBoxClassName,
               )}

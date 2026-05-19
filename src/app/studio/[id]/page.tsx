@@ -43,7 +43,7 @@ const StudioPage = async ({ params, searchParams }: Props) => {
 
         <div className="flex flex-col gap-2">
           <header className="flex items-center justify-between py-1.5 px-2.5">
-            <span className="text-font-2 text-sm">
+            <span className="text-font-2 title-5">
               작품목록 {CharArray.length}
             </span>
 

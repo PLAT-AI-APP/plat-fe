@@ -26,14 +26,14 @@ const PersonaMenuPopover = ({
         <button
           onClick={() => handleAction(onEdit)}
           type="button"
-          className="flex items-center gap-2 text-left text-sm px-2.5 py-2 rounded-lg hover:bg-btn-hover"
+          className="flex items-center gap-2 text-left body-4 px-2.5 py-2 rounded-lg hover:bg-btn-hover"
         >
           <Edit className="w-4 h-4" /> 수정
         </button>
         <button
           onClick={() => handleAction(onDelete)}
           type="button"
-          className="font-medium flex items-center gap-2 text-font-accents text-sm text-left px-2.5 py-2 rounded-lg hover:bg-btn-hover"
+          className="font-medium flex items-center gap-2 text-font-accents body-4 text-left px-2.5 py-2 rounded-lg hover:bg-btn-hover"
         >
           <Trash className="w-4 h-4 text-font-accents" />
           삭제

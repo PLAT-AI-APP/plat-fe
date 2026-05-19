@@ -24,10 +24,10 @@ const ActiveButton = ({
       type={type}
       disabled={!isActive}
       className={cn(
-        "w-full h-11.5 font-medium rounded-xl border border-white/10 transition-all",
+        "w-full h-11.5 title-3 text-font-4 rounded-lg border border-border-main transition-all",
         isActive
-          ? "bg-brand text-white cursor-pointer"
-          : "bg-font-disabled text-font-1 cursor-not-allowed",
+          ? "bg-brand cursor-pointer"
+          : "bg-font-disabled cursor-not-allowed",
         className,
       )}
       {...props}

@@ -21,7 +21,7 @@ const CharacterChat = ({
         height={40}
         className="rounded-full w-10 h-10"
       />
-      <div id="chat-bubble-container" className="text-sm font-medium">
+      <div id="chat-bubble-container" className="body-4">
         <span className="block">{CharacterName}</span>
         <div className="w-fit mt-1.5 px-3 py-2 bg-card rounded-[0px_16px_16px_16px]">
           {chatText}

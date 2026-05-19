@@ -45,11 +45,11 @@ const RepresentativeImage = () => {
     <section>
       {/* 이미지 가이드 영역 */}
       <header className="flex flex-col gap-1 pb-5.25">
-        <div className="flex items-center gap-1 font-semibold">
+        <div className="flex items-center gap-1 title-3">
           <span>대표이미지</span>
           <span className="text-font-accents">*</span>
         </div>
-        <p className="text-xs text-font-2">
+        <p className="body-5 text-font-2">
           jpg, png, webp 이미지파일만 가능해요. 최대 5MB, 1:1 비율을 권장해요.
         </p>
       </header>
@@ -90,7 +90,7 @@ const RepresentativeImage = () => {
         <div className="flex gap-1 h-9">
           <label
             htmlFor="image"
-            className="flex text-sm items-center justify-center whitespace-nowrap flex-1 cursor-pointer w-full text-center border border-border-main rounded-xl bg-bg-darkest px-auto py-2"
+            className="flex body-4 items-center justify-center whitespace-nowrap flex-1 cursor-pointer w-full text-center border border-border-main rounded-xl bg-bg-darkest px-auto py-2"
           >
             업로드
           </label>

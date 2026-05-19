@@ -25,7 +25,7 @@ const MyChattingMenuPopover = ({
     <PopoverLayout onClose={onClose} triggerRef={triggerRef}>
       <nav
         id="chat-menu-nav"
-        className="antialiased flex flex-col gap-1 whitespace-nowrap font-medium text-sm"
+        className="antialiased flex flex-col gap-1 whitespace-nowrap font-medium body-4"
         onClick={(e) => e.stopPropagation()}
       >
         <ul className="flex flex-col gap-1">

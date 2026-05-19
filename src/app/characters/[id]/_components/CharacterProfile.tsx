@@ -71,12 +71,12 @@ const CharacterProfile = ({
         <ActiveButton
           text="대화하기"
           isActive
-          className="rounded-xl font-normal"
+          className="rounded-xl"
           onClick={handleChattingStartBtn}
         />
-        <button className="flex rounded-xl justify-center items-center bg-card hover:bg-card-hover cursor-pointer w-11.5 aspect-square">
+        {/* <button className="flex rounded-xl justify-center items-center bg-card hover:bg-card-hover cursor-pointer w-11.5 aspect-square">
           <Heart className="text-font-2" />
-        </button>
+        </button> */}
       </div>
 
       {/* 제작자 정보, 팔로우 button */}
@@ -90,15 +90,15 @@ const CharacterProfile = ({
             className="object-cover aspect-square rounded-full"
           />
           <div className="flex flex-col gap-0.5">
-            <Link href={"/"} className="text-font-1 hover:underline">
+            <Link href={"/"} className="text-font-1 body-2 hover:underline">
               {creatorName}
             </Link>
-            <span className="text-font-2 text-[12px]">
+            <span className="text-font-2 body-6">
               팔로워 {formatStatCount(followerCount)}
             </span>
           </div>
         </div>
-        <button className="px-2.5 py-1 rounded-[10px] text-bg-dark bg-font-1 text-sm font-medium">
+        <button className="px-2.5 py-1 rounded-[10px] text-bg-dark bg-font-1 title-5">
           팔로우
         </button>
       </div>
