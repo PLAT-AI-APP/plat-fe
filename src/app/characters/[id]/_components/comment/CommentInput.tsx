@@ -32,7 +32,7 @@ export const CommentInput = ({
         />
         <textarea
           className={cn(
-            "text-sm px-3 py-2 h-19 bg-card rounded-2xl resize-none flex-1",
+            "body-4 px-3 py-2 h-19 bg-card rounded-2xl resize-none flex-1",
             isReplyMode && "max-h-14",
           )}
           onChange={(e) => setText(e.target.value)}
@@ -41,7 +41,7 @@ export const CommentInput = ({
         />
       </div>
 
-      <div className="flex justify-end gap-2.5 font-medium text-sm">
+      <div className="flex justify-end gap-2.5 title-5">
         {isReplyMode && (
           <button
             type="button"

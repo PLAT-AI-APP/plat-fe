@@ -21,7 +21,7 @@ const ChattingRoomHeader = ({
     <header className="flex items-center justify-between sticky top-0 bg-bg-dark z-10">
       <div
         // onClick={onBack}
-        className="flex items-center gap-6.25 px-4 py-4.25 text-[20px] font-medium"
+        className="flex items-center gap-6.25 px-4 py-4.25 title-1"
       >
         {/* <ArrowLeft className="w-7 h-7" /> */}
         {characterName}

@@ -44,12 +44,12 @@ const Header = ({ userId }: HeaderProps) => {
 
           <div className="flex items-start gap-6">
             <div className="flex flex-col">
-              <h1 className="text-lg font-medium">{nickname}</h1>
+              <h1 className="title-2">{nickname}</h1>
 
               <nav className="flex gap-4">
                 <button
                   onClick={() => openFollowModal("followers")}
-                  className="flex gap-1 text-sm cursor-pointer"
+                  className="flex gap-1 body-4 cursor-pointer"
                   type="button"
                 >
                   <span className="text-font-2">팔로워</span>
@@ -57,7 +57,7 @@ const Header = ({ userId }: HeaderProps) => {
                 </button>
                 <button
                   onClick={() => openFollowModal("following")}
-                  className="flex gap-1 text-sm cursor-pointer"
+                  className="flex gap-1 body-4 cursor-pointer"
                   type="button"
                 >
                   <span className="text-font-2">팔로잉</span>
@@ -78,13 +78,13 @@ const Header = ({ userId }: HeaderProps) => {
         <button
           onClick={handleProfileEditBtn}
           type="button"
-          className="h-fit px-4 py-2 text-sm bg-bg-darkest rounded-xl border border-border-main"
+          className="h-fit px-4 py-2 body-4 bg-bg-darkest rounded-xl border border-border-main"
         >
           프로필 수정
         </button>
       </section>
 
-      <p className="text-sm text-font-2">{bio}</p>
+      <p className="body-4 text-font-2">{bio}</p>
 
       {/* 모달 레이어 */}
       {/* {profileEditodal.isOpen && (

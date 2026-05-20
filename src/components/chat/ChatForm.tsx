@@ -36,7 +36,7 @@ const ChatForm = () => {
           value={msg}
           onChange={(e) => handleMsg(e.target.value)}
           placeholder="메시지 보내기"
-          className="flex-1 items-start text-font-1 text-sm placeholder:text-font-disabled focus:border-none focus:outline-0"
+          className="flex-1 items-start text-font-1 body-4 placeholder:text-font-disabled focus:border-none focus:outline-0"
         />
 
         <footer className="flex justify-between">

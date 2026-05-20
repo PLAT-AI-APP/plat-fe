@@ -35,7 +35,7 @@ const CharacterBasicInfo = ({
       <header className="flex flex-col gap-1.5">
         <h2 className="title-1 text-font-1">{title}</h2>
         <div className="flex gap-3">
-          <span className="flex items-center gap-1 text-sm text-font-2">
+          <span className="flex items-center gap-1 body-4 text-font-2">
             <ChatFill className="h-4 w-4" />
             {formatStatCount(chatCount)}
           </span>

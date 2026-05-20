@@ -84,7 +84,7 @@ export default function ProfileContent({ id }: { id: string }) {
       >
         <header
           className={cn(
-            "flex justify-between text-sm text-font-2 px-2.5 py-1.5",
+            "flex justify-between body-4 text-font-2 px-2.5 py-1.5",
           )}
         >
           작품목록 2
@@ -93,7 +93,7 @@ export default function ProfileContent({ id }: { id: string }) {
               ref={triggerRef}
               type="button"
               onClick={toggle}
-              className="flex items-center gap-1.5 text-xs font-medium cursor-pointer"
+              className="flex items-center gap-1.5 body-4 cursor-pointer"
               aria-haspopup="listbox"
               aria-expanded={isOpen}
             >
