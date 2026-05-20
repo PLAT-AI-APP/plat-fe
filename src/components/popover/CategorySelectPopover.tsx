@@ -1,0 +1,64 @@
+import React from "react";
+import { ModalLayout } from "../ModalLayout";
+import { cn } from "@/lib/utils";
+import Check from "@/icons/Check";
+
+interface CategorySelectPopoverProps {
+  onClose: () => void;
+  categoryTriggerRef: React.RefObject<HTMLElement | null> | undefined;
+  currentCategory: string;
+  handlecategory: (category: string) => void;
+}
+const CategorySelectPopover = ({
+  categoryTriggerRef,
+  currentCategory,
+  handlecategory,
+  onClose,
+}: CategorySelectPopoverProps) => {
+  return (
+    <ModalLayout
+      onClose={onClose}
+      triggerRef={categoryTriggerRef} // ModalLayout에 전달
+      className="w-full right-0 bottom-full top-auto -translate-y-2.5"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="flex flex-col gap-1 "
+      >
+        {CATEGORIES.map((category) => {
+          const isActive = currentCategory === category;
+          return (
+            <div
+              key={category}
+              onClick={() => handlecategory(category)}
+              className={cn(
+                "hover:bg-btn-hover body-4 flex justify-between px-2.5 py-2 rounded-lg cursor-pointer",
+                isActive && "title-5",
+              )}
+            >
+              <span>{category}</span>
+              {isActive && <Check className="w-4.5 h-4.5 text-brand" />}
+            </div>
+          );
+        })}
+      </div>
+    </ModalLayout>
+  );
+};
+
+export default CategorySelectPopover;
+
+const CATEGORIES = [
+  "시뮬레이션",
+  "로맨스",
+  "판타지/SF",
+  "드라마",
+  "무협/사극",
+  "GL",
+  "BL",
+  "공포/추리",
+  "액션",
+  "코믹/일상",
+  "스포츠/학원",
+  "기타",
+];

@@ -1,28 +1,13 @@
 import TagAddModal from "@/components/modal/TagAddModal";
-import { ModalLayout } from "@/components/ModalLayout";
+import CategorySelectPopover from "@/components/popover/CategorySelectPopover";
+import PublicSelectPopover from "@/components/popover/PublicSelectPopover";
+import TendencySelectPopover from "@/components/popover/TendencySelectPopover";
 import SmartInput from "@/components/smart-input";
 import useToggle from "@/hooks/useToggle";
 import { Close } from "@/icons";
-import Check from "@/icons/Check";
-import { cn } from "@/lib/utils";
 import { CharacterCreateFormValues } from "@/type/character";
-import React, { useState, useRef, MouseEvent } from "react"; // useRef 추가
+import React, { useState, useRef, MouseEvent } from "react";
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
-
-const CATEGORIES = [
-  "시뮬레이션",
-  "로맨스",
-  "판타지/SF",
-  "드라마",
-  "무협/사극",
-  "GL",
-  "BL",
-  "공포/추리",
-  "액션",
-  "코믹/일상",
-  "스포츠/학원",
-  "기타",
-];
 
 const Setting = () => {
   const { setValue, register, control } =
@@ -40,31 +25,16 @@ const Setting = () => {
 
   const [tagInputValue, setTagInputValue] = useState("");
 
-  // modal 제어
-  // const [isPublic, setIsPublic] = useState(false);
-  // const [isTendency, setIsTendency] = useState(false);
-  // const [iscategory, setIscategory] = useState(false);
-
   const publicModal = useToggle();
   const tendencyModal = useToggle();
   const categoryModal = useToggle();
-
-  // const toggleIsPublic = () => {
-  //   setIsPublic((prev) => !prev);
-  // };
-  // const toggleisTendency = () => {
-  //   setIsTendency((prev) => !prev);
-  // };
-  // const toggleiscategory = () => {
-  //   setIscategory((prev) => !prev);
-  // };
 
   const isPublicWatch = useWatch({ control, name: "isPublic" });
   const characterDescription = useWatch({
     control,
     name: "characterDescription",
   });
-  const tendencyWatch = useWatch({ control, name: "tendency" });
+  const tendency = useWatch({ control, name: "tendency" });
   const categoryWatch = useWatch({ control, name: "category" });
 
   // 공개여부 change
@@ -104,8 +74,6 @@ const Setting = () => {
     remove(index);
   };
 
-  const TENDENCY_LIST = ["전체", "남성향", "여성향"] as const;
-
   const [isTagModal, setIsTagModal] = useState(false);
   const toggleIsTagModal = (e?: MouseEvent) => {
     e?.stopPropagation();
@@ -125,42 +93,12 @@ const Setting = () => {
         toggleIsOpen={publicModal.toggle}
         modalComponents={
           publicModal.isOpen && (
-            <ModalLayout
+            <PublicSelectPopover
+              handleIsPublic={handleIsPublic}
+              isPublic={isPublicWatch}
               onClose={publicModal.toggle}
-              triggerRef={publicTriggerRef} // ModalLayout에 전달
-              className="w-full"
-            >
-              <div
-                onClick={(e) => e.stopPropagation()}
-                className="flex flex-col gap-1"
-              >
-                <div
-                  onClick={() => handleIsPublic(true)}
-                  className={cn(
-                    "hover:bg-btn-hover body-4 flex justify-between px-2.5 py-2 rounded-lg cursor-pointer",
-                    isPublicWatch && "title-5",
-                  )}
-                >
-                  <span>공개</span>
-                  {isPublicWatch && (
-                    <Check className="w-4.5 h-4.5 text-brand" />
-                  )}
-                </div>
-
-                <div
-                  onClick={() => handleIsPublic(false)}
-                  className={cn(
-                    "hover:bg-btn-hover body-4 flex justify-between px-2.5 py-2 rounded-lg cursor-pointer",
-                    !isPublicWatch && "title-5",
-                  )}
-                >
-                  <span>비공개</span>
-                  {!isPublicWatch && (
-                    <Check className="w-4.5 h-4.5 text-brand" />
-                  )}
-                </div>
-              </div>
-            </ModalLayout>
+              publicTriggerRef={publicTriggerRef}
+            />
           )
         }
       />
@@ -185,40 +123,19 @@ const Setting = () => {
         type="modal"
         label="성향"
         required
-        value={tendencyWatch}
+        value={tendency}
         isOpen={tendencyModal.isOpen}
         toggleIsOpen={tendencyModal.toggle}
         description="선택된 성향에 따라 사용자에게 추천돼요."
         descFontSize="body-6"
         modalComponents={
           tendencyModal.isOpen && (
-            <ModalLayout
+            <TendencySelectPopover
+              currentTendency={tendency}
+              handleTendency={handleTendency}
               onClose={tendencyModal.toggle}
-              triggerRef={tendencyTriggerRef} // ModalLayout에 전달
-              className="w-full"
-            >
-              <div
-                onClick={(e) => e.stopPropagation()}
-                className="flex flex-col gap-1"
-              >
-                {TENDENCY_LIST.map((tendency) => {
-                  const isActive = tendencyWatch === tendency;
-                  return (
-                    <div
-                      key={tendency}
-                      onClick={() => handleTendency(tendency)}
-                      className={cn(
-                        "hover:bg-btn-hover body-4 flex justify-between px-2.5 py-2 rounded-lg cursor-pointer",
-                        isActive && "title-5",
-                      )}
-                    >
-                      <span>{tendency}</span>
-                      {isActive && <Check className="w-4.5 h-4.5 text-brand" />}
-                    </div>
-                  );
-                })}
-              </div>
-            </ModalLayout>
+              tendencyTriggerRef={tendencyTriggerRef}
+            />
           )
         }
       />
@@ -237,33 +154,12 @@ const Setting = () => {
         description="캐릭터와 잘 어울리는 카테고리를 골라주세요."
         modalComponents={
           categoryModal.isOpen && (
-            <ModalLayout
-              onClose={categoryModal.close}
-              triggerRef={categoryTriggerRef} // ModalLayout에 전달
-              className="w-full right-0 bottom-full top-auto -translate-y-2.5"
-            >
-              <div
-                onClick={(e) => e.stopPropagation()}
-                className="flex flex-col gap-1 "
-              >
-                {CATEGORIES.map((category) => {
-                  const isActive = categoryWatch === category;
-                  return (
-                    <div
-                      key={category}
-                      onClick={() => handlecategory(category)}
-                      className={cn(
-                        "hover:bg-btn-hover body-4 flex justify-between px-2.5 py-2 rounded-lg cursor-pointer",
-                        isActive && "title-5",
-                      )}
-                    >
-                      <span>{category}</span>
-                      {isActive && <Check className="w-4.5 h-4.5 text-brand" />}
-                    </div>
-                  );
-                })}
-              </div>
-            </ModalLayout>
+            <CategorySelectPopover
+              categoryTriggerRef={categoryTriggerRef}
+              currentCategory={categoryWatch}
+              handlecategory={handlecategory}
+              onClose={categoryModal.toggle}
+            />
           )
         }
       />
