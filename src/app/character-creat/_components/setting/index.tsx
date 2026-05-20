@@ -176,6 +176,7 @@ const Setting = () => {
         maxLine={10}
         maxLength={1000}
         value={characterDescription}
+        descFontSize="body-6"
       />
 
       {/* 성향 선택 */}
@@ -187,6 +188,8 @@ const Setting = () => {
         value={tendencyWatch}
         isOpen={tendencyModal.isOpen}
         toggleIsOpen={tendencyModal.toggle}
+        description="선택된 성향에 따라 사용자에게 추천돼요."
+        descFontSize="body-6"
         modalComponents={
           tendencyModal.isOpen && (
             <ModalLayout
@@ -230,6 +233,8 @@ const Setting = () => {
         placeholder={categoryWatch || "[선택 없음]"}
         isOpen={categoryModal.isOpen}
         toggleIsOpen={categoryModal.toggle}
+        descFontSize="body-6"
+        description="캐릭터와 잘 어울리는 카테고리를 골라주세요."
         modalComponents={
           categoryModal.isOpen && (
             <ModalLayout

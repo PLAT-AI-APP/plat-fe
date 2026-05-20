@@ -30,7 +30,7 @@ const ChattingStartModal = ({
       className="p-5 max-w-125 w-full"
     >
       <header className="flex justify-between pb-9">
-        <div className="flex gap-3 items-center">
+        <div className="flex gap-3 items-center title-1">
           <Message />
           대화 시작하기
         </div>
@@ -50,12 +50,13 @@ const ChattingStartModal = ({
           // fontSize="lg"
           leftElement={<User className="w-5 h-5 text-font-2" />}
           rightElement={
-            <button className="text-xs text-font-2 rounded-sm py-1 px-3 bg-card hover:bg-card-hover">
+            <button className="body-6 text-font-2 rounded-sm py-1 px-3 bg-card hover:bg-card-hover">
               변경
             </button>
           }
           disabled
           value={"윤아"}
+          descFontSize="body-4"
         />
 
         <SmartInput
@@ -77,6 +78,7 @@ const ChattingStartModal = ({
               triggerRef={triggerRef}
             />
           }
+          descFontSize="body-4"
         />
       </section>
 
