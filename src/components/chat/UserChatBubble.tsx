@@ -80,7 +80,7 @@ const UserChatBubble = ({
         </div>
       )}
       <div className="flex justify-end">
-        <span className="body-4 bg-brand px-3 py-2 rounded-[16px_0px_16px_16px]">
+        <span className="body-4 bg-[#B25500] px-3 py-2 rounded-[16px_0px_16px_16px]">
           {text}
         </span>
       </div>
