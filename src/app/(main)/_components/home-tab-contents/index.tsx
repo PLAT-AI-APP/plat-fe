@@ -1,7 +1,7 @@
 import New from "@/icons/New";
 import React from "react";
 import CharacterShowcase from "./_components/CharacterShowcase";
-import CharacterExperience from "./_components/CharacterExperience";
+import CharacterExperience from "./_components/character-experience";
 
 interface HomeTabContentsProps {
   charArray: {
