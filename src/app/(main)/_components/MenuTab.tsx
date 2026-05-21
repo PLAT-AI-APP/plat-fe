@@ -38,7 +38,7 @@ const MenuTab = ({ currentTab }: MenuTabProps) => {
     <nav
       id="category-navigation"
       aria-label="캐릭터 카테고리"
-      className="w-full flex gap-2"
+      className="w-full flex gap-2 mb-12"
     >
       {categoryArray.map(({ id, name, icon: Icon }) => {
         const isActive = currentTab === id;

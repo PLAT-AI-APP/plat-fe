@@ -1,104 +1,127 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useCallback } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
-import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { ArrowLeft, ArrowRight } from "@/icons";
 
 const bannerData = [
   {
     id: 1,
-    src: "/public/images/sample.png",
+    src: "/images/sample.png",
     alt: "이벤트 1",
+    title: "첫 번째 이벤트 제목",
+    desc: "첫 번째 배너의 상세 내용입니다. 여기에 원하는 설명을 적으세요.",
+    tags: ["#이벤트", "#혜택", "#시작"],
   },
   {
     id: 2,
-    src: "/public/images/sample.png",
+    src: "/images/sample.png",
     alt: "이벤트 2",
+    title: "두 번째 프로모션 제목",
+    desc: "두 번째 배너의 상세 내용입니다. 가볍고 빠른 캐러셀 라이브러리!",
+    tags: ["#프로모션", "#할인", "#핫템"],
   },
   {
     id: 3,
-    src: "/public/images/sample.png",
+    src: "/images/sample.png",
     alt: "이벤트 3",
+    title: "세 번째 기획전 제목",
+    desc: "세 번째 배너의 상세 내용입니다. 놓치면 후회하는 마지막 기회.",
+    tags: ["#기획전", "#쿠폰", "#마감임박"],
   },
 ];
 
 export function MainBannerCarousel() {
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
-
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
     Autoplay({ delay: 5000, stopOnInteraction: false }),
   ]);
 
-  const scrollTo = useCallback(
-    (index: number) => emblaApi && emblaApi.scrollTo(index),
+  const scrollPrev = useCallback(
+    () => emblaApi && emblaApi.scrollPrev(),
+    [emblaApi],
+  );
+  const scrollNext = useCallback(
+    () => emblaApi && emblaApi.scrollNext(),
     [emblaApi],
   );
 
-  const onSelect = useCallback((emblaApi: any) => {
-    setSelectedIndex(emblaApi.selectedScrollSnap());
-  }, []);
-
-  useEffect(() => {
-    if (!emblaApi) return;
-    onSelect(emblaApi);
-    setScrollSnaps(emblaApi.scrollSnapList());
-    emblaApi.on("select", onSelect);
-    emblaApi.on("reInit", onSelect);
-  }, [emblaApi, onSelect]);
-
   return (
-    // 전체 컨테이너 높이를 366px로 고정
-    <section
-      className={cn(
-        "relative w-full mx-auto overflow-hidden rounded-4xl",
-        // 반응형 높이 설정
-        "h-30", // 기본 (640px 미만)
-        "sm:h-37.5", // 640px 이상
-        "md:h-50", // 768px 이상
-        "xl:h-62.5", // 1280px 이상
-      )}
-    >
-      {/* --- 메인 슬라이드 영역 --- */}
-      <div className="h-full" ref={emblaRef}>
-        <div className="flex h-full">
-          {bannerData.map((banner) => (
-            <article
+    <section className="relative max-w-full w-full min-h-118.5 bg-neutral-900 overflow-hidden">
+      {/* --- Embla Viewport (여기서 영역 밖으로 나가는 슬라이드를 숨깁니다) --- */}
+      <div
+        id="carousel-viewport"
+        className="w-full h-full overflow-hidden"
+        ref={emblaRef}
+      >
+        {/* --- Embla Container --- */}
+        <div id="carousel-container" className="flex h-full">
+          {/* --- 개별 슬라이드 루프 --- */}
+          {bannerData.map((banner, index) => (
+            <div
               key={banner.id}
-              className={cn(
-                "bg-amber-200 relative flex-[0_0_100%] min-w-0 h-full flex items-center justify-center",
-              )}
+              className="relative flex-[0_0_100%] min-w-0 h-full overflow-hidden"
             >
-              {/* 이미지가 366px 높이를 꽉 채우되 비율을 유지하도록 설정 */}
-              <Image
-                src={banner.src}
-                alt={banner.alt}
-                width={100}
-                height={100}
-                className="w-full h-full object-cover object-center"
-              />
-            </article>
+              {/* 배경을 채워줄 흐린 블러 이미지 */}
+              <div className="absolute inset-0 z-0 opacity-40 blur-[50px] scale-110">
+                <Image
+                  alt="blur-bg"
+                  fill
+                  priority={index === 0}
+                  className="object-cover"
+                  src={banner.src}
+                />
+              </div>
+
+              {/* 메인 콘텐츠 영역: 내부 여백(px)을 주어 화살표 버튼 공간 확보 */}
+              <div className="relative z-10 w-full h-full flex items-center px-16 md:px-20">
+                {/* 텍스트 정보 콘텐츠 */}
+                <div className="flex flex-col gap-4 text-white max-w-lg z-20">
+                  <h2 className="text-3xl md:text-4xl font-bold font-['Pretendard'] leading-tight">
+                    {banner.title}
+                  </h2>
+                  <p className="text-zinc-400 text-base md:text-lg font-normal font-['Pretendard'] leading-relaxed whitespace-pre-line">
+                    {banner.desc}
+                  </p>
+
+                  {/* 해시태그 */}
+                  <ul className="flex gap-2 mt-2">
+                    {banner.tags.map((tag, i) => (
+                      <li
+                        key={i}
+                        className="px-2 py-1 bg-black/50 rounded-[5px] backdrop-blur-[2px]"
+                      >
+                        <span className="text-orange-500 text-sm md:text-base font-normal font-['Pretendard']">
+                          {tag}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              {/* 하단 그라데이션 어둡게 처리 */}
+              <div className="absolute inset-x-0 bottom-0 h-28 bg-linear-to-t from-neutral-900 to-transparent z-10" />
+            </div>
           ))}
         </div>
       </div>
 
-      {/* --- 하단 인디케이터 (Dots) --- */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10">
-        {scrollSnaps.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => scrollTo(index)}
-            className={cn(
-              "h-1.5 transition-all duration-300 rounded-full cursor-pointer",
-              index === selectedIndex
-                ? "w-10 bg-[#FF7A00]" // 활성화: 주황색 긴 바
-                : "w-2.5 bg-white/50 hover:bg-white/80", // 비활성화: 흰색 반투명 점
-            )}
-          />
-        ))}
-      </div>
+      <button
+        onClick={scrollPrev}
+        data-icon="arrow-right"
+        className="size-10 absolute left-10 top-1/2 -translate-y-1/2 opacity-30 overflow-hidden"
+      >
+        <ArrowLeft className="w-10 h-10" />
+      </button>
+      <button
+        onClick={scrollNext}
+        data-icon="arrow-right"
+        className="size-10 absolute right-10 top-1/2 -translate-y-1/2 opacity-30 overflow-hidden"
+      >
+        <ArrowRight className="w-10 h-10" />
+      </button>
     </section>
   );
 }

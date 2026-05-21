@@ -6,6 +6,7 @@ import { Metadata } from "next";
 import HomeTabContents from "./_components/home-tab-contents";
 import RankingTabContents from "./_components/ranking-tab-contents";
 import { CHARACTERS_DUMMY } from "@/mocks/dummyData";
+import CharacterCreateBanner from "./_components/CharacterCreateBanner";
 
 export const metadata: Metadata = {
   title: "home",
@@ -14,9 +15,9 @@ export const metadata: Metadata = {
 interface HomePageProps {
   searchParams: { [key: string]: string | string[] | undefined };
 }
+
 const Home = async ({ searchParams }: HomePageProps) => {
   const params = await searchParams;
-  // 쿼리스트링 'tab' 값을 가져옵니다. (기본값: 'all')
   const currentTab =
     (params.tab as "all" | "ranking" | "new" | "official" | "categories") ||
     "all";
@@ -32,29 +33,29 @@ const Home = async ({ searchParams }: HomePageProps) => {
     <article
       id="home-container"
       className={cn(
-        "@container w-full mx-auto max-w-300",
-        "px-5 md:px-6 lg:px-8",
-        "flex flex-col", // 내부 배치를 위해 flex는 유지하되 높이 강제 X
+        "w-full min-h-screen", // w-screen 대신 모바일 가로 스크롤 방지를 위해 w-full 권장
+        "flex flex-col",
       )}
     >
-      <div className="flex flex-col gap-7.5 w-full">
-        {/* 메인 비주얼/슬라이드 영역 */}
-        <MainBannerCarousel />
+      {/* 메인 비주얼/슬라이드 영역 (화면 전체 너비 100% 꽉 채움) */}
+      <MainBannerCarousel />
 
-        <div className="max-w-300 w-full flex flex-col mx-auto gap-6.5 items-center">
-          {/* 카테고리 필터 영역 */}
-          <MenuTab currentTab={currentTab} />
+      {/* 하단 콘텐츠 영역 전체를 감싸는 컨테이너 (중앙 정렬 + 양옆 여백 균등 적용) */}
+      <div className="w-full max-w-300 mx-auto @container flex flex-col">
+        {/* 카테고리 필터 영역 */}
+        <MenuTab currentTab={currentTab} />
 
-          <div
-            id="contents-wrapper"
-            className="flex flex-col gap-15 w-full mx-auto"
-          >
+        {/* 본문 콘텐츠 + 배너 + 푸터 영역 */}
+        <div className="w-full flex flex-col gap-18">
+          <div id="contents-wrapper" className="flex flex-col gap-15 w-full">
             {TabComponents[currentTab]}
           </div>
+
+          <CharacterCreateBanner />
+
+          <Footer />
         </div>
       </div>
-
-      <Footer />
     </article>
   );
 };
