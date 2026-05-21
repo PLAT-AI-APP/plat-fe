@@ -1,6 +1,7 @@
 import New from "@/icons/New";
 import React from "react";
 import CharacterShowcase from "./_components/CharacterShowcase";
+import CharacterExperience from "./_components/CharacterExperience";
 
 interface HomeTabContentsProps {
   charArray: {
@@ -22,6 +23,9 @@ const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
         cardSize="M"
         limit={5}
       />
+
+      {/* 플랫의 공식 캐릭터 맛보기 섹션 */}
+      <CharacterExperience />
 
       {/* ~한 캐릭터 모음 섹션 */}
       <CharacterShowcase
