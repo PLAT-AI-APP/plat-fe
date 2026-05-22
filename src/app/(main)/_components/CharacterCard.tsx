@@ -16,7 +16,7 @@ interface CharacterCardProps {
 }
 
 // 사이즈별 스타일 설정 객체 (Style Configuration Map)
-const SIZE_CONFIG: Record<
+export const SIZE_CONFIG: Record<
   CardSize,
   {
     wrapper: string;
