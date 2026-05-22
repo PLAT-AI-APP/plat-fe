@@ -68,7 +68,10 @@ const CharacterShowcase = ({
       </header>
 
       <div
-        className={cn("flex gap-4 flex-wrap")}
+        className={cn(
+          "flex gap-4 flex-wrap",
+          cardSize === "XL" && "justify-between",
+        )}
         style={{
           gap: `${rowGap}px ${columnGap}px`, // rowGap과 columnGap을 한 번에 설정
         }}

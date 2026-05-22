@@ -12,7 +12,13 @@ export const CharacterAvatar = () => (
   </div>
 );
 
-export const ChatBubble = ({ name, message }: { name: string; message: string }) => (
+export const ChatBubble = ({
+  name,
+  message,
+}: {
+  name: string;
+  message: string;
+}) => (
   <div className="w-full inline-flex justify-start items-start gap-2">
     <CharacterAvatar />
     <div className="inline-flex flex-col justify-start items-start gap-1.5 overflow-hidden">
@@ -26,7 +32,7 @@ export const ChatBubble = ({ name, message }: { name: string; message: string })
 
 export const NarrativeBlock = ({ content }: { content: string }) => (
   <div className="inline-flex justify-start items-start gap-5 w-full">
-    <div className="size-7 relative overflow-hidden flex-shrink-0">
+    <div className="size-7 relative overflow-hidden shrink-0">
       <div className="size-6 left-[2.33px] top-[3.50px] absolute bg-font-2" />
     </div>
     <p className="flex-1 justify-start text-font-2 text-sm leading-relaxed whitespace-pre-wrap">
@@ -38,9 +44,10 @@ export const NarrativeBlock = ({ content }: { content: string }) => (
 export const ActionFooter = () => (
   <footer className="w-full right-0 bottom-0 absolute inline-flex flex-col justify-start items-center gap-1">
     <div
-      className="w-full h-30 left-0 bottom-0 absolute 
-bg-gradient-to-b from-neutral-900/0 via-neutral-900/50 to-neutral-900 
-rounded-br-2xl backdrop-blur-[8px]"
+      className="w-full h-32 left-0 bottom-0 absolute 
+             bg-linear-to-b from-neutral-900/0 via-neutral-900/50 to-neutral-900 
+             rounded-br-2xl backdrop-blur-[1.5px]
+             mask-[linear-gradient(to_bottom,transparent,black_20%)]"
     />
     <div className="self-stretch flex flex-col justify-start items-center gap-1.25 z-30">
       <div className="self-stretch inline-flex justify-center items-center gap-1">

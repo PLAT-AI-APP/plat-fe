@@ -1,4 +1,5 @@
 import { ChatFill } from "@/icons";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 import React from "react";
 
@@ -10,7 +11,7 @@ interface CharacterCardProps {
   description: string;
   creatorName: string;
   chatCount: number;
-  images: string[] | string; // 다중 이미지 배열 (XL 등의 캐러셀용)
+  images: string[] | string;
   size?: CardSize;
 }
 
@@ -24,17 +25,17 @@ const SIZE_CONFIG: Record<
     title: string;
     desc: string;
     isIntegrated: boolean;
-    creatorName?: string; // L, XL에만 존재하므로 선택적(?) 속성으로 지정
-    chatCount?: string; // XL에만 존재하므로 선택적(?) 속성으로 지정
+    creatorName?: string;
+    chatCount?: string;
   }
 > = {
   // ~~님을 위한 추천 card size
   S: {
-    wrapper: "w-[186px] gap-2", // S 사이즈 너비 추정치
+    wrapper: "w-[185.83px] gap-2", // S 사이즈 너비 추정치
     imageArea: "w-full h-60 rounded-2xl",
     infoArea: "pl-2 gap-0.5",
-    title: "title-3 leading-6",
-    desc: "body-4 leading-5",
+    title: "title-3 ",
+    desc: "body-4 ",
     isIntegrated: false, // 텍스트 영역 배경 유무
   },
   // 오늘의 PICK, 최근 소문나기 시작한 신작 card size
@@ -42,8 +43,8 @@ const SIZE_CONFIG: Record<
     wrapper: "w-56.75 gap-2",
     imageArea: "w-full h-72 rounded-2xl",
     infoArea: "pl-2 gap-0.5",
-    title: "title-3 leading-6",
-    desc: "body-4 leading-5",
+    title: "title-3 ",
+    desc: "body-4 ",
     isIntegrated: false,
   },
   // ~한 캐릭터 모음 card size
@@ -51,18 +52,19 @@ const SIZE_CONFIG: Record<
     wrapper: "w-[288px]", // L 사이즈 너비 추정치
     imageArea: "w-full h-96 rounded-t-2xl",
     infoArea: "px-4 py-6 bg-bg-darkest rounded-b-2xl gap-1",
-    title: "title-3 leading-6",
-    desc: "body-4 leading-5",
+    title: "title-3 ",
+    desc: "body-4 ",
     creatorName: "body-5",
     isIntegrated: true,
+    chatCount: "text-font-disabled",
   },
   // 인기 캐릭터 이미지 미리보기 card size
   XL: {
     wrapper: "w-96.5 justify-between",
     imageArea: "w-full h-96 rounded-t-2xl",
     infoArea: "px-5 py-8 bg-bg-darkest rounded-b-2xl gap-2",
-    title: "title-1 leading-7",
-    desc: "body-2 leading-6",
+    title: "title-1 ",
+    desc: "body-2 ",
     isIntegrated: true,
     creatorName: "body-5",
     chatCount: "body-5",
@@ -128,13 +130,10 @@ const CharacterCard = ({
         </p>
 
         <div className="inline-flex justify-start items-start gap-0.5 mt-0.5">
-          <span className="text-font-2 text-xs font-normal font-['Pretendard'] leading-5">
-            @
-          </span>
           <span
-            className={`text-font-2 body-6 leading-5 line-clamp-1 ${config.creatorName}`}
+            className={`text-font-2 body-6 line-clamp-1 ${config.creatorName}`}
           >
-            {creatorName}
+            @ {creatorName}
           </span>
         </div>
 
@@ -143,17 +142,9 @@ const CharacterCard = ({
             data-icon="chat-fill"
             className="w-4 h-4 relative flex items-center justify-center"
           >
-            {/* L 사이즈에서는 아이콘 색상이 font-3-disabled 였던 점을 고려하여 분기 가능 */}
-            {/* <div
-              className={`w-3 h-2.5 rounded-xs ${config.isIntegrated ? "bg-font-3-disabled" : "bg-font-2"}`}
-            /> */}
-            <ChatFill
-              className={`w-4 h-4 ${config.isIntegrated ? "text-font-3-disabled" : "text-font-2"}`}
-            />
+            <ChatFill className={cn(`w-4 h-4 text-font-2`, config.chatCount)} />
           </div>
-          <span
-            className={`body-6 leading-5 ${config.isIntegrated ? "text-font-3-disabled" : "text-font-2"} ${config.chatCount}`}
-          >
+          <span className={cn(`body-6 text-font-2`, config.chatCount)}>
             {chatCount}
           </span>
         </div>
