@@ -15,7 +15,7 @@ interface HomeTabContentsProps {
 }
 const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
   return (
-    <article className="flex flex-col gap-18 mt-12">
+    <article className="flex flex-col gap-18 mt-12 pb-18">
       {/* 오늘의 PICK 섹션 */}
       <CharacterShowcase
         charArray={charArray}

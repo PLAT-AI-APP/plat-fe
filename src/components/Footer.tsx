@@ -25,7 +25,7 @@ const Footer = () => {
     },
   ];
   return (
-    <footer id="main-footer" className="p-5 mt-18 flex flex-col gap-4">
+    <footer id="main-footer" className="p-5 flex flex-col gap-4">
       {/* 푸터 내비게이션 영역 */}
       <nav id="footer-navigation" aria-label="푸터 메뉴">
         <ul id="footer-menu-list" className="flex gap-3 p-0 m-0 list-none">
