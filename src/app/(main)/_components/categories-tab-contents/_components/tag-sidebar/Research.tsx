@@ -42,7 +42,10 @@ const EXPLORE_TAGS = [
   { name: "능글", outline: "outline-border", isHot: false },
 ];
 
-const Research = () => {
+interface ResearchProps {
+  currentTag?: string;
+}
+const Research = ({ currentTag = "학교생활" }: ResearchProps) => {
   return (
     <section className="self-stretch flex flex-col items-start gap-4">
       <header className="inline-flex items-center gap-3">
@@ -87,13 +90,16 @@ const Research = () => {
           {EXPLORE_TAGS.map((tag, index) => (
             <span
               key={index}
-              className={`cursor-pointer px-1.5 py-1 rounded-md border border-border-main hover:border-font-disabled flex justify-center items-center ${tag.outline} ${tag.isHot ? "gap-1" : "gap-0.5"}`}
+              className={cn(
+                `cursor-pointer px-1.5 py-1 rounded-md border border-border-main hover:border-font-disabled flex justify-center items-center ${tag.outline} ${tag.isHot ? "gap-1" : "gap-0.5"}`,
+                currentTag === tag.name && "border-brand text-brand",
+              )}
             >
               <span className="flex items-center gap-0.5">
                 <span>#</span>
                 <span>{tag.name}</span>
               </span>
-              {tag.isHot && <span>HOT</span>}
+              {tag.isHot && <span className="text-font-accents">HOT</span>}
             </span>
           ))}
         </div>

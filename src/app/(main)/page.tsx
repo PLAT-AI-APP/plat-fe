@@ -27,42 +27,35 @@ const Home = async ({ searchParams }: HomePageProps) => {
     all: <HomeTabContents charArray={CHARACTERS_DUMMY} />,
     ranking: <RankingTabContents />,
     categories: <CategoriesTabContents />,
-    // new: <NewContent />,
-    // official: <OfficialContent />,
   };
 
   const isCategories = currentTab === "categories";
+
   return (
     <article
       id="home-container"
       className={cn(
-        "w-full min-h-[calc(100vh-60px)]",
-        "flex",
+        "w-full min-h-[calc(100vh-60px)] flex",
         isCategories && "bg-bg-darker",
       )}
     >
-      {/* 카테고리 tab전용 태그 탐색 sidebar */}
+      {/* 사이드바 영역 */}
       {isCategories && <TagSidebar />}
 
-      <section
-        className={cn("w-full min-h-[calc(100vh-60px)]", "flex flex-col")}
-      >
+      {/* 메인 콘텐츠 영역 */}
+      <section className="flex flex-col w-full min-h-[calc(100vh-60px)]">
         {/* 메인 비주얼/슬라이드 영역 */}
         {currentTab === "all" && <MainBannerCarousel />}
 
-        <div className="w-full flex-1 max-w-300 mx-auto @container flex flex-col">
-          {/* 카테고리 필터 영역 */}
+        <div className="w-full max-w-300 mx-auto @container flex-1 flex flex-col">
           <MenuTab currentTab={currentTab} />
 
-          {/* 본문+푸터 영역 */}
-          <div className="w-full flex flex-col flex-1">
-            <div id="contents-wrapper" className="flex flex-col w-full flex-1">
-              {TabComponents[currentTab]}
-            </div>
+          <div id="contents-wrapper" className="flex flex-col grow w-full">
+            {TabComponents[currentTab]}
+          </div>
 
-            <div className="mt-auto">
-              <Footer />
-            </div>
+          <div className="shrink-0 w-full">
+            <Footer />
           </div>
         </div>
       </section>
