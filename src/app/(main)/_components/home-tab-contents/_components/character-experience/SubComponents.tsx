@@ -1,9 +1,10 @@
+import { cn } from "@/lib/utils";
 import React from "react";
 
 export const CharacterAvatar = () => (
   <div
     data-property-1="P6"
-    className="size-10 relative bg-linear-225 from-orange-500 to-red-500 rounded-[100px] overflow-hidden flex-shrink-0"
+    className="size-10 relative bg-linear-225 from-orange-500 to-red-500 rounded-[100px] overflow-hidden shrink-0"
   >
     <div className="w-8 h-9 left-[33.51px] top-[16.50px] absolute origin-top-left rotate-[142.81deg] bg-orange-300 rounded-full" />
     <div className="size-[1.53px] left-[18.29px] top-[21.02px] absolute bg-font-2 rounded-full" />
@@ -41,7 +42,7 @@ export const NarrativeBlock = ({ content }: { content: string }) => (
   </div>
 );
 
-export const ActionFooter = () => (
+export const ActionFooter = ({ isActive = true }: { isActive: boolean }) => (
   <footer className="w-full right-0 bottom-0 absolute inline-flex flex-col justify-start items-center gap-1">
     <div
       className="w-full h-32 left-0 bottom-0 absolute 
@@ -52,11 +53,23 @@ export const ActionFooter = () => (
     <div className="self-stretch flex flex-col justify-start items-center gap-1.25 z-30">
       <div className="self-stretch inline-flex justify-center items-center gap-1">
         <p className="body-4 text-center justify-start text-font-0">
-          이 캐릭터와 무료로 3회 대화할 수 있어요
+          {isActive
+            ? "이 캐릭터와 무료로 3회 대화할 수 있어요"
+            : "이미 3번의 무료 대화를 진행했어요 "}
         </p>
       </div>
-      <button className="self-stretch h-16 relative bg-brand rounded-br-2xl backdrop-blur-[5.05px] cursor-pointer border-none outline-none">
-        <span className="title-3 justify-start text-font-4">
+      <button
+        className={cn(
+          "self-stretch h-16 relative bg-brand rounded-br-2xl backdrop-blur-[5.05px] cursor-pointer border-none outline-none",
+          !isActive && "bg-border-main",
+        )}
+      >
+        <span
+          className={cn(
+            "title-3 justify-start text-font-4",
+            !isActive && "text-font-disabled",
+          )}
+        >
           이 캐릭터와 대화하기
         </span>
       </button>
