@@ -6,6 +6,8 @@ import { Metadata } from "next";
 import HomeTabContents from "./_components/home-tab-contents";
 import RankingTabContents from "./_components/ranking-tab-contents";
 import { CHARACTERS_DUMMY } from "@/mocks/dummyData";
+import CategoriesTabContents from "./_components/categories-tab-contents";
+import TagSidebar from "./_components/categories-tab-contents/_components/tag-sidebar";
 
 export const metadata: Metadata = {
   title: "home",
@@ -14,9 +16,9 @@ export const metadata: Metadata = {
 interface HomePageProps {
   searchParams: { [key: string]: string | string[] | undefined };
 }
+
 const Home = async ({ searchParams }: HomePageProps) => {
   const params = await searchParams;
-  // 쿼리스트링 'tab' 값을 가져옵니다. (기본값: 'all')
   const currentTab =
     (params.tab as "all" | "ranking" | "new" | "official" | "categories") ||
     "all";
@@ -24,37 +26,39 @@ const Home = async ({ searchParams }: HomePageProps) => {
   const TabComponents: { [key: string]: React.ReactNode } = {
     all: <HomeTabContents charArray={CHARACTERS_DUMMY} />,
     ranking: <RankingTabContents />,
-    // new: <NewContent />,
-    // official: <OfficialContent />,
+    categories: <CategoriesTabContents />,
   };
+
+  const isCategories = currentTab === "categories";
 
   return (
     <article
       id="home-container"
       className={cn(
-        "@container w-full mx-auto max-w-300",
-        "px-5 md:px-6 lg:px-8",
-        "flex flex-col", // 내부 배치를 위해 flex는 유지하되 높이 강제 X
+        "w-full min-h-[calc(100vh-60px)] flex",
+        isCategories && "bg-bg-darker",
       )}
     >
-      <div className="flex flex-col gap-7.5 w-full">
-        {/* 메인 비주얼/슬라이드 영역 */}
-        <MainBannerCarousel />
+      {/* 사이드바 영역 */}
+      {isCategories && <TagSidebar />}
 
-        <div className="max-w-300 w-full flex flex-col mx-auto gap-6.5 items-center">
-          {/* 카테고리 필터 영역 */}
+      {/* 메인 콘텐츠 영역 */}
+      <section className="flex flex-col w-full min-h-[calc(100vh-60px)]">
+        {/* 메인 비주얼/슬라이드 영역 */}
+        {currentTab === "all" && <MainBannerCarousel />}
+
+        <div className="w-full max-w-300 mx-auto @container flex-1 flex flex-col">
           <MenuTab currentTab={currentTab} />
 
-          <div
-            id="contents-wrapper"
-            className="flex flex-col gap-15 w-full mx-auto"
-          >
+          <div id="contents-wrapper" className="flex flex-col grow w-full">
             {TabComponents[currentTab]}
           </div>
-        </div>
-      </div>
 
-      <Footer />
+          <div className="shrink-0 w-full">
+            <Footer />
+          </div>
+        </div>
+      </section>
     </article>
   );
 };

@@ -100,7 +100,7 @@ export default function ClientLayout({
           id="page-content"
           onScroll={onScroll}
           className={cn(
-            "flex-1 overflow-y-auto overflow-x-hidden flex flex-col",
+            "flex-1 overflow-y-auto overflow-x-hidden",
             "min-h-0 w-full mx-auto", // min-h-0이 핵심입니다.
             isScrolling && "is-scrolling",
           )}
