@@ -10,9 +10,12 @@ interface CharacterCardProps {
   title: string;
   description: string;
   creatorName: string;
-  chatCount: number;
+  chatCount?: number;
   images: string[] | string;
   size?: CardSize;
+
+  tagList?: string[];
+  currentTag?: string;
 }
 
 // 사이즈별 스타일 설정 객체 (Style Configuration Map)
@@ -40,9 +43,9 @@ export const SIZE_CONFIG: Record<
   },
   // 오늘의 PICK, 최근 소문나기 시작한 신작 card size
   M: {
-    wrapper: "w-56.75 gap-2",
+    wrapper: "w-[227px] gap-2",
     imageArea: "w-full h-72 rounded-2xl",
-    infoArea: "pl-2 gap-0.5",
+    infoArea: "px-2 gap-0.5",
     title: "title-3 ",
     desc: "body-4 ",
     isIntegrated: false,
@@ -78,6 +81,8 @@ const CharacterCard = ({
   chatCount,
   images,
   size = "M",
+  currentTag = "학교생활",
+  tagList,
 }: CharacterCardProps) => {
   const config = SIZE_CONFIG[size];
 
@@ -117,7 +122,10 @@ const CharacterCard = ({
 
       {/* 정보 텍스트 영역 */}
       <div
-        className={`self-stretch flex flex-col justify-start items-start w-full ${config.infoArea}`}
+        className={cn(
+          `self-stretch flex flex-col justify-start items-start w-full ${config.infoArea}`,
+          tagList && "gap-0.5",
+        )}
       >
         <div className="inline-flex justify-center items-center gap-1">
           <h2 className={`text-font-0 line-clamp-1 ${config.title}`}>
@@ -129,6 +137,27 @@ const CharacterCard = ({
           {description}
         </p>
 
+        {tagList && (
+          <ul className="py-1 flex flex-wrap justify-start items-center gap-1.5 overflow-hidden h-5.5">
+            {Array.from({ length: 5 }).map((_, index) => {
+              return (
+                <li
+                  key={index}
+                  className={cn(
+                    "shrink-0 pl-1 pr-0.75 py-px bg-card rounded-md flex justify-center items-center",
+                    currentTag === _ && "text-brand bg-brand-opacity",
+                  )}
+                >
+                  {/* 오타였던 size- 클래스는 제거했습니다 */}
+                  <div className="flex justify-start items-center gap-0.5">
+                    <div className="text-font-2 text-xs"># 태그</div>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+
         <div className="inline-flex justify-start items-start gap-0.5 mt-0.5">
           <span
             className={`text-font-2 body-6 line-clamp-1 ${config.creatorName}`}
@@ -137,17 +166,21 @@ const CharacterCard = ({
           </span>
         </div>
 
-        <div className="inline-flex justify-center items-center gap-1">
-          <div
-            data-icon="chat-fill"
-            className="w-4 h-4 relative flex items-center justify-center"
-          >
-            <ChatFill className={cn(`w-4 h-4 text-font-2`, config.chatCount)} />
+        {chatCount && (
+          <div className="inline-flex justify-center items-center gap-1">
+            <div
+              data-icon="chat-fill"
+              className="w-4 h-4 relative flex items-center justify-center"
+            >
+              <ChatFill
+                className={cn(`w-4 h-4 text-font-2`, config.chatCount)}
+              />
+            </div>
+            <span className={cn(`body-6 text-font-2`, config.chatCount)}>
+              {chatCount}
+            </span>
           </div>
-          <span className={cn(`body-6 text-font-2`, config.chatCount)}>
-            {chatCount}
-          </span>
-        </div>
+        )}
       </div>
     </article>
   );

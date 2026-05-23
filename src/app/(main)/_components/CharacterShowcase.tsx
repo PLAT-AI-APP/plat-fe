@@ -6,10 +6,10 @@ import { cn } from "@/lib/utils";
 import { CharacterCardSkeleton } from "./CharacterCardSkeleton";
 
 interface CharacterShowcaseProps {
-  title: string;
+  title?: string;
   charArray: {
     name: string;
-    chatCount: number;
+    chatCount?: number;
     dec: string;
     tag: string[];
     img: string[] | string;
@@ -21,6 +21,7 @@ interface CharacterShowcaseProps {
   TitleLogo?: React.ReactNode;
   columnGap?: number;
   rowGap?: number;
+  currentTag?: string;
 }
 
 const CharacterShowcase = ({
@@ -32,6 +33,7 @@ const CharacterShowcase = ({
   TitleLogo,
   columnGap,
   rowGap,
+  currentTag,
 }: CharacterShowcaseProps) => {
   // 인위적인 로딩 상태 관리 (초기값: true)
   const [isLoading, setIsLoading] = useState(true);
@@ -57,22 +59,24 @@ const CharacterShowcase = ({
 
   return (
     <section className="w-full h-auto max-w-300 flex flex-col gap-4 justify-center mx-auto">
-      <header className="flex justify-between items-center pl-2">
-        <h2 className="flex items-center gap-2 heading-3">
-          {title} {TitleLogo && TitleLogo}
-        </h2>
+      {title && (
+        <header className="flex justify-between items-center pl-2">
+          <h2 className="flex items-center gap-2 heading-3">
+            {title} {TitleLogo && TitleLogo}
+          </h2>
 
-        {allViewLink && (
-          <Link
-            href={{
-              query: { tab: allViewLink },
-            }}
-            className="title-3 text-white underline"
-          >
-            전체보기
-          </Link>
-        )}
-      </header>
+          {allViewLink && (
+            <Link
+              href={{
+                query: { tab: allViewLink },
+              }}
+              className="title-3 text-white underline"
+            >
+              전체보기
+            </Link>
+          )}
+        </header>
+      )}
 
       <div
         className={cn(
@@ -99,6 +103,8 @@ const CharacterShowcase = ({
                 creatorName={char.creatorName || "Unknown"}
                 chatCount={char.chatCount}
                 images={"/images/sample.png"}
+                tagList={char.tag}
+                currentTag={currentTag}
               />
             ))}
       </div>
