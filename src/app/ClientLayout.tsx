@@ -1,15 +1,14 @@
 "use client";
 
-import { useState, useEffect } from "react"; // useEffect 추가
+import { useState, useEffect } from "react";
 import Header from "@/components/header";
 import Sidebar from "@/components/Sidebar";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useScrollTimeout } from "@/hooks/useScrollTiemout";
 import { cn } from "@/lib/utils";
 import { useMyInfoQuery } from "@/api/user/getMyInfo";
 import { ModalManager } from "@/components/modal/ModalManager";
 import { useAuthStore } from "@/store/useAuthStore";
-// import { useAuthStore } from "@/store/useAuthStore";
 
 // 사이드바를 아예 보여주지 않을 경로 리스트
 const HIDE_SIDEBAR_PATHS = ["/character-creat"];
@@ -19,6 +18,7 @@ const HIDE_HEADER_PATHS = ["/character-creat"];
 
 // 사이드바를 기본으로 접어둘 경로 리스트
 const FOLD_SIDEBAR_PATHS = ["/chatting-room"];
+const FOLD_SIDEBAR_FULL_PATHS = ["/?tab=categories"];
 
 export default function ClientLayout({
   children,
@@ -26,6 +26,11 @@ export default function ClientLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  // 쿼리스트링을 포함한 전체 경로(fullPath) 생성
+  const queryString = searchParams.toString();
+  const fullPath = queryString ? `${pathname}?${queryString}` : pathname;
 
   useMyInfoQuery();
 
@@ -38,13 +43,22 @@ export default function ClientLayout({
     pathname?.startsWith(path),
   );
 
-  const [prevPathname, setPrevPathname] = useState(pathname);
+  // 사이드바 접힘 조건 판단 함수 (fullPath 활용)
+  const shouldFoldSidebar = () => {
+    const isFoldedPath = FOLD_SIDEBAR_PATHS.some((path) =>
+      pathname?.startsWith(path),
+    );
+    // 통합된 fullPath로 바로 비교
+    const isFoldedFullPath = FOLD_SIDEBAR_FULL_PATHS.includes(fullPath);
+    return isFoldedPath || isFoldedFullPath;
+  };
 
-  // 초기값은 무조건 false (어떤 경로든, 어떤 화면 크기든 첫 로딩은 펴짐)
-  const [isFolded, setIsFolded] = useState(
-    FOLD_SIDEBAR_PATHS.some((path) => pathname?.startsWith(path)),
-  );
+  // 초기값 설정 시 조건 반영
+  const [isFolded, setIsFolded] = useState(shouldFoldSidebar());
 
+  const [prevFullPath, setPrevFullPath] = useState(fullPath);
+
+  // 반응형 미디어 쿼리 제어 (기존 로직 유지)
   useEffect(() => {
     const mql = window.matchMedia("(max-width: 1023px)");
     const handleSceneChange = (e: MediaQueryListEvent) => {
@@ -53,12 +67,13 @@ export default function ClientLayout({
 
     mql.addEventListener("change", handleSceneChange);
     return () => mql.removeEventListener("change", handleSceneChange);
-  }, [pathname]); // isFolded를 의존성에 추가하여 최신 상태 확인
+  }, [pathname]);
 
-  // 경로 변경 감지 로직 (기존 유지)
-  if (pathname !== prevPathname) {
-    setPrevPathname(pathname);
-    if (pathname?.startsWith("/chatting-room")) {
+  // 한 번의 비교로 경로와 쿼리스트링 변경 모두 감지
+  if (fullPath !== prevFullPath) {
+    setPrevFullPath(fullPath);
+
+    if (shouldFoldSidebar()) {
       setIsFolded(true);
     }
   }
@@ -84,13 +99,14 @@ export default function ClientLayout({
       router.replace("/");
     }
   }, [accessToken, pathname, router]);
+
   return (
     <>
       {!isHeaderHidden && <Header handleFoldToggle={handleFoldToggle} />}
       <main
         id="main-container"
         className={cn(
-          "flex flex-row overflow-hidden", // 내부 요소가 삐져나가지 않게 차단
+          "flex flex-row overflow-hidden",
           isHeaderHidden ? "h-screen" : "h-[calc(100vh-60px)]",
         )}
       >
@@ -101,7 +117,7 @@ export default function ClientLayout({
           onScroll={onScroll}
           className={cn(
             "flex-1 overflow-y-auto overflow-x-hidden",
-            "min-h-0 w-full mx-auto", // min-h-0이 핵심입니다.
+            "min-h-0 w-full mx-auto",
             isScrolling && "is-scrolling",
           )}
         >
