@@ -1,7 +1,8 @@
 import New from "@/icons/New";
 import React from "react";
-import CharacterShowcase from "./_components/CharacterShowcase";
+import CharacterShowcase from "../CharacterShowcase";
 import CharacterExperience from "./_components/character-experience";
+import CharacterCreateBanner from "../CharacterCreateBanner";
 
 interface HomeTabContentsProps {
   charArray: {
@@ -14,7 +15,7 @@ interface HomeTabContentsProps {
 }
 const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
   return (
-    <div className="flex flex-col gap-15">
+    <article className="flex flex-col gap-18 mt-12">
       {/* 오늘의 PICK 섹션 */}
       <CharacterShowcase
         charArray={charArray}
@@ -92,7 +93,8 @@ const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
           moreLink="official"
         />
       </section> */}
-    </div>
+      <CharacterCreateBanner />
+    </article>
   );
 };
 
