@@ -25,7 +25,7 @@ const ExperienceHeader = ({
             alt=""
             width={48}
             height={48}
-            className={`size-12.75 rounded-full cursor-pointer ${i === selectedIndex ? "border-[3px] border-brand" : "hover:opacity-70 active:scale-90"}`}
+            className={`size-12.75 rounded-full cursor-pointer ${i === selectedIndex ? "border-[3px] border-brand" : "opacity-74 active:scale-90"}`}
             src="/images/sample.png"
           />
         ))}
