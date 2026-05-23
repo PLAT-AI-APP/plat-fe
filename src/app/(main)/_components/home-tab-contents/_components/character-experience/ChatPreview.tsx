@@ -31,7 +31,7 @@ const ChatPreview = () => {
         />
       </div>
 
-      <ActionFooter />
+      <ActionFooter isActive />
     </section>
   );
 };
