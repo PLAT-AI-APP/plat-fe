@@ -1,9 +1,9 @@
 "use client"; // 상태와 useEffect를 사용하므로 클라이언트 컴포넌트로 명시해야 합니다.
 import React, { useState, useEffect } from "react";
-import CharacterCard from "../../CharacterCard";
+import CharacterCard from "./CharacterCard";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { CharacterCardSkeleton } from "../../CharacterCardSkeleton";
+import { CharacterCardSkeleton } from "./CharacterCardSkeleton";
 
 interface CharacterShowcaseProps {
   title: string;
