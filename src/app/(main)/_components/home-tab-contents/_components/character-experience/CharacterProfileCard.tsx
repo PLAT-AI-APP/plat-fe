@@ -16,7 +16,7 @@ const CharacterProfileCard = ({ index }: CharacterProfileCardProps) => {
         height={100}
         className="object-cover w-full h-full absolute inset-0"
       />
-      <header className="absolute left-0 bottom-0 self-stretch px-6 pt-9 pb-7 bg-linear-to-b from-neutral-950/0 to-neutral-950/70 rounded-bl-2xl flex flex-col justify-center items-start gap-1 w-full">
+      <header className="absolute left-0 bottom-0 self-stretch px-6 pt-9 pb-7 bg-linear-to-b from-black/0 via-black/80 to-black/100 rounded-bl-2xl flex flex-col justify-center items-start gap-1 w-full">
         <div className="inline-flex justify-start items-center gap-2.5">
           <h2 className="justify-start text-font-0 heading-2">
             제목제목제목제목제목{index}
@@ -28,10 +28,9 @@ const CharacterProfileCard = ({ index }: CharacterProfileCardProps) => {
 
         {/* 태그 리스트 영역 */}
         <div className="inline-flex justify-start items-start gap-1">
-          <span className="body-4 pl-1.5 pr-1 py-0.5 bg-card rounded-md backdrop-blur-[2px] flex justify-center items-center">
+          <span className="body-5 pl-1.5 pr-1 py-0.5 bg-card rounded-md backdrop-blur-[2px] flex justify-center items-center">
             <span className="flex justify-start items-center gap-0.5">
-              <span className="justify-start text-brand">#</span>
-              <span className="justify-start text-brand">태그</span>
+              <span className="justify-start text-font-2"># 태그</span>
             </span>
           </span>
         </div>

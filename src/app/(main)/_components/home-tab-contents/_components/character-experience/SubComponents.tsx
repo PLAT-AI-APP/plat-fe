@@ -1,3 +1,4 @@
+import { Message } from "@/icons";
 import { cn } from "@/lib/utils";
 import React from "react";
 
@@ -33,9 +34,7 @@ export const ChatBubble = ({
 
 export const NarrativeBlock = ({ content }: { content: string }) => (
   <div className="inline-flex justify-start items-start gap-5 w-full">
-    <div className="size-7 relative overflow-hidden shrink-0">
-      <div className="size-6 left-[2.33px] top-[3.50px] absolute bg-font-2" />
-    </div>
+    <Message className="size-7 text-font-2" />
     <p className="flex-1 justify-start text-font-2 text-sm leading-relaxed whitespace-pre-wrap">
       {content}
     </p>
