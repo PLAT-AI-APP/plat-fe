@@ -9,7 +9,7 @@ interface HomeTabContentsProps {
     name: string;
     chatCount: number;
     dec: string;
-    tag: string[];
+    tag?: string[];
     img: string;
   }[];
 }

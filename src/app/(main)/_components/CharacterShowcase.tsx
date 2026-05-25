@@ -11,7 +11,7 @@ interface CharacterShowcaseProps {
     name: string;
     chatCount?: number;
     dec: string;
-    tag: string[];
+    tag?: string[];
     img: string[] | string;
     creatorName?: string; // 옵셔널 처리
   }[];
