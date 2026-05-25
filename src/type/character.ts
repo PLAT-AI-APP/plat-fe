@@ -34,7 +34,7 @@ export interface CharacterCreateFormValues {
   characterDetailSetting: string;
 
   // 탭별 데이터 (배열)
-  asset: CharacterAsset[];
+  asset?: CharacterAsset[];
   scenarios: ScenarioItem[];
   tagList: { name: string }[];
 

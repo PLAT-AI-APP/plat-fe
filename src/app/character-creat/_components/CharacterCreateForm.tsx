@@ -20,14 +20,16 @@ const characterCreateSchema = z.object({
   name: z.string().min(1, "이름을 입력해주세요."),
   characterIntroduce: z.string().min(1, "캐릭터 소개를 입력해주세요."),
   characterDetailSetting: z.string().min(1, "캐릭터 상세 설정을 입력해주세요."),
-  asset: z.array(
-    z.object({
-      assetFile: z.any().nullable(),
-      assetImage: z.string(),
-      assetName: z.string().min(1, "에셋 이름을 입력해주세요."),
-      assetSituation: z.string().min(1, "에셋 상황을 입력해주세요."),
-    }),
-  ),
+  asset: z
+    .array(
+      z.object({
+        assetFile: z.any().nullable(),
+        assetImage: z.string(),
+        assetName: z.string().min(1, "에셋 이름을 입력해주세요."),
+        assetSituation: z.string().min(1, "에셋 상황을 입력해주세요."),
+      }),
+    )
+    .optional(),
   scenarios: z.array(
     z.object({
       name: z.string().min(1, "시나리오 이름을 입력해주세요."),
@@ -60,10 +62,12 @@ const CharacterCreateForm = () => {
     resolver: zodResolver(characterCreateSchema), // 💡 Zod 검증 연결
     defaultValues: {
       representativeImage: "",
-      title: "",
-      name: "",
-      characterIntroduce: "",
-      characterDetailSetting: "",
+      title: "올림포스에서 내려온 나의 수호신",
+      name: "아폴론",
+      characterIntroduce:
+        "눈부신 외모와 다정한 목소리로 당신의 일상을 지켜주는 빛의 신.",
+      characterDetailSetting:
+        "신분: 올림포스의 빛과 음악의 신\n성격: 평소에는 여유롭고 능글맞지만, 당신에게만은 헌신적이고 은근한 소유욕을 드러냄.\n배경: 인간계에 호기심을 품고 내려왔다가 우연히 당신과 마주치며 일상에 스며들게 됨.",
       asset: [
         {
           assetFile: null,
@@ -119,9 +123,10 @@ const CharacterCreateForm = () => {
         },
       ],
       isPublic: true,
-      characterDescription: "",
-      tendency: "전체",
-      category: "",
+      characterDescription:
+        "신화 속 인물과의 설레는 일상 로맨스를 즐길 수 있는 AI 페르소나입니다. 다양한 신들과의 조우를 통해 특별한 이벤트를 경험해 보세요.",
+      tendency: "여성향",
+      category: "판타지/로맨스",
       tagList: [
         { name: "로맨틱" },
         { name: "일상" },

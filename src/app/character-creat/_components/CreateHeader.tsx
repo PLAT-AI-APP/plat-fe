@@ -46,11 +46,12 @@ const CreateHeader = ({ onSave, onDraftClick }: CreateHeaderProps) => {
       introduce: currentFormData.characterIntroduce,
       detailSetting: currentFormData.characterDetailSetting,
 
-      assets: currentFormData.asset.map((a) => ({
-        name: a.assetName,
-        situation: a.assetSituation,
-        image: a.assetImage,
-      })),
+      assets:
+        currentFormData.asset?.map((a) => ({
+          name: a.assetName,
+          situation: a.assetSituation,
+          image: a.assetImage,
+        })) || [],
 
       visibility: currentFormData.isPublic ? "PUBLIC" : "PRIVATE",
 
