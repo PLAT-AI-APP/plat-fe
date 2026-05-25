@@ -102,7 +102,7 @@ const CharacterShowcase = ({
                 description={char.dec}
                 creatorName={char.creatorName || "Unknown"}
                 chatCount={char.chatCount}
-                images={"/images/sample.png"}
+                images={char.img}
                 tagList={char.tag}
                 currentTag={currentTag}
               />

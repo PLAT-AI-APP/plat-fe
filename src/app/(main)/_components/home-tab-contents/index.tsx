@@ -39,7 +39,89 @@ const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
 
       {/* 인기 캐릭터 이미지 미리보기 섹션 */}
       <CharacterShowcase
-        charArray={charArray}
+        charArray={[
+          {
+            name: "옆자리 불량학생",
+            chatCount: 123,
+            dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
+            img: [
+              "https://picsum.photos/200/300?random=1",
+              "https://picsum.photos/200/300?random=2",
+              "https://picsum.photos/200/300?random=3",
+            ],
+          },
+          {
+            // (참고) id가 겹치면 리스트 렌더링 시 key 에러가 날 수 있어 임의로 변경했습니다.
+            name: "옆자리 불량학생",
+            chatCount: 123,
+            dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
+            img: [
+              "https://picsum.photos/200/300?random=4",
+              "https://picsum.photos/200/300?random=5",
+              "https://picsum.photos/200/300?random=6",
+            ],
+          },
+          {
+            name: "옆자리 불량학생",
+            chatCount: 123,
+            dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
+            img: [
+              "https://picsum.photos/200/300?random=7",
+              "https://picsum.photos/200/300?random=8",
+              "https://picsum.photos/200/300?random=9",
+            ],
+          },
+          {
+            name: "옆자리 불량학생",
+            chatCount: 123,
+            dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
+            img: [
+              "https://picsum.photos/200/300?random=10",
+              "https://picsum.photos/200/300?random=11",
+              "https://picsum.photos/200/300?random=12",
+            ],
+          },
+          {
+            name: "옆자리 불량학생",
+            chatCount: 123,
+            dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
+            img: [
+              "https://picsum.photos/200/300?random=13",
+              "https://picsum.photos/200/300?random=14",
+              "https://picsum.photos/200/300?random=15",
+            ],
+          },
+          {
+            name: "옆자리 불량학생",
+            chatCount: 123,
+            dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
+            img: [
+              "https://picsum.photos/200/300?random=16",
+              "https://picsum.photos/200/300?random=17",
+              "https://picsum.photos/200/300?random=18",
+            ],
+          },
+          {
+            name: "옆자리 불량학생",
+            chatCount: 123,
+            dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
+            img: [
+              "https://picsum.photos/200/300?random=19",
+              "https://picsum.photos/200/300?random=20",
+              "https://picsum.photos/200/300?random=21",
+            ],
+          },
+          {
+            name: "옆자리 불량학생",
+            chatCount: 123,
+            dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
+            img: [
+              "https://picsum.photos/200/300?random=22",
+              "https://picsum.photos/200/300?random=23",
+              "https://picsum.photos/200/300?random=24",
+            ],
+          },
+        ]}
         title="인기 캐릭터 이미지 미리보기"
         allViewLink=""
         cardSize="XL"
@@ -69,30 +151,6 @@ const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
         rowGap={28}
       />
 
-      {/* 추천 신작 섹션 */}
-      {/* <section id="trending-new-section" className="flex flex-col gap-4">
-        <CharacterGrid
-          char={charArray}
-          // lineCount={1}
-          //   isNew={true}
-          title="떠오르는 추천 신작"
-          TitleLogo={<New className="w-4.5 h-4.5" />}
-          moreLink="new"
-        />
-      </section> */}
-
-      {/* 공식 캐릭터 섹션 */}
-      {/* <section id="official-characters-section" className="flex flex-col gap-4">
-        <CharacterGrid
-          char={charArray}
-          // lineCount={1}
-          cardHeight={281}
-          //   isOfficial={true}
-          title="플랫의 공식 캐릭터"
-          TitleLogo={<Logo className="w-4.5 h-4.5" />}
-          moreLink="official"
-        />
-      </section> */}
       <CharacterCreateBanner />
     </article>
   );
