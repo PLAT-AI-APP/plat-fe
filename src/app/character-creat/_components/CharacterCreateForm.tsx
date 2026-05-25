@@ -45,7 +45,11 @@ const characterCreateSchema = z.object({
   characterDescription: z.string(),
   tendency: z.string(),
   category: z.string().min(1, "카테고리를 선택해주세요."),
-  tagList: z.array(z.string()),
+  tagList: z.array(
+    z.object({
+      name: z.string(),
+    }),
+  ),
 });
 
 const CharacterCreateForm = () => {
@@ -118,7 +122,12 @@ const CharacterCreateForm = () => {
       characterDescription: "",
       tendency: "전체",
       category: "",
-      tagList: ["로맨틱", "일상"],
+      tagList: [
+        { name: "로맨틱" },
+        { name: "일상" },
+        { name: "판타지" },
+        { name: "신화" },
+      ],
     },
   });
 
