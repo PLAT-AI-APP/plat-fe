@@ -32,6 +32,7 @@ export const SIZE_CONFIG: Record<
     isIntegrated: boolean;
     creatorName: string;
     chatCount: string;
+    chatCountIcon?: string;
   }
 > = {
   // ~~님을 위한 추천 card size
@@ -44,6 +45,7 @@ export const SIZE_CONFIG: Record<
     isIntegrated: false,
     creatorName: "body-6",
     chatCount: "body-6",
+    chatCountIcon: "text-red-200",
   },
   // 오늘의 PICK, 최근 소문나기 시작한 신작 card size
   M: {
@@ -55,6 +57,7 @@ export const SIZE_CONFIG: Record<
     isIntegrated: false,
     creatorName: "body-6",
     chatCount: "body-6",
+    chatCountIcon: "text-font-disabled",
   },
   // ~한 캐릭터 모음 card size
   L: {
@@ -190,7 +193,7 @@ const CharacterCard = ({
               className="w-4 h-4 relative flex items-center justify-center"
             >
               <ChatFill
-                className={cn(`w-4 h-4 text-font-2`, config.chatCount)}
+                className={cn(`w-4 h-4`, config.chatCountIcon || "text-font-2")}
               />
             </div>
             <span className={cn(`text-font-2`, config.chatCount)}>
