@@ -36,7 +36,7 @@ export interface CharacterCreateFormValues {
   // 탭별 데이터 (배열)
   asset: CharacterAsset[];
   scenarios: ScenarioItem[];
-  tagList: { name: string }[];
+  tagList: string[];
 
   // 메타 설정
   isPublic: boolean;

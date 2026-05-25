@@ -86,7 +86,7 @@ export default function ClientLayout({
 
   useEffect(() => {
     // 인증(로그인)이 꼭 필요한 보호 경로 목록 정의
-    const protectedRoutes = ["/mypage", "/studio"];
+    const protectedRoutes = ["/mypage"];
 
     // 현재 접속한 pathname이 보호 경로 중 하나로 시작하는지 검사
     const isProtectedRoute = protectedRoutes.some((route) =>

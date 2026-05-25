@@ -10,10 +10,50 @@ import CreateHeader from "./CreateHeader";
 import CreateTabs, { TabId } from "./CreateTabs";
 import CreateModals from "./CreateModals";
 
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+// 💡 Zod 스키마 정의 (에러가 발생했던 tagList와 type 부분 완벽 수정)
+const characterCreateSchema = z.object({
+  representativeImage: z.string().min(1, "대표 이미지를 등록해주세요."),
+  title: z.string().min(1, "타이틀을 입력해주세요."),
+  name: z.string().min(1, "이름을 입력해주세요."),
+  characterIntroduce: z.string().min(1, "캐릭터 소개를 입력해주세요."),
+  characterDetailSetting: z.string().min(1, "캐릭터 상세 설정을 입력해주세요."),
+  asset: z.array(
+    z.object({
+      assetFile: z.any().nullable(),
+      assetImage: z.string(),
+      assetName: z.string().min(1, "에셋 이름을 입력해주세요."),
+      assetSituation: z.string().min(1, "에셋 상황을 입력해주세요."),
+    }),
+  ),
+  scenarios: z.array(
+    z.object({
+      name: z.string().min(1, "시나리오 이름을 입력해주세요."),
+      contents: z.array(
+        z.object({
+          id: z.string(),
+          // 💡 수정됨: string 대신 구체적인 타입(enum) 지정
+          type: z.enum(["chat", "action", "asset"]),
+          value: z.string().min(1, "내용을 입력해주세요."),
+        }),
+      ),
+    }),
+  ),
+  isPublic: z.boolean(),
+  characterDescription: z.string(),
+  tendency: z.string(),
+  category: z.string().min(1, "카테고리를 선택해주세요."),
+  tagList: z.array(z.string()),
+});
+
 const CharacterCreateForm = () => {
   const router = useRouter();
+
   const methods = useForm<CharacterCreateFormValues>({
     mode: "onChange",
+    resolver: zodResolver(characterCreateSchema), // 💡 Zod 검증 연결
     defaultValues: {
       representativeImage: "",
       title: "",
@@ -78,7 +118,7 @@ const CharacterCreateForm = () => {
       characterDescription: "",
       tendency: "전체",
       category: "",
-      tagList: [],
+      tagList: ["로맨틱", "일상"],
     },
   });
 
