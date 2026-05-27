@@ -14,16 +14,22 @@ const Setting = () => {
     useFormContext<CharacterCreateFormValues>();
   const { fields, append, remove } = useFieldArray({
     control,
-    name: "tagList",
+    name: "tagIds",
   });
-  const tagList = useWatch({ control, name: "tagList" });
+  const tagList = useWatch({ control, name: "tagIds" });
 
   // 트리거 Ref 생성 시작
   const publicTriggerRef = useRef(null);
   const tendencyTriggerRef = useRef(null);
   const categoryTriggerRef = useRef(null);
 
-  const [tagInputValue, setTagInputValue] = useState("");
+  const [tagInputValue, setTagInputValue] = useState<{
+    id: number;
+    label: string;
+  }>({
+    id: 0,
+    label: "",
+  });
 
   const publicModal = useToggle();
   const tendencyModal = useToggle();
@@ -55,20 +61,27 @@ const Setting = () => {
   // tab 추가
   const addTag = (e: React.FormEvent) => {
     e.preventDefault();
-    const trimmedValue = tagInputValue.trim();
+    const trimmedValue = tagInputValue;
 
     if (!trimmedValue) return;
     if (fields.length >= 5) {
       alert("태그는 최대 5개까지 등록 가능합니다.");
       return;
     }
-    if (fields.some((tag) => tag.name === trimmedValue)) {
+    if (fields.some((tag) => tag.id === trimmedValue.id)) {
       alert("이미 등록된 태그입니다.");
       return;
     }
 
-    append({ name: trimmedValue });
-    setTagInputValue("");
+    append({
+      id: trimmedValue.id,
+      label: trimmedValue.label,
+    });
+
+    setTagInputValue({
+      id: 0,
+      label: "",
+    });
   };
   const removeTag = (index: number) => {
     remove(index);
@@ -168,12 +181,12 @@ const Setting = () => {
       <form onSubmit={addTag}>
         <div onClick={toggleIsTagModal}>
           <SmartInput
-            onChange={(e) => setTagInputValue(e.target.value)}
+            // onChange={(e) => setTagInputValue(e.target.value)}
             required
             type="modal"
             placeholder="태그를 등록해주세요."
             label={`태그 등록(${tagList.length}/5)`}
-            value={tagInputValue}
+            // value={tagInputValue}
             inputClassName="placeholder:text-font-2 cursor-pointer"
           />
         </div>
@@ -184,7 +197,7 @@ const Setting = () => {
               key={i}
               className="px-1.25 py-0.5 flex items-center gap-1 rounded-md bg-card"
             >
-              <span className="body-6 text-brand">#{tag.name}</span>
+              <span className="body-6 text-brand">#{tag.label}</span>
               <Close
                 onClick={() => removeTag(i)}
                 className="w-2 h-2 text-font-2 cursor-pointer"
