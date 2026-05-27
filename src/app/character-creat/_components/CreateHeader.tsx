@@ -32,7 +32,7 @@ const CreateHeader = ({ onSave, onDraftClick }: CreateHeaderProps) => {
     }
   };
 
-  // 💡 3. 데이터 가공 및 전송 로직
+  // 데이터 가공 및 전송 로직
   const handleRegisterClick = () => {
     // 폼이 유효하지 않으면 전송 방지 (테스트 끝나면 주석 해제하세요)
     // if (!isValid) return;
@@ -57,7 +57,7 @@ const CreateHeader = ({ onSave, onDraftClick }: CreateHeaderProps) => {
 
       description: currentFormData.characterDescription,
       tendency: currentFormData.tendency,
-      tagList: currentFormData.tagList,
+      tagIds: currentFormData.tagIds.map((tag) => tag.id),
     };
 
     console.log("서버로 전송될 페이로드:", payload);

@@ -5,13 +5,13 @@ import { ApiSuccessResponse, AppError } from "@/type/api";
 export interface GetHashtagListResponse {
   lang: string;
   isAdult: boolean;
-  tags: string[];
+  tags: { id: number; label: string }[];
 }
 
 const getHashtagList = async () => {
   const response = await authAxios.get<
     ApiSuccessResponse<GetHashtagListResponse>
-  >(`/hastag/list`, {
+  >(`/hashtag/list`, {
     params: {
       lang: "KO",
     },

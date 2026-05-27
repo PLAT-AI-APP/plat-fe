@@ -13,58 +13,65 @@ import { useModalStore } from "@/store/useModalStore";
 const TagAddModal = ({ onClose }: TagAddModalProps) => {
   const { control, setValue } = useFormContext<CharacterCreateFormValues>();
 
-  const currentTagsWatch = useWatch({ control, name: "tagList" });
+  const currentTagsWatch = useWatch({ control, name: "tagIds" });
   // 1. 모달 내부 임시 상태 (문자열 배열)
-  const [localSelectedNames, setLocalSelectedNames] = useState<string[]>(() => {
+  const [localSelectedNames, setLocalSelectedNames] = useState<
+    { id: number; label: string }[]
+  >(() => {
     const currentTags = currentTagsWatch || [];
-    return currentTags.map((t) => t.name);
+
+    return currentTags.map((t) => ({
+      id: t.id,
+      label: t.label,
+    }));
   });
 
   const [searchKeyword, setSearchKeyword] = useState("");
 
-  // 2. API 데이터 가져오기 (string[])
   const { data: hashtagListData } = useHashtagListQuery();
   const hashtagList = hashtagListData?.tags || [];
 
-  // 3. 필터링 및 정렬 로직
+  // 필터링 및 정렬 로직
   const filteredTags = hashtagList
-    .filter((name) => name.toLowerCase().includes(searchKeyword.toLowerCase()))
+    .filter((tag) =>
+      tag.label.toLowerCase().includes(searchKeyword.toLowerCase()),
+    )
     .sort((a, b) => {
-      const aSelected = localSelectedNames.includes(a);
-      const bSelected = localSelectedNames.includes(b);
+      // 💡 some을 사용하여 객체 배열에서 label이 포함되어 있는지 확인
+      const aSelected = localSelectedNames.some((n) => n.label === a.label);
+      const bSelected = localSelectedNames.some((n) => n.label === b.label);
 
-      // 선택된 태그를 맨 앞으로 (-1이 우선순위 높음)
       if (aSelected !== bSelected) {
         return aSelected ? -1 : 1;
       }
-      // 동일 그룹 내에서는 가나다순
-      return a.localeCompare(b, "ko");
+      return a.label.localeCompare(b.label, "ko");
     });
 
-  // 4. 태그 토글 핸들러
-  const handleTagToggle = (name: string) => {
-    const isAlreadySelected = localSelectedNames.includes(name);
+  // 태그 토글 핸들러
+  const handleTagToggle = (tag: { id: number; label: string }) => {
+    // 선택 여부 확인
+    const isAlreadySelected = localSelectedNames.some((n) => n.id === tag.id);
 
-    // 1. 이미 선택된 태그라면? (개수 상관없이 무조건 해제)
+    // 이미 선택된 태그라면? (해제)
     if (isAlreadySelected) {
-      setLocalSelectedNames((prev) => prev.filter((n) => n !== name));
+      setLocalSelectedNames((prev) => prev.filter((n) => n.id !== tag.id));
       return;
     }
 
-    // 2. 새로 선택하는데 이미 5개라면? (차단)
+    // 새로 선택하는데 이미 5개라면? (차단)
     if (localSelectedNames.length >= 5) {
       alert("태그는 최대 5개까지만 선택할 수 있습니다.");
       return;
     }
 
-    // 3. 그 외의 경우 (새로운 태그 추가)
-    setLocalSelectedNames((prev) => [name, ...prev]);
+    // 새로운 객체 추가
+    setLocalSelectedNames((prev) => [...prev, tag]);
   };
 
-  // 5. 완료 시 저장
+  // 완료 시 저장
   const handleComplete = () => {
-    const finalTags = localSelectedNames.map((name) => ({ name }));
-    setValue("tagList", finalTags, { shouldDirty: true, shouldValidate: true });
+    const finalTags = localSelectedNames;
+    setValue("tagIds", finalTags, { shouldDirty: true, shouldValidate: true });
     onClose();
   };
 
@@ -103,21 +110,23 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
           </label>
         </div>
 
-        <nav id="tag-list-wrapper">
+        <nav>
           <ul className="bg-bg-darker rounded-xl flex gap-y-2 gap-x-2.5 p-2.5 flex-wrap max-h-85 min-h-85 overflow-auto">
-            {filteredTags.map((name) => {
-              const isSelected = localSelectedNames.includes(name);
+            {filteredTags.map((tag) => {
+              const isSelected = localSelectedNames.some(
+                (n) => n.id === tag.id,
+              );
               return (
-                <li key={name}>
+                <li key={tag.id}>
                   <button
                     type="button"
-                    onClick={() => handleTagToggle(name)}
+                    onClick={() => handleTagToggle(tag)}
                     className={cn(
                       "px-1.5 py-0.75 rounded-md bg-card text-xs cursor-pointer hover:bg-card-hover transition-colors border border-transparent",
                       isSelected && "bg-brand-opacity text-brand",
                     )}
                   >
-                    #{name}
+                    #{tag.label}
                   </button>
                 </li>
               );

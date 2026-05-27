@@ -15,22 +15,13 @@ interface postChatacterCreateProps {
   visibility: string;
   description: string;
   tendency: string;
-  tagList: { name: string }[];
+  tagIds: number[];
 }
 
 const postChatacterCreate = async (props: postChatacterCreateProps) => {
-  // 서버로 보내기 직전에 tagList만 string[] 형태로 가공(Mapping)합니다.
-  const payload = {
-    ...props,
-    tagList: props.tagList.map((tag) => tag.name), // [{ name: "로맨틱" }] -> ["로맨틱"]
-  };
-
-  console.log("🔥 폼 원본 데이터:", props);
-  console.log("🚀 서버로 전송되는 가공된 페이로드:", payload);
-
   const response = await authAxios.post<ApiSuccessResponse<null>>(
     `/character`,
-    payload,
+    props,
   );
   return response.data;
 };
