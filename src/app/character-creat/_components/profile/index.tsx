@@ -29,7 +29,7 @@ const Profile = () => {
           maxLength={20}
           placeholder="제목을 입력해주세요."
           isBorder
-          {...register("title", { required: true })}
+          {...register("title")}
           value={titleValue}
         />
 
@@ -40,7 +40,7 @@ const Profile = () => {
           maxLength={20}
           placeholder="캐릭터 이름을 입력해주세요."
           isBorder
-          {...register("name", { required: true })}
+          {...register("name")}
           value={nameValue}
         />
 
@@ -54,7 +54,7 @@ const Profile = () => {
           maxLine={3}
           minLine={3}
           isBorder
-          {...register("characterIntroduce", { required: true })}
+          {...register("characterIntroduce")}
           value={characterIntroduceValue}
         />
       </div>

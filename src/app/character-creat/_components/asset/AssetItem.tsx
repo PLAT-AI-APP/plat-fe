@@ -15,8 +15,12 @@ interface AssetItemProps {
 }
 
 const AssetItem = ({ id, index, remove, copyAsset }: AssetItemProps) => {
-  const { register, setValue, control } =
-    useFormContext<CharacterCreateFormValues>();
+  const {
+    register,
+    setValue,
+    control,
+    formState: { errors },
+  } = useFormContext<CharacterCreateFormValues>();
   const [isActive, setIsActive] = useState(false);
 
   const assetImage = useWatch({ control, name: `asset.${index}.assetImage` });
@@ -25,6 +29,7 @@ const AssetItem = ({ id, index, remove, copyAsset }: AssetItemProps) => {
     control,
     name: `asset.${index}.assetSituation`,
   });
+  const currentAssetError = errors.asset?.[index];
 
   const toggleActive = () => setIsActive((prev) => !prev);
 
@@ -53,13 +58,13 @@ const AssetItem = ({ id, index, remove, copyAsset }: AssetItemProps) => {
     reader.readAsDataURL(file);
   };
 
-  const handleCopy = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-    } catch (error) {
-      console.error("복사 실패:", error);
-    }
-  };
+  // const handleCopy = async (text: string) => {
+  //   try {
+  //     await navigator.clipboard.writeText(text);
+  //   } catch (error) {
+  //     console.error("복사 실패:", error);
+  //   }
+  // };
 
   return (
     <Draggable draggableId={id} index={index}>
@@ -146,6 +151,7 @@ const AssetItem = ({ id, index, remove, copyAsset }: AssetItemProps) => {
                 maxLength={15}
                 value={assetName}
                 labelFontSize="title-5"
+                error={currentAssetError?.assetName?.message}
               />
               <SmartInput
                 {...register(`asset.${index}.assetSituation` as const)}
@@ -160,6 +166,7 @@ const AssetItem = ({ id, index, remove, copyAsset }: AssetItemProps) => {
                 value={assetSituation}
                 labelFontSize="title-5"
                 descFontSize="body-6"
+                error={currentAssetError?.assetSituation?.message}
               />
             </div>
           )}

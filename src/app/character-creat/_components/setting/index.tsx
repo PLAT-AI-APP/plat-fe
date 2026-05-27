@@ -118,7 +118,7 @@ const Setting = () => {
 
       {/* 캐릭터 설명 */}
       <SmartInput
-        {...register("characterDescription", { required: true })}
+        {...register("characterDescription")}
         label="캐릭터 설명"
         required
         description="캐릭터의 성격이나 서사, 사건 등 상세한 내용을 작성해주세요."

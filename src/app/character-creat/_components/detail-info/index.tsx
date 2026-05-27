@@ -6,9 +6,6 @@ import { useFormContext, useWatch } from "react-hook-form";
 const DetailInfo = () => {
   const { register, control } = useFormContext<CharacterCreateFormValues>();
 
-  // 상태 및 데이터 관찰
-  // const heightValue = watch("height");
-  // const weightValue = watch("weight");
   const characterDetailSetting = useWatch({
     control,
     name: "characterDetailSetting",
@@ -16,26 +13,6 @@ const DetailInfo = () => {
 
   return (
     <section className="flex flex-col gap-6">
-      {/* 신체 정보 입력 영역 */}
-      {/* <div id="physical-info-container" className="flex gap-6">
-        <SmartInput
-          label="키"
-          maxLength={10}
-          placeholder="예) 168cm"
-          isBorder
-          {...register("height")}
-          value={heightValue}
-        />
-        <SmartInput
-          label="몸무게"
-          maxLength={10}
-          placeholder="예) 48kg"
-          isBorder
-          {...register("weight")}
-          value={weightValue}
-        />
-      </div> */}
-
       {/* 상세 설정 입력 영역 */}
       <article>
         <SmartInput
