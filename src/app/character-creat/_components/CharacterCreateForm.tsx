@@ -47,9 +47,10 @@ const characterCreateSchema = z.object({
   characterDescription: z.string(),
   tendency: z.string(),
   category: z.string().min(1, "카테고리를 선택해주세요."),
-  tagList: z.array(
+  tagIds: z.array(
     z.object({
-      name: z.string(),
+      id: z.number(),
+      label: z.string(),
     }),
   ),
 });
@@ -127,12 +128,7 @@ const CharacterCreateForm = () => {
         "신화 속 인물과의 설레는 일상 로맨스를 즐길 수 있는 AI 페르소나입니다. 다양한 신들과의 조우를 통해 특별한 이벤트를 경험해 보세요.",
       tendency: "여성향",
       category: "판타지/로맨스",
-      tagList: [
-        { name: "로맨틱" },
-        { name: "일상" },
-        { name: "판타지" },
-        { name: "신화" },
-      ],
+      tagIds: [],
     },
   });
 

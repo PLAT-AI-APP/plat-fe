@@ -146,7 +146,8 @@ const EmailVerifySection = () => {
             text={isEmailVerified ? "변경" : isOtpSent ? "재전송" : "인증요청"}
             className={cn(
               "px-4 py-3 text-sm w-fit max-h-11 text-nowrap",
-              isEmailVerified && "border border-border-main bg-bg-darker",
+              isEmailVerified &&
+                "border border-border-main bg-bg-darker text-font-2",
             )}
             onClick={handleEmailBtnClick}
           />
