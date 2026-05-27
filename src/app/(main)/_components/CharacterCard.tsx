@@ -45,7 +45,7 @@ export const SIZE_CONFIG: Record<
     isIntegrated: false,
     creatorName: "body-6",
     chatCount: "body-6",
-    chatCountIcon: "text-red-200",
+    chatCountIcon: "text-font-disabled",
   },
   // 오늘의 PICK, 최근 소문나기 시작한 신작 card size
   M: {
