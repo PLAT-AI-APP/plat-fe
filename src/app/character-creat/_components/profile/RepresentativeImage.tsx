@@ -1,5 +1,5 @@
 import { Close, ImageIcon } from "@/icons";
-import { CharacterCreateFormValues } from "@/type/character";
+import { CharacterCreateFormValues } from "@/schema/character.schema";
 import Image from "next/image";
 import React, { ChangeEvent } from "react";
 import { useFormContext } from "react-hook-form";

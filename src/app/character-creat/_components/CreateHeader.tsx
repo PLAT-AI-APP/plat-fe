@@ -5,7 +5,7 @@ import { Redo } from "@/icons";
 import ArrowLineLeft from "@/icons/ArrowLineLeft";
 import ActiveButton from "@/components/ActiveButton";
 import { useFormContext } from "react-hook-form";
-import { CharacterCreateFormValues } from "@/type/character";
+import { CharacterCreateFormValues } from "@/schema/character.schema";
 import { useRouter } from "next/navigation";
 import { useChatacterCreateMutation } from "@/api/character/postChatacterCreate";
 

@@ -1,7 +1,7 @@
 import SmartInput from "@/components/smart-input";
 import { Close, Plus } from "@/icons";
 import { cn } from "@/lib/utils";
-import { CharacterCreateFormValues } from "@/type/character";
+import { CharacterCreateFormValues } from "@/schema/character.schema";
 import React, { useRef, useState } from "react";
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
 

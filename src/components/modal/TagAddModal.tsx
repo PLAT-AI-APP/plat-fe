@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { cn } from "@/lib/utils";
-import { CharacterCreateFormValues } from "@/type/character";
+import { CharacterCreateFormValues } from "@/schema/character.schema";
 import { ModalLayout } from "../ModalLayout";
 import Tag from "@/icons/Tag";
 import { ArrowRight, Close, Megaphone, Search } from "@/icons";

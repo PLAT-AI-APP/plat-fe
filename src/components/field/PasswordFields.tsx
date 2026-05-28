@@ -4,7 +4,6 @@ import { useTogglePassword } from "@/hooks/useTogglePassword";
 import React, { useEffect } from "react";
 import { FieldError, useFormContext, useWatch } from "react-hook-form";
 import AuthInput from "../auth/AuthInput";
-import { PASSWORD_REGEX } from "@/lib/regex";
 import { PasswordToggle } from "../auth/PasswordToggle";
 
 const PasswordFields = () => {

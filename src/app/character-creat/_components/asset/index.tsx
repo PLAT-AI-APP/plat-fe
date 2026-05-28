@@ -1,4 +1,4 @@
-import { CharacterCreateFormValues } from "@/type/character";
+import { CharacterCreateFormValues } from "@/schema/character.schema";
 import React, { useRef, ChangeEvent } from "react";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { DragDropContext, Droppable, DropResult } from "@hello-pangea/dnd";

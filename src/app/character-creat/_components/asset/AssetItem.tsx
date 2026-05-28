@@ -4,8 +4,8 @@ import Image from "next/image";
 import { useFormContext, useWatch } from "react-hook-form";
 import { ArrowDown, Dots, Trash, ImageIcon } from "@/icons";
 import CopyFill from "@/icons/CopyFill";
-import { CharacterCreateFormValues } from "@/type/character";
 import SmartInput from "@/components/smart-input";
+import { CharacterCreateFormValues } from "@/schema/character.schema";
 
 interface AssetItemProps {
   id: string;

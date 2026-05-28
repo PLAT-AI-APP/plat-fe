@@ -5,7 +5,7 @@ import TendencySelectPopover from "@/components/popover/TendencySelectPopover";
 import SmartInput from "@/components/smart-input";
 import useToggle from "@/hooks/useToggle";
 import { Close } from "@/icons";
-import { CharacterCreateFormValues } from "@/type/character";
+import { CharacterCreateFormValues } from "@/schema/character.schema";
 import React, { useState, useRef, MouseEvent } from "react";
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
 

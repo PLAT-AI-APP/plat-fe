@@ -39,18 +39,20 @@ export const characterCreateSchema = z.object({
     .max(50, "에셋은 최대 50개까지만 등록 가능합니다.")
     .optional(),
 
-  scenarios: z.array(
-    z.object({
-      name: z.string().min(1, "시나리오 이름을 입력해주세요."),
-      contents: z.array(
-        z.object({
-          id: z.string(),
-          type: z.enum(["chat", "action", "asset"]),
-          value: z.string().min(1, "내용을 입력해주세요."),
-        }),
-      ),
-    }),
-  ),
+  scenarios: z
+    .array(
+      z.object({
+        name: z.string().min(1, "시나리오 이름을 입력해주세요."),
+        contents: z.array(
+          z.object({
+            id: z.string(),
+            type: z.enum(["chat", "action", "asset"]),
+            value: z.string().min(1, "내용을 입력해주세요.").max(1500),
+          }),
+        ),
+      }),
+    )
+    .max(5, "시나리오는 최대 5개까지 생성할 수 있습니다."),
 
   isPublic: z.boolean(),
   characterDescription: z
@@ -69,3 +71,5 @@ export const characterCreateSchema = z.object({
     )
     .max(5, "태그는 최대 5개까지만 등록 가능합니다."),
 });
+
+export type CharacterCreateFormValues = z.input<typeof characterCreateSchema>;

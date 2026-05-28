@@ -2,7 +2,7 @@ import React from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import RepresentativeImage from "./RepresentativeImage";
 import SmartInput from "@/components/smart-input";
-import { CharacterCreateFormValues } from "@/type/character";
+import { CharacterCreateFormValues } from "@/schema/character.schema";
 import StatusWarning from "@/icons/StatusWarning";
 
 const Profile = () => {

@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { CharacterCreateFormValues } from "@/type/character";
 import CharacterPreview from "./CharacterPreview";
 import { useNavigationGuard } from "next-navigation-guard";
 import { useRouter } from "next/navigation";
@@ -10,6 +9,7 @@ import CreateHeader from "./CreateHeader";
 import CreateTabs, { TabId } from "./CreateTabs";
 import CreateModals from "./CreateModals";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { CharacterCreateFormValues } from "@/schema/character.schema";
 import { characterCreateSchema } from "@/schema/character.schema";
 
 const CharacterCreateForm = () => {
