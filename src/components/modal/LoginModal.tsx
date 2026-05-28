@@ -12,14 +12,13 @@ import { useEmailLoginMutation } from "@/api/auth/emailLogin";
 import { useAuthStore } from "@/store/useAuthStore";
 import { EMAIL_REGEX } from "@/lib/regex";
 import { ModalLayout } from "../ModalLayout";
-import { useRouter } from "next/navigation";
 import useRouteEffect from "@/hooks/useRouteEffect";
 
 import { LoginModalProps } from "@/type/modal";
+import { loginFormSchema, LoginFormValues } from "@/schema/auth.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
-  const router = useRouter();
-
   const isShowPw = useTogglePassword();
 
   const {
@@ -28,7 +27,8 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
     watch,
     formState: { errors },
     setError,
-  } = useForm({
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginFormSchema),
     mode: "onSubmit",
     reValidateMode: "onSubmit",
     defaultValues: {
@@ -105,13 +105,7 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
               label="이메일"
               type="email"
               placeholder="example@gmail.com"
-              {...register("email", {
-                required: "이메일을 입력해주세요.",
-                pattern: {
-                  value: EMAIL_REGEX,
-                  message: "올바른 이메일 형식이 아닙니다.",
-                },
-              })}
+              {...register("email")}
               error={errors.email}
             />
 
@@ -128,13 +122,7 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
                     onToggle={isShowPw.toggle}
                   />
                 }
-                {...register("pw", {
-                  required: "비밀번호를 입력해주세요.",
-                  minLength: {
-                    value: 8,
-                    message: "최소 8자 이상이어야 합니다.",
-                  },
-                })}
+                {...register("pw")}
                 error={errors.pw}
               />
 

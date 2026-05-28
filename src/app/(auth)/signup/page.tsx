@@ -2,12 +2,15 @@
 
 import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { AuthFormValues } from "@/type/auth";
 import SignupForm from "./_components/SignupForm";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { authFormSchema } from "@/schema/auth.schema";
+import z from "zod";
 
 const SignupPage = () => {
-  const methods = useForm<AuthFormValues>({
-    mode: "onChange", // 인터랙티브한 반응을 위해 onChange 권장
+  const methods = useForm<z.input<typeof authFormSchema>>({
+    resolver: zodResolver(authFormSchema),
+    mode: "onChange",
     reValidateMode: "onChange",
     defaultValues: {
       nickname: "",
@@ -15,7 +18,6 @@ const SignupPage = () => {
       code: "",
       password: "",
       passwordCheck: "",
-      // emailVerifyToken: "",
       signupToken: "",
       isPrivacyAgreed: false,
       isTermsAgreed: false,

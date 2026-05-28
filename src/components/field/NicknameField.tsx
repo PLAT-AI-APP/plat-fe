@@ -36,14 +36,7 @@ const NicknameField = () => {
 
   return (
     <SmartInput
-      {...register("nickname", {
-        required: "닉네임을 입력해주세요.",
-        maxLength: { value: 20, message: "최대 20자까지 가능합니다." },
-        pattern: {
-          value: NICKNAME_REGEX,
-          message: "특수문자는 사용할 수 없습니다.",
-        },
-      })}
+      {...register("nickname")}
       label="닉네임"
       required
       value={nicknameValue}
