@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { AuthFormValues } from "@/schema/auth.schema";
 import { useAuthRegisterMutation } from "@/api/auth/authRegister";
@@ -13,6 +13,8 @@ import PasswordField from "@/components/field/PasswordField";
 import PasswordCheckField from "@/components/field/PasswordCheckField";
 
 const SignupForm = () => {
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+
   const {
     control,
     formState: { errors },
@@ -36,7 +38,8 @@ const SignupForm = () => {
       password &&
       passwordCheck &&
       isPrivacyAgreed &&
-      isTermsAgreed
+      isTermsAgreed &&
+      isEmailVerified
     ) && Object.keys(errors).length === 0;
 
   const { mutate: authRegister } = useAuthRegisterMutation();
@@ -75,7 +78,7 @@ const SignupForm = () => {
 
       <fieldset className="flex flex-col gap-5.25">
         <NicknameField />
-        <EmailVerifySection />
+        <EmailVerifySection onVerifiedChange={setIsEmailVerified} />
         <PasswordField />
         <PasswordCheckField />
       </fieldset>

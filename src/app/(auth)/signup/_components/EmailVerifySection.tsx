@@ -11,7 +11,11 @@ import { useEmailVerifyConfirmMutation } from "@/api/auth/emailVerifyConfirm";
 import { useCountdown } from "@/hooks/useCountdown";
 import { motion, AnimatePresence } from "framer-motion";
 
-const EmailVerifySection = () => {
+interface EmailVerifySectionProps {
+  onVerifiedChange?: (isVerified: boolean) => void;
+}
+
+const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
   // 상태: UI 및 에러 관련
   const [isOtpSent, setIsOtpSent] = useState(false); // 인증번호 입력창 표시 여부
   const [isEmailVerified, setIsEmailVerified] = useState(false); // 이메일 인증 최종 성공 여부
@@ -40,12 +44,14 @@ const EmailVerifySection = () => {
     const isEmailValid = await trigger("email");
     if (!isEmailValid || !email) return;
 
+    onVerifiedChange?.(false);
     setValue("code", "");
     emailVerify(email, {
       onSuccess: (data) => {
         if (data.result === "OK") {
           setIsOtpSent(true);
           setIsEmailVerified(false); // 재전송 시 인증 상태 초기화
+          onVerifiedChange?.(false);
           startTimer();
           setOtpError("");
         }
@@ -68,6 +74,7 @@ const EmailVerifySection = () => {
           // alert("이메일 인증 성공");
           setIsEmailVerified(true); // 인증 완료 상태로 변경
           setIsOtpSent(false); // 인증번호 입력창 숨김
+          onVerifiedChange?.(true);
           setOtpError("");
           stopTimer();
         },
@@ -85,6 +92,7 @@ const EmailVerifySection = () => {
     if (isEmailVerified) {
       // 이미 인증된 상태에서 '변경'을 누를 경우
       setIsEmailVerified(false);
+      onVerifiedChange?.(false);
       setValue("email", "");
       setValue("code", "");
     } else {
@@ -125,6 +133,8 @@ const EmailVerifySection = () => {
                 message: "올바른 이메일 형식이 아닙니다.",
               },
               onChange: async () => {
+                setIsEmailVerified(false);
+                onVerifiedChange?.(false);
                 await trigger("email");
               },
             })}
@@ -231,4 +241,4 @@ const EmailVerifySection = () => {
   );
 };
 
-export default React.memo(EmailVerifySection);
+export default EmailVerifySection;
