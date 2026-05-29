@@ -30,7 +30,8 @@ const EmailVerifySection = () => {
   const code = useWatch({ control, name: "code" });
 
   // API 뮤테이션 및 타이머 훅
-  const { mutate: emailVerify } = useEmailVerifyMutation();
+  const { mutate: emailVerify, isPending: isEmailVerifyPending } =
+    useEmailVerifyMutation();
   const { mutate: emailVerifyConfirm } = useEmailVerifyConfirmMutation();
   const { timeLeft, startTimer, formatTime, stopTimer } = useCountdown(300);
 
@@ -64,7 +65,7 @@ const EmailVerifySection = () => {
       { code: code || "", email },
       {
         onSuccess: () => {
-          alert("이메일 인증 성공");
+          // alert("이메일 인증 성공");
           setIsEmailVerified(true); // 인증 완료 상태로 변경
           setIsOtpSent(false); // 인증번호 입력창 숨김
           setOtpError("");
@@ -79,6 +80,8 @@ const EmailVerifySection = () => {
 
   // 로직: 인증 버튼 클릭 핸들러 (인증요청 또는 변경)
   const handleEmailBtnClick = () => {
+    if (isEmailVerifyPending) return;
+
     if (isEmailVerified) {
       // 이미 인증된 상태에서 '변경'을 누를 경우
       setIsEmailVerified(false);
@@ -137,14 +140,33 @@ const EmailVerifySection = () => {
           <ActiveButton
             type="button"
             isActive={!!email}
-            text={isEmailVerified ? "변경" : isOtpSent ? "재전송" : "인증요청"}
+            disabled={!email || isEmailVerifyPending}
+            text={
+              isEmailVerifyPending
+                ? ""
+                : isEmailVerified
+                  ? "변경"
+                  : isOtpSent
+                    ? "재전송"
+                    : "인증요청"
+            }
             className={cn(
-              "px-4 py-3 text-sm w-fit max-h-11 text-nowrap",
+              "px-4 py-3 text-sm w-fit max-h-11 text-nowrap flex items-center justify-center gap-2",
               isEmailVerified &&
                 "border border-border-main bg-bg-darker text-font-2",
             )}
             onClick={handleEmailBtnClick}
-          />
+          >
+            {isEmailVerifyPending && (
+              <>
+                <span
+                  aria-hidden="true"
+                  className="w-4 h-4 rounded-full border-2 border-font-4/40 border-t-font-4 animate-spin"
+                />
+                <span>요청 중</span>
+              </>
+            )}
+          </ActiveButton>
         </div>
         {/* {errors.email?.message && (
           <span role="alert" className="pl-2 pt-1.5 text-font-accents text-xs">

@@ -21,10 +21,10 @@ const PostEmailVerify = async (email: string) => {
 export const useEmailVerifyMutation = () => {
   return useMutation({
     mutationFn: (email: string) => PostEmailVerify(email),
-    onSuccess: (data) => {
-      if (data.result === "OK") {
-        alert(data.message || "인증번호가 발송되었습니다.");
-      }
-    },
+    // onSuccess: (data) => {
+    //   if (data.result === "OK") {
+    //     alert(data.message || "인증번호가 발송되었습니다.");
+    //   }
+    // },
   });
 };

@@ -6,7 +6,6 @@ import ThemeProvider from "@/providers/ThemeProvider";
 import ClientLayout from "./ClientLayout";
 import "pretendard/dist/web/static/pretendard.css";
 import { NavigationGuardProvider } from "next-navigation-guard";
-import { Suspense } from "react";
 // import MSWProvider from "@/providers/MSWProvider";
 
 const geistSans = Geist({
@@ -102,9 +101,7 @@ export default function RootLayout({
         <ReactQueryProvider>
           <ThemeProvider>
             <NavigationGuardProvider>
-              <Suspense fallback={<div>페이지를 불러오는 중입니다...</div>}>
-                <ClientLayout>{children}</ClientLayout>
-              </Suspense>
+              <ClientLayout>{children}</ClientLayout>
             </NavigationGuardProvider>
           </ThemeProvider>
         </ReactQueryProvider>
