@@ -53,8 +53,6 @@ export const authFormSchema = z
         "비밀번호 확인은 특수문자를 포함해야 합니다.",
       ),
 
-    signupToken: z.string().min(1, "회원가입 토큰이 필요합니다."),
-
     isPrivacyAgreed: z.boolean().refine((value) => value === true, {
       message: "개인정보 처리방침에 동의해주세요.",
     }),
@@ -67,3 +65,5 @@ export const authFormSchema = z
     path: ["passwordCheck"],
     message: "비밀번호가 일치하지 않습니다.",
   });
+
+export type AuthFormValues = z.input<typeof authFormSchema>;

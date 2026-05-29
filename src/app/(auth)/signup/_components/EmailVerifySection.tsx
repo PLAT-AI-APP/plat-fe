@@ -2,7 +2,7 @@
 
 import React, { useMemo, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
-import { AuthFormValues } from "@/type/auth";
+import { AuthFormValues } from "@/schema/auth.schema";
 import { EMAIL_REGEX } from "@/lib/regex";
 import { cn } from "@/lib/utils";
 import ActiveButton from "@/components/ActiveButton";
@@ -32,20 +32,14 @@ const EmailVerifySection = () => {
   // API 뮤테이션 및 타이머 훅
   const { mutate: emailVerify } = useEmailVerifyMutation();
   const { mutate: emailVerifyConfirm } = useEmailVerifyConfirmMutation();
-  const {
-    timeLeft,
-    startTimer,
-    formatTime,
-    isActive: isTimerActive,
-    stopTimer,
-  } = useCountdown(300);
+  const { timeLeft, startTimer, formatTime, stopTimer } = useCountdown(300);
 
   // 로직: 이메일 인증번호 요청 (인증요청/재전송)
   const handleRequestOtp = async () => {
     const isEmailValid = await trigger("email");
     if (!isEmailValid || !email) return;
 
-    setValue("otp", "");
+    setValue("code", "");
     emailVerify(email, {
       onSuccess: (data) => {
         if (data.result === "OK") {
@@ -89,7 +83,7 @@ const EmailVerifySection = () => {
       // 이미 인증된 상태에서 '변경'을 누를 경우
       setIsEmailVerified(false);
       setValue("email", "");
-      setValue("otp", "");
+      setValue("code", "");
     } else {
       // 인증 전이거나 재전송인 경우
       handleRequestOtp();
@@ -199,14 +193,6 @@ const EmailVerifySection = () => {
                   className="px-4 py-3 text-sm w-fit max-h-11 text-nowrap"
                 />
               </div>
-              {(timeLeft <= 0 || otpError) && (
-                <span
-                  role="alert"
-                  className="pl-2 pt-1.5 text-font-accents text-xs"
-                >
-                  {otpError || "인증번호 유효시간 초과"}
-                </span>
-              )}
             </div>
           </motion.article>
         )}

@@ -5,7 +5,7 @@ import { SubmitHandler, useFormContext } from "react-hook-form";
 import AuthInput from "./AuthInput";
 import OtpInput from "./OtpInput";
 import ActiveButton from "../ActiveButton";
-import { AuthFormValues } from "@/type/auth";
+import { AuthFormValues } from "@/schema/auth.schema";
 import { EMAIL_REGEX } from "@/lib/regex";
 import { useEmailVerifyMutation } from "@/api/auth/emailVerify";
 import { useEmailVerifyConfirmMutation } from "@/api/auth/emailVerifyConfirm";

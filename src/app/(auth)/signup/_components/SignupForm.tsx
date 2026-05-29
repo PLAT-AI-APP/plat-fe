@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useFormContext, useWatch } from "react-hook-form";
-import { AuthFormValues } from "@/type/auth";
+import { AuthFormValues } from "@/schema/auth.schema";
 import { useAuthRegisterMutation } from "@/api/auth/authRegister";
 import ActiveButton from "@/components/ActiveButton";
 import Agreed from "./Agreed";
@@ -26,24 +26,18 @@ const SignupForm = () => {
     passwordCheck = "",
     isPrivacyAgreed = "",
     isTermsAgreed = "",
-    // emailVerifyToken = "",
   } = useWatch({ control });
 
   // 폼 유효성 검사 로직 (추가적인 커스텀 검증이 필요한 경우)
   const isFormValid =
     !!(
-      (
-        nickname &&
-        email &&
-        password &&
-        passwordCheck &&
-        isPrivacyAgreed &&
-        isTermsAgreed
-      )
-      // && emailVerifyToken
-    ) &&
-    Object.keys(errors).length === 0 &&
-    password === passwordCheck;
+      nickname &&
+      email &&
+      password &&
+      passwordCheck &&
+      isPrivacyAgreed &&
+      isTermsAgreed
+    ) && Object.keys(errors).length === 0;
 
   const { mutate: authRegister } = useAuthRegisterMutation();
 

@@ -4,11 +4,10 @@ import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import SignupForm from "./_components/SignupForm";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { authFormSchema } from "@/schema/auth.schema";
-import z from "zod";
+import { authFormSchema, AuthFormValues } from "@/schema/auth.schema";
 
 const SignupPage = () => {
-  const methods = useForm<z.input<typeof authFormSchema>>({
+  const methods = useForm<AuthFormValues>({
     resolver: zodResolver(authFormSchema),
     mode: "onChange",
     reValidateMode: "onChange",
@@ -18,7 +17,6 @@ const SignupPage = () => {
       code: "",
       password: "",
       passwordCheck: "",
-      signupToken: "",
       isPrivacyAgreed: false,
       isTermsAgreed: false,
     },

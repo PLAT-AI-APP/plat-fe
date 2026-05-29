@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useFormContext, useWatch } from "react-hook-form";
-import { AuthFormValues } from "@/type/auth";
+import { AuthFormValues } from "@/schema/auth.schema";
 
 // Icons
 import Checkbox from "@/icons/Checkbox";
