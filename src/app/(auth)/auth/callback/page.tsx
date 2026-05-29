@@ -1,6 +1,8 @@
 import { Metadata } from "next";
 import AuthClient from "./_components/AuthClient";
 
+export const dynamic = "force-dynamic";
+
 interface PageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }

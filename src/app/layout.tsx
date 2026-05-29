@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Suspense } from "react";
 import "@/app/globals.css";
 import ReactQueryProvider from "@/providers/ReactQueryProvider";
 import ThemeProvider from "@/providers/ThemeProvider";
@@ -101,7 +102,9 @@ export default function RootLayout({
         <ReactQueryProvider>
           <ThemeProvider>
             <NavigationGuardProvider>
-              <ClientLayout>{children}</ClientLayout>
+              <Suspense fallback={null}>
+                <ClientLayout>{children}</ClientLayout>
+              </Suspense>
             </NavigationGuardProvider>
           </ThemeProvider>
         </ReactQueryProvider>
