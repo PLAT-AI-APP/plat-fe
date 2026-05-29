@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { useMyInfoQuery } from "@/api/user/getMyInfo";
 import { ModalManager } from "@/components/modal/ModalManager";
 import { useAuthStore } from "@/store/useAuthStore";
+import { postRefresh } from "@/api/auth/postRefresh";
 
 // 사이드바를 아예 보여주지 않을 경로 리스트
 const HIDE_SIDEBAR_PATHS = ["/character-creat"];
@@ -19,6 +20,17 @@ const HIDE_HEADER_PATHS = ["/character-creat"];
 // 사이드바를 기본으로 접어둘 경로 리스트
 const FOLD_SIDEBAR_PATHS = ["/chatting-room"];
 const FOLD_SIDEBAR_FULL_PATHS = ["/?tab=categories"];
+const PROTECTED_ROUTES = [
+  "/my-chatting",
+  "/chatting-room",
+  "/character-creat",
+  "/studio",
+  "/usage-history",
+  "/token-charge",
+];
+
+const isProtectedPath = (path: string) =>
+  PROTECTED_ROUTES.some((route) => path.startsWith(route));
 
 export default function ClientLayout({
   children,
@@ -81,12 +93,85 @@ export default function ClientLayout({
   const handleFoldToggle = () => setIsFolded((prev) => !prev);
   const { isScrolling, onScroll } = useScrollTimeout();
 
-  const { accessToken } = useAuthStore();
+  const { accessToken, isLoggedIn, logout, setAccessToken, setLoggedIn } =
+    useAuthStore();
   const router = useRouter();
+  const isProtectedRoute = isProtectedPath(pathname);
+  const [hasHydrated, setHasHydrated] = useState(false);
+  const [isAuthChecking, setIsAuthChecking] = useState(true);
+
+  useEffect(() => {
+    setHasHydrated(useAuthStore.persist.hasHydrated());
+
+    const unsubscribe = useAuthStore.persist.onFinishHydration(() => {
+      setHasHydrated(true);
+    });
+
+    return unsubscribe;
+  }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const checkAuth = async () => {
+      if (!hasHydrated) return;
+
+      if (!isLoggedIn) {
+        if (isMounted) setIsAuthChecking(false);
+        return;
+      }
+
+      if (accessToken) {
+        if (isMounted) setIsAuthChecking(false);
+        return;
+      }
+
+      try {
+        const data = await postRefresh();
+        if (!isMounted) return;
+
+        if (data?.accessToken) {
+          setAccessToken(data.accessToken);
+          setLoggedIn(true);
+        } else {
+          logout();
+        }
+      } catch {
+        if (isMounted) {
+          logout();
+        }
+      } finally {
+        if (isMounted) {
+          setIsAuthChecking(false);
+        }
+      }
+    };
+
+    setIsAuthChecking(true);
+    checkAuth();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [
+    accessToken,
+    hasHydrated,
+    isLoggedIn,
+    logout,
+    setAccessToken,
+    setLoggedIn,
+  ]);
 
   useEffect(() => {
     // 인증(로그인)이 꼭 필요한 보호 경로 목록 정의
-    const protectedRoutes = ["/mypage"];
+    const protectedRoutes = [
+      "/my-chatting",
+      "/chatting-room",
+      "/character-creat",
+      "/studio",
+      "/usage-history",
+      "/token-charge",
+    ];
 
     // 현재 접속한 pathname이 보호 경로 중 하나로 시작하는지 검사
     const isProtectedRoute = protectedRoutes.some((route) =>
@@ -94,11 +179,47 @@ export default function ClientLayout({
     );
 
     // 보호된 경로인데 토큰이 없다면 홈으로 튕겨내기
-    if (isProtectedRoute && !accessToken) {
+    if (isAuthChecking) return;
+
+    if (isProtectedRoute && !isLoggedIn) {
       alert("로그인이 필요한 서비스입니다.");
       router.replace("/");
     }
-  }, [accessToken, pathname, router]);
+  }, [isAuthChecking, isLoggedIn, pathname, router]);
+
+  useEffect(() => {
+    const handleProtectedLinkClick = (event: MouseEvent) => {
+      if (event.defaultPrevented || event.button !== 0) return;
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+        return;
+      }
+
+      const target = event.target as Element | null;
+      const anchor = target?.closest("a[href]");
+      if (!(anchor instanceof HTMLAnchorElement)) return;
+
+      const url = new URL(anchor.href);
+      if (url.origin !== window.location.origin) return;
+      if (!isProtectedPath(url.pathname)) return;
+      if (isLoggedIn) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+      if (isAuthChecking) return;
+
+      alert("로그인이 필요한 서비스입니다.");
+    };
+
+    document.addEventListener("click", handleProtectedLinkClick, true);
+
+    return () => {
+      document.removeEventListener("click", handleProtectedLinkClick, true);
+    };
+  }, [isAuthChecking, isLoggedIn]);
+
+  if (isProtectedRoute && (isAuthChecking || !isLoggedIn)) {
+    return null;
+  }
 
   return (
     <>

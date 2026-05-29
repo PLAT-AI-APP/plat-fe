@@ -74,7 +74,7 @@ const onResponseError = async (
   instance: AxiosInstance,
 ): Promise<AxiosResponse | never> => {
   const originalRequest = err.config;
-  const { logout, setAccessToken } = useAuthStore.getState();
+  const { logout, setAccessToken, setLoggedIn } = useAuthStore.getState();
 
   // 현재 에러가 발생한 API의 URL 경로를 추출합니다.
   const requestUrl = originalRequest?.url || "";
@@ -97,6 +97,7 @@ const onResponseError = async (
 
       // 2. Zustand 스토어 업데이트
       setAccessToken(newAccessToken);
+      setLoggedIn(true);
 
       // 3. 실패했던 기존 요청의 헤더를 새 토큰으로 교체
       originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
