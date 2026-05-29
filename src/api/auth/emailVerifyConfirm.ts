@@ -25,8 +25,8 @@ export const useEmailVerifyConfirmMutation = () => {
   return useMutation({
     mutationFn: ({ code, email }: PostemailVerifyConfirmProps) =>
       PostemailVerifyConfirm({ email, code }),
-    onSuccess: (data) => {
-      alert(data.serverMessage || "인증번호가 발송되었습니다.");
-    },
+    // onSuccess: (data) => {
+    //   alert(data.serverMessage || "인증번호가 발송되었습니다.");
+    // },
   });
 };
