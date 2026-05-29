@@ -3,9 +3,9 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { AuthFormValues } from "@/schema/auth.schema";
-import { EMAIL_REGEX } from "@/lib/regex";
 import { cn } from "@/lib/utils";
 import ActiveButton from "@/components/ActiveButton";
+import SmartInput from "@/components/smart-input";
 import { useEmailVerifyMutation } from "@/api/auth/emailVerify";
 import { useEmailVerifyConfirmMutation } from "@/api/auth/emailVerifyConfirm";
 import { useCountdown } from "@/hooks/useCountdown";
@@ -19,6 +19,8 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
   // 상태: UI 및 에러 관련
   const [isOtpSent, setIsOtpSent] = useState(false); // 인증번호 입력창 표시 여부
   const [isEmailVerified, setIsEmailVerified] = useState(false); // 이메일 인증 최종 성공 여부
+
+  const [successMessage, setSuccessMessage] = useState("");
 
   const {
     register,
@@ -55,12 +57,14 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
     if (!isEmailValid || !email) return;
 
     onVerifiedChange?.(false);
+    setSuccessMessage("");
     setValue("code", "");
     clearErrors("code");
     emailVerify(email, {
       onSuccess: (data) => {
         if (data.result === "OK") {
           setIsOtpSent(true);
+          setSuccessMessage("인증번호 전송완료!");
           setIsEmailVerified(false); // 재전송 시 인증 상태 초기화
           onVerifiedChange?.(false);
           startTimer();
@@ -83,11 +87,14 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
     emailVerifyConfirm(
       { code: code || "", email },
       {
-        onSuccess: () => {
+        onSuccess: (data) => {
           // alert("이메일 인증 성공");
           setIsEmailVerified(true); // 인증 완료 상태로 변경
           setIsOtpSent(false); // 인증번호 입력창 숨김
           onVerifiedChange?.(true);
+          setSuccessMessage(
+            data.serverMessage || "이메일 인증이 완료되었습니다.",
+          );
           clearErrors("code");
           stopTimer();
         },
@@ -109,6 +116,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
       // 이미 인증된 상태에서 '변경'을 누를 경우
       setIsEmailVerified(false);
       onVerifiedChange?.(false);
+      setSuccessMessage("");
       setValue("email", "");
       setValue("code", "");
       clearErrors("code");
@@ -126,42 +134,37 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
       if (timeLeft <= 0) return "시간이 초과되었습니다.";
     }
     return null;
-  }, [
-    errors.email,
-    errors.code,
-    isOtpSent,
-    isEmailVerified,
-    timeLeft,
-  ]);
+  }, [errors.email, errors.code, isOtpSent, isEmailVerified, timeLeft]);
+
+  const displayMessage = displayErrorMessage || successMessage;
+  const isDisplayMessageError = !!displayErrorMessage;
 
   return (
     <section id="email-auth-container" className="flex flex-col ">
       {/* 이메일 입력 영역 */}
       <article className="flex flex-col gap-2">
-        <label className="text-sm font-medium">이메일</label>
-        <div className="flex gap-2">
-          <input
+        <div className="flex items-start gap-2">
+          <SmartInput
             {...register("email", {
-              required: "이메일을 입력해주세요.",
-              pattern: {
-                value: EMAIL_REGEX,
-                message: "올바른 이메일 형식이 아닙니다.",
-              },
               onChange: async () => {
                 setIsEmailVerified(false);
                 onVerifiedChange?.(false);
+                setSuccessMessage("");
                 clearErrors("code");
                 await trigger("email");
               },
             })}
+            label="이메일"
+            labelFontSize="title-5"
+            value={email}
             placeholder="example@gmail.com"
-            className={cn(
-              "w-full h-11 border border-border-main bg-black/20 rounded-lg px-4 py-3 text-sm text-font-1",
-              "placeholder:text-font-2/50 focus:outline-none focus:border-brand transition-all",
+            inputClassName={cn(
+              "h-11 bg-black/20 rounded-lg px-4 py-3 text-sm text-font-1",
+              "placeholder:text-font-2/50 focus:border-brand transition-all",
               errors.email && "border-font-accents focus:border-font-accents",
-              isEmailVerified && "bg-card text-font-2", // 인증 완료 시 스타일 변경
+              isEmailVerified && "bg-card text-font-2",
             )}
-            disabled={isEmailVerified} // 인증 완료 시 수정 불가
+            disabled={isEmailVerified}
           />
           <ActiveButton
             type="button"
@@ -177,7 +180,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
                     : "인증요청"
             }
             className={cn(
-              "px-4 py-3 text-sm w-fit max-h-11 text-nowrap flex items-center justify-center gap-2",
+              "mt-[29px] px-4 py-3 text-sm w-fit max-h-11 text-nowrap flex items-center justify-center gap-2",
               isEmailVerified &&
                 "border border-border-main bg-bg-darker text-font-2",
             )}
@@ -212,36 +215,41 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
             className="overflow-hidden"
           >
             <div className="flex flex-col gap-2 mt-5.25">
-              <label className="text-sm font-medium">인증번호</label>
-              <div className="flex gap-2">
-                <div className="relative flex-1">
-                  <input
-                    {...register("code", {
-                      required: "인증번호를 입력해주세요",
-                      maxLength: 6,
-                      onChange: () => {
-                        clearErrors("code");
-                      },
-                    })}
-                    maxLength={6}
-                    placeholder="000000"
-                    className={cn(
-                      "w-full h-11 border border-border-main bg-black/20 rounded-lg px-4 py-3 text-sm text-font-1",
-                      "placeholder:text-font-2/50 focus:outline-none focus:border-brand transition-all",
-                      errors.code &&
-                        "border-font-accents focus:border-font-accents",
-                    )}
-                  />
-                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-font-2">
-                    {formatTime()}
-                  </span>
-                </div>
+              <div className="flex items-start gap-2">
+                <SmartInput
+                  {...register("code", {
+                    onChange: () => {
+                      setSuccessMessage("");
+                      clearErrors("code");
+                    },
+                  })}
+                  label="인증번호"
+                  labelFontSize="title-5"
+                  value={code}
+                  placeholder="000000"
+                  inputMode="numeric"
+                  onInput={(event) => {
+                    event.currentTarget.value = event.currentTarget.value.slice(
+                      0,
+                      6,
+                    );
+                  }}
+                  inputClassName={cn(
+                    "h-11 bg-black/20 rounded-lg px-4 py-3 pr-16 text-sm text-font-1",
+                    "placeholder:text-font-2/50 focus:border-brand transition-all",
+                    errors.code &&
+                      "border-font-accents focus:border-font-accents",
+                  )}
+                  rightElement={
+                    <span className="text-sm text-font-2">{formatTime()}</span>
+                  }
+                />
                 <ActiveButton
                   type="button"
                   isActive={(code?.length ?? 0) >= 6 && timeLeft > 0}
                   text="인증확인"
                   onClick={handleVerifyOtp}
-                  className="px-4 py-3 text-sm w-fit max-h-11 text-nowrap"
+                  className="mt-[29px] px-4 py-3 text-sm w-fit max-h-11 text-nowrap"
                 />
               </div>
             </div>
@@ -251,9 +259,15 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
 
       {/* 3. 통합 에러 메시지 영역 (항상 섹션 최하단) */}
       {/* 메시지가 사라져도 레이아웃 흔들림 방지 */}
-      {displayErrorMessage && (
-        <span role="alert" className="pl-2 pt-1.5 text-font-accents text-xs">
-          {displayErrorMessage}
+      {displayMessage && (
+        <span
+          role={isDisplayMessageError ? "alert" : "status"}
+          className={cn(
+            "pl-2 pt-1.5 text-xs",
+            isDisplayMessageError ? "text-font-accents" : "text-font-2",
+          )}
+        >
+          {displayMessage}
         </span>
       )}
     </section>
