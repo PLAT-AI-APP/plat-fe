@@ -53,7 +53,11 @@ const Agreed = () => {
         onClick={toggleIsAllAgree}
       >
         <div className="flex items-center justify-center h-6 w-6">
-          {isAllAgree ? <CheckboxFill className="text-white" /> : <Checkbox />}
+          {isAllAgree ? (
+            <CheckboxFill className="text-red-white" />
+          ) : (
+            <CheckboxEmpty />
+          )}
         </div>
         <span className="text-font-1 body-2">약관 전체 동의</span>
       </article>
