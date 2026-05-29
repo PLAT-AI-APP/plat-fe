@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { AuthFormValues } from "@/schema/auth.schema";
 import { EMAIL_REGEX } from "@/lib/regex";
@@ -19,7 +19,6 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
   // 상태: UI 및 에러 관련
   const [isOtpSent, setIsOtpSent] = useState(false); // 인증번호 입력창 표시 여부
   const [isEmailVerified, setIsEmailVerified] = useState(false); // 이메일 인증 최종 성공 여부
-  const [otpError, setOtpError] = useState("");
 
   const {
     register,
@@ -27,6 +26,8 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
     formState: { errors },
     trigger,
     setValue,
+    setError,
+    clearErrors,
   } = useFormContext<AuthFormValues>();
 
   // 데이터: 폼 값 감시
@@ -39,6 +40,15 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
   const { mutate: emailVerifyConfirm } = useEmailVerifyConfirmMutation();
   const { timeLeft, startTimer, formatTime, stopTimer } = useCountdown(300);
 
+  useEffect(() => {
+    if (isOtpSent && !isEmailVerified && timeLeft <= 0) {
+      setError("code", {
+        type: "manual",
+        message: "시간이 초과되었습니다.",
+      });
+    }
+  }, [isOtpSent, isEmailVerified, timeLeft, setError]);
+
   // 로직: 이메일 인증번호 요청 (인증요청/재전송)
   const handleRequestOtp = async () => {
     const isEmailValid = await trigger("email");
@@ -46,6 +56,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
 
     onVerifiedChange?.(false);
     setValue("code", "");
+    clearErrors("code");
     emailVerify(email, {
       onSuccess: (data) => {
         if (data.result === "OK") {
@@ -53,7 +64,6 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
           setIsEmailVerified(false); // 재전송 시 인증 상태 초기화
           onVerifiedChange?.(false);
           startTimer();
-          setOtpError("");
         }
       },
     });
@@ -62,7 +72,10 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
   // 로직: 인증번호 확인(검증)
   const handleVerifyOtp = () => {
     if (timeLeft <= 0) {
-      setOtpError("인증 시간이 만료되었습니다. 다시 시도해주세요.");
+      setError("code", {
+        type: "manual",
+        message: "시간이 초과되었습니다.",
+      });
       return;
     }
     if (!email) return;
@@ -75,11 +88,14 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
           setIsEmailVerified(true); // 인증 완료 상태로 변경
           setIsOtpSent(false); // 인증번호 입력창 숨김
           onVerifiedChange?.(true);
-          setOtpError("");
+          clearErrors("code");
           stopTimer();
         },
         onError: () => {
-          setOtpError("인증번호가 일치하지 않습니다.");
+          setError("code", {
+            type: "manual",
+            message: "인증번호가 일치하지 않습니다.",
+          });
         },
       },
     );
@@ -95,6 +111,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
       onVerifiedChange?.(false);
       setValue("email", "");
       setValue("code", "");
+      clearErrors("code");
     } else {
       // 인증 전이거나 재전송인 경우
       handleRequestOtp();
@@ -105,9 +122,8 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
   const displayErrorMessage = useMemo(() => {
     if (errors.email?.message) return errors.email.message;
     if (isOtpSent && !isEmailVerified) {
-      if (otpError) return otpError;
-      if (timeLeft <= 0) return "인증번호 유효시간 초과";
       if (errors.code?.message) return errors.code.message;
+      if (timeLeft <= 0) return "시간이 초과되었습니다.";
     }
     return null;
   }, [
@@ -115,7 +131,6 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
     errors.code,
     isOtpSent,
     isEmailVerified,
-    otpError,
     timeLeft,
   ]);
 
@@ -135,6 +150,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
               onChange: async () => {
                 setIsEmailVerified(false);
                 onVerifiedChange?.(false);
+                clearErrors("code");
                 await trigger("email");
               },
             })}
@@ -203,13 +219,16 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
                     {...register("code", {
                       required: "인증번호를 입력해주세요",
                       maxLength: 6,
+                      onChange: () => {
+                        clearErrors("code");
+                      },
                     })}
                     maxLength={6}
                     placeholder="000000"
                     className={cn(
                       "w-full h-11 border border-border-main bg-black/20 rounded-lg px-4 py-3 text-sm text-font-1",
                       "placeholder:text-font-2/50 focus:outline-none focus:border-brand transition-all",
-                      (errors.code || otpError) &&
+                      errors.code &&
                         "border-font-accents focus:border-font-accents",
                     )}
                   />
