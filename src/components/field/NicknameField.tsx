@@ -3,7 +3,6 @@
 import React from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import SmartInput from "@/components/smart-input";
-import { NICKNAME_REGEX } from "@/lib/regex";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useCheckNicknameQuery } from "@/api/auth/checkNickname";
 import { useUserStore } from "@/store/useUserStore";
@@ -33,6 +32,12 @@ const NicknameField = () => {
   );
 
   const error = errors["nickname"];
+  const isAvailableNickname =
+    !error &&
+    !isFetching &&
+    isNicknameCheckEnabled &&
+    debouncedNickname === nicknameValue &&
+    nicknameData?.available === true;
 
   return (
     <SmartInput
@@ -48,6 +53,10 @@ const NicknameField = () => {
           ? "이미 사용중인 닉네임입니다."
           : undefined)
       }
+      helperMessage={
+        isAvailableNickname ? "사용 가능한 닉네임입니다." : undefined
+      }
+      helperMessageType="success"
     />
   );
 };

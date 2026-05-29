@@ -18,6 +18,8 @@ export interface SmartInputProps extends React.InputHTMLAttributes<
   modalComponents?: React.ReactNode;
   toggleIsOpen?: () => void;
   error?: FieldError | string;
+  helperMessage?: string;
+  helperMessageType?: "success" | "default";
   leftElement?: React.ReactNode;
   rightElement?: React.ReactNode;
   // fontSize?: "md" | "lg";

@@ -5,7 +5,12 @@ import { cn } from "@/lib/utils";
 import React, { forwardRef } from "react";
 import { SmartInputProps } from "./types";
 import { useAutoResize, useLeftPadding } from "./hooks";
-import { LabelSection, CharacterCounter, ErrorMessage } from "./SubComponents";
+import {
+  LabelSection,
+  CharacterCounter,
+  ErrorMessage,
+  HelperMessage,
+} from "./SubComponents";
 
 const SmartInput = forwardRef<
   HTMLInputElement | HTMLTextAreaElement,
@@ -30,6 +35,8 @@ const SmartInput = forwardRef<
     toggleIsOpen,
     onChange,
     error = undefined,
+    helperMessage,
+    helperMessageType,
     leftElement,
     rightElement,
     labelFontSize = "title-3",
@@ -189,7 +196,11 @@ const SmartInput = forwardRef<
           )}
         </div>
 
-        <ErrorMessage error={error} />
+        {error ? (
+          <ErrorMessage error={error} />
+        ) : (
+          <HelperMessage message={helperMessage} type={helperMessageType} />
+        )}
       </div>
     </div>
   );

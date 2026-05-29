@@ -13,7 +13,7 @@ const postHashtagSuggest = async (params: PostHashtagSuggestProps) => {
       params,
     },
   );
-  alert(response.data.message);
+  // alert(response.data.message);
   return response.data;
 };
 
