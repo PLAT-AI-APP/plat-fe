@@ -120,9 +120,9 @@ const onResponseError = async (
       message: message || "알 수 없는 에러가 발생했습니다.",
     };
 
-    if (code === "ALERT") {
-      alert(formattedError.message);
-    }
+    // if (code === "ALERT") {
+    //   alert(formattedError.message);
+    // }
 
     return Promise.reject(formattedError);
   }
