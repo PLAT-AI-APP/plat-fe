@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import SmartInput from "@/components/smart-input";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -13,6 +13,8 @@ const NicknameField = () => {
     register,
     control,
     formState: { errors },
+    setError,
+    clearErrors,
   } = useFormContext();
 
   const nicknameValue = useWatch({ control, name: "nickname" });
@@ -39,9 +41,60 @@ const NicknameField = () => {
     debouncedNickname === nicknameValue &&
     nicknameData?.available === true;
 
+  useEffect(() => {
+    if (!nicknameValue || debouncedNickname === user?.nickname) {
+      clearErrors("nickname");
+      return;
+    }
+
+    if (!isNicknameCheckEnabled || debouncedNickname !== nicknameValue) {
+      setError("nickname", {
+        type: "manual",
+        message: "",
+      });
+      return;
+    }
+
+    if (isFetching) {
+      setError("nickname", {
+        type: "manual",
+        message: "",
+      });
+      return;
+    }
+
+    if (nicknameData?.available === false) {
+      setError("nickname", {
+        type: "manual",
+        message: "이미 사용중인 닉네임입니다.",
+      });
+      return;
+    }
+
+    if (nicknameData?.available === true) {
+      clearErrors("nickname");
+    }
+  }, [
+    clearErrors,
+    debouncedNickname,
+    isFetching,
+    isNicknameCheckEnabled,
+    nicknameData?.available,
+    nicknameValue,
+    setError,
+    user?.nickname,
+  ]);
+
   return (
     <SmartInput
-      {...register("nickname")}
+      {...register("nickname", {
+        onChange: () => {
+          setError("nickname", {
+            type: "manual",
+            message: "",
+          });
+        },
+      })}
       label="닉네임"
       required
       value={nicknameValue}
