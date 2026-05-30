@@ -2,11 +2,11 @@
 
 import React, { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { ModalLayout } from "../ModalLayout";
-import EmailAuthForm from "@/app/(auth)/find-password/_components/EmailAuthForm";
-import PasswordReset from "@/app/(auth)/find-password/_components/PasswordReset";
+import EmailAuthForm from "./EmailAuthForm";
+import PasswordReset from "./PasswordReset";
 import { PasswordResetFormValues } from "@/type/auth";
 import { FindPasswordModalProps } from "@/type/modal";
+import { ModalLayout } from "@/components/ModalLayout";
 
 const FindPasswordModal = ({ onClose, stackIndex }: FindPasswordModalProps) => {
   const [step, setStep] = useState(1);

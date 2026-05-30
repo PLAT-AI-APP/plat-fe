@@ -4,7 +4,6 @@ import { ModalTypeMap } from "@/store/useModalStore";
 // 각 모달 컴포넌트 임포트
 import AddLanguageModal from "./AddLanguageModal";
 import ChattingStartModal from "./ChattingStartModal";
-import FindPasswordModal from "./FindPasswordModal";
 import { FollowModal } from "./FollowModal";
 import LoginModal from "./LoginModal";
 import PersonaAddModal from "./PersonaAddModal";
@@ -14,6 +13,7 @@ import TagAddModal from "./TagAddModal";
 import TagSuggestionsModal from "./TagSuggestionsModal";
 import UserNoteModal from "./UserNoteModal";
 import PersonaModal from "./persona";
+import FindPasswordModal from "./find-password";
 
 export const MODAL_COMPONENTS: {
   [K in keyof ModalTypeMap]: ComponentType<ModalTypeMap[K]>;
