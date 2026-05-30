@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { SubmitHandler, useFormContext } from "react-hook-form";
-import AuthInput from "./AuthInput";
+import SmartInput from "@/components/smart-input";
 import OtpInput from "./OtpInput";
 import ActiveButton from "../ActiveButton";
 import { AuthFormValues } from "@/schema/auth.schema";
@@ -113,10 +113,11 @@ const EmailOtpStep = ({ title, onSubmit }: EmailOtpStepProps) => {
       </h1>
 
       <div id="auth-fields-container" className="flex flex-col gap-4 pb-8">
-        <AuthInput
+        <SmartInput
           id="input-email"
           label="이메일"
-          type="email"
+          inputType="email"
+          labelFontSize="title-5"
           placeholder="example@email.com"
           {...register("email", {
             required: "이메일을 입력해주세요.",

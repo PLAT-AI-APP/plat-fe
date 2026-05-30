@@ -22,6 +22,7 @@ const SmartInput = forwardRef<
     maxLength,
     required = false,
     type = "input",
+    inputType = "text",
     inputClassName,
     inputBoxClassName,
     isBorder = true,
@@ -149,9 +150,10 @@ const SmartInput = forwardRef<
               {...(rest as React.InputHTMLAttributes<HTMLInputElement>)}
               ref={ref as React.ForwardedRef<HTMLInputElement>}
               style={{ paddingLeft: `${paddingLeft}px` }}
-              type="text"
+              type={inputType}
               className={cn(
                 "w-full px-4 py-3 bg-bg-darkest border border-border-main rounded-xl outline-none placeholder:text-font-disabled",
+                rightElement && "pr-11",
                 inputClassName,
                 error && "border-font-accents",
               )}

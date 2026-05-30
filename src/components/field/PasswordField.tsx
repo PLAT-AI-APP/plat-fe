@@ -2,7 +2,7 @@
 
 import React from "react";
 import { FieldError, useFormContext } from "react-hook-form";
-import AuthInput from "@/components/auth/AuthInput";
+import SmartInput from "@/components/smart-input";
 import { PasswordToggle } from "@/components/auth/PasswordToggle";
 import { useTogglePassword } from "@/hooks/useTogglePassword";
 
@@ -15,9 +15,10 @@ const PasswordField = () => {
   const isShowPw = useTogglePassword();
 
   return (
-    <AuthInput
+    <SmartInput
       label="비밀번호"
-      type={isShowPw.inputType}
+      inputType={isShowPw.inputType}
+      labelFontSize="title-5"
       placeholder="8자 이상 입력해주세요"
       {...register("password")}
       error={errors.password as FieldError}

@@ -8,6 +8,7 @@ export interface SmartInputProps extends React.InputHTMLAttributes<
   maxLength?: number;
   required?: boolean;
   type?: "input" | "textarea" | "modal";
+  inputType?: React.HTMLInputTypeAttribute;
   isOpen?: boolean;
   inputClassName?: string;
   inputBoxClassName?: string;

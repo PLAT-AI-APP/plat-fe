@@ -1,5 +1,5 @@
 import ActiveButton from "@/components/ActiveButton";
-import AuthInput from "@/components/auth/AuthInput";
+import SmartInput from "@/components/smart-input";
 import { PasswordToggle } from "@/components/auth/PasswordToggle";
 import { useTogglePassword } from "@/hooks/useTogglePassword";
 import { PasswordResetFormValues } from "@/type/auth";
@@ -35,9 +35,10 @@ const PasswordReset = () => {
 
       <fieldset className="flex flex-col gap-6">
         {/* 비밀번호 input */}
-        <AuthInput
+        <SmartInput
           label="비밀번호"
-          type={isShowPw.inputType}
+          inputType={isShowPw.inputType}
+          labelFontSize="title-5"
           placeholder="8자 이상 입력해주세요"
           {...register("password", {
             required: "비밀번호를 입력해주세요.",
@@ -51,9 +52,10 @@ const PasswordReset = () => {
           }
         />
         {/* 비밀번호 확인 input */}
-        <AuthInput
+        <SmartInput
           label="비밀번호 확인"
-          type={isShowConfirm.inputType}
+          inputType={isShowConfirm.inputType}
+          labelFontSize="title-5"
           placeholder="비밀번호를 다시 입력해주세요"
           {...register("passwordCheck", {
             required: "비밀번호 확인이 필요합니다.",

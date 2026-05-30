@@ -2,7 +2,7 @@
 import { useEmailVerifyMutation } from "@/api/auth/emailVerify";
 import { useEmailVerifyConfirmMutation } from "@/api/auth/emailVerifyConfirm";
 import ActiveButton from "@/components/ActiveButton";
-import AuthInput from "@/components/auth/AuthInput";
+import SmartInput from "@/components/smart-input";
 import OtpInput from "@/components/auth/OtpInput";
 import { Email } from "@/icons";
 import { EMAIL_REGEX } from "@/lib/regex";
@@ -115,10 +115,10 @@ const EmailAuthForm = ({ onNextStep }: EmailAuthFormProps) => {
 
       <div id="auth-fields-container" className="flex flex-col gap-4 pb-8">
         {/* 이메일 입력 필드 */}
-        <AuthInput
-          id="input-email"
+        <SmartInput
           label="이메일"
-          type="email"
+          inputType="email"
+          labelFontSize="title-5"
           placeholder="example@email.com"
           {...register("email", {
             required: "이메일을 입력해주세요.",
@@ -130,7 +130,7 @@ const EmailAuthForm = ({ onNextStep }: EmailAuthFormProps) => {
           })}
           error={errors.email}
           disabled={isOtpSent || isPending}
-          inputClassName={isOtpSent ? "bg-card text-font-2" : ""}
+          inputClassName={isOtpSent ? "bg-card text-font-2" : undefined}
           leftElement={isOtpSent && <Email className="w-5 h-5 text-font-2" />}
         />
 

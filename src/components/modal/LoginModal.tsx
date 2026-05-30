@@ -5,12 +5,11 @@ import { ChatFill, Google } from "@/icons";
 import Link from "next/link";
 import ActiveButton from "../ActiveButton";
 import { PasswordToggle } from "../auth/PasswordToggle";
-import AuthInput from "../auth/AuthInput";
+import SmartInput from "../smart-input";
 import { useTogglePassword } from "@/hooks/useTogglePassword";
 import { useForm } from "react-hook-form";
 import { useEmailLoginMutation } from "@/api/auth/emailLogin";
 import { useAuthStore } from "@/store/useAuthStore";
-import { EMAIL_REGEX } from "@/lib/regex";
 import { ModalLayout } from "../ModalLayout";
 import useRouteEffect from "@/hooks/useRouteEffect";
 
@@ -100,22 +99,23 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
           >
             <legend className="sr-only">이메일 및 비밀번호 입력</legend>
 
-            <AuthInput
+            <SmartInput
               id="input-email"
               label="이메일"
-              type="email"
+              inputType="email"
+              labelFontSize="title-5"
               placeholder="example@gmail.com"
               {...register("email")}
               error={errors.email}
             />
 
             <div id="password-input-group" className="flex flex-col gap-2">
-              <AuthInput
+              <SmartInput
                 id="input-password"
                 label="비밀번호"
-                type={isShowPw.inputType}
+                inputType={isShowPw.inputType}
+                labelFontSize="title-5"
                 placeholder="비밀번호를 입력하세요"
-                className="pr-9"
                 rightElement={
                   <PasswordToggle
                     isVisible={isShowPw.isVisible}

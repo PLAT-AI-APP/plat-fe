@@ -3,7 +3,7 @@
 import { useTogglePassword } from "@/hooks/useTogglePassword";
 import React, { useEffect } from "react";
 import { FieldError, useFormContext, useWatch } from "react-hook-form";
-import AuthInput from "../auth/AuthInput";
+import SmartInput from "../smart-input";
 import { PasswordToggle } from "../auth/PasswordToggle";
 
 const PasswordFields = () => {
@@ -29,9 +29,10 @@ const PasswordFields = () => {
 
   return (
     <div className="flex flex-col gap-5.25">
-      <AuthInput
+      <SmartInput
         label="비밀번호"
-        type={isShowPw.inputType}
+        inputType={isShowPw.inputType}
+        labelFontSize="title-5"
         placeholder="8자 이상 입력해주세요"
         {...register("password")}
         error={errors.password as FieldError}
@@ -43,9 +44,10 @@ const PasswordFields = () => {
         }
       />
 
-      <AuthInput
+      <SmartInput
         label="비밀번호 확인"
-        type={isShowConfirm.inputType}
+        inputType={isShowConfirm.inputType}
+        labelFontSize="title-5"
         placeholder="비밀번호를 다시 입력해주세요"
         {...register("passwordCheck")}
         error={errors.passwordCheck as FieldError}
