@@ -2,6 +2,7 @@ import { create } from "zustand";
 import {
   AddLanguageModalProps,
   ChattingStartModalProps,
+  FindPasswordModalProps,
   FollowModalProps,
   LoginModalProps,
   PersonaAddModalProps,
@@ -13,10 +14,11 @@ import {
   PersonaModalProps,
 } from "@/type/modal";
 
-// 3. 모달 이름과 Props를 매핑 (이곳에 새 모달을 추가하세요)
+// 모달 이름과 Props를 매핑 (이곳에 새 모달을 추가하세요)
 export type ModalTypeMap = {
   ADD_LANGUAGE: AddLanguageModalProps;
   CHATTING_START: ChattingStartModalProps;
+  FIND_PASSWORD: FindPasswordModalProps;
   FOLLOW: FollowModalProps;
   LOGIN: LoginModalProps;
   PERSONA_ADD: PersonaAddModalProps;
@@ -35,7 +37,7 @@ type ModalInstanceUnion = {
   };
 }[keyof ModalTypeMap];
 
-// 4. 스택에 저장될 데이터 구조
+// 스택에 저장될 데이터 구조
 export interface ModalInstance<T extends keyof ModalTypeMap> {
   type: T;
   // 저장될 때부터 onClose가 없는 타입을 저장하도록 설정

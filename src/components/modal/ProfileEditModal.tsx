@@ -19,10 +19,10 @@ import BioField from "../field/BioField";
 import GenderField from "../field/GenderField";
 // import PhoneField from "../field/PhoneField";
 import AccountField from "../field/AccountField";
-import Link from "next/link";
 
 import { ProfileEditModalProps } from "@/type/modal";
 import { useDeleteUserMutation } from "@/api/user/deleteUser";
+import { useModalStore } from "@/store/useModalStore";
 
 const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
   const { handleSubmit, watch } = useFormContext<ProfileEditFormType>();
@@ -31,8 +31,13 @@ const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
   // const [isPhoneModal, setIsPhoneModal] = useState(false);
 
   const { mutate: deleteUser } = useDeleteUserMutation();
+  const openModal = useModalStore((state) => state.openModal);
 
   const birth = watch("birth");
+
+  const handleFindPasswordClick = () => {
+    openModal("FIND_PASSWORD");
+  };
 
   const onSave = (data: ProfileEditFormType) => {
     updateMyInfo(
@@ -80,9 +85,13 @@ const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
         </div>
 
         <footer className="flex gap-9 justify-center mt-9">
-          <Link href={"/find-password"} className="body-4 text-font-2 w-fit">
+          <button
+            type="button"
+            onClick={handleFindPasswordClick}
+            className="body-4 text-font-2 w-fit"
+          >
             비밀번호 변경
-          </Link>
+          </button>
           <button
             onClick={() => deleteUser}
             type="button"

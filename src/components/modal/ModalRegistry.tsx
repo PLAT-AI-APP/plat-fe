@@ -4,6 +4,7 @@ import { ModalTypeMap } from "@/store/useModalStore";
 // 각 모달 컴포넌트 임포트
 import AddLanguageModal from "./AddLanguageModal";
 import ChattingStartModal from "./ChattingStartModal";
+import FindPasswordModal from "./FindPasswordModal";
 import { FollowModal } from "./FollowModal";
 import LoginModal from "./LoginModal";
 import PersonaAddModal from "./PersonaAddModal";
@@ -19,6 +20,7 @@ export const MODAL_COMPONENTS: {
 } = {
   ADD_LANGUAGE: AddLanguageModal,
   CHATTING_START: ChattingStartModal,
+  FIND_PASSWORD: FindPasswordModal,
   FOLLOW: FollowModal,
   LOGIN: LoginModal,
   PERSONA_ADD: PersonaAddModal,

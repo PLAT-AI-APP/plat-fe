@@ -2,56 +2,41 @@ import { CharacterScenario } from "./character";
 
 export interface GlobalModalProps {
   onClose: () => void;
+  stackIndex?: number;
 }
 
-export interface AddLanguageModalProps {
-  onClose: () => void;
-}
+export type AddLanguageModalProps = GlobalModalProps;
 
-export interface ChattingStartModalProps {
-  onClose: () => void;
+export interface ChattingStartModalProps extends GlobalModalProps {
   scenarioList: CharacterScenario[];
   setCurrentScenario: (scenario: CharacterScenario) => void;
   currentScenario: CharacterScenario | undefined;
 }
 
-export interface FollowModalProps {
-  onClose: () => void;
+export interface FollowModalProps extends GlobalModalProps {
   // userId: string;
   activeTab: "followers" | "following";
 }
 
-export interface LoginModalProps {
-  onClose: () => void;
+export type FindPasswordModalProps = GlobalModalProps;
+
+export interface LoginModalProps extends GlobalModalProps {
   triggerRef: React.RefObject<HTMLElement | null> | undefined;
 }
 
-export interface PersonaAddModalProps {
-  onClose: () => void;
+export interface PersonaAddModalProps extends GlobalModalProps {
   isEditMode?: boolean;
   personaId?: string;
 }
 
-export interface ProfileEditModalProps {
-  onClose: () => void;
-}
+export type ProfileEditModalProps = GlobalModalProps;
 
-export interface StorageModalProps {
-  onClose: () => void;
-}
+export type StorageModalProps = GlobalModalProps;
 
-export interface TagAddModalProps {
-  onClose: () => void;
-}
+export type TagAddModalProps = GlobalModalProps;
 
-export interface TagSuggestionsModalProps {
-  onClose: () => void;
-}
+export type TagSuggestionsModalProps = GlobalModalProps;
 
-export interface UserNoteModalProps {
-  onClose: () => void;
-}
+export type UserNoteModalProps = GlobalModalProps;
 
-export interface PersonaModalProps {
-  onClose: () => void;
-}
+export type PersonaModalProps = GlobalModalProps;

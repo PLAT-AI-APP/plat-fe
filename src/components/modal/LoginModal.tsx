@@ -12,6 +12,7 @@ import { useEmailLoginMutation } from "@/api/auth/emailLogin";
 import { useAuthStore } from "@/store/useAuthStore";
 import { ModalLayout } from "../ModalLayout";
 import useRouteEffect from "@/hooks/useRouteEffect";
+import { useModalStore } from "@/store/useModalStore";
 
 import { LoginModalProps } from "@/type/modal";
 import { loginFormSchema, LoginFormValues } from "@/schema/auth.schema";
@@ -19,6 +20,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
   const isShowPw = useTogglePassword();
+  const openModal = useModalStore((state) => state.openModal);
 
   const {
     register,
@@ -69,6 +71,10 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
   };
 
   useRouteEffect(onClose);
+
+  const handleFindPasswordClick = () => {
+    openModal("FIND_PASSWORD");
+  };
 
   return (
     <ModalLayout
@@ -127,13 +133,14 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
               />
 
               {/* 비밀번호 재설정 page 이동 link */}
-              <Link
+              <button
                 id="btn-forgot-password"
-                href={"find-password"}
+                type="button"
+                onClick={handleFindPasswordClick}
                 className="cursor-pointer w-fit pl-1 text-font-2 body-6 hover:text-font-1 transition-colors"
               >
                 비밀번호를 잊으셨나요?
-              </Link>
+              </button>
             </div>
           </fieldset>
 

@@ -11,6 +11,7 @@ interface ModalProps {
   className?: string;
   triggerRef?: React.RefObject<HTMLElement | null>;
   hasBackground?: boolean;
+  stackIndex?: number;
 }
 
 // 클라이언트 사이드 여부를 확인하는 간단한 유틸리티
@@ -24,8 +25,11 @@ export const ModalLayout = ({
   className,
   triggerRef,
   hasBackground = false,
+  stackIndex = 0,
 }: ModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
+  const overlayZIndex = 100 + stackIndex * 2;
+  const modalZIndex = overlayZIndex + 1;
 
   // useEffect + useState 대신 사용하여 성능 경고를 피함
   const isClient = useSyncExternalStore(
@@ -42,6 +46,7 @@ export const ModalLayout = ({
       {hasBackground && (
         <div
           className="fixed inset-0 bg-black/50 z-100"
+          style={{ zIndex: overlayZIndex }}
           onClick={(e) => {
             e.stopPropagation();
             onClose();
@@ -55,6 +60,7 @@ export const ModalLayout = ({
         ref={modalRef}
         role="dialog"
         aria-modal="true"
+        style={{ zIndex: modalZIndex }}
         onClick={(e) => e.stopPropagation()}
         onMouseDown={(e) => e.stopPropagation()}
         className={cn(
