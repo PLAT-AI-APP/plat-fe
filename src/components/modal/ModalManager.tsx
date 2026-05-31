@@ -7,8 +7,6 @@ export const ModalManager = () => {
   return (
     <>
       {modals.map((modal, index) => {
-        console.log(modal.props);
-
         const ModalComponent = MODAL_COMPONENTS[
           modal.type
         ] as React.ComponentType<

@@ -37,6 +37,17 @@ interface ProfilePopoverProps {
   onClose: () => void;
   triggerRef: React.RefObject<HTMLElement | null>;
 }
+interface ActivityTab {
+  name: string;
+  icon: React.ComponentType<{
+    size?: number;
+    strokeWidth?: number;
+    className?: string;
+  }>;
+  link?: string;
+  onClick?: () => void;
+  hasTendencyOptions?: boolean;
+}
 
 const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
   const router = useRouter();
@@ -45,9 +56,18 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
   const tendency = useToggle();
-  const activityArray = [
-    { name: "내 페르소나", link: "/persona", icon: Persona },
-    { name: "콘텐츠 설정", icon: Setting, onclick: tendency.toggle },
+  const activityArray: ActivityTab[] = [
+    {
+      name: "내 페르소나",
+      icon: Persona,
+      onClick: () => openModal("PERSONA"),
+    },
+    {
+      name: "콘텐츠 설정",
+      icon: Setting,
+      onClick: tendency.toggle,
+      hasTendencyOptions: true,
+    },
   ];
 
   // isLoggedIn이 false일 때 "내 페르소나"를 필터링
@@ -178,7 +198,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
           return (
             <div
               key={tab.name}
-              onClick={tab.name === "콘텐츠 설정" ? tendency.toggle : undefined}
+              onClick={tab.onClick}
               // className="relative cursor-pointer flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg hover:bg-btn-hover transition-colors text-font-1 hover:text-font-1 text-sm"
             >
               <div className="relative cursor-pointer flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg hover:bg-btn-hover transition-colors duration-300 ease-in-out text-font-1 hover:text-font-1">
@@ -191,19 +211,23 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
                   {tab.name}
                 </div>
 
-                <div className="flex items-center gap-1">
-                  <span className="title-6 text-font-1">{cureentTendency}</span>
-                  <ArrowRight
-                    className={cn(
-                      "w-2.5 h-2.5 text-font-disabled",
-                      tendency.isOpen && "rotate-90",
-                    )}
-                  />
-                </div>
+                {tab.hasTendencyOptions && (
+                  <div className="flex items-center gap-1">
+                    <span className="title-6 text-font-1">
+                      {cureentTendency}
+                    </span>
+                    <ArrowRight
+                      className={cn(
+                        "w-2.5 h-2.5 text-font-disabled",
+                        tendency.isOpen && "rotate-90",
+                      )}
+                    />
+                  </div>
+                )}
               </div>
 
               <AnimatePresence>
-                {tendency.isOpen && (
+                {tab.hasTendencyOptions && tendency.isOpen && (
                   <motion.div
                     onClick={(e) => e.stopPropagation()}
                     initial={{ height: 0, opacity: 0 }} // 시작 상태: 높이 0, 투명도 0
