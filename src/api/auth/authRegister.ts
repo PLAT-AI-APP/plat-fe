@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { axiosInstance } from "..";
 import { ApiSuccessResponse, AppError } from "@/type/api";
+import { useRouter } from "next/navigation";
 
 interface PostAuthRegisterProps {
   email: string;
@@ -23,14 +24,16 @@ const PostAuthRegister = async (props: PostAuthRegisterProps) => {
 
 /** 최종 회원가입 */
 export const useAuthRegisterMutation = () => {
+  const router = useRouter();
+
   return useMutation<
     { serverMessage: string },
     AppError,
     PostAuthRegisterProps
   >({
     mutationFn: PostAuthRegister,
-    onSuccess: (data) => {
-      window.location.href = "/";
+    onSuccess: () => {
+      router.replace("/");
     },
   });
 };
