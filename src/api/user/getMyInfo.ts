@@ -17,12 +17,14 @@ const GetMyInfo = async () => {
 export const useMyInfoQuery = () => {
   const setUser = useUserStore((state) => state.setUser);
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const isAuthReady = useAuthStore((state) => state.isAuthReady);
+  const accessToken = useAuthStore((state) => state.accessToken);
 
   const query = useQuery<UserInfo, AppError>({
     queryKey: ["get-my-info"],
     queryFn: GetMyInfo,
     staleTime: 1000 * 60 * 5,
-    enabled: isLoggedIn,
+    enabled: isAuthReady && isLoggedIn && !!accessToken,
   });
 
   // 데이터가 성공적으로 로드되면 Zustand 스토어에 저장

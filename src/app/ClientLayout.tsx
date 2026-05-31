@@ -9,7 +9,8 @@ import { cn } from "@/lib/utils";
 import { useMyInfoQuery } from "@/api/user/getMyInfo";
 import { ModalManager } from "@/components/modal/ModalManager";
 import { useAuthStore } from "@/store/useAuthStore";
-import { postRefresh } from "@/api/auth/postRefresh";
+import { refreshAccessToken } from "@/api/auth/postRefresh";
+import axios from "axios";
 
 // 사이드바를 아예 보여주지 않을 경로 리스트
 const HIDE_SIDEBAR_PATHS = ["/character-creat"];
@@ -31,6 +32,10 @@ const PROTECTED_ROUTES = [
 
 const isProtectedPath = (path: string) =>
   PROTECTED_ROUTES.some((route) => path.startsWith(route));
+
+const isAuthExpiredError = (error: unknown) =>
+  axios.isAxiosError(error) &&
+  (error.response?.status === 401 || error.response?.status === 403);
 
 export default function ClientLayout({
   children,
@@ -93,8 +98,14 @@ export default function ClientLayout({
   const handleFoldToggle = () => setIsFolded((prev) => !prev);
   const { isScrolling, onScroll } = useScrollTimeout();
 
-  const { accessToken, isLoggedIn, logout, setAccessToken, setLoggedIn } =
-    useAuthStore();
+  const {
+    accessToken,
+    isLoggedIn,
+    logout,
+    setAccessToken,
+    setAuthReady,
+    setLoggedIn,
+  } = useAuthStore();
   const router = useRouter();
   const isProtectedRoute = isProtectedPath(pathname);
   const [hasHydrated, setHasHydrated] = useState(false);
@@ -117,36 +128,46 @@ export default function ClientLayout({
       if (!hasHydrated) return;
 
       if (!isLoggedIn) {
-        if (isMounted) setIsAuthChecking(false);
+        if (isMounted) {
+          setAuthReady(true);
+          setIsAuthChecking(false);
+        }
         return;
       }
 
       if (accessToken) {
-        if (isMounted) setIsAuthChecking(false);
+        if (isMounted) {
+          setAuthReady(true);
+          setIsAuthChecking(false);
+        }
         return;
       }
 
       try {
-        const data = await postRefresh();
+        const refreshedAccessToken = await refreshAccessToken();
         if (!isMounted) return;
 
-        if (data?.accessToken) {
-          setAccessToken(data.accessToken);
+        if (refreshedAccessToken) {
+          setAccessToken(refreshedAccessToken);
           setLoggedIn(true);
         } else {
           logout();
         }
-      } catch {
+      } catch (error) {
         if (isMounted) {
-          logout();
+          if (isAuthExpiredError(error)) {
+            logout();
+          }
         }
       } finally {
         if (isMounted) {
+          setAuthReady(true);
           setIsAuthChecking(false);
         }
       }
     };
 
+    setAuthReady(false);
     setIsAuthChecking(true);
     checkAuth();
 
@@ -159,6 +180,7 @@ export default function ClientLayout({
     isLoggedIn,
     logout,
     setAccessToken,
+    setAuthReady,
     setLoggedIn,
   ]);
 

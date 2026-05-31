@@ -5,7 +5,7 @@ import axios, {
   AxiosError,
   AxiosResponse,
 } from "axios";
-import { postRefresh } from "./auth/postRefresh";
+import { refreshAccessToken } from "./auth/postRefresh";
 
 /** 1. Axios 모듈 확장: _retry 속성 정의 */
 declare module "axios" {
@@ -36,6 +36,10 @@ const BASE_CONFIG = {
   timeout: 5000,
   headers: { "Content-Type": "application/json" },
 };
+
+const isAuthExpiredError = (error: unknown) =>
+  axios.isAxiosError(error) &&
+  (error.response?.status === 401 || error.response?.status === 403);
 
 // 인터셉터 없는 순수 axios
 export const plainAxios = axios.create(BASE_CONFIG);
@@ -91,9 +95,12 @@ const onResponseError = async (
     originalRequest._retry = true;
 
     try {
-      // 1. 공통으로 분리한 postRefresh 사용
-      const data = await postRefresh();
-      const newAccessToken = data.accessToken;
+      const newAccessToken = await refreshAccessToken();
+
+      if (!newAccessToken) {
+        logout();
+        return Promise.reject(err);
+      }
 
       // 2. Zustand 스토어 업데이트
       setAccessToken(newAccessToken);
@@ -106,7 +113,9 @@ const onResponseError = async (
       return instance(originalRequest);
     } catch (refreshError) {
       // 리프레시 실패 시 로그아웃 처리
-      logout();
+      if (isAuthExpiredError(refreshError)) {
+        logout();
+      }
       return Promise.reject(refreshError);
     }
   }

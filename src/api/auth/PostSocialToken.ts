@@ -3,7 +3,13 @@ import { plainAxios } from "..";
 import { useAuthStore } from "@/store/useAuthStore";
 
 export const postSocialToken = async (code: string) => {
-  const response = await plainAxios.post("/auth/social/token", { code });
+  const response = await plainAxios.post(
+    "/auth/social/token",
+    { code },
+    {
+      withCredentials: true,
+    },
+  );
   return response.data.data;
 };
 

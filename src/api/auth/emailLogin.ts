@@ -12,7 +12,9 @@ interface PostEmailLoginProps {
 const PostEmailLogin = async (props: PostEmailLoginProps) => {
   const response = await axiosInstance.post<
     ApiSuccessResponse<{ accessToken: string }>
-  >("/auth/login", props);
+  >("/auth/login", props, {
+    withCredentials: true,
+  });
 
   return {
     serverMessage: response.data.message ?? "",
