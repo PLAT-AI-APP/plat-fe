@@ -129,12 +129,9 @@ const PersonaAddModal = ({
           <button
             type="submit"
             disabled={!isValid} // 필수값이 없거나 에러 시 비활성화
-            className={`py-3 w-full title-3 rounded-xl border transition-all
-              ${
-                isValid
-                  ? "bg-brand text-white border-transparent hover:brightness-110"
-                  : "bg-bg-darkest text-font-disabled border-border-main cursor-not-allowed"
-              }`}
+            className={`mt-3 py-3 w-full title-3 rounded-xl bg-bg-darkest border border-border-main transition-colors ${
+              isValid ? "hover:bg-btn-hover" : "text-font-disabled cursor-not-allowed"
+            }`}
           >
             페르소나 {isEditMode ? "수정" : "추가"}
           </button>
