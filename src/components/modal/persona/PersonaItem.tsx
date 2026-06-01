@@ -53,7 +53,14 @@ const PersonaItem = ({ persona, isActive, onSelect }: PersonaItemProps) => {
               onClose={close}
               triggerRef={triggerRef}
               onDelete={() => deletePersona(persona.personaId)}
-              onEdit={() => openModal("PERSONA_ADD")}
+              onEdit={() =>
+                openModal("PERSONA_ADD", {
+                  isEditMode: true,
+                  personaId: persona.personaId,
+                  name,
+                  description,
+                })
+              }
             />
           )}
         </div>

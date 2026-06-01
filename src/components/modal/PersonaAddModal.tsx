@@ -19,6 +19,8 @@ const PersonaAddModal = ({
   onClose,
   isEditMode = false,
   personaId,
+  name: initialName,
+  description: initialDescription,
 }: PersonaAddModalProps) => {
   const {
     register,
@@ -39,13 +41,21 @@ const PersonaAddModal = ({
   });
 
   useEffect(() => {
+    if (isEditMode && (initialName || initialDescription)) {
+      reset({
+        name: initialName ?? "",
+        info: initialDescription ?? "",
+      });
+      return;
+    }
+
     if (isEditMode && personaDetail) {
       reset({
         name: personaDetail.name,
         info: personaDetail.description,
       });
     }
-  }, [isEditMode, personaDetail, reset]);
+  }, [initialDescription, initialName, isEditMode, personaDetail, reset]);
 
   const { mutate: addPersona } = useAddPersonaMutation();
   const { mutate: editPersona } = useEditPersonaMutation();

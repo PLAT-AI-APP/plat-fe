@@ -27,6 +27,8 @@ export interface LoginModalProps extends GlobalModalProps {
 export interface PersonaAddModalProps extends GlobalModalProps {
   isEditMode?: boolean;
   personaId?: string;
+  name?: string;
+  description?: string;
 }
 
 export type ProfileEditModalProps = GlobalModalProps;
