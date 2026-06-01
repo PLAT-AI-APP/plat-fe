@@ -6,6 +6,8 @@
   --brand-dark: #ff9a3c;
   --brand-opacity: rgba(255, 122, 0, 0.1); /* 10% 투명도 적용 */
   --brand-opacity-2: rgba(255, 122, 0, 0.2); /* 20% 투명도 적용 */
+  --brand-opacity-3: #ff7a0008; /* 3% 투명도 적용 */
+  --font-error: #ff3842;
   --font-accents: #ed1c24;
 
   --font-1: #11141f;
@@ -31,6 +33,7 @@ input:-webkit-autofill:active {
   --font-3-disabled: #5c6180;
   --font-4: #0d0e11;
   --font-accents: #ed1c24;
+  --font-error: #ff3842;
   --border: #2a2f4a;
   --bg-dark: #11141f;
   --bg-darker: #0e1018;
@@ -48,6 +51,7 @@ input:-webkit-autofill:active {
   --color-font-0: var(--font-0);
   --color-font-1: var(--font-1);
   --color-font-2: var(--font-2);
+  --color-font-error: var(--font-error);
   --color-font-disabled: var(--font-3-disabled);
   --color-font-4: var(--font-4);
   --color-border-main: var(--border);
@@ -63,6 +67,7 @@ input:-webkit-autofill:active {
   --color-brand-dark: var(--brand-dark);
   --color-brand-opacity: var(--brand-opacity);
   --color-brand-opacity-2: var(--brand-opacity-2);
+  --color-brand-opacity-3: var(--brand-opacity-3);
   --color-font-accents: var(--font-accents);
 }
 
