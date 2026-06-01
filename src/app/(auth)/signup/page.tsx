@@ -19,6 +19,7 @@ const SignupPage = () => {
       passwordCheck: "",
       isPrivacyAgreed: false,
       isTermsAgreed: false,
+      isAgeAgreed: false,
     },
   });
 

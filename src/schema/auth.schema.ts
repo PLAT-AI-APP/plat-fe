@@ -60,6 +60,12 @@ export const authFormSchema = z
     isTermsAgreed: z.boolean().refine((value) => value === true, {
       message: "이용약관에 동의해주세요.",
     }),
+    isAgeAgreed: z
+      .boolean()
+      .refine((value) => value === true, {
+        message: "이용약관에 동의해주세요.",
+      })
+      .optional(),
   })
   .refine((data) => data.password === data.passwordCheck, {
     path: ["passwordCheck"],
@@ -83,7 +89,10 @@ export const passwordResetFormSchema = z
       .string()
       .min(1, "비밀번호를 입력해주세요.")
       .min(8, "비밀번호는 8자 이상이어야 합니다.")
-      .regex(/[!@#$%^&*(),.?":{}|<>]/, "비밀번호는 특수문자를 포함해야 합니다."),
+      .regex(
+        /[!@#$%^&*(),.?":{}|<>]/,
+        "비밀번호는 특수문자를 포함해야 합니다.",
+      ),
     passwordCheck: z
       .string()
       .min(1, "비밀번호 확인을 입력해주세요.")
