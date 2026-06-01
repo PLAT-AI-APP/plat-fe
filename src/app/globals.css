@@ -5,6 +5,7 @@
   --brand: #ff7a00;
   --brand-dark: #ff9a3c;
   --brand-opacity: rgba(255, 122, 0, 0.1); /* 10% 투명도 적용 */
+  --brand-opacity-2: rgba(255, 122, 0, 0.2); /* 20% 투명도 적용 */
   --font-accents: #ed1c24;
 
   --font-1: #11141f;
@@ -61,6 +62,7 @@ input:-webkit-autofill:active {
   --color-brand: var(--brand);
   --color-brand-dark: var(--brand-dark);
   --color-brand-opacity: var(--brand-opacity);
+  --color-brand-opacity-2: var(--brand-opacity-2);
   --color-font-accents: var(--font-accents);
 }
 
@@ -110,6 +112,11 @@ button {
 @utility heading-3 {
   font-size: 22px;
   font-weight: 700;
+  line-height: 1.3;
+}
+@utility heading-3R {
+  font-size: 22px;
+  font-weight: 400;
   line-height: 1.3;
 }
 
