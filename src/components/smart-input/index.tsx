@@ -147,8 +147,7 @@ const SmartInput = forwardRef<
                   maxHeight: maxLine ? `${maxLine * LINE_HEIGHT}px` : undefined,
                 }}
                 className={cn(
-                  "w-full bg-bg-darkest outline-none resize-none placeholder:text-font-disabled overflow-y-auto custom-scrollbar",
-                  isFocused && "bg-brand-opacity-3",
+                  "w-full bg-transparent outline-none resize-none placeholder:text-font-disabled overflow-y-auto custom-scrollbar",
                   inputClassName,
                 )}
                 placeholder={placeholder}
