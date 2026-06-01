@@ -65,9 +65,11 @@ const PersonaItem = ({ persona, isActive, onSelect }: PersonaItemProps) => {
           )}
         </div>
       </div>
-      <p className="line-clamp-1 whitespace-break-spaces body-4 text-font-2">
-        {description}
-      </p>
+      {description && (
+        <p className="line-clamp-1 whitespace-break-spaces body-4 text-font-2">
+          {description}
+        </p>
+      )}
     </li>
   );
 };
