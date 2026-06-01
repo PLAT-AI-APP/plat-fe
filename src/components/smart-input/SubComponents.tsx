@@ -63,12 +63,20 @@ export const CharacterCounter = ({
   );
 };
 
-export const ErrorMessage = ({ error }: { error?: FieldError | string }) => {
+export const ErrorMessage = ({
+  error,
+}: {
+  error?: FieldError | string;
+}) => {
   if (!error) return null;
   const message = typeof error === "string" ? error : error?.message;
   if (!message) return null;
   return (
-    <span className="pt-2 pl-2 text-font-accents body-6 block">{message}</span>
+    <span
+      className={cn("pt-2 pl-2 body-6 block", "text-font-error")}
+    >
+      {message}
+    </span>
   );
 };
 

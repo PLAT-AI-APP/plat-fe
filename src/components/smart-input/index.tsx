@@ -2,7 +2,7 @@
 
 import { ArrowDown, ArrowRight, ArrowUp } from "@/icons";
 import { cn } from "@/lib/utils";
-import React, { forwardRef } from "react";
+import React, { forwardRef, useState } from "react";
 import { SmartInputProps } from "./types";
 import { useAutoResize, useLeftPadding } from "./hooks";
 import {
@@ -42,12 +42,15 @@ const SmartInput = forwardRef<
     rightElement,
     labelFontSize = "title-3",
     descFontSize = "body-5",
+    onFocus,
+    onBlur,
     ...rest
   } = props;
 
   const isTextarea = type === "textarea";
   const isModal = type === "modal";
   const isInput = type === "input" || !type;
+  const [isFocused, setIsFocused] = useState(false);
 
   const { textareaRef, adjustHeight } = useAutoResize(value, isTextarea);
   const { iconRef, paddingLeft } = useLeftPadding(leftElement);
@@ -89,6 +92,20 @@ const SmartInput = forwardRef<
   const LINE_HEIGHT = 20;
   const currentLength = String(value || "").length;
 
+  const handleFocus = (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    setIsFocused(true);
+    onFocus?.(e);
+  };
+
+  const handleBlur = (
+    e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    setIsFocused(false);
+    onBlur?.(e);
+  };
+
   return (
     <div className={cn("flex flex-col flex-1 gap-2 w-full", className)}>
       <LabelSection
@@ -116,7 +133,9 @@ const SmartInput = forwardRef<
               className={cn(
                 "relative flex rounded-xl bg-bg-darkest px-4 py-3 pb-7.25",
                 isBorder && "border border-border-main",
+                isFocused && "border-brand-dark bg-brand-opacity-3",
                 error && "border-font-accents",
+                isFocused && error && "border-brand-dark",
                 inputBoxClassName,
               )}
             >
@@ -129,11 +148,14 @@ const SmartInput = forwardRef<
                 }}
                 className={cn(
                   "w-full bg-bg-darkest outline-none resize-none placeholder:text-font-disabled overflow-y-auto custom-scrollbar",
+                  isFocused && "bg-brand-opacity-3",
                   inputClassName,
                 )}
                 placeholder={placeholder}
                 value={value}
                 onChange={handleValueChange}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
                 maxLength={maxLength}
               />
               <CharacterCounter
@@ -155,11 +177,15 @@ const SmartInput = forwardRef<
                 "w-full px-4 py-3 bg-bg-darkest border border-border-main rounded-xl outline-none placeholder:text-font-disabled",
                 rightElement && "pr-11",
                 inputClassName,
+                isFocused && "border-brand-dark bg-brand-opacity-3",
                 error && "border-font-accents",
+                isFocused && error && "border-brand-dark",
               )}
               placeholder={placeholder}
               value={value}
               onChange={handleValueChange}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
               maxLength={maxLength}
             />
           )}
