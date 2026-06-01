@@ -67,3 +67,37 @@ export const authFormSchema = z
   });
 
 export type AuthFormValues = z.input<typeof authFormSchema>;
+
+/** 비밀번호 재설정 form 유효성 */
+export const passwordResetFormSchema = z
+  .object({
+    email: z
+      .string()
+      .min(1, "이메일을 입력해주세요.")
+      .email("올바른 이메일 형식이 아닙니다."),
+    code: z
+      .string()
+      .min(1, "인증 코드를 입력해주세요.")
+      .length(6, "인증 코드는 6자리여야 합니다."),
+    password: z
+      .string()
+      .min(1, "비밀번호를 입력해주세요.")
+      .min(8, "비밀번호는 8자 이상이어야 합니다.")
+      .regex(/[!@#$%^&*(),.?":{}|<>]/, "비밀번호는 특수문자를 포함해야 합니다."),
+    passwordCheck: z
+      .string()
+      .min(1, "비밀번호 확인을 입력해주세요.")
+      .min(8, "비밀번호 확인은 8자 이상이어야 합니다.")
+      .regex(
+        /[!@#$%^&*(),.?":{}|<>]/,
+        "비밀번호 확인은 특수문자를 포함해야 합니다.",
+      ),
+  })
+  .refine((data) => data.password === data.passwordCheck, {
+    path: ["passwordCheck"],
+    message: "비밀번호가 일치하지 않습니다.",
+  });
+
+export type PasswordResetFormSchemaValues = z.input<
+  typeof passwordResetFormSchema
+>;

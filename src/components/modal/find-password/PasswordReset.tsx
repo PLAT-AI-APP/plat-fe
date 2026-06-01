@@ -1,26 +1,45 @@
+import { usePasswordResetMutation } from "@/api/auth/postPasswordReset";
 import ActiveButton from "@/components/ActiveButton";
 import { PasswordToggle } from "@/components/auth/PasswordToggle";
 import SmartInput from "@/components/smart-input";
 import { useTogglePassword } from "@/hooks/useTogglePassword";
-import { PasswordResetFormValues } from "@/type/auth";
+import { PasswordResetFormSchemaValues } from "@/schema/auth.schema";
+import { useModalStore } from "@/store/useModalStore";
 import React from "react";
 import { Form, useFormContext, useWatch } from "react-hook-form";
 
 const PasswordReset = () => {
+  const { mutate: passwrodReset } = usePasswordResetMutation();
   const {
     register,
     control,
-    trigger,
     formState: { errors },
-  } = useFormContext<PasswordResetFormValues>();
+  } = useFormContext<PasswordResetFormSchemaValues>();
 
-  const password = useWatch({ control, name: "password" });
+  const password = useWatch({
+    control,
+    name: "password",
+  });
+
+  const passwordCheck = useWatch({
+    control,
+    name: "passwordCheck",
+  });
+
+  const isPasswordResetActive =
+    !!password &&
+    !!passwordCheck &&
+    !errors.password &&
+    !errors.passwordCheck &&
+    password === passwordCheck;
 
   const isShowPw = useTogglePassword();
   const isShowConfirm = useTogglePassword();
 
-  const onSubmit = (data: PasswordResetFormValues) => {
-    console.log(data);
+  const { closeModal } = useModalStore();
+  const onSubmit = (data: PasswordResetFormSchemaValues) => {
+    passwrodReset(data);
+    closeModal();
   };
 
   return (
@@ -31,7 +50,10 @@ const PasswordReset = () => {
       className="py-9 px-6 w-screen max-w-112.5 rounded-3xl border border-border-main bg-bg-darker"
     >
       <header className="flex flex-col gap-1.5 font-medium pb-9">
-        <h1 className="text-[22px]">비밀번호 재설정</h1>
+        <h1 className="heading-3">비밀번호 재설정</h1>
+        <p className="body-4 text-font-2">
+          이메일 인증을 통해 비밀번호를 재설정할 수 있습니다.
+        </p>
       </header>
 
       <fieldset className="flex flex-col gap-6">
@@ -40,10 +62,7 @@ const PasswordReset = () => {
           inputType={isShowPw.inputType}
           labelFontSize="title-5"
           placeholder="8자 이상 입력해주세요"
-          {...register("password", {
-            required: "비밀번호를 입력해주세요.",
-            minLength: { value: 8, message: "최소 8자 이상이어야 합니다." },
-          })}
+          {...register("password")}
           error={errors.password}
           rightElement={
             <PasswordToggle
@@ -58,14 +77,7 @@ const PasswordReset = () => {
           inputType={isShowConfirm.inputType}
           labelFontSize="title-5"
           placeholder="비밀번호를 다시 입력해주세요"
-          {...register("passwordCheck", {
-            required: "비밀번호 확인이 필요합니다.",
-            validate: (value) =>
-              value === password || "비밀번호가 일치하지 않습니다.",
-            onChange: async () => {
-              await trigger("passwordCheck");
-            },
-          })}
+          {...register("passwordCheck")}
           error={errors.passwordCheck}
           rightElement={
             <PasswordToggle
@@ -77,7 +89,7 @@ const PasswordReset = () => {
       </fieldset>
 
       <ActiveButton
-        isActive
+        isActive={isPasswordResetActive}
         text="비밀번호 재설정"
         className="mt-6"
         form="password-reset-form"

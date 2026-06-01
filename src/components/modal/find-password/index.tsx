@@ -2,21 +2,26 @@
 
 import React, { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import EmailAuthForm from "./EmailAuthForm";
 import PasswordReset from "./PasswordReset";
-import { PasswordResetFormValues } from "@/type/auth";
 import { FindPasswordModalProps } from "@/type/modal";
 import { ModalLayout } from "@/components/ModalLayout";
+import EmailVerifySection from "@/app/(auth)/signup/_components/EmailVerifySection";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  passwordResetFormSchema,
+  PasswordResetFormSchemaValues,
+} from "@/schema/auth.schema";
 
 const FindPasswordModal = ({ onClose, stackIndex }: FindPasswordModalProps) => {
   const [step, setStep] = useState(1);
 
-  const methods = useForm<PasswordResetFormValues>({
-    mode: "onSubmit",
-    reValidateMode: "onSubmit",
+  const methods = useForm<PasswordResetFormSchemaValues>({
+    mode: "onChange",
+    reValidateMode: "onChange",
+    resolver: zodResolver(passwordResetFormSchema),
     defaultValues: {
       email: "",
-      otp: Array(6).fill(""),
+      code: "",
       password: "",
       passwordCheck: "",
     },
@@ -35,7 +40,19 @@ const FindPasswordModal = ({ onClose, stackIndex }: FindPasswordModalProps) => {
     >
       <FormProvider {...methods}>
         {step === 1 ? (
-          <EmailAuthForm onNextStep={onNextStep} />
+          <section className="py-9 px-6 w-screen max-w-97 rounded-3xl border border-border-main bg-bg-darker">
+            <header className="flex flex-col gap-1.5 pb-9">
+              <h1 className="heading-3">비밀번호 재설정</h1>
+              <p className="text-font-2 body-4">
+                이메일 인증을 통해 비밀번호를 재설정할 수 있습니다.
+              </p>
+            </header>
+            <EmailVerifySection
+              onVerifiedChange={(isVerified) => {
+                if (isVerified) onNextStep();
+              }}
+            />
+          </section>
         ) : (
           <PasswordReset />
         )}
