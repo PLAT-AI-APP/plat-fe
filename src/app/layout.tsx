@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import "@/app/globals.css";
 import ReactQueryProvider from "@/providers/ReactQueryProvider";
 import ThemeProvider from "@/providers/ThemeProvider";
+import SonnerProvider from "@/providers/SonnerProvider";
 import ClientLayout from "./ClientLayout";
 import "pretendard/dist/web/static/pretendard.css";
 import { NavigationGuardProvider } from "next-navigation-guard";
@@ -104,6 +105,7 @@ export default function RootLayout({
             <NavigationGuardProvider>
               <Suspense fallback={null}>
                 <ClientLayout>{children}</ClientLayout>
+                <SonnerProvider />
               </Suspense>
             </NavigationGuardProvider>
           </ThemeProvider>

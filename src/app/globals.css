@@ -84,6 +84,74 @@ button {
   cursor: pointer;
 }
 
+/* Sonner */
+.sonner-toast {
+  width: min(360px, calc(100vw - 24px));
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--brand);
+  border-radius: 12px;
+  background: var(--bg-card);
+  color: var(--font-1);
+  box-shadow: var(--shadow-card-heavy);
+  padding: 12px 14px;
+}
+
+.sonner-title {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.sonner-description {
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.4;
+  color: var(--font-2);
+}
+
+.sonner-action {
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: var(--brand);
+  color: #11141f;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 10px;
+}
+
+.sonner-cancel {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--font-2);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 6px 10px;
+}
+
+.sonner-close {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--font-2);
+}
+
+.sonner-success {
+  border-left-color: #37c871;
+}
+
+.sonner-error {
+  border-left-color: var(--font-accents);
+}
+
+.sonner-warning {
+  border-left-color: #f4b740;
+}
+
+.sonner-info {
+  border-left-color: var(--brand);
+}
+
 /* Display */
 @utility display-1 {
   font-size: 40px;
