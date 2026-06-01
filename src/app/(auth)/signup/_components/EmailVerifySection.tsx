@@ -64,7 +64,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
       onSuccess: (data) => {
         if (data.result === "OK") {
           setIsOtpSent(true);
-          setSuccessMessage("인증번호 전송완료!");
+          setSuccessMessage("메일함에서 인증번호를 확인해 주세요");
           setIsEmailVerified(false); // 재전송 시 인증 상태 초기화
           onVerifiedChange?.(false);
           startTimer();
