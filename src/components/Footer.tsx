@@ -52,9 +52,12 @@ const Footer = () => {
         <span id="footer-representative">대표 김승우</span>|
         <span id="footer-phone-number">02-123-4567</span>|
         <span id="footer-registration-number">
-          사업자등록번호: 123-45-67890
+          사업자등록번호: 227-40-01411
         </span>
-        |<span id="footer-office-address">서울 OO구 OOO로123길 45, 10F</span>
+        |
+        <span id="footer-office-address">
+          인천광역시 연수구 하모니로178번길 22, 7 층 707호 707-아19호
+        </span>
       </address>
 
       {/* 저작권 표시 영역 */}
