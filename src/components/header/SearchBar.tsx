@@ -27,13 +27,13 @@ export const SearchBar = () => {
       id="search-bar-form"
       role="search"
       ref={triggerRef}
-      className="relative flex items-center group w-full"
+      className="relative flex items-center group min-w-[260px]"
       onSubmit={(e) => e.preventDefault()} // 엔터 시 페이지 새로고침 방지
     >
       <input
         id="search-input"
         type="text"
-        className="text-sm border cursor-pointer border-border-main w-full h-10 px-4 pl-10 rounded-xl focus:outline-none transition-all placeholder:body-4 placeholder:text-font-disabled focus:cursor-text focus:border-font-1"
+        className="body-4 border cursor-pointer border-border-main w-full h-10 px-4 pl-10 rounded-xl focus:outline-none transition-all placeholder:body-4 placeholder:text-font-disabled focus:cursor-text focus:border-font-1"
         placeholder="검색어를 입력하세요"
         // 포커스 시 활성화
         onFocus={() => setIsActive(true)}
