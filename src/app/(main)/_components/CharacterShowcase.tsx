@@ -46,6 +46,7 @@ const CharacterShowcase = ({
       align: "start",
       containScroll: "trimSnaps",
       dragFree: true,
+      slidesToScroll: "auto",
     },
   });
   const isCarousel = layout === "carousel";
@@ -61,8 +62,6 @@ const CharacterShowcase = ({
   const displayChars = limit ? charArray.slice(0, limit) : charArray;
   const skeletonCount =
     limit || (displayChars.length > 0 ? displayChars.length : 4);
-
-  if (!isLoading && displayChars.length === 0) return null;
 
   const cardItems = isLoading
     ? Array.from({ length: skeletonCount }).map((_, index) => (
@@ -81,6 +80,8 @@ const CharacterShowcase = ({
           currentTag={currentTag}
         />
       ));
+
+  if (!isLoading && displayChars.length === 0) return null;
 
   return (
     <section className="mx-auto flex h-auto w-full max-w-300 flex-col justify-center gap-4">
@@ -106,7 +107,7 @@ const CharacterShowcase = ({
       {isCarousel ? (
         <div className="relative">
           <div className="overflow-hidden" ref={viewportRef}>
-            <div className="flex" style={{ gap: columnGap ?? 16 }}>
+            <div className="flex" style={{ gap: columnGap }}>
               {cardItems.map((item) => (
                 <div key={item.key} className="min-w-0 shrink-0">
                   {item}
@@ -119,7 +120,7 @@ const CharacterShowcase = ({
             type="button"
             onClick={scrollPrev}
             aria-label="Previous items"
-            className="absolute left-[-18px] top-[122.5px] z-10 flex size-9 -translate-y-1/2 items-center justify-center rounded-[20px] bg-white/12 p-2 text-font-0 backdrop-blur-[1.54px] transition-colors hover:bg-white/20"
+            className="opacity-25 hover:opacity-100 absolute left-[-18px] top-[122.5px] z-10 flex size-9 -translate-y-1/2 items-center justify-center rounded-[20px] bg-white/12 p-2 text-font-0 backdrop-blur-[1.54px] transition-colors hover:bg-white/20"
           >
             <ArrowLeft className="size-5" />
           </button>
@@ -127,7 +128,7 @@ const CharacterShowcase = ({
             type="button"
             onClick={scrollNext}
             aria-label="Next items"
-            className="absolute right-[-18px] top-[122.5px] z-10 flex size-9 -translate-y-1/2 items-center justify-center rounded-[20px] bg-white/12 p-2 text-font-0 backdrop-blur-[1.54px] transition-colors hover:bg-white/20"
+            className="opacity-25 hover:opacity-100 absolute right-[-18px] top-[122.5px] z-10 flex size-9 -translate-y-1/2 items-center justify-center rounded-[20px] bg-white/12 p-2 text-font-0 backdrop-blur-[1.54px] transition-colors hover:bg-white/20"
           >
             <ArrowRight className="size-5" />
           </button>
