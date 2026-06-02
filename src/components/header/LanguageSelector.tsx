@@ -28,7 +28,7 @@ const LanguageSelector = () => {
         onClick={() => setIsActive((prev) => !prev)}
         aria-haspopup="listbox"
         aria-expanded={isActive}
-        className="flex cursor-pointer items-center gap-1 hover:bg-btn-hover transition-all duration-200 ease-in-out rounded-lg p-1.25 pr-2.5 border-none outline-none"
+        className="flex cursor-pointer items-center gap-1 hover:bg-btn-hover transition-all ease-in-out rounded-lg p-1.25 pr-2.5 border-none outline-none"
       >
         <Global className="w-5 h-5 text-font-2" />
         <span id="current-lang-label" className="text-font-2 text-sm">

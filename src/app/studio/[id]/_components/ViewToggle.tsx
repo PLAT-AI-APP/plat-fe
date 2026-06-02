@@ -39,7 +39,7 @@ const ViewToggle = ({ viewMode }: ViewToggleProps) => {
       <span className="relative z-10 flex flex-1 justify-center items-center">
         <ViewList
           className={cn(
-            "w-5 h-5 transition-colors duration-200",
+            "w-5 h-5 transition-colors",
             viewMode === "list" ? "" : "text-font-disabled",
           )}
         />
@@ -49,7 +49,7 @@ const ViewToggle = ({ viewMode }: ViewToggleProps) => {
       <span className="relative z-10 flex flex-1 justify-center items-center">
         <ViewGrid
           className={cn(
-            "w-5 h-5 transition-colors duration-200",
+            "w-5 h-5 transition-colors",
             viewMode === "grid" ? "" : "text-font-disabled",
           )}
         />
