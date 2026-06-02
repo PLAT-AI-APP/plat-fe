@@ -23,7 +23,7 @@ const CharacterExperience = () => {
   }, []);
 
   return (
-    <section className="flex flex-col gap-4.5">
+    <section className="flex flex-col gap-4">
       <ExperienceHeader
         handleSelectedIndex={handleSelectedIndex}
         selectedIndex={selectedIndex}

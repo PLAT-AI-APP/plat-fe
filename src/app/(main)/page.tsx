@@ -48,7 +48,7 @@ const Home = async ({ searchParams }: HomePageProps) => {
         {/* 메인 비주얼/슬라이드 영역 */}
         {currentTab === "all" && <MainBannerCarousel />}
 
-        <div className="w-full max-w-300 mx-auto @container flex-1 flex flex-col">
+        <div className="w-full max-w-300.5 mx-auto @container flex-1 flex flex-col">
           <MenuTab currentTab={currentTab} />
           {/* <OverflowTagList
             maxLines={1}

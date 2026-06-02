@@ -29,13 +29,14 @@ const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
       {/* 플랫의 공식 캐릭터 맛보기 섹션 */}
       <CharacterExperience />
 
-      {/* ~한 캐릭터 모음 섹션 */}
+      {/* 인기 태그 캐릭터 모음 섹션 */}
       <CharacterShowcase
         charArray={charArray}
-        title="~한 캐릭터 모음"
-        allViewLink=""
-        cardSize="L"
-        limit={8}
+        title="인기 태그 캐릭터 모음"
+        cardSize="S"
+        limit={12}
+        columnGap={16}
+        rowGap={28}
       />
 
       {/* 인기 캐릭터 이미지 미리보기 섹션 */}
@@ -124,8 +125,7 @@ const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
           },
         ]}
         title="인기 캐릭터 이미지 미리보기"
-        allViewLink=""
-        cardSize="XL"
+        cardSize="L"
         limit={3}
       />
 
@@ -141,14 +141,14 @@ const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
         rowGap={28}
       />
 
-      {/* ~~님을 위한 추천 섹션 */}
+      {/* (유저이름)님을 위한 추천 섹션 */}
       <CharacterShowcase
         charArray={charArray}
-        title="~~님을 위한 추천"
+        title="(유저이름)님을 위한 추천"
         allViewLink="asf"
         cardSize="S"
-        limit={18}
-        columnGap={17}
+        limit={24}
+        columnGap={16}
         rowGap={28}
       />
 

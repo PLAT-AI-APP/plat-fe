@@ -84,7 +84,7 @@ const CharacterShowcase = ({
   if (!isLoading && displayChars.length === 0) return null;
 
   return (
-    <section className="mx-auto flex h-auto w-full max-w-300 flex-col justify-center gap-4">
+    <section className="mx-auto flex h-auto w-full max-w-full flex-col justify-center gap-4">
       {title && (
         <header className="flex items-center justify-between pl-2">
           <h2 className="heading-3 flex items-center gap-2">
@@ -96,7 +96,7 @@ const CharacterShowcase = ({
               href={{
                 query: { tab: allViewLink },
               }}
-              className="title-3 text-white underline"
+              className="body-4 font-medium tracking-normal text-font-2 underline"
             >
               전체보기
             </Link>
