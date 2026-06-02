@@ -11,6 +11,8 @@ interface HomeTabContentsProps {
     dec: string;
     tag?: string[];
     img: string[] | string;
+    isNew?: boolean;
+    isOfficial?: boolean;
   }[];
 }
 const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {

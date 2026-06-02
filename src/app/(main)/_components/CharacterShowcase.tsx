@@ -17,6 +17,8 @@ interface CharacterShowcaseProps {
     tag?: string[];
     img: string[] | string;
     creatorName?: string;
+    isNew?: boolean;
+    isOfficial?: boolean;
   }[];
   cardSize?: "S" | "M" | "L" | "XL";
   limit?: number;
@@ -78,6 +80,8 @@ const CharacterShowcase = ({
           images={char.img}
           tagList={char.tag}
           currentTag={currentTag}
+          isNew={char.isNew}
+          isOfficial={char.isOfficial}
         />
       ));
 

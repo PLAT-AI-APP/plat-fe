@@ -1,6 +1,8 @@
 "use client";
 
 import { ChatFill } from "@/icons";
+import Logo from "@/icons/Logo";
+import New from "@/icons/New";
 import { cn } from "@/lib/utils";
 import useEmblaCarousel from "embla-carousel-react";
 import Image from "next/image";
@@ -17,6 +19,8 @@ interface CharacterCardProps {
   size?: CardSize;
   tagList?: string[];
   currentTag?: string;
+  isNew?: boolean;
+  isOfficial?: boolean;
 }
 
 export const SIZE_CONFIG: Record<
@@ -90,12 +94,19 @@ const CharacterCard = ({
   size = "M",
   currentTag = "학교생활",
   tagList,
+  isNew = false,
+  isOfficial = false,
 }: CharacterCardProps) => {
   const config = SIZE_CONFIG[size];
   const imageList = Array.isArray(images) ? images : [images];
   const lastImageIndex = imageList.length - 1;
   const hasIndicator = imageList.length > 1;
   const hasChatCount = typeof chatCount === "number";
+  const titleIcon = isOfficial ? (
+    <Logo className="size-[18px] shrink-0" />
+  ) : isNew ? (
+    <New className="size-[18px] shrink-0 text-font-0" />
+  ) : null;
 
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
   const [pointerStartX, setPointerStartX] = useState<number | null>(null);
@@ -198,11 +209,13 @@ const CharacterCard = ({
               : "translate-y-5 opacity-0",
           )}
         >
-          <p className="title-3 text-white">이 캐릭터가 마음에 드셨나요?</p>
+          <p className="title-3 text-white text-nowrap">
+            캐릭터의 다른 모습을 보고 싶다면?
+          </p>
 
           <button
             type="button"
-            className="pointer-events-auto rounded-xl border border-brand-dark bg-[#0D0E11]/40 px-4 py-2 title-4 text-brand"
+            className="hover:bg-brand/20 pointer-events-auto rounded-xl border border-brand-dark bg-[#0D0E11]/40 px-4 py-2 title-4 text-brand"
           >
             바로 대화하기
           </button>
@@ -210,8 +223,9 @@ const CharacterCard = ({
 
         <div className="relative z-10 self-stretch h-36 px-4 pt-6 pb-5 bg-[linear-gradient(180deg,rgba(0,0,0,0)_0%,rgba(0,0,0,0.4)_20%,rgba(0,0,0,0.8)_100%)] rounded-b-2xl flex flex-col justify-end items-start gap-1">
           <div className="self-stretch flex flex-col justify-start items-start gap-1">
-            <div className="inline-flex justify-start items-center gap-1">
-              <h2 className="text-font-0 title-2 line-clamp-1">{title}</h2>
+            <div className="flex w-full items-center gap-1">
+              <h2 className="min-w-0 truncate text-font-0 title-2">{title}</h2>
+              {titleIcon}
             </div>
             <p className="body-3 text-font-1 line-clamp-1">{description}</p>
           </div>
@@ -297,10 +311,11 @@ const CharacterCard = ({
           tagList && "gap-0.5",
         )}
       >
-        <div className="inline-flex justify-center items-center gap-1">
-          <h2 className={`text-font-0 line-clamp-1 ${config.title}`}>
+        <div className="flex w-full items-center gap-1">
+          <h2 className={`min-w-0 truncate text-font-0 ${config.title}`}>
             {title}
           </h2>
+          {titleIcon}
         </div>
 
         <p className={`self-stretch text-font-1 line-clamp-1 ${config.desc}`}>

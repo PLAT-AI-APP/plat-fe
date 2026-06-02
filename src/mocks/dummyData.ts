@@ -4,12 +4,10 @@ export const CHARACTERS_DUMMY = [
     name: "옆자리 불량학생",
     chatCount: 123,
     dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
-    img: [
-      "https://picsum.photos/384/384?random=101",
-      "https://picsum.photos/384/384?random=102",
-      "https://picsum.photos/384/384?random=103",
-    ],
+    img: "https://picsum.photos/200/300",
+
     isPublic: false,
+    isOfficial: true,
   },
   {
     id: 398292,
@@ -18,6 +16,7 @@ export const CHARACTERS_DUMMY = [
     dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
     img: "https://picsum.photos/200/300",
     isPublic: false,
+    isNew: true,
   },
   {
     id: 398292,
@@ -26,6 +25,8 @@ export const CHARACTERS_DUMMY = [
     dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
     img: "https://picsum.photos/200/300",
     isPublic: false,
+    isNew: true,
+    isOfficial: true,
   },
   {
     id: 398292,
