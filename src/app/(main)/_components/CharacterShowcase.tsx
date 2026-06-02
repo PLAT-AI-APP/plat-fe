@@ -1,8 +1,11 @@
-"use client"; // 상태와 useEffect를 사용하므로 클라이언트 컴포넌트로 명시해야 합니다.
-import React, { useState, useEffect } from "react";
-import CharacterCard from "./CharacterCard";
-import Link from "next/link";
+"use client";
+
+import { ArrowLeft, ArrowRight } from "@/icons";
 import { cn } from "@/lib/utils";
+import useEmblaCarousel from "embla-carousel-react";
+import Link from "next/link";
+import React, { useCallback, useEffect, useState } from "react";
+import CharacterCard from "./CharacterCard";
 import { CharacterCardSkeleton } from "./CharacterCardSkeleton";
 
 interface CharacterShowcaseProps {
@@ -13,7 +16,7 @@ interface CharacterShowcaseProps {
     dec: string;
     tag?: string[];
     img: string[] | string;
-    creatorName?: string; // 옵셔널 처리
+    creatorName?: string;
   }[];
   cardSize?: "S" | "M" | "L" | "XL";
   limit?: number;
@@ -22,6 +25,7 @@ interface CharacterShowcaseProps {
   columnGap?: number;
   rowGap?: number;
   currentTag?: string;
+  layout?: "grid" | "carousel";
 }
 
 const CharacterShowcase = ({
@@ -34,34 +38,61 @@ const CharacterShowcase = ({
   columnGap,
   rowGap,
   currentTag,
+  layout = "grid",
 }: CharacterShowcaseProps) => {
-  // 인위적인 로딩 상태 관리 (초기값: true)
   const [isLoading, setIsLoading] = useState(true);
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    align: "start",
+    containScroll: "trimSnaps",
+    dragFree: true,
+  });
+  const isCarousel = layout === "carousel";
 
-  // 컴포넌트 마운트 시 지정된 시간 후 로딩 상태 해제
+  const scrollPrev = useCallback(() => {
+    emblaApi?.scrollPrev();
+  }, [emblaApi]);
+
+  const scrollNext = useCallback(() => {
+    emblaApi?.scrollNext();
+  }, [emblaApi]);
+
   useEffect(() => {
-    // 2초(2000ms) 동안 스켈레톤을 보여줍니다.
     const timer = setTimeout(() => {
       setIsLoading(false);
     }, 2000);
 
-    return () => clearTimeout(timer); // 메모리 누수 방지를 위한 클린업
+    return () => clearTimeout(timer);
   }, []);
 
   const displayChars = limit ? charArray.slice(0, limit) : charArray;
-
-  // 스켈레톤을 보여줄 개수 (limit가 있으면 limit만큼, 없으면 기본값 4개 혹은 배열 길이)
   const skeletonCount =
     limit || (displayChars.length > 0 ? displayChars.length : 4);
 
-  // 실제 데이터가 없고 로딩도 끝났을 때 방어
   if (!isLoading && displayChars.length === 0) return null;
 
+  const cardItems = isLoading
+    ? Array.from({ length: skeletonCount }).map((_, index) => (
+        <CharacterCardSkeleton key={`skeleton-${index}`} size={cardSize} />
+      ))
+    : displayChars.map((char, index) => (
+        <CharacterCard
+          key={`card-${index}`}
+          size={cardSize}
+          title={char.name}
+          description={char.dec}
+          creatorName={char.creatorName || "Unknown"}
+          chatCount={char.chatCount}
+          images={char.img}
+          tagList={char.tag}
+          currentTag={currentTag}
+        />
+      ));
+
   return (
-    <section className="w-full h-auto max-w-300 flex flex-col gap-4 justify-center mx-auto">
+    <section className="mx-auto flex h-auto w-full max-w-300 flex-col justify-center gap-4">
       {title && (
-        <header className="flex justify-between items-center pl-2">
-          <h2 className="flex items-center gap-2 heading-3">
+        <header className="flex items-center justify-between pl-2">
+          <h2 className="heading-3 flex items-center gap-2">
             {title} {TitleLogo && TitleLogo}
           </h2>
 
@@ -78,36 +109,49 @@ const CharacterShowcase = ({
         </header>
       )}
 
-      <div
-        className={cn(
-          "flex gap-4 flex-wrap",
-          cardSize === "XL" && "justify-between",
-        )}
-        style={{
-          gap: `${rowGap}px ${columnGap}px`, // rowGap과 columnGap을 한 번에 설정
-        }}
-      >
-        {isLoading
-          ? Array.from({ length: skeletonCount }).map((_, index) => (
-              <CharacterCardSkeleton
-                key={`skeleton-${index}`}
-                size={cardSize}
-              />
-            ))
-          : displayChars.map((char, index) => (
-              <CharacterCard
-                key={`card-${index}`}
-                size={cardSize}
-                title={char.name} // 더미가 아닌 실제 데이터로 수정
-                description={char.dec}
-                creatorName={char.creatorName || "Unknown"}
-                chatCount={char.chatCount}
-                images={char.img}
-                tagList={char.tag}
-                currentTag={currentTag}
-              />
-            ))}
-      </div>
+      {isCarousel ? (
+        <div className="relative">
+          <div className="overflow-hidden" ref={emblaRef}>
+            <div className="flex" style={{ gap: columnGap ?? 16 }}>
+              {cardItems.map((item) => (
+                <div key={item.key} className="min-w-0 shrink-0">
+                  {item}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={scrollPrev}
+            aria-label="Previous items"
+            className="absolute left-[-18px] top-[122.5px] z-10 flex size-9 -translate-y-1/2 items-center justify-center rounded-[20px] bg-white/12 p-2 text-font-0 backdrop-blur-[1.54px] transition-colors hover:bg-white/20"
+          >
+            <ArrowLeft className="size-5" />
+          </button>
+          <button
+            type="button"
+            onClick={scrollNext}
+            aria-label="Next items"
+            className="absolute right-[-18px] top-[122.5px] z-10 flex size-9 -translate-y-1/2 items-center justify-center rounded-[20px] bg-white/12 p-2 text-font-0 backdrop-blur-[1.54px] transition-colors hover:bg-white/20"
+          >
+            <ArrowRight className="size-5" />
+          </button>
+        </div>
+      ) : (
+        <div
+          className={cn(
+            "flex flex-wrap gap-4",
+            cardSize === "XL" && "justify-between",
+          )}
+          style={{
+            columnGap,
+            rowGap,
+          }}
+        >
+          {cardItems}
+        </div>
+      )}
     </section>
   );
 };

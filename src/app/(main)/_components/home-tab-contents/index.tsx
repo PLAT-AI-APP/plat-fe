@@ -10,19 +10,20 @@ interface HomeTabContentsProps {
     chatCount: number;
     dec: string;
     tag?: string[];
-    img: string;
+    img: string[] | string;
   }[];
 }
 const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
   return (
-    <article className="flex flex-col gap-18 mt-12 pb-18">
+    <article className="flex flex-col gap-18 mt-7 pb-18">
       {/* 오늘의 PICK 섹션 */}
       <CharacterShowcase
         charArray={charArray}
         title="오늘의 PICK"
         allViewLink=""
-        cardSize="M"
-        limit={5}
+        cardSize="S"
+        columnGap={16}
+        layout="carousel"
       />
 
       {/* 플랫의 공식 캐릭터 맛보기 섹션 */}

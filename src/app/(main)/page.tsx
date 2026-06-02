@@ -8,6 +8,7 @@ import RankingTabContents from "./_components/ranking-tab-contents";
 import { CHARACTERS_DUMMY } from "@/mocks/dummyData";
 import CategoriesTabContents from "./_components/categories-tab-contents";
 import TagSidebar from "./_components/categories-tab-contents/_components/tag-sidebar";
+// import OverflowTagList from "@/components/OverflowTagList";
 
 export const metadata: Metadata = {
   title: "home",
@@ -49,7 +50,47 @@ const Home = async ({ searchParams }: HomePageProps) => {
 
         <div className="w-full max-w-300 mx-auto @container flex-1 flex flex-col">
           <MenuTab currentTab={currentTab} />
-
+          {/* <OverflowTagList
+            maxLines={1}
+            tags={[
+              {
+                id: "tag-1",
+                label: "소꿉친구",
+              },
+              {
+                id: "tag-2",
+                label: "장난스러움",
+              },
+              {
+                id: "tag-3",
+                label: "츤데레",
+              },
+              {
+                id: "tag-4",
+                label: "학교",
+              },
+              {
+                id: "tag-5",
+                label: "청춘",
+              },
+              {
+                id: "tag-6",
+                label: "짝사랑",
+              },
+              {
+                id: "tag-7",
+                label: "일상",
+              },
+              {
+                id: "tag-8",
+                label: "일상",
+              },
+              {
+                id: "tag-9",
+                label: "일상",
+              },
+            ]}
+          /> */}
           <div id="contents-wrapper" className="flex flex-col grow w-full">
             {TabComponents[currentTab]}
           </div>

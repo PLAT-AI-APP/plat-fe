@@ -48,7 +48,7 @@ export function MainBannerCarousel() {
   );
 
   return (
-    <section className="relative max-w-full w-full min-h-118.5 bg-neutral-900 overflow-hidden">
+    <section className="relative max-w-full w-full min-h-[439.05px] bg-neutral-900 overflow-hidden">
       {/* --- Embla Viewport (여기서 영역 밖으로 나가는 슬라이드를 숨깁니다) --- */}
       <div
         id="carousel-viewport"
@@ -111,16 +111,16 @@ export function MainBannerCarousel() {
       <button
         onClick={scrollPrev}
         data-icon="arrow-right"
-        className="size-10 absolute left-10 top-1/2 -translate-y-1/2 opacity-30 overflow-hidden"
+        className="size-8 absolute left-10 top-1/2 -translate-y-1/2 opacity-30 overflow-hidden"
       >
-        <ArrowLeft className="w-10 h-10" />
+        <ArrowLeft className="size-8" />
       </button>
       <button
         onClick={scrollNext}
         data-icon="arrow-right"
-        className="size-10 absolute right-10 top-1/2 -translate-y-1/2 opacity-30 overflow-hidden"
+        className="size-8 absolute right-10 top-1/2 -translate-y-1/2 opacity-30 overflow-hidden"
       >
-        <ArrowRight className="w-10 h-10" />
+        <ArrowRight className="size-8" />
       </button>
     </section>
   );
