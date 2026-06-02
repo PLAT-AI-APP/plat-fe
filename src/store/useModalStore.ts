@@ -12,7 +12,9 @@ import {
   TagSuggestionsModalProps,
   UserNoteModalProps,
   PersonaModalProps,
+  NoticeDialogModalProps,
 } from "@/type/modal";
+import { useAuthStore } from "./useAuthStore";
 
 // 모달 이름과 Props를 매핑 (이곳에 새 모달을 추가하세요)
 export type ModalTypeMap = {
@@ -28,6 +30,7 @@ export type ModalTypeMap = {
   TAG_SUGGESTIONS: TagSuggestionsModalProps;
   USER_NOTE: UserNoteModalProps;
   PERSONA: PersonaModalProps;
+  NOTICE_DIALOG: NoticeDialogModalProps;
 };
 
 type ModalInstanceUnion = {
@@ -61,9 +64,39 @@ export const useModalStore = create<ModalState>((set) => ({
   modals: [],
 
   openModal: (type, props) =>
-    set((state) => ({
-      modals: [...state.modals, { type, props } as ModalInstanceUnion],
-    })),
+    set((state) => {
+      const isLoggedIn = useAuthStore.getState().isLoggedIn;
+      const requiresAuthModalTypes: (keyof ModalTypeMap)[] = [
+        "PERSONA",
+        "PERSONA_ADD",
+        "PROFILE_EDIT",
+        "FOLLOW",
+        "USER_NOTE",
+        "STORAGE",
+        "TAG_ADD",
+        "TAG_SUGGESTIONS",
+      ];
+
+      if (!isLoggedIn && requiresAuthModalTypes.includes(type)) {
+        return {
+          modals: [
+            ...state.modals,
+            {
+              type: "NOTICE_DIALOG",
+              props: {
+                label: "로그인이 필요해요",
+                description: "로그인 후 이용할 수 있는 기능입니다.",
+                confirmText: "로그인",
+              },
+            } as ModalInstanceUnion,
+          ],
+        };
+      }
+
+      return {
+        modals: [...state.modals, { type, props } as ModalInstanceUnion],
+      };
+    }),
 
   closeModal: () =>
     set((state) => ({

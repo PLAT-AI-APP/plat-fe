@@ -14,6 +14,7 @@ import TagSuggestionsModal from "./TagSuggestionsModal";
 import UserNoteModal from "./UserNoteModal";
 import PersonaModal from "./persona";
 import FindPasswordModal from "./find-password";
+import NoticeDialogModal from "./NoticeDialogModal";
 
 export const MODAL_COMPONENTS: {
   [K in keyof ModalTypeMap]: ComponentType<ModalTypeMap[K]>;
@@ -30,4 +31,5 @@ export const MODAL_COMPONENTS: {
   TAG_SUGGESTIONS: TagSuggestionsModal,
   USER_NOTE: UserNoteModal,
   PERSONA: PersonaModal,
+  NOTICE_DIALOG: NoticeDialogModal,
 };
