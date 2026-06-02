@@ -1,10 +1,10 @@
 "use client";
 
 import { ArrowLeft, ArrowRight } from "@/icons";
+import { useCarousel } from "@/hooks/useCarousel";
 import { cn } from "@/lib/utils";
-import useEmblaCarousel from "embla-carousel-react";
 import Link from "next/link";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import CharacterCard from "./CharacterCard";
 import { CharacterCardSkeleton } from "./CharacterCardSkeleton";
 
@@ -41,20 +41,14 @@ const CharacterShowcase = ({
   layout = "grid",
 }: CharacterShowcaseProps) => {
   const [isLoading, setIsLoading] = useState(true);
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    align: "start",
-    containScroll: "trimSnaps",
-    dragFree: true,
+  const { viewportRef, scrollPrev, scrollNext } = useCarousel({
+    options: {
+      align: "start",
+      containScroll: "trimSnaps",
+      dragFree: true,
+    },
   });
   const isCarousel = layout === "carousel";
-
-  const scrollPrev = useCallback(() => {
-    emblaApi?.scrollPrev();
-  }, [emblaApi]);
-
-  const scrollNext = useCallback(() => {
-    emblaApi?.scrollNext();
-  }, [emblaApi]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -111,7 +105,7 @@ const CharacterShowcase = ({
 
       {isCarousel ? (
         <div className="relative">
-          <div className="overflow-hidden" ref={emblaRef}>
+          <div className="overflow-hidden" ref={viewportRef}>
             <div className="flex" style={{ gap: columnGap ?? 16 }}>
               {cardItems.map((item) => (
                 <div key={item.key} className="min-w-0 shrink-0">

@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useCallback } from "react";
-import useEmblaCarousel from "embla-carousel-react";
+import { useCarousel } from "@/hooks/useCarousel";
+import { ArrowLeft, ArrowRight } from "@/icons";
 import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
-import { ArrowLeft, ArrowRight } from "@/icons";
 
 const bannerData = [
   {
@@ -34,18 +33,10 @@ const bannerData = [
 ];
 
 export function MainBannerCarousel() {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [
-    Autoplay({ delay: 5000, stopOnInteraction: false }),
-  ]);
-
-  const scrollPrev = useCallback(
-    () => emblaApi && emblaApi.scrollPrev(),
-    [emblaApi],
-  );
-  const scrollNext = useCallback(
-    () => emblaApi && emblaApi.scrollNext(),
-    [emblaApi],
-  );
+  const { viewportRef, scrollPrev, scrollNext } = useCarousel({
+    options: { loop: true },
+    plugins: [Autoplay({ delay: 5000, stopOnInteraction: false })],
+  });
 
   return (
     <section className="relative max-w-full w-full min-h-[439.05px] bg-neutral-900 overflow-hidden">
@@ -53,7 +44,7 @@ export function MainBannerCarousel() {
       <div
         id="carousel-viewport"
         className="w-full h-full overflow-hidden"
-        ref={emblaRef}
+        ref={viewportRef}
       >
         {/* --- Embla Container --- */}
         <div id="carousel-container" className="flex h-full">
