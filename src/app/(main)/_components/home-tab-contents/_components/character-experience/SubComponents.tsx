@@ -35,7 +35,7 @@ export const ChatBubble = ({
 export const NarrativeBlock = ({ content }: { content: string }) => (
   <div className="inline-flex justify-start items-start gap-5 w-full">
     <Message className="size-7 text-font-2" />
-    <p className="flex-1 justify-start text-font-2 text-sm leading-relaxed whitespace-pre-wrap">
+    <p className="flex-1 justify-start text-font-2 body-4 whitespace-pre-line">
       {content}
     </p>
   </div>
@@ -44,14 +44,14 @@ export const NarrativeBlock = ({ content }: { content: string }) => (
 export const ActionFooter = ({ isActive = true }: { isActive: boolean }) => (
   <footer className="w-full right-0 bottom-0 absolute inline-flex flex-col justify-start items-center gap-1">
     <div
-      className="w-full h-32 left-0 bottom-0 absolute 
+      className="w-full h-25 left-0 bottom-0 absolute 
              bg-linear-to-b from-neutral-900/0 via-neutral-900/50 to-neutral-900 
              rounded-br-2xl backdrop-blur-[1.5px]
              mask-[linear-gradient(to_bottom,transparent,black_20%)]"
     />
     <div className="self-stretch flex flex-col justify-start items-center gap-1.25 z-30">
       <div className="self-stretch inline-flex justify-center items-center gap-1">
-        <p className="body-4 text-center justify-start text-font-0">
+        <p className="body-5 text-center justify-start text-font-1">
           {isActive
             ? "이 캐릭터와 무료로 3회 대화할 수 있어요"
             : "이미 3번의 무료 대화를 진행했어요 "}
@@ -59,13 +59,13 @@ export const ActionFooter = ({ isActive = true }: { isActive: boolean }) => (
       </div>
       <button
         className={cn(
-          "self-stretch h-16 relative bg-brand rounded-br-2xl backdrop-blur-[5.05px] cursor-pointer border-none outline-none",
+          "self-stretch h-11.25 relative bg-brand/20 rounded-br-2xl",
           !isActive && "bg-border-main",
         )}
       >
         <span
           className={cn(
-            "title-3 justify-start text-font-4",
+            "title-5 justify-start text-brand-dark",
             !isActive && "text-font-disabled",
           )}
         >

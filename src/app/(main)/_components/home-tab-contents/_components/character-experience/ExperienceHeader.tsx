@@ -12,20 +12,20 @@ const ExperienceHeader = ({
 }: ExperienceHeaderProps) => {
   return (
     <header className="flex justify-between">
-      <h2 className="heading-3">
-        <span className="flex items-center gap-2 ">
+      <h2 className="title-2">
+        <span className="flex items-center gap-2">
           플랫의 공식 캐릭터 맛보기 <Logo className="w-4.5 h-4.5" />
         </span>
       </h2>
-      <div className="inline-flex justify-start items-center gap-4">
+      <div className="inline-flex justify-start items-center gap-3">
         {[1, 2, 3].map((_, i) => (
           <Image
             onClick={() => handleSelectedIndex(i)}
             key={i}
             alt=""
-            width={48}
-            height={48}
-            className={`size-12.75 rounded-full cursor-pointer ${i === selectedIndex ? "border-[3px] border-brand" : "opacity-74 active:scale-90"}`}
+            width={44}
+            height={44}
+            className={`size-11 rounded-full cursor-pointer ${i === selectedIndex ? "border-4 border-brand" : "opacity-74 active:scale-90"}`}
             src="/images/sample.png"
           />
         ))}
