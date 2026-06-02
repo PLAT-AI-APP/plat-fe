@@ -102,14 +102,14 @@ export function MainBannerCarousel() {
       <button
         onClick={scrollPrev}
         data-icon="arrow-right"
-        className="size-8 absolute left-10 top-1/2 -translate-y-1/2 opacity-30 overflow-hidden"
+        className="opacity-25 hover:opacity-100 size-8 absolute left-10 top-1/2 -translate-y-1/2 overflow-hidden"
       >
         <ArrowLeft className="size-8" />
       </button>
       <button
         onClick={scrollNext}
         data-icon="arrow-right"
-        className="size-8 absolute right-10 top-1/2 -translate-y-1/2 opacity-30 overflow-hidden"
+        className="opacity-25 hover:opacity-100 size-8 absolute right-10 top-1/2 -translate-y-1/2 overflow-hidden"
       >
         <ArrowRight className="size-8" />
       </button>

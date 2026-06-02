@@ -34,7 +34,7 @@ const ExperienceCarousel = ({
   }, [selectedIndex, emblaApi, scrollTo]);
 
   return (
-    <article className="relative max-w-full w-full min-h-130.5 max-h-130.5 bg-neutral-900 rounded-2xl">
+    <article className="relative max-w-full w-full min-h-95 max-h-95 bg-neutral-900 rounded-2xl">
       <div className="w-full h-full overflow-hidden" ref={viewportRef}>
         <div className="flex w-full h-full">
           {Array.from({ length: 5 }).map((_, index) => (
@@ -44,16 +44,20 @@ const ExperienceCarousel = ({
       </div>
 
       <button
+        type="button"
         onClick={scrollPrev}
-        className="size-10 p-2 left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 absolute bg-white/40 rounded-[20px] backdrop-blur-[1.54px] flex justify-center items-center gap-2 cursor-pointer z-10 border-none outline-none"
+        aria-label="Previous items"
+        className="opacity-25 hover:opacity-100 absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 flex size-10 items-center justify-center rounded-[20px] bg-white/12 p-2 text-font-0 backdrop-blur-[1.54px] transition-colors hover:bg-white/20"
       >
-        <ArrowLeft className="w-6 h-6" />
+        <ArrowLeft className="size-6" />
       </button>
       <button
+        type="button"
         onClick={scrollNext}
-        className="size-10 p-2 right-0 top-1/2 translate-x-1/2 -translate-y-1/2 absolute bg-white/40 rounded-[20px] backdrop-blur-[1.54px] flex justify-center items-center gap-2 cursor-pointer z-10 border-none outline-none"
+        aria-label="Next items"
+        className="opacity-25 hover:opacity-100 absolute right-0 top-1/2 translate-x-1/2 -translate-y-1/2 z-10 flex size-10 items-center justify-center rounded-[20px] bg-white/12 p-2 text-font-0 backdrop-blur-[1.54px] transition-colors hover:bg-white/20"
       >
-        <ArrowRight className="w-6 h-6" />
+        <ArrowRight className="size-6" />
       </button>
     </article>
   );
