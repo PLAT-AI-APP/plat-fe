@@ -175,6 +175,18 @@ const CharacterCard = ({
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUp}
       >
+        {hasChatCount && (
+          <div className="absolute z-20 top-4.25 right-[13.7px] inline-flex justify-center items-center gap-1 px-1 py-0.5 bg-card rounded-lg">
+            <div
+              data-icon="chat-fill"
+              className="size-4 relative flex items-center justify-center overflow-hidden"
+            >
+              <ChatFill className="size-4 text-font-2" />
+            </div>
+            <span className="text-font-2 body-4">{chatCount}</span>
+          </div>
+        )}
+
         <div className="absolute inset-0 overflow-hidden" ref={emblaRef}>
           <div className="flex h-full">
             {imageList.map((image, idx) => (
@@ -217,7 +229,7 @@ const CharacterCard = ({
             type="button"
             className="hover:bg-brand/20 pointer-events-auto rounded-xl border border-brand-dark bg-[#0D0E11]/40 px-4 py-2 title-4 text-brand"
           >
-            바로 대화하기
+            프로필 보기
           </button>
         </div>
 
@@ -229,18 +241,6 @@ const CharacterCard = ({
             </div>
             <p className="body-3 text-font-1 line-clamp-1">{description}</p>
           </div>
-
-          {hasChatCount && (
-            <div className="inline-flex justify-center items-center gap-0.5">
-              <div
-                data-icon="chat-fill"
-                className="size-4 relative flex items-center justify-center overflow-hidden"
-              >
-                <ChatFill className="size-4 text-font-disabled" />
-              </div>
-              <span className="text-font-2 body-5">{chatCount}</span>
-            </div>
-          )}
 
           <div className="self-stretch inline-flex justify-center items-center gap-2">
             {imageList.map((_, idx) => (
@@ -272,13 +272,13 @@ const CharacterCard = ({
 
   return (
     <article
-      className={`inline-flex flex-col justify-start items-start ${config.wrapper}`}
+      className={`cursor-pointer group inline-flex flex-col justify-start items-start ${config.wrapper}`}
     >
       <div
         className={`relative overflow-hidden bg-zinc-800 ${config.imageArea}`}
       >
         <Image
-          className="object-cover transition-opacity duration-300"
+          className="group-hover:scale-110 object-cover transition-all duration-300"
           src={imageList[currentImgIndex]}
           alt={`${title} image ${currentImgIndex + 1}`}
           fill
