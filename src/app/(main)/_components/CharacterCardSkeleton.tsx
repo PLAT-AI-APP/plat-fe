@@ -32,7 +32,6 @@ export const CharacterCardSkeleton = ({
   }
 
   const config = SIZE_CONFIG[size];
-  const isLarge = config.isIntegrated;
   const infoAreaWithoutGap = config.infoArea.replace(/gap-\S+/g, "").trim();
 
   return (
@@ -44,19 +43,11 @@ export const CharacterCardSkeleton = ({
       <div
         className={`self-stretch flex flex-col justify-start items-start w-full ${infoAreaWithoutGap} ${SKELETON_GAP[size]}`}
       >
-        <div
-          className={`bg-card-hover rounded-[50px] ${
-            isLarge ? "h-5 w-1/2" : "h-4 w-1/2 mt-1"
-          }`}
-        />
-
-        <div
-          className={`bg-card-hover rounded-[50px] ${
-            isLarge ? "h-4 w-11/12" : "h-4 w-3/4"
-          }`}
-        />
-
-        {isLarge && <div className="h-4 w-1/4 bg-card-hover rounded-[50px]" />}
+        <div className="h-4 w-1/2 rounded-[50px] bg-card-hover mt-1" />
+        <div className="h-4 w-3/4 rounded-[50px] bg-card-hover" />
+        {size === "M" && (
+          <div className="h-4 w-1/4 rounded-[50px] bg-card-hover" />
+        )}
       </div>
     </article>
   );

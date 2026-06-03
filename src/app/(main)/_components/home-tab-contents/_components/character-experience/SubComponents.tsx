@@ -25,7 +25,7 @@ export const ChatBubble = ({
     <CharacterAvatar />
     <div className="inline-flex flex-col justify-start items-start gap-1.5 overflow-hidden">
       <span className="justify-start text-font-1 text-sm">{name}</span>
-      <div className="px-3 py-2 bg-bg-card rounded-tr-2xl rounded-bl-2xl rounded-br-2xl inline-flex justify-center items-center gap-2.5 overflow-hidden">
+      <div className="px-3 py-2 bg-card rounded-tr-2xl rounded-bl-2xl rounded-br-2xl inline-flex justify-center items-center gap-2.5 overflow-hidden">
         <p className="justify-start text-font-0 text-sm">{message}</p>
       </div>
     </div>
