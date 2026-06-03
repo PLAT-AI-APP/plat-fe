@@ -34,20 +34,26 @@ const Agreed = () => {
 
   const isTermsAgreed = useWatch({ control, name: "isTermsAgreed" });
   const isPrivacyAgreed = useWatch({ control, name: "isPrivacyAgreed" });
+  const isAgeAgreed = useWatch({ control, name: "isAgeAgreed" });
 
-  const isAllAgree = !!(isTermsAgreed && isPrivacyAgreed);
+  const isAllAgree = !!(isTermsAgreed && isPrivacyAgreed && isAgeAgreed);
 
   const toggleIsAllAgree = () => {
     const nextState = !isAllAgree;
     setValue("isTermsAgreed", nextState, { shouldValidate: true });
     setValue("isPrivacyAgreed", nextState, { shouldValidate: true });
+    setValue("isAgeAgreed", nextState, { shouldValidate: true });
   };
 
   const toggleItem = (
     name: "isTermsAgreed" | "isPrivacyAgreed" | "isAgeAgreed",
   ) => {
-    const currentValue =
-      name === "isTermsAgreed" ? isTermsAgreed : isPrivacyAgreed;
+    const agreementValues = {
+      isTermsAgreed,
+      isPrivacyAgreed,
+      isAgeAgreed,
+    };
+    const currentValue = agreementValues[name];
     setValue(name, !currentValue, { shouldValidate: true });
   };
 
@@ -71,8 +77,12 @@ const Agreed = () => {
 
       <ul id="agreement-list" className="flex flex-col gap-4">
         {AGREEMENT_ITEMS.map(({ id, title, link }) => {
-          const checked =
-            id === "isTermsAgreed" ? isTermsAgreed : isPrivacyAgreed;
+          const checked = {
+            isTermsAgreed,
+            isPrivacyAgreed,
+            isAgeAgreed,
+          }[id];
+
           return (
             <li
               key={id}

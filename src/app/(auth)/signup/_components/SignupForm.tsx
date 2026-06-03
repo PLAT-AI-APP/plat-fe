@@ -28,6 +28,7 @@ const SignupForm = () => {
     passwordCheck = "",
     isPrivacyAgreed = "",
     isTermsAgreed = "",
+    isAgeAgreed = "",
   } = useWatch({ control });
 
   // 폼 유효성 검사 로직 (추가적인 커스텀 검증이 필요한 경우)
@@ -39,6 +40,7 @@ const SignupForm = () => {
       passwordCheck &&
       isPrivacyAgreed &&
       isTermsAgreed &&
+      isAgeAgreed &&
       isEmailVerified
     ) && Object.keys(errors).length === 0;
 
