@@ -9,6 +9,7 @@ import SmartInput from "@/components/smart-input";
 import { useEmailVerifyMutation } from "@/api/auth/emailVerify";
 import { useEmailVerifyConfirmMutation } from "@/api/auth/emailVerifyConfirm";
 import { useCountdown } from "@/hooks/useCountdown";
+import { useFieldFeedback } from "@/hooks/useFieldFeedback";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface EmailVerifySectionProps {
@@ -20,7 +21,8 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
   const [isOtpSent, setIsOtpSent] = useState(false); // 인증번호 입력창 표시 여부
   const [isEmailVerified, setIsEmailVerified] = useState(false); // 이메일 인증 최종 성공 여부
 
-  const [successMessage, setSuccessMessage] = useState("");
+  const { getFeedback, setFeedback, clearFeedback } =
+    useFieldFeedback<AuthFormValues>();
 
   const {
     register,
@@ -57,14 +59,14 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
     if (!isEmailValid || !email) return;
 
     onVerifiedChange?.(false);
-    setSuccessMessage("");
+    clearFeedback("email");
     setValue("code", "");
     clearErrors("code");
     emailVerify(email, {
       onSuccess: (data) => {
         if (data.result === "OK") {
           setIsOtpSent(true);
-          setSuccessMessage("메일함에서 인증번호를 확인해 주세요");
+          setFeedback("email", "메일함에서 인증번호를 확인해 주세요");
           setIsEmailVerified(false); // 재전송 시 인증 상태 초기화
           onVerifiedChange?.(false);
           startTimer();
@@ -92,7 +94,8 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
           setIsEmailVerified(true); // 인증 완료 상태로 변경
           setIsOtpSent(false); // 인증번호 입력창 숨김
           onVerifiedChange?.(true);
-          setSuccessMessage(
+          setFeedback(
+            "email",
             data.serverMessage || "이메일 인증이 완료되었습니다.",
           );
           clearErrors("code");
@@ -116,7 +119,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
       // 이미 인증된 상태에서 '변경'을 누를 경우
       setIsEmailVerified(false);
       onVerifiedChange?.(false);
-      setSuccessMessage("");
+      clearFeedback("email");
       setValue("email", "");
       setValue("code", "");
       clearErrors("code");
@@ -136,7 +139,8 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
     return null;
   }, [errors.email, errors.code, isOtpSent, isEmailVerified, timeLeft]);
 
-  const displayMessage = displayErrorMessage || successMessage;
+  const displayFeedback = getFeedback("email");
+  const displayMessage = displayErrorMessage || displayFeedback?.message;
   const isDisplayMessageError = !!displayErrorMessage;
 
   return (
@@ -149,7 +153,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
               onChange: async () => {
                 setIsEmailVerified(false);
                 onVerifiedChange?.(false);
-                setSuccessMessage("");
+                clearFeedback("email");
                 clearErrors("code");
                 await trigger("email");
               },
@@ -220,7 +224,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
                 <SmartInput
                   {...register("code", {
                     onChange: () => {
-                      setSuccessMessage("");
+                      clearFeedback("email");
                       clearErrors("code");
                     },
                   })}
