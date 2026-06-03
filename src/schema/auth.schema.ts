@@ -44,7 +44,7 @@ export const loginFormSchema = z.object({
   email: z
     .string()
     .min(1, "이메일을 입력해주세요.")
-    .email("올바른 이메일 형식이 아닙니다."),
+    .email("잘못된 이메일 형식에요"),
 
   pw: createPasswordSchema("비밀번호를 입력해주세요."),
 });
@@ -68,7 +68,7 @@ export const authFormSchema = z
     email: z
       .string()
       .min(1, "이메일을 입력해주세요.")
-      .email("올바른 이메일 형식이 아닙니다."),
+      .email("잘못된 이메일 형식에요"),
 
     code: z
       .string()
@@ -105,7 +105,7 @@ export const passwordResetFormSchema = z
     email: z
       .string()
       .min(1, "이메일을 입력해주세요.")
-      .email("올바른 이메일 형식이 아닙니다."),
+      .email("잘못된 이메일 형식에요"),
     code: z
       .string()
       .min(1, "인증 코드를 입력해주세요.")

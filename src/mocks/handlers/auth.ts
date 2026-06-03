@@ -100,7 +100,7 @@ export const authHandlers = [
   //           fields: {
   //             email: !email
   //               ? "이메일을 입력해 주세요."
-  //               : "올바른 이메일 형식이 아닙니다.",
+  //               : "잘못된 이메일 형식에요",
   //             password: !password ? "비밀번호를 입력해 주세요." : "",
   //           },
   //         },
@@ -193,7 +193,7 @@ export const authHandlers = [
     // 1. [400] MethodArgumentNotValidException (필수 필드 및 이메일 형식 누락)
     const fields: Record<string, string> = {};
     if (!email || !email.includes("@"))
-      fields.email = "올바른 이메일 형식이 아닙니다.";
+      fields.email = "잘못된 이메일 형식에요";
     if (!password) fields.password = "비밀번호를 입력해 주세요.";
     if (!code) fields.code = "인증코드를 입력해 주세요.";
 
