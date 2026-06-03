@@ -342,7 +342,7 @@ const CharacterCard = ({
           </ul>
         )}
 
-        <div className="inline-flex justify-start items-start gap-0.5 mt-0.5">
+        <div className="inline-flex justify-start items-start gap-0.5">
           <span className={cn("text-font-2 line-clamp-1", config.creatorName)}>
             @ {creatorName}
           </span>
