@@ -123,7 +123,7 @@ const EmailOtpStep = ({ title, onSubmit }: EmailOtpStepProps) => {
             required: "이메일을 입력해주세요.",
             pattern: {
               value: EMAIL_REGEX,
-              message: "올바른 이메일 형식이 아닙니다.",
+              message: "잘못된 이메일 형식에요",
             },
             onChange: async () => {
               await trigger("email");

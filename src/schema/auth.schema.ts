@@ -1,6 +1,16 @@
 import z from "zod";
+import {
+  EMAIL_REGEX,
+  NICKNAME_REGEX,
+  PASSWORD_REGEX,
+  PASSWORD_SPECIAL_CHAR_REGEX,
+} from "@/lib/regex";
 
-const SPECIAL_CHAR_REGEX = /[!@#$%^&*(),.?":{}|<>]/;
+const createEmailSchema = () =>
+  z
+    .string()
+    .min(1, "이메일을 입력해주세요.")
+    .regex(EMAIL_REGEX, "잘못된 이메일 형식에요");
 
 const createPasswordSchema = (requiredMessage: string) =>
   z.string().superRefine((value, ctx) => {
@@ -12,7 +22,9 @@ const createPasswordSchema = (requiredMessage: string) =>
       return;
     }
 
-    const hasSpecialChar = SPECIAL_CHAR_REGEX.test(value);
+    if (PASSWORD_REGEX.test(value)) return;
+
+    const hasSpecialChar = PASSWORD_SPECIAL_CHAR_REGEX.test(value);
     const isMin8 = value.length >= 8;
 
     if (!hasSpecialChar && !isMin8) {
@@ -41,10 +53,7 @@ const createPasswordSchema = (requiredMessage: string) =>
 
 /** 회원가입 form 유효성 */
 export const loginFormSchema = z.object({
-  email: z
-    .string()
-    .min(1, "이메일을 입력해주세요.")
-    .email("잘못된 이메일 형식에요"),
+  email: createEmailSchema(),
 
   pw: createPasswordSchema("비밀번호를 입력해주세요."),
 });
@@ -58,17 +67,9 @@ export const authFormSchema = z
       .string()
       .min(1, "닉네임을 입력해주세요.")
       .max(20, "닉네임은 20자 이하로 입력해주세요.")
-      .refine(
-        (value) => !/[`~!@#$%^&*()\-_=+\[\]{};:'",.<>/?\\|]/.test(value),
-        {
-          message: "특수문자는 사용이 불가해요",
-        },
-      ),
+      .regex(NICKNAME_REGEX, "특수문자는 사용이 불가해요"),
 
-    email: z
-      .string()
-      .min(1, "이메일을 입력해주세요.")
-      .email("잘못된 이메일 형식에요"),
+    email: createEmailSchema(),
 
     code: z
       .string()
@@ -102,10 +103,7 @@ export type AuthFormValues = z.input<typeof authFormSchema>;
 /** 비밀번호 재설정 form 유효성 */
 export const passwordResetFormSchema = z
   .object({
-    email: z
-      .string()
-      .min(1, "이메일을 입력해주세요.")
-      .email("잘못된 이메일 형식에요"),
+    email: createEmailSchema(),
     code: z
       .string()
       .min(1, "인증 코드를 입력해주세요.")
