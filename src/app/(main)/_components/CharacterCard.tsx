@@ -176,7 +176,7 @@ const CharacterCard = ({
         onPointerUp={handlePointerUp}
       >
         {hasChatCount && (
-          <div className="absolute z-20 top-4.25 right-[13.7px] inline-flex justify-center items-center gap-1 px-1 py-0.5 bg-card rounded-lg">
+          <div className="absolute w-13.5 z-20 top-4.25 right-[13.7px] inline-flex justify-center items-center gap-1 px-1 py-0.5 bg-card rounded-lg">
             <div
               data-icon="chat-fill"
               className="size-4 relative flex items-center justify-center overflow-hidden"
