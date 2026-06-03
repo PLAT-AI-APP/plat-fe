@@ -39,7 +39,7 @@ export function MainBannerCarousel() {
   });
 
   return (
-    <section className="relative max-w-full w-full min-h-[439.05px] bg-neutral-900 overflow-hidden">
+    <section className="relative max-w-full w-full min-h-[437.08px] bg-neutral-900 overflow-hidden">
       {/* --- Embla Viewport (여기서 영역 밖으로 나가는 슬라이드를 숨깁니다) --- */}
       <div
         id="carousel-viewport"
