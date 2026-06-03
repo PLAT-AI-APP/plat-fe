@@ -17,7 +17,6 @@ import ProfileImageField from "../field/ProfileImageField";
 import NicknameField from "../field/NicknameField";
 import BioField from "../field/BioField";
 import GenderField from "../field/GenderField";
-// import PhoneField from "../field/PhoneField";
 import AccountField from "../field/AccountField";
 
 import { ProfileEditModalProps } from "@/type/modal";
@@ -80,7 +79,6 @@ const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
           <BioField />
           <BirthDateInput value={birth} />
           <GenderField />
-          {/* <PhoneField onOpenModal={() => setIsPhoneModal(true)} /> */}
           <AccountField />
         </div>
 

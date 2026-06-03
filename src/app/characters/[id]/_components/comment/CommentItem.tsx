@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils";
 import { CommentType } from "@/type/comment";
 import { useLineOverflow } from "@/hooks/useOverflowText";
 // import { CommentInput } from "./CommentInput";
-// import ReplyItem from "../ReplyItem";
 import ReplyLine from "@/icons/ReplyLine";
 // import PinFill from "@/icons/PinFill";
 import { Dots } from "@/icons";
@@ -141,7 +140,6 @@ const CommentItem = ({ comment }: Props) => {
         <section className="flex flex-col gap-3" id="reply-list-area">
           {(isReply ? comment.replies : comment.replies.slice(0, 2)).map(
             (reply) => (
-              <ReplyItem key={reply.id} reply={reply} />
             ),
           )}
 
