@@ -27,13 +27,13 @@ const CharacterProfileCard = ({ index }: CharacterProfileCardProps) => {
         {/* 태그 리스트 영역 */}
         <div className="inline-flex items-start gap-1">
           <span className="body-5 flex justify-center items-center">
-            <span className="text-brand">#태그</span>
+            <span className="text-font-2">#태그</span>
           </span>
           <span className="body-5 flex justify-center items-center">
-            <span className="text-brand">#태그</span>
+            <span className="text-font-2">#태그</span>
           </span>
           <span className="body-5 flex justify-center items-center">
-            <span className="text-brand">#태그</span>
+            <span className="text-font-2">#태그</span>
           </span>
         </div>
 
