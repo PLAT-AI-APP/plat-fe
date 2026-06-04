@@ -8,15 +8,15 @@ interface CharacterProfileCardProps {
 
 const CharacterProfileCard = ({ index }: CharacterProfileCardProps) => {
   return (
-    <section className="relative min-w-86.75 bg-white w-95 h-full rounded-tl-2xl rounded-bl-2xl inline-flex flex-col justify-end items-start overflow-hidden">
+    <section className="relative min-w-86.75 w-95 h-full overflow-hidden rounded-l-2xl bg-neutral-900 inline-flex flex-col justify-end items-start">
       <Image
-        src={"/images/sample.png"}
+        src={`https://picsum.photos/seed/character-experience-${index}/200/300`}
         alt=""
         width={100}
         height={100}
-        className="object-cover w-full h-full absolute inset-0"
+        className="absolute inset-0 h-full w-full object-cover"
       />
-      <header className="absolute left-0 bottom-0 self-stretch px-6 pt-9 pb-7 bg-linear-to-b from-black/0 via-black/80 to-black/100 rounded-bl-2xl flex flex-col justify-center items-start gap-1 w-full">
+      <header className="absolute bottom-0 left-0 flex w-full flex-col items-start justify-center gap-1 self-stretch bg-linear-to-b from-black/0 via-black/80 to-black/100 px-6 pb-7 pt-9">
         <div className="inline-flex items-center gap-2.5">
           <h2 className="text-font-0 title-2">제목제목제목제목제목{index}</h2>
         </div>

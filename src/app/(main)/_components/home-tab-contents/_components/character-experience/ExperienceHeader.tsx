@@ -26,7 +26,7 @@ const ExperienceHeader = ({
             width={44}
             height={44}
             className={`size-11 rounded-full cursor-pointer ${i === selectedIndex ? "border-4 border-brand" : "opacity-74 active:scale-90"}`}
-            src="/images/sample.png"
+            src={`https://picsum.photos/seed/experience-thumb-${i}/200/300`}
           />
         ))}
       </div>

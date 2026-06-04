@@ -187,12 +187,15 @@ const CharacterCard = ({
           </div>
         )}
 
-        <div className="absolute inset-0 overflow-hidden" ref={emblaRef}>
-          <div className="flex h-full">
+        <div
+          className="absolute inset-0 overflow-hidden rounded-2xl bg-[#0D0E11] [clip-path:inset(0_1px_0_0_round_16px)]"
+          ref={emblaRef}
+        >
+          <div className="flex h-full w-full">
             {imageList.map((image, idx) => (
               <div
                 key={`${image}-${idx}`}
-                className="relative min-w-0 flex-[0_0_100%]"
+                className="relative h-full w-full min-w-0 flex-[0_0_100%] overflow-hidden bg-[#0D0E11]"
               >
                 <Image
                   className="object-cover"
@@ -233,7 +236,7 @@ const CharacterCard = ({
           </button>
         </div>
 
-        <div className="relative z-10 self-stretch h-36 px-4 pt-6 pb-5 bg-[linear-gradient(180deg,rgba(0,0,0,0)_0%,rgba(0,0,0,0.4)_20%,rgba(0,0,0,0.8)_100%)] rounded-b-2xl flex flex-col justify-end items-start gap-1">
+        <div className="relative z-10 self-stretch h-36 px-4 pt-6 pb-5 bg-[linear-gradient(180deg,rgba(0,0,0,0)_0%,rgba(0,0,0,0.4)_20%,rgba(0,0,0,0.8)_100%)] flex flex-col justify-end items-start gap-1">
           <div className="self-stretch flex flex-col justify-start items-start gap-1">
             <div className="flex w-full items-center gap-1">
               <h2 className="min-w-0 truncate text-font-0 title-2">{title}</h2>

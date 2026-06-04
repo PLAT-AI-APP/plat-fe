@@ -9,9 +9,9 @@ interface ExperienceSlideProps {
 
 const ExperienceSlide = ({ index }: ExperienceSlideProps) => {
   return (
-    <div className="flex min-w-full h-full relative">
+    <div className="relative h-full min-w-0 flex-[0_0_100%] overflow-hidden">
       <motion.div
-        className="flex w-full h-full"
+        className="flex h-full w-full overflow-hidden"
         // 화면에 안 보일 때: 투명하고 살짝 블러 처리
         initial={{ opacity: 0, filter: "blur(20px)" }}
         // 슬라이드가 화면에 나타날 때 (Embla가 넘겨줄 때 자동 실행)
