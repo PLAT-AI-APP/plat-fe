@@ -38,7 +38,7 @@ export const SIZE_CONFIG: Record<
   }
 > = {
   S: {
-    wrapper: "w-[187px] gap-2",
+    wrapper: "w-[186.67px] gap-2",
     imageArea: "w-full h-[245px] rounded-[16px]",
     infoArea: "pl-1 gap-0.5",
     title: "title-3 text-font-0",

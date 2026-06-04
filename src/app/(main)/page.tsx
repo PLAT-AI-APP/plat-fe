@@ -40,15 +40,12 @@ const Home = async ({ searchParams }: HomePageProps) => {
         isCategories && "bg-bg-darker",
       )}
     >
-      {/* 사이드바 영역 */}
-      {isCategories && <TagSidebar />}
-
       {/* 메인 콘텐츠 영역 */}
       <section className="flex flex-col w-full min-h-[calc(100vh-60px)]">
         {/* 메인 비주얼/슬라이드 영역 */}
         {currentTab === "all" && <MainBannerCarousel />}
 
-        <div className="w-full max-w-300.5 mx-auto @container flex-1 flex flex-col">
+        <div className="w-full max-w-300 mx-auto @container flex-1 flex flex-col">
           <MenuTab currentTab={currentTab} />
           {/* <OverflowTagList
             maxLines={1}
@@ -100,6 +97,9 @@ const Home = async ({ searchParams }: HomePageProps) => {
           </div>
         </div>
       </section>
+
+      {/* 사이드바 영역 */}
+      {isCategories && <TagSidebar />}
     </article>
   );
 };
