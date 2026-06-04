@@ -238,7 +238,7 @@ const CharacterCard = ({
 
         <div className="relative z-10 self-stretch h-36 px-4 pt-6 pb-5 bg-[linear-gradient(180deg,rgba(0,0,0,0)_0%,rgba(0,0,0,0.4)_20%,rgba(0,0,0,0.8)_100%)] flex flex-col justify-end items-start gap-1">
           <div className="self-stretch flex flex-col justify-start items-start gap-1">
-            <div className="flex w-full items-center gap-1">
+            <div className="flex w-full items-center gap-1.5">
               <h2 className="min-w-0 truncate text-font-0 title-2">{title}</h2>
               {titleIcon}
             </div>
@@ -314,7 +314,7 @@ const CharacterCard = ({
           tagList && "gap-0.5",
         )}
       >
-        <div className="flex w-full items-center gap-1">
+        <div className="flex w-full items-center gap-1.5">
           <h2 className={`min-w-0 truncate text-font-0 ${config.title}`}>
             {title}
           </h2>
