@@ -40,7 +40,7 @@ export const SIZE_CONFIG: Record<
   S: {
     wrapper: "w-[186.67px] gap-2",
     imageArea: "w-full h-[245px] rounded-[16px]",
-    infoArea: "pl-1 gap-0.5",
+    infoArea: "gap-0.5",
     title: "title-3 text-font-0",
     desc: "body-4 text-font-2",
     isIntegrated: false,

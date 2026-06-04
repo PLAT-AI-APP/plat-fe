@@ -90,7 +90,7 @@ const CharacterShowcase = ({
   return (
     <section className="mx-auto flex h-auto w-full max-w-full flex-col justify-center gap-4">
       {title && (
-        <header className="flex items-center justify-between pl-2">
+        <header className="flex items-center justify-between">
           <h2 className="title-2 flex items-center gap-2">
             {title} {TitleLogo && TitleLogo}
           </h2>
