@@ -5,7 +5,7 @@ import { ArrowLeft, ArrowRight, Date as DateIcon } from "@/icons";
 import Calendar, { OnArgs } from "react-calendar";
 import dayjs from "dayjs";
 import { useFormContext } from "react-hook-form";
-import { UserDetailFormValues } from "@/type/auth";
+import { ProfileEditFormType } from "@/schema/profile.schema";
 
 interface BirthDateInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: boolean;
@@ -17,7 +17,7 @@ export const BirthDateInput = React.forwardRef<
   HTMLInputElement,
   BirthDateInputProps
 >(({ className, error, onChange, isEditMode = false, ...rest }, ref) => {
-  const { setValue, watch } = useFormContext<UserDetailFormValues>();
+  const { setValue, watch } = useFormContext<ProfileEditFormType>();
   const birth = watch("birth");
 
   const [showCalendar, setShowCalendar] = useState(false);

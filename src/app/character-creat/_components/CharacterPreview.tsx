@@ -3,11 +3,8 @@ import CreatePreviewList from "./CreatePreviewList";
 import { useScrollTimeout } from "@/hooks/useScrollTiemout";
 import { Asterisk, ImageIcon, SendFill } from "@/icons";
 import { cn } from "@/lib/utils";
-import {
-  CharacterCreateFormValues,
-  ScenarioContentItem,
-  ScenarioType,
-} from "@/type/character";
+import { CharacterCreateFormValues } from "@/schema/character.schema";
+import { ScenarioContentItem, ScenarioType } from "@/type/character";
 import React, { useRef, useState, memo } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 

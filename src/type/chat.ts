@@ -1,14 +1,3 @@
-/** 내가 대화했던 방 목록의 간략 버전 type */
-export interface ChatListItemType {
-  id: string;
-  title: string;
-  scenario: string;
-  time: string;
-  profileImage: string;
-  isPinned: boolean;
-  lastMessage: string;
-}
-
 export interface AIModelType {
   id: string;
   name: string;
@@ -19,8 +8,6 @@ export interface AIModelType {
   unit: string; // 단위 (예: "채팅")
   icon: string; // 아이콘 경로 또는 이름
 }
-
-export type MessageRole = "assistant" | "user";
 
 /** 캐릭터 응답 타입 */
 interface AssistantMessageType {
