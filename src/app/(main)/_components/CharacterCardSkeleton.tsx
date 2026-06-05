@@ -1,4 +1,4 @@
-import { SIZE_CONFIG } from "./CharacterCard";
+import { SIZE_CONFIG } from "./character-card/constants";
 
 interface CharacterCardSkeletonProps {
   size?: "S" | "M" | "L" | "XL";

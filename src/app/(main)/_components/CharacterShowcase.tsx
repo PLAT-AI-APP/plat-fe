@@ -5,7 +5,7 @@ import { useCarousel } from "@/hooks/useCarousel";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import CharacterCard from "./CharacterCard";
+import CharacterCard from "./character-card";
 import { CharacterCardSkeleton } from "./CharacterCardSkeleton";
 
 interface CharacterShowcaseProps {
@@ -28,6 +28,7 @@ interface CharacterShowcaseProps {
   rowGap?: number;
   currentTag?: string;
   layout?: "grid" | "carousel";
+  selectedTags?: string | string[];
 }
 
 const CharacterShowcase = ({
@@ -41,6 +42,7 @@ const CharacterShowcase = ({
   rowGap,
   currentTag,
   layout = "grid",
+  selectedTags,
 }: CharacterShowcaseProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const { viewportRef, scrollPrev, scrollNext } = useCarousel({
@@ -82,6 +84,7 @@ const CharacterShowcase = ({
           currentTag={currentTag}
           isNew={char.isNew}
           isOfficial={char.isOfficial}
+          selectedTags={selectedTags}
         />
       ));
 

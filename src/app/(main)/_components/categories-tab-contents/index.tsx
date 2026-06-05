@@ -1,6 +1,12 @@
-import React from "react";
+"use client";
+
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import CharacterShowcase from "../CharacterShowcase";
-import { Sort } from "@/icons";
+import SearchResultSort from "./_components/SearchResultSort";
+import TagSidebar, {
+  INITIAL_SELECTED_TAGS,
+} from "./_components/tag-sidebar";
 
 export const DUMMY_CHARACTERS = [
   {
@@ -39,29 +45,46 @@ export const DUMMY_CHARACTERS = [
 ];
 
 const CategoriesTabContents = () => {
+  const [selectedTags, setSelectedTags] = useState<string[]>(
+    INITIAL_SELECTED_TAGS,
+  );
+  const [sidebarRoot, setSidebarRoot] = useState<HTMLElement | null>(null);
+
+  useEffect(() => {
+    setSidebarRoot(document.getElementById("categories-tag-sidebar-root"));
+  }, []);
+
   return (
-    <article className="flex grow w-full mt-13 bg-bg-darker">
-      <div className="flex-1 flex flex-col gap-5.5 justify-start">
-        <header className="flex items-center justify-between">
-          검색 결과 12건
-          <div className="px-3 py-2 bg-btn-hover rounded-lg inline-flex justify-center items-center gap-2">
-            <Sort className="size-5" />
+    <>
+      <article className="flex grow w-full mt-7 bg-bg-darker">
+        <div className="flex-1 flex flex-col gap-7 justify-start">
+          <header className="flex items-center justify-between heading-3R">
+            <p>
+              검색 결과 <span className="heading-3">12건</span>
+            </p>
 
-            {/* 텍스트 관련 테일윈드는 이전 요청 내용에 맞추어 정리할 수 있습니다 */}
-            <div className="justify-start text-font-1 text-sm font-normal">
-              최신순
-            </div>
-          </div>
-        </header>
+            <SearchResultSort />
+          </header>
 
-        <CharacterShowcase
-          charArray={DUMMY_CHARACTERS}
-          cardSize="M"
-          columnGap={16}
-          rowGap={16}
-        />
-      </div>
-    </article>
+          <CharacterShowcase
+            charArray={DUMMY_CHARACTERS}
+            cardSize="S"
+            columnGap={16}
+            rowGap={28}
+            selectedTags={selectedTags}
+          />
+        </div>
+      </article>
+
+      {sidebarRoot &&
+        createPortal(
+          <TagSidebar
+            selectedTags={selectedTags}
+            onSelectedTagsChange={setSelectedTags}
+          />,
+          sidebarRoot,
+        )}
+    </>
   );
 };
 
