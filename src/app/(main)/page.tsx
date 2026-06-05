@@ -7,7 +7,6 @@ import HomeTabContents from "./_components/home-tab-contents";
 import RankingTabContents from "./_components/ranking-tab-contents";
 import { CHARACTERS_DUMMY } from "@/mocks/dummyData";
 import CategoriesTabContents from "./_components/categories-tab-contents";
-import TagSidebar from "./_components/categories-tab-contents/_components/tag-sidebar";
 // import OverflowTagList from "@/components/OverflowTagList";
 
 export const metadata: Metadata = {
@@ -98,8 +97,10 @@ const Home = async ({ searchParams }: HomePageProps) => {
         </div>
       </section>
 
-      {/* 사이드바 영역 */}
-      {isCategories && <TagSidebar />}
+      {/* 사이드바 영역: CategoriesTabContents가 선택 태그 상태를 소유하고 이 위치로 렌더링합니다. */}
+      {isCategories && (
+        <div id="categories-tag-sidebar-root" className="contents" />
+      )}
     </article>
   );
 };
