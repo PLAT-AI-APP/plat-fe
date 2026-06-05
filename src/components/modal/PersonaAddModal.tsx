@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ModalLayout } from "../ModalLayout";
 import { Close, Persona } from "@/icons";
 import SmartInput from "@/components/smart-input";
@@ -9,11 +10,7 @@ import { useEditPersonaMutation } from "@/api/persona/editPersona";
 import { useDetailPersonaQuery } from "@/api/persona/detailPersons";
 
 import { PersonaAddModalProps } from "@/type/modal";
-
-interface PersonaFormValues {
-  name: string;
-  info: string;
-}
+import { personaFormSchema, PersonaFormValues } from "@/schema/modal.schema";
 
 const PersonaAddModal = ({
   onClose,
@@ -27,9 +24,10 @@ const PersonaAddModal = ({
     handleSubmit,
     watch,
     reset,
-    formState: { isValid },
+    formState: { errors, isValid },
   } = useForm<PersonaFormValues>({
     mode: "onChange",
+    resolver: zodResolver(personaFormSchema),
     defaultValues: {
       name: "",
       info: "",
@@ -108,7 +106,8 @@ const PersonaAddModal = ({
             maxLength={20}
             placeholder="이름을 입력해주세요."
             value={name} // 글자 수 표시용
-            {...register("name", { required: true, maxLength: 20 })}
+            error={errors.name}
+            {...register("name")}
           />
 
           <SmartInput
@@ -121,7 +120,8 @@ const PersonaAddModal = ({
             inputClassName="max-h-30.25"
             placeholder={`나이, 성별 등을 자유롭게 입력해주세요.\n...`}
             value={info} // 글자 수 표시용
-            {...register("info", { maxLength: 200 })}
+            error={errors.info}
+            {...register("info")}
           />
         </div>
 

@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { useForm, useWatch } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import SmartInput from "@/components/smart-input";
 import { Close } from "@/icons";
 import Note from "@/icons/Note";
@@ -8,14 +9,19 @@ import { ModalLayout } from "../ModalLayout";
 import ActiveButton from "../ActiveButton";
 
 import { UserNoteModalProps } from "@/type/modal";
-
-// 폼 데이터 타입 정의
-interface UserNoteFormValues {
-  userNote: string;
-}
+import {
+  userNoteFormSchema,
+  UserNoteFormValues,
+} from "@/schema/modal.schema";
 
 const UserNoteModal = ({ onClose }: UserNoteModalProps) => {
-  const { register, handleSubmit, control } = useForm<UserNoteFormValues>({
+  const {
+    register,
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<UserNoteFormValues>({
+    resolver: zodResolver(userNoteFormSchema),
     defaultValues: {
       userNote: "",
     },
@@ -58,7 +64,7 @@ const UserNoteModal = ({ onClose }: UserNoteModalProps) => {
 
       <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
         <SmartInput
-          {...register("userNote", { required: true })}
+          {...register("userNote")}
           value={noteValue} // 실시간 글자 수 반영을 위해 watch 값 전달
           maxLength={500}
           inputClassName="bg-card border-none"
@@ -68,6 +74,7 @@ const UserNoteModal = ({ onClose }: UserNoteModalProps) => {
           minLine={6}
           isBorder={false}
           placeholder={`잊으면 안되는 중요한 내용, 추가하고 싶은 설정 등\n...`}
+          error={errors.userNote}
         />
         <ActiveButton
           type="submit"

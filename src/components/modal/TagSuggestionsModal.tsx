@@ -3,18 +3,24 @@ import { ModalLayout } from "../ModalLayout";
 import { Close, Megaphone } from "@/icons";
 import SmartInput from "@/components/smart-input";
 import { useForm, useWatch } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import ActiveButton from "../ActiveButton";
-
-interface TagFormValues {
-  name: string;
-  opinion: string;
-}
 
 import { TagSuggestionsModalProps } from "@/type/modal";
 import { useHashtagSuggestMutation } from "@/api/hashtag/postHashtagSuggest";
+import {
+  tagSuggestionFormSchema,
+  TagSuggestionFormValues,
+} from "@/schema/modal.schema";
 
 const TagSuggestionsModal = ({ onClose }: TagSuggestionsModalProps) => {
-  const { register, control, handleSubmit } = useForm<TagFormValues>({
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<TagSuggestionFormValues>({
+    resolver: zodResolver(tagSuggestionFormSchema),
     defaultValues: {
       name: "",
       opinion: "",
@@ -26,7 +32,7 @@ const TagSuggestionsModal = ({ onClose }: TagSuggestionsModalProps) => {
 
   const { mutate: hashtagSuggest } = useHashtagSuggestMutation();
 
-  const onSubmit = (data: TagFormValues) => {
+  const onSubmit = (data: TagSuggestionFormValues) => {
     const { name, opinion } = data;
     hashtagSuggest({ name, opinion });
     onClose();
@@ -45,25 +51,16 @@ const TagSuggestionsModal = ({ onClose }: TagSuggestionsModalProps) => {
         </header>
         <div className="flex flex-col gap-6">
           <SmartInput
-            {...register("name", {
-              required: {
-                value: true,
-                message: "해시태그를 입력해주세요.",
-              },
-            })}
+            {...register("name")}
             value={nameValue}
             label="해시태그"
             maxLength={10}
             placeholder="제안할 해시태그를 입력해주세요."
             required
+            error={errors.name}
           />
           <SmartInput
-            {...register("opinion", {
-              required: {
-                value: true,
-                message: "의견을 입력해주세요.",
-              },
-            })}
+            {...register("opinion")}
             type="textarea"
             value={opinionValue}
             label="의견"
@@ -72,6 +69,7 @@ const TagSuggestionsModal = ({ onClose }: TagSuggestionsModalProps) => {
             minLine={10}
             placeholder="해시태그를 제안한 이유나 의견이 있다면 자유롭게 적어주세요."
             required
+            error={errors.opinion}
           />
         </div>
         <ActiveButton

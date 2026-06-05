@@ -2,16 +2,20 @@
 
 import React from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import { ModalLayout } from "../ModalLayout";
 import { Close } from "@/icons";
 import { BirthDateInput } from "../BirthDateInput";
 import ActiveButton from "../ActiveButton";
 
-import { ProfileEditFormType } from "@/type/user";
 import { useUserStore } from "@/store/useUserStore";
 import { useUpdateMyInfoMutation } from "@/api/user/patchMyInfo";
 import { useFormServerError } from "@/hooks/useFormServerError";
+import {
+  profileEditFormSchema,
+  ProfileEditFormType,
+} from "@/schema/profile.schema";
 
 import ProfileImageField from "../field/ProfileImageField";
 import NicknameField from "../field/NicknameField";
@@ -118,8 +122,10 @@ const ProfileEditModal = ({ onClose }: ProfileEditModalProps) => {
 
   const methods = useForm<ProfileEditFormType>({
     mode: "onChange",
+    resolver: zodResolver(profileEditFormSchema),
     defaultValues: {
       profileImg: user?.profileImage || "",
+      profileImgFile: "",
       birth: user?.birth || "",
       // countryCode: user?.phone?.countryCode || "",
       email: user?.email || "",

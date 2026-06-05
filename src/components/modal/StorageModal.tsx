@@ -1,16 +1,14 @@
 "use client";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ModalLayout } from "../ModalLayout";
 import { Close, Storage } from "@/icons";
 import ActiveButton from "../ActiveButton";
 import SmartInput from "@/components/smart-input";
 
 import { StorageModalProps } from "@/type/modal";
-
-interface StorageFormValues {
-  longTermMemory: string;
-}
+import { storageFormSchema, StorageFormValues } from "@/schema/modal.schema";
 
 const StorageModal = ({ onClose }: StorageModalProps) => {
   // useForm 초기화
@@ -18,8 +16,9 @@ const StorageModal = ({ onClose }: StorageModalProps) => {
     register,
     handleSubmit,
     watch,
-    formState: { isDirty },
+    formState: { errors },
   } = useForm<StorageFormValues>({
+    resolver: zodResolver(storageFormSchema),
     defaultValues: {
       longTermMemory: "",
     },
@@ -72,6 +71,7 @@ const StorageModal = ({ onClose }: StorageModalProps) => {
           inputClassName="bg-card"
           inputBoxClassName="bg-card"
           placeholder={`장기기억이 생성되려면 더 많은 대화가 쌓여야 해요...`}
+          error={errors.longTermMemory}
         />
 
         <div className="flex justify-end mt-9">

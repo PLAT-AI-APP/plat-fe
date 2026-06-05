@@ -4,7 +4,7 @@ import React, { ChangeEvent } from "react";
 import Image from "next/image";
 import { useFormContext, useWatch } from "react-hook-form";
 import { CameraFill } from "@/icons";
-import { ProfileEditFormType } from "@/type/user";
+import { ProfileEditFormType } from "@/schema/profile.schema";
 
 // 제네릭 관련 타입 충돌을 방지하기 위해 이 컴포넌트가 제어할 대상 타입을 명시합니다.
 interface ProfileImageFieldProps {
