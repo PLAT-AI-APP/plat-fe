@@ -25,22 +25,26 @@ import AccountField from "../field/AccountField";
 
 import { ProfileEditModalProps } from "@/type/modal";
 import { useDeleteUserMutation } from "@/api/user/deleteUser";
-import { useModalStore } from "@/store/useModalStore";
+// import { useModalStore } from "@/store/useModalStore";
 
 const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
-  const { handleSubmit, watch } = useFormContext<ProfileEditFormType>();
+  const {
+    handleSubmit,
+    watch,
+    formState: { isValid },
+  } = useFormContext<ProfileEditFormType>();
   const { mutate: updateMyInfo } = useUpdateMyInfoMutation();
   const { setFieldErrors } = useFormServerError<ProfileEditFormType>();
   // const [isPhoneModal, setIsPhoneModal] = useState(false);
 
   const { mutate: deleteUser } = useDeleteUserMutation();
-  const openModal = useModalStore((state) => state.openModal);
+  // const openModal = useModalStore((state) => state.openModal);
 
   const birth = watch("birth");
 
-  const handleFindPasswordClick = () => {
-    openModal("FIND_PASSWORD");
-  };
+  // const handleFindPasswordClick = () => {
+  //   openModal("FIND_PASSWORD");
+  // };
 
   const onSave = (data: ProfileEditFormType) => {
     updateMyInfo(
@@ -86,18 +90,18 @@ const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
           <AccountField />
         </div>
 
-        <footer className="flex gap-9 justify-center mt-9">
-          <button
+        <footer className="flex gap-9 justify-end mt-9">
+          {/* <button
             type="button"
             onClick={handleFindPasswordClick}
             className="body-4 text-font-2 w-fit"
           >
             비밀번호 변경
-          </button>
+          </button> */}
           <button
             onClick={() => deleteUser}
             type="button"
-            className="body-4 text-font-2 w-fit"
+            className="body-4 text-font-2 w-fit underline"
           >
             회원탈퇴
           </button>
@@ -106,7 +110,7 @@ const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
         <ActiveButton
           text="저장"
           type="submit"
-          isActive={true}
+          isActive={isValid}
           className="rounded-xl mt-10 mb-5"
         />
       </section>

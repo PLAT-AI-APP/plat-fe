@@ -28,8 +28,8 @@ const GenderField = () => {
               })
             }
             className={cn(
-              "flex-1 bg-bg-darkest body-4 border border-border-main rounded-xl py-3 transition-colors",
-              gender === g && "text-brand title-5 bg-brand-opacity",
+              "flex-1 bg-card body-4 rounded-xl py-3 transition-colors",
+              gender === g && "text-brand title-5 bg-brand/10",
             )}
           >
             {g === "MALE" ? "남자" : "여자"}

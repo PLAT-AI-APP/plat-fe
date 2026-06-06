@@ -8,7 +8,10 @@ import { useCheckNicknameQuery } from "@/api/auth/checkNickname";
 import { useUserStore } from "@/store/useUserStore";
 
 const NICKNAME_UNAVAILABLE_MESSAGE =
-  "중복되거나, 특수문자는 사용할 수 없어요";
+  "이미 사용 중인 닉네임이에요";
+const MAX_NICKNAME_LENGTH = 20;
+const NICKNAME_MAX_LENGTH_MESSAGE =
+  "20자 이내의 닉네임을 사용해요";
 
 const NicknameField = () => {
   const user = useUserStore((state) => state.user);
@@ -26,6 +29,7 @@ const NicknameField = () => {
   const isNicknameCheckEnabled =
     !!debouncedNickname &&
     debouncedNickname.trim().length > 0 &&
+    debouncedNickname.length <= MAX_NICKNAME_LENGTH &&
     debouncedNickname !== user?.nickname;
 
   const { data: nicknameData, isFetching } = useCheckNicknameQuery(
@@ -42,11 +46,20 @@ const NicknameField = () => {
     !isFetching &&
     isNicknameCheckEnabled &&
     debouncedNickname === nicknameValue &&
+    nicknameValue.length <= MAX_NICKNAME_LENGTH &&
     nicknameData?.available === true;
 
   useEffect(() => {
     if (!nicknameValue || debouncedNickname === user?.nickname) {
       clearErrors("nickname");
+      return;
+    }
+
+    if (nicknameValue.length > MAX_NICKNAME_LENGTH) {
+      setError("nickname", {
+        type: "manual",
+        message: NICKNAME_MAX_LENGTH_MESSAGE,
+      });
       return;
     }
 
@@ -102,7 +115,7 @@ const NicknameField = () => {
       required
       value={nicknameValue}
       placeholder="1 ~ 20자 이내, 특수문자 불가"
-      maxLength={20}
+      maxLength={MAX_NICKNAME_LENGTH}
       error={
         (error?.message as string) ||
         (!isFetching && nicknameData?.available === false

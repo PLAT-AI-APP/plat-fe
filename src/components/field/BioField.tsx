@@ -29,8 +29,8 @@ const BioField = <T extends FieldValues>({
       placeholder="소개글을 작성해주세요."
       maxLine={2}
       minLine={2}
-      maxLength={50}
-      error={error?.message as string}
+      maxLength={100}
+      error={error ? "" : undefined}
     />
   );
 };
