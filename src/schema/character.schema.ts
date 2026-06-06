@@ -6,20 +6,20 @@ export const characterCreateSchema = z.object({
   title: z
     .string()
     .min(1, "제목을 입력해주세요.")
-    .max(20, "제목은 최대 20자까지 입력 가능합니다."),
+    .max(20, "제목은 최대 20자까지 입력 가능해요"),
   name: z
     .string()
     .min(1, "캐릭터 이름을 입력해주세요.")
-    .max(20, "캐릭터 이름은 최대 20자까지 입력 가능합니다."),
+    .max(20, "캐릭터 이름은 최대 20자까지 입력 가능해요"),
   characterIntroduce: z
     .string()
     .min(1, "캐릭터 소개를 입력해주세요.")
-    .max(30, "캐릭터 소개는 최대 30자까지 입력 가능합니다."),
+    .max(30, "캐릭터 소개는 최대 30자까지 입력 가능해요"),
 
   characterDetailSetting: z
     .string()
     .min(1, "캐릭터 상세 설정을 입력해주세요.")
-    .max(2000, "상세 설정은 최대 2000자까지 입력 가능합니다."),
+    .max(2000, "상세 설정은 최대 2000자까지 입력 가능해요"),
 
   asset: z
     .array(
@@ -29,11 +29,11 @@ export const characterCreateSchema = z.object({
         assetName: z
           .string()
           .min(1, "에셋 이름을 입력해주세요.")
-          .max(15, "에셋 이름은 최대 15자까지 입력 가능합니다."),
+          .max(15, "에셋 이름은 최대 15자까지 입력 가능해요"),
         assetSituation: z
           .string()
           .min(1, "에셋 상황을 입력해주세요.")
-          .max(50, "상황 설명은 최대 50자까지 입력 가능합니다."),
+          .max(50, "상황 설명은 최대 50자까지 입력 가능해요"),
       }),
     )
     .max(50, "에셋은 최대 50개까지만 등록 가능합니다.")
@@ -47,7 +47,10 @@ export const characterCreateSchema = z.object({
           z.object({
             id: z.string(),
             type: z.enum(["chat", "action", "asset"]),
-            value: z.string().min(1, "내용을 입력해주세요.").max(1500),
+            value: z
+              .string()
+              .min(1, "내용을 입력해주세요.")
+              .max(1500, "내용은 최대 1500자까지 입력 가능해요"),
           }),
         ),
       }),
@@ -58,7 +61,7 @@ export const characterCreateSchema = z.object({
   characterDescription: z
     .string()
     .min(1, "캐릭터 설명을 입력해주세요.")
-    .max(1000, "캐릭터 설명은 최대 1000자까지 입력 가능합니다."),
+    .max(1000, "캐릭터 설명은 최대 1000자까지 입력 가능해요"),
 
   tendency: z.string().min(1, "성향을 선택해주세요."),
   category: z.string().min(1, "카테고리를 선택해주세요."),

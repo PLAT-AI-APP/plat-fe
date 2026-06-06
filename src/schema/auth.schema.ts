@@ -66,7 +66,7 @@ export const authFormSchema = z
     nickname: z
       .string()
       .min(1, "닉네임을 입력해주세요.")
-      .max(20, "20자 이내의 닉네임을 사용해요")
+      .max(20, "닉네임은 최대 20자까지 입력 가능해요")
       .regex(NICKNAME_REGEX, "특수문자는 사용할 수 없어요"),
 
     email: createEmailSchema(),
