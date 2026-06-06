@@ -2,7 +2,7 @@
 
 import { ArrowDown, ArrowRight, ArrowUp } from "@/icons";
 import { cn } from "@/lib/utils";
-import React, { forwardRef, useState } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
 import { SmartInputProps } from "./types";
 import { useAutoResize, useLeftPadding } from "./hooks";
 import {
@@ -51,9 +51,18 @@ const SmartInput = forwardRef<
   const isModal = type === "modal";
   const isInput = type === "input" || !type;
   const [isFocused, setIsFocused] = useState(false);
+  const [displayValue, setDisplayValue] = useState(() =>
+    String(value ?? ""),
+  );
 
   const { textareaRef, adjustHeight } = useAutoResize(value, isTextarea);
   const { iconRef, paddingLeft } = useLeftPadding(leftElement);
+
+  useEffect(() => {
+    if (value !== undefined) {
+      setDisplayValue(String(value ?? ""));
+    }
+  }, [value]);
 
   // Merge external ref with internal textareaRef
   const handleTextareaRef = (node: HTMLTextAreaElement) => {
@@ -66,11 +75,7 @@ const SmartInput = forwardRef<
   const handleValueChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
   ) => {
-    // maxLength 속성이 존재할 때, 브라우저 버그로 한 글자 더 들어온 경우 강제로 잘라냅니다.
-    if (maxLength && e.target.value.length > maxLength) {
-      e.target.value = e.target.value.slice(0, maxLength);
-    }
-
+    setDisplayValue(e.target.value);
     onChange?.(e);
     if (isTextarea) adjustHeight();
   };
@@ -90,7 +95,13 @@ const SmartInput = forwardRef<
   };
 
   const LINE_HEIGHT = 20;
-  const currentLength = String(value || "").length;
+  const currentLength = displayValue.length;
+  const isLengthExceeded =
+    typeof maxLength === "number" && currentLength > maxLength;
+  const hasError = error !== undefined && error !== null;
+  const errorMessage =
+    typeof error === "string" ? error : error?.message;
+  const hasErrorMessage = Boolean(errorMessage);
 
   const handleFocus = (
     e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -134,8 +145,9 @@ const SmartInput = forwardRef<
                 "relative flex rounded-xl bg-bg-darkest px-4 py-3 pb-7.25",
                 isBorder && "border border-border-main",
                 isFocused && "border-brand-dark bg-brand-opacity-3",
-                error && "border-font-accents",
-                isFocused && error && "border-brand-dark",
+                hasError && "border-font-accents",
+                isFocused && hasError && "border-brand-dark",
+                isLengthExceeded && "border-font-error",
                 inputBoxClassName,
               )}
             >
@@ -155,12 +167,12 @@ const SmartInput = forwardRef<
                 onChange={handleValueChange}
                 onFocus={handleFocus}
                 onBlur={handleBlur}
-                maxLength={maxLength}
               />
               <CharacterCounter
                 currentLength={currentLength}
                 maxLength={maxLength}
                 isTextarea
+                isError={isLengthExceeded}
               />
             </div>
           )}
@@ -177,15 +189,15 @@ const SmartInput = forwardRef<
                 rightElement && "pr-11",
                 inputClassName,
                 isFocused && "border-brand-dark bg-brand-opacity-3",
-                error && "border-font-accents",
-                isFocused && error && "border-brand-dark",
+                hasError && "border-font-accents",
+                isFocused && hasError && "border-brand-dark",
+                isLengthExceeded && "border-font-error",
               )}
               placeholder={placeholder}
               value={value}
               onChange={handleValueChange}
               onFocus={handleFocus}
               onBlur={handleBlur}
-              maxLength={maxLength}
             />
           )}
 
@@ -197,7 +209,7 @@ const SmartInput = forwardRef<
               style={{ paddingLeft: `${paddingLeft}px` }}
               className={cn(
                 "relative body-4 px-4 py-3 flex items-center justify-between rounded-xl border border-border-main bg-bg-darkest cursor-pointer",
-                error && "border-font-accents",
+                hasError && "border-font-accents",
                 inputBoxClassName,
               )}
             >
@@ -213,6 +225,7 @@ const SmartInput = forwardRef<
             <CharacterCounter
               currentLength={currentLength}
               maxLength={maxLength}
+              isError={isLengthExceeded}
             />
           )}
 
@@ -223,9 +236,9 @@ const SmartInput = forwardRef<
           )}
         </div>
 
-        {error ? (
+        {hasErrorMessage ? (
           <ErrorMessage error={error} />
-        ) : (
+        ) : hasError || isLengthExceeded ? null : (
           <HelperMessage message={helperMessage} type={helperMessageType} />
         )}
       </div>
