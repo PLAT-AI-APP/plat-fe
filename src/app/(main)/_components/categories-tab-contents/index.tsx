@@ -1,12 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import CharacterShowcase from "../CharacterShowcase";
 import SearchResultSort from "./_components/SearchResultSort";
-import TagSidebar, {
-  INITIAL_SELECTED_TAGS,
-} from "./_components/tag-sidebar";
+import TagSidebar, { INITIAL_SELECTED_TAGS } from "./_components/tag-sidebar";
+import CharacterCreatePrompt from "./_components/CharacterCreatePrompt";
 
 export const DUMMY_CHARACTERS = [
   {
@@ -56,7 +56,8 @@ const CategoriesTabContents = () => {
 
   return (
     <>
-      <article className="flex grow w-full mt-7 bg-bg-darker">
+      <article className="flex flex-col gap-18 w-full mt-7 bg-bg-darker">
+        {/* 검색결과 */}
         <div className="flex-1 flex flex-col gap-7 justify-start">
           <header className="flex items-center justify-between heading-3R">
             <p>
@@ -74,6 +75,26 @@ const CategoriesTabContents = () => {
             selectedTags={selectedTags}
           />
         </div>
+
+        {/* 플랫에서 추천하는 캐릭터 */}
+        <div className="flex-1 flex flex-col gap-4.5 justify-start">
+          <header className="flex flex-col heading-3">
+            <p>플랫에서 추천하는 캐릭터</p>
+
+            <p className="body-2 text-font-2">
+              태그에 맞지는 않지만, 취향에 잘 맞을지도 몰라요
+            </p>
+          </header>
+
+          <CharacterShowcase
+            charArray={DUMMY_CHARACTERS}
+            cardSize="S"
+            columnGap={16}
+            rowGap={28}
+            selectedTags={selectedTags}
+          />
+        </div>
+        <CharacterCreatePrompt />
       </article>
 
       {sidebarRoot &&

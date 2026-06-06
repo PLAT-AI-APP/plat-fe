@@ -353,8 +353,37 @@ const TagSidebar = ({
         </label>
       </div>
 
+      {/* 선택 태그 영역: 현재 선택된 태그를 모아 보여주고 개별/전체 해제가 가능합니다. */}
+      <section className="border-y border-border-main px-5 pb-8 pt-6">
+        <header className="mb-3 flex h-[21px] items-center justify-between">
+          <h2 className="title-6 text-font-2">선택 태그</h2>
+          <button
+            type="button"
+            onClick={() => onSelectedTagsChange([])}
+            className="body-6 text-font-2 underline-offset-2 hover:underline"
+          >
+            전체 해제
+          </button>
+        </header>
+
+        <div className="flex flex-wrap content-start gap-2">
+          {selectedTags.map((tag) => (
+            <TagPill
+              key={tag}
+              label={tag}
+              size="lg"
+              isSelected
+              onRemove={() => toggleTag(tag)}
+            />
+          ))}
+        </div>
+      </section>
+
       {/* 태그 폴더 영역: 취향 맞춤 카드와 일반 태그 폴더가 같은 접힘 UI를 공유합니다. */}
-      <div id="tag-sidebar-content" className="flex w-full flex-col gap-6 px-5">
+      <div
+        id="tag-sidebar-content"
+        className="flex w-full flex-col gap-6 px-5 py-4"
+      >
         <TagFolder
           title="취향 맞춤 태그"
           // titleSuffix={<AiLineIcon className="size-3" />}
@@ -370,11 +399,11 @@ const TagSidebar = ({
                   key={item.title}
                   type="button"
                   onClick={() => selectRecommendation(item.tags)}
-                  className="flex h-[73px] w-full items-center justify-between rounded-xl bg-bg-darkest p-3 text-left transition-colors hover:bg-card"
+                  className="group flex w-full items-center justify-between rounded-xl bg-bg-darkest p-3 text-left transition-colors hover:bg-brand/10"
                 >
                   <div className="min-w-0">
                     <div className="flex items-center gap-1">
-                      <AiLineIcon className="size-5 shrink-0" />
+                      <AiLineIcon className="size-5 shrink-0 group-hover:text-brand-dark" />
                       <strong className="title-6 truncate text-font-1">
                         {item.title}
                       </strong>
@@ -386,12 +415,12 @@ const TagSidebar = ({
                     </div>
                   </div>
 
-                  <Check
+                  {/* <Check
                     className={cn(
                       "size-4 shrink-0 transition-colors",
                       isSelected ? "text-brand" : "text-border-main",
                     )}
-                  />
+                  /> */}
                 </button>
               );
             })}
@@ -408,32 +437,6 @@ const TagSidebar = ({
           />
         ))}
       </div>
-
-      {/* 선택 태그 영역: 현재 선택된 태그를 모아 보여주고 개별/전체 해제가 가능합니다. */}
-      <section className="mt-6 border-t border-border-main px-5 pb-6 pt-6">
-        <header className="mb-3 flex h-[21px] items-center justify-between">
-          <h2 className="title-6 text-font-2">선택 태그</h2>
-          <button
-            type="button"
-            onClick={() => onSelectedTagsChange([])}
-            className="body-6 text-font-2 underline-offset-2 hover:underline"
-          >
-            전체 해제
-          </button>
-        </header>
-
-        <div className="flex min-h-[115px] flex-wrap content-start gap-2">
-          {selectedTags.map((tag) => (
-            <TagPill
-              key={tag}
-              label={tag}
-              size="lg"
-              isSelected
-              onRemove={() => toggleTag(tag)}
-            />
-          ))}
-        </div>
-      </section>
     </aside>
   );
 };

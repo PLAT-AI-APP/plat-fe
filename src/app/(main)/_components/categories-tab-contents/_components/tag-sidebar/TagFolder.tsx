@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowDown } from "@/icons";
+import { ArrowDown, Close } from "@/icons";
 import { cn } from "@/lib/utils";
 import React, { useMemo, useState } from "react";
 
@@ -25,11 +25,12 @@ export const TagPill = ({
   const className = cn(
     "inline-flex shrink-0 items-center justify-center rounded-md border font-medium transition-colors",
     "border-transparent bg-card text-font-2",
+    "group-hover:text-brand-dark",
     isInteractive && "hover:text-font-1",
     isSelected && "border-brand bg-brand-opacity text-brand",
-    size === "sm" && "h-5 px-1.5 text-[10px]",
-    size === "md" && "h-[29px] px-2 body-6",
-    size === "lg" && "h-[33px] px-2.5 body-6",
+    size === "sm" && "h-5 body-5 bg-transparent",
+    size === "md" && "h-[29px] px-2 py-1 body-4",
+    size === "lg" && "h-[33px] pl-3 py-1.5 pr-2 title-5 border-none",
     isInteractive ? "cursor-pointer" : "cursor-default",
   );
 
@@ -41,7 +42,7 @@ export const TagPill = ({
         <span>#</span>
         <span>{label}</span>
       </span>
-      {onRemove && <span className="ml-1 text-font-2">x</span>}
+      {onRemove && <Close className="size-3 ml-1 text-font-2" />}
     </>
   );
 
@@ -50,11 +51,7 @@ export const TagPill = ({
   }
 
   return (
-    <button
-      type="button"
-      onClick={onRemove || onClick}
-      className={className}
-    >
+    <button type="button" onClick={onRemove || onClick} className={className}>
       {content}
     </button>
   );
@@ -79,6 +76,14 @@ export const TagFolder = ({
 }: TagFolderProps) => {
   // 각 폴더는 독립적으로 열림/닫힘 상태를 가집니다.
   const [isOpen, setIsOpen] = useState(true);
+
+  const selectedTagCount = useMemo(() => {
+    if (!tags) return 0;
+
+    // 접힌 상태의 카운트는 전체 선택 개수가 아니라 이 폴더에 속한 선택 태그 개수만 보여줍니다.
+    return tags.filter((tag) => selectedTags.includes(tag)).length;
+  }, [selectedTags, tags]);
+
   const orderedTags = useMemo(() => {
     if (!tags) return [];
 
@@ -97,14 +102,17 @@ export const TagFolder = ({
         onClick={() => setIsOpen((prev) => !prev)}
         className="flex h-[21px] w-full items-center justify-between text-left"
       >
-        <span className="title-6 flex items-center gap-1.5 text-font-2">
+        <span className="body-4 flex items-center gap-1.5 text-font-2">
           {title}
           {titleSuffix}
+          {!isOpen && selectedTagCount > 0 && (
+            <span className="text-brand-dark">+{selectedTagCount}</span>
+          )}
         </span>
         <ArrowDown
           className={cn(
             "size-4 text-font-2 transition-transform duration-300 ease-out",
-            !isOpen && "-rotate-90",
+            !isOpen && "-rotate-180",
           )}
         />
       </button>
