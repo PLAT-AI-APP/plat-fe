@@ -7,6 +7,9 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { useCheckNicknameQuery } from "@/api/auth/checkNickname";
 import { useUserStore } from "@/store/useUserStore";
 
+const NICKNAME_UNAVAILABLE_MESSAGE =
+  "중복되거나, 특수문자는 사용할 수 없어요";
+
 const NicknameField = () => {
   const user = useUserStore((state) => state.user);
   const {
@@ -66,7 +69,7 @@ const NicknameField = () => {
     if (nicknameData?.available === false) {
       setError("nickname", {
         type: "manual",
-        message: "이미 사용중인 닉네임입니다.",
+        message: NICKNAME_UNAVAILABLE_MESSAGE,
       });
       return;
     }
@@ -103,7 +106,7 @@ const NicknameField = () => {
       error={
         (error?.message as string) ||
         (!isFetching && nicknameData?.available === false
-          ? "이미 사용중인 닉네임입니다."
+          ? NICKNAME_UNAVAILABLE_MESSAGE
           : undefined)
       }
       helperMessage={
