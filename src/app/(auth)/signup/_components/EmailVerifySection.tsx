@@ -187,7 +187,8 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
               "mt-[29px] px-4 py-3 body-4 w-fit max-h-11 text-nowrap flex items-center justify-center gap-2",
               isEmailVerified &&
                 "border border-border-main bg-bg-darker text-font-2",
-              isOtpSent && "border border-brand-dark bg-brand-opacity-3",
+              isOtpSent &&
+                "border border-brand-dark bg-brand/10 text-brand-dark",
             )}
             onClick={handleEmailBtnClick}
           >

@@ -107,7 +107,7 @@ const NicknameField = () => {
           : undefined)
       }
       helperMessage={
-        isAvailableNickname ? "사용 가능한 닉네임입니다." : undefined
+        isAvailableNickname ? "멋진 닉네임이에요" : undefined
       }
       helperMessageType="success"
     />
