@@ -18,6 +18,7 @@ const SmartInput = forwardRef<
 >((props, ref) => {
   const {
     label,
+    showOptionalLabel = false,
     placeholder,
     maxLength,
     required = false,
@@ -122,6 +123,7 @@ const SmartInput = forwardRef<
       <LabelSection
         label={label}
         required={required}
+        showOptionalLabel={showOptionalLabel}
         description={description}
         labelFontSize={labelFontSize}
         descFontSize={descFontSize}

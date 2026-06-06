@@ -1,7 +1,11 @@
 import React from "react";
 import { useModalStore } from "@/store/useModalStore";
+import { cn } from "@/lib/utils";
 
-const PersonaFooter = () => {
+interface PersonaFooterProps {
+  isMaxPersona: boolean;
+}
+const PersonaFooter = ({ isMaxPersona }: PersonaFooterProps) => {
   const { openModal } = useModalStore();
 
   return (
@@ -11,9 +15,12 @@ const PersonaFooter = () => {
       </p>
 
       <button
-        onClick={() => openModal("PERSONA_ADD")}
+        onClick={() => !isMaxPersona && openModal("PERSONA_ADD")}
         type="button"
-        className="mt-3 py-3 w-full title-3 rounded-xl bg-bg-darkest border border-border-main hover:bg-btn-hover transition-colors"
+        className={cn(
+          "mt-3 py-3 w-full title-3 rounded-xl bg-brand/10 text-brand-dark",
+          isMaxPersona && "bg-card text-font-2",
+        )}
       >
         페르소나 추가
       </button>

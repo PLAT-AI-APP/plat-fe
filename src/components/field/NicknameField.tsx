@@ -11,7 +11,7 @@ const NICKNAME_UNAVAILABLE_MESSAGE =
   "이미 사용 중인 닉네임이에요";
 const MAX_NICKNAME_LENGTH = 20;
 const NICKNAME_MAX_LENGTH_MESSAGE =
-  "20자 이내의 닉네임을 사용해요";
+  "닉네임은 최대 20자까지 입력 가능해요";
 
 const NicknameField = () => {
   const user = useUserStore((state) => state.user);

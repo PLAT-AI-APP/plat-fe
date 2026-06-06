@@ -122,6 +122,7 @@ const PersonaAddModal = ({
             value={info} // 글자 수 표시용
             error={errors.info}
             {...register("info")}
+            showOptionalLabel
           />
         </div>
 
@@ -129,8 +130,10 @@ const PersonaAddModal = ({
           <button
             type="submit"
             disabled={!isValid} // 필수값이 없거나 에러 시 비활성화
-            className={`mt-3 py-3 w-full title-3 rounded-xl bg-bg-darkest border border-border-main transition-colors ${
-              isValid ? "hover:bg-btn-hover" : "text-font-disabled cursor-not-allowed"
+            className={`mt-3 py-3 w-full title-3 rounded-xl transition-colors ${
+              !isValid
+                ? "bg-card text-font-disabled"
+                : "text-brand-dark bg-brand/10 cursor-not-allowed"
             }`}
           >
             페르소나 {isEditMode ? "수정" : "추가"}

@@ -28,7 +28,9 @@ const PersonaModal = ({ onClose }: PersonaModalProps) => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const handleCurrentPersona = useCallback((personaId: string) => {
-    setSelectedId(personaId);
+    setSelectedId((prevSelectedId) =>
+      prevSelectedId === personaId ? null : personaId,
+    );
   }, []);
 
   // 실제 '로딩 중' 판단: 요청을 아직 안 보냈거나(!shouldFetch), 쿼리가 로딩 중일 때
@@ -51,12 +53,15 @@ const PersonaModal = ({ onClose }: PersonaModalProps) => {
                 key={persona.personaId}
                 persona={persona}
                 isActive={selectedId === persona.personaId}
+                hasSelectedPersona={selectedId !== null}
                 onSelect={handleCurrentPersona}
               />
             ))}
           </ul>
         )}
-        {!isDataLoading && <PersonaFooter />}
+        {!isDataLoading && (
+          <PersonaFooter isMaxPersona={(personas?.length ?? 0) >= 5} />
+        )}
       </div>
     </ModalLayout>
   );

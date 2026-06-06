@@ -5,12 +5,14 @@ import { cn } from "@/lib/utils";
 export const LabelSection = ({
   label,
   required,
+  showOptionalLabel,
   description,
   labelFontSize,
   descFontSize,
 }: {
   label?: string;
   required?: boolean;
+  showOptionalLabel?: boolean;
   description?: string;
   labelFontSize?: "title-3" | "title-5";
   descFontSize?: "body-4" | "body-5" | "body-6";
@@ -26,6 +28,9 @@ export const LabelSection = ({
       >
         <span>{label}</span>
         {required && <span className="text-font-accents">*</span>}
+        {showOptionalLabel && !required && (
+          <span className="text-font-disabled">(선택)</span>
+        )}
       </div>
       {description && (
         <p
@@ -66,18 +71,12 @@ export const CharacterCounter = ({
   );
 };
 
-export const ErrorMessage = ({
-  error,
-}: {
-  error?: FieldError | string;
-}) => {
+export const ErrorMessage = ({ error }: { error?: FieldError | string }) => {
   if (!error) return null;
   const message = typeof error === "string" ? error : error?.message;
   if (!message) return null;
   return (
-    <span
-      className={cn("pt-2 pl-2 body-6 block", "text-font-error")}
-    >
+    <span className={cn("pt-2 pl-2 body-6 block", "text-font-error")}>
       {message}
     </span>
   );

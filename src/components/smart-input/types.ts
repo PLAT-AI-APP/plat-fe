@@ -5,6 +5,7 @@ export interface SmartInputProps extends React.InputHTMLAttributes<
   HTMLInputElement | HTMLTextAreaElement
 > {
   label?: string;
+  showOptionalLabel?: boolean;
   maxLength?: number;
   required?: boolean;
   type?: "input" | "textarea" | "modal";

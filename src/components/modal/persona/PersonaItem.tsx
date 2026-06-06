@@ -1,75 +1,84 @@
-import React, { useRef } from "react";
+import React from "react";
 import { cn } from "@/lib/utils";
-import CheckCircle from "@/icons/CheckCircle";
-import { Dots } from "@/icons";
+import { Pen } from "@/icons";
 import { Persona } from "@/type/persona";
-import { useDeletePersonaMutation } from "@/api/persona/deletePersona";
-import PersonaMenuPopover from "@/components/popover/PersonaMenuPopover";
-import useToggle from "@/hooks/useToggle";
 import { useModalStore } from "@/store/useModalStore";
 
 interface PersonaItemProps {
   persona: Persona;
   isActive: boolean;
+  hasSelectedPersona: boolean;
   onSelect: (personaId: string) => void;
 }
 
-const PersonaItem = ({ persona, isActive, onSelect }: PersonaItemProps) => {
+const PersonaItem = ({
+  persona,
+  isActive,
+  hasSelectedPersona,
+  onSelect,
+}: PersonaItemProps) => {
   const { name, description, isDefault } = persona;
-
-  const { mutate: deletePersona } = useDeletePersonaMutation();
-
-  const triggerRef = useRef(null);
-
-  const { isOpen, close, toggle } = useToggle();
-
   const { openModal } = useModalStore();
+
+  const isDimmed = hasSelectedPersona && !isActive;
+
   return (
     <li
       onClick={() => onSelect(persona.personaId)}
       className={cn(
-        "cursor-pointer w-full flex flex-col rounded-2xl gap-2 px-4 py-3 bg-card hover:bg-card-hover transition-colors",
-        isActive && "border border-font-1",
+        "group flex w-full cursor-pointer flex-col gap-2 overflow-hidden rounded-2xl border px-4 py-3 transition-colors",
+        isActive
+          ? "border-brand-dark bg-brand-opacity"
+          : "border-transparent bg-card hover:bg-brand-opacity",
+        isDimmed && "bg-font-4",
       )}
     >
-      <div className="flex justify-between">
-        <div className="flex items-center gap-3">
-          {isDefault && (
-            <span className="caption-2 px-1.5 py-0.75 bg-brand-opacity rounded-lg text-brand border border-brand">
-              기본
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex min-w-0 flex-1 flex-col gap-2">
+          <div className="flex items-center gap-2">
+            <span
+              className={cn(
+                "title-3 truncate transition-colors",
+                isActive ? "text-brand-dark" : "text-font-1",
+              )}
+            >
+              {name}
             </span>
+            {isDefault && (
+              <span
+                className={cn(
+                  "caption-2 shrink-0 rounded-lg px-1.5 py-0.75 text-brand",
+                  isDimmed ? "bg-card" : "bg-font-4",
+                )}
+              >
+                기본
+              </span>
+            )}
+          </div>
+          {description && (
+            <p className="body-4 line-clamp-1 min-w-full whitespace-nowrap text-font-2">
+              {description}
+            </p>
           )}
-          <span className="title-3">{name}</span>
-          {isActive && <CheckCircle className="-ml-2" />}
         </div>
-        <div ref={triggerRef} className="relative">
-          <Dots
-            className="w-6 h-6 text-font-2 cursor-pointer hover:text-font-1"
-            onClick={toggle}
-          />
 
-          {isOpen && (
-            <PersonaMenuPopover
-              onClose={close}
-              triggerRef={triggerRef}
-              onDelete={() => deletePersona(persona.personaId)}
-              onEdit={() =>
-                openModal("PERSONA_ADD", {
-                  isEditMode: true,
-                  personaId: persona.personaId,
-                  name,
-                  description,
-                })
-              }
-            />
-          )}
-        </div>
+        <button
+          type="button"
+          aria-label={`${name} 페르소나 수정`}
+          className="shrink-0 text-font-2 transition-colors hover:text-brand-dark"
+          onClick={(event) => {
+            event.stopPropagation();
+            openModal("PERSONA_ADD", {
+              isEditMode: true,
+              personaId: persona.personaId,
+              name,
+              description,
+            });
+          }}
+        >
+          <Pen className="size-[18px]" aria-hidden="true" />
+        </button>
       </div>
-      {description && (
-        <p className="line-clamp-1 whitespace-break-spaces body-4 text-font-2">
-          {description}
-        </p>
-      )}
     </li>
   );
 };
