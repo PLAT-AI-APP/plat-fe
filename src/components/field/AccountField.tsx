@@ -25,6 +25,7 @@ const AccountField = () => {
       disabled
       value={email}
       leftElement={PROVIDER_LOGOS[provider]}
+      labelFontSize="title-5"
     />
   );
 };

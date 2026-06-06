@@ -31,6 +31,7 @@ const BioField = <T extends FieldValues>({
       minLine={2}
       maxLength={100}
       error={error ? "" : undefined}
+      labelFontSize="title-5"
     />
   );
 };

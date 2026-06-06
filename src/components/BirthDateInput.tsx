@@ -71,7 +71,7 @@ export const BirthDateInput = React.forwardRef<
       id="birthdate-input-container"
       className={cn("flex flex-col flex-1 gap-2 w-full", className)}
     >
-      <header className="flex items-center gap-1 font-medium text-sm text-white">
+      <header className="flex items-center gap-1 title-5 text-white">
         <span>생년월일</span>
         {/* <span className="text-font-accents">*</span> */}
       </header>
