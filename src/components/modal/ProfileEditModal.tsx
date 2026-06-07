@@ -3,7 +3,6 @@
 import React from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 
 import { ModalLayout } from "../ModalLayout";
 import { Close } from "@/icons";
@@ -25,7 +24,7 @@ import GenderField from "../field/GenderField";
 import AccountField from "../field/AccountField";
 
 import { ProfileEditModalProps } from "@/type/modal";
-// import { useModalStore } from "@/store/useModalStore";
+import { useModalStore } from "@/store/useModalStore";
 
 const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
   const {
@@ -35,15 +34,14 @@ const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
   } = useFormContext<ProfileEditFormType>();
   const { mutate: updateMyInfo } = useUpdateMyInfoMutation();
   const { setFieldErrors } = useFormServerError<ProfileEditFormType>();
-  const router = useRouter();
   // const [isPhoneModal, setIsPhoneModal] = useState(false);
-  // const openModal = useModalStore((state) => state.openModal);
+  const openModal = useModalStore((state) => state.openModal);
 
   const birth = watch("birth");
 
-  // const handleFindPasswordClick = () => {
-  //   openModal("FIND_PASSWORD");
-  // };
+  const handleFindPasswordClick = () => {
+    openModal("FIND_PASSWORD");
+  };
 
   const onSave = (data: ProfileEditFormType) => {
     updateMyInfo(
@@ -90,22 +88,12 @@ const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
         </div>
 
         <footer className="flex gap-9 justify-end mt-4">
-          {/* <button
+          <button
             type="button"
             onClick={handleFindPasswordClick}
-            className="body-4 text-font-2 w-fit"
-          >
-            비밀번호 변경
-          </button> */}
-          <button
-            onClick={() => {
-              onClose();
-              router.push("/withdrawal");
-            }}
-            type="button"
             className="body-4 text-font-2 w-fit underline"
           >
-            회원탈퇴
+            비밀번호 변경
           </button>
         </footer>
 
