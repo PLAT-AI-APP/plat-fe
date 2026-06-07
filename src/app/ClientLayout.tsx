@@ -21,6 +21,7 @@ const HIDE_HEADER_PATHS = ["/character-creat"];
 // 사이드바를 기본으로 접어둘 경로 리스트
 const FOLD_SIDEBAR_PATHS = ["/chatting-room"];
 const FOLD_SIDEBAR_FULL_PATHS = ["/?tab=categories"];
+const SKIP_AUTH_ALERT_ONCE_KEY = "skip-auth-alert-once";
 const PROTECTED_ROUTES = [
   "/my-chatting",
   "/chatting-room",
@@ -28,6 +29,7 @@ const PROTECTED_ROUTES = [
   "/studio",
   "/usage-history",
   "/token-charge",
+  "/withdrawal",
 ];
 
 const isProtectedPath = (path: string) =>
@@ -193,6 +195,7 @@ export default function ClientLayout({
       "/studio",
       "/usage-history",
       "/token-charge",
+      "/withdrawal",
     ];
 
     // 현재 접속한 pathname이 보호 경로 중 하나로 시작하는지 검사
@@ -204,6 +207,15 @@ export default function ClientLayout({
     if (isAuthChecking) return;
 
     if (isProtectedRoute && !isLoggedIn) {
+      const shouldSkipAuthAlert =
+        sessionStorage.getItem(SKIP_AUTH_ALERT_ONCE_KEY) === "true";
+
+      if (shouldSkipAuthAlert) {
+        sessionStorage.removeItem(SKIP_AUTH_ALERT_ONCE_KEY);
+        router.replace("/");
+        return;
+      }
+
       alert("로그인이 필요한 서비스입니다.");
       router.replace("/");
     }

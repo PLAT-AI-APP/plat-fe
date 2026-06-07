@@ -3,6 +3,7 @@
 import React from "react";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 
 import { ModalLayout } from "../ModalLayout";
 import { Close } from "@/icons";
@@ -24,7 +25,6 @@ import GenderField from "../field/GenderField";
 import AccountField from "../field/AccountField";
 
 import { ProfileEditModalProps } from "@/type/modal";
-import { useDeleteUserMutation } from "@/api/user/deleteUser";
 // import { useModalStore } from "@/store/useModalStore";
 
 const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
@@ -35,9 +35,8 @@ const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
   } = useFormContext<ProfileEditFormType>();
   const { mutate: updateMyInfo } = useUpdateMyInfoMutation();
   const { setFieldErrors } = useFormServerError<ProfileEditFormType>();
+  const router = useRouter();
   // const [isPhoneModal, setIsPhoneModal] = useState(false);
-
-  const { mutate: deleteUser } = useDeleteUserMutation();
   // const openModal = useModalStore((state) => state.openModal);
 
   const birth = watch("birth");
@@ -99,7 +98,10 @@ const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
             비밀번호 변경
           </button> */}
           <button
-            onClick={() => deleteUser}
+            onClick={() => {
+              onClose();
+              router.push("/withdrawal");
+            }}
             type="button"
             className="body-4 text-font-2 w-fit underline"
           >

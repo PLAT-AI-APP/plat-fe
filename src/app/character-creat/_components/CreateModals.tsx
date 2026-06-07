@@ -46,6 +46,7 @@ const CreateModals = ({
           }
           description="저장하지 않은 데이터는 모두 사라집니다."
           onClose={closeModal}
+          cancelFn={closeModal}
         />
       )}
     </>
