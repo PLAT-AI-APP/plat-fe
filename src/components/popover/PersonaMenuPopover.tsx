@@ -1,5 +1,5 @@
 import React from "react";
-import { Edit, Trash } from "@/icons";
+import { Pen, Trash } from "@/icons";
 import { PopoverLayout } from "./layout";
 
 interface PersonaMenuPopoverProps {
@@ -21,22 +21,26 @@ const PersonaMenuPopover = ({
     onClose();
   };
   return (
-    <PopoverLayout onClose={onClose} triggerRef={triggerRef}>
+    <PopoverLayout
+      onClose={onClose}
+      triggerRef={triggerRef}
+      className="border-none left-1/2 right-auto top-[calc(100%+12px)] w-28 -translate-x-1/2 rounded-xl bg-btn-selected px-1 py-2"
+    >
       <menu className="flex flex-col gap-1">
         <button
           onClick={() => handleAction(onEdit)}
           type="button"
-          className="flex items-center gap-2 text-left body-4 px-2.5 py-2 rounded-lg hover:bg-btn-hover"
+          className="flex items-center gap-2 text-left body-4 p-2 rounded-lg hover:bg-btn-hover"
         >
-          <Edit className="w-4 h-4" /> 수정
+          <Pen className="size-5 text-font-2" /> 수정하기
         </button>
         <button
           onClick={() => handleAction(onDelete)}
           type="button"
-          className="font-medium flex items-center gap-2 text-font-accents body-4 text-left px-2.5 py-2 rounded-lg hover:bg-btn-hover"
+          className="flex items-center gap-2 body-4 text-left p-2 rounded-lg hover:bg-btn-hover"
         >
-          <Trash className="w-4 h-4 text-font-accents" />
-          삭제
+          <Trash className="size-5 text-font-2" />
+          삭제하기
         </button>
       </menu>
     </PopoverLayout>
