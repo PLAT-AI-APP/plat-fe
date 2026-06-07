@@ -76,7 +76,7 @@ export const ErrorMessage = ({ error }: { error?: FieldError | string }) => {
   const message = typeof error === "string" ? error : error?.message;
   if (!message) return null;
   return (
-    <span className={cn("pt-2 pl-2 body-6 block", "text-font-error")}>
+    <span className={cn("pt-2 body-6 block", "text-font-error")}>
       {message}
     </span>
   );
@@ -93,10 +93,7 @@ export const HelperMessage = ({
 
   return (
     <span
-      className={cn(
-        "pt-2 pl-2 body-6 block",
-        type === "success" && "text-font-2",
-      )}
+      className={cn("pt-2 body-6 block", type === "success" && "text-font-2")}
     >
       {message}
     </span>
