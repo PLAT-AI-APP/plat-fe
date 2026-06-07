@@ -136,7 +136,7 @@ const PersonaAddModal = ({
                 : "text-brand-dark bg-brand/10 cursor-not-allowed"
             }`}
           >
-            페르소나 {isEditMode ? "수정" : "추가"}
+            {isEditMode ? "저장하기" : "추가하기"}
           </button>
         </footer>
       </form>
