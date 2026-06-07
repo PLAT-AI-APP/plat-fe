@@ -89,7 +89,7 @@ const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
           <AccountField />
         </div>
 
-        <footer className="flex gap-9 justify-end mt-9">
+        <footer className="flex gap-9 justify-end mt-4">
           {/* <button
             type="button"
             onClick={handleFindPasswordClick}
