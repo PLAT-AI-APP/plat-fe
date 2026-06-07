@@ -5,6 +5,7 @@ import axios, {
   AxiosError,
   AxiosResponse,
 } from "axios";
+import { toast } from "sonner";
 import { refreshAccessToken } from "./auth/postRefresh";
 
 /** 1. Axios 모듈 확장: _retry 속성 정의 */
@@ -129,8 +130,8 @@ const onResponseError = async (
       message: message || "알 수 없는 에러가 발생했습니다.",
     };
 
-    if (code === "ALERT") {
-      alert(formattedError.message);
+    if (code?.toUpperCase() === "ALERT") {
+      toast.error(formattedError.message);
     }
 
     return Promise.reject(formattedError);
