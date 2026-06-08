@@ -21,6 +21,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
   const isShowPw = useTogglePassword();
   const openModal = useModalStore((state) => state.openModal);
+  const allowNextNavigation = useModalStore(
+    (state) => state.allowNextNavigation,
+  );
 
   const {
     register,
@@ -74,6 +77,15 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
 
   const handleFindPasswordClick = () => {
     openModal("FIND_PASSWORD");
+  };
+
+  const handleSocialLoginClick = (provider: "kakao" | "google") => {
+    allowNextNavigation();
+    window.location.href = `${process.env.NEXT_PUBLIC_BASE_URI}/oauth2/authorization/${provider}`;
+  };
+
+  const handleSignupNavigationIntent = () => {
+    allowNextNavigation();
   };
 
   return (
@@ -162,17 +174,13 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
             id="link-kakao-login"
             icon={<ChatFill />}
             label="카카오톡으로 시작하기"
-            onClick={() =>
-              (window.location.href = `${process.env.NEXT_PUBLIC_BASE_URI}/oauth2/authorization/kakao`)
-            }
+            onClick={() => handleSocialLoginClick("kakao")}
           />
           <SocialLoginButton
             id="link-google-login"
             icon={<Google />}
             label="구글로 시작하기"
-            onClick={() =>
-              (window.location.href = `${process.env.NEXT_PUBLIC_BASE_URI}/oauth2/authorization/google`)
-            }
+            onClick={() => handleSocialLoginClick("google")}
           />
         </nav>
       </section>
@@ -186,6 +194,12 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
         <Link
           id="link-to-signup"
           href="/signup"
+          onPointerDown={handleSignupNavigationIntent}
+          onKeyDown={(event) => {
+            if (event.key === "Enter" || event.key === " ") {
+              handleSignupNavigationIntent();
+            }
+          }}
           onClick={onClose}
           className="title-5 text-brand hover:underline"
         >

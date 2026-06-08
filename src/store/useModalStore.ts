@@ -49,6 +49,7 @@ export interface ModalInstance<T extends keyof ModalTypeMap> {
 
 interface ModalState {
   modals: ModalInstance<keyof ModalTypeMap>[]; // 여러 타입의 모달이 섞인 배열
+  isNextNavigationAllowed: boolean;
 
   // Generic을 사용하여 type에 맞는 props만 넣을 수 있도록 제한
   openModal: <T extends keyof ModalTypeMap>(
@@ -56,12 +57,15 @@ interface ModalState {
     props?: Omit<ModalTypeMap[T], "onClose">,
   ) => void;
 
+  allowNextNavigation: () => void;
+  consumeNextNavigationAllowance: () => boolean;
   closeModal: () => void;
   clearModals: () => void;
 }
 
-export const useModalStore = create<ModalState>((set) => ({
+export const useModalStore = create<ModalState>((set, get) => ({
   modals: [],
+  isNextNavigationAllowed: false,
 
   openModal: (type, props) =>
     set((state) => {
@@ -97,6 +101,26 @@ export const useModalStore = create<ModalState>((set) => ({
         modals: [...state.modals, { type, props } as ModalInstanceUnion],
       };
     }),
+
+  allowNextNavigation: () => {
+    set({ isNextNavigationAllowed: true });
+
+    if (typeof window !== "undefined") {
+      window.setTimeout(() => {
+        set({ isNextNavigationAllowed: false });
+      }, 1000);
+    }
+  },
+
+  consumeNextNavigationAllowance: () => {
+    const isAllowed = get().isNextNavigationAllowed;
+
+    if (isAllowed) {
+      set({ isNextNavigationAllowed: false });
+    }
+
+    return isAllowed;
+  },
 
   closeModal: () =>
     set((state) => ({

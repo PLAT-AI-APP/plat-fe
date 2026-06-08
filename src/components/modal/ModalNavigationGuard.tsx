@@ -5,10 +5,20 @@ import { useModalStore } from "@/store/useModalStore";
 
 const ModalNavigationGuard = () => {
   const hasOpenModal = useModalStore((state) => state.modals.length > 0);
+  const consumeNextNavigationAllowance = useModalStore(
+    (state) => state.consumeNextNavigationAllowance,
+  );
 
   useNavigationGuard({
-    enabled: hasOpenModal,
-    confirm: () => false,
+    enabled: (params) => {
+      if (!hasOpenModal) return false;
+      if (params.type === "beforeunload") {
+        return !consumeNextNavigationAllowance();
+      }
+
+      return true;
+    },
+    confirm: () => consumeNextNavigationAllowance(),
   });
 
   return null;
