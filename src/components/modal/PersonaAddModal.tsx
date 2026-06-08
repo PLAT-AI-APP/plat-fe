@@ -73,7 +73,7 @@ const PersonaAddModal = ({
     <ModalLayout
       hasBackground
       onClose={onClose} // 모달 외부 클릭 시 닫기
-      className="w-screen max-w-100 h-fit whitespace-nowrap top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-5 bg-bg-dark border border-border-main rounded-3xl"
+      className="w-screen max-w-125 h-fit whitespace-nowrap top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-5 bg-bg-dark border border-border-main rounded-3xl"
     >
       <header className="pb-6">
         <div className="flex items-center justify-between">

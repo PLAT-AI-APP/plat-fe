@@ -24,7 +24,7 @@ const PersonaFooter = ({ isMaxPersona }: PersonaFooterProps) => {
           "hover:bg-brand/10 hover:text-brand-dark hover:border-none",
         )}
       >
-        <Plus className="size-4.5 text-font-2 group-hover:text-brand-dark" />
+        <Plus className="size-4.5 group-hover:text-brand-dark" />
         페르소나 추가
       </button>
     </footer>
