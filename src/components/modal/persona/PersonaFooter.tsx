@@ -21,7 +21,8 @@ const PersonaFooter = ({ isMaxPersona }: PersonaFooterProps) => {
         className={cn(
           "group flex items-center justify-center gap-2 mt-3 py-3 w-full h-12 title-3 rounded-xl bg-bg-dark border border-card-hover",
           isMaxPersona && "bg-card text-font-2",
-          "hover:bg-brand/10 hover:text-brand-dark hover:border-none",
+          !isMaxPersona &&
+            "hover:bg-brand/10 hover:text-brand-dark hover:border-none",
         )}
       >
         <Plus className="size-4.5 group-hover:text-brand-dark" />
