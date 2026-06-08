@@ -163,8 +163,8 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
             value={email}
             placeholder="example@gmail.com"
             inputClassName={cn(
-              "h-11 bg-black/20 rounded-lg px-4 py-3 text-sm text-font-1",
-              "placeholder:text-font-2/50 focus:border-brand transition-all",
+              "bg-black/20 px-4 py-3 text-font-1",
+              "focus:border-brand transition-all",
               errors.email && "border-font-accents focus:border-font-accents",
               isEmailVerified && "bg-card text-font-2",
             )}
@@ -184,12 +184,13 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
                     : "인증요청"
             }
             className={cn(
-              "mt-[29px] px-4 py-3 body-4 w-fit max-h-11 text-nowrap flex items-center justify-center gap-2",
+              "mt-[29px] px-4 py-3 rounded-xl w-fit max-h-11.75 text-nowrap flex items-center justify-center gap-2",
               isEmailVerified &&
                 "border border-border-main bg-bg-darker text-font-2",
               isOtpSent &&
                 "border border-brand-dark bg-brand/10 text-brand-dark",
             )}
+            textClassName="body-4"
             onClick={handleEmailBtnClick}
           >
             {isEmailVerifyPending && (
@@ -198,7 +199,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
                   aria-hidden="true"
                   className="w-4 h-4 rounded-full border-2 border-font-4/40 border-t-font-4 animate-spin"
                 />
-                <span>요청 중</span>
+                <span className="body-4 font-normal">요청 중</span>
               </>
             )}
           </ActiveButton>

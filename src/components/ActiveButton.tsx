@@ -7,6 +7,7 @@ interface ActiveButtonProps extends ComponentPropsWithoutRef<"button"> {
   isActive: boolean;
   id?: string;
   children?: ReactNode;
+  textClassName?: string;
 }
 
 const ActiveButton = ({
@@ -16,6 +17,7 @@ const ActiveButton = ({
   type = "submit",
   id,
   children,
+  textClassName,
   ...props
 }: ActiveButtonProps) => {
   return (
@@ -32,7 +34,7 @@ const ActiveButton = ({
       )}
       {...props}
     >
-      {text}
+      {text && <span className={textClassName}>{text}</span>}
       {children}
     </button>
   );
