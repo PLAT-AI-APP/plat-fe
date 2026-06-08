@@ -54,13 +54,20 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
 
   const { mutate: logout } = useLogoutMutation();
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const { openModal } = useModalStore();
 
   const tendency = useToggle();
+
+  const handlePersonaModalOpen = () => {
+    onClose();
+    openModal("PERSONA");
+  };
+
   const activityArray: ActivityTab[] = [
     {
       name: "내 페르소나",
       icon: Persona,
-      onClick: () => openModal("PERSONA"),
+      onClick: handlePersonaModalOpen,
     },
     {
       name: "콘텐츠 설정",
@@ -88,8 +95,6 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
 
   const loginModalBtnRef = useRef(null);
   const loginModal = useToggle();
-
-  const { openModal } = useModalStore();
 
   const handleLoginBtn = (name: "KAKAO" | "GOOGLE" | "LOGIN") => {
     if (name === "LOGIN") {
