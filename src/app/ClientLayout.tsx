@@ -8,6 +8,7 @@ import { useScrollTimeout } from "@/hooks/useScrollTiemout";
 import { cn } from "@/lib/utils";
 import { useMyInfoQuery } from "@/api/user/getMyInfo";
 import { ModalManager } from "@/components/modal/ModalManager";
+import ModalNavigationGuard from "@/components/modal/ModalNavigationGuard";
 import { useAuthStore } from "@/store/useAuthStore";
 import { refreshAccessToken } from "@/api/auth/postRefresh";
 import axios from "axios";
@@ -278,6 +279,7 @@ export default function ClientLayout({
         >
           {children}
           <ModalManager />
+          <ModalNavigationGuard />
         </div>
       </main>
     </>
