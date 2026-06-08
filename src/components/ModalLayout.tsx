@@ -45,7 +45,7 @@ export const ModalLayout = ({
     <>
       {hasBackground && (
         <div
-          className="fixed inset-0 bg-black/50 z-100"
+          className="fixed inset-0 bg-font-4/50 z-100"
           style={{ zIndex: overlayZIndex }}
           onClick={(e) => {
             e.stopPropagation();

@@ -25,6 +25,7 @@ const AddLanguageModal = ({ onClose }: AddLanguageModalProps) => {
   return (
     <ModalLayout
       onClose={onClose}
+      hasBackground
       className="w-92.5 whitespace-nowrap p-5 border border-border-main rounded-3xl"
     >
       <header className="flex justify-between items-center">
