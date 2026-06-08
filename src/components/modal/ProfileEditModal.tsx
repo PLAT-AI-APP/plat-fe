@@ -133,7 +133,7 @@ const ProfileEditModal = ({ onClose }: ProfileEditModalProps) => {
 
   return (
     <ModalLayout
-      onClose={() => null}
+      onClose={onClose}
       hasBackground
       className="p-5 min-h-112.5 max-h-160 w-150 max-w-[80vw]"
     >
