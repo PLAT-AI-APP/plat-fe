@@ -1,16 +1,25 @@
 "use client";
 
+import { Info } from "@/icons";
+import StatusError from "@/icons/StatusError";
+import StatusSuccess from "@/icons/StatusSuccess";
+import StatusWarning from "@/icons/StatusWarning";
 import { Toaster } from "sonner";
 
 const SonnerProvider = () => {
   return (
     <Toaster
-      position="top-right"
+      position="top-center"
       expand
-      closeButton
-      duration={3200}
-      offset={16}
+      duration={2000}
+      offset={40}
       theme="dark"
+      icons={{
+        success: <StatusSuccess className="sonner-status-icon" />,
+        error: <StatusError className="sonner-status-icon" />,
+        info: <Info className="sonner-status-icon" />,
+        warning: <StatusWarning className="sonner-status-icon" />,
+      }}
       toastOptions={{
         unstyled: true,
         classNames: {
