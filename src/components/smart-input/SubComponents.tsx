@@ -82,10 +82,7 @@ export const ErrorMessage = ({ error }: { error?: FieldError | string }) => {
   );
 };
 
-export const HelperMessage = ({
-  message,
-  type = "default",
-}: {
+export const HelperMessage = ({ message }: {
   message?: string;
   type?: "success" | "default";
 }) => {
@@ -93,7 +90,7 @@ export const HelperMessage = ({
 
   return (
     <span
-      className={cn("pt-2 body-6 block", type === "success" && "text-font-2")}
+      className={cn("pt-2 body-6 block text-font-2")}
     >
       {message}
     </span>

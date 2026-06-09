@@ -10,6 +10,7 @@ import { useUserStore } from "@/store/useUserStore";
 const NICKNAME_UNAVAILABLE_MESSAGE = "이미 사용 중인 닉네임이에요";
 const MAX_NICKNAME_LENGTH = 20;
 const NICKNAME_MAX_LENGTH_MESSAGE = "닉네임은 최대 20자까지 입력 가능해요";
+const NICKNAME_HELPER_MESSAGE = "중복되거나, 특수문자는 사용할 수 없어요";
 
 const NicknameField = () => {
   const user = useUserStore((state) => state.user);
@@ -120,8 +121,10 @@ const NicknameField = () => {
           ? NICKNAME_UNAVAILABLE_MESSAGE
           : undefined)
       }
-      helperMessage={isAvailableNickname ? "멋진 닉네임이에요" : undefined}
-      helperMessageType="success"
+      helperMessage={
+        isAvailableNickname ? "멋진 닉네임이에요" : NICKNAME_HELPER_MESSAGE
+      }
+      helperMessageType={isAvailableNickname ? "success" : "default"}
       labelFontSize="title-5"
     />
   );
