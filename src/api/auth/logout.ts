@@ -1,7 +1,6 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { ApiSuccessResponse, AppError } from "@/type/api";
-import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useUserStore } from "@/store/useUserStore";
 
@@ -15,7 +14,7 @@ const PostLogout = async () => {
 
 /** 로그아웃 */
 export const useLogoutMutation = () => {
-  const router = useRouter();
+  const queryClient = useQueryClient();
   const { logout } = useAuthStore();
   const { clearUser } = useUserStore();
   return useMutation<{ serverMessage: string }, AppError>({
@@ -23,7 +22,8 @@ export const useLogoutMutation = () => {
     onSuccess: () => {
       logout();
       clearUser();
-      router.push("/");
+      queryClient.removeQueries({ queryKey: ["get-my-info"] });
+      window.location.replace("/");
     },
   });
 };
