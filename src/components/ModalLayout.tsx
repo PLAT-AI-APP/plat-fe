@@ -38,7 +38,7 @@ export const ModalLayout = ({
     getServerSnapshot,
   );
 
-  const handleClose = triggerRef ? onClose : () => {};
+  const handleClose = triggerRef && !hasBackground ? onClose : () => {};
   useClickAway(modalRef, handleClose, triggerRef);
 
   const modalContent = (
