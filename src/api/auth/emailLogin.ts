@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "..";
 import { ApiSuccessResponse, AppError } from "@/type/api";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -24,6 +24,7 @@ const PostEmailLogin = async (props: PostEmailLoginProps) => {
 
 /** 이메일 로그인 */
 export const useEmailLoginMutation = () => {
+  const queryClient = useQueryClient();
   const setAccessToken = useAuthStore((state) => state.setAccessToken);
   const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
   const { closeModal } = useModalStore();
@@ -33,9 +34,10 @@ export const useEmailLoginMutation = () => {
     PostEmailLoginProps
   >({
     mutationFn: PostEmailLogin,
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       setAccessToken(data.token);
       setLoggedIn(true);
+      await queryClient.invalidateQueries({ queryKey: ["get-my-info"] });
       closeModal();
     },
   });
