@@ -12,9 +12,13 @@ const Header = ({ userId }: HeaderProps) => {
   const { followerCount = 0, followingCount = 0 } = followCount ?? {};
 
   const { openModal } = useModalStore();
+  const { user } = useUserStore();
+  const isOwnProfile = user?.id === userId;
 
   // 모달을 열 때 탭 종류를 인자로 받음
   const openFollowModal = (tab: "followers" | "following") => {
+    if (!isOwnProfile) return;
+
     openModal("FOLLOW", { activeTab: tab });
   };
 
@@ -22,9 +26,8 @@ const Header = ({ userId }: HeaderProps) => {
   const nickname = useUserStore((state) => state.user?.nickname);
   const bio = useUserStore((state) => state.user?.bio);
 
-  const { user } = useUserStore();
   const handleProfileEditBtn = () => {
-    if (user?.id === userId) {
+    if (isOwnProfile) {
       openModal("PROFILE_EDIT");
     }
   };
@@ -49,7 +52,8 @@ const Header = ({ userId }: HeaderProps) => {
               <nav className="flex gap-4">
                 <button
                   onClick={() => openFollowModal("followers")}
-                  className="flex gap-1 body-4 cursor-pointer"
+                  className="flex gap-1 body-4 cursor-pointer disabled:cursor-default"
+                  disabled={!isOwnProfile}
                   type="button"
                 >
                   <span className="text-font-2">팔로워</span>
@@ -57,7 +61,8 @@ const Header = ({ userId }: HeaderProps) => {
                 </button>
                 <button
                   onClick={() => openFollowModal("following")}
-                  className="flex gap-1 body-4 cursor-pointer"
+                  className="flex gap-1 body-4 cursor-pointer disabled:cursor-default"
+                  disabled={!isOwnProfile}
                   type="button"
                 >
                   <span className="text-font-2">팔로잉</span>
