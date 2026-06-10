@@ -1,6 +1,6 @@
 import React from "react";
 import PeriodTab from "./PeriodTab";
-import CharacterGrid from "@/components/character/CharacterGrid";
+import CharacterShowcase from "../CharacterShowcase";
 import { DUMMY_CHARACTERS } from "@/app/studio/[id]/_components/dummyData";
 
 const RankingTabContents = () => {
@@ -8,7 +8,12 @@ const RankingTabContents = () => {
     <section className="flex flex-col gap-4">
       <PeriodTab />
 
-      <CharacterGrid char={DUMMY_CHARACTERS} />
+      <CharacterShowcase
+        charArray={DUMMY_CHARACTERS}
+        cardSize="S"
+        rowGap={12}
+        columnGap={12}
+      />
     </section>
   );
 };

@@ -5,7 +5,7 @@ import CharacterList from "./_components/character-list";
 import ViewToggle from "./_components/ViewToggle";
 import StudioStats from "./_components/StudioStats";
 import CharacterCreateBanner from "./_components/CharacterCreateBanner";
-import CharacterGrid from "@/components/character/CharacterGrid";
+import CharacterShowcase from "@/app/(main)/_components/CharacterShowcase";
 import { DUMMY_CHARACTERS as CharArray } from "./_components/dummyData";
 import SortFilter from "./_components/SortFilter";
 
@@ -69,12 +69,11 @@ const StudioPage = async ({ params, searchParams }: Props) => {
           ) : viewMode === "list" ? (
             <CharacterList char={CharArray} />
           ) : (
-            <CharacterGrid
+            <CharacterShowcase
+              charArray={CharArray}
+              cardSize="S"
               rowGap={12}
               columnGap={12}
-              char={CharArray}
-              cardClassName="min-w-37.5 max-w-60"
-              gridClassName="grid-cols-2 @[474px]:grid-cols-3 @[636px]:grid-cols-4"
             />
           )}
         </div>

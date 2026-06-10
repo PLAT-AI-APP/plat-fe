@@ -2,7 +2,7 @@
 import { cn } from "@/lib/utils";
 import React, { useRef, useState } from "react";
 import Header from "./Header";
-import CharacterGrid from "@/components/character/CharacterGrid";
+import CharacterShowcase from "@/app/(main)/_components/CharacterShowcase";
 import { Sort } from "@/icons";
 import CharacterSortPopover from "@/components/popover/CharacterSortPopover";
 import useToggle from "@/hooks/useToggle";
@@ -116,10 +116,9 @@ export default function ProfileContent({ id }: { id: string }) {
           id="character-list-section"
           className="w-full h-auto flex flex-col gap-4 justify-center"
         >
-          <CharacterGrid
-            char={CharArray}
-            // lineCount={2}
-            cardHeight={280.67}
+          <CharacterShowcase
+            charArray={CharArray}
+            cardSize="S"
             rowGap={12}
             columnGap={12}
           />
