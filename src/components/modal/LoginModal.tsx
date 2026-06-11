@@ -10,7 +10,6 @@ import { PasswordToggle } from "@/components/auth/PasswordToggle";
 import SocialLoginButton from "@/components/auth/SocialLoginButton";
 import { ModalLayout } from "@/components/ModalLayout";
 import SmartInput from "@/components/smart-input";
-import { FIELD_HELPER_MESSAGES } from "@/constants/fieldMessages";
 import { ChatFill, Google } from "@/icons";
 import { useTogglePassword } from "@/hooks/useTogglePassword";
 import useRouteEffect from "@/hooks/useRouteEffect";
@@ -113,7 +112,6 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
               placeholder="example@gmail.com"
               {...register("email")}
               error={errors.email}
-              helperMessage={FIELD_HELPER_MESSAGES.emailDomain}
             />
 
             <div id="password-input-group" className="flex flex-col gap-2">
@@ -131,7 +129,6 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
                 }
                 {...register("pw")}
                 error={errors.pw}
-                helperMessage={FIELD_HELPER_MESSAGES.password}
               />
 
               <button
