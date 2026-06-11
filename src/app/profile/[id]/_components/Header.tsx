@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
+import { useUnFollowMutation } from "@/api/follow/deleteFollow";
 import { useFollowCountQuery } from "@/api/follow/getFollowCount";
+import { useFollowMutation } from "@/api/follow/postFollow";
+import { cn, formatWithCommas } from "@/lib/utils";
 import { useModalStore } from "@/store/useModalStore";
 import { useUserStore } from "@/store/useUserStore";
 
@@ -12,17 +15,13 @@ interface StatItemProps {
   label: string;
   value: number | string;
   onClick?: () => void;
-  disabled?: boolean;
 }
 
-const formatCount = (value: number | string) =>
-  typeof value === "number" ? new Intl.NumberFormat("ko-KR").format(value) : value;
-
-const StatItem = ({ label, value, onClick, disabled = false }: StatItemProps) => {
+const StatItem = ({ label, value, onClick }: StatItemProps) => {
   const content = (
     <>
       <span className="body-2 text-font-2">{label}</span>
-      <span className="title-3 text-font-1">{formatCount(value)}</span>
+      <span className="title-3 text-font-1">{formatWithCommas(value)}</span>
     </>
   );
 
@@ -34,8 +33,7 @@ const StatItem = ({ label, value, onClick, disabled = false }: StatItemProps) =>
     <button
       type="button"
       onClick={onClick}
-      disabled={disabled}
-      className="flex items-center gap-[7px] disabled:cursor-default"
+      className="flex items-center gap-[7px]"
     >
       {content}
     </button>
@@ -51,17 +49,19 @@ const StatDivider = () => (
 const Header = ({ userId }: HeaderProps) => {
   const { data: followCount } = useFollowCountQuery(userId);
   const { followerCount = 0, followingCount = 0 } = followCount ?? {};
-
   const { openModal } = useModalStore();
   const { user } = useUserStore();
-  const isOwnProfile = user?.id === userId;
+  const { mutate: follow } = useFollowMutation();
+  const { mutate: unFollow } = useUnFollowMutation();
+  const [isFollowing, setIsFollowing] = useState(false);
 
+  const isOwnProfile = user?.id === userId;
   const profileImage = user?.profileImage;
   const nickname = user?.nickname || "이름";
   const bio = user?.bio || "";
   const chatCount = 0;
 
-const openFollowModal = (tab: "followers" | "following") => {
+  const openFollowModal = (tab: "followers" | "following") => {
     openModal("FOLLOW", {
       activeTab: tab,
       userId,
@@ -70,14 +70,26 @@ const openFollowModal = (tab: "followers" | "following") => {
     });
   };
 
-  const handleProfileEditBtn = () => {
-    if (!isOwnProfile) return;
-
+  const handleProfileEdit = () => {
     openModal("PROFILE_EDIT");
   };
 
+  const handleFollowToggle = () => {
+    setIsFollowing((prev) => !prev);
+
+    if (isFollowing) {
+      unFollow({ userId });
+      return;
+    }
+
+    follow({ userId });
+  };
+
   return (
-    <header id="profile-header" className="flex w-full max-w-[1200px] flex-col gap-5">
+    <header
+      id="profile-header"
+      className="flex w-full max-w-[1200px] flex-col gap-5"
+    >
       <section id="profile-info-summary" className="flex w-full flex-col gap-3">
         <div className="flex w-full items-center justify-between gap-4">
           <div className="flex min-w-0 items-center gap-4">
@@ -94,14 +106,28 @@ const openFollowModal = (tab: "followers" | "following") => {
             </h1>
           </div>
 
-          <button
-            type="button"
-            onClick={handleProfileEditBtn}
-            disabled={!isOwnProfile}
-            className="title-3 flex h-12 shrink-0 items-center justify-center rounded-2xl border border-card-hover bg-bg-dark px-4 text-font-1 disabled:cursor-default"
-          >
-            프로필 수정
-          </button>
+          {isOwnProfile ? (
+            <button
+              type="button"
+              onClick={handleProfileEdit}
+              className="title-3 flex h-12 items-center justify-center rounded-2xl border border-card-hover bg-bg-dark px-4 py-3 text-font-1"
+            >
+              프로필 수정
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={handleFollowToggle}
+              className={cn(
+                "title-3 flex h-12 min-w-[111px] items-center justify-center rounded-2xl px-4 py-3",
+                isFollowing
+                  ? "border border-card-hover bg-bg-dark text-font-1"
+                  : "bg-font-1 text-bg-dark",
+              )}
+            >
+              {isFollowing ? "팔로잉" : "팔로우"}
+            </button>
+          )}
         </div>
 
         <nav className="body-2 flex items-center gap-1.5 whitespace-nowrap">
