@@ -119,9 +119,9 @@ const Header = ({ userId }: HeaderProps) => {
               type="button"
               onClick={handleFollowToggle}
               className={cn(
-                "title-3 flex h-12 min-w-[111px] items-center justify-center rounded-2xl px-4 py-3",
+                "title-3 w-22.25 flex h-11 items-center justify-center rounded-[20px] px-4 py-2.5",
                 isFollowing
-                  ? "border border-card-hover bg-bg-dark text-font-1"
+                  ? "border border-card-hover bg-border-main text-font-1"
                   : "bg-font-1 text-bg-dark",
               )}
             >

@@ -74,7 +74,7 @@ export default function ProfileContent({ id }: { id: string }) {
   const triggerRef = useRef<HTMLButtonElement>(null);
 
   return (
-    <article className="@container flex flex-col gap-11.5 px-10 pt-7.5">
+    <article className="@container max-w-300 mx-auto flex flex-col gap-11.5 px-10 pt-7.5 pb-11.25">
       <Header userId={id} />
 
       <section
