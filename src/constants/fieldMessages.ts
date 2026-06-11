@@ -44,6 +44,7 @@ export const FIELD_ERROR_MESSAGES = {
   ageRequired: "이용약관에 동의해주세요.",
 
   bioMaxLength: "소개글은 최대 100자까지 입력 가능해요",
+  birthInvalid: "__BIRTH_INVALID_DATE__",
   birthFuture: "아직 오지 않은 날짜예요. 다시 확인해 볼까요?",
 
   userNoteRequired: "유저노트를 입력해주세요.",

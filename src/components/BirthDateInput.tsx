@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import { useFormContext } from "react-hook-form";
 import { ProfileEditFormType } from "@/schema/profile.schema";
 import {
+  FIELD_ERROR_MESSAGES,
   FIELD_FEEDBACK_MESSAGES,
   FIELD_HELPER_MESSAGES,
 } from "@/constants/fieldMessages";
@@ -49,9 +50,14 @@ export const BirthDateInput = React.forwardRef<
     formState: { errors },
   } = useFormContext<ProfileEditFormType>();
   const birth = watch("birth");
-  const birthErrorMessage = errors.birth?.message;
-  const hasError = error || Boolean(birthErrorMessage);
+  const birthError = errors.birth;
+  const birthErrorMessage = birthError?.message;
+  const shouldHideBirthErrorMessage =
+    birthErrorMessage === FIELD_ERROR_MESSAGES.birthInvalid ||
+    birthErrorMessage === "Invalid input";
+  const hasError = error || Boolean(birthError);
   const isValidBirth = isValidPastOrTodayDate(birth);
+  const isBirthTyping = Boolean(birth) && !isValidBirth;
 
   const [showCalendar, setShowCalendar] = useState(false);
   const [viewDate, setViewDate] = useState<Date | null>(new Date());
@@ -105,9 +111,9 @@ export const BirthDateInput = React.forwardRef<
   return (
     <section
       id="birthdate-input-container"
-      className={cn("flex flex-col flex-1 gap-2 w-full", className)}
+      className={cn("flex flex-col flex-1 w-full", className)}
     >
-      <header className="flex items-center gap-1 title-5 text-white">
+      <header className="mb-2 flex items-center gap-1 title-5 text-white">
         <span>생년월일</span>
         {/* <span className="text-font-accents">*</span> */}
       </header>
@@ -169,17 +175,17 @@ export const BirthDateInput = React.forwardRef<
         )}
       </div>
 
-      {birthErrorMessage ? (
+      {birthErrorMessage && !shouldHideBirthErrorMessage ? (
         <span className="body-6 block pt-2 text-font-error">
           {birthErrorMessage}
         </span>
-      ) : (
+      ) : birthError ? null : isValidBirth || isBirthTyping ? (
         <span className="body-6 block pt-2 text-font-2">
           {isValidBirth
             ? FIELD_FEEDBACK_MESSAGES.birthValid
             : FIELD_HELPER_MESSAGES.birth}
         </span>
-      )}
+      ) : null}
     </section>
   );
 });

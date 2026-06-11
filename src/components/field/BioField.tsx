@@ -3,7 +3,6 @@
 import React from "react";
 import { FieldValues, Path, useFormContext, useWatch } from "react-hook-form";
 import SmartInput from "@/components/smart-input";
-import { FIELD_HELPER_MESSAGES } from "@/constants/fieldMessages";
 
 interface BioFieldProps<T extends FieldValues> {
   name?: Path<T>;
@@ -32,7 +31,6 @@ const BioField = <T extends FieldValues>({
       minLine={2}
       maxLength={100}
       error={error ? "" : undefined}
-      helperMessage={FIELD_HELPER_MESSAGES.bio}
       labelFontSize="title-5"
     />
   );
