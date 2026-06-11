@@ -30,7 +30,7 @@ export const FIELD_ERROR_MESSAGES = {
   passwordInvalid: "특수 문자 포함, 최소 8자 입력해 주세요",
   passwordSpecialCharRequired: "!, @, #, $ 등의 특수문자를 사용해 주세요",
   passwordMinLength: "최소 8자 이상이어야 해요",
-  passwordMismatch: "비밀번호가 일치하지 않습니다.",
+  passwordMismatch: "비밀번호를 한 번 더 확인해 주세요",
 
   nicknameRequired: "닉네임을 입력해주세요.",
   nicknameMaxLength: "20자 이내의 닉네임을 사용해요",
