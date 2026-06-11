@@ -1,22 +1,23 @@
 "use client";
-import React from "react";
-import SocialLoginButton from "../auth/SocialLoginButton";
-import { ChatFill, Google } from "@/icons";
-import Link from "next/link";
-import ActiveButton from "../ActiveButton";
-import { PasswordToggle } from "../auth/PasswordToggle";
-import SmartInput from "../smart-input";
-import { useTogglePassword } from "@/hooks/useTogglePassword";
-import { useForm } from "react-hook-form";
-import { useEmailLoginMutation } from "@/api/auth/emailLogin";
-import { useAuthStore } from "@/store/useAuthStore";
-import { ModalLayout } from "../ModalLayout";
-import useRouteEffect from "@/hooks/useRouteEffect";
-import { useModalStore } from "@/store/useModalStore";
 
-import { LoginModalProps } from "@/type/modal";
-import { loginFormSchema, LoginFormValues } from "@/schema/auth.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import React from "react";
+import { useForm, useWatch } from "react-hook-form";
+import { useEmailLoginMutation } from "@/api/auth/emailLogin";
+import ActiveButton from "@/components/ActiveButton";
+import { PasswordToggle } from "@/components/auth/PasswordToggle";
+import SocialLoginButton from "@/components/auth/SocialLoginButton";
+import { ModalLayout } from "@/components/ModalLayout";
+import SmartInput from "@/components/smart-input";
+import { FIELD_HELPER_MESSAGES } from "@/constants/fieldMessages";
+import { ChatFill, Google } from "@/icons";
+import { useTogglePassword } from "@/hooks/useTogglePassword";
+import useRouteEffect from "@/hooks/useRouteEffect";
+import { loginFormSchema, LoginFormValues } from "@/schema/auth.schema";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useModalStore } from "@/store/useModalStore";
+import { LoginModalProps } from "@/type/modal";
 
 const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
   const isShowPw = useTogglePassword();
@@ -28,9 +29,9 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
     setError,
+    control,
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
     mode: "onSubmit",
@@ -41,8 +42,8 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
     },
   });
 
-  const email = watch("email");
-  const pw = watch("pw");
+  const email = useWatch({ control, name: "email" }) ?? "";
+  const pw = useWatch({ control, name: "pw" }) ?? "";
 
   const { mutate: emailLogin } = useEmailLoginMutation();
   const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
@@ -53,21 +54,10 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
       {
         onSuccess: () => {
           setLoggedIn(true);
-          // router.push("/");
         },
-        onError: (err) => {
-          console.log(err);
-
-          // 2. 서버 에러 메시지를 'pw' 또는 'email' 필드의 에러로 전달합니다.
-          // 일반적으로 로그인 실패는 보안상 이메일/비밀번호 중 무엇이 틀렸는지 모호하게 표현하므로
-          // 아래 비밀번호 인풋 하단에 에러를 노출시키는 것이 UI 안정성에 좋습니다.
-          setError("pw", {
-            type: "server",
-            message: err.message || "이메일 또는 비밀번호를 다시 확인해주세요.",
-          });
-
-          // 만약 이메일 인풋 쪽에 에러를 띄우고 싶다면 아래 주석을 해제하세요.
+        onError: () => {
           setError("email", { type: "server", message: "" });
+          setError("pw", { type: "server", message: "" });
         },
       },
     );
@@ -95,17 +85,15 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
       triggerRef={triggerRef}
       className="w-112.5 p-6 pt-9 h-fit top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
     >
-      {/* 헤더: 로그인의 목적과 제목 정의 */}
       <header id="login-card-header" className="pb-9">
         <h1 id="login-welcome-title" className="heading-3 text-font-1">
-          지금 로그인하고 <br />
+          지금 로그인하고
+          <br />
           모든 서비스를 경험해보세요.
         </h1>
       </header>
 
-      {/* 본문: 로그인 수단들을 모아놓은 메인 섹션 */}
       <section id="login-methods-area" className="flex flex-col gap-10">
-        {/* 이메일 로그인 폼 */}
         <form
           id="email-auth-form"
           className="flex flex-col gap-5"
@@ -125,6 +113,7 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
               placeholder="example@gmail.com"
               {...register("email")}
               error={errors.email}
+              helperMessage={FIELD_HELPER_MESSAGES.emailDomain}
             />
 
             <div id="password-input-group" className="flex flex-col gap-2">
@@ -142,9 +131,9 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
                 }
                 {...register("pw")}
                 error={errors.pw}
+                helperMessage={FIELD_HELPER_MESSAGES.password}
               />
 
-              {/* 비밀번호 재설정 page 이동 link */}
               <button
                 id="btn-forgot-password"
                 type="button"
@@ -164,7 +153,7 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
             className="mt-2 h-12 rounded-lg"
           />
         </form>
-        {/* 소셜 로그인 섹션 */}
+
         <nav
           id="social-auth-nav"
           aria-label="소셜 로그인 선택"
@@ -185,7 +174,6 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
         </nav>
       </section>
 
-      {/* 서비스 가입 유도 및 기타 링크 */}
       <footer
         id="login-card-footer"
         className="flex items-center justify-center gap-3 pt-7"
