@@ -1,120 +1,137 @@
 "use client";
-import { cn } from "@/lib/utils";
+
 import React, { useRef, useState } from "react";
-import Header from "./Header";
 import CharacterShowcase from "@/app/(main)/_components/CharacterShowcase";
-import { Sort } from "@/icons";
-import CharacterSortPopover from "@/components/popover/CharacterSortPopover";
+import CharacterSortPopover, {
+  CharacterSortOption,
+} from "@/components/popover/CharacterSortPopover";
 import useToggle from "@/hooks/useToggle";
+import { Sort } from "@/icons";
+import Header from "./Header";
 
 const CharArray = [
   {
     name: "옆자리 불량학생",
     chatCount: 123,
-    dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을",
+    dec: "매일 학교에서 일어나는 소소한 일상을 함께 이야기해요.",
     tag: ["학교", "일상", "친구"],
     img: "https://picsum.photos/200/300",
   },
   {
     name: "옆자리 불량학생",
     chatCount: 123,
-    dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을",
-    tag: ["학교", "일상", "친구", "친구", "친구"],
-    img: "https://picsum.photos/200/300",
+    dec: "장난스럽지만 속은 다정한 캐릭터와 대화를 나눠보세요.",
+    tag: ["학교", "일상", "친구", "로맨스"],
+    img: "https://picsum.photos/201/300",
   },
   {
     name: "옆자리 불량학생",
     chatCount: 123,
-    dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을",
-    tag: ["학교", "일상", "친구", "친구", "친구", "친구"],
-    img: "https://picsum.photos/200/300",
+    dec: "무심한 듯 챙겨주는 친구와 이어지는 이야기입니다.",
+    tag: ["학교", "일상", "친구", "청춘"],
+    img: "https://picsum.photos/202/300",
   },
   {
     name: "옆자리 불량학생",
     chatCount: 123,
     dec: "매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
     tag: ["학교", "일상"],
-    img: "https://picsum.photos/200/300",
+    img: "https://picsum.photos/203/300",
   },
   {
     name: "옆자리 불량학생",
     chatCount: 123,
-    dec: "기해주는 채팅입니다.",
-    tag: ["학교", "일상", "친구", "친구", "친구", "친구"],
-    img: "https://picsum.photos/200/300",
+    dec: "가볍게 대화하기 좋은 캐릭터입니다.",
+    tag: ["학교", "일상", "친구"],
+    img: "https://picsum.photos/204/300",
   },
   {
     name: "옆자리 불량학생",
     chatCount: 123,
-    dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
-    tag: ["학교", "일상", "친구", "친구"],
-    img: "https://picsum.photos/200/300",
+    dec: "친구처럼 편하게 말을 걸어주는 캐릭터입니다.",
+    tag: ["학교", "일상", "친구"],
+    img: "https://picsum.photos/205/300",
   },
   {
     name: "옆자리 불량학생",
     chatCount: 123,
-    dec: "옆자리 불량학생이채팅입니다.",
-    tag: ["학교", "일상", "친구", "친구", "친구", "친구"],
-    img: "https://picsum.photos/200/300",
+    dec: "짧은 대화에도 자연스럽게 이어지는 캐릭터입니다.",
+    tag: ["학교", "일상", "친구"],
+    img: "https://picsum.photos/206/300",
   },
   {
     name: "옆자리 불량학생",
     chatCount: 123,
-    dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을",
-    tag: ["학교", "일상", "친구", "친구"],
-    img: "https://picsum.photos/200/300",
+    dec: "학교생활의 여러 순간을 함께 나누는 캐릭터입니다.",
+    tag: ["학교", "일상"],
+    img: "https://picsum.photos/207/300",
   },
 ];
 
 export default function ProfileContent({ id }: { id: string }) {
-  // 상태 및 참조 변수
-  const [sort, setSort] = useState<"최신순" | "채팅순">("최신순");
+  const [sort, setSort] = useState<CharacterSortOption>("최신순");
   const { isOpen, toggle } = useToggle();
   const triggerRef = useRef<HTMLButtonElement>(null);
 
   return (
     <article className="@container flex flex-col gap-11.5 px-10 pt-7.5">
-      {/* 사용자 프로필 정보 요약 영역 */}
       <Header userId={id} />
 
-      {/* 탭 메뉴 및 콘텐츠 영역 */}
       <section
         id="profile-content"
-        className="flex-1 flex flex-col gap-2 min-w-0 h-full rounded-3xl"
+        className="flex min-w-0 flex-1 flex-col gap-3.5"
       >
-        <header
-          className={cn(
-            "flex justify-between body-4 text-font-2 px-2.5 py-1.5",
-          )}
-        >
-          작품목록 2
-          <div id="sort-filter-container" className="relative">
+        <div className="flex min-w-0 flex-1 flex-col gap-4">
+          <nav className="flex w-full items-end border-b-2 border-card-hover">
             <button
-              ref={triggerRef}
               type="button"
-              onClick={toggle}
-              className="flex items-center gap-1.5 body-4 cursor-pointer"
-              aria-haspopup="listbox"
-              aria-expanded={isOpen}
+              className="title-3 flex w-[102px] items-center justify-center border-b-2 border-brand px-5 py-2.5 text-center text-font-1"
             >
-              <Sort className="w-3.5 h-3.5" />
-              {sort}
+              캐릭터
             </button>
+            <button
+              type="button"
+              disabled
+              className="body-2 flex w-[102px] cursor-default items-center justify-center px-5 py-2.5 text-center text-font-disabled"
+            >
+              -
+            </button>
+          </nav>
 
-            {isOpen && (
-              <CharacterSortPopover
-                onChange={setSort}
-                onClose={toggle}
-                triggerRef={triggerRef as React.RefObject<HTMLButtonElement>}
-                value={sort}
-              />
-            )}
-          </div>
-        </header>
+          <header className="flex w-full items-center justify-between">
+            <div className="title-5 flex items-center gap-1 text-font-2">
+              <span>작품 목록</span>
+              <span>{CharArray.length}</span>
+            </div>
+
+            <div id="sort-filter-container" className="relative">
+              <button
+                ref={triggerRef}
+                type="button"
+                onClick={toggle}
+                className="title-5 flex items-center gap-1.5 rounded-lg px-1.5 py-1 text-font-2"
+                aria-haspopup="listbox"
+                aria-expanded={isOpen}
+              >
+                <Sort className="size-4" />
+                {sort}
+              </button>
+
+              {isOpen && (
+                <CharacterSortPopover
+                  onChange={setSort}
+                  onClose={toggle}
+                  triggerRef={triggerRef as React.RefObject<HTMLButtonElement>}
+                  value={sort}
+                />
+              )}
+            </div>
+          </header>
+        </div>
 
         <section
           id="character-list-section"
-          className="w-full h-auto flex flex-col gap-4 justify-center"
+          className="flex h-auto w-full flex-col justify-center gap-4"
         >
           <CharacterShowcase
             charArray={CharArray}

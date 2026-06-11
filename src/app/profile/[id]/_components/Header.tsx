@@ -1,12 +1,53 @@
 import React from "react";
 import Image from "next/image";
-import { useUserStore } from "@/store/useUserStore";
 import { useFollowCountQuery } from "@/api/follow/getFollowCount";
 import { useModalStore } from "@/store/useModalStore";
+import { useUserStore } from "@/store/useUserStore";
 
 interface HeaderProps {
   userId: string;
 }
+
+interface StatItemProps {
+  label: string;
+  value: number | string;
+  onClick?: () => void;
+  disabled?: boolean;
+}
+
+const formatCount = (value: number | string) =>
+  typeof value === "number" ? new Intl.NumberFormat("ko-KR").format(value) : value;
+
+const StatItem = ({ label, value, onClick, disabled = false }: StatItemProps) => {
+  const content = (
+    <>
+      <span className="body-2 text-font-2">{label}</span>
+      <span className="title-3 text-font-1">{formatCount(value)}</span>
+    </>
+  );
+
+  if (!onClick) {
+    return <div className="flex items-center gap-[7px]">{content}</div>;
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className="flex items-center gap-[7px] disabled:cursor-default"
+    >
+      {content}
+    </button>
+  );
+};
+
+const StatDivider = () => (
+  <span className="title-3 text-font-disabled" aria-hidden="true">
+    ·
+  </span>
+);
+
 const Header = ({ userId }: HeaderProps) => {
   const { data: followCount } = useFollowCountQuery(userId);
   const { followerCount = 0, followingCount = 0 } = followCount ?? {};
@@ -15,93 +56,74 @@ const Header = ({ userId }: HeaderProps) => {
   const { user } = useUserStore();
   const isOwnProfile = user?.id === userId;
 
-  // 모달을 열 때 탭 종류를 인자로 받음
-  const openFollowModal = (tab: "followers" | "following") => {
-    if (!isOwnProfile) return;
+  const profileImage = user?.profileImage;
+  const nickname = user?.nickname || "이름";
+  const bio = user?.bio || "";
+  const chatCount = 0;
 
-    openModal("FOLLOW", { activeTab: tab });
+const openFollowModal = (tab: "followers" | "following") => {
+    openModal("FOLLOW", {
+      activeTab: tab,
+      userId,
+      nickname,
+      isOwnProfile,
+    });
   };
-
-  const profileImage = useUserStore((state) => state.user?.profileImage);
-  const nickname = useUserStore((state) => state.user?.nickname);
-  const bio = useUserStore((state) => state.user?.bio);
 
   const handleProfileEditBtn = () => {
-    if (isOwnProfile) {
-      openModal("PROFILE_EDIT");
-    }
+    if (!isOwnProfile) return;
+
+    openModal("PROFILE_EDIT");
   };
+
   return (
-    <header id="profile-header" className="flex flex-col gap-4">
-      <section id="profile-info-summary" className="flex justify-between">
-        <div className="flex gap-5.25">
-          <aside className="shrink-0">
+    <header id="profile-header" className="flex w-full max-w-[1200px] flex-col gap-5">
+      <section id="profile-info-summary" className="flex w-full flex-col gap-3">
+        <div className="flex w-full items-center justify-between gap-4">
+          <div className="flex min-w-0 items-center gap-4">
             <Image
               src={profileImage || "/p1.png"}
               alt="프로필 이미지"
-              width={60}
-              height={60}
-              className="rounded-full w-15 h-15"
+              width={68}
+              height={68}
+              className="size-[68px] shrink-0 rounded-full bg-[#d9d9d9] object-cover"
             />
-          </aside>
 
-          <div className="flex items-start gap-6">
-            <div className="flex flex-col">
-              <h1 className="title-2">{nickname}</h1>
-
-              <nav className="flex gap-4">
-                <button
-                  onClick={() => openFollowModal("followers")}
-                  className="flex gap-1 body-4 cursor-pointer disabled:cursor-default"
-                  disabled={!isOwnProfile}
-                  type="button"
-                >
-                  <span className="text-font-2">팔로워</span>
-                  <span>{followerCount}</span>
-                </button>
-                <button
-                  onClick={() => openFollowModal("following")}
-                  className="flex gap-1 body-4 cursor-pointer disabled:cursor-default"
-                  disabled={!isOwnProfile}
-                  type="button"
-                >
-                  <span className="text-font-2">팔로잉</span>
-                  <span>{followingCount}</span>
-                </button>
-              </nav>
-            </div>
-
-            <button
-              type="button"
-              className="px-3.5 py-1.5 bg-font-1 text-bg-dark text-xs rounded-[100px]"
-            >
-              팔로우
-            </button>
+            <h1 className="title-1 min-w-0 max-w-[346px] truncate text-font-1">
+              {nickname}
+            </h1>
           </div>
+
+          <button
+            type="button"
+            onClick={handleProfileEditBtn}
+            disabled={!isOwnProfile}
+            className="title-3 flex h-12 shrink-0 items-center justify-center rounded-2xl border border-card-hover bg-bg-dark px-4 text-font-1 disabled:cursor-default"
+          >
+            프로필 수정
+          </button>
         </div>
 
-        <button
-          onClick={handleProfileEditBtn}
-          type="button"
-          className="h-fit px-4 py-2 body-4 bg-bg-darkest rounded-xl border border-border-main"
-        >
-          프로필 수정
-        </button>
+        <nav className="body-2 flex items-center gap-1.5 whitespace-nowrap">
+          <StatItem
+            label="팔로워"
+            value={followerCount}
+            onClick={() => openFollowModal("followers")}
+          />
+          <StatDivider />
+          <StatItem
+            label="팔로잉"
+            value={followingCount}
+            onClick={() => openFollowModal("following")}
+          />
+          <StatDivider />
+          <StatItem label="대화량" value={chatCount} />
+        </nav>
       </section>
 
-      <p className="body-4 text-font-2">{bio}</p>
-
-      {/* 모달 레이어 */}
-      {/* {profileEditodal.isOpen && (
-        <ProfileEditModal onClose={profileEditodal.toggle} />
-      )} */}
-      {/* {followModal.isOpen && (
-        <FollowModal
-          onClose={followModal.toggle}
-          userId={userId}
-          activeTab={activeFollowTab}
-        />
-      )} */}
+      {bio && (
+        <p className="body-4 w-full whitespace-pre-line text-font-2">{bio}</p>
+      )}
     </header>
   );
 };

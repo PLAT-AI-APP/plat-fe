@@ -2,7 +2,13 @@
 
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { useUnFollowMutation } from "@/api/follow/deleteFollow";
 import { useFollowerListQuery } from "@/api/follow/getFollowerList";
 import { useFollowingListQuery } from "@/api/follow/getFollowingList";
@@ -105,7 +111,7 @@ const FollowModal = ({
               key={tab.id}
               onClick={() => setActiveTabs(tab.id)}
               className={cn(
-                "body-2 translate-y-0.5 cursor-pointer px-7.25 py-2.75 text-font-disabled",
+                "body-2 translate-y-0.5 cursor-pointer px-5 py-2.5 text-font-disabled transition-none",
                 activeTabs === tab.id &&
                   "title-3 border-b-2 border-brand text-font-1",
               )}
@@ -126,7 +132,7 @@ const FollowModal = ({
       </header>
 
       {activeQuery.isLoading ? (
-        <div className="body-4 flex h-95 items-center justify-center text-font-2">
+        <div className="body-4 flex h-95 items-center justify-center text-font-2 transition-none">
           로딩 중...
         </div>
       ) : listData.length === 0 ? (
@@ -141,7 +147,7 @@ const FollowModal = ({
       ) : (
         <ul
           ref={ulRef}
-          className="custom-scrollbar flex h-95 flex-col gap-1 overflow-y-auto"
+          className="custom-scrollbar flex h-95 flex-col gap-1 overflow-y-auto transition-none"
         >
           {listData.map((user) => {
             const isToggled = followChangeIds.includes(user.userId);

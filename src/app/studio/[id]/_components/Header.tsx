@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import ProfileEditModal from "@/components/modal/ProfileEditModal";
-// import { FollowModal } from "@/components/modal/FollowModal";
 import { useUserStore } from "@/store/useUserStore";
 import { ArrowRight } from "@/icons";
 import Link from "next/link";
