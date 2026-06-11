@@ -2,15 +2,15 @@
 
 import React, { useEffect } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
-import SmartInput from "@/components/smart-input";
-import { useDebounce } from "@/hooks/useDebounce";
 import { useCheckNicknameQuery } from "@/api/auth/checkNickname";
+import SmartInput from "@/components/smart-input";
+import {
+  FIELD_FEEDBACK_MESSAGES,
+  FIELD_HELPER_MESSAGES,
+} from "@/constants/fieldMessages";
+import { useDebounce } from "@/hooks/useDebounce";
+import { NICKNAME_REGEX } from "@/lib/regex";
 import { useUserStore } from "@/store/useUserStore";
-
-const NICKNAME_UNAVAILABLE_MESSAGE = "이미 사용 중인 닉네임이에요";
-const MAX_NICKNAME_LENGTH = 20;
-const NICKNAME_MAX_LENGTH_MESSAGE = "닉네임은 최대 20자까지 입력 가능해요";
-const NICKNAME_HELPER_MESSAGE = "중복되거나, 특수문자는 사용할 수 없어요";
 
 const NicknameField = () => {
   const user = useUserStore((state) => state.user);
@@ -20,16 +20,28 @@ const NicknameField = () => {
     formState: { errors },
     setError,
     clearErrors,
+    trigger,
   } = useFormContext();
 
   const nicknameValue = useWatch({ control, name: "nickname" });
-  const debouncedNickname = useDebounce({ value: nicknameValue, delay: 500 });
+  const currentNickname =
+    typeof nicknameValue === "string" ? nicknameValue : "";
+  const debouncedNickname = useDebounce({
+    value: currentNickname,
+    delay: 500,
+  });
+
+  const isCurrentNicknameValid =
+    currentNickname.length > 0 &&
+    currentNickname.length <= 20 &&
+    NICKNAME_REGEX.test(currentNickname);
+  const isDebouncedNicknameValid =
+    debouncedNickname.length > 0 &&
+    debouncedNickname.length <= 20 &&
+    NICKNAME_REGEX.test(debouncedNickname);
 
   const isNicknameCheckEnabled =
-    !!debouncedNickname &&
-    debouncedNickname.trim().length > 0 &&
-    debouncedNickname.length <= MAX_NICKNAME_LENGTH &&
-    debouncedNickname !== user?.nickname;
+    isDebouncedNicknameValid && debouncedNickname !== user?.nickname;
 
   const { data: nicknameData, isFetching } = useCheckNicknameQuery(
     debouncedNickname,
@@ -40,48 +52,42 @@ const NicknameField = () => {
   );
 
   const error = errors["nickname"];
+  const isNicknameSettled = debouncedNickname === currentNickname;
+  const isUnavailableNickname =
+    isCurrentNicknameValid &&
+    isNicknameSettled &&
+    !isFetching &&
+    nicknameData?.available === false;
   const isAvailableNickname =
     !error &&
-    !isFetching &&
     isNicknameCheckEnabled &&
-    debouncedNickname === nicknameValue &&
-    nicknameValue.length <= MAX_NICKNAME_LENGTH &&
+    isCurrentNicknameValid &&
+    isNicknameSettled &&
+    !isFetching &&
     nicknameData?.available === true;
 
   useEffect(() => {
-    if (!nicknameValue || debouncedNickname === user?.nickname) {
+    if (!currentNickname || currentNickname === user?.nickname) {
       clearErrors("nickname");
       return;
     }
 
-    if (nicknameValue.length > MAX_NICKNAME_LENGTH) {
-      setError("nickname", {
-        type: "manual",
-        message: NICKNAME_MAX_LENGTH_MESSAGE,
-      });
+    if (!isCurrentNicknameValid) {
+      void trigger("nickname");
       return;
     }
 
-    if (!isNicknameCheckEnabled || debouncedNickname !== nicknameValue) {
-      setError("nickname", {
-        type: "manual",
-        message: "",
-      });
-      return;
-    }
-
-    if (isFetching) {
-      setError("nickname", {
-        type: "manual",
-        message: "",
-      });
+    if (!isNicknameSettled || isFetching) {
+      if (error?.type === "manual") {
+        clearErrors("nickname");
+      }
       return;
     }
 
     if (nicknameData?.available === false) {
       setError("nickname", {
         type: "manual",
-        message: NICKNAME_UNAVAILABLE_MESSAGE,
+        message: FIELD_FEEDBACK_MESSAGES.nicknameUnavailable,
       });
       return;
     }
@@ -91,38 +97,35 @@ const NicknameField = () => {
     }
   }, [
     clearErrors,
-    debouncedNickname,
+    currentNickname,
+    error?.type,
+    isCurrentNicknameValid,
     isFetching,
-    isNicknameCheckEnabled,
+    isNicknameSettled,
     nicknameData?.available,
-    nicknameValue,
     setError,
+    trigger,
     user?.nickname,
   ]);
 
   return (
     <SmartInput
-      {...register("nickname", {
-        onChange: () => {
-          setError("nickname", {
-            type: "manual",
-            message: "",
-          });
-        },
-      })}
+      {...register("nickname")}
       label="닉네임"
       required
-      value={nicknameValue}
+      value={currentNickname}
       placeholder="1 ~ 20자 이내, 특수문자 불가"
-      maxLength={MAX_NICKNAME_LENGTH}
+      maxLength={20}
       error={
         (error?.message as string) ||
-        (!isFetching && nicknameData?.available === false
-          ? NICKNAME_UNAVAILABLE_MESSAGE
+        (isUnavailableNickname
+          ? FIELD_FEEDBACK_MESSAGES.nicknameUnavailable
           : undefined)
       }
       helperMessage={
-        isAvailableNickname ? "멋진 닉네임이에요" : NICKNAME_HELPER_MESSAGE
+        isAvailableNickname
+          ? FIELD_FEEDBACK_MESSAGES.nicknameAvailable
+          : FIELD_HELPER_MESSAGES.nicknameWithDuplication
       }
       helperMessageType={isAvailableNickname ? "success" : "default"}
       labelFontSize="title-5"

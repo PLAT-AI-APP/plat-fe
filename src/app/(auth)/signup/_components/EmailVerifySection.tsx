@@ -11,6 +11,10 @@ import { useEmailVerifyConfirmMutation } from "@/api/auth/emailVerifyConfirm";
 import { useCountdown } from "@/hooks/useCountdown";
 import { useFieldFeedback } from "@/hooks/useFieldFeedback";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+  FIELD_FEEDBACK_MESSAGES,
+  FIELD_HELPER_MESSAGES,
+} from "@/constants/fieldMessages";
 
 interface EmailVerifySectionProps {
   onVerifiedChange?: (isVerified: boolean) => void;
@@ -48,7 +52,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
     if (isOtpSent && !isEmailVerified && timeLeft <= 0) {
       setError("code", {
         type: "manual",
-        message: "시간이 초과되었습니다.",
+        message: FIELD_FEEDBACK_MESSAGES.emailVerificationExpired,
       });
     }
   }, [isOtpSent, isEmailVerified, timeLeft, setError]);
@@ -66,7 +70,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
       onSuccess: (data) => {
         if (data.result === "OK") {
           setIsOtpSent(true);
-          setFeedback("email", "메일함에서 인증번호를 확인해 주세요");
+          setFeedback("email", FIELD_FEEDBACK_MESSAGES.emailVerificationSent);
           setIsEmailVerified(false); // 재전송 시 인증 상태 초기화
           onVerifiedChange?.(false);
           startTimer();
@@ -80,7 +84,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
     if (timeLeft <= 0) {
       setError("code", {
         type: "manual",
-        message: "시간이 초과되었습니다.",
+        message: FIELD_FEEDBACK_MESSAGES.emailVerificationExpired,
       });
       return;
     }
@@ -96,7 +100,8 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
           onVerifiedChange?.(true);
           setFeedback(
             "email",
-            data.serverMessage || "이메일 인증이 완료되었습니다.",
+            data.serverMessage ||
+              FIELD_FEEDBACK_MESSAGES.emailVerificationComplete,
           );
           clearErrors("code");
           stopTimer();
@@ -104,7 +109,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
         onError: () => {
           setError("code", {
             type: "manual",
-            message: "인증번호가 일치하지 않습니다.",
+            message: FIELD_FEEDBACK_MESSAGES.emailVerificationMismatch,
           });
         },
       },
@@ -134,7 +139,9 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
     if (errors.email?.message) return errors.email.message;
     if (isOtpSent && !isEmailVerified) {
       if (errors.code?.message) return errors.code.message;
-      if (timeLeft <= 0) return "시간이 초과되었습니다.";
+      if (timeLeft <= 0) {
+        return FIELD_FEEDBACK_MESSAGES.emailVerificationExpired;
+      }
     }
     return null;
   }, [errors.email, errors.code, isOtpSent, isEmailVerified, timeLeft]);
@@ -169,6 +176,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
               isEmailVerified && "bg-card text-font-2",
             )}
             disabled={isEmailVerified}
+            helperMessage={FIELD_HELPER_MESSAGES.emailDomain}
           />
           <ActiveButton
             type="button"

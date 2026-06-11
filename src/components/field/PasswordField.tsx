@@ -2,8 +2,9 @@
 
 import React from "react";
 import { FieldError, useFormContext } from "react-hook-form";
-import SmartInput from "@/components/smart-input";
 import { PasswordToggle } from "@/components/auth/PasswordToggle";
+import SmartInput from "@/components/smart-input";
+import { FIELD_HELPER_MESSAGES } from "@/constants/fieldMessages";
 import { useTogglePassword } from "@/hooks/useTogglePassword";
 
 const PasswordField = () => {
@@ -22,6 +23,7 @@ const PasswordField = () => {
       placeholder="8자 이상 입력해주세요"
       {...register("password")}
       error={errors.password as FieldError}
+      helperMessage={FIELD_HELPER_MESSAGES.password}
       rightElement={
         <PasswordToggle
           isVisible={isShowPw.isVisible}

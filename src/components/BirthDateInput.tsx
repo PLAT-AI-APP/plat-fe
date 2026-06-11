@@ -6,6 +6,7 @@ import Calendar, { OnArgs } from "react-calendar";
 import dayjs from "dayjs";
 import { useFormContext } from "react-hook-form";
 import { ProfileEditFormType } from "@/schema/profile.schema";
+import { FIELD_HELPER_MESSAGES } from "@/constants/fieldMessages";
 
 interface BirthDateInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: boolean;
@@ -132,6 +133,12 @@ export const BirthDateInput = React.forwardRef<
           </>
         )}
       </div>
+
+      {!error && (
+        <span className="body-6 block pt-2 text-font-2">
+          {FIELD_HELPER_MESSAGES.birth}
+        </span>
+      )}
     </section>
   );
 });
