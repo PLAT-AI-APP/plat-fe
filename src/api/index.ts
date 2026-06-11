@@ -70,6 +70,11 @@ const onRequest = (
     config.headers.Authorization = `Bearer ${token}`;
   }
 
+  if (typeof FormData !== "undefined" && config.data instanceof FormData) {
+    delete config.headers["Content-Type"];
+    delete config.headers["content-type"];
+  }
+
   return config;
 };
 
@@ -157,7 +162,6 @@ authAxios.interceptors.response.use(
   (err: AxiosError<ApiErrorResponse>) => {
     // 1. 콘솔에 백엔드 에러 출력
     if (err.response?.data) {
-      const { code, data, message } = err.response.data;
       // console.error(`🔒 [authAxios Error] ${code}: ${message}`, data);
     }
     // 2. 기존 에러 처리 함수 실행

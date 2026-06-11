@@ -4,7 +4,7 @@ import { endpoint } from "../utils";
 const existingNicknames = ["admin", "test", "plat"];
 const verifiedEmails = new Set<string>();
 
-const ok = <T,>(data?: T, message?: string) =>
+const ok = <T>(data?: T, message?: string) =>
   HttpResponse.json({
     result: "OK",
     ...(message && { message }),
@@ -77,7 +77,7 @@ export const authHandlers = [
 
     return ok(
       { emailVerifyToken: `mock-email-token-${code}` },
-      "이메일 인증이 완료되었습니다.",
+      "이메일 인증이 완료되었어요",
     );
   }),
 
@@ -172,7 +172,10 @@ export const authHandlers = [
       return error(401, "MESSAGE", "로그인 세션이 만료되었습니다.");
     }
 
-    return ok({ accessToken: "mock-refreshed-access-token" }, "토큰이 갱신되었습니다.");
+    return ok(
+      { accessToken: "mock-refreshed-access-token" },
+      "토큰이 갱신되었습니다.",
+    );
   }),
 
   http.post(endpoint("/auth/social/token"), async ({ request }) => {
@@ -186,13 +189,12 @@ export const authHandlers = [
   }),
 
   http.post(endpoint("/auth/password/reset"), async ({ request }) => {
-    const { email, code, password, passwordCheck } =
-      (await request.json()) as {
-        email?: string;
-        code?: string;
-        password?: string;
-        passwordCheck?: string;
-      };
+    const { email, code, password, passwordCheck } = (await request.json()) as {
+      email?: string;
+      code?: string;
+      password?: string;
+      passwordCheck?: string;
+    };
 
     const fields: Record<string, string> = {};
     if (!email) fields.email = "이메일을 입력해 주세요.";

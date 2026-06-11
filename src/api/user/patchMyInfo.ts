@@ -7,47 +7,38 @@ interface PatchMyInfoProps {
   bio: string;
   birth: string;
   gender: string;
-  // profileImg: string;
   profileImgFile: File | string;
-  // phone: {
-  //   countryCode: string;
-  //   number: string;
-  // };
 }
 
+const createProfilePayload = (data: PatchMyInfoProps) => ({
+  nickname: data.nickname,
+  bio: data.bio || "",
+  ...(data.birth ? { birth: data.birth } : {}),
+  ...(data.gender ? { gender: data.gender } : {}),
+});
+
 const PatchMyInfo = async (data: PatchMyInfoProps) => {
+  const payload = createProfilePayload(data);
+
+  if (!(data.profileImgFile instanceof File)) {
+    const response = await authAxios.patch<ApiSuccessResponse>(
+      "/users/me",
+      payload,
+    );
+
+    return response.data.data;
+  }
+
   const formData = new FormData();
-
-  formData.append("nickname", data.nickname);
-  formData.append("bio", data.bio || "");
-  formData.append("birth", data.birth);
-  formData.append("gender", data.gender);
-
-  // formData.append("phone.countryCode", data.phone.countryCode || "+82");
-  // formData.append("phone.number", data.phone.number || "01029114961");
-
-  // 만약 profileImg가 File 객체라면 파일 전송
-  if (data.profileImgFile instanceof File) {
-    formData.append("profileImage", data.profileImgFile);
-    formData.append("removeImage", "false");
-  }
-  // 만약 profileImg가 아예 없거나 빈 값이라면 이미지 삭제 처리
-  else if (!data.profileImgFile) {
-    formData.append("removeImage", "true");
-  }
-  // 기존 URL(string) 유지 시
-  else {
-    formData.append("removeImage", "false");
-  }
+  formData.append("nickname", payload.nickname);
+  formData.append("bio", payload.bio);
+  if (payload.birth) formData.append("birth", payload.birth);
+  if (payload.gender) formData.append("gender", payload.gender);
+  formData.append("profileImage", data.profileImgFile);
 
   const response = await authAxios.patch<ApiSuccessResponse>(
-    `/users/me`,
+    "/users/me",
     formData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    },
   );
 
   return response.data.data;
@@ -61,7 +52,6 @@ export const useUpdateMyInfoMutation = () => {
     mutationKey: ["patch-my-info"],
     mutationFn: PatchMyInfo,
     onSuccess: () => {
-      // 내 정보 GET 쿼리 무효화 (최신화)
       queryClient.invalidateQueries({ queryKey: ["get-my-info"] });
     },
   });

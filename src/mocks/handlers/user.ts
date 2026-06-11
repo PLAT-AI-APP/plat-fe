@@ -17,6 +17,34 @@ let mockUser: UserInfo = {
   email: "mock@example.com",
 };
 
+type PatchUserBody = {
+  nickname?: string;
+  bio?: string;
+  birth?: string;
+  gender?: UserInfo["gender"];
+  removeImage?: boolean;
+  profileImageFile?: File | null;
+};
+
+const parsePatchUserBody = async (request: Request): Promise<PatchUserBody> => {
+  const contentType = request.headers.get("content-type") ?? "";
+
+  if (contentType.includes("multipart/form-data")) {
+    const formData = await request.formData();
+
+    return {
+      nickname: String(formData.get("nickname") ?? ""),
+      bio: String(formData.get("bio") ?? ""),
+      birth: String(formData.get("birth") ?? ""),
+      gender: String(formData.get("gender") ?? "") as UserInfo["gender"],
+      removeImage: formData.get("removeImage") === "true",
+      profileImageFile: formData.get("profileImage") as File | null,
+    };
+  }
+
+  return (await request.json()) as PatchUserBody;
+};
+
 export const userHandlers = [
   http.get(endpoint("/users/me"), async () => {
     return HttpResponse.json({
@@ -26,18 +54,16 @@ export const userHandlers = [
   }),
 
   http.patch(endpoint("/users/me"), async ({ request }) => {
-    const formData = await request.formData();
-    const nickname = String(formData.get("nickname") ?? "");
-    const bio = String(formData.get("bio") ?? "");
-    const birth = String(formData.get("birth") ?? "");
-    const gender = String(formData.get("gender") ?? "") as UserInfo["gender"];
-    const profileImageFile = formData.get("profileImage");
-    const removeImage = formData.get("removeImage") === "true";
+    const body = await parsePatchUserBody(request);
+    const nickname = body.nickname ?? "";
+    const bio = body.bio ?? "";
+    const birth = body.birth ?? mockUser.birth;
+    const gender = body.gender ?? mockUser.gender;
+    const removeImage = body.removeImage === true;
+    const profileImageFile = body.profileImageFile;
 
     const fields: Record<string, string> = {};
     if (!nickname) fields.nickname = "닉네임을 입력해 주세요.";
-    if (!birth) fields.birth = "생년월일을 입력해 주세요.";
-    if (!gender) fields.gender = "성별을 선택해 주세요.";
 
     if (Object.keys(fields).length > 0) {
       return HttpResponse.json(
