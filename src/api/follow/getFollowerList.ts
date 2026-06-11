@@ -6,6 +6,7 @@ export interface GetFollowerListResponse {
   userId: string;
   profileImage: string | null;
   nickname: string;
+  description: string;
 }
 
 interface GetFollowerListProps {

@@ -14,7 +14,9 @@ export interface ChattingStartModalProps extends GlobalModalProps {
 }
 
 export interface FollowModalProps extends GlobalModalProps {
-  // userId: string;
+  userId: string;
+  nickname?: string;
+  isOwnProfile?: boolean;
   activeTab: "followers" | "following";
 }
 

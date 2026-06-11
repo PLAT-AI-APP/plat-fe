@@ -4,7 +4,7 @@ import { ModalTypeMap } from "@/store/useModalStore";
 // 각 모달 컴포넌트 임포트
 import AddLanguageModal from "./AddLanguageModal";
 import ChattingStartModal from "./ChattingStartModal";
-import { FollowModal } from "./FollowModal";
+import FollowModal from "./follow";
 import LoginModal from "./LoginModal";
 import PersonaAddModal from "./PersonaAddModal";
 import ProfileEditModal from "./ProfileEditModal";
