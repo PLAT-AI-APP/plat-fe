@@ -1,5 +1,28 @@
 import { z } from "zod";
 import { EMAIL_REGEX, NICKNAME_REGEX } from "@/lib/regex";
+import { FIELD_ERROR_MESSAGES } from "@/constants/fieldMessages";
+
+const isFutureDate = (value: string) => {
+  if (!value) return false;
+
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  if (!match) return false;
+
+  const [, year, month, day] = match;
+  const date = new Date(Number(year), Number(month) - 1, Number(day));
+  const isValidDate =
+    date.getFullYear() === Number(year) &&
+    date.getMonth() === Number(month) - 1 &&
+    date.getDate() === Number(day);
+
+  if (!isValidDate) return false;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  date.setHours(0, 0, 0, 0);
+
+  return date.getTime() > today.getTime();
+};
 
 export const profileEditFormSchema = z.object({
   profileImg: z.string(),
@@ -9,20 +32,22 @@ export const profileEditFormSchema = z.object({
   nickname: z
     .string()
     .trim()
-    .min(1, "닉네임을 입력해주세요.")
-    .max(20, "닉네임은 최대 20자까지 입력 가능해요")
-    .regex(NICKNAME_REGEX, "특수문자는 사용할 수 없어요"),
+    .min(1, FIELD_ERROR_MESSAGES.nicknameRequired)
+    .max(20, FIELD_ERROR_MESSAGES.nicknameMaxLength)
+    .regex(NICKNAME_REGEX, FIELD_ERROR_MESSAGES.nicknameInvalid),
   bio: z
     .string()
     .trim()
-    .max(100, "소개글은 최대 100자까지 입력 가능해요")
+    .max(100, FIELD_ERROR_MESSAGES.bioMaxLength)
     .optional(),
-  birth: z.string(),
+  birth: z
+    .string()
+    .refine((value) => !isFutureDate(value), FIELD_ERROR_MESSAGES.birthFuture),
   gender: z.enum(["MALE", "FEMALE", ""]),
   email: z
     .string()
-    .min(1, "이메일을 입력해주세요.")
-    .regex(EMAIL_REGEX, "잘못된 이메일 형식에요"),
+    .min(1, FIELD_ERROR_MESSAGES.emailRequired)
+    .regex(EMAIL_REGEX, FIELD_ERROR_MESSAGES.emailInvalid),
   provider: z.enum(["KAKAO", "GOOGLE", "EMAIL"]),
 });
 

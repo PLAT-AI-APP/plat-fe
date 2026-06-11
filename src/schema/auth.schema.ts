@@ -5,12 +5,13 @@ import {
   PASSWORD_REGEX,
   PASSWORD_SPECIAL_CHAR_REGEX,
 } from "@/lib/regex";
+import { FIELD_ERROR_MESSAGES } from "@/constants/fieldMessages";
 
 const createEmailSchema = () =>
   z
     .string()
-    .min(1, "이메일을 입력해주세요.")
-    .regex(EMAIL_REGEX, "잘못된 이메일 형식에요");
+    .min(1, FIELD_ERROR_MESSAGES.emailRequired)
+    .regex(EMAIL_REGEX, FIELD_ERROR_MESSAGES.emailInvalid);
 
 const createPasswordSchema = (requiredMessage: string) =>
   z.string().superRefine((value, ctx) => {
@@ -30,7 +31,7 @@ const createPasswordSchema = (requiredMessage: string) =>
     if (!hasSpecialChar && !isMin8) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "특수 문자 포함, 최소 8자 입력해 주세요",
+        message: FIELD_ERROR_MESSAGES.passwordInvalid,
       });
       return;
     }
@@ -38,7 +39,7 @@ const createPasswordSchema = (requiredMessage: string) =>
     if (!hasSpecialChar && isMin8) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "!, @, #, $ 등의 특수문자를 사용해 주세요",
+        message: FIELD_ERROR_MESSAGES.passwordSpecialCharRequired,
       });
       return;
     }
@@ -46,16 +47,16 @@ const createPasswordSchema = (requiredMessage: string) =>
     if (hasSpecialChar && !isMin8) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "최소 8자 이상이어야 해요",
+        message: FIELD_ERROR_MESSAGES.passwordMinLength,
       });
     }
   });
 
-/** 회원가입 form 유효성 */
+/** 로그인 form 유효성 */
 export const loginFormSchema = z.object({
   email: createEmailSchema(),
 
-  pw: createPasswordSchema("비밀번호를 입력해주세요."),
+  pw: createPasswordSchema(FIELD_ERROR_MESSAGES.passwordRequired),
 });
 
 export type LoginFormValues = z.input<typeof loginFormSchema>;
@@ -65,37 +66,39 @@ export const authFormSchema = z
   .object({
     nickname: z
       .string()
-      .min(1, "닉네임을 입력해주세요.")
-      .max(20, "닉네임은 최대 20자까지 입력 가능해요")
-      .regex(NICKNAME_REGEX, "특수문자는 사용할 수 없어요"),
+      .min(1, FIELD_ERROR_MESSAGES.nicknameRequired)
+      .max(20, FIELD_ERROR_MESSAGES.nicknameMaxLength)
+      .regex(NICKNAME_REGEX, FIELD_ERROR_MESSAGES.nicknameInvalid),
 
     email: createEmailSchema(),
 
     code: z
       .string()
-      .min(1, "인증 코드를 입력해주세요.")
-      .length(6, "인증 코드는 6자리여야 합니다."),
+      .min(1, FIELD_ERROR_MESSAGES.verificationCodeRequired)
+      .length(6, FIELD_ERROR_MESSAGES.verificationCodeLength),
 
-    password: createPasswordSchema("비밀번호를 입력해주세요."),
-    passwordCheck: createPasswordSchema("비밀번호 확인을 입력해주세요."),
+    password: createPasswordSchema(FIELD_ERROR_MESSAGES.passwordRequired),
+    passwordCheck: createPasswordSchema(
+      FIELD_ERROR_MESSAGES.passwordCheckRequired,
+    ),
 
     isPrivacyAgreed: z.boolean().refine((value) => value === true, {
-      message: "개인정보 처리방침에 동의해주세요.",
+      message: FIELD_ERROR_MESSAGES.privacyRequired,
     }),
 
     isTermsAgreed: z.boolean().refine((value) => value === true, {
-      message: "이용약관에 동의해주세요.",
+      message: FIELD_ERROR_MESSAGES.termsRequired,
     }),
     isAgeAgreed: z
       .boolean()
       .refine((value) => value === true, {
-        message: "이용약관에 동의해주세요.",
+        message: FIELD_ERROR_MESSAGES.ageRequired,
       })
       .optional(),
   })
   .refine((data) => data.password === data.passwordCheck, {
     path: ["passwordCheck"],
-    message: "비밀번호가 일치하지 않습니다.",
+    message: FIELD_ERROR_MESSAGES.passwordMismatch,
   });
 
 export type AuthFormValues = z.input<typeof authFormSchema>;
@@ -106,14 +109,16 @@ export const passwordResetFormSchema = z
     email: createEmailSchema(),
     code: z
       .string()
-      .min(1, "인증 코드를 입력해주세요.")
-      .length(6, "인증 코드는 6자리여야 합니다."),
-    password: createPasswordSchema("비밀번호를 입력해주세요."),
-    passwordCheck: createPasswordSchema("비밀번호 확인을 입력해주세요."),
+      .min(1, FIELD_ERROR_MESSAGES.verificationCodeRequired)
+      .length(6, FIELD_ERROR_MESSAGES.verificationCodeLength),
+    password: createPasswordSchema(FIELD_ERROR_MESSAGES.passwordRequired),
+    passwordCheck: createPasswordSchema(
+      FIELD_ERROR_MESSAGES.passwordCheckRequired,
+    ),
   })
   .refine((data) => data.password === data.passwordCheck, {
     path: ["passwordCheck"],
-    message: "비밀번호가 일치하지 않습니다.",
+    message: FIELD_ERROR_MESSAGES.passwordMismatch,
   });
 
 export type PasswordResetFormSchemaValues = z.input<

@@ -6,7 +6,10 @@ import Calendar, { OnArgs } from "react-calendar";
 import dayjs from "dayjs";
 import { useFormContext } from "react-hook-form";
 import { ProfileEditFormType } from "@/schema/profile.schema";
-import { FIELD_HELPER_MESSAGES } from "@/constants/fieldMessages";
+import {
+  FIELD_FEEDBACK_MESSAGES,
+  FIELD_HELPER_MESSAGES,
+} from "@/constants/fieldMessages";
 
 interface BirthDateInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: boolean;
@@ -14,12 +17,41 @@ interface BirthDateInputProps extends React.InputHTMLAttributes<HTMLInputElement
   isEditMode?: boolean;
 }
 
+const isValidPastOrTodayDate = (value?: string) => {
+  if (!value) return false;
+
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value);
+  if (!match) return false;
+
+  const [, year, month, day] = match;
+  const date = new Date(Number(year), Number(month) - 1, Number(day));
+  const isValidDate =
+    date.getFullYear() === Number(year) &&
+    date.getMonth() === Number(month) - 1 &&
+    date.getDate() === Number(day);
+
+  if (!isValidDate) return false;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  date.setHours(0, 0, 0, 0);
+
+  return date.getTime() <= today.getTime();
+};
+
 export const BirthDateInput = React.forwardRef<
   HTMLInputElement,
   BirthDateInputProps
 >(({ className, error, onChange, isEditMode = false, ...rest }, ref) => {
-  const { setValue, watch } = useFormContext<ProfileEditFormType>();
+  const {
+    setValue,
+    watch,
+    formState: { errors },
+  } = useFormContext<ProfileEditFormType>();
   const birth = watch("birth");
+  const birthErrorMessage = errors.birth?.message;
+  const hasError = error || Boolean(birthErrorMessage);
+  const isValidBirth = isValidPastOrTodayDate(birth);
 
   const [showCalendar, setShowCalendar] = useState(false);
   const [viewDate, setViewDate] = useState<Date | null>(new Date());
@@ -36,7 +68,7 @@ export const BirthDateInput = React.forwardRef<
 
     // 값 업데이트
     e.target.value = formatted;
-    setValue("birth", formatted);
+    setValue("birth", formatted, { shouldDirty: true, shouldValidate: true });
 
     // 값이 10자리가 완료되었을 때만 캘린더 뷰 이동
     if (formatted.length === 10) {
@@ -52,7 +84,10 @@ export const BirthDateInput = React.forwardRef<
   // 날짜 선택 시 로직
   const handleDateSelect = (date: Date) => {
     const formattedDate = dayjs(date).format("YYYY-MM-DD");
-    setValue("birth", formattedDate);
+    setValue("birth", formattedDate, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
     setShowCalendar(false);
   };
 
@@ -93,7 +128,7 @@ export const BirthDateInput = React.forwardRef<
           placeholder="YYYY-MM-DD"
           className={cn(
             "w-full px-4 py-3 pl-12 text-sm bg-bg-darkest border border-border-main rounded-xl outline-none placeholder:text-font-disabled text-white",
-            error && "border-font-accents",
+            hasError && "border-font-accents",
           )}
         />
 
@@ -134,9 +169,15 @@ export const BirthDateInput = React.forwardRef<
         )}
       </div>
 
-      {!error && (
+      {birthErrorMessage ? (
+        <span className="body-6 block pt-2 text-font-error">
+          {birthErrorMessage}
+        </span>
+      ) : (
         <span className="body-6 block pt-2 text-font-2">
-          {FIELD_HELPER_MESSAGES.birth}
+          {isValidBirth
+            ? FIELD_FEEDBACK_MESSAGES.birthValid
+            : FIELD_HELPER_MESSAGES.birth}
         </span>
       )}
     </section>

@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ModalLayout } from "../ModalLayout";
 import { Close, Persona } from "@/icons";
@@ -22,7 +22,7 @@ const PersonaAddModal = ({
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     reset,
     formState: { errors, isValid },
   } = useForm<PersonaFormValues>({
@@ -58,7 +58,8 @@ const PersonaAddModal = ({
   const { mutate: addPersona } = useAddPersonaMutation();
   const { mutate: editPersona } = useEditPersonaMutation();
 
-  const { info, name } = watch();
+  const name = useWatch({ control, name: "name" }) ?? "";
+  const info = useWatch({ control, name: "info" }) ?? "";
 
   const onSubmit = () => {
     if (isEditMode && personaId) {
@@ -106,7 +107,7 @@ const PersonaAddModal = ({
             maxLength={20}
             placeholder="이름을 입력해주세요."
             value={name} // 글자 수 표시용
-            error={errors.name}
+            error={errors.name ? "" : undefined}
             {...register("name")}
           />
 
@@ -120,7 +121,7 @@ const PersonaAddModal = ({
             inputClassName="max-h-30.25"
             placeholder={`나이, 성별 등을 자유롭게 입력해주세요.\n...`}
             value={info} // 글자 수 표시용
-            error={errors.info}
+            error={errors.info ? "" : undefined}
             {...register("info")}
             showOptionalLabel
           />
