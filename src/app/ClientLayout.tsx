@@ -10,6 +10,7 @@ import { useMyInfoQuery } from "@/api/user/getMyInfo";
 import { ModalManager } from "@/components/modal/ModalManager";
 import ModalNavigationGuard from "@/components/modal/ModalNavigationGuard";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useModalStore } from "@/store/useModalStore";
 import { refreshAccessToken } from "@/api/auth/postRefresh";
 import axios from "axios";
 
@@ -111,6 +112,7 @@ export default function ClientLayout({
     setLoggedIn,
   } = useAuthStore();
   const router = useRouter();
+  const clearModals = useModalStore((state) => state.clearModals);
   const isProtectedRoute = isProtectedPath(pathname);
   const [hasHydrated, setHasHydrated] = useState(false);
   const [isAuthChecking, setIsAuthChecking] = useState(true);
@@ -215,14 +217,16 @@ export default function ClientLayout({
 
       if (shouldSkipAuthAlert) {
         sessionStorage.removeItem(SKIP_AUTH_ALERT_ONCE_KEY);
+        clearModals();
         router.replace("/");
         return;
       }
 
       alert("로그인이 필요한 서비스입니다.");
+      clearModals();
       router.replace("/");
     }
-  }, [isAuthChecking, isLoggedIn, pathname, router]);
+  }, [clearModals, isAuthChecking, isLoggedIn, pathname, router]);
 
   useEffect(() => {
     const handleProtectedLinkClick = (event: MouseEvent) => {

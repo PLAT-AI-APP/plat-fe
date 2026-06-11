@@ -84,7 +84,6 @@ export const useModalStore = create<ModalState>((set, get) => ({
       if (!isLoggedIn && requiresAuthModalTypes.includes(type)) {
         return {
           modals: [
-            ...state.modals,
             {
               type: "NOTICE_DIALOG",
               props: {
