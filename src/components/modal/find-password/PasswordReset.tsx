@@ -2,7 +2,10 @@ import { usePasswordResetMutation } from "@/api/auth/postPasswordReset";
 import ActiveButton from "@/components/ActiveButton";
 import { PasswordToggle } from "@/components/auth/PasswordToggle";
 import SmartInput from "@/components/smart-input";
-import { FIELD_HELPER_MESSAGES } from "@/constants/fieldMessages";
+import {
+  FIELD_FEEDBACK_MESSAGES,
+  FIELD_HELPER_MESSAGES,
+} from "@/constants/fieldMessages";
 import { useTogglePassword } from "@/hooks/useTogglePassword";
 import { PasswordResetFormSchemaValues } from "@/schema/auth.schema";
 import { useModalStore } from "@/store/useModalStore";
@@ -81,7 +84,12 @@ const PasswordReset = () => {
           placeholder="비밀번호를 다시 입력해주세요"
           {...register("passwordCheck")}
           error={errors.passwordCheck}
-          helperMessage={FIELD_HELPER_MESSAGES.passwordCheck}
+          helperMessage={
+            isPasswordResetActive
+              ? FIELD_FEEDBACK_MESSAGES.passwordCheckValid
+              : FIELD_HELPER_MESSAGES.passwordCheck
+          }
+          helperMessageType={isPasswordResetActive ? "success" : "default"}
           rightElement={
             <PasswordToggle
               isVisible={isShowConfirm.isVisible}

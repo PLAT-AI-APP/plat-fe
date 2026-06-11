@@ -14,10 +14,11 @@ export const FIELD_FEEDBACK_MESSAGES = {
   nicknameAvailable: "멋진 닉네임이에요",
   nicknameUnavailable: "이미 사용 중인 닉네임이에요",
   emailVerificationSent: "메일함에서 인증번호를 확인해 주세요",
-  emailVerificationComplete: "이메일 인증이 완료되었습니다.",
+  emailVerificationComplete: "이메일 인증이 완료되었어요",
   emailVerificationExpired: "시간이 초과되었습니다.",
   emailVerificationMismatch: "인증번호가 일치하지 않습니다.",
   birthValid: "소중한 날이네요, 잘 기억해 둘게요",
+  passwordCheckValid: "확인되었어요",
 } as const;
 
 /** form/schema 유효성 에러 메시지 모음 */

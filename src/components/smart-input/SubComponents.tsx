@@ -82,7 +82,9 @@ export const ErrorMessage = ({ error }: { error?: FieldError | string }) => {
   );
 };
 
-export const HelperMessage = ({ message }: {
+export const HelperMessage = ({
+  message,
+}: {
   message?: string;
   type?: "success" | "default";
 }) => {

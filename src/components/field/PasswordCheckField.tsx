@@ -4,7 +4,10 @@ import React, { useEffect } from "react";
 import { FieldError, useFormContext, useWatch } from "react-hook-form";
 import { PasswordToggle } from "@/components/auth/PasswordToggle";
 import SmartInput from "@/components/smart-input";
-import { FIELD_HELPER_MESSAGES } from "@/constants/fieldMessages";
+import {
+  FIELD_FEEDBACK_MESSAGES,
+  FIELD_HELPER_MESSAGES,
+} from "@/constants/fieldMessages";
 import { useTogglePassword } from "@/hooks/useTogglePassword";
 
 const PasswordCheckField = () => {
@@ -19,6 +22,12 @@ const PasswordCheckField = () => {
   const passwordCheck = useWatch({ control, name: "passwordCheck" });
 
   const isShowConfirm = useTogglePassword();
+  const isPasswordCheckValid =
+    Boolean(password) &&
+    Boolean(passwordCheck) &&
+    !errors.password &&
+    !errors.passwordCheck &&
+    password === passwordCheck;
 
   useEffect(() => {
     if (passwordCheck) {
@@ -34,7 +43,12 @@ const PasswordCheckField = () => {
       placeholder="비밀번호를 다시 입력해주세요"
       {...register("passwordCheck")}
       error={errors.passwordCheck as FieldError}
-      helperMessage={FIELD_HELPER_MESSAGES.passwordCheck}
+      helperMessage={
+        isPasswordCheckValid
+          ? FIELD_FEEDBACK_MESSAGES.passwordCheckValid
+          : FIELD_HELPER_MESSAGES.passwordCheck
+      }
+      helperMessageType={isPasswordCheckValid ? "success" : "default"}
       rightElement={
         <PasswordToggle
           isVisible={isShowConfirm.isVisible}
