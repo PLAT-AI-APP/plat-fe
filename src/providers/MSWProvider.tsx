@@ -1,51 +1,45 @@
-// "use client";
+"use client";
 
-// import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-// export default function MSWProvider({
-//   children,
-// }: {
-//   children: React.ReactNode;
-// }) {
-//   const [mswReady, setMswReady] = useState(false);
+const isMockingEnabled = process.env.NEXT_PUBLIC_API_MOCKING === "enabled";
+let workerReadyPromise: Promise<void> | null = null;
 
-//   useEffect(() => {
-//     // 1. 이미 준비되었거나 개발 환경이 아니면 종료
-//     if (mswReady) {
-//       setMswReady(true);
-//       return;
-//     }
+const startWorker = async () => {
+  if (!workerReadyPromise) {
+    workerReadyPromise = import("@/mocks/browser").then(async ({ worker }) => {
+      await worker.start({
+        onUnhandledRequest: "bypass",
+        serviceWorker: {
+          url: "/mockServiceWorker.js",
+        },
+      });
+    });
+  }
 
-//     const initMsw = async () => {
-//       try {
-//         const { worker } = await import("@/mocks/browser");
+  return workerReadyPromise;
+};
 
-//         await worker.start({
-//           onUnhandledRequest: "bypass",
-//           serviceWorker: {
-//             // Next.js public 폴더 내의 서비스 워커 파일 경로를 명시적으로 지정
-//             url: "/mockServiceWorker.js",
-//           },
-//         });
+export default function MSWProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const [isReady, setIsReady] = useState(!isMockingEnabled);
 
-//         setMswReady(true);
-//       } catch (error) {
-//         console.error("[MSW] 초기화 실패:", error);
-//         // 실패하더라도 앱은 돌아가야 하므로 true로 설정
-//         setMswReady(true);
-//       }
-//     };
+  useEffect(() => {
+    if (!isMockingEnabled) return;
 
-//     initMsw();
-//   }, [mswReady]);
+    startWorker()
+      .catch((error) => {
+        console.error("[MSW] failed to start worker:", error);
+      })
+      .finally(() => {
+        setIsReady(true);
+      });
+  }, []);
 
-//   // 서버 사이드에서는 아무것도 렌더링하지 않음 (Hydration 에러 방지)
-//   if (typeof window === "undefined") return null;
+  if (!isReady) return null;
 
-//   // 개발 환경에서 MSW 준비 전까지 로딩 처리 (준비 안 되면 null 반환으로 렌더링 지연)
-//   if (!mswReady) {
-//     return null;
-//   }
-
-//   return <>{children}</>;
-// }
+  return <>{children}</>;
+}

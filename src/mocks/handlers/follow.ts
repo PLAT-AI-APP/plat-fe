@@ -1,4 +1,5 @@
 import { http, HttpResponse } from "msw";
+import { endpoint, pathValue } from "../utils";
 
 const MOCK_FOLLOWINGS = Array.from({ length: 100 }, (_, i) => ({
   userId: 100 + i,
@@ -14,8 +15,8 @@ const MOCK_FOLLOWERS = Array.from({ length: 100 }, (_, i) => ({
 
 export const followHandlers = [
   /** 유저의 팔로워/팔로잉 수 조회 */
-  http.get("*/follow/:userId/count", ({ params }) => {
-    const { userId } = params;
+  http.get(/\/follow\/[^/]+\/count(?:\?.*)?$/, ({ request }) => {
+    const userId = pathValue(request.url, /\/follow\/([^/]+)\/count$/);
 
     // 유저가 없을 경우 (404)
     if (userId === "999") {
@@ -40,7 +41,7 @@ export const followHandlers = [
   }),
 
   /** 팔로잉 목록 조회 핸들러 */
-  http.get("*/follow/following", ({ request }) => {
+  http.get(endpoint("/follow/following"), ({ request }) => {
     const url = new URL(request.url);
 
     // 1. Query String 추출 (userId는 더 이상 추출하지 않음)
@@ -70,7 +71,7 @@ export const followHandlers = [
   }),
 
   /** 팔로워 목록 조회 핸들러 */
-  http.get("*/follow/followers", ({ request }) => {
+  http.get(endpoint("/follow/followers"), ({ request }) => {
     const url = new URL(request.url);
 
     // 1. Query String 파싱
@@ -100,8 +101,8 @@ export const followHandlers = [
   }),
 
   /** 특정 유저 언팔로우 API */
-  http.delete("*/follow/:userId", ({ params, request }) => {
-    const { userId } = params;
+  http.delete(/\/follow\/[^/]+(?:\?.*)?$/, ({ request }) => {
+    const userId = pathValue(request.url, /\/follow\/([^/]+)$/);
     const authHeader = request.headers.get("Authorization");
 
     // 1. 인증 체크 (Bearer 토큰 유무 확인)
@@ -150,8 +151,8 @@ export const followHandlers = [
   }),
 
   /** 특정 유저 팔로우 API */
-  http.post("*/follow/:userId", ({ params, request }) => {
-    const { userId } = params;
+  http.post(/\/follow\/[^/]+(?:\?.*)?$/, ({ request }) => {
+    const userId = pathValue(request.url, /\/follow\/([^/]+)$/);
     const authHeader = request.headers.get("Authorization");
 
     // 1. 인증 체크 (Bearer 토큰 유무 확인)

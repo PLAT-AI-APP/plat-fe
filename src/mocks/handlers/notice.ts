@@ -1,4 +1,5 @@
 import { http, HttpResponse } from "msw";
+import { endpoint, pathValue } from "../utils";
 
 // 타입 정의
 interface NoticeItem {
@@ -53,7 +54,7 @@ const { list: mockNotices, details: mockNoticeDetails } = generateMockData();
 
 export const noticeHandlers = [
   // 공지사항 목록 조회 API
-  http.get("*/notice", ({ request }) => {
+  http.get(endpoint("/notice"), ({ request }) => {
     const url = new URL(request.url);
     const page = parseInt(url.searchParams.get("page") || "0", 10);
     const size = parseInt(url.searchParams.get("size") || "20", 10);
@@ -93,9 +94,9 @@ export const noticeHandlers = [
   }),
 
   // 공지사항 상세 조회 API (요청하신 대로 data 래핑 제거)
-  http.get("*/notice/:noticeId", ({ params }) => {
-    const { noticeId } = params;
-    const id = parseInt(noticeId as string, 10);
+  http.get(/\/notice\/[^/]+(?:\?.*)?$/, ({ request }) => {
+    const noticeId = pathValue(request.url, /\/notice\/([^/]+)$/);
+    const id = parseInt(noticeId ?? "", 10);
     const notice = mockNoticeDetails[id];
 
     if (!notice) {

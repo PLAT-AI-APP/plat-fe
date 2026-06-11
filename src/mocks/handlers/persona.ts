@@ -1,39 +1,47 @@
 import { http, HttpResponse } from "msw";
+import type { Persona } from "@/type/persona";
+import { endpoint, pathValue } from "../utils";
 
-// 함수 외부에 가짜 DB 선언
-let mockPersonas = [
+let mockPersonas: Persona[] = [
   {
-    personaId: 1,
-    name: "김철수",
-    description: "평범한 직장인",
+    personaId: "1",
+    name: "기본 페르소나",
+    description: "차분하고 친근한 기본 페르소나입니다.",
     isDefault: true,
   },
   {
-    personaId: 2,
-    name: "마법사 철수",
-    description: "마법사 견습생",
+    personaId: "2",
+    name: "작업 모드",
+    description: "집중해서 작업할 때 사용하는 페르소나입니다.",
     isDefault: false,
   },
 ];
 
 export const personaHandlers = [
-  /** 페르소나 목록 조회 */
-  http.get("*/users/me/personas", async () => {
+  http.get(endpoint("/users/me/personas"), async () => {
     return HttpResponse.json({
       result: "OK",
-      data: mockPersonas,
+      data: {
+        data: mockPersonas,
+      },
     });
   }),
 
-  /** 페르소나 상세 조회 */
-  http.get("*/users/me/personas/:personaId", async ({ params }) => {
-    const { personaId } = params;
+  http.get(/\/users\/me\/personas\/[^/]+(?:\?.*)?$/, async ({ request }) => {
+    const personaId = pathValue(request.url, /\/users\/me\/personas\/([^/]+)$/);
     const targetPersona = mockPersonas.find(
-      (p) => p.personaId === Number(personaId),
+      (persona) => persona.personaId === personaId,
     );
 
     if (!targetPersona) {
-      return new HttpResponse(null, { status: 404 });
+      return HttpResponse.json(
+        {
+          result: "ERROR",
+          code: "MESSAGE",
+          message: "존재하지 않는 페르소나입니다.",
+        },
+        { status: 404 },
+      );
     }
 
     return HttpResponse.json({
@@ -42,22 +50,37 @@ export const personaHandlers = [
     });
   }),
 
-  /** 페르소나 추가 */
-  http.post("*/users/me/personas", async ({ request }) => {
-    const newPersonaData = (await request.json()) as {
-      name: string;
-      description: string;
+  http.post(endpoint("/users/me/personas"), async ({ request }) => {
+    const { name, description } = (await request.json()) as {
+      name?: string;
+      description?: string;
     };
 
-    // 외부 변수(mockPersonas)에 새로운 데이터 push
-    const newPersona = {
-      personaId: mockPersonas.length + 1, // 단순한 ID 생성 로직
-      name: newPersonaData.name,
-      description: newPersonaData.description,
-      isDefault: false,
-    };
+    if (!name) {
+      return HttpResponse.json(
+        {
+          result: "ERROR",
+          code: "FIELD_ERROR",
+          message: "입력값을 확인해 주세요.",
+          data: {
+            fields: {
+              name: "페르소나 이름을 입력해 주세요.",
+            },
+          },
+        },
+        { status: 400 },
+      );
+    }
 
-    mockPersonas.push(newPersona);
+    mockPersonas = [
+      ...mockPersonas,
+      {
+        personaId: crypto.randomUUID(),
+        name,
+        description: description ?? "",
+        isDefault: false,
+      },
+    ];
 
     return HttpResponse.json(
       {
@@ -68,48 +91,58 @@ export const personaHandlers = [
     );
   }),
 
-  /** 페르소나 수정 */
-  http.patch("*/users/me/personas/:personaId", async ({ params, request }) => {
-    const { personaId } = params;
-
-    const updateData = (await request.json()) as {
+  http.patch(/\/users\/me\/personas\/[^/]+(?:\?.*)?$/, async ({ request }) => {
+    const { name, description } = (await request.json()) as {
       name?: string;
       description?: string;
     };
-
-    const index = mockPersonas.findIndex(
-      (p) => p.personaId === Number(personaId),
+    const personaId = pathValue(request.url, /\/users\/me\/personas\/([^/]+)$/);
+    const targetIndex = mockPersonas.findIndex(
+      (persona) => persona.personaId === personaId,
     );
 
-    if (index === -1) {
-      return new HttpResponse(null, { status: 404 });
+    if (targetIndex < 0) {
+      return HttpResponse.json(
+        {
+          result: "ERROR",
+          code: "MESSAGE",
+          message: "존재하지 않는 페르소나입니다.",
+        },
+        { status: 404 },
+      );
     }
 
-    mockPersonas[index] = {
-      ...mockPersonas[index],
-      ...updateData,
+    mockPersonas[targetIndex] = {
+      ...mockPersonas[targetIndex],
+      ...(name !== undefined && { name }),
+      ...(description !== undefined && { description }),
     };
 
     return HttpResponse.json({
       result: "OK",
-      data: mockPersonas[index],
-      message: "페르소나 정보가 수정되었습니다.",
+      message: "페르소나가 수정되었습니다.",
     });
   }),
 
-  /** 페르소나 삭제 */
-  http.delete("*/users/me/personas/:personaId", async ({ params }) => {
-    const { personaId } = params;
-
-    const exists = mockPersonas.some((p) => p.personaId === Number(personaId));
+  http.delete(/\/users\/me\/personas\/[^/]+(?:\?.*)?$/, async ({ request }) => {
+    const personaId = pathValue(request.url, /\/users\/me\/personas\/([^/]+)$/);
+    const exists = mockPersonas.some(
+      (persona) => persona.personaId === personaId,
+    );
 
     if (!exists) {
-      return new HttpResponse(null, { status: 404 });
+      return HttpResponse.json(
+        {
+          result: "ERROR",
+          code: "MESSAGE",
+          message: "존재하지 않는 페르소나입니다.",
+        },
+        { status: 404 },
+      );
     }
 
-    // 가짜 DB에서 해당 ID 제외 (삭제 처리)
     mockPersonas = mockPersonas.filter(
-      (p) => p.personaId !== Number(personaId),
+      (persona) => persona.personaId !== personaId,
     );
 
     return HttpResponse.json({
