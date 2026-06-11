@@ -149,6 +149,9 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
   const displayFeedback = getFeedback("email");
   const displayMessage = displayErrorMessage || displayFeedback?.message;
   const isDisplayMessageError = !!displayErrorMessage;
+  const emailHelperMessage = displayMessage
+    ? undefined
+    : FIELD_HELPER_MESSAGES.emailDomain;
 
   return (
     <section id="email-auth-container" className="flex flex-col ">
@@ -176,7 +179,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
               isEmailVerified && "bg-card text-font-2",
             )}
             disabled={isEmailVerified}
-            helperMessage={FIELD_HELPER_MESSAGES.emailDomain}
+            helperMessage={emailHelperMessage}
           />
           <ActiveButton
             type="button"
@@ -278,7 +281,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
         <span
           role={isDisplayMessageError ? "alert" : "status"}
           className={cn(
-            "pl-2 pt-1.5 text-xs",
+            "pt-2 text-xs",
             isDisplayMessageError ? "text-font-accents" : "text-font-2",
           )}
         >
