@@ -1,6 +1,6 @@
 import React from "react";
-import { ModalLayout } from "./ModalLayout";
 import { cn } from "@/lib/utils";
+import { ModalLayout } from "./ModalLayout";
 
 interface DialogProps {
   onClose: () => void;
@@ -11,6 +11,7 @@ interface DialogProps {
   confirmFn?: () => void;
   confirmText?: string;
 }
+
 const Dialog = ({
   onClose,
   label,
@@ -43,12 +44,13 @@ const Dialog = ({
     >
       <div className="flex w-full flex-col items-center gap-8">
         <div className="flex w-full flex-col items-start gap-3">
-          {/* label이 문자열이면 p태그로 래핑, 아니면 그대로 렌더링 */}
+          {/* 호출부가 직접 JSX 제목을 넘기는 경우도 있어 문자열일 때만 기본 타이틀 스타일을 적용합니다. */}
           {typeof label === "string" ? (
             <h2 className="title-2 w-full text-font-1">{label}</h2>
           ) : (
             label
           )}
+
           {description && (
             <p className="body-4 w-full whitespace-pre-line text-font-2">
               {description}
@@ -56,16 +58,17 @@ const Dialog = ({
           )}
         </div>
 
-        <div className="flex w-full items-end gap-2 title-5">
+        <div className="title-5 flex w-full items-end gap-2">
           {hasCancelButton && (
             <button
-              onClick={handleCancel}
               type="button"
+              onClick={handleCancel}
               className="flex h-10.5 flex-1 items-center justify-center rounded-xl bg-card px-6 text-font-1 transition-colors hover:bg-card-hover"
             >
               {cancelText}
             </button>
           )}
+
           <button
             type="button"
             onClick={handleConfirm}

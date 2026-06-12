@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+"use client";
+
 import Image from "next/image";
+import { useRef, useState } from "react";
 import { useUnFollowMutation } from "@/api/follow/deleteFollow";
 import { useFollowCountQuery } from "@/api/follow/getFollowCount";
 import { useFollowMutation } from "@/api/follow/postFollow";
+import Dialog from "@/components/Dialog";
+import ProfileActionPopover from "@/components/popover/ProfileActionPopover";
+import { Dots } from "@/icons";
 import { cn, formatWithCommas } from "@/lib/utils";
 import { useModalStore } from "@/store/useModalStore";
 import { useUserStore } from "@/store/useUserStore";
@@ -54,6 +59,9 @@ const Header = ({ userId }: HeaderProps) => {
   const { mutate: follow } = useFollowMutation();
   const { mutate: unFollow } = useUnFollowMutation();
   const [isFollowing, setIsFollowing] = useState(false);
+  const [isActionPopoverOpen, setIsActionPopoverOpen] = useState(false);
+  const [isBlockDialogOpen, setIsBlockDialogOpen] = useState(false);
+  const actionTriggerRef = useRef<HTMLButtonElement>(null);
 
   const isOwnProfile = user?.id === userId;
   const profileImage = user?.profileImage;
@@ -85,72 +93,129 @@ const Header = ({ userId }: HeaderProps) => {
     follow({ userId });
   };
 
-  return (
-    <header
-      id="profile-header"
-      className="flex w-full max-w-[1200px] flex-col gap-5"
-    >
-      <section id="profile-info-summary" className="flex w-full flex-col gap-3">
-        <div className="flex w-full items-center justify-between gap-4">
-          <div className="flex min-w-0 items-center gap-4">
-            <Image
-              src={profileImage || "/p1.png"}
-              alt="프로필 이미지"
-              width={68}
-              height={68}
-              className="size-[68px] shrink-0 rounded-full bg-[#d9d9d9] object-cover"
-            />
+  const handleShareProfile = () => {
+    if (typeof window === "undefined") {
+      return;
+    }
 
-            <h1 className="title-1 min-w-0 max-w-[346px] truncate text-font-1">
-              {nickname}
-            </h1>
+    // 공유 API가 별도로 없어 현재 프로필 URL을 클립보드에 복사하는 최소 동작으로 연결합니다.
+    void navigator.clipboard?.writeText(window.location.href);
+  };
+
+  const handleBlockConfirm = () => {
+    // 차단 API가 연결되면 이 위치에서 userId로 차단 요청을 보내면 됩니다.
+    setIsBlockDialogOpen(false);
+  };
+
+  return (
+    <>
+      <header
+        id="profile-header"
+        className="flex w-full max-w-[1200px] flex-col gap-5"
+      >
+        <section
+          id="profile-info-summary"
+          className="flex w-full flex-col gap-3"
+        >
+          <div className="flex w-full items-center justify-between gap-4">
+            <div className="flex min-w-0 items-center gap-4">
+              <Image
+                src={profileImage || "/p1.png"}
+                alt="프로필 이미지"
+                width={68}
+                height={68}
+                className="size-[68px] shrink-0 rounded-full bg-[#d9d9d9] object-cover"
+              />
+
+              <div className="flex min-w-0 items-center gap-1">
+                <h1 className="title-1 min-w-0 truncate text-font-1">
+                  {nickname}
+                </h1>
+
+                {!isOwnProfile && (
+                  <div className="relative flex size-6 shrink-0 items-center justify-center">
+                    <button
+                      ref={actionTriggerRef}
+                      type="button"
+                      aria-label="프로필 더보기 메뉴 열기"
+                      aria-expanded={isActionPopoverOpen}
+                      onClick={() => setIsActionPopoverOpen((prev) => !prev)}
+                      className="flex size-6 items-center justify-center text-font-2 transition-colors hover:text-font-1"
+                    >
+                      <Dots className="size-6 rotate-90" aria-hidden="true" />
+                    </button>
+
+                    {isActionPopoverOpen && (
+                      <ProfileActionPopover
+                        triggerRef={actionTriggerRef}
+                        onClose={() => setIsActionPopoverOpen(false)}
+                        onShare={handleShareProfile}
+                        onBlock={() => setIsBlockDialogOpen(true)}
+                      />
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {isOwnProfile ? (
+              <button
+                type="button"
+                onClick={handleProfileEdit}
+                className="title-3 flex h-12 items-center justify-center rounded-2xl border border-card-hover bg-bg-dark px-4 py-3 text-font-1"
+              >
+                프로필 수정
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={handleFollowToggle}
+                className={cn(
+                  "title-3 flex h-11 w-[89px] items-center justify-center rounded-[20px] px-4 py-2.5",
+                  isFollowing
+                    ? "bg-border-main text-font-1"
+                    : "bg-font-1 text-bg-dark",
+                )}
+              >
+                {isFollowing ? "팔로잉" : "팔로우"}
+              </button>
+            )}
           </div>
 
-          {isOwnProfile ? (
-            <button
-              type="button"
-              onClick={handleProfileEdit}
-              className="title-3 flex h-12 items-center justify-center rounded-2xl border border-card-hover bg-bg-dark px-4 py-3 text-font-1"
-            >
-              프로필 수정
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={handleFollowToggle}
-              className={cn(
-                "title-3 w-22.25 flex h-11 items-center justify-center rounded-[20px] px-4 py-2.5",
-                isFollowing
-                  ? "border border-card-hover bg-border-main text-font-1"
-                  : "bg-font-1 text-bg-dark",
-              )}
-            >
-              {isFollowing ? "팔로잉" : "팔로우"}
-            </button>
-          )}
-        </div>
+          <nav className="body-2 flex items-center gap-1.5 whitespace-nowrap">
+            <StatItem
+              label="팔로워"
+              value={followerCount}
+              onClick={() => openFollowModal("followers")}
+            />
+            <StatDivider />
+            <StatItem
+              label="팔로잉"
+              value={followingCount}
+              onClick={() => openFollowModal("following")}
+            />
+            <StatDivider />
+            <StatItem label="대화량" value={chatCount} />
+          </nav>
+        </section>
 
-        <nav className="body-2 flex items-center gap-1.5 whitespace-nowrap">
-          <StatItem
-            label="팔로워"
-            value={followerCount}
-            onClick={() => openFollowModal("followers")}
-          />
-          <StatDivider />
-          <StatItem
-            label="팔로잉"
-            value={followingCount}
-            onClick={() => openFollowModal("following")}
-          />
-          <StatDivider />
-          <StatItem label="대화량" value={chatCount} />
-        </nav>
-      </section>
+        {bio && (
+          <p className="body-4 w-full whitespace-pre-line text-font-2">{bio}</p>
+        )}
+      </header>
 
-      {bio && (
-        <p className="body-4 w-full whitespace-pre-line text-font-2">{bio}</p>
+      {isBlockDialogOpen && (
+        <Dialog
+          onClose={() => setIsBlockDialogOpen(false)}
+          cancelFn={() => setIsBlockDialogOpen(false)}
+          cancelText="취소하기"
+          confirmText="차단하기"
+          label={`‘${nickname}’을 차단할까요?`}
+          description="차단한 유저가 만든 캐릭터를 보거나 채팅에 참여할 수 없어요."
+          confirmFn={handleBlockConfirm}
+        />
       )}
-    </header>
+    </>
   );
 };
 

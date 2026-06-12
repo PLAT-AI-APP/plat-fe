@@ -12,6 +12,8 @@ export { default as BellOn } from "./BellOn";
 export { default as Flag } from "./Flag";
 export { default as Megaphone } from "./Megaphone";
 export { default as Info } from "./Info";
+export { default as Prohibition } from "./Prohibition";
+export { default as ShareOutline } from "./ShareOutline";
 export { default as Star } from "./Star";
 
 // 3. 미디어 및 입력
@@ -48,6 +50,7 @@ export { default as Clock } from "./Clock";
 export { default as Sort } from "./Sort";
 export { default as Trash } from "./Trash";
 export { default as Dots } from "./Dots";
+export { default as DotsVertical } from "./DotsVertical";
 export { default as Close } from "./Close";
 export { default as Asterisk } from "./Asterisk";
 export { default as ViewGrid } from "./ViewGrid";

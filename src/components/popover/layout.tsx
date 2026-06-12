@@ -1,15 +1,15 @@
 "use client";
 
 import { useRef } from "react";
-import { cn } from "@/lib/utils";
 import { useClickAway } from "@/hooks/useClickAway";
+import { cn } from "@/lib/utils";
 
 interface PopoverLayoutProps {
   children: React.ReactNode;
   onClose: () => void;
   /**
-   * 부모(Relative) 요소가 triggerRef이거나
-   * triggerRef를 감싸는 상위 요소여야 합니다.
+   * 팝오버 기준이 되는 트리거입니다.
+   * useClickAway에서 트리거 클릭은 바깥 클릭으로 처리하지 않도록 함께 전달합니다.
    */
   triggerRef: React.RefObject<HTMLElement | null>;
   className?: string;
@@ -23,7 +23,7 @@ export const PopoverLayout = ({
 }: PopoverLayoutProps) => {
   const popoverRef = useRef<HTMLDivElement>(null);
 
-  // 외부 클릭 시 닫기 (triggerRef 영역 제외)
+  // 팝오버와 트리거 바깥을 누를 때만 닫아 내부 버튼 클릭은 안전하게 유지합니다.
   useClickAway(popoverRef, onClose, triggerRef);
 
   return (
@@ -31,10 +31,8 @@ export const PopoverLayout = ({
       ref={popoverRef}
       onClick={(e) => e.stopPropagation()}
       onMouseDown={(e) => e.stopPropagation()}
-      style={{ top: "calc(100% + 10px)" }} // 기준 요소 하단 10px
       className={cn(
-        // right-0을 통해 기준 요소의 우측 끝에 맞춤
-        "absolute px-2 py-3 right-0 z-50 w-37.5 bg-bg-dark rounded-xl shadow-card-heavy border border-border-main",
+        "absolute right-0 top-[calc(100%+10px)] z-50 w-37.5 rounded-xl border border-border-main bg-bg-dark px-2 py-3 shadow-card-heavy",
         className,
       )}
     >
