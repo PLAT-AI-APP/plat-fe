@@ -102,6 +102,8 @@ const SmartInput = forwardRef<
   const errorMessage =
     typeof error === "string" ? error : error?.message;
   const hasErrorMessage = Boolean(errorMessage);
+  // textarea는 내부 카운터만 사용하고, 공통 하단 메시지는 노출하지 않습니다.
+  const shouldRenderBottomMessage = !isTextarea;
 
   const handleFocus = (
     e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -239,11 +241,11 @@ const SmartInput = forwardRef<
           )}
         </div>
 
-        {hasErrorMessage ? (
+        {shouldRenderBottomMessage && hasErrorMessage ? (
           <ErrorMessage error={error} />
-        ) : hasError || isLengthExceeded ? null : (
+        ) : shouldRenderBottomMessage && !hasError && !isLengthExceeded ? (
           <HelperMessage message={helperMessage} type={helperMessageType} />
-        )}
+        ) : null}
       </div>
     </div>
   );
