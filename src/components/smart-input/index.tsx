@@ -2,7 +2,7 @@
 
 import { ArrowDown, ArrowRight, ArrowUp } from "@/icons";
 import { cn } from "@/lib/utils";
-import React, { forwardRef, useEffect, useState } from "react";
+import React, { forwardRef, useState } from "react";
 import { SmartInputProps } from "./types";
 import { useAutoResize, useLeftPadding } from "./hooks";
 import {
@@ -55,15 +55,12 @@ const SmartInput = forwardRef<
   const [displayValue, setDisplayValue] = useState(() =>
     String(value ?? ""),
   );
+  // controlled 입력은 props.value를 기준으로, uncontrolled 입력은 내부 상태를 기준으로 글자 수를 계산합니다.
+  const currentDisplayValue =
+    value !== undefined ? String(value ?? "") : displayValue;
 
   const { textareaRef, adjustHeight } = useAutoResize(value, isTextarea);
   const { iconRef, paddingLeft } = useLeftPadding(leftElement);
-
-  useEffect(() => {
-    if (value !== undefined) {
-      setDisplayValue(String(value ?? ""));
-    }
-  }, [value]);
 
   // Merge external ref with internal textareaRef
   const handleTextareaRef = (node: HTMLTextAreaElement) => {
@@ -76,7 +73,9 @@ const SmartInput = forwardRef<
   const handleValueChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
   ) => {
-    setDisplayValue(e.target.value);
+    if (value === undefined) {
+      setDisplayValue(e.target.value);
+    }
     onChange?.(e);
     if (isTextarea) adjustHeight();
   };
@@ -96,7 +95,7 @@ const SmartInput = forwardRef<
   };
 
   const LINE_HEIGHT = 20;
-  const currentLength = displayValue.length;
+  const currentLength = currentDisplayValue.length;
   const isLengthExceeded =
     typeof maxLength === "number" && currentLength > maxLength;
   const hasError = error !== undefined && error !== null;
@@ -148,6 +147,7 @@ const SmartInput = forwardRef<
                 isBorder && "border border-border-main",
                 isFocused && "border-brand-dark bg-brand-opacity-3",
                 hasError && "border-font-accents",
+                // 포커스 중에는 입력 중인 상태를 우선 보여주기 위해 포커스 보더를 유지합니다.
                 isFocused && hasError && "border-brand-dark",
                 isLengthExceeded && "border-font-error",
                 inputBoxClassName,
@@ -192,6 +192,7 @@ const SmartInput = forwardRef<
                 inputClassName,
                 isFocused && "border-brand-dark bg-brand-opacity-3",
                 hasError && "border-font-accents",
+                // 포커스 중에는 입력 중인 상태를 우선 보여주기 위해 포커스 보더를 유지합니다.
                 isFocused && hasError && "border-brand-dark",
                 isLengthExceeded && "border-font-error",
               )}

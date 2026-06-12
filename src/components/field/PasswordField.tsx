@@ -13,6 +13,7 @@ interface PasswordFieldProps {
   label?: string;
   placeholder?: string;
   showHelperMessage?: boolean;
+  hideErrorMessage?: boolean;
 }
 
 const PasswordField = ({
@@ -21,6 +22,7 @@ const PasswordField = ({
   label = "비밀번호",
   placeholder = "8자 이상 입력해주세요",
   showHelperMessage = true,
+  hideErrorMessage = false,
 }: PasswordFieldProps) => {
   const {
     register,
@@ -28,6 +30,13 @@ const PasswordField = ({
   } = useFormContext();
 
   const isShowPw = useTogglePassword();
+  const passwordError = errors[name] as FieldError | undefined;
+  // 로그인처럼 에러 문구가 필요 없는 화면에서는 에러 상태만 넘겨 보더 스타일만 사용합니다.
+  const displayError = hideErrorMessage
+    ? passwordError
+      ? ""
+      : undefined
+    : passwordError;
 
   return (
     <SmartInput
@@ -37,7 +46,7 @@ const PasswordField = ({
       labelFontSize="title-5"
       placeholder={placeholder}
       {...register(name)}
-      error={errors[name] as FieldError}
+      error={displayError}
       helperMessage={
         showHelperMessage ? FIELD_HELPER_MESSAGES.password : undefined
       }

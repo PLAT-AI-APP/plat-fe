@@ -5,8 +5,10 @@ import { FormProvider, useForm } from "react-hook-form";
 import PasswordReset from "./PasswordReset";
 import { FindPasswordModalProps } from "@/type/modal";
 import { ModalLayout } from "@/components/ModalLayout";
+import ActiveButton from "@/components/ActiveButton";
 import EmailVerifySection from "@/app/(auth)/signup/_components/EmailVerifySection";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { cn } from "@/lib/utils";
 import {
   passwordResetFormSchema,
   PasswordResetFormSchemaValues,
@@ -14,6 +16,7 @@ import {
 
 const FindPasswordModal = ({ onClose, stackIndex }: FindPasswordModalProps) => {
   const [step, setStep] = useState(1);
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
 
   const methods = useForm<PasswordResetFormSchemaValues>({
     mode: "onChange",
@@ -28,6 +31,7 @@ const FindPasswordModal = ({ onClose, stackIndex }: FindPasswordModalProps) => {
   });
 
   const onNextStep = () => {
+    if (!isEmailVerified) return;
     setStep((prev) => prev + 1);
   };
 
@@ -49,8 +53,16 @@ const FindPasswordModal = ({ onClose, stackIndex }: FindPasswordModalProps) => {
             </header>
             <EmailVerifySection
               onVerifiedChange={(isVerified) => {
-                if (isVerified) onNextStep();
+                setIsEmailVerified(isVerified);
               }}
+            />
+            <ActiveButton
+              type="button"
+              text="다음"
+              isActive={isEmailVerified}
+              onClick={onNextStep}
+              className={cn("mt-9 h-[45px] rounded-xl bg-card text-font-2")}
+              textClassName="title-5"
             />
           </section>
         ) : (
