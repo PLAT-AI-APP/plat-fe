@@ -4,7 +4,7 @@ export const FIELD_HELPER_MESSAGES = {
   nicknameWithDuplication: "중복되거나, 특수문자는 사용할 수 없어요",
   emailDomain: ".com으로 끝나는 이메일을 사용해요",
   password: "특수 문자 포함, 최소 8자 입력해 주세요",
-  passwordCheck: "비밀번호를 한 번 더 입력해 주세요",
+  passwordCheck: "위에 입력한 비밀번호와 동일하게 입력해요",
   bio: "소개글을 작성해주세요",
   birth: "태어난 날짜를 입력해 주세요",
 } as const;
