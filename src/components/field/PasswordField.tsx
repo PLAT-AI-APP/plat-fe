@@ -7,7 +7,21 @@ import SmartInput from "@/components/smart-input";
 import { FIELD_HELPER_MESSAGES } from "@/constants/fieldMessages";
 import { useTogglePassword } from "@/hooks/useTogglePassword";
 
-const PasswordField = () => {
+interface PasswordFieldProps {
+  id?: string;
+  name?: string;
+  label?: string;
+  placeholder?: string;
+  showHelperMessage?: boolean;
+}
+
+const PasswordField = ({
+  id,
+  name = "password",
+  label = "비밀번호",
+  placeholder = "8자 이상 입력해주세요",
+  showHelperMessage = true,
+}: PasswordFieldProps) => {
   const {
     register,
     formState: { errors },
@@ -17,13 +31,16 @@ const PasswordField = () => {
 
   return (
     <SmartInput
-      label="비밀번호"
+      id={id}
+      label={label}
       inputType={isShowPw.inputType}
       labelFontSize="title-5"
-      placeholder="8자 이상 입력해주세요"
-      {...register("password")}
-      error={errors.password as FieldError}
-      helperMessage={FIELD_HELPER_MESSAGES.password}
+      placeholder={placeholder}
+      {...register(name)}
+      error={errors[name] as FieldError}
+      helperMessage={
+        showHelperMessage ? FIELD_HELPER_MESSAGES.password : undefined
+      }
       rightElement={
         <PasswordToggle
           isVisible={isShowPw.isVisible}

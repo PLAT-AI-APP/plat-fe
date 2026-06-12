@@ -1,12 +1,7 @@
 import { usePasswordResetMutation } from "@/api/auth/postPasswordReset";
 import ActiveButton from "@/components/ActiveButton";
-import { PasswordToggle } from "@/components/auth/PasswordToggle";
-import SmartInput from "@/components/smart-input";
-import {
-  FIELD_FEEDBACK_MESSAGES,
-  FIELD_HELPER_MESSAGES,
-} from "@/constants/fieldMessages";
-import { useTogglePassword } from "@/hooks/useTogglePassword";
+import PasswordCheckField from "@/components/field/PasswordCheckField";
+import PasswordField from "@/components/field/PasswordField";
 import { PasswordResetFormSchemaValues } from "@/schema/auth.schema";
 import { useModalStore } from "@/store/useModalStore";
 import React from "react";
@@ -15,7 +10,6 @@ import { Form, useFormContext, useWatch } from "react-hook-form";
 const PasswordReset = () => {
   const { mutate: passwrodReset } = usePasswordResetMutation();
   const {
-    register,
     control,
     formState: { errors },
   } = useFormContext<PasswordResetFormSchemaValues>();
@@ -36,9 +30,6 @@ const PasswordReset = () => {
     !errors.password &&
     !errors.passwordCheck &&
     password === passwordCheck;
-
-  const isShowPw = useTogglePassword();
-  const isShowConfirm = useTogglePassword();
 
   const { closeModal } = useModalStore();
   const onSubmit = (data: PasswordResetFormSchemaValues) => {
@@ -61,47 +52,13 @@ const PasswordReset = () => {
       </header>
 
       <fieldset className="flex flex-col gap-6">
-        <SmartInput
-          label="비밀번호"
-          inputType={isShowPw.inputType}
-          labelFontSize="title-5"
-          placeholder="8자 이상 입력해주세요"
-          {...register("password")}
-          error={errors.password}
-          helperMessage={FIELD_HELPER_MESSAGES.password}
-          rightElement={
-            <PasswordToggle
-              isVisible={isShowPw.isVisible}
-              onToggle={isShowPw.toggle}
-            />
-          }
-        />
-
-        <SmartInput
-          label="비밀번호 확인"
-          inputType={isShowConfirm.inputType}
-          labelFontSize="title-5"
-          placeholder="비밀번호를 다시 입력해주세요"
-          {...register("passwordCheck")}
-          error={errors.passwordCheck}
-          helperMessage={
-            isPasswordResetActive
-              ? FIELD_FEEDBACK_MESSAGES.passwordCheckValid
-              : FIELD_HELPER_MESSAGES.passwordCheck
-          }
-          helperMessageType={isPasswordResetActive ? "success" : "default"}
-          rightElement={
-            <PasswordToggle
-              isVisible={isShowConfirm.isVisible}
-              onToggle={isShowConfirm.toggle}
-            />
-          }
-        />
+        <PasswordField />
+        <PasswordCheckField />
       </fieldset>
 
       <ActiveButton
         isActive={isPasswordResetActive}
-        text="비밀번호 재설정"
+        text="비밀번호 변경"
         className="mt-6"
         form="password-reset-form"
       />

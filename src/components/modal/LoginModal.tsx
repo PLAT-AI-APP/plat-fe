@@ -6,12 +6,11 @@ import React from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { useEmailLoginMutation } from "@/api/auth/emailLogin";
 import ActiveButton from "@/components/ActiveButton";
-import { PasswordToggle } from "@/components/auth/PasswordToggle";
 import SocialLoginButton from "@/components/auth/SocialLoginButton";
+import PasswordField from "@/components/field/PasswordField";
 import { ModalLayout } from "@/components/ModalLayout";
 import SmartInput from "@/components/smart-input";
 import { ChatFill, Google } from "@/icons";
-import { useTogglePassword } from "@/hooks/useTogglePassword";
 import useRouteEffect from "@/hooks/useRouteEffect";
 import { loginFormSchema, LoginFormValues } from "@/schema/auth.schema";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -19,7 +18,6 @@ import { useModalStore } from "@/store/useModalStore";
 import { LoginModalProps } from "@/type/modal";
 
 const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
-  const isShowPw = useTogglePassword();
   const openModal = useModalStore((state) => state.openModal);
   const allowNextNavigation = useModalStore(
     (state) => state.allowNextNavigation,
@@ -115,20 +113,11 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
             />
 
             <div id="password-input-group" className="flex flex-col gap-2">
-              <SmartInput
+              <PasswordField
                 id="input-password"
-                label="비밀번호"
-                inputType={isShowPw.inputType}
-                labelFontSize="title-5"
+                name="pw"
                 placeholder="비밀번호를 입력하세요"
-                rightElement={
-                  <PasswordToggle
-                    isVisible={isShowPw.isVisible}
-                    onToggle={isShowPw.toggle}
-                  />
-                }
-                {...register("pw")}
-                error={errors.pw}
+                showHelperMessage={false}
               />
 
               <button
