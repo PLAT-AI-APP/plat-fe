@@ -13,7 +13,7 @@ const ModalNavigationGuard = () => {
     enabled: (params) => {
       if (!hasOpenModal) return false;
       if (params.type === "beforeunload") {
-        return !consumeNextNavigationAllowance();
+        return false;
       }
 
       return true;
