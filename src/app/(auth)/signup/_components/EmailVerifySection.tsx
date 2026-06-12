@@ -149,9 +149,11 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
   const displayFeedback = getFeedback("email");
   const displayMessage = displayErrorMessage || displayFeedback?.message;
   const isDisplayMessageError = !!displayErrorMessage;
-  const emailHelperMessage = displayMessage
+  const emailHelperMessage = displayMessage || isOtpSent || isEmailVerified
     ? undefined
     : FIELD_HELPER_MESSAGES.emailDomain;
+  const isEmailButtonActive =
+    Boolean(email) && !errors.email && !isEmailVerifyPending;
 
   return (
     <section id="email-auth-container" className="flex flex-col ">
@@ -183,8 +185,8 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
           />
           <ActiveButton
             type="button"
-            isActive={!!email}
-            disabled={!email || isEmailVerifyPending}
+            isActive={isEmailButtonActive}
+            disabled={!isEmailButtonActive}
             text={
               isEmailVerifyPending
                 ? ""
@@ -196,8 +198,10 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
             }
             className={cn(
               "mt-[29px] px-4 py-3 rounded-xl w-fit max-h-11.75 text-nowrap flex items-center justify-center gap-2",
-              isEmailVerified &&
-                "border border-border-main bg-bg-darker text-font-2",
+              isEmailButtonActive
+                ? "bg-brand text-font-4"
+                : "bg-font-disabled text-font-1",
+              isEmailVerified && "bg-brand text-font-4",
               isOtpSent &&
                 "border border-brand-dark bg-brand/10 text-brand-dark",
             )}
