@@ -33,6 +33,7 @@ const PROTECTED_ROUTES = [
   "/token-charge",
   "/withdrawal",
   "/profile",
+  "/settings",
 ];
 
 const isProtectedPath = (path: string) =>
@@ -201,6 +202,7 @@ export default function ClientLayout({
       "/token-charge",
       "/withdrawal",
       "/profile",
+      "/settings",
     ];
 
     // 현재 접속한 pathname이 보호 경로 중 하나로 시작하는지 검사
