@@ -8,8 +8,8 @@ import { useDeleteUserMutation } from "@/api/user/deleteUser";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useUserStore } from "@/store/useUserStore";
 import ActiveButton from "@/components/ActiveButton";
-import Dialog from "@/components/Dialog";
 import { cn } from "@/lib/utils";
+import { useDialogStore } from "@/store/useDialogStore";
 
 const WITHDRAWAL_NOTICES = [
   "모든 데이터와 개인정보는 삭제되며 다시 찾을 수 없어요",
@@ -20,33 +20,38 @@ const WITHDRAWAL_NOTICES = [
 
 const SKIP_AUTH_ALERT_ONCE_KEY = "skip-auth-alert-once";
 
-type WithdrawalDialogType = "confirm" | "complete" | null;
-
 const WithdrawalContents = () => {
   const router = useRouter();
   const user = useUserStore((state) => state.user);
   const clearUser = useUserStore((state) => state.clearUser);
   const logout = useAuthStore((state) => state.logout);
-  const { mutate: deleteUser, isPending } = useDeleteUserMutation();
+  const { isPending } = useDeleteUserMutation();
+  const openDialog = useDialogStore((state) => state.openDialog);
   const [isConfirmed, setIsConfirmed] = useState(false);
-  const [dialogType, setDialogType] = useState<WithdrawalDialogType>(null);
 
   const nickname = user?.nickname || "회원";
   const canSubmit = isConfirmed && !isPending;
-
-  const closeConfirmDialog = () => {
-    // 탈퇴 api연동시 주석 해제
-    // if (isPending) return;
-    setDialogType(null);
-  };
 
   const handleDeleteConfirm = () => {
     // 탈퇴 api연동시 주석 해제
     // if (isPending) return;
     // deleteUser(undefined, {
-    //   onSuccess: () => setDialogType("complete"),
+    //   onSuccess: () => openCompleteDialog(),
     // });
-    setDialogType("complete");
+    openCompleteDialog();
+  };
+
+  const openCompleteDialog = () => {
+    openDialog("WITHDRAWAL_COMPLETE", {
+      onConfirm: handleCompleteConfirm,
+    });
+  };
+
+  const openConfirmDialog = () => {
+    openDialog("WITHDRAWAL_CONFIRM", {
+      isPending,
+      onConfirm: handleDeleteConfirm,
+    });
   };
 
   const handleCompleteConfirm = () => {
@@ -123,7 +128,7 @@ const WithdrawalContents = () => {
             type="button"
             isActive={canSubmit}
             text={isPending ? "탈퇴 처리 중" : "탈퇴할게요"}
-            onClick={() => setDialogType("confirm")}
+            onClick={openConfirmDialog}
             className={cn(
               "h-13 flex-1 rounded-xl",
               !canSubmit && "text-font-disabled",
@@ -131,29 +136,6 @@ const WithdrawalContents = () => {
           />
         </div>
       </div>
-
-      {dialogType === "confirm" && (
-        <Dialog
-          onClose={closeConfirmDialog}
-          cancelFn={closeConfirmDialog}
-          label="정말 떠나시나요?"
-          description={`탈퇴가 완료되면 그동안의 소중한 정보들을 다시 볼 수 없게
-돼요. 정말 탈퇴를 진행할까요?`}
-          confirmText={isPending ? "탈퇴 처리 중" : "탈퇴하기"}
-          confirmFn={handleDeleteConfirm}
-          cancelText="남아있기"
-        />
-      )}
-
-      {dialogType === "complete" && (
-        <Dialog
-          onClose={handleCompleteConfirm}
-          label="그동안 이용해 주셔서 감사해요"
-          description={`그동안 PLAT과 함께해 주셔서 감사해요.\n언제든 다시 만날 수 있길 바랄게요.`}
-          confirmText="확인"
-          confirmFn={handleCompleteConfirm}
-        />
-      )}
     </section>
   );
 };

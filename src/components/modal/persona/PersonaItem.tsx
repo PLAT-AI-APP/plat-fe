@@ -2,10 +2,10 @@ import React, { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { Dots } from "@/icons";
 import { Persona } from "@/type/persona";
+import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
 import PersonaMenuPopover from "@/components/popover/PersonaMenuPopover";
 import { useDeletePersonaMutation } from "@/api/persona/deletePersona";
-import Dialog from "@/components/Dialog";
 
 interface PersonaItemProps {
   persona: Persona;
@@ -22,10 +22,11 @@ const PersonaItem = ({
 }: PersonaItemProps) => {
   const { name, description, isDefault } = persona;
   const { openModal } = useModalStore();
+  const openDialog = useDialogStore((state) => state.openDialog);
+  const closeDialog = useDialogStore((state) => state.closeDialog);
   const { mutate: deletePersona } = useDeletePersonaMutation();
   const menuTriggerRef = useRef<HTMLButtonElement>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const isDimmed = hasSelectedPersona && !isActive;
 
@@ -40,7 +41,7 @@ const PersonaItem = ({
 
   const handleDeleteConfirm = () => {
     deletePersona(persona.personaId, {
-      onSuccess: () => setIsDeleteDialogOpen(false),
+      onSuccess: closeDialog,
     });
   };
 
@@ -105,24 +106,17 @@ const PersonaItem = ({
                 triggerRef={menuTriggerRef}
                 onClose={() => setIsMenuOpen(false)}
                 onEdit={openEditModal}
-                onDelete={() => setIsDeleteDialogOpen(true)}
+                onDelete={() =>
+                  openDialog("PERSONA_DELETE", {
+                    personaName: name,
+                    onConfirm: handleDeleteConfirm,
+                  })
+                }
               />
             )}
           </div>
         </div>
       </li>
-
-      {isDeleteDialogOpen && (
-        <Dialog
-          onClose={() => setIsDeleteDialogOpen(false)}
-          cancelFn={() => setIsDeleteDialogOpen(false)}
-          cancelText="취소하기"
-          confirmText="확인하기"
-          label="페르소나를 삭제할까요?"
-          description={`'${name}'이 없어지며 다시 되돌릴 수 없어요`}
-          confirmFn={handleDeleteConfirm}
-        />
-      )}
     </>
   );
 };

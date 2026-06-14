@@ -44,9 +44,3 @@ export type TagSuggestionsModalProps = GlobalModalProps;
 export type UserNoteModalProps = GlobalModalProps;
 
 export type PersonaModalProps = GlobalModalProps;
-
-export interface NoticeDialogModalProps extends GlobalModalProps {
-  label: string;
-  description?: string;
-  confirmText?: string;
-}

@@ -6,17 +6,16 @@ import {
   FollowModalProps,
   LoginModalProps,
   PersonaAddModalProps,
+  PersonaModalProps,
   ProfileEditModalProps,
   StorageModalProps,
   TagAddModalProps,
   TagSuggestionsModalProps,
   UserNoteModalProps,
-  PersonaModalProps,
-  NoticeDialogModalProps,
 } from "@/type/modal";
 import { useAuthStore } from "./useAuthStore";
+import { useDialogStore } from "./useDialogStore";
 
-// 모달 이름과 Props를 매핑 (이곳에 새 모달을 추가하세요)
 export type ModalTypeMap = {
   ADD_LANGUAGE: AddLanguageModalProps;
   CHATTING_START: ChattingStartModalProps;
@@ -30,7 +29,6 @@ export type ModalTypeMap = {
   TAG_SUGGESTIONS: TagSuggestionsModalProps;
   USER_NOTE: UserNoteModalProps;
   PERSONA: PersonaModalProps;
-  NOTICE_DIALOG: NoticeDialogModalProps;
 };
 
 type ModalInstanceUnion = {
@@ -40,18 +38,15 @@ type ModalInstanceUnion = {
   };
 }[keyof ModalTypeMap];
 
-// 스택에 저장될 데이터 구조
 export interface ModalInstance<T extends keyof ModalTypeMap> {
   type: T;
-  // 저장될 때부터 onClose가 없는 타입을 저장하도록 설정
   props: Omit<ModalTypeMap[T], "onClose">;
 }
 
 interface ModalState {
-  modals: ModalInstance<keyof ModalTypeMap>[]; // 여러 타입의 모달이 섞인 배열
+  modals: ModalInstance<keyof ModalTypeMap>[];
   isNextNavigationAllowed: boolean;
 
-  // Generic을 사용하여 type에 맞는 props만 넣을 수 있도록 제한
   openModal: <T extends keyof ModalTypeMap>(
     type: T,
     props?: Omit<ModalTypeMap[T], "onClose">,
@@ -63,43 +58,41 @@ interface ModalState {
   clearModals: () => void;
 }
 
+const requiresAuthModalTypes: (keyof ModalTypeMap)[] = [
+  "PERSONA",
+  "PERSONA_ADD",
+  "PROFILE_EDIT",
+  "FOLLOW",
+  "USER_NOTE",
+  "STORAGE",
+  "TAG_ADD",
+  "TAG_SUGGESTIONS",
+];
+
 export const useModalStore = create<ModalState>((set, get) => ({
   modals: [],
   isNextNavigationAllowed: false,
 
-  openModal: (type, props) =>
-    set((state) => {
-      const isLoggedIn = useAuthStore.getState().isLoggedIn;
-      const requiresAuthModalTypes: (keyof ModalTypeMap)[] = [
-        "PERSONA",
-        "PERSONA_ADD",
-        "PROFILE_EDIT",
-        "FOLLOW",
-        "USER_NOTE",
-        "STORAGE",
-        "TAG_ADD",
-        "TAG_SUGGESTIONS",
-      ];
+  openModal: (type, props) => {
+    const isLoggedIn = useAuthStore.getState().isLoggedIn;
 
-      if (!isLoggedIn && requiresAuthModalTypes.includes(type)) {
-        return {
-          modals: [
-            {
-              type: "NOTICE_DIALOG",
-              props: {
-                label: "로그인이 필요해요",
-                description: "로그인 후 이용할 수 있는 기능입니다.",
-                confirmText: "로그인",
-              },
-            } as ModalInstanceUnion,
-          ],
-        };
-      }
+    if (!isLoggedIn && requiresAuthModalTypes.includes(type)) {
+      // 로그인 필요 안내는 모달 스택이 아니라 다이얼로그 매니저로 열어 두 레이어의 책임을 분리합니다.
+      useDialogStore.getState().openDialog("LOGIN_REQUIRED", {
+        label: "로그인이 필요해요",
+        description: "로그인 후 이용할 수 있는 기능입니다.",
+        confirmText: "로그인",
+        onConfirm: () => {
+          get().openModal("LOGIN", { triggerRef: undefined });
+        },
+      });
+      return;
+    }
 
-      return {
-        modals: [...state.modals, { type, props } as ModalInstanceUnion],
-      };
-    }),
+    set((state) => ({
+      modals: [...state.modals, { type, props } as ModalInstanceUnion],
+    }));
+  },
 
   allowNextNavigation: () => {
     set({ isNextNavigationAllowed: true });

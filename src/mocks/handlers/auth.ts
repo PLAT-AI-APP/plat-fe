@@ -3,6 +3,7 @@ import { endpoint } from "../utils";
 
 const existingNicknames = ["admin", "test", "plat"];
 const verifiedEmails = new Set<string>();
+const firstLoginEmails = new Set(["first@example.com", "taewok0205@gmail.com"]);
 
 const ok = <T>(data?: T, message?: string) =>
   HttpResponse.json({
@@ -151,6 +152,7 @@ export const authHandlers = [
         message: "로그인되었습니다.",
         data: {
           accessToken: "mock-access-token",
+          isFirstLogin: firstLoginEmails.has(username),
         },
       },
       {

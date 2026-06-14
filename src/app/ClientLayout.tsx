@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Header from "@/components/header";
 import Sidebar from "@/components/Sidebar";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -9,7 +9,9 @@ import { cn } from "@/lib/utils";
 import { useMyInfoQuery } from "@/api/user/getMyInfo";
 import { ModalManager } from "@/components/modal/ModalManager";
 import ModalNavigationGuard from "@/components/modal/ModalNavigationGuard";
+import DialogManager from "@/components/dialog/DialogManager";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
 import { refreshAccessToken } from "@/api/auth/postRefresh";
 import axios from "axios";
@@ -114,9 +116,23 @@ export default function ClientLayout({
   } = useAuthStore();
   const router = useRouter();
   const clearModals = useModalStore((state) => state.clearModals);
+  const openModal = useModalStore((state) => state.openModal);
+  const openDialog = useDialogStore((state) => state.openDialog);
   const isProtectedRoute = isProtectedPath(pathname);
   const [hasHydrated, setHasHydrated] = useState(false);
   const [isAuthChecking, setIsAuthChecking] = useState(true);
+
+  const openLoginRequiredDialog = useCallback(() => {
+    // 보호 경로 안내도 전역 Dialog로 통일해 브라우저 alert와 모달 스택이 섞이지 않게 합니다.
+    openDialog("LOGIN_REQUIRED", {
+      label: "로그인이 필요해요",
+      description: "로그인 후 이용할 수 있는 기능입니다.",
+      confirmText: "로그인",
+      onConfirm: () => {
+        openModal("LOGIN", { triggerRef: undefined });
+      },
+    });
+  }, [openDialog, openModal]);
 
   useEffect(() => {
     setHasHydrated(useAuthStore.persist.hasHydrated());
@@ -224,11 +240,18 @@ export default function ClientLayout({
         return;
       }
 
-      alert("로그인이 필요한 서비스입니다.");
       clearModals();
+      openLoginRequiredDialog();
       router.replace("/");
     }
-  }, [clearModals, isAuthChecking, isLoggedIn, pathname, router]);
+  }, [
+    clearModals,
+    isAuthChecking,
+    isLoggedIn,
+    openLoginRequiredDialog,
+    pathname,
+    router,
+  ]);
 
   useEffect(() => {
     const handleProtectedLinkClick = (event: MouseEvent) => {
@@ -250,7 +273,7 @@ export default function ClientLayout({
       event.stopPropagation();
       if (isAuthChecking) return;
 
-      alert("로그인이 필요한 서비스입니다.");
+      openLoginRequiredDialog();
     };
 
     document.addEventListener("click", handleProtectedLinkClick, true);
@@ -258,7 +281,7 @@ export default function ClientLayout({
     return () => {
       document.removeEventListener("click", handleProtectedLinkClick, true);
     };
-  }, [isAuthChecking, isLoggedIn]);
+  }, [isAuthChecking, isLoggedIn, openLoginRequiredDialog]);
 
   if (isProtectedRoute && (isAuthChecking || !isLoggedIn)) {
     return null;
@@ -287,6 +310,7 @@ export default function ClientLayout({
         >
           {children}
           <ModalManager />
+          <DialogManager />
           <ModalNavigationGuard />
         </div>
       </main>

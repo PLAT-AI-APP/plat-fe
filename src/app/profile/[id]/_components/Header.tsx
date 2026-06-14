@@ -5,10 +5,10 @@ import { useRef, useState } from "react";
 import { useUnFollowMutation } from "@/api/follow/deleteFollow";
 import { useFollowCountQuery } from "@/api/follow/getFollowCount";
 import { useFollowMutation } from "@/api/follow/postFollow";
-import Dialog from "@/components/Dialog";
 import ProfileActionPopover from "@/components/popover/ProfileActionPopover";
 import { Dots } from "@/icons";
 import { cn, formatWithCommas } from "@/lib/utils";
+import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
 import { useUserStore } from "@/store/useUserStore";
 
@@ -58,9 +58,10 @@ const Header = ({ userId }: HeaderProps) => {
   const { user } = useUserStore();
   const { mutate: follow } = useFollowMutation();
   const { mutate: unFollow } = useUnFollowMutation();
+  const openDialog = useDialogStore((state) => state.openDialog);
+  const closeDialog = useDialogStore((state) => state.closeDialog);
   const [isFollowing, setIsFollowing] = useState(false);
   const [isActionPopoverOpen, setIsActionPopoverOpen] = useState(false);
-  const [isBlockDialogOpen, setIsBlockDialogOpen] = useState(false);
   const actionTriggerRef = useRef<HTMLButtonElement>(null);
 
   const isOwnProfile = user?.id === userId;
@@ -104,7 +105,7 @@ const Header = ({ userId }: HeaderProps) => {
 
   const handleBlockConfirm = () => {
     // 차단 API가 연결되면 이 위치에서 userId로 차단 요청을 보내면 됩니다.
-    setIsBlockDialogOpen(false);
+    closeDialog();
   };
 
   return (
@@ -150,7 +151,12 @@ const Header = ({ userId }: HeaderProps) => {
                         triggerRef={actionTriggerRef}
                         onClose={() => setIsActionPopoverOpen(false)}
                         onShare={handleShareProfile}
-                        onBlock={() => setIsBlockDialogOpen(true)}
+                        onBlock={() =>
+                          openDialog("USER_BLOCK", {
+                            nickname,
+                            onConfirm: handleBlockConfirm,
+                          })
+                        }
                       />
                     )}
                   </div>
@@ -203,18 +209,6 @@ const Header = ({ userId }: HeaderProps) => {
           <p className="body-4 w-full whitespace-pre-line text-font-2">{bio}</p>
         )}
       </header>
-
-      {isBlockDialogOpen && (
-        <Dialog
-          onClose={() => setIsBlockDialogOpen(false)}
-          cancelFn={() => setIsBlockDialogOpen(false)}
-          cancelText="취소하기"
-          confirmText="차단하기"
-          label={`‘${nickname}’을 차단할까요?`}
-          description="차단한 유저가 만든 캐릭터를 보거나 채팅에 참여할 수 없어요."
-          confirmFn={handleBlockConfirm}
-        />
-      )}
     </>
   );
 };

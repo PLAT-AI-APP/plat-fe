@@ -3,21 +3,23 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useFormContext, useWatch } from "react-hook-form";
-import { AuthFormValues } from "@/schema/auth.schema";
 import { useAuthRegisterMutation } from "@/api/auth/authRegister";
 import ActiveButton from "@/components/ActiveButton";
-import Dialog from "@/components/Dialog";
+import NicknameField from "@/components/field/NicknameField";
+import PasswordCheckField from "@/components/field/PasswordCheckField";
+import PasswordField from "@/components/field/PasswordField";
+import { useFormServerError } from "@/hooks/useFormServerError";
+import { AuthFormValues } from "@/schema/auth.schema";
+import { useDialogStore } from "@/store/useDialogStore";
+import { useModalStore } from "@/store/useModalStore";
 import Agreed from "./Agreed";
 import EmailVerifySection from "./EmailVerifySection";
-import { useFormServerError } from "@/hooks/useFormServerError";
-import NicknameField from "@/components/field/NicknameField";
-import PasswordField from "@/components/field/PasswordField";
-import PasswordCheckField from "@/components/field/PasswordCheckField";
 
 const SignupForm = () => {
   const router = useRouter();
+  const openModal = useModalStore((state) => state.openModal);
+  const openDialog = useDialogStore((state) => state.openDialog);
   const [isEmailVerified, setIsEmailVerified] = useState(false);
-  const [isCompleteDialogOpen, setIsCompleteDialogOpen] = useState(false);
 
   const {
     control,
@@ -35,7 +37,7 @@ const SignupForm = () => {
     isAgeAgreed = "",
   } = useWatch({ control });
 
-  // 폼 유효성 검사 로직 (추가적인 커스텀 검증이 필요한 경우)
+  // 이메일 인증은 RHF 스키마 밖의 서버 검증이라 최종 버튼 활성 조건에서 별도로 함께 확인합니다.
   const isFormValid =
     !!(
       nickname &&
@@ -49,8 +51,13 @@ const SignupForm = () => {
     ) && Object.keys(errors).length === 0;
 
   const { mutate: authRegister } = useAuthRegisterMutation();
-
   const { setFieldErrors } = useFormServerError<AuthFormValues>();
+
+  const handleLoginAfterSignup = () => {
+    router.replace("/");
+    openModal("LOGIN", { triggerRef: undefined });
+  };
+
   const onSubmit = (data: AuthFormValues) => {
     authRegister(
       {
@@ -62,10 +69,13 @@ const SignupForm = () => {
       },
       {
         onSuccess: () => {
-          setIsCompleteDialogOpen(true);
+          openDialog("SIGNUP_COMPLETE", {
+            nickname: data.nickname,
+            onLogin: handleLoginAfterSignup,
+          });
         },
         onError: (error) => {
-          // 서버에서 온 필드 에러들을 폼에 매핑
+          // 서버에서 내려온 필드별 에러를 RHF 에러 상태로 매핑해 입력 필드 아래에 표시합니다.
           setFieldErrors(error.fields);
         },
       },
@@ -77,7 +87,7 @@ const SignupForm = () => {
       <form
         id="signup-form"
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col gap-9 py-9 px-6 w-screen max-w-112.5 rounded-3xl border border-border-main bg-bg-darker"
+        className="flex w-screen max-w-112.5 flex-col gap-9 rounded-3xl border border-border-main bg-bg-darker px-6 py-9"
       >
         <header className="flex flex-col gap-1.5 font-medium">
           <h1 className="heading-3">회원가입</h1>
@@ -97,36 +107,6 @@ const SignupForm = () => {
 
         <ActiveButton text="다음" type="submit" isActive={isFormValid} />
       </form>
-
-      {isCompleteDialogOpen && (
-        <Dialog
-          onClose={() => null}
-          label={
-            <div className="flex w-full flex-col items-start justify-end gap-3 break-words">
-              <div className="flex w-full flex-col items-start gap-1">
-                <p className="body-5 w-full text-font-2">
-                  안녕하세요 {nickname}님,
-                </p>
-                <h2 className="title-2 w-full text-font-1">
-                  회원가입을 축하드려요!
-                </h2>
-              </div>
-
-              <div className="body-4 w-full text-font-2">
-                <p>
-                  특별한 인연을 위해,{" "}
-                  <span className="title-5 text-font-1">
-                    웰컴노트 크레딧을 선물했어요.
-                  </span>
-                </p>
-                <p>저희와 함께 즐거운 순간을 만들어 볼까요?</p>
-              </div>
-            </div>
-          }
-          confirmText="둘러보기"
-          confirmFn={() => router.replace("/")}
-        />
-      )}
     </>
   );
 };

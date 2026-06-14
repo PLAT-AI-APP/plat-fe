@@ -13,11 +13,12 @@ import SmartInput from "@/components/smart-input";
 import { ChatFill, Google } from "@/icons";
 import useRouteEffect from "@/hooks/useRouteEffect";
 import { loginFormSchema, LoginFormValues } from "@/schema/auth.schema";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
 import { LoginModalProps } from "@/type/modal";
 
 const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
+  const openDialog = useDialogStore((state) => state.openDialog);
   const openModal = useModalStore((state) => state.openModal);
   const allowNextNavigation = useModalStore(
     (state) => state.allowNextNavigation,
@@ -45,14 +46,20 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
   const pw = useWatch({ control, name: "pw" }) ?? "";
 
   const { mutate: emailLogin } = useEmailLoginMutation();
-  const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
 
   const onSubmit = () => {
     emailLogin(
       { username: email, password: pw },
       {
-        onSuccess: () => {
-          setLoggedIn(true);
+        onSuccess: (data) => {
+          if (data.isFirstLogin) {
+            openDialog("WELCOME_CREDIT", {
+              onConfirm: onClose,
+            });
+            return;
+          }
+
+          onClose();
         },
         onError: () => {
           setError("email", { type: "server", message: "" });

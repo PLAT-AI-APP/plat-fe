@@ -2,7 +2,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "..";
 import { ApiSuccessResponse, AppError } from "@/type/api";
 import { useAuthStore } from "@/store/useAuthStore";
-import { useModalStore } from "@/store/useModalStore";
 
 interface PostEmailLoginProps {
   username: string;
@@ -11,12 +10,13 @@ interface PostEmailLoginProps {
 
 const PostEmailLogin = async (props: PostEmailLoginProps) => {
   const response = await axiosInstance.post<
-    ApiSuccessResponse<{ accessToken: string }>
+    ApiSuccessResponse<{ accessToken: string; isFirstLogin?: boolean }>
   >("/auth/login", props, {
     withCredentials: true,
   });
 
   return {
+    isFirstLogin: Boolean(response.data.data.isFirstLogin),
     serverMessage: response.data.message ?? "",
     token: response.data.data.accessToken,
   };
@@ -27,9 +27,8 @@ export const useEmailLoginMutation = () => {
   const queryClient = useQueryClient();
   const setAccessToken = useAuthStore((state) => state.setAccessToken);
   const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
-  const { closeModal } = useModalStore();
   return useMutation<
-    { serverMessage: string; token: string },
+    { isFirstLogin: boolean; serverMessage: string; token: string },
     AppError,
     PostEmailLoginProps
   >({
@@ -38,7 +37,6 @@ export const useEmailLoginMutation = () => {
       setAccessToken(data.token);
       setLoggedIn(true);
       await queryClient.invalidateQueries({ queryKey: ["get-my-info"] });
-      closeModal();
     },
   });
 };
