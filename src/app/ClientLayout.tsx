@@ -26,6 +26,7 @@ const HIDE_HEADER_PATHS = ["/character-creat"];
 const FOLD_SIDEBAR_PATHS = ["/chatting-room"];
 const FOLD_SIDEBAR_FULL_PATHS = ["/?tab=categories"];
 const SKIP_AUTH_ALERT_ONCE_KEY = "skip-auth-alert-once";
+const PENDING_WELCOME_CREDIT_DIALOG_KEY = "pending-welcome-credit-dialog";
 const PROTECTED_ROUTES = [
   "/my-chatting",
   "/chatting-room",
@@ -282,6 +283,19 @@ export default function ClientLayout({
       document.removeEventListener("click", handleProtectedLinkClick, true);
     };
   }, [isAuthChecking, isLoggedIn, openLoginRequiredDialog]);
+
+  useEffect(() => {
+    if (pathname !== "/" || typeof window === "undefined") return;
+
+    const shouldOpenWelcomeDialog =
+      sessionStorage.getItem(PENDING_WELCOME_CREDIT_DIALOG_KEY) === "true";
+
+    if (!shouldOpenWelcomeDialog) return;
+
+    // 홈에 진입한 뒤 한 번만 소비해 로그인 모달이 닫힌 다음 환영 다이얼로그가 뜨도록 맞춥니다.
+    sessionStorage.removeItem(PENDING_WELCOME_CREDIT_DIALOG_KEY);
+    openDialog("WELCOME_CREDIT", {});
+  }, [openDialog, pathname]);
 
   if (isProtectedRoute && (isAuthChecking || !isLoggedIn)) {
     return null;

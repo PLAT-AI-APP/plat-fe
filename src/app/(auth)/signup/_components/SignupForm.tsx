@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useFormContext, useWatch } from "react-hook-form";
 import { useAuthRegisterMutation } from "@/api/auth/authRegister";
 import ActiveButton from "@/components/ActiveButton";
@@ -16,7 +15,6 @@ import Agreed from "./Agreed";
 import EmailVerifySection from "./EmailVerifySection";
 
 const SignupForm = () => {
-  const router = useRouter();
   const openModal = useModalStore((state) => state.openModal);
   const openDialog = useDialogStore((state) => state.openDialog);
   const [isEmailVerified, setIsEmailVerified] = useState(false);
@@ -54,8 +52,8 @@ const SignupForm = () => {
   const { setFieldErrors } = useFormServerError<AuthFormValues>();
 
   const handleLoginAfterSignup = () => {
-    router.replace("/");
-    openModal("LOGIN", { triggerRef: undefined });
+    // 회원가입 직후에는 같은 화면 위에서 바로 로그인 모달을 열어 다음 행동을 자연스럽게 이어갑니다.
+    openModal("LOGIN");
   };
 
   const onSubmit = (data: AuthFormValues) => {

@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { useEmailLoginMutation } from "@/api/auth/emailLogin";
@@ -13,12 +14,14 @@ import SmartInput from "@/components/smart-input";
 import { ChatFill, Google } from "@/icons";
 import useRouteEffect from "@/hooks/useRouteEffect";
 import { loginFormSchema, LoginFormValues } from "@/schema/auth.schema";
-import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
 import { LoginModalProps } from "@/type/modal";
 
+const PENDING_WELCOME_CREDIT_DIALOG_KEY = "pending-welcome-credit-dialog";
+
 const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
-  const openDialog = useDialogStore((state) => state.openDialog);
+  const pathname = usePathname();
+  const router = useRouter();
   const openModal = useModalStore((state) => state.openModal);
   const allowNextNavigation = useModalStore(
     (state) => state.allowNextNavigation,
@@ -47,19 +50,42 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
 
   const { mutate: emailLogin } = useEmailLoginMutation();
 
+  const handleLoginSuccess = () => {
+    // 회원가입 화면에서만 홈으로 보내고, 그 외에는 현재 경로 위에서 인증 상태만 갱신합니다.
+    if (pathname === "/signup") {
+      // 로그인 성공 후의 의도된 이동은 모달 네비게이션 가드가 막지 않도록 한 번 허용합니다.
+      allowNextNavigation();
+      onClose();
+      router.replace("/");
+      return;
+    }
+
+    onClose();
+  };
+
+  const handleFirstLoginSuccess = () => {
+    if (typeof window !== "undefined") {
+      // 홈에 도착한 뒤 웰컴 다이얼로그를 한 번만 열 수 있도록 대기 상태를 저장합니다.
+      sessionStorage.setItem(PENDING_WELCOME_CREDIT_DIALOG_KEY, "true");
+    }
+
+    // 첫 로그인 보상 플로우의 홈 이동도 모달 가드 예외로 통과시킵니다.
+    allowNextNavigation();
+    onClose();
+    router.replace("/");
+  };
+
   const onSubmit = () => {
     emailLogin(
       { username: email, password: pw },
       {
         onSuccess: (data) => {
           if (data.isFirstLogin) {
-            openDialog("WELCOME_CREDIT", {
-              onConfirm: onClose,
-            });
+            handleFirstLoginSuccess();
             return;
           }
 
-          onClose();
+          handleLoginSuccess();
         },
         onError: () => {
           setError("email", { type: "server", message: "" });
