@@ -1,6 +1,7 @@
 "use client";
 
 import { useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import React, {
   useEffect,
@@ -19,17 +20,19 @@ import { Close } from "@/icons";
 import { cn } from "@/lib/utils";
 import { useModalStore } from "@/store/useModalStore";
 import { FollowModalProps } from "@/type/modal";
-import { FOLLOW_TABS, FollowTab } from "./constants";
+import { FOLLOW_TAB_IDS, FollowTab } from "./constants";
 import FollowEmptyState from "./FollowEmptyState";
 import FollowUserItem from "./FollowUserItem";
 
 const FollowModal = ({
   onClose,
   userId,
-  nickname = "이 유저",
+  nickname,
   isOwnProfile = true,
   activeTab = "followers",
 }: FollowModalProps) => {
+  const t = useTranslations("modalUi.follow");
+  const commonT = useTranslations("modalUi.common");
   const router = useRouter();
   const queryClient = useQueryClient();
   const allowNextNavigation = useModalStore(
@@ -39,8 +42,8 @@ const FollowModal = ({
   const [followChangeIds, setFollowChangeIds] = useState<string[]>([]);
   const { mutate: follow } = useFollowMutation();
   const { mutate: unFollow } = useUnFollowMutation();
+  const displayNickname = nickname || t("fallbackNickname");
 
-  // 모달에서 팔로우 상태를 바꿀 수 있으므로 닫힐 때 관련 목록/카운트를 갱신합니다.
   useEffect(() => {
     return () => {
       queryClient.invalidateQueries({ queryKey: ["get-following-list"] });
@@ -56,13 +59,11 @@ const FollowModal = ({
     }
   }, [activeTabs]);
 
-  // 현재 선택된 탭의 query만 활성화해서 불필요한 API 호출을 막습니다.
   const followingQuery = useFollowingListQuery(activeTabs === "following");
   const followerQuery = useFollowerListQuery(activeTabs === "followers");
   const activeQuery =
     activeTabs === "following" ? followingQuery : followerQuery;
 
-  // useInfiniteQuery의 page 구조를 리스트 렌더링에 쓰기 쉬운 1차원 배열로 평탄화합니다.
   const listData = useMemo(
     () => activeQuery.data?.pages.flatMap((page) => page.content) ?? [],
     [activeQuery.data],
@@ -75,7 +76,6 @@ const FollowModal = ({
   });
 
   const handleToggleFollow = (targetUserId: string, isFollowing: boolean) => {
-    // 서버 응답 전에도 버튼 상태가 즉시 바뀌어 보이도록 로컬 토글 목록을 둡니다.
     setFollowChangeIds((prev) =>
       prev.includes(targetUserId)
         ? prev.filter((id) => id !== targetUserId)
@@ -91,32 +91,36 @@ const FollowModal = ({
   };
 
   const moveWithModalClose = (href: string) => {
-    // 모달 내부 CTA 이동은 navigation guard에 막히지 않도록 1회성 이동 허용을 소비합니다.
     allowNextNavigation();
     onClose();
     router.push(href);
   };
 
+  const tabTitles = {
+    followers: t("followers"),
+    following: t("following"),
+  } as const;
+
   return (
     <ModalLayout
       onClose={onClose}
-      hasBackground={true}
+      hasBackground
       className="w-112.5 overflow-hidden p-5"
     >
       <header className="mb-8 flex items-center justify-between">
         <nav className="flex gap-1">
-          {FOLLOW_TABS.map((tab) => (
+          {FOLLOW_TAB_IDS.map((tabId) => (
             <button
               type="button"
-              key={tab.id}
-              onClick={() => setActiveTabs(tab.id)}
+              key={tabId}
+              onClick={() => setActiveTabs(tabId)}
               className={cn(
                 "body-2 translate-y-0.5 cursor-pointer px-5 py-2.5 text-font-disabled transition-none",
-                activeTabs === tab.id &&
+                activeTabs === tabId &&
                   "title-3 border-b-2 border-brand text-font-1",
               )}
             >
-              {tab.title}
+              {tabTitles[tabId]}
             </button>
           ))}
         </nav>
@@ -124,8 +128,8 @@ const FollowModal = ({
         <button
           type="button"
           onClick={onClose}
+          aria-label={commonT("close")}
           className="flex size-6 items-center justify-center rounded-lg hover:bg-btn-hover"
-          aria-label="닫기"
         >
           <Close className="size-5" />
         </button>
@@ -133,13 +137,13 @@ const FollowModal = ({
 
       {activeQuery.isLoading ? (
         <div className="body-4 flex h-95 items-center justify-center text-font-2 transition-none">
-          로딩 중...
+          {commonT("loading")}
         </div>
       ) : listData.length === 0 ? (
         <FollowEmptyState
           activeTab={activeTabs}
           isOwnProfile={isOwnProfile}
-          nickname={nickname}
+          nickname={displayNickname}
           onCreateCharacter={() => moveWithModalClose("/character-creat")}
           onExploreCharacter={() => moveWithModalClose("/")}
           onFollow={() => follow({ userId })}
@@ -168,7 +172,7 @@ const FollowModal = ({
             <div ref={targetRef}>
               {activeQuery.isFetchingNextPage ? (
                 <span className="body-6 animate-pulse text-font-2">
-                  목록을 가져오는 중...
+                  {commonT("loadingMore")}
                 </span>
               ) : activeQuery.hasNextPage ? (
                 <div className="h-4" />

@@ -39,7 +39,7 @@ export const authHandlers = [
     }
 
     if (email === "already@example.com") {
-      return error(400, "MESSAGE", "이미 가입된 이메일입니다.");
+      return error(400, "MESSAGE", "이미 가입한 이메일입니다.");
     }
 
     return ok(null, "인증번호가 발송되었습니다.");
@@ -66,11 +66,12 @@ export const authHandlers = [
       return error(404, "MESSAGE", "인증코드가 만료되었습니다.");
     }
 
+    // 기본 토스트 확인용 ALERT 케이스입니다.
     if (code === "999999") {
       return error(
         429,
         "ALERT",
-        "인증 시도 횟수를 초과했습니다. 인증코드를 재전송해 주세요.",
+        "인증 시도 횟수를 초과했습니다. 잠시 후 다시 시도해 주세요.",
       );
     }
 
@@ -78,7 +79,7 @@ export const authHandlers = [
 
     return ok(
       { emailVerifyToken: `mock-email-token-${code}` },
-      "이메일 인증이 완료되었어요",
+      "이메일 인증이 완료되었어요.",
     );
   }),
 
@@ -119,7 +120,7 @@ export const authHandlers = [
     }
 
     if (email === "already@example.com") {
-      return error(400, "MESSAGE", "이미 가입된 이메일입니다.");
+      return error(400, "MESSAGE", "이미 가입한 이메일입니다.");
     }
 
     if (!verifiedEmails.has(email)) {
@@ -143,7 +144,20 @@ export const authHandlers = [
     }
 
     if (username === "fail@example.com" || password === "wrong-password") {
-      return error(401, "MESSAGE", "이메일 또는 비밀번호를 확인해 주세요.");
+      return error(
+        401,
+        "MESSAGE",
+        "이메일 또는 비밀번호를 다시 확인해 주세요.",
+      );
+    }
+
+    // 로그인 화면에서 토스트 디자인을 확인할 때 사용하는 케이스입니다.
+    if (username === "alert@example.com") {
+      return error(
+        429,
+        "ALERT",
+        "요청이 너무 많아요. 잠시 후 다시 시도해 주세요.",
+      );
     }
 
     return HttpResponse.json(

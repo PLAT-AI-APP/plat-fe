@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslations } from "next-intl";
 import { Persona, Close } from "@/icons";
 
 interface PersonaHeaderProps {
@@ -6,25 +7,26 @@ interface PersonaHeaderProps {
 }
 
 const PersonaHeader = ({ onClose }: PersonaHeaderProps) => {
+  const t = useTranslations("modalUi.personaList");
+  const commonT = useTranslations("modalUi.common");
+
   return (
     <header className="pb-6">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <Persona className="w-6 h-6" />
-          <h2 className="title-1">페르소나</h2>
+          <Persona className="h-6 w-6" />
+          <h2 className="title-1">{t("title")}</h2>
         </div>
         <button
           onClick={onClose}
           type="button"
-          className="p-1 rounded-lg hover:bg-btn-hover w-5.5 h-5.5"
-          aria-label="닫기"
+          aria-label={commonT("close")}
+          className="h-5.5 w-5.5 rounded-lg p-1 hover:bg-btn-hover"
         >
-          <Close className="w-3.5 h-3.5" />
+          <Close className="h-3.5 w-3.5" />
         </button>
       </div>
-      <p className="body-4 text-font-2 pt-2">
-        페르소나로 설정한 역할에 맞춰 캐릭터와 대화할 수 있어요.
-      </p>
+      <p className="body-4 pt-2 text-font-2">{t("description")}</p>
     </header>
   );
 };

@@ -16,7 +16,7 @@ const TAGS = [
   "로맨스",
   "판타지",
   "코미디",
-  "힐링",
+  "미스터리",
 ].map((label, index) => ({
   id: index + 1,
   label,
@@ -61,6 +61,18 @@ export const hashtagHandlers = [
           },
         },
         { status: 400 },
+      );
+    }
+
+    // 태그 제안 모달에서 토스트 디자인을 확인할 때 사용하는 케이스입니다.
+    if (name === "toast-alert") {
+      return HttpResponse.json(
+        {
+          result: "ERROR",
+          code: "ALERT",
+          message: "태그 제안이 잠시 제한되었어요. 조금 뒤 다시 시도해 주세요.",
+        },
+        { status: 429 },
       );
     }
 

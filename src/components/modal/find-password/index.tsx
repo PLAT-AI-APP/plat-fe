@@ -1,20 +1,22 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 import React, { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import PasswordReset from "./PasswordReset";
-import { FindPasswordModalProps } from "@/type/modal";
-import { ModalLayout } from "@/components/ModalLayout";
-import ActiveButton from "@/components/ActiveButton";
 import EmailVerifySection from "@/app/(auth)/signup/_components/EmailVerifySection";
-import { zodResolver } from "@hookform/resolvers/zod";
+import ActiveButton from "@/components/ActiveButton";
+import { ModalLayout } from "@/components/ModalLayout";
 import { cn } from "@/lib/utils";
 import {
   passwordResetFormSchema,
   PasswordResetFormSchemaValues,
 } from "@/schema/auth.schema";
+import { FindPasswordModalProps } from "@/type/modal";
+import PasswordReset from "./PasswordReset";
 
 const FindPasswordModal = ({ onClose, stackIndex }: FindPasswordModalProps) => {
+  const t = useTranslations("modalUi.passwordReset");
   const [step, setStep] = useState(1);
   const [isEmailVerified, setIsEmailVerified] = useState(false);
 
@@ -40,25 +42,25 @@ const FindPasswordModal = ({ onClose, stackIndex }: FindPasswordModalProps) => {
       onClose={onClose}
       hasBackground
       stackIndex={stackIndex}
-      className="p-0 border-none bg-transparent shadow-none"
+      className="border-none bg-transparent p-0 shadow-none"
     >
       <FormProvider {...methods}>
         {step === 1 ? (
-          <section className="py-9 px-6 w-screen max-w-97 rounded-3xl border border-border-main bg-bg-darker">
+          <section className="w-screen max-w-97 rounded-3xl border border-border-main bg-bg-darker px-6 py-9">
             <header className="flex flex-col gap-1.5 pb-9">
-              <h1 className="heading-3">비밀번호 재설정</h1>
-              <p className="text-font-2 body-4">
-                이메일 인증을 통해 비밀번호를 재설정할 수 있습니다.
-              </p>
+              <h1 className="heading-3">{t("title")}</h1>
+              <p className="body-4 text-font-2">{t("description")}</p>
             </header>
+
             <EmailVerifySection
               onVerifiedChange={(isVerified) => {
                 setIsEmailVerified(isVerified);
               }}
             />
+
             <ActiveButton
               type="button"
-              text="다음"
+              text={t("next")}
               isActive={isEmailVerified}
               onClick={onNextStep}
               className={cn("mt-9 h-[45px] rounded-xl bg-card text-font-2")}

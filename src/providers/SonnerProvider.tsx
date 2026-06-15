@@ -3,14 +3,13 @@
 import { Info } from "@/icons";
 import StatusError from "@/icons/StatusError";
 import StatusSuccess from "@/icons/StatusSuccess";
-import StatusWarning from "@/icons/StatusWarning";
 import { Toaster } from "sonner";
 
 const SonnerProvider = () => {
   return (
     <Toaster
       position="top-center"
-      expand
+      closeButton
       duration={2000}
       offset={40}
       theme="dark"
@@ -18,7 +17,8 @@ const SonnerProvider = () => {
         success: <StatusSuccess className="sonner-status-icon" />,
         error: <StatusError className="sonner-status-icon" />,
         info: <Info className="sonner-status-icon" />,
-        warning: <StatusWarning className="sonner-status-icon" />,
+        // 요청한 피그마 노드(1311:2148)의 시각 기준에 맞춰 warning도 동일 아이콘을 사용합니다.
+        warning: <StatusError className="sonner-status-icon" />,
       }}
       toastOptions={{
         unstyled: true,

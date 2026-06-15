@@ -93,18 +93,17 @@ button {
 
 /* Sonner */
 [data-sonner-toast].sonner-toast {
-  width: min(300px, calc(100vw - 32px));
-  min-height: 66px;
+  width: min(517px, calc(100vw - 32px));
+  min-height: 88px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0;
-  border: 2px solid var(--toast-border, var(--border));
-  border-radius: 32px;
-  background: var(--toast-bg, var(--bg-card));
-  color: #f8fafc;
+  align-items: flex-start;
+  gap: 8px;
+  border: 1px solid var(--toast-border, var(--border));
+  border-radius: 12px;
+  background: var(--font-4);
+  color: var(--font-1);
   box-shadow: none;
-  padding: 20px 27px;
+  padding: 20px 16px;
   transform-origin: top center;
   transition:
     opacity 500ms ease,
@@ -122,26 +121,29 @@ button {
 }
 
 .sonner-title {
-  width: 220px;
-  text-align: center;
+  text-align: left;
   font-size: 16px;
-  font-weight: 500;
-  line-height: 1.4;
+  font-weight: 400;
+  line-height: 1.5;
   letter-spacing: 0;
-  color: #f8fafc;
+  color: var(--font-1);
+  white-space: normal;
+  word-break: break-word;
 }
 
 .sonner-description {
   margin-top: 4px;
   font-size: 13px;
   font-weight: 400;
-  line-height: 1.4;
-  color: var(--font-2);
+  line-height: 1.5;
+  color: var(--font-disabled);
+  white-space: normal;
+  word-break: break-word;
 }
 
 [data-sonner-toast].sonner-toast [data-icon] {
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   margin: 0;
   color: var(--toast-border, var(--brand));
 }
@@ -149,12 +151,21 @@ button {
 [data-sonner-toast].sonner-toast [data-content] {
   display: flex;
   flex: 1;
-  align-items: center;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+[data-sonner-toast].sonner-toast [data-content] > div {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
 }
 
 .sonner-status-icon {
-  width: 26px;
-  height: 26px;
+  width: 24px;
+  height: 24px;
   color: inherit;
 }
 
@@ -180,28 +191,31 @@ button {
 
 .sonner-close {
   background: transparent;
-  border: 1px solid transparent;
-  color: var(--font-2);
+  border: 0;
+  color: var(--font-disabled);
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  align-self: flex-start;
+  margin-left: 24px;
+  flex-shrink: 0;
 }
 
 .sonner-success {
-  --toast-border: #22c55e;
-  --toast-bg: rgba(16, 185, 129, 0.6);
+  --toast-border: #00c925;
 }
 
 .sonner-error {
-  --toast-border: #ef4444;
-  --toast-bg: rgba(239, 68, 68, 0.3);
+  --toast-border: var(--font-error);
 }
 
 .sonner-warning {
-  --toast-border: #fb923c;
-  --toast-bg: rgba(251, 146, 60, 0.3);
+  /* 요청한 피그마 노드(1311:2148)의 상태색을 그대로 따릅니다. */
+  --toast-border: var(--font-error);
 }
 
 .sonner-info {
-  --toast-border: #06b6d4;
-  --toast-bg: rgba(6, 182, 212, 0.3);
+  --toast-border: var(--font-disabled);
 }
 
 @keyframes sonner-toast-in {

@@ -1,4 +1,5 @@
 import React, { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { Dots } from "@/icons";
 import { Persona } from "@/type/persona";
@@ -20,6 +21,8 @@ const PersonaItem = ({
   hasSelectedPersona,
   onSelect,
 }: PersonaItemProps) => {
+  const t = useTranslations("modalUi.personaList");
+  const commonT = useTranslations("modalUi.common");
   const { name, description, isDefault } = persona;
   const { openModal } = useModalStore();
   const openDialog = useDialogStore((state) => state.openDialog);
@@ -27,7 +30,6 @@ const PersonaItem = ({
   const { mutate: deletePersona } = useDeletePersonaMutation();
   const menuTriggerRef = useRef<HTMLButtonElement>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
   const isDimmed = hasSelectedPersona && !isActive;
 
   const openEditModal = () => {
@@ -75,7 +77,7 @@ const PersonaItem = ({
                     isDimmed ? "bg-card" : "bg-font-4",
                   )}
                 >
-                  기본
+                  {commonT("defaultBadge")}
                 </span>
               )}
             </div>
@@ -90,7 +92,7 @@ const PersonaItem = ({
             <button
               ref={menuTriggerRef}
               type="button"
-              aria-label={`${name} 페르소나 메뉴 열기`}
+              aria-label={t("menuAria", { name })}
               aria-expanded={isMenuOpen}
               className="flex items-center text-font-2 transition-colors hover:text-brand-dark"
               onClick={(event) => {

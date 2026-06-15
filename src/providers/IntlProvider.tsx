@@ -4,8 +4,10 @@ import { useEffect } from "react";
 import { NextIntlClientProvider } from "next-intl";
 import dayjs from "@/lib/dayjs";
 import { CHARACTER_CREATE_MESSAGES_BY_LOCALE } from "@/i18n/characterCreateMessages";
+import { CHAT_ROOM_MESSAGES_BY_LOCALE } from "@/i18n/chatRoomMessages";
 import { DAYJS_LOCALE_BY_APP_LOCALE } from "@/i18n/config";
 import { getMessages } from "@/i18n/messages";
+import { MODAL_MESSAGES_BY_LOCALE } from "@/i18n/modalMessages";
 import { RUNTIME_MESSAGES_BY_LOCALE } from "@/i18n/runtimeMessages";
 import { STUDIO_MESSAGES_BY_LOCALE } from "@/i18n/studioMessages";
 import { UI_MESSAGES_BY_LOCALE } from "@/i18n/uiMessages";
@@ -47,14 +49,20 @@ const IntlProvider = ({ children }: { children: React.ReactNode }) => {
     mergeMessages(
       mergeMessages(
         mergeMessages(
-          getMessages(locale) as Record<string, unknown>,
-          RUNTIME_MESSAGES_BY_LOCALE[locale] as Record<string, unknown>,
+          mergeMessages(
+            getMessages(locale) as Record<string, unknown>,
+            RUNTIME_MESSAGES_BY_LOCALE[locale] as Record<string, unknown>,
+          ),
+          UI_MESSAGES_BY_LOCALE[locale] as Record<string, unknown>,
         ),
-        UI_MESSAGES_BY_LOCALE[locale] as Record<string, unknown>,
+        STUDIO_MESSAGES_BY_LOCALE[locale] as Record<string, unknown>,
       ),
-      STUDIO_MESSAGES_BY_LOCALE[locale] as Record<string, unknown>,
+      CHARACTER_CREATE_MESSAGES_BY_LOCALE[locale] as Record<string, unknown>,
     ),
-    CHARACTER_CREATE_MESSAGES_BY_LOCALE[locale] as Record<string, unknown>,
+    mergeMessages(
+      CHAT_ROOM_MESSAGES_BY_LOCALE[locale] as Record<string, unknown>,
+      MODAL_MESSAGES_BY_LOCALE[locale] as Record<string, unknown>,
+    ),
   );
 
   useEffect(() => {

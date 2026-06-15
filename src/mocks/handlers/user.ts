@@ -5,7 +5,7 @@ import { endpoint } from "../utils";
 let mockUser: UserInfo = {
   id: "1234567890123456789",
   nickname: "플랫유저",
-  bio: "안녕하세요. PLAT을 사용 중입니다.",
+  bio: "안녕하세요. PLAT를 사용 중입니다.",
   profileImage: "/images/sample.png",
   birth: "2000-01-15",
   gender: "MALE",
@@ -74,6 +74,18 @@ export const userHandlers = [
           data: { fields },
         },
         { status: 400 },
+      );
+    }
+
+    // 프로필 수정 화면에서 토스트 디자인을 확인할 때 사용하는 케이스입니다.
+    if (nickname === "toast-alert") {
+      return HttpResponse.json(
+        {
+          result: "ERROR",
+          code: "ALERT",
+          message: "지금은 프로필을 수정할 수 없어요. 잠시 후 다시 시도해 주세요.",
+        },
+        { status: 429 },
       );
     }
 

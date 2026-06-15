@@ -1,21 +1,23 @@
 "use client";
+
 import React from "react";
-import { useForm } from "react-hook-form";
+import { useTranslations } from "next-intl";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ModalLayout } from "../ModalLayout";
 import { Close, Storage } from "@/icons";
 import ActiveButton from "../ActiveButton";
 import SmartInput from "@/components/smart-input";
-
 import { StorageModalProps } from "@/type/modal";
 import { storageFormSchema, StorageFormValues } from "@/schema/modal.schema";
 
 const StorageModal = ({ onClose }: StorageModalProps) => {
-  // useForm 초기화
+  const t = useTranslations("modalUi.storage");
+  const commonT = useTranslations("modalUi.common");
   const {
     register,
     handleSubmit,
-    watch,
+    control,
     formState: { errors },
   } = useForm<StorageFormValues>({
     resolver: zodResolver(storageFormSchema),
@@ -24,13 +26,9 @@ const StorageModal = ({ onClose }: StorageModalProps) => {
     },
   });
 
-  // 실시간 값 감시 (저장 버튼 활성화용)
-  const memoryValue = watch("longTermMemory");
+  const memoryValue = useWatch({ control, name: "longTermMemory" });
 
-  // 제출 핸들러
-  const onSubmit = (data: StorageFormValues) => {
-    console.log("장기기억 저장 데이터:", data);
-    // API 호출 로직...
+  const onSubmit = () => {
     onClose();
   };
 
@@ -38,26 +36,24 @@ const StorageModal = ({ onClose }: StorageModalProps) => {
     <ModalLayout
       onClose={onClose}
       hasBackground
-      className="w-screen max-w-125 h-fit whitespace-nowrap top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-5"
+      className="top-1/2 left-1/2 h-fit w-screen max-w-125 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap p-5"
     >
       <header className="pb-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Storage className="w-6 h-6" />
-            <h2 className="title-1">장기기억</h2>
+            <Storage className="h-6 w-6" />
+            <h2 className="title-1">{t("title")}</h2>
           </div>
           <button
             onClick={onClose}
             type="button"
-            className="p-1 rounded-lg hover:bg-btn-hover w-5.5 h-5.5"
-            aria-label="닫기"
+            aria-label={commonT("close")}
+            className="h-5.5 w-5.5 rounded-lg p-1 hover:bg-btn-hover"
           >
-            <Close className="w-3.5 h-3.5" />
+            <Close className="h-3.5 w-3.5" />
           </button>
         </div>
-        <p className="body-4 text-font-2 pt-2">
-          대화내역이 자동으로 요약되어 캐릭터가 더 오래 기억할 수 있어요.
-        </p>
+        <p className="body-4 pt-2 text-font-2">{t("description")}</p>
       </header>
 
       <form onSubmit={handleSubmit(onSubmit)} className="w-full">
@@ -71,16 +67,16 @@ const StorageModal = ({ onClose }: StorageModalProps) => {
           isBorder={false}
           inputClassName="bg-card"
           inputBoxClassName="bg-card"
-          placeholder={`장기기억이 생성되려면 더 많은 대화가 쌓여야 해요...`}
+          placeholder={t("placeholder")}
           error={errors.longTermMemory}
         />
 
-        <div className="flex justify-end mt-9">
+        <div className="mt-9 flex justify-end">
           <ActiveButton
-            type="submit" // 제출 버튼으로 설정
-            isActive={Boolean(memoryValue?.trim())} // 공백 제외 값이 있을 때만 활성화
-            text="저장"
-            className="rounded-xl w-25"
+            type="submit"
+            isActive={Boolean(memoryValue?.trim())}
+            text={commonT("save")}
+            className="w-25 rounded-xl"
           />
         </div>
       </form>

@@ -1,5 +1,7 @@
 "use client";
+
 import React from "react";
+import { useTranslations } from "next-intl";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import SmartInput from "@/components/smart-input";
@@ -7,7 +9,6 @@ import { Close } from "@/icons";
 import Note from "@/icons/Note";
 import { ModalLayout } from "../ModalLayout";
 import ActiveButton from "../ActiveButton";
-
 import { UserNoteModalProps } from "@/type/modal";
 import {
   userNoteFormSchema,
@@ -15,6 +16,8 @@ import {
 } from "@/schema/modal.schema";
 
 const UserNoteModal = ({ onClose }: UserNoteModalProps) => {
+  const t = useTranslations("modalUi.userNote");
+  const commonT = useTranslations("modalUi.common");
   const {
     register,
     handleSubmit,
@@ -27,13 +30,9 @@ const UserNoteModal = ({ onClose }: UserNoteModalProps) => {
     },
   });
 
-  // 실시간 값 감시 (글자 수 표시 및 버튼 활성화용)
   const noteValue = useWatch({ control, name: "userNote" });
 
-  // 제출 핸들러
-  const onSubmit = (data: UserNoteFormValues) => {
-    console.log("저장할 데이터:", data);
-    // TODO: API 전송 로직
+  const onSubmit = () => {
     onClose();
   };
 
@@ -41,32 +40,30 @@ const UserNoteModal = ({ onClose }: UserNoteModalProps) => {
     <ModalLayout
       onClose={onClose}
       hasBackground
-      className="w-screen max-w-112.5 h-fit whitespace-nowrap top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-5"
+      className="top-1/2 left-1/2 h-fit w-screen max-w-112.5 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap p-5"
     >
       <header className="pb-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Note className="w-6 h-6" />
-            <h2 className="title-1">유저노트</h2>
+            <Note className="h-6 w-6" />
+            <h2 className="title-1">{t("title")}</h2>
           </div>
           <button
             onClick={onClose}
             type="button"
-            className="p-1 rounded-lg hover:bg-btn-hover w-5.5 h-5.5"
-            aria-label="닫기"
+            aria-label={commonT("close")}
+            className="h-5.5 w-5.5 rounded-lg p-1 hover:bg-btn-hover"
           >
-            <Close className="w-3.5 h-3.5" />
+            <Close className="h-3.5 w-3.5" />
           </button>
         </div>
-        <p className="body-4 text-font-2 pt-2">
-          대화내역이 자동으로 요약되어 캐릭터가 더 오래 기억할 수 있어요.
-        </p>
+        <p className="body-4 pt-2 text-font-2">{t("description")}</p>
       </header>
 
       <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
         <SmartInput
           {...register("userNote")}
-          value={noteValue} // 실시간 글자 수 반영을 위해 watch 값 전달
+          value={noteValue}
           maxLength={500}
           inputClassName="bg-card border-none"
           inputBoxClassName="bg-card"
@@ -74,14 +71,14 @@ const UserNoteModal = ({ onClose }: UserNoteModalProps) => {
           maxLine={10}
           minLine={6}
           isBorder={false}
-          placeholder={`잊으면 안되는 중요한 내용, 추가하고 싶은 설정 등\n...`}
+          placeholder={t("placeholder")}
           error={errors.userNote}
         />
         <ActiveButton
           type="submit"
-          isActive={Boolean(noteValue?.trim())} // 공백 제외 내용이 있을 때만 활성
-          text="저장"
-          className="rounded-xl w-25 mt-9 float-end"
+          isActive={Boolean(noteValue?.trim())}
+          text={commonT("save")}
+          className="mt-9 float-end w-25 rounded-xl"
         />
       </form>
     </ModalLayout>

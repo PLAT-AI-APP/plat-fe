@@ -1,13 +1,15 @@
+import { useTranslations } from "next-intl";
+import React from "react";
+import { Form, useFormContext, useWatch } from "react-hook-form";
 import { usePasswordResetMutation } from "@/api/auth/postPasswordReset";
 import ActiveButton from "@/components/ActiveButton";
 import PasswordCheckField from "@/components/field/PasswordCheckField";
 import PasswordField from "@/components/field/PasswordField";
 import { PasswordResetFormSchemaValues } from "@/schema/auth.schema";
 import { useModalStore } from "@/store/useModalStore";
-import React from "react";
-import { Form, useFormContext, useWatch } from "react-hook-form";
 
 const PasswordReset = () => {
+  const t = useTranslations("modalUi.passwordReset");
   const { mutate: passwrodReset } = usePasswordResetMutation();
   const {
     control,
@@ -42,13 +44,11 @@ const PasswordReset = () => {
       id="password-reset-form"
       control={control}
       onSubmit={({ data }) => onSubmit(data)}
-      className="py-9 px-6 w-screen max-w-112.5 rounded-3xl border border-border-main bg-bg-darker"
+      className="w-screen max-w-112.5 rounded-3xl border border-border-main bg-bg-darker px-6 py-9"
     >
-      <header className="flex flex-col gap-1.5 font-medium pb-9">
-        <h1 className="heading-3">비밀번호 재설정</h1>
-        <p className="body-4 text-font-2">
-          이메일 인증을 통해 비밀번호를 재설정할 수 있습니다.
-        </p>
+      <header className="flex flex-col gap-1.5 pb-9 font-medium">
+        <h1 className="heading-3">{t("title")}</h1>
+        <p className="body-4 text-font-2">{t("description")}</p>
       </header>
 
       <fieldset className="flex flex-col gap-6">
@@ -58,7 +58,7 @@ const PasswordReset = () => {
 
       <ActiveButton
         isActive={isPasswordResetActive}
-        text="비밀번호 변경"
+        text={t("submit")}
         className="mt-6"
         form="password-reset-form"
       />

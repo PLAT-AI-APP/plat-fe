@@ -1,12 +1,16 @@
 "use client";
+
 import React from "react";
+import { useTranslations } from "next-intl";
 import { Info } from "@/icons";
 
 const ChattingRoomNotice = () => {
+  const t = useTranslations("chatRoom");
+
   return (
     <p className="body-6 flex items-center justify-center gap-1 pb-5.75 pt-4">
-      <Info className="w-5 h-5" />
-      캐릭터가 보내는 메시지는 모두 생성된 내용이에요
+      <Info className="h-5 w-5" />
+      {t("generatedNotice")}
     </p>
   );
 };
