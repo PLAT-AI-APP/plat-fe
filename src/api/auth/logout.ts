@@ -23,7 +23,8 @@ export const useLogoutMutation = () => {
       logout();
       clearUser();
       queryClient.removeQueries({ queryKey: ["get-my-info"] });
-      window.location.replace("/");
+      // 로그아웃 후에는 홈으로 이동하지 않고 현재 경로를 기준으로 브라우저를 새로고침합니다.
+      window.location.reload();
     },
   });
 };
