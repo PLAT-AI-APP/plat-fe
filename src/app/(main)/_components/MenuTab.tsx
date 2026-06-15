@@ -1,58 +1,43 @@
 "use client";
+
+import Link from "next/link";
+import React from "react";
+import { useTranslations } from "next-intl";
 import Logo from "@/icons/Logo";
 import New from "@/icons/New";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import React from "react";
 
-const categoryArray = [
-  {
-    id: "all",
-    name: "홈",
-  },
-  {
-    id: "ranking",
-    name: "랭킹",
-  },
-  {
-    id: "new",
-    name: "신작",
-    icon: New,
-  },
-  {
-    id: "official",
-    name: "공식",
-    icon: Logo,
-  },
-  {
-    id: "categories",
-    name: "카테고리",
-  },
-];
+const MenuTab = ({ currentTab }: { currentTab: string }) => {
+  const t = useTranslations();
+  const categoryArray = [
+    { id: "all", name: t("mainTabs.home") },
+    { id: "ranking", name: t("mainTabs.ranking") },
+    { id: "new", name: t("mainTabs.new"), icon: New },
+    { id: "official", name: t("mainTabs.official"), icon: Logo },
+    { id: "categories", name: t("mainTabs.categories") },
+  ];
 
-interface MenuTabProps {
-  currentTab: string;
-}
-const MenuTab = ({ currentTab }: MenuTabProps) => {
   return (
     <nav
       id="category-navigation"
-      aria-label="캐릭터 카테고리"
-      className="w-full flex gap-2 mt-7"
+      aria-label={t("mainTabs.navigation")}
+      className="mt-7 flex w-full gap-2"
     >
       {categoryArray.map(({ id, name, icon: Icon }) => {
         const isActive = currentTab === id;
+
         return (
           <Link
             key={name}
-            id={`category-link-${name}`} // 각 링크에도 고유 ID 부여 (트래킹 용이)
+            id={`category-link-${id}`}
             href={{ pathname: "/", query: { tab: id } }}
-            // scroll={false}
-            className={`relative px-2.5 py-2 flex gap-1 items-center justify-center
-          ${isActive ? "text-font-1 title-2" : "body-1 text-font-2 hover:text-font-1"}`}
+            className={`relative flex items-center justify-center gap-1 px-2.5 py-2 ${
+              isActive
+                ? "title-2 text-font-1"
+                : "body-1 text-font-2 hover:text-font-1"
+            }`}
           >
             {name}
-            {Icon && <Icon className="w-4.5 h-4.5 inline text-white" />}
+            {Icon && <Icon className="inline h-4.5 w-4.5 text-white" />}
 
             {isActive && (
               <div className="absolute bottom-0 left-0 w-full box-border border-b-2 border-brand" />

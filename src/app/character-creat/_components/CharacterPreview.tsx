@@ -1,3 +1,8 @@
+"use client";
+
+import React, { memo, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
+import { useFormContext, useWatch } from "react-hook-form";
 import ActiveButton from "@/components/ActiveButton";
 import CreatePreviewList from "./CreatePreviewList";
 import { useScrollTimeout } from "@/hooks/useScrollTiemout";
@@ -5,36 +10,33 @@ import { Asterisk, ImageIcon, SendFill } from "@/icons";
 import { cn } from "@/lib/utils";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
 import { ScenarioContentItem, ScenarioType } from "@/type/character";
-import React, { useRef, useState, memo } from "react";
-import { useFormContext, useWatch } from "react-hook-form";
 
 interface CharacterPreviewProps {
   activeScenarioIndex: number;
 }
 
 const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
+  const t = useTranslations("characterCreate.preview");
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-
   const { control, setValue, getValues } =
     useFormContext<CharacterCreateFormValues>();
-
-  const scenarios = useWatch({
-    control,
-    name: "scenarios",
-  });
-
-  const name = useWatch({
-    control,
-    name: "name",
-  });
-
+  const scenarios = useWatch({ control, name: "scenarios" });
+  const name = useWatch({ control, name: "name" });
+  // 미입력 상태의 이름도 샘플 콘텐츠 성격이므로 번역 키 대신 고정값으로 유지합니다.
   const characterName = name || "캐릭터";
   const contents = scenarios?.[activeScenarioIndex]?.contents || [];
-
   const [currentMode, setCurrentMode] = useState<ScenarioType>("chat");
-  const handleCurrentMode = (name: ScenarioType) => {
-    if (name === currentMode) return setCurrentMode("chat");
-    setCurrentMode(name);
+  const [msg, setMsg] = useState("");
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const { isScrolling, onScroll } = useScrollTimeout();
+
+  const handleCurrentMode = (mode: ScenarioType) => {
+    if (mode === currentMode) {
+      setCurrentMode("chat");
+      return;
+    }
+
+    setCurrentMode(mode);
   };
 
   const handleUpdateContent = (id: string, newValue: string) => {
@@ -59,10 +61,6 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
     });
   };
 
-  const { isScrolling, onScroll } = useScrollTimeout();
-
-  const [msg, setMsg] = useState("");
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!msg.trim()) return;
@@ -82,51 +80,45 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
     );
     setMsg("");
 
-    // 브라우저가 새 요소를 렌더링한 후 실행되도록 보장
     requestAnimationFrame(() => {
-      if (scrollContainerRef.current) {
-        const container = scrollContainerRef.current;
-        container.scrollTo({
-          top: container.scrollHeight, // 이제 새 요소 높이가 포함된 scrollHeight가 계산됨
-          behavior: "smooth",
-        });
-      }
+      if (!scrollContainerRef.current) return;
+
+      const container = scrollContainerRef.current;
+      container.scrollTo({
+        top: container.scrollHeight,
+        behavior: "smooth",
+      });
     });
   };
 
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  // {user} 삽입 함수
   const handleInsertUserToken = () => {
     const textarea = textareaRef.current;
     if (!textarea) return;
 
-    const start = textarea.selectionStart; // 현재 커서 시작 위치
-    const end = textarea.selectionEnd; // 현재 커서 끝 위치
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
     const token = "{{user}}";
     const text = msg;
-
-    // 현재 커서 위치에 {{user}} 삽입
     const before = text.substring(0, start);
     const after = text.substring(end);
     const newText = `${before}${token}${after}`;
 
     setMsg(newText);
 
-    // 렌더링 후 커서 위치 조정
     setTimeout(() => {
       textarea.focus();
-      // 커서를 삽입된 토큰 바로 뒤로 이동 (원래 위치 + 토큰 길이)
       const newCursorPos = start + token.length;
       textarea.setSelectionRange(newCursorPos, newCursorPos);
     }, 0);
   };
+
   return (
-    <section className="flex flex-col justify-between flex-1">
+    <section className="flex flex-1 flex-col justify-between">
       <div
         onScroll={onScroll}
         ref={scrollContainerRef}
         className={cn(
-          "flex-1 overflow-y-auto px-4 custom-scrollbar hide-scrollbar-on-idle",
+          "custom-scrollbar hide-scrollbar-on-idle flex-1 overflow-y-auto px-4",
           isScrolling && "is-scrolling",
         )}
       >
@@ -134,7 +126,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
           contents={contents}
           characterName={characterName}
           profileImage="/images/sample.png"
-          isEditable={true}
+          isEditable
           onUpdate={handleUpdateContent}
           onDelete={handleDeleteContent}
           onReorder={handleReorderContents}
@@ -143,15 +135,15 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
 
       <form
         onSubmit={handleSubmit}
-        className="shrink-0 p-4 pb-3 mt-1.75 bg-bg-darkest rounded-4xl border border-border-main"
+        className="mt-1.75 shrink-0 rounded-4xl border border-border-main bg-bg-darkest p-4 pb-3"
       >
         <textarea
           rows={2}
           ref={textareaRef}
           value={msg}
           onChange={(e) => setMsg(e.target.value)}
-          placeholder="메시지 보내기"
-          className="mb-2 w-full text-sm placeholder:text-font-disabled outline-none bg-transparent"
+          placeholder={t("messagePlaceholder")}
+          className="mb-2 w-full bg-transparent text-sm outline-none placeholder:text-font-disabled"
         />
 
         <div className="flex justify-between">
@@ -160,27 +152,28 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
               type="button"
               onClick={() => handleCurrentMode("action")}
               className={cn(
-                "flex items-center gap-1.5 py-1.5 pl-2.5 pr-3 rounded-[100px] border border-border-main bg-[#171D28]/50",
-                currentMode === "action" && "text-brand border-brand",
+                "flex items-center gap-1.5 rounded-[100px] border border-border-main bg-[#171D28]/50 py-1.5 pl-2.5 pr-3",
+                currentMode === "action" && "border-brand text-brand",
               )}
             >
-              <Asterisk className="w-4 h-4" />
-              상황
+              <Asterisk className="h-4 w-4" />
+              {t("action")}
             </button>
             <button
               type="button"
               onClick={() => handleCurrentMode("asset")}
               className={cn(
-                "flex items-center gap-1.5 py-1.5 pl-2.5 pr-3 rounded-[100px] border border-border-main bg-[#171D28]/50",
-                currentMode === "asset" && "text-brand border-brand",
+                "flex items-center gap-1.5 rounded-[100px] border border-border-main bg-[#171D28]/50 py-1.5 pl-2.5 pr-3",
+                currentMode === "asset" && "border-brand text-brand",
               )}
             >
-              <ImageIcon className="w-4 h-4" /> 에셋
+              <ImageIcon className="h-4 w-4" />
+              {t("asset")}
             </button>
             <button
               type="button"
               onClick={handleInsertUserToken}
-              className="flex items-center gap-1.5 py-1.5 pl-2.5 pr-3 rounded-[100px] border border-border-main bg-[#171D28]/50 "
+              className="flex items-center gap-1.5 rounded-[100px] border border-border-main bg-[#171D28]/50 py-1.5 pl-2.5 pr-3"
             >
               {`{user}`}
             </button>
@@ -190,9 +183,9 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
             isActive={msg.length > 0}
             text=""
             type="submit"
-            className="w-8.5 h-8.5 flex items-center justify-center rounded-full"
+            className="flex h-8.5 w-8.5 items-center justify-center rounded-full"
           >
-            <SendFill className="w-4.5 h-4.5" />
+            <SendFill className="h-4.5 w-4.5" />
           </ActiveButton>
         </div>
       </form>
@@ -200,4 +193,4 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
   );
 };
 
-export default React.memo(CharacterPreview);
+export default memo(CharacterPreview);

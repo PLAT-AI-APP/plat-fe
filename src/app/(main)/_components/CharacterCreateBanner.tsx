@@ -1,7 +1,12 @@
+"use client";
+
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import React from "react";
 
 const CharacterCreateBanner = () => {
+  const t = useTranslations("home");
+
   return (
     <section className="w-full h-64 relative bg-bg-darkest bg-linear-to-r from-slate-500/0 from-80% to-slate-500 rounded-2xl flex flex-col justify-start items-start gap-2.5 overflow-hidden">
       {/* 왼쪽 텍스트 및 버튼 영역 */}
@@ -11,10 +16,10 @@ const CharacterCreateBanner = () => {
       >
         <header className="flex flex-col justify-center items-start gap-1">
           <p className="text-zinc-400 text-sm font-normal font-['Pretendard'] leading-5">
-            마음에 드는 캐릭터가 없나요?
+            {t("createPromptCaption")}
           </p>
           <h2 className="text-white text-xl font-bold font-['Pretendard'] leading-7">
-            직접 나만의 캐릭터를 만들어보세요
+            {t("createPromptTitle")}
           </h2>
         </header>
 
@@ -24,7 +29,7 @@ const CharacterCreateBanner = () => {
             href={"/character-creat"}
             className="text-brand-dark text-base font-semibold font-['Pretendard'] leading-6"
           >
-            캐릭터 생성하기
+            {t("createCharacterCta")}
           </Link>
         </button>
       </div>

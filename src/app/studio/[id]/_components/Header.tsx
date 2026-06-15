@@ -1,84 +1,48 @@
 "use client";
+
 import React, { useState } from "react";
 import Image from "next/image";
-import ProfileEditModal from "@/components/modal/ProfileEditModal";
-import { useUserStore } from "@/store/useUserStore";
-import { ArrowRight } from "@/icons";
 import Link from "next/link";
-// import { useFollowCountQuery } from "@/api/follow/getFollowCount";
+import { useTranslations } from "next-intl";
+import ProfileEditModal from "@/components/modal/ProfileEditModal";
+import { ArrowRight } from "@/icons";
+import { useUserStore } from "@/store/useUserStore";
 
 interface HeaderProps {
   id: string;
 }
+
 const Header = ({ id }: HeaderProps) => {
-  // const { data: followCount } = useFollowCountQuery(id);
-  // const { followerCount = 0, followingCount = 0 } = followCount ?? {};
-
-  const [isProfileEditodal, setIsProfileEditodal] = useState(false);
-  // const [isFollowModal, setIsFollowModal] = useState(false);
-
-  const toggleIsProfileEditodal = () => {
-    setIsProfileEditodal((prev) => !prev);
-  };
-
-  // const toggleIsFollowModal = () => {
-  //   setIsFollowModal((prev) => !prev);
-  // };
-
-  // 상태 타입 정의 (기본값은 'followers')
-  // const [activeFollowTab, setActiveFollowTab] = useState<
-  //   "followers" | "following"
-  // >("followers");
-
-  // 모달을 열 때 탭 종류를 인자로 받음
-  // const openFollowModal = (tab: "followers" | "following") => {
-  //   setActiveFollowTab(tab);
-  //   setIsFollowModal(true);
-  // };
-
+  const t = useTranslations("studio");
+  const [isProfileEditModal, setIsProfileEditModal] = useState(false);
   const profileImage = useUserStore((state) => state.user?.profileImage);
   const nickname = useUserStore((state) => state.user?.nickname);
   const bio = useUserStore((state) => state.user?.bio);
 
+  const toggleProfileEditModal = () => {
+    setIsProfileEditModal((prev) => !prev);
+  };
+
   return (
     <header
       id="profile-header"
-      className="flex justify-between items-center gap-4 w-full"
+      className="flex w-full items-center justify-between gap-4"
     >
       <section id="profile-info-summary" className="flex flex-col gap-4">
         <div className="flex gap-5.25">
           <aside className="shrink-0">
             <Image
               src={profileImage || "/public/p1.png"}
-              alt="프로필 이미지"
+              alt={t("profileImageAlt")}
               width={60}
               height={60}
-              className="rounded-full w-15 h-15"
+              className="h-15 w-15 rounded-full"
             />
           </aside>
 
           <div className="flex items-start gap-6">
             <div className="flex flex-col">
               <h1 className="title-2">{nickname}</h1>
-
-              {/* <nav className="flex gap-4">
-                <button
-                  onClick={() => openFollowModal("followers")}
-                  className="flex gap-1 text-sm cursor-pointer"
-                  type="button"
-                >
-                  <span className="text-font-2">팔로워</span>
-                  <span>{followerCount}</span>
-                </button>
-                <button
-                  onClick={() => openFollowModal("following")}
-                  className="flex gap-1 text-sm cursor-pointer"
-                  type="button"
-                >
-                  <span className="text-font-2">팔로잉</span>
-                  <span>{followingCount}</span>
-                </button>
-              </nav> */}
             </div>
           </div>
         </div>
@@ -88,24 +52,15 @@ const Header = ({ id }: HeaderProps) => {
 
       <Link
         href={`/profile/${id}`}
-        onClick={toggleIsProfileEditodal}
-        type="button"
-        className="inline p-1 w-fit h-fit rounded-lg hover:bg-btn-hover"
+        onClick={toggleProfileEditModal}
+        className="inline h-fit w-fit rounded-lg p-1 hover:bg-btn-hover"
       >
-        <ArrowRight className="w-4 h-4 text-font-2" />
+        <ArrowRight className="h-4 w-4 text-font-2" />
       </Link>
 
-      {/* 모달 레이어 */}
-      {isProfileEditodal && (
-        <ProfileEditModal onClose={toggleIsProfileEditodal} />
+      {isProfileEditModal && (
+        <ProfileEditModal onClose={toggleProfileEditModal} />
       )}
-      {/* {isFollowModal && (
-        <FollowModal
-          onClose={toggleIsFollowModal}
-          // userId={id}
-          activeTab={activeFollowTab}
-        />
-      )} */}
     </header>
   );
 };

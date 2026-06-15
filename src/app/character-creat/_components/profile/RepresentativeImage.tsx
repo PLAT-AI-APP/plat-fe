@@ -1,35 +1,35 @@
+"use client";
+
+import React, { ChangeEvent } from "react";
+import Image from "next/image";
+import { useTranslations } from "next-intl";
+import { useFormContext } from "react-hook-form";
 import { Close, ImageIcon } from "@/icons";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
-import Image from "next/image";
-import React, { ChangeEvent } from "react";
-import { useFormContext } from "react-hook-form";
 
 const RepresentativeImage = () => {
+  const t = useTranslations("characterCreate.representativeImage");
   const { setValue, getValues } = useFormContext<CharacterCreateFormValues>();
-  // const [preview, setValue] = useState<string | null>(null);
   const preview = getValues("representativeImage");
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // 파일 형식 검사
     const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
     if (!allowedTypes.includes(file.type)) {
-      alert("jpg, png, webp 이미지 파일만 가능합니다.");
-      e.target.value = ""; // 선택 초기화
+      alert(t("invalidType"));
+      e.target.value = "";
       return;
     }
 
-    // 파일 용량 검사 (5MB)
     const maxSize = 5 * 1024 * 1024;
     if (file.size > maxSize) {
-      alert("파일 용량은 최대 5MB까지 가능합니다.");
-      e.target.value = ""; // 선택 초기화
+      alert(t("invalidSize"));
+      e.target.value = "";
       return;
     }
 
-    // 프리뷰 생성
     const reader = new FileReader();
     reader.onloadend = () => {
       setValue("representativeImage", reader.result as string);
@@ -43,19 +43,15 @@ const RepresentativeImage = () => {
 
   return (
     <section>
-      {/* 이미지 가이드 영역 */}
       <header className="flex flex-col gap-1 pb-5.25">
-        <div className="flex items-center gap-1 title-3">
-          <span>대표이미지</span>
+        <div className="title-3 flex items-center gap-1">
+          <span>{t("label")}</span>
           <span className="text-font-accents">*</span>
         </div>
-        <p className="body-5 text-font-2">
-          jpg, png, webp 이미지파일만 가능해요. 최대 5MB, 1:1 비율을 권장해요.
-        </p>
+        <p className="body-5 text-font-2">{t("guide")}</p>
       </header>
 
-      {/* 이미지 업로드 컨트롤러 */}
-      <div id="image-upload-wrapper" className="flex flex-col gap-2 w-fit">
+      <div id="image-upload-wrapper" className="flex w-fit flex-col gap-2">
         <input
           id="image"
           className="hidden"
@@ -66,41 +62,35 @@ const RepresentativeImage = () => {
 
         <label
           htmlFor="image"
-          className="flex w-30 h-30 items-center justify-center bg-card rounded-xl overflow-hidden cursor-pointer"
+          className="flex h-30 w-30 cursor-pointer items-center justify-center overflow-hidden rounded-xl bg-card"
         >
           {preview ? (
             <Image
-              src={preview} // base64 string
-              alt="대표 이미지 미리보기"
-              // 부모 컨테이너(120px)에 맞춰 렌더링 크기 지정
+              src={preview}
+              alt={t("previewAlt")}
               width={120}
               height={120}
-              className="object-cover w-full h-full"
-              // unoptimized={true}
+              className="h-full w-full object-cover"
             />
           ) : (
-            <ImageIcon
-              className="text-font-disabled w-7.5 h-7.5"
-              width={60}
-              height={60}
-            />
+            <ImageIcon className="h-7.5 w-7.5 text-font-disabled" />
           )}
         </label>
 
-        <div className="flex gap-1 h-9">
+        <div className="flex h-9 gap-1">
           <label
             htmlFor="image"
-            className="flex body-4 items-center justify-center whitespace-nowrap flex-1 cursor-pointer w-full text-center border border-border-main rounded-xl bg-bg-darkest px-auto py-2"
+            className="body-4 flex w-full flex-1 cursor-pointer items-center justify-center whitespace-nowrap rounded-xl border border-border-main bg-bg-darkest py-2 text-center"
           >
-            업로드
+            {t("upload")}
           </label>
           {preview && (
             <button
               onClick={previewRemove}
               type="button"
-              className="flex items-center justify-center w-9 rounded-xl border border-[#FF383C] bg-[#FF383C]/10"
+              className="flex w-9 items-center justify-center rounded-xl border border-[#FF383C] bg-[#FF383C]/10"
             >
-              <Close className="w-4 h-4 text-font-accents" />
+              <Close className="h-4 w-4 text-font-accents" />
             </button>
           )}
         </div>

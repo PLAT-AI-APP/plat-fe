@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import type { UserBlockDialogProps } from "@/type/dialog";
 import Dialog from "./Dialog";
 
@@ -6,14 +9,16 @@ const UserBlockDialog = ({
   onClose,
   onConfirm,
 }: UserBlockDialogProps) => {
+  const t = useTranslations();
+
   return (
     <Dialog
       onClose={onClose}
       cancelFn={onClose}
-      cancelText="취소하기"
-      confirmText="차단하기"
-      label={`‘${nickname}’을 차단할까요?`}
-      description="차단한 유저가 만든 캐릭터를 보거나 채팅에 참여할 수 없어요."
+      cancelText="dialog.userBlock.cancel"
+      confirmText="dialog.userBlock.confirm"
+      label={t("dialog.userBlock.title", { nickname })}
+      description="dialog.userBlock.description"
       confirmFn={onConfirm}
     />
   );

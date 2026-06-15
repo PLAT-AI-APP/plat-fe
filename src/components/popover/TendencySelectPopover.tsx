@@ -1,7 +1,10 @@
+"use client";
+
 import React from "react";
 import { ModalLayout } from "../ModalLayout";
 import Check from "@/icons/Check";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 const TENDENCY_LIST = ["전체", "남성향", "여성향"] as const;
 
@@ -17,6 +20,13 @@ const TendencySelectPopover = ({
   currentTendency,
   handleTendency,
 }: tendencySelectPopoverProps) => {
+  const t = useTranslations("selector");
+  const tendencyLabelByValue: Record<(typeof TENDENCY_LIST)[number], string> = {
+    전체: t("all"),
+    남성향: t("male"),
+    여성향: t("female"),
+  };
+
   return (
     <ModalLayout
       onClose={onClose}
@@ -35,7 +45,7 @@ const TendencySelectPopover = ({
                 isActive && "title-5",
               )}
             >
-              <span>{tendency}</span>
+              <span>{tendencyLabelByValue[tendency]}</span>
               {isActive && <Check className="w-4.5 h-4.5 text-brand" />}
             </div>
           );

@@ -2,7 +2,7 @@ import type { LoginRequiredDialogProps } from "@/type/dialog";
 import Dialog from "./Dialog";
 
 const LoginRequiredDialog = ({
-  confirmText = "확인",
+  confirmText = "dialog.loginRequired.confirm",
   description,
   label,
   onClose,

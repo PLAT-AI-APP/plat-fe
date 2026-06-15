@@ -1,5 +1,8 @@
+"use client";
+
 import Logo from "@/icons/Logo";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import React from "react";
 
 interface ExperienceHeaderProps {
@@ -10,11 +13,13 @@ const ExperienceHeader = ({
   handleSelectedIndex,
   selectedIndex,
 }: ExperienceHeaderProps) => {
+  const t = useTranslations("home");
+
   return (
     <header className="flex justify-between">
       <h2 className="title-2">
         <span className="flex items-center gap-2">
-          플랫의 공식 캐릭터 맛보기 <Logo className="w-4.5 h-4.5" />
+          {t("officialShowcase")} <Logo className="w-4.5 h-4.5" />
         </span>
       </h2>
       <div className="inline-flex justify-start items-center gap-3">

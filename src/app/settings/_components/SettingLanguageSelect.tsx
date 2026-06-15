@@ -2,14 +2,14 @@
 
 import { useRef, useState } from "react";
 import { ArrowDown, Check } from "@/icons";
+import { LANGUAGE_LIST } from "@/constants/language";
 import { useClickAway } from "@/hooks/useClickAway";
 import { cn } from "@/lib/utils";
-
-const LANGUAGE_OPTIONS = ["한국어", "일본어", "중국어", "영어", "언어"] as const;
+import { useLocaleStore } from "@/store/useLocaleStore";
 
 const SettingLanguageSelect = () => {
-  const [selectedLanguage, setSelectedLanguage] =
-    useState<(typeof LANGUAGE_OPTIONS)[number]>("한국어");
+  const locale = useLocaleStore((state) => state.locale);
+  const setLocale = useLocaleStore((state) => state.setLocale);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -17,8 +17,12 @@ const SettingLanguageSelect = () => {
   // 드롭다운 바깥 클릭 시 열린 상태를 정리해 다른 설정 행과 겹치지 않게 합니다.
   useClickAway(dropdownRef, () => setIsOpen(false), triggerRef);
 
-  const handleSelect = (language: (typeof LANGUAGE_OPTIONS)[number]) => {
-    setSelectedLanguage(language);
+  const selectedLanguage =
+    LANGUAGE_LIST.find((language) => language.locale === locale) ??
+    LANGUAGE_LIST[0];
+
+  const handleSelect = (nextLocale: (typeof LANGUAGE_LIST)[number]["locale"]) => {
+    setLocale(nextLocale);
     setIsOpen(false);
   };
 
@@ -29,9 +33,9 @@ const SettingLanguageSelect = () => {
         type="button"
         aria-expanded={isOpen}
         onClick={() => setIsOpen((prev) => !prev)}
-        className="title-3 flex h-10 w-[114px] items-center justify-between rounded-xl bg-bg-darkest px-4 py-2 text-font-1"
+        className="title-3 flex h-10 w-[140px] items-center justify-between rounded-xl bg-bg-darkest px-4 py-2 text-font-1"
       >
-        {selectedLanguage}
+        {selectedLanguage.name}
         <ArrowDown
           className={cn(
             "size-4 text-font-1 transition-transform",
@@ -43,22 +47,23 @@ const SettingLanguageSelect = () => {
       {isOpen && (
         <div
           ref={dropdownRef}
-          className="absolute right-0 top-12 z-20 flex w-[114px] flex-col gap-1 rounded-xl bg-bg-darkest p-3 shadow-card-heavy"
+          className="absolute right-0 top-12 z-20 flex w-[140px] flex-col gap-1 rounded-xl bg-bg-darkest p-3 shadow-card-heavy"
         >
-          {LANGUAGE_OPTIONS.map((language) => {
-            const isSelected = language === selectedLanguage;
+          {LANGUAGE_LIST.map((language) => {
+            const isSelected = language.locale === locale;
 
             return (
               <button
-                key={language}
+                key={language.locale}
                 type="button"
-                onClick={() => handleSelect(language)}
+                onClick={() => handleSelect(language.locale)}
                 className={cn(
                   "body-2 flex h-8 w-full items-center justify-between rounded-lg px-3 py-1 text-font-1 transition-colors hover:bg-bg-dark",
                   isSelected && "bg-bg-dark",
                 )}
               >
-                <span>{language}</span>
+                {/* 언어 선택지는 현재 locale과 무관하게 각 언어의 고유 표기를 유지합니다. */}
+                <span>{language.name}</span>
                 {isSelected && <Check className="size-4 text-font-1" />}
               </button>
             );

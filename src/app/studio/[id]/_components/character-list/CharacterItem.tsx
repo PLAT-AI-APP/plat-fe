@@ -1,11 +1,13 @@
 "use client";
+
 import React, { useRef } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import CharacterMenuPopover from "@/components/popover/CharacterMenuPopover";
+import useToggle from "@/hooks/useToggle";
 import { ChatFill, Dots } from "@/icons";
 import { formatStatCount } from "@/lib/utils";
-import CharacterMenuPopover from "@/components/popover/CharacterMenuPopover";
-import { useRouter } from "next/navigation";
-import useToggle from "@/hooks/useToggle";
 
 interface CharacterItemProps {
   chatCount: number;
@@ -22,16 +24,15 @@ const CharacterItem = ({
   id,
   isPublic,
   tagList,
-  // likeCount,
   thumbnail,
   title,
   description,
 }: CharacterItemProps) => {
+  const selectorT = useTranslations("selector");
+  const profileT = useTranslations("profile");
+  const studioT = useTranslations("studio");
   const router = useRouter();
-
-  // 상태 및 참조 변수
   const triggerRef = useRef(null);
-
   const { isOpen, toggle } = useToggle();
 
   const handleCardClick = () => {
@@ -39,18 +40,18 @@ const CharacterItem = ({
       router.push(`/characters/${id}`);
     }
   };
+
   return (
     <article
       onClick={handleCardClick}
-      className="flex gap-2 cursor-pointer px-3 py-2.5 rounded-2xl hover:bg-card"
+      className="flex cursor-pointer gap-2 rounded-2xl px-3 py-2.5 hover:bg-card"
     >
-      {/* 캐릭터 image */}
       <Image
         src={thumbnail}
-        alt={`${title} 대표 이미지`}
+        alt={studioT("characterImageAlt", { title })}
         width={82}
         height={82}
-        className="w-20.5 h-20.5 rounded-xl"
+        className="h-20.5 w-20.5 rounded-xl"
       />
 
       <div
@@ -65,12 +66,11 @@ const CharacterItem = ({
                 ref={triggerRef}
                 type="button"
                 onClick={toggle}
-                aria-label="더보기 메뉴"
+                aria-label={profileT("moreMenu")}
               >
-                <Dots className="w-3.5 h-3.5 text-font-2" />
+                <Dots className="h-3.5 w-3.5 text-font-2" />
               </button>
 
-              {/* 캐릭터 수정/삭제 popover */}
               {isOpen && (
                 <div onClick={(e) => e.stopPropagation()}>
                   <CharacterMenuPopover
@@ -84,23 +84,20 @@ const CharacterItem = ({
             </div>
           </header>
 
-          {/* 캐릭터의 설명 */}
-          <p className="pr-5.5 body-6 text-font-2 whitespace-pre-line line-clamp-1">
+          <p className="body-6 line-clamp-1 whitespace-pre-line pr-5.5 text-font-2">
             {description}
           </p>
 
-          {/* 채팅 갯수, 공개/비공개 여부 */}
-          <footer className="flex pt-1 pb-0.5 gap-1 body-6 text-font-2">
+          <footer className="body-6 flex gap-1 pb-0.5 pt-1 text-font-2">
             <span className="flex items-center gap-1">
-              <ChatFill className="w-3.5 h-3.5" />
+              <ChatFill className="h-3.5 w-3.5" />
               {formatStatCount(chatCount)}
             </span>
-            <span aria-hidden="true">·</span>
-            <span>{isPublic ? "공개" : "비공개"}</span>
+            <span aria-hidden="true">쨌</span>
+            <span>{isPublic ? selectorT("public") : selectorT("private")}</span>
           </footer>
         </section>
 
-        {/* 캐릭터의 태그 리스트 영역 */}
         <aside className="flex items-center gap-1.5 text-font-2">
           <ul className="flex gap-0.5">
             {tagList.map((tag, index) => (

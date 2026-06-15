@@ -1,5 +1,8 @@
+"use client";
+
 import React from "react";
 import { Edit, Trash } from "@/icons";
+import { useTranslations } from "next-intl";
 import { PopoverLayout } from "./layout";
 
 interface CharacterMenuPopoverProps {
@@ -15,6 +18,8 @@ const CharacterMenuPopover = ({
   onDelete,
   onEdit,
 }: CharacterMenuPopoverProps) => {
+  const t = useTranslations("popover");
+
   const handleAction = (action?: () => void) => {
     action?.();
     onClose();
@@ -29,7 +34,7 @@ const CharacterMenuPopover = ({
           className="flex items-center gap-2 text-left body-4 px-2.5 py-2 rounded-lg hover:bg-btn-hover transition-colors"
         >
           <Edit className="w-4 h-4" />
-          <span>수정</span>
+          <span>{t("edit")}</span>
         </button>
         <button
           onClick={() => handleAction(onDelete)}
@@ -37,7 +42,7 @@ const CharacterMenuPopover = ({
           className="flex items-center gap-2 text-font-accents body-4 text-left px-2.5 py-2 rounded-lg hover:bg-btn-hover transition-colors"
         >
           <Trash className="w-4 h-4 text-font-accents" />
-          <span>삭제</span>
+          <span>{t("delete")}</span>
         </button>
       </menu>
     </PopoverLayout>

@@ -4,35 +4,37 @@ import { useCarousel } from "@/hooks/useCarousel";
 import { ArrowLeft, ArrowRight } from "@/icons";
 import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
-
-const bannerData = [
-  {
-    id: 1,
-    src: "/images/sample.png",
-    alt: "이벤트 1",
-    title: "첫 번째 이벤트 제목",
-    desc: "첫 번째 배너의 상세 내용입니다. 여기에 원하는 설명을 적으세요.",
-    tags: ["#이벤트", "#혜택", "#시작"],
-  },
-  {
-    id: 2,
-    src: "/images/sample.png",
-    alt: "이벤트 2",
-    title: "두 번째 프로모션 제목",
-    desc: "두 번째 배너의 상세 내용입니다. 가볍고 빠른 캐러셀 라이브러리!",
-    tags: ["#프로모션", "#할인", "#핫템"],
-  },
-  {
-    id: 3,
-    src: "/images/sample.png",
-    alt: "이벤트 3",
-    title: "세 번째 기획전 제목",
-    desc: "세 번째 배너의 상세 내용입니다. 놓치면 후회하는 마지막 기회.",
-    tags: ["#기획전", "#쿠폰", "#마감임박"],
-  },
-];
+import { useTranslations } from "next-intl";
 
 export function MainBannerCarousel() {
+  const t = useTranslations("home");
+  const bannerData = [
+    {
+      id: 1,
+      src: "/images/sample.png",
+      alt: t("bannerAlt", { index: 1 }),
+      title: t("banner1Title"),
+      desc: t("banner1Desc"),
+      tags: [t("eventTag"), t("benefitTag"), t("startTag")],
+    },
+    {
+      id: 2,
+      src: "/images/sample.png",
+      alt: t("bannerAlt", { index: 2 }),
+      title: t("banner2Title"),
+      desc: t("banner2Desc"),
+      tags: [t("promotionTag"), t("discountTag"), t("hotTag")],
+    },
+    {
+      id: 3,
+      src: "/images/sample.png",
+      alt: t("bannerAlt", { index: 3 }),
+      title: t("banner3Title"),
+      desc: t("banner3Desc"),
+      tags: [t("specialTag"), t("couponTag"), t("deadlineTag")],
+    },
+  ];
+
   const { viewportRef, scrollPrev, scrollNext } = useCarousel({
     options: { loop: true },
     plugins: [Autoplay({ delay: 5000, stopOnInteraction: false })],

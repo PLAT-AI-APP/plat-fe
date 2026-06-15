@@ -1,7 +1,9 @@
 "use client";
-import { cn } from "@/lib/utils";
+
 import Image from "next/image";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
+import { cn } from "@/lib/utils";
 
 interface CommentInputProps {
   profileImage: string;
@@ -9,13 +11,16 @@ interface CommentInputProps {
   isReplyMode?: boolean;
   toggleIsCommentInput?: () => void;
 }
+
 export const CommentInput = ({
   profileImage,
   formClassName,
   isReplyMode = false,
   toggleIsCommentInput,
 }: CommentInputProps) => {
+  const t = useTranslations();
   const [text, setText] = useState("");
+
   return (
     <form
       onSubmit={(e) => e.preventDefault()}
@@ -27,28 +32,28 @@ export const CommentInput = ({
           src={profileImage}
           width={40}
           height={40}
-          alt="내 프로필"
+          alt={t("characterDetail.myProfileAlt")}
           className="h-10 w-10 rounded-full"
         />
         <textarea
           className={cn(
-            "body-4 px-3 py-2 h-19 bg-card rounded-2xl resize-none flex-1",
+            "body-4 h-19 flex-1 resize-none rounded-2xl bg-card px-3 py-2",
             isReplyMode && "max-h-14",
           )}
           onChange={(e) => setText(e.target.value)}
           value={text}
-          placeholder="댓글을 입력하세요..."
+          placeholder={t("characterDetail.commentPlaceholder")}
         />
       </div>
 
-      <div className="flex justify-end gap-2.5 title-5">
+      <div className="title-5 flex justify-end gap-2.5">
         {isReplyMode && (
           <button
             type="button"
             onClick={toggleIsCommentInput}
             className="hover:underline"
           >
-            취소
+            {t("common.cancel")}
           </button>
         )}
 
@@ -56,11 +61,11 @@ export const CommentInput = ({
           type="submit"
           disabled={Boolean(!text)}
           className={cn(
-            "text-font-disabled w-fit px-4 py-1.5 hover:bg-card-hover transition-all bg-btn-hover rounded-[100px]",
+            "w-fit rounded-[100px] bg-btn-hover px-4 py-1.5 text-font-disabled transition-all hover:bg-card-hover",
             text && "bg-card-hover",
           )}
         >
-          {isReplyMode ? "답글" : "등록"}
+          {isReplyMode ? t("characterDetail.reply") : t("characterDetail.submit")}
         </button>
       </div>
     </form>

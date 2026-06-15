@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTranslations } from "next-intl";
 import { FieldValues, Path, useFormContext, useWatch } from "react-hook-form";
 import SmartInput from "@/components/smart-input";
 
@@ -11,6 +12,7 @@ interface BioFieldProps<T extends FieldValues> {
 const BioField = <T extends FieldValues>({
   name = "bio" as Path<T>,
 }: BioFieldProps<T>) => {
+  const t = useTranslations();
   const {
     register,
     control,
@@ -24,9 +26,9 @@ const BioField = <T extends FieldValues>({
     <SmartInput
       {...register(name)}
       type="textarea"
-      label="소개글"
+      label={t("fieldsExtra.bioLabel")}
       value={bio as string}
-      placeholder="소개글을 작성해주세요"
+      placeholder={t("fieldsExtra.bioPlaceholder")}
       maxLine={2}
       minLine={2}
       maxLength={100}

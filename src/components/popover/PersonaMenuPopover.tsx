@@ -1,5 +1,8 @@
+"use client";
+
 import React from "react";
 import { Pen, Trash } from "@/icons";
+import { useTranslations } from "next-intl";
 import { PopoverLayout } from "./layout";
 
 interface PersonaMenuPopoverProps {
@@ -16,6 +19,8 @@ const PersonaMenuPopover = ({
   onDelete,
   onEdit,
 }: PersonaMenuPopoverProps) => {
+  const t = useTranslations("popover");
+
   const handleAction = (action?: () => void) => {
     action?.();
     onClose();
@@ -32,7 +37,7 @@ const PersonaMenuPopover = ({
           type="button"
           className="flex items-center gap-2 text-left body-4 p-2 rounded-lg hover:bg-btn-hover"
         >
-          <Pen className="size-5 text-font-2" /> 수정하기
+          <Pen className="size-5 text-font-2" /> {t("editPersona")}
         </button>
         <button
           onClick={() => handleAction(onDelete)}
@@ -40,7 +45,7 @@ const PersonaMenuPopover = ({
           className="flex items-center gap-2 body-4 text-left p-2 rounded-lg hover:bg-btn-hover"
         >
           <Trash className="size-5 text-font-2" />
-          삭제하기
+          {t("deletePersona")}
         </button>
       </menu>
     </PopoverLayout>

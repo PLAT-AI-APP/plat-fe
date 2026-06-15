@@ -1,13 +1,16 @@
-import { Close, Search } from "@/icons";
-import { ModalLayout } from "../ModalLayout";
+"use client";
+
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
+import { Close, Search } from "@/icons";
 import { useRecentSearch } from "@/hooks/useRecentSearch";
 import { cn } from "@/lib/utils";
+import { ModalLayout } from "../ModalLayout";
 
 export const SearchBar = () => {
-  const triggerRef = useRef<HTMLFormElement>(null); // 버튼을 위한 ref
-  const [isActive, setIsActive] = useState<boolean>(false);
-
+  const t = useTranslations();
+  const triggerRef = useRef<HTMLFormElement>(null);
+  const [isActive, setIsActive] = useState(false);
   const { removeKeyword, keywords, clearAll } = useRecentSearch();
 
   const popularKeyword = [
@@ -22,32 +25,31 @@ export const SearchBar = () => {
     "사라기",
     "아카데미",
   ];
+
   return (
     <form
       id="search-bar-form"
       role="search"
       ref={triggerRef}
-      className="relative flex items-center group min-w-[260px]"
-      onSubmit={(e) => e.preventDefault()} // 엔터 시 페이지 새로고침 방지
+      className="group relative flex min-w-[260px] items-center"
+      onSubmit={(e) => e.preventDefault()}
     >
       <input
         id="search-input"
         type="text"
-        className="body-4 border cursor-pointer border-border-main w-full h-10 px-4 pl-10 rounded-xl focus:outline-none transition-all placeholder:body-4 placeholder:text-font-disabled focus:cursor-text focus:border-font-1"
-        placeholder="검색어를 입력하세요"
-        // 포커스 시 활성화
+        className="body-4 h-10 w-full cursor-pointer rounded-xl border border-border-main px-4 pl-10 transition-all placeholder:body-4 placeholder:text-font-disabled focus:cursor-text focus:border-font-1 focus:outline-none"
+        placeholder={t("searchBar.placeholder")}
         onFocus={() => setIsActive(true)}
       />
 
-      {/* 아이콘 영역을 label로 감싸 클릭 시 input에 포커스가 가도록 개선 */}
       <label
         id="search-icon-wrapper"
         htmlFor="search-input"
-        className="absolute left-4 cursor-pointer pointer-events-none"
+        className="pointer-events-none absolute left-4 cursor-pointer"
       >
         <Search
           id="icon-search-glass"
-          className="text-font-disabled w-4.5 h-4.5 "
+          className="h-4.5 w-4.5 text-font-disabled"
         />
       </label>
 
@@ -55,18 +57,19 @@ export const SearchBar = () => {
         <ModalLayout
           triggerRef={triggerRef || null}
           onClose={() => setIsActive(false)}
-          className="w-85 p-5 flex flex-col gap-6.5"
+          className="flex w-85 flex-col gap-6.5 p-5"
         >
-          {/* 최근 검색어 영역 */}
           {keywords.length > 0 && (
             <section className="flex flex-col gap-4">
               <header className="flex justify-between">
-                <h1 className="text-font-1 title-3">최근 검색어</h1>
+                <h1 className="title-3 text-font-1">
+                  {t("searchBar.recentTitle")}
+                </h1>
                 <button
                   onClick={clearAll}
-                  className="cursor-pointer text-font-2 hover:underline body-6"
+                  className="body-6 cursor-pointer text-font-2 hover:underline"
                 >
-                  전체삭제
+                  {t("searchBar.clearAll")}
                 </button>
               </header>
 
@@ -75,7 +78,7 @@ export const SearchBar = () => {
                   <li
                     key={keyword}
                     className={cn(
-                      "flex gap-2 items-center body-4 rounded-[100px] border border-border-main justify-between py-1.5 pl-3 pr-2 transition-colors cursor-pointer",
+                      "body-4 flex cursor-pointer items-center justify-between gap-2 rounded-[100px] border border-border-main py-1.5 pr-2 pl-3 transition-colors",
                       "[&:not(:has(.close-btn:hover))]:hover:bg-btn-hover",
                     )}
                   >
@@ -83,9 +86,9 @@ export const SearchBar = () => {
                     <button
                       id={`remove-keyword-${keyword}`}
                       onClick={() => removeKeyword(keyword)}
-                      className="close-btn w-4 h-4 rounded-full flex items-center justify-center hover:bg-btn-hover transition-colors"
+                      className="close-btn flex h-4 w-4 items-center justify-center rounded-full transition-colors hover:bg-btn-hover"
                     >
-                      <Close className="w-3 h-3 text-font-2" />
+                      <Close className="h-3 w-3 text-font-2" />
                     </button>
                   </li>
                 ))}
@@ -93,32 +96,29 @@ export const SearchBar = () => {
             </section>
           )}
 
-          {/* 인기 검색어 영역 */}
           <section className="flex flex-col gap-4">
-            <h1 id="popular-search-title" className="text-font-1 title-3">
-              인기 검색어
+            <h1 id="popular-search-title" className="title-3 text-font-1">
+              {t("searchBar.popularTitle")}
             </h1>
 
-            <ol className="grid grid-cols-2 grid-rows-5 grid-flow-col gap-1">
+            <ol className="grid grid-flow-col grid-cols-2 grid-rows-5 gap-1">
               {popularKeyword.map((item, index) => {
                 const isTopThree = index < 3;
 
                 return (
                   <li key={index} className="flex items-center gap-2 px-1 py-2">
-                    {/* 순위 숫자 */}
                     <span
                       className={cn(
-                        "w-3.75 body-4",
-                        isTopThree ? "text-brand title-5" : "text-font-2",
+                        "body-4 w-3.75",
+                        isTopThree ? "title-5 text-brand" : "text-font-2",
                       )}
                     >
                       {index + 1}
                     </span>
-                    {/* 검색어 키워드 */}
                     <span
                       className={cn(
                         "body-4 cursor-pointer hover:underline",
-                        isTopThree ? "text-font-1 title-5" : "text-font-2",
+                        isTopThree ? "title-5 text-font-1" : "text-font-2",
                       )}
                     >
                       {item}

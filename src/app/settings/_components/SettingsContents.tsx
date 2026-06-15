@@ -1,15 +1,19 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { ArrowDown } from "@/icons";
+import { useAuthStore } from "@/store/useAuthStore";
 import SettingLanguageSelect from "./SettingLanguageSelect";
 import SettingRow from "./SettingRow";
 import SettingSection from "./SettingSection";
 import SettingToggle from "./SettingToggle";
 
 const SettingsContents = () => {
+  const t = useTranslations();
   const { resolvedTheme, setTheme } = useTheme();
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const isLightMode = resolvedTheme === "light";
 
   const handleThemeChange = (checked: boolean) => {
@@ -21,46 +25,51 @@ const SettingsContents = () => {
     <section className="flex min-h-full w-full justify-center bg-bg-dark px-6">
       <div className="flex w-[592px] max-w-full flex-col gap-6 pt-[30px]">
         <header className="flex w-full items-center py-4">
-          <h1 className="heading-2 text-font-1">설정</h1>
+          <h1 className="heading-2 text-font-1">{t("settings.title")}</h1>
         </header>
 
         <div className="flex w-full flex-col gap-5">
-          <SettingSection title="환경설정">
-            <SettingRow title="화면모드">
+          <SettingSection title={t("settings.sections.environment")}>
+            <SettingRow title={t("settings.rows.theme")}>
               <SettingToggle
                 checked={isLightMode}
-                label="화면모드"
+                label={t("settings.rows.theme")}
                 onChange={handleThemeChange}
               />
             </SettingRow>
 
-            <SettingRow title="선호언어">
+            <SettingRow title={t("settings.rows.language")}>
               <SettingLanguageSelect />
             </SettingRow>
           </SettingSection>
 
-          <hr className="w-full border-border-main" />
+          {/* 비회원 설정 화면은 피그마 기준으로 환경설정만 노출하고, 계정 전용 항목은 숨깁니다. */}
+          {isLoggedIn && (
+            <>
+              <hr className="w-full border-border-main" />
 
-          <SettingSection title="알림 및 콘텐츠 관리">
-            <SettingRow title="차단 관리">
-              <button
-                type="button"
-                aria-label="차단 관리로 이동"
-                className="flex size-[18px] items-center justify-center text-font-2 transition-colors hover:text-font-1"
+              <SettingSection title={t("settings.sections.notifications")}>
+                <SettingRow title={t("settings.rows.blockedUsers")}>
+                  <button
+                    type="button"
+                    aria-label={t("settings.actions.goToBlockedUsers")}
+                    className="flex size-[18px] items-center justify-center text-font-2 transition-colors hover:text-font-1"
+                  >
+                    <ArrowDown className="size-[18px] -rotate-90" />
+                  </button>
+                </SettingRow>
+              </SettingSection>
+
+              <hr className="w-full border-border-main" />
+
+              <Link
+                href="/withdrawal"
+                className="body-3 flex w-full items-center py-3 text-font-2 underline underline-offset-2"
               >
-                <ArrowDown className="size-[18px] -rotate-90" />
-              </button>
-            </SettingRow>
-          </SettingSection>
-
-          <hr className="w-full border-border-main" />
-
-          <Link
-            href="/withdrawal"
-            className="body-3 flex w-full items-center py-3 text-font-2 underline underline-offset-2"
-          >
-            회원탈퇴
-          </Link>
+                {t("settings.actions.withdrawal")}
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </section>

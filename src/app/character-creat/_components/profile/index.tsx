@@ -1,14 +1,16 @@
+"use client";
+
 import React from "react";
+import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
-import RepresentativeImage from "./RepresentativeImage";
 import SmartInput from "@/components/smart-input";
-import { CharacterCreateFormValues } from "@/schema/character.schema";
 import StatusWarning from "@/icons/StatusWarning";
+import { CharacterCreateFormValues } from "@/schema/character.schema";
+import RepresentativeImage from "./RepresentativeImage";
 
 const Profile = () => {
+  const t = useTranslations("characterCreate.profile");
   const { register, control } = useFormContext<CharacterCreateFormValues>();
-
-  // 상태 관찰 데이터
   const titleValue = useWatch({ control, name: "title" });
   const nameValue = useWatch({ control, name: "name" });
   const characterIntroduceValue = useWatch({
@@ -20,36 +22,32 @@ const Profile = () => {
     <section className="flex flex-col gap-6">
       <RepresentativeImage />
 
-      {/* 기본 정보 입력 필드 */}
       <div id="character-basic-info" className="flex flex-col gap-6">
-        {/* 제목 input */}
         <SmartInput
-          label="제목"
-          required={true}
+          label={t("titleLabel")}
+          required
           maxLength={20}
-          placeholder="제목을 입력해주세요."
+          placeholder={t("titlePlaceholder")}
           isBorder
           {...register("title")}
           value={titleValue}
         />
 
-        {/* 캐릭터 이름 input */}
         <SmartInput
-          label="캐릭터 이름"
-          required={true}
+          label={t("nameLabel")}
+          required
           maxLength={20}
-          placeholder="캐릭터 이름을 입력해주세요."
+          placeholder={t("namePlaceholder")}
           isBorder
           {...register("name")}
           value={nameValue}
         />
 
-        {/* 캐릭터 소개 input */}
         <SmartInput
-          label="캐릭터 소개"
-          required={true}
+          label={t("introduceLabel")}
+          required
           maxLength={30}
-          placeholder="캐릭터 소개글을 작성해주세요."
+          placeholder={t("introducePlaceholder")}
           type="textarea"
           maxLine={3}
           minLine={3}
@@ -59,13 +57,9 @@ const Profile = () => {
         />
       </div>
 
-      {/* 운영 정책 안내 */}
-      <footer className="body-6 flex items-center gap-2 text-font-2 p-3 pr-5 rounded-xl bg-card">
-        <StatusWarning className="w-5 h-5" />
-        <p>
-          폭력, 혐오, 성적묘사 등의 표현 및 이미지는 규정에 따라 영구적으로
-          제재될 수 있어요
-        </p>
+      <footer className="body-6 flex items-center gap-2 rounded-xl bg-card p-3 pr-5 text-font-2">
+        <StatusWarning className="h-5 w-5" />
+        <p>{t("policyNotice")}</p>
       </footer>
     </section>
   );

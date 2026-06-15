@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import type { WelcomeCreditDialogProps } from "@/type/dialog";
 import Dialog from "./Dialog";
 
@@ -5,6 +8,8 @@ const WelcomeCreditDialog = ({
   onClose,
   onConfirm,
 }: WelcomeCreditDialogProps) => {
+  const t = useTranslations();
+
   const handleConfirm = () => {
     onConfirm?.();
     onClose();
@@ -13,19 +18,19 @@ const WelcomeCreditDialog = ({
   return (
     <Dialog
       onClose={handleConfirm}
-      label="웰컴 크레딧 선물이 도착했어요"
+      label="dialog.welcomeCredit.title"
       description={
         <div className="body-4 w-full text-font-2">
           <p>
-            특별한 인연을 위해,{" "}
+            {t("dialog.welcomeCredit.descriptionBefore")}
             <span className="title-5 text-font-1">
-              웰컴노트 크레딧을 선물했어요.
+              {t("dialog.welcomeCredit.descriptionHighlight")}
             </span>
           </p>
-          <p>저희와 함께 즐거운 순간을 만들어 볼까요?</p>
+          <p>{t("dialog.welcomeCredit.descriptionAfter")}</p>
         </div>
       }
-      confirmText="확인"
+      confirmText="dialog.welcomeCredit.confirm"
       confirmFn={handleConfirm}
     />
   );

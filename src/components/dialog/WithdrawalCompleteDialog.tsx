@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import type { WithdrawalCompleteDialogProps } from "@/type/dialog";
 import Dialog from "./Dialog";
 
@@ -5,6 +8,8 @@ const WithdrawalCompleteDialog = ({
   onClose,
   onConfirm,
 }: WithdrawalCompleteDialogProps) => {
+  const t = useTranslations();
+
   const handleConfirm = () => {
     onClose();
     onConfirm();
@@ -13,9 +18,9 @@ const WithdrawalCompleteDialog = ({
   return (
     <Dialog
       onClose={handleConfirm}
-      label="그동안 이용해 주셔서 감사해요"
-      description={`그동안 PLAT과 함께해 주셔서 감사해요.\n언제든 다시 만날 수 있길 바랄게요.`}
-      confirmText="확인"
+      label="dialog.withdrawalComplete.title"
+      description={`${t("dialog.withdrawalComplete.descriptionLine1")}\n${t("dialog.withdrawalComplete.descriptionLine2")}`}
+      confirmText="dialog.withdrawalComplete.confirm"
       confirmFn={handleConfirm}
     />
   );

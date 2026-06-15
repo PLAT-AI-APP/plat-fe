@@ -1,16 +1,20 @@
+"use client";
+
 import Check from "@/icons/Check";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 import React, { useState } from "react";
 
-const SORT_OPTIONS = ["인기순", "대화량순", "관련도순", "최신순"] as const;
+const SORT_OPTIONS = ["popular", "chats", "interest", "latest"] as const;
 
 type SortOption = (typeof SORT_OPTIONS)[number];
 
 const SearchResultSort = () => {
-  const [selectedSort, setSelectedSort] = useState<SortOption>("인기순");
+  const t = useTranslations("searchSort");
+  const [selectedSort, setSelectedSort] = useState<SortOption>("popular");
 
   return (
-    <nav aria-label="캐릭터 정렬">
+    <nav aria-label={t("navigation")}>
       <ul className="flex items-center gap-1">
         {SORT_OPTIONS.map((option, index) => {
           const isSelected = selectedSort === option;
@@ -37,7 +41,7 @@ const SearchResultSort = () => {
                   {isSelected && (
                     <Check className="size-3.5 shrink-0 text-brand" />
                   )}
-                  <span className="whitespace-nowrap">{option}</span>
+                  <span className="whitespace-nowrap">{t(option)}</span>
                 </button>
               </li>
             </React.Fragment>

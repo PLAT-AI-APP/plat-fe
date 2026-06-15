@@ -1,5 +1,8 @@
+"use client";
+
 import React from "react";
 import { PenSparkle, Trash } from "@/icons";
+import { useTranslations } from "next-intl";
 import { PopoverLayout } from "./layout";
 
 interface MyChattingMenuPopoverProps {
@@ -15,6 +18,8 @@ const MyChattingMenuPopover = ({
   onDelete,
   onEdit,
 }: MyChattingMenuPopoverProps) => {
+  const t = useTranslations("popover");
+
   // 로직 / 함수
   const handleAction = (action?: () => void) => {
     action?.();
@@ -34,7 +39,7 @@ const MyChattingMenuPopover = ({
               onClick={() => handleAction(onEdit)}
               className="items-center w-full hover:bg-btn-hover rounded-lg px-2.5 py-2 flex gap-2"
             >
-              <PenSparkle className="w-4 h-4" /> 새 채팅
+              <PenSparkle className="w-4 h-4" /> {t("newChat")}
             </button>
           </li>
 
@@ -43,7 +48,7 @@ const MyChattingMenuPopover = ({
               onClick={() => handleAction(onDelete)}
               className="items-center w-full rounded-lg px-2.5 py-2 flex gap-2 text-font-accents hover:bg-btn-hover"
             >
-              <Trash className="w-4 h-4" /> 삭제
+              <Trash className="w-4 h-4" /> {t("delete")}
             </button>
           </li>
         </ul>

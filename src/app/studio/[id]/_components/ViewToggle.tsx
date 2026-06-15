@@ -2,6 +2,7 @@
 
 import React from "react";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { ViewGrid, ViewList } from "@/icons";
 import { useChangeQueryString } from "@/hooks/useChangeQueryString";
@@ -11,6 +12,7 @@ interface ViewToggleProps {
 }
 
 const ViewToggle = ({ viewMode }: ViewToggleProps) => {
+  const t = useTranslations("studio");
   const changeQueryString = useChangeQueryString();
 
   const toggleViewMode = () => {
@@ -22,34 +24,29 @@ const ViewToggle = ({ viewMode }: ViewToggleProps) => {
     <button
       id="view-mode-toggle"
       onClick={toggleViewMode}
-      className="relative flex items-center w-16.5 h-8.5 p-1 rounded-full border border-border-main bg-bg-darkest cursor-pointer overflow-hidden"
-      aria-label={`Switch to ${viewMode === "list" ? "grid" : "list"} view`}
+      className="relative flex h-8.5 w-16.5 cursor-pointer items-center overflow-hidden rounded-full border border-border-main bg-bg-darkest p-1"
+      aria-label={viewMode === "list" ? t("switchToGrid") : t("switchToList")}
     >
-      {/* 움직이는 배경원 */}
       <motion.div
         className="absolute h-6.5 w-6.5 rounded-full bg-[#2a304d]"
         initial={false}
-        animate={{
-          x: viewMode === "list" ? 0 : 29,
-        }}
+        animate={{ x: viewMode === "list" ? 0 : 29 }}
         transition={{ type: "spring", stiffness: 500, damping: 30 }}
       />
 
-      {/* List 아이콘 영역 */}
-      <span className="relative z-10 flex flex-1 justify-center items-center">
+      <span className="relative z-10 flex flex-1 items-center justify-center">
         <ViewList
           className={cn(
-            "w-5 h-5 transition-colors",
+            "h-5 w-5 transition-colors",
             viewMode === "list" ? "" : "text-font-disabled",
           )}
         />
       </span>
 
-      {/* Grid 아이콘 영역 */}
-      <span className="relative z-10 flex flex-1 justify-center items-center">
+      <span className="relative z-10 flex flex-1 items-center justify-center">
         <ViewGrid
           className={cn(
-            "w-5 h-5 transition-colors",
+            "h-5 w-5 transition-colors",
             viewMode === "grid" ? "" : "text-font-disabled",
           )}
         />

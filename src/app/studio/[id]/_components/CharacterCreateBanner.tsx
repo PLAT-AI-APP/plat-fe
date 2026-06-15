@@ -1,29 +1,32 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
 const CharacterCreateBanner = () => {
+  const t = useTranslations("studio");
+
   return (
     <div
       className={cn(
-        "flex justify-between rounded-3xl border border-border-main bg-bg-darker py-4 px-5",
+        "flex justify-between rounded-3xl border border-border-main bg-bg-darker px-5 py-4",
         "@max-[400px]:flex-col @max-[400px]:gap-6",
       )}
     >
       <div className="flex flex-col gap-1">
-        <span className="title-3">캐릭터 제작</span>
-        <span className="body-4 text-font-2">
-          나만의 캐릭터를 직접 만들고 공유해 보세요
-        </span>
+        <span className="title-3">{t("createTitle")}</span>
+        <span className="body-4 text-font-2">{t("createDescription")}</span>
       </div>
+
       <Link
-        href={`/character-creat`}
+        href="/character-creat"
         className={cn(
-          "flex items-center h-10 title-5 text-brand py-2.5 pr-5 pl-4 rounded-xl bg-brand-opacity border border-brand",
-          "justify-center",
+          "flex h-10 items-center justify-center rounded-xl border border-brand bg-brand-opacity py-2.5 pl-4 pr-5 text-brand title-5",
         )}
       >
-        제작하기
+        {t("createAction")}
       </Link>
     </div>
   );

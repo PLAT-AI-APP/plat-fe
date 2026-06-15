@@ -1,7 +1,12 @@
-import React from "react";
+"use client";
 
-const loading = () => {
-  return <div>로딩중....</div>;
+import React from "react";
+import { useTranslations } from "next-intl";
+
+const Loading = () => {
+  const t = useTranslations();
+
+  return <div>{t("loading.text")}</div>;
 };
 
-export default loading;
+export default Loading;

@@ -1,4 +1,7 @@
+"use client";
+
 import { ModalLayout } from "@/components/ModalLayout";
+import { useTranslateText } from "@/hooks/useTranslateText";
 import { cn } from "@/lib/utils";
 import type { DialogProps } from "@/type/dialog";
 
@@ -8,9 +11,10 @@ const Dialog = ({
   description,
   cancelFn,
   confirmFn,
-  confirmText = "저장",
-  cancelText = "취소",
+  confirmText = "common.confirm",
+  cancelText = "common.cancel",
 }: DialogProps) => {
+  const translateText = useTranslateText();
   const hasCancelButton = Boolean(cancelFn);
 
   const handleCancel = () => {
@@ -34,16 +38,18 @@ const Dialog = ({
     >
       <div className="flex w-full flex-col items-center gap-8">
         <div className="flex w-full flex-col items-start gap-3">
-          {/* 호출부가 JSX 제목을 넘기는 특수 케이스가 있어 문자열일 때만 기본 제목 스타일을 입힙니다. */}
+          {/* JSX 제목은 호출부가 그대로 제어하고, 문자열 제목만 공통 번역/타이포를 적용합니다. */}
           {typeof label === "string" ? (
-            <h2 className="title-2 w-full text-font-1">{label}</h2>
+            <h2 className="title-2 w-full text-font-1">
+              {translateText(label)}
+            </h2>
           ) : (
             label
           )}
 
           {typeof description === "string" ? (
             <p className="body-4 w-full whitespace-pre-line text-font-2">
-              {description}
+              {translateText(description)}
             </p>
           ) : (
             description
@@ -57,7 +63,7 @@ const Dialog = ({
               onClick={handleCancel}
               className="flex h-10.5 flex-1 items-center justify-center rounded-xl bg-card px-6 text-font-1 transition-colors hover:bg-card-hover"
             >
-              {cancelText}
+              {translateText(cancelText)}
             </button>
           )}
 
@@ -69,7 +75,7 @@ const Dialog = ({
               hasCancelButton ? "flex-1" : "w-full",
             )}
           >
-            {confirmText}
+            {translateText(confirmText)}
           </button>
         </div>
       </div>

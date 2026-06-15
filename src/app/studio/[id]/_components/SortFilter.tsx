@@ -1,21 +1,24 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { Sort } from "@/icons";
-import CharacterSortPopover from "@/components/popover/CharacterSortPopover";
+import { useTranslations } from "next-intl";
+import CharacterSortPopover, {
+  CharacterSortOption,
+} from "@/components/popover/CharacterSortPopover";
 import { useChangeQueryString } from "@/hooks/useChangeQueryString";
+import { Sort } from "@/icons";
 
 interface SortFilterProps {
-  currentSort: "최신순" | "채팅순";
+  currentSort: CharacterSortOption;
 }
 
 const SortFilter = ({ currentSort }: SortFilterProps) => {
+  const t = useTranslations();
   const [isSortOpen, setIsSortOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
-
   const changeQueryString = useChangeQueryString();
 
-  const handleSortChange = (newSort: string) => {
+  const handleSortChange = (newSort: CharacterSortOption) => {
     changeQueryString({ updateKey: "sort", updateValue: newSort });
     setIsSortOpen(false);
   };
@@ -26,12 +29,12 @@ const SortFilter = ({ currentSort }: SortFilterProps) => {
         ref={triggerRef}
         type="button"
         onClick={() => setIsSortOpen(!isSortOpen)}
-        className="flex items-center py-1 px-1.5 gap-1.5 title-5 text-font-2 cursor-pointer"
+        className="title-5 flex cursor-pointer items-center gap-1.5 px-1.5 py-1 text-font-2"
         aria-haspopup="listbox"
         aria-expanded={isSortOpen}
       >
-        <Sort className="w-4 h-4 text-font-2" />
-        {currentSort}
+        <Sort className="h-4 w-4 text-font-2" />
+        {t(`profile.sort.${currentSort}`)}
       </button>
 
       {isSortOpen && (

@@ -1,7 +1,10 @@
+"use client";
+
 import React from "react";
 import { ModalLayout } from "../ModalLayout";
 import { cn } from "@/lib/utils";
 import Check from "@/icons/Check";
+import { useTranslations } from "next-intl";
 
 interface CategorySelectPopoverProps {
   onClose: () => void;
@@ -15,6 +18,22 @@ const CategorySelectPopover = ({
   handlecategory,
   onClose,
 }: CategorySelectPopoverProps) => {
+  const t = useTranslations("category");
+  const categoryLabelByValue: Record<(typeof CATEGORIES)[number], string> = {
+    시뮬레이션: t("simulation"),
+    로맨스: t("romance"),
+    "판타지/SF": t("fantasySf"),
+    드라마: t("drama"),
+    "무협/사극": t("martialArtsHistorical"),
+    GL: t("gl"),
+    BL: t("bl"),
+    "공포/추리": t("horrorMystery"),
+    액션: t("action"),
+    "코믹/일상": t("comicDaily"),
+    "스포츠/학원": t("sportsSchool"),
+    기타: t("etc"),
+  };
+
   return (
     <ModalLayout
       onClose={onClose}
@@ -36,7 +55,7 @@ const CategorySelectPopover = ({
                 isActive && "title-5",
               )}
             >
-              <span>{category}</span>
+              <span>{categoryLabelByValue[category]}</span>
               {isActive && <Check className="w-4.5 h-4.5 text-brand" />}
             </div>
           );

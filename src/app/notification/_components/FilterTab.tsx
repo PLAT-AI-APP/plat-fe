@@ -1,26 +1,30 @@
-import { cn } from "@/lib/utils";
+"use client";
+
 import Link from "next/link";
 import React from "react";
+import { useTranslations } from "next-intl";
+import { cn } from "@/lib/utils";
 
-const FilterTabArray = [
-  {
-    id: "ALL",
-    name: "전체",
-  },
-  { id: "NOTICE", name: "공지" },
-  { id: "UPDATE", name: "업데이트" },
-  { id: "EVENT", name: "이벤트" },
-];
+const FILTER_TAB_IDS = ["ALL", "NOTICE", "UPDATE", "EVENT"] as const;
 
 interface FilterTabProps {
   currentFilter: "NOTICE" | "UPDATE" | "EVENT" | null | undefined;
 }
+
 const FilterTab = ({ currentFilter }: FilterTabProps) => {
+  const t = useTranslations();
+
+  const filterLabelMap = {
+    ALL: t("notification.filters.all"),
+    NOTICE: t("notification.filters.notice"),
+    UPDATE: t("notification.filters.update"),
+    EVENT: t("notification.filters.event"),
+  } as const;
+
   return (
     <nav>
       <ul className="flex gap-2">
-        {FilterTabArray.map(({ id, name }) => {
-          // 1. currentFilter가 id와 정확히 일치하거나,
+        {FILTER_TAB_IDS.map((id) => {
           const isActive =
             currentFilter === id || (id === "ALL" && !currentFilter);
 
@@ -28,21 +32,20 @@ const FilterTab = ({ currentFilter }: FilterTabProps) => {
             <li
               key={id}
               className={cn(
-                "cursor-pointer py-1.5 px-3 rounded-[100px] bg-card hover:bg-card-hover",
+                "cursor-pointer rounded-[100px] bg-card px-3 py-1.5 hover:bg-card-hover",
                 isActive && "bg-card-selected",
               )}
             >
               <Link
                 href={{
-                  // "전체"를 클릭했을 때는 쿼리 파라미터를 비워두는 것이 깔끔합니다.
-                  query: id === "ALL" ? { filter: id } : { filter: id },
+                  query: id === "ALL" ? {} : { filter: id },
                 }}
                 className={cn(
                   "body-4 text-font-2 transition-colors",
-                  isActive && "text-font-1", // 가독성을 위해 font-bold 추가 권장
+                  isActive && "text-font-1",
                 )}
               >
-                {name}
+                {filterLabelMap[id]}
               </Link>
             </li>
           );

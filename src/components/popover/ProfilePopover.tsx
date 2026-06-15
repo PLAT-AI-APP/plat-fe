@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -23,20 +25,13 @@ import useToggle from "@/hooks/useToggle";
 import { useModalStore } from "@/store/useModalStore";
 import useRouteEffect from "@/hooks/useRouteEffect";
 import Token from "@/icons/Token";
+import { useTranslations } from "next-intl";
 
-const supportArray = [
-  { name: "공지사항", link: "/notification", icon: Megaphone },
-  { name: "고객센터", link: "/customer-service", icon: Headphone },
-];
-const tendencyArray = [
-  { name: "전체", color: "#AA8BD8" },
-  { name: "남성향", color: "#60A5FA" },
-  { name: "여성향", color: "#F472B6" },
-];
 interface ProfilePopoverProps {
   onClose: () => void;
   triggerRef: React.RefObject<HTMLElement | null>;
 }
+
 interface ActivityTab {
   name: string;
   icon: React.ComponentType<{
@@ -50,13 +45,27 @@ interface ActivityTab {
 }
 
 const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
+  const t = useTranslations("profilePopover");
+  const selectorT = useTranslations("selector");
   const router = useRouter();
-
   const { mutate: logout } = useLogoutMutation();
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const { openModal } = useModalStore();
-
   const tendency = useToggle();
+
+  const supportArray = [
+    { name: t("notice"), link: "/notification", icon: Megaphone },
+    {
+      name: t("customerService"),
+      link: "/customer-service",
+      icon: Headphone,
+    },
+  ];
+  const tendencyArray = [
+    { name: selectorT("all"), color: "#AA8BD8" },
+    { name: selectorT("male"), color: "#60A5FA" },
+    { name: selectorT("female"), color: "#F472B6" },
+  ];
 
   const handlePersonaModalOpen = () => {
     onClose();
@@ -65,28 +74,28 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
 
   const activityArray: ActivityTab[] = [
     {
-      name: "내 페르소나",
+      name: t("persona"),
       icon: Persona,
       onClick: handlePersonaModalOpen,
     },
     {
-      name: "콘텐츠 설정",
+      name: t("contentSettings"),
       icon: Setting,
       onClick: tendency.toggle,
       hasTendencyOptions: true,
     },
   ];
 
-  // isLoggedIn이 false일 때 "내 페르소나"를 필터링
+  // 로그인 상태가 아닐 때는 개인화 기능으로 이어지는 항목을 숨깁니다.
   const filteredActivityArray = activityArray.filter((item) => {
-    if (item.name === "내 페르소나") {
-      return isLoggedIn; // 로그인 상태일 때만 true 반환하여 포함시킴
+    if (item.name === t("persona")) {
+      return isLoggedIn;
     }
-    return true; // 나머지 아이템은 항상 표시
+    return true;
   });
 
-  const [cureentTendency, setCurrentTendency] =
-    useState<(typeof tendencyArray)[number]["name"]>("전체");
+  const [currentTendency, setCurrentTendency] =
+    useState<(typeof tendencyArray)[number]["name"]>(selectorT("all"));
 
   const handleCurrentTendency = (name: string) => {
     setCurrentTendency(name);
@@ -114,8 +123,9 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
         ? `${process.env.NEXT_PUBLIC_BASE_URI}/oauth2/authorization/kakao`
         : `${process.env.NEXT_PUBLIC_BASE_URI}/oauth2/authorization/google`;
   };
+
   const handleProfilePopoverClose = () => {
-    // 로그인 모달이 켜져 있다면, 어떤 바깥 클릭이 들어와도 프로필 모달은 무시
+    // 로그인 모달이 열려 있으면 배경 클릭이 부모 팝오버까지 닿지 않게 막습니다.
     if (loginModal.isOpen) {
       return;
     }
@@ -136,7 +146,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
   return (
     <PopoverLayout
       triggerRef={triggerRef}
-      onClose={handleProfilePopoverClose} // 가드 로직이 포함된 핸들러
+      onClose={handleProfilePopoverClose}
       className="w-75 transition-colors"
     >
       {isLoggedIn ? (
@@ -148,7 +158,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
           <div className="flex items-center gap-3">
             <Image
               src={profileImage || "/p1.png"}
-              alt="profile image"
+              alt={t("profileImageAlt")}
               width={40}
               height={40}
               className="w-10 h-10 rounded-full"
@@ -165,53 +175,46 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
       ) : (
         <div className="p-2 flex flex-col gap-3 text-sm font-medium">
           <div
-            // href={"/login"}
             onClick={() => handleLoginBtn("KAKAO")}
             className="flex cursor-pointer items-center justify-center relative body-4 text-center h-11.5 rounded-lg bg-[#FEE500] w-full py-2 text-bg-darkest"
           >
             <Kakao className="absolute w-5.5 h-5.5 top-1/2 left-7.5 -translate-y-1/2" />
-            카카오 계정으로 시작하기
+            {t("loginWithKakao")}
           </div>
           <div
-            // href={"/login"}
             onClick={() => handleLoginBtn("GOOGLE")}
             className="flex cursor-pointer items-center justify-center relative body-4 text-center h-11.5 rounded-lg bg-white w-full py-2 text-black"
           >
             <Google className="absolute w-5.5 h-5.5 top-1/2 left-7.5 -translate-y-1/2" />
-            구글 계정으로 시작하기
+            {t("loginWithGoogle")}
           </div>
           <div
-            // href={"/login"}
             ref={loginModalBtnRef}
             onClick={() => handleLoginBtn("LOGIN")}
             className="flex cursor-pointer items-center justify-center relative body-4 text-center h-11.5 rounded-lg bg-card w-full py-2 text-font-2"
           >
-            {/* <Kakao className="absolute w-5.5 h-5.5 top-1/2 left-7.5 -translate-y-1/2" /> */}
-            다른 방법으로 로그인하기
+            {t("loginWithOther")}
           </div>
         </div>
       )}
 
       <hr className="text-border-main pb-2.5 mt-2.5" />
 
-      <h3 className="pb-1.5 pl-2.5 caption-1 text-font-2 font-medium">활동</h3>
+      <h3 className="pb-1.5 pl-2.5 caption-1 text-font-2 font-medium">
+        {t("activity")}
+      </h3>
       {filteredActivityArray.map((tab) => {
         const Icon = tab.icon;
 
-        // 경로 이동용 tab이 아니라면
-        if (!tab.link)
+        if (!tab.link) {
           return (
-            <div
-              key={tab.name}
-              onClick={tab.onClick}
-              // className="relative cursor-pointer flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg hover:bg-btn-hover transition-colors text-font-1 hover:text-font-1 text-sm"
-            >
+            <div key={tab.name} onClick={tab.onClick}>
               <div className="relative cursor-pointer flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg hover:bg-btn-hover transition-colors duration-300 ease-in-out text-font-1 hover:text-font-1">
                 <div className="flex items-center gap-2 body-4">
                   <Icon
                     size={18}
                     strokeWidth={0.5}
-                    className={cn("shrink-0  text-font-2")}
+                    className={cn("shrink-0 text-font-2")}
                   />
                   {tab.name}
                 </div>
@@ -219,7 +222,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
                 {tab.hasTendencyOptions && (
                   <div className="flex items-center gap-1">
                     <span className="title-6 text-font-1">
-                      {cureentTendency}
+                      {currentTendency}
                     </span>
                     <ArrowRight
                       className={cn(
@@ -235,30 +238,28 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
                 {tab.hasTendencyOptions && tendency.isOpen && (
                   <motion.div
                     onClick={(e) => e.stopPropagation()}
-                    initial={{ height: 0, opacity: 0 }} // 시작 상태: 높이 0, 투명도 0
-                    animate={{ height: "auto", opacity: 1 }} // 펼쳐진 상태: 높이 자동, 투명도 1
-                    exit={{ height: 0, opacity: 0 }} // 닫힐 때 상태
-                    transition={{ duration: 0.3, ease: "easeInOut" }} // 애니메이션 속도 및 곡선
-                    className="overflow-hidden" // 필수: 펼쳐지는 동안 내부 내용이 가려져야 함
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                    className="overflow-hidden"
                   >
                     <ul className="flex flex-col gap-1 p-2.5">
                       {tendencyArray.map(({ color, name }) => (
                         <li
                           key={name}
                           onClick={() => handleCurrentTendency(name)}
-                          className={cn(
-                            "body-5 cursor-pointer flex justify-between px-3.5 py-2.5 rounded-2xl hover:bg-btn-hover transition-colors duration-300 ease-in-out",
-                          )}
+                          className="body-5 cursor-pointer flex justify-between px-3.5 py-2.5 rounded-2xl hover:bg-btn-hover transition-colors duration-300 ease-in-out"
                         >
                           <div className="flex items-center gap-2">
                             <div
-                              className={`w-2.5 h-2.5 rounded-full`}
+                              className="w-2.5 h-2.5 rounded-full"
                               style={{ backgroundColor: color }}
                             />
                             {name}
                           </div>
 
-                          {cureentTendency === name && (
+                          {currentTendency === name && (
                             <Check className="w-4 h-4 text-brand" />
                           )}
                         </li>
@@ -267,9 +268,9 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
                   </motion.div>
                 )}
               </AnimatePresence>
-              {/* {isModal && <TendencySettingModal onClose={toggleIstendency} />} */}
             </div>
           );
+        }
 
         return (
           <Link
@@ -281,7 +282,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
               <Icon
                 size={18}
                 strokeWidth={0.5}
-                className={cn("shrink-0  text-font-2")}
+                className={cn("shrink-0 text-font-2")}
               />
               {tab.name}
             </div>
@@ -291,20 +292,21 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
 
       <hr className="text-border-main pb-2.5 mt-2.5" />
 
-      <h3 className="pb-1.5 pl-2.5 caption-1 text-font-2">문의 및 설정</h3>
+      <h3 className="pb-1.5 pl-2.5 caption-1 text-font-2">
+        {t("inquiryAndSettings")}
+      </h3>
       {supportArray.map((tab) => {
         const Icon = tab.icon;
         return (
           <Link
             key={tab.name}
             href={tab.link}
-            // onClick={onClose}
             className="flex items-center gap-2 px-3 py-2.5 rounded-lg hover:bg-btn-hover transition-colors text-font-1 hover:text-font-1 body-4"
           >
             <Icon
               size={18}
               strokeWidth={0.5}
-              className={cn("shrink-0  text-font-2")}
+              className={cn("shrink-0 text-font-2")}
             />
             {tab.name}
           </Link>
@@ -319,7 +321,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
             className="cursor-pointer flex items-center gap-2 px-3 py-2.5 rounded-xl hover:bg-btn-hover transition-colors duration-300 ease-in-out text-font-1 hover:text-font-1 body-4"
           >
             <Logout size={18} className="text-font-2 shrink-0" />
-            로그아웃
+            {t("logout")}
           </div>
         </>
       )}

@@ -51,7 +51,7 @@ const NicknameField = () => {
     },
   );
 
-  const error = errors["nickname"];
+  const error = errors.nickname;
   const isNicknameSettled = debouncedNickname === currentNickname;
   const isUnavailableNickname =
     isCurrentNicknameValid &&
@@ -111,10 +111,10 @@ const NicknameField = () => {
   return (
     <SmartInput
       {...register("nickname")}
-      label="닉네임"
+      label="auth.fields.nicknameLabel"
       required
       value={currentNickname}
-      placeholder="1 ~ 20자 이내, 특수문자 불가"
+      placeholder="auth.fields.nicknamePlaceholder"
       maxLength={20}
       error={
         (error?.message as string) ||

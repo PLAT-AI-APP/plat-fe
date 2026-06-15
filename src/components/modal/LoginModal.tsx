@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import React from "react";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { useEmailLoginMutation } from "@/api/auth/emailLogin";
@@ -20,6 +21,7 @@ import { LoginModalProps } from "@/type/modal";
 const PENDING_WELCOME_CREDIT_DIALOG_KEY = "pending-welcome-credit-dialog";
 
 const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
+  const t = useTranslations();
   const pathname = usePathname();
   const router = useRouter();
   const openModal = useModalStore((state) => state.openModal);
@@ -117,13 +119,14 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
         onClose={onClose}
         hasBackground
         triggerRef={triggerRef}
-        className="w-112.5 p-6 pt-9 h-fit top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+        className="left-1/2 top-1/2 h-fit w-112.5 -translate-x-1/2 -translate-y-1/2 p-6 pt-9"
       >
         <header id="login-card-header" className="pb-9">
-          <h1 id="login-welcome-title" className="heading-3 text-font-1">
-            지금 로그인하고
-            <br />
-            모든 서비스를 경험해보세요.
+          <h1
+            id="login-welcome-title"
+            className="heading-3 whitespace-pre-line text-font-1"
+          >
+            {t("auth.login.title")}
           </h1>
         </header>
 
@@ -135,16 +138,16 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
           >
             <fieldset
               id="login-input-fields"
-              className="flex flex-col gap-4 border-none p-0 m-0"
+              className="m-0 flex flex-col gap-4 border-none p-0"
             >
-              <legend className="sr-only">이메일 및 비밀번호 입력</legend>
+              <legend className="sr-only">{t("auth.login.submit")}</legend>
 
               <SmartInput
                 id="input-email"
-                label="이메일"
+                label="auth.login.emailLabel"
                 inputType="email"
                 labelFontSize="title-5"
-                placeholder="example@gmail.com"
+                placeholder="auth.login.emailPlaceholder"
                 {...register("email")}
                 // 로그인 모달은 에러 문구 없이 보더로만 실패 상태를 표현합니다.
                 error={errors.email ? "" : undefined}
@@ -154,7 +157,8 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
                 <PasswordField
                   id="input-password"
                   name="pw"
-                  placeholder="비밀번호를 입력하세요"
+                  label="auth.login.passwordLabel"
+                  placeholder="auth.login.passwordPlaceholder"
                   showHelperMessage={false}
                   hideErrorMessage
                 />
@@ -163,16 +167,16 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
                   id="btn-forgot-password"
                   type="button"
                   onClick={handleFindPasswordClick}
-                  className="cursor-pointer w-fit pl-1 text-font-2 body-6 hover:text-font-1 transition-colors"
+                  className="body-6 w-fit cursor-pointer pl-1 text-font-2 transition-colors hover:text-font-1"
                 >
-                  비밀번호를 잊으셨나요?
+                  {t("auth.login.forgotPassword")}
                 </button>
               </div>
             </fieldset>
 
             <ActiveButton
               id="btn-login-submit"
-              text="로그인"
+              text={t("auth.login.submit")}
               type="submit"
               isActive={email.length > 0 && pw.length > 0}
               className="mt-2 h-12 rounded-lg"
@@ -181,19 +185,19 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
 
           <nav
             id="social-auth-nav"
-            aria-label="소셜 로그인 선택"
+            aria-label={t("auth.login.submit")}
             className="flex flex-col gap-3"
           >
             <SocialLoginButton
               id="link-kakao-login"
               icon={<ChatFill />}
-              label="카카오톡으로 시작하기"
+              label={t("auth.login.socialKakao")}
               onClick={() => handleSocialLoginClick("kakao")}
             />
             <SocialLoginButton
               id="link-google-login"
               icon={<Google />}
-              label="구글로 시작하기"
+              label={t("auth.login.socialGoogle")}
               onClick={() => handleSocialLoginClick("google")}
             />
           </nav>
@@ -203,7 +207,7 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
           id="login-card-footer"
           className="flex items-center justify-center gap-3 pt-7"
         >
-          <p className="body-6 text-font-2">아직 회원이 아니신가요?</p>
+          <p className="body-6 text-font-2">{t("auth.login.signupPrompt")}</p>
           <Link
             id="link-to-signup"
             href="/signup"
@@ -216,7 +220,7 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
             onClick={onClose}
             className="title-5 text-brand hover:underline"
           >
-            회원가입
+            {t("auth.login.signupAction")}
           </Link>
         </footer>
       </ModalLayout>

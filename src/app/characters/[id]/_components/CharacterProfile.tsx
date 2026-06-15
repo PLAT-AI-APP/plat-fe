@@ -1,13 +1,14 @@
 "use client";
-import { useCharacterScenarioListQuery } from "@/api/character/getCharacterScenarioList";
-import ActiveButton from "@/components/ActiveButton";
-import { Heart } from "@/icons";
-import { formatStatCount } from "@/lib/utils";
-import { useModalStore } from "@/store/useModalStore";
-import { CharacterScenario } from "@/type/character";
+
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
+import { useCharacterScenarioListQuery } from "@/api/character/getCharacterScenarioList";
+import ActiveButton from "@/components/ActiveButton";
+import { formatStatCount } from "@/lib/utils";
+import { useModalStore } from "@/store/useModalStore";
+import { CharacterScenario } from "@/type/character";
 
 interface CharacterProfileProps {
   imageSrc: string;
@@ -24,82 +25,69 @@ const CharacterProfile = ({
   followerCount,
   characterId,
 }: CharacterProfileProps) => {
-  // useSuspenseQuery 대신 일반 useQuery를 사용하더라도 HydrationBoundary가 있으면
-  // 초기 렌더링 시 데이터를 즉시 사용
+  const t = useTranslations();
   const { data: scenarios } = useCharacterScenarioListQuery(characterId);
-
-  // 초기 상태를 scenarios?[0]으로 설정 (옵셔널 체이닝 활용)
-  // 타입은 CharacterScenario | undefined 가 됩니다.
   const [currentScenario, setCurrentScenario] = useState<
     CharacterScenario | undefined
   >(scenarios?.[0]);
 
-  // 만약 scenarios가 처음에 undefined였다가 들어왔을 때를 대비한 동기화
-  // (Hydration 시에는 즉시 들어오지만, 클라이언트에서 업데이트 시 필요할 수 있음)
   if (!currentScenario && scenarios && scenarios.length > 0) {
     setCurrentScenario(scenarios[0]);
   }
 
-  // const { isOpen, toggle } = useToggle();
   const { openModal } = useModalStore();
 
-  // 데이터가 아예 없을 때의 방어 로직
   if (!scenarios || scenarios.length === 0) {
-    return <div>등록된 시나리오가 없습니다.</div>;
+    return <div>{t("characterDetail.noScenario")}</div>;
   }
 
-  const handleChattingStartBtn = () => {
-    openModal("CHATTING_START", {
-      scenarioList: scenarios,
-      currentScenario: currentScenario,
-      setCurrentScenario: setCurrentScenario,
-    });
-  };
-
   return (
-    <section className="flex flex-col gap-4 max-w-100">
+    <section className="flex max-w-100 flex-col gap-4">
       <Image
         src={imageSrc}
-        alt="메인 캐릭터 이미지"
+        alt={t("characterDetail.mainImageAlt")}
         width={500}
         height={500}
-        className="object-cover aspect-square rounded-2xl"
+        className="aspect-square rounded-2xl object-cover"
       />
 
-      {/* 대화하기 좋아요 button */}
       <div className="flex gap-3">
         <ActiveButton
-          text="대화하기"
+          text={t("characterDetail.chat")}
           isActive
           className="rounded-xl"
-          onClick={handleChattingStartBtn}
+          onClick={() =>
+            openModal("CHATTING_START", {
+              scenarioList: scenarios,
+              currentScenario,
+              setCurrentScenario,
+            })
+          }
         />
-        {/* <button className="flex rounded-xl justify-center items-center bg-card hover:bg-card-hover cursor-pointer w-11.5 aspect-square">
-          <Heart className="text-font-2" />
-        </button> */}
       </div>
 
-      {/* 제작자 정보, 팔로우 button */}
-      <div className="flex justify-between items-center">
+      <div className="flex items-center justify-between">
         <div className="flex gap-3">
           <Image
             src={creatorImage}
-            alt="캐릭터 제작자 이미지"
+            alt={t("characterDetail.creatorImageAlt")}
             width={40}
             height={40}
-            className="object-cover aspect-square rounded-full"
+            className="aspect-square rounded-full object-cover"
           />
           <div className="flex flex-col gap-0.5">
-            <Link href={"/"} className="text-font-1 body-2 hover:underline">
+            <Link href="/" className="body-2 text-font-1 hover:underline">
               {creatorName}
             </Link>
-            <span className="text-font-2 body-6">
-              팔로워 {formatStatCount(followerCount)}
+            <span className="body-6 text-font-2">
+              {t("characterDetail.followers", {
+                count: formatStatCount(followerCount),
+              })}
             </span>
           </div>
         </div>
-        <button className="px-2.5 py-1 rounded-[10px] text-bg-dark bg-font-1 title-5">
-          팔로우
+        <button className="title-5 rounded-[10px] bg-font-1 px-2.5 py-1 text-bg-dark">
+          {t("characterDetail.follow")}
         </button>
       </div>
     </section>

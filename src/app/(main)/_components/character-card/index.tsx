@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils";
 import useEmblaCarousel from "embla-carousel-react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ChatCountBadge from "./ChatCountBadge";
 import { LAST_SWIPE_THRESHOLD, SIZE_CONFIG } from "./constants";
@@ -33,6 +34,7 @@ const CharacterCard = ({
   isOfficial = false,
   selectedTags,
 }: CharacterCardProps) => {
+  const t = useTranslations("characterCard");
   const config = SIZE_CONFIG[size];
   const imageList = useMemo(() => normalizeImages(images), [images]);
 
@@ -149,7 +151,7 @@ const CharacterCard = ({
                 <Image
                   className="object-cover"
                   src={image}
-                  alt={`${title} image ${index + 1}`}
+                  alt={t("imageAlt", { title, index: index + 1 })}
                   fill
                   sizes="384px"
                 />
@@ -197,7 +199,7 @@ const CharacterCard = ({
         <Image
           className="object-cover transition-all duration-300 group-hover:scale-110"
           src={imageList[currentImgIndex]}
-          alt={`${title} image ${currentImgIndex + 1}`}
+          alt={t("imageAlt", { title, index: currentImgIndex + 1 })}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />

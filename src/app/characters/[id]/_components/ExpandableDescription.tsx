@@ -1,5 +1,7 @@
 "use client";
+
 import React, { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { ArrowDown } from "@/icons";
 import { cn } from "@/lib/utils";
 
@@ -10,6 +12,7 @@ interface ExpandableDescriptionProps {
 export const ExpandableDescription = ({
   content,
 }: ExpandableDescriptionProps) => {
+  const t = useTranslations();
   const [isExpanded, setIsExpanded] = useState(false);
   const [shouldShowExpand, setShouldShowExpand] = useState(false);
   const textRef = useRef<HTMLParagraphElement>(null);
@@ -30,8 +33,8 @@ export const ExpandableDescription = ({
 
   return (
     <section className="flex flex-col gap-3">
-      <h3 className="text-font-1 title-3">
-        캐릭터 정보 | <span className="title-5">이윤아</span>
+      <h3 className="title-3 text-font-1">
+        {t("characterDetail.infoTitle")} | <span className="title-5">이윤아</span>
       </h3>
       <div
         id="description-body"
@@ -39,13 +42,13 @@ export const ExpandableDescription = ({
           "relative",
           shouldShowExpand &&
             !isExpanded &&
-            "after:absolute after:bottom-0 after:left-0 after:w-full after:h-full after:bg-linear-to-t after:from-bg-dark after:to-transparent after:pointer-events-none",
+            "after:pointer-events-none after:absolute after:bottom-0 after:left-0 after:h-full after:w-full after:bg-linear-to-t after:from-bg-dark after:to-transparent",
         )}
       >
         <p
           ref={textRef}
           className={cn(
-            "whitespace-pre-wrap body-4 text-font-2 leading-relaxed overflow-hidden transition-all duration-500",
+            "body-4 overflow-hidden whitespace-pre-wrap text-font-2 leading-relaxed transition-all duration-500",
             shouldShowExpand && !isExpanded ? "max-h-22" : "",
           )}
         >
@@ -57,14 +60,11 @@ export const ExpandableDescription = ({
         <button
           onClick={() => setIsExpanded(!isExpanded)}
           aria-expanded={isExpanded}
-          className="flex justify-center items-center gap-1 p-1 pl-2 body-6 text-font-2 hover:text-white transition-colors z-10"
+          className="body-6 z-10 flex items-center justify-center gap-1 p-1 pl-2 text-font-2 transition-colors hover:text-white"
         >
-          {isExpanded ? "접기" : "펼치기"}
+          {isExpanded ? t("characterDetail.collapse") : t("characterDetail.expand")}
           <ArrowDown
-            className={cn(
-              "w-4 h-4 transition-transform",
-              isExpanded && "rotate-180",
-            )}
+            className={cn("h-4 w-4 transition-transform", isExpanded && "rotate-180")}
           />
         </button>
       )}

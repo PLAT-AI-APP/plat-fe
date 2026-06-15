@@ -79,9 +79,9 @@ export const useModalStore = create<ModalState>((set, get) => ({
     if (!isLoggedIn && requiresAuthModalTypes.includes(type)) {
       // 로그인 필요 안내는 모달 스택이 아니라 다이얼로그 매니저로 열어 두 레이어의 책임을 분리합니다.
       useDialogStore.getState().openDialog("LOGIN_REQUIRED", {
-        label: "로그인이 필요해요",
-        description: "로그인 후 이용할 수 있는 기능입니다.",
-        confirmText: "로그인",
+        label: "dialog.loginRequired.title",
+        description: "dialog.loginRequired.description",
+        confirmText: "dialog.loginRequired.confirm",
         onConfirm: () => {
           get().openModal("LOGIN", { triggerRef: undefined });
         },

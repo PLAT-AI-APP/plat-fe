@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import type { WithdrawalConfirmDialogProps } from "@/type/dialog";
 import Dialog from "./Dialog";
 
@@ -6,15 +9,20 @@ const WithdrawalConfirmDialog = ({
   onClose,
   onConfirm,
 }: WithdrawalConfirmDialogProps) => {
+  const t = useTranslations();
+
   return (
     <Dialog
       onClose={onClose}
       cancelFn={onClose}
-      cancelText="남아있기"
-      confirmText={isPending ? "탈퇴 처리 중" : "탈퇴하기"}
-      label="정말 떠나시나요?"
-      description={`탈퇴가 완료되면 그동안의 소중한 정보들을 다시 볼 수 없게
-돼요. 정말 탈퇴를 진행할까요?`}
+      cancelText="dialog.withdrawalConfirm.cancel"
+      confirmText={
+        isPending
+          ? t("dialog.withdrawalConfirm.confirmPending")
+          : t("dialog.withdrawalConfirm.confirm")
+      }
+      label="dialog.withdrawalConfirm.title"
+      description={`${t("dialog.withdrawalConfirm.descriptionLine1")}\n${t("dialog.withdrawalConfirm.descriptionLine2")}`}
       confirmFn={onConfirm}
     />
   );

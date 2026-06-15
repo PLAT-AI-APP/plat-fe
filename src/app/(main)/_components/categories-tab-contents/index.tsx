@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
+import { useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import CharacterShowcase from "../CharacterShowcase";
 import SearchResultSort from "./_components/SearchResultSort";
@@ -45,14 +45,17 @@ export const DUMMY_CHARACTERS = [
 ];
 
 const CategoriesTabContents = () => {
+  const t = useTranslations("categoriesPage");
   const [selectedTags, setSelectedTags] = useState<string[]>(
     INITIAL_SELECTED_TAGS,
   );
-  const [sidebarRoot, setSidebarRoot] = useState<HTMLElement | null>(null);
-
-  useEffect(() => {
-    setSidebarRoot(document.getElementById("categories-tag-sidebar-root"));
-  }, []);
+  const sidebarRoot = useMemo(
+    () =>
+      typeof document === "undefined"
+        ? null
+        : document.getElementById("categories-tag-sidebar-root"),
+    [],
+  );
 
   return (
     <>
@@ -61,7 +64,10 @@ const CategoriesTabContents = () => {
         <div className="flex-1 flex flex-col gap-7 justify-start">
           <header className="flex items-center justify-between heading-3R">
             <p>
-              검색 결과 <span className="heading-3">12건</span>
+              {t("searchResults")}{" "}
+              <span className="heading-3">
+                {t("resultCount", { count: 12 })}
+              </span>
             </p>
 
             <SearchResultSort />
@@ -79,10 +85,10 @@ const CategoriesTabContents = () => {
         {/* 플랫에서 추천하는 캐릭터 */}
         <div className="flex-1 flex flex-col gap-4.5 justify-start">
           <header className="flex flex-col heading-3">
-            <p>플랫에서 추천하는 캐릭터</p>
+            <p>{t("recommendedCharacters")}</p>
 
             <p className="body-2 text-font-2">
-              태그에 맞지는 않지만, 취향에 잘 맞을지도 몰라요
+              {t("recommendedDescription")}
             </p>
           </header>
 

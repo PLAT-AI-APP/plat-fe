@@ -126,9 +126,9 @@ export default function ClientLayout({
   const openLoginRequiredDialog = useCallback(() => {
     // 보호 경로 안내도 전역 Dialog로 통일해 브라우저 alert와 모달 스택이 섞이지 않게 합니다.
     openDialog("LOGIN_REQUIRED", {
-      label: "로그인이 필요해요",
-      description: "로그인 후 이용할 수 있는 기능입니다.",
-      confirmText: "로그인",
+      label: "dialog.loginRequired.title",
+      description: "dialog.loginRequired.description",
+      confirmText: "dialog.loginRequired.confirm",
       onConfirm: () => {
         openModal("LOGIN", { triggerRef: undefined });
       },

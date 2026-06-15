@@ -1,15 +1,21 @@
+"use client";
+
+import React, { MouseEvent, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
+import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
+import SmartInput from "@/components/smart-input";
 import TagAddModal from "@/components/modal/TagAddModal";
 import CategorySelectPopover from "@/components/popover/CategorySelectPopover";
 import PublicSelectPopover from "@/components/popover/PublicSelectPopover";
 import TendencySelectPopover from "@/components/popover/TendencySelectPopover";
-import SmartInput from "@/components/smart-input";
 import useToggle from "@/hooks/useToggle";
 import { Close } from "@/icons";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
-import React, { useState, useRef, MouseEvent } from "react";
-import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
 
 const Setting = () => {
+  const t = useTranslations("characterCreate.settings");
+  const selectorT = useTranslations("selector");
+  const categoryT = useTranslations("category");
   const { setValue, register, control } =
     useFormContext<CharacterCreateFormValues>();
   const { fields, append, remove } = useFieldArray({
@@ -17,24 +23,16 @@ const Setting = () => {
     name: "tagIds",
   });
   const tagList = useWatch({ control, name: "tagIds" });
-
-  // 트리거 Ref 생성 시작
   const publicTriggerRef = useRef(null);
   const tendencyTriggerRef = useRef(null);
   const categoryTriggerRef = useRef(null);
-
   const [tagInputValue, setTagInputValue] = useState<{
     id: number;
     label: string;
-  }>({
-    id: 0,
-    label: "",
-  });
-
+  }>({ id: 0, label: "" });
   const publicModal = useToggle();
   const tendencyModal = useToggle();
   const categoryModal = useToggle();
-
   const isPublicWatch = useWatch({ control, name: "isPublic" });
   const characterDescription = useWatch({
     control,
@@ -42,47 +40,59 @@ const Setting = () => {
   });
   const tendency = useWatch({ control, name: "tendency" });
   const categoryWatch = useWatch({ control, name: "category" });
+  const tendencyLabelByValue: Record<string, string> = {
+    전체: selectorT("all"),
+    남성향: selectorT("male"),
+    여성향: selectorT("female"),
+  };
+  const categoryLabelByValue: Record<string, string> = {
+    시뮬레이션: categoryT("simulation"),
+    로맨스: categoryT("romance"),
+    "판타지/SF": categoryT("fantasySf"),
+    드라마: categoryT("drama"),
+    "무협/사극": categoryT("martialArtsHistorical"),
+    GL: categoryT("gl"),
+    BL: categoryT("bl"),
+    "공포/추리": categoryT("horrorMystery"),
+    액션: categoryT("action"),
+    "코믹/일상": categoryT("comicDaily"),
+    "스포츠/학원": categoryT("sportsSchool"),
+    기타: categoryT("etc"),
+  };
 
-  // 공개여부 change
-  const handleIsPublic = (ispublic: boolean) => {
-    setValue("isPublic", ispublic);
+  const handleIsPublic = (isPublic: boolean) => {
+    setValue("isPublic", isPublic);
     publicModal.close();
   };
-  // 성향 change
-  const handleTendency = (tendency: string) => {
-    setValue("tendency", tendency);
+
+  const handleTendency = (nextTendency: string) => {
+    setValue("tendency", nextTendency);
     tendencyModal.close();
   };
-  // 카테고리 change
-  const handlecategory = (category: string) => {
+
+  const handleCategory = (category: string) => {
     setValue("category", category);
     categoryModal.close();
   };
-  // tab 추가
+
   const addTag = (e: React.FormEvent) => {
     e.preventDefault();
     const trimmedValue = tagInputValue;
 
     if (!trimmedValue) return;
     if (fields.length >= 5) {
-      alert("태그는 최대 5개까지 등록 가능합니다.");
+      alert(t("tagMaxAlert"));
       return;
     }
     if (fields.some((tag) => tag.id === trimmedValue.id)) {
-      alert("이미 등록된 태그입니다.");
+      alert(t("tagDuplicateAlert"));
       return;
     }
 
-    append({
-      id: trimmedValue.id,
-      label: trimmedValue.label,
-    });
-
-    setTagInputValue({
-      id: 0,
-      label: "",
-    });
+    append({ id: trimmedValue.id, label: trimmedValue.label });
+    setTagInputValue({ id: 0, label: "" });
   };
+
   const removeTag = (index: number) => {
     remove(index);
   };
@@ -95,13 +105,12 @@ const Setting = () => {
 
   return (
     <section className="flex flex-col gap-6">
-      {/* 공개여부 선택 */}
       <SmartInput
-        ref={publicTriggerRef} // 트리거 Ref 적용
+        ref={publicTriggerRef}
         type="modal"
-        label="공개 여부"
+        label={t("publicLabel")}
         required
-        value={isPublicWatch ? "공개" : "비공개"}
+        value={isPublicWatch ? selectorT("public") : selectorT("private")}
         isOpen={publicModal.isOpen}
         toggleIsOpen={publicModal.toggle}
         modalComponents={
@@ -116,12 +125,11 @@ const Setting = () => {
         }
       />
 
-      {/* 캐릭터 설명 */}
       <SmartInput
         {...register("characterDescription")}
-        label="캐릭터 설명"
+        label={t("descriptionLabel")}
         required
-        description="캐릭터의 성격이나 서사, 사건 등 상세한 내용을 작성해주세요."
+        description={t("descriptionHelp")}
         type="textarea"
         minLine={10}
         maxLine={10}
@@ -130,16 +138,15 @@ const Setting = () => {
         descFontSize="body-6"
       />
 
-      {/* 성향 선택 */}
       <SmartInput
-        ref={tendencyTriggerRef} // 트리거 Ref 적용
+        ref={tendencyTriggerRef}
         type="modal"
-        label="성향"
+        label={t("tendencyLabel")}
         required
-        value={tendency}
+        value={tendencyLabelByValue[tendency] ?? tendency}
         isOpen={tendencyModal.isOpen}
         toggleIsOpen={tendencyModal.toggle}
-        description="선택된 성향에 따라 사용자에게 추천돼요."
+        description={t("tendencyHelp")}
         descFontSize="body-6"
         modalComponents={
           tendencyModal.isOpen && (
@@ -153,41 +160,37 @@ const Setting = () => {
         }
       />
 
-      {/* 카테고리 선택 */}
       <SmartInput
-        ref={categoryTriggerRef} // 트리거 Ref 적용
+        ref={categoryTriggerRef}
         type="modal"
-        label="카테고리"
+        label={t("categoryLabel")}
         required
-        value={categoryWatch}
-        placeholder={categoryWatch || "[선택 없음]"}
+        value={categoryLabelByValue[categoryWatch] ?? categoryWatch}
+        placeholder={categoryWatch || t("noCategory")}
         isOpen={categoryModal.isOpen}
         toggleIsOpen={categoryModal.toggle}
         descFontSize="body-6"
-        description="캐릭터와 잘 어울리는 카테고리를 골라주세요."
+        description={t("categoryHelp")}
         modalComponents={
           categoryModal.isOpen && (
             <CategorySelectPopover
               categoryTriggerRef={categoryTriggerRef}
               currentCategory={categoryWatch}
-              handlecategory={handlecategory}
+              handlecategory={handleCategory}
               onClose={categoryModal.toggle}
             />
           )
         }
       />
 
-      {/* 태그 추가 */}
       <form onSubmit={addTag}>
         <div onClick={toggleIsTagModal}>
           <SmartInput
-            // onChange={(e) => setTagInputValue(e.target.value)}
             required
             type="modal"
-            placeholder="태그를 등록해주세요."
-            label={`태그 등록(${tagList.length}/5)`}
-            // value={tagInputValue}
-            inputClassName="placeholder:text-font-2 cursor-pointer"
+            placeholder={t("tagPlaceholder")}
+            label={t("tagLabel", { count: tagList.length })}
+            inputClassName="cursor-pointer placeholder:text-font-2"
           />
         </div>
 
@@ -195,12 +198,12 @@ const Setting = () => {
           {tagList.map((tag, i) => (
             <li
               key={i}
-              className="px-1.25 py-0.5 flex items-center gap-1 rounded-md bg-card"
+              className="flex items-center gap-1 rounded-md bg-card px-1.25 py-0.5"
             >
               <span className="body-6 text-brand">#{tag.label}</span>
               <Close
                 onClick={() => removeTag(i)}
-                className="w-2 h-2 text-font-2 cursor-pointer"
+                className="h-2 w-2 cursor-pointer text-font-2"
               />
             </li>
           ))}

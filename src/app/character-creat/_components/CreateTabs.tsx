@@ -1,20 +1,23 @@
+"use client";
+
 import React from "react";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
-import Profile from "./profile";
-import DetailInfo from "./detail-info";
 import Asset from "./asset";
+import DetailInfo from "./detail-info";
+import Profile from "./profile";
 import Scenario from "./scenario";
 import Setting from "./setting";
 
-export const TABS = [
-  { id: "profile", title: "프로필", component: Profile },
-  { id: "details", title: "상세정보", component: DetailInfo },
-  { id: "assets", title: "에셋", component: Asset },
-  { id: "scenario", title: "시나리오", component: Scenario },
-  { id: "settings", title: "설정", component: Setting },
+export const TAB_IDS = [
+  "profile",
+  "details",
+  "assets",
+  "scenario",
+  "settings",
 ] as const;
 
-export type TabId = (typeof TABS)[number]["id"];
+export type TabId = (typeof TAB_IDS)[number];
 
 interface CreateTabsProps {
   currentTabId: TabId;
@@ -29,34 +32,50 @@ const CreateTabs = ({
   activeScenarioIndex,
   setActiveScenarioIndex,
 }: CreateTabsProps) => {
-  const activeTab = TABS.find((tab) => tab.id === currentTabId);
-  const ActiveComponent = activeTab?.component;
+  const t = useTranslations("characterCreate.tabs");
+
+  const renderActiveTab = () => {
+    switch (currentTabId) {
+      case "profile":
+        return <Profile />;
+      case "details":
+        return <DetailInfo />;
+      case "assets":
+        return <Asset />;
+      case "scenario":
+        return (
+          <Scenario
+            activeScenarioIndex={activeScenarioIndex}
+            setActiveScenarioIndex={setActiveScenarioIndex}
+          />
+        );
+      case "settings":
+        return <Setting />;
+      default:
+        return null;
+    }
+  };
 
   return (
-    <section className="max-w-125 flex-1 h-full p-5 rounded-3xl bg-bg-darker border border-border-main">
-      <nav className="flex gap-1 border-b-2 border-font-disabled mb-9">
-        {TABS.map((tab) => (
+    <section className="h-full max-w-125 flex-1 rounded-3xl border border-border-main bg-bg-darker p-5">
+      <nav className="mb-9 flex gap-1 border-b-2 border-font-disabled">
+        {TAB_IDS.map((tabId) => (
           <button
             type="button"
-            key={tab.id}
-            onClick={() => setCurrentTabId(tab.id)}
+            key={tabId}
+            onClick={() => setCurrentTabId(tabId)}
             className={cn(
-              "body-4 text-font-2 p-2.5 cursor-pointer translate-y-0.5 outline-none",
-              currentTabId === tab.id &&
-                "text-font-1 title-5 border-b-2 border-brand",
+              "body-4 translate-y-0.5 cursor-pointer p-2.5 text-font-2 outline-none",
+              currentTabId === tabId &&
+                "title-5 border-b-2 border-brand text-font-1",
             )}
           >
-            {tab.title}
+            {t(tabId)}
           </button>
         ))}
       </nav>
 
-      {ActiveComponent && (
-        <ActiveComponent
-          activeScenarioIndex={activeScenarioIndex}
-          setActiveScenarioIndex={setActiveScenarioIndex}
-        />
-      )}
+      {renderActiveTab()}
     </section>
   );
 };

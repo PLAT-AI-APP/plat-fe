@@ -1,5 +1,8 @@
+"use client";
+
 import React from "react";
 import { FieldError } from "react-hook-form";
+import { useTranslateText } from "@/hooks/useTranslateText";
 import { cn } from "@/lib/utils";
 
 export const LabelSection = ({
@@ -17,29 +20,24 @@ export const LabelSection = ({
   labelFontSize?: "title-3" | "title-5";
   descFontSize?: "body-4" | "body-5" | "body-6";
 }) => {
+  const translateText = useTranslateText();
+
   if (!label) return null;
+
   return (
     <div className="flex flex-col gap-1">
-      <div
-        className={cn(
-          "flex items-center gap-1",
-          labelFontSize, // 넘겨받은 클래스명을 그대로 적용 (예: "title-5" 또는 "title-3")
-        )}
-      >
-        <span>{label}</span>
+      <div className={cn("flex items-center gap-1", labelFontSize)}>
+        <span>{translateText(label)}</span>
         {required && <span className="text-font-accents">*</span>}
         {showOptionalLabel && !required && (
-          <span className="text-font-disabled">(선택)</span>
+          <span className="text-font-disabled">
+            {translateText("common.optional")}
+          </span>
         )}
       </div>
       {description && (
-        <p
-          className={cn(
-            "text-font-2",
-            descFontSize, // 넘겨받은 클래스명을 그대로 적용 (예: "body-5", "body-4" 등)
-          )}
-        >
-          {description}
+        <p className={cn("text-font-2", descFontSize)}>
+          {translateText(description)}
         </p>
       )}
     </div>
@@ -58,6 +56,7 @@ export const CharacterCounter = ({
   isError?: boolean;
 }) => {
   if (!maxLength) return null;
+
   return (
     <div
       className={cn(
@@ -72,12 +71,16 @@ export const CharacterCounter = ({
 };
 
 export const ErrorMessage = ({ error }: { error?: FieldError | string }) => {
+  const translateText = useTranslateText();
+
   if (!error) return null;
+
   const message = typeof error === "string" ? error : error?.message;
   if (!message) return null;
+
   return (
     <span className={cn("pt-2 body-6 block", "text-font-error")}>
-      {message}
+      {translateText(message)}
     </span>
   );
 };
@@ -88,13 +91,9 @@ export const HelperMessage = ({
   message?: string;
   type?: "success" | "default";
 }) => {
+  const translateText = useTranslateText();
+
   if (!message) return null;
 
-  return (
-    <span
-      className={cn("pt-2 body-6 block text-font-2")}
-    >
-      {message}
-    </span>
-  );
+  return <span className="pt-2 body-6 block text-font-2">{translateText(message)}</span>;
 };

@@ -1,11 +1,14 @@
+"use client";
+
+import React from "react";
+import { useTranslations } from "next-intl";
+import { useFormContext, useWatch } from "react-hook-form";
 import SmartInput from "@/components/smart-input";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
-import React from "react";
-import { useFormContext, useWatch } from "react-hook-form";
 
 const DetailInfo = () => {
+  const t = useTranslations("characterCreate.details");
   const { register, control } = useFormContext<CharacterCreateFormValues>();
-
   const characterDetailSetting = useWatch({
     control,
     name: "characterDetailSetting",
@@ -13,13 +16,12 @@ const DetailInfo = () => {
 
   return (
     <section className="flex flex-col gap-6">
-      {/* 상세 설정 입력 영역 */}
       <article>
         <SmartInput
-          label="캐릭터 상세 설정"
+          label={t("label")}
           maxLength={2000}
           type="textarea"
-          description="세계관과 캐릭터의 성격, 말투, 외모 등 캐릭터 정보를 적어주세요."
+          description={t("description")}
           required
           maxLine={15}
           minLine={15}

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
 import GoogleProvider from "@/icons/provider/GoogleProvider";
 import KakaoProvider from "@/icons/provider/KakaoProvider";
@@ -14,6 +15,7 @@ const PROVIDER_LOGOS: Record<string, React.ReactNode> = {
 };
 
 const AccountField = () => {
+  const t = useTranslations();
   const { register, control } = useFormContext();
   const email = useWatch({ control, name: "email" });
   const provider = useWatch({ control, name: "provider" });
@@ -21,7 +23,7 @@ const AccountField = () => {
   return (
     <SmartInput
       {...register("email")}
-      label="계정"
+      label={t("fieldsExtra.accountLabel")}
       disabled
       value={email}
       leftElement={PROVIDER_LOGOS[provider]}

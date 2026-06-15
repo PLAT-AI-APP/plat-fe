@@ -1,5 +1,8 @@
+"use client";
+
 import React from "react";
 import { Edit, Flag, Trash } from "@/icons";
+import { useTranslations } from "next-intl";
 import { PopoverLayout } from "./layout";
 
 interface CommentMenuPopoverProps {
@@ -21,6 +24,8 @@ const CommentMenuPopover = ({
   onClose,
   triggerRef,
 }: CommentMenuPopoverProps) => {
+  const t = useTranslations("popover");
+
   // 버튼 클릭 공통 핸들러 (동작 실행 후 팝업 닫기)
   const handleAction = (action?: () => void) => {
     action?.();
@@ -37,7 +42,7 @@ const CommentMenuPopover = ({
             className="whitespace-nowrap flex items-center gap-2 p-1.5 body-4 hover:bg-btn-hover rounded-lg transition-colors"
           >
             <Flag className="w-5 h-5 text-font-2" />
-            신고
+            {t("report")}
           </button>
         )}
 
@@ -49,14 +54,14 @@ const CommentMenuPopover = ({
               className="whitespace-nowrap flex items-center gap-2 p-1.5 body-4 font-medium hover:bg-btn-hover rounded-lg transition-colors"
             >
               <Edit className="w-5 h-5 text-font-2" />
-              수정
+              {t("edit")}
             </button>
             <button
               onClick={() => handleAction(onDelete)}
               className="whitespace-nowrap flex items-center gap-2 p-1.5 body-4 font-medium hover:bg-btn-hover rounded-lg transition-colors text-font-accents"
             >
               <Trash className="w-5 h-5" />
-              삭제
+              {t("delete")}
             </button>
           </>
         )}

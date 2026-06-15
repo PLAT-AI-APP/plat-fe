@@ -1,4 +1,5 @@
 import { IconProps } from "@/icons";
+import type { AppLocale } from "@/i18n/config";
 import { CNFlag, JPFlag, KRFlag, THFlag, USFlag, VNFlag } from "@/icons/flags";
 
 export interface LanguageItemType {
@@ -8,6 +9,7 @@ export interface LanguageItemType {
   countryCode: string;
   format: string;
   length: number;
+  locale: AppLocale;
   Icon: React.ComponentType<IconProps>;
 }
 
@@ -19,6 +21,7 @@ export const LANGUAGE_LIST: LanguageItemType[] = [
     countryCode: "+82",
     format: "### #### ####",
     length: 11,
+    locale: "ko",
     Icon: KRFlag,
   },
   {
@@ -28,6 +31,7 @@ export const LANGUAGE_LIST: LanguageItemType[] = [
     countryCode: "+1",
     format: "###-###-####",
     length: 10,
+    locale: "en",
     Icon: USFlag,
   },
   {
@@ -37,6 +41,7 @@ export const LANGUAGE_LIST: LanguageItemType[] = [
     countryCode: "+81",
     format: "## #### ####",
     length: 10,
+    locale: "ja",
     Icon: JPFlag,
   },
   {
@@ -46,6 +51,7 @@ export const LANGUAGE_LIST: LanguageItemType[] = [
     countryCode: "+86",
     format: "### #### ####",
     length: 11,
+    locale: "zh",
     Icon: CNFlag,
   },
   {
@@ -55,6 +61,7 @@ export const LANGUAGE_LIST: LanguageItemType[] = [
     countryCode: "+66",
     format: "## #### ####",
     length: 10,
+    locale: "th",
     Icon: THFlag,
   },
   {
@@ -64,6 +71,7 @@ export const LANGUAGE_LIST: LanguageItemType[] = [
     countryCode: "+84",
     format: "### #### ###",
     length: 10,
+    locale: "vi",
     Icon: VNFlag,
   },
 ];

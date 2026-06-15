@@ -1,12 +1,15 @@
+"use client";
+
 import React, { useRef, useState } from "react";
-import { ModalLayout } from "../ModalLayout";
-import { Close, Message, User } from "@/icons";
+import { useTranslations } from "next-intl";
 import ActiveButton from "../ActiveButton";
+import { ModalLayout } from "../ModalLayout";
+import ScenarioSelectPopover from "../popover/ScenarioSelectPopover";
 import SmartInput from "@/components/smart-input";
 import useToggle from "@/hooks/useToggle";
-import ScenarioSelectPopover from "../popover/ScenarioSelectPopover";
-import { ChattingStartModalProps } from "@/type/modal";
+import { Close, Message, User } from "@/icons";
 import { CharacterScenario } from "@/type/character";
+import { ChattingStartModalProps } from "@/type/modal";
 
 const ChattingStartModal = ({
   onClose,
@@ -14,59 +17,61 @@ const ChattingStartModal = ({
   currentScenario,
   setCurrentScenario,
 }: ChattingStartModalProps) => {
+  const t = useTranslations();
   const [localScenario, setLocalScenario] = useState(currentScenario);
   const { isOpen, close, toggle } = useToggle();
-
-  const triggerRef = useRef(null);
+  const triggerRef = useRef<HTMLElement>(null);
 
   const handleSelect = (scenario: CharacterScenario) => {
-    setLocalScenario(scenario); // 모달 UI 즉시 반영
-    setCurrentScenario(scenario); // 부모(원본) 상태 반영
+    // 모달 안의 선택값과 부모 상태를 같이 갱신해 닫힌 뒤에도 선택 결과가 유지되게 합니다.
+    setLocalScenario(scenario);
+    setCurrentScenario(scenario);
   };
+
   return (
     <ModalLayout
       onClose={onClose}
       hasBackground
-      className="p-5 max-w-125 w-full"
+      className="w-full max-w-125 p-5"
     >
       <header className="flex justify-between pb-9">
-        <div className="flex gap-3 items-center title-1">
+        <div className="title-1 flex items-center gap-3">
           <Message />
-          대화 시작하기
+          {t("chattingStart.title")}
         </div>
         <button
           onClick={onClose}
           type="button"
           className="rounded-lg p-1 hover:bg-btn-hover"
         >
-          <Close className="w-3.5 h-3.5" />
+          <Close className="h-3.5 w-3.5" />
         </button>
       </header>
 
       <section className="flex flex-col gap-6">
         <SmartInput
-          label="내 페르소나"
-          description="대화 속에서 당신은 어떤 인물인가요? 당신의 이름, 직업, 특징을 설정해 보세요."
-          // fontSize="lg"
-          leftElement={<User className="w-5 h-5 text-font-2" />}
+          label={t("chattingStart.personaLabel")}
+          description={t("chattingStart.personaDescription")}
+          leftElement={<User className="h-5 w-5 text-font-2" />}
           rightElement={
-            <button className="body-6 text-font-2 rounded-sm py-1 px-3 bg-card hover:bg-card-hover">
-              변경
+            <button className="body-6 rounded-sm bg-card px-3 py-1 text-font-2 hover:bg-card-hover">
+              {t("chattingStart.change")}
             </button>
           }
           disabled
-          value={"윤아"}
+          value={t("chattingStart.personaValue")}
           descFontSize="body-4"
         />
 
         <SmartInput
-          label="시나리오"
-          description="어떤 테마로 대화를 시작할까요? 준비된 시나리오 중 하나를 골라보세요."
-          // fontSize="lg"
+          label={t("chattingStart.scenarioLabel")}
+          description={t("chattingStart.scenarioDescription")}
           type="modal"
           isOpen={isOpen}
           toggleIsOpen={toggle}
-          ref={triggerRef}
+          // SmartInput은 input ref 타입을 기대하지만, modal 타입에서는 실제 트리거 요소를
+          // 팝오버 기준점으로만 사용하므로 공통 ref 객체를 캐스팅해 재사용합니다.
+          ref={triggerRef as unknown as React.Ref<HTMLInputElement>}
           value={localScenario?.name}
           disabled
           modalComponents={
@@ -82,7 +87,7 @@ const ChattingStartModal = ({
         />
       </section>
 
-      <ActiveButton text="시작하기" isActive className="mt-12" />
+      <ActiveButton text={t("chattingStart.submit")} isActive className="mt-12" />
     </ModalLayout>
   );
 };

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Suspense } from "react";
 import "@/app/globals.css";
+import IntlProvider from "@/providers/IntlProvider";
 import ReactQueryProvider from "@/providers/ReactQueryProvider";
 import ThemeProvider from "@/providers/ThemeProvider";
 import SonnerProvider from "@/providers/SonnerProvider";
@@ -101,14 +102,16 @@ export default function RootLayout({
       >
         {/* <MSWProvider> */}
         <ReactQueryProvider>
-          <ThemeProvider>
-            <NavigationGuardProvider>
-              <Suspense fallback={null}>
-                <ClientLayout>{children}</ClientLayout>
-                <SonnerProvider />
-              </Suspense>
-            </NavigationGuardProvider>
-          </ThemeProvider>
+          <IntlProvider>
+            <ThemeProvider>
+              <NavigationGuardProvider>
+                <Suspense fallback={null}>
+                  <ClientLayout>{children}</ClientLayout>
+                  <SonnerProvider />
+                </Suspense>
+              </NavigationGuardProvider>
+            </ThemeProvider>
+          </IntlProvider>
         </ReactQueryProvider>
         {/* </MSWProvider> */}
       </body>

@@ -1,5 +1,8 @@
+"use client";
+
 import type React from "react";
 import { Prohibition, ShareOutline } from "@/icons";
+import { useTranslations } from "next-intl";
 import { PopoverLayout } from "./layout";
 
 interface ProfileActionPopoverProps {
@@ -15,6 +18,8 @@ const ProfileActionPopover = ({
   onShare,
   triggerRef,
 }: ProfileActionPopoverProps) => {
+  const t = useTranslations("popover");
+
   const handleShareClick = () => {
     // 팝오버 액션은 실행 전 먼저 닫아 다음 모달/토스트와 레이어가 겹치지 않게 합니다.
     onClose();
@@ -31,12 +36,12 @@ const ProfileActionPopover = ({
   const profileActions = [
     {
       icon: <ShareOutline className="size-6 shrink-0 text-font-2" />,
-      label: "프로필 공유하기",
+      label: t("shareProfile"),
       onClick: handleShareClick,
     },
     {
       icon: <Prohibition className="size-6 shrink-0 text-font-2" />,
-      label: "유저 차단하기",
+      label: t("blockUser"),
       onClick: handleBlockClick,
     },
   ];

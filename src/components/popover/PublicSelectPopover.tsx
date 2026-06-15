@@ -1,7 +1,10 @@
+"use client";
+
 import React from "react";
 import { ModalLayout } from "../ModalLayout";
 import Check from "@/icons/Check";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 interface PublicSelectPopoverProps {
   onClose: () => void;
@@ -15,6 +18,8 @@ const PublicSelectPopover = ({
   onClose,
   publicTriggerRef,
 }: PublicSelectPopoverProps) => {
+  const t = useTranslations("selector");
+
   return (
     <ModalLayout
       onClose={onClose}
@@ -29,7 +34,7 @@ const PublicSelectPopover = ({
             isPublic && "title-5",
           )}
         >
-          <span>공개</span>
+          <span>{t("public")}</span>
           {isPublic && <Check className="w-4.5 h-4.5 text-brand" />}
         </div>
 
@@ -40,7 +45,7 @@ const PublicSelectPopover = ({
             !isPublic && "title-5",
           )}
         >
-          <span>비공개</span>
+          <span>{t("private")}</span>
           {!isPublic && <Check className="w-4.5 h-4.5 text-brand" />}
         </div>
       </div>

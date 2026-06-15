@@ -1,52 +1,60 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { ArrowRight } from "@/icons";
 import { formatWithCommas } from "@/lib/utils";
 
 export const MOCK_STUDIO_DATA = {
   characterCount: 329,
   chatCount: 1455,
-  isIdentityVerified: true, // 본인인증 완료
-  isAdultVerified: false, // 미인증
+  isIdentityVerified: true,
+  isAdultVerified: false,
 };
 
 const StudioStats = () => {
+  const t = useTranslations("studio");
+
   return (
-    <div className="grid grid-cols-2 @[516px]:grid-cols-4 gap-3">
-      {/* 캐릭터 */}
-      <div className="flex flex-1 flex-col gap-2 min-w-27.5">
-        <span className="text-font-2 body-4">캐릭터</span>
+    <div className="grid grid-cols-2 gap-3 @[516px]:grid-cols-4">
+      <div className="flex min-w-27.5 flex-1 flex-col gap-2">
+        <span className="body-4 text-font-2">{t("stats.characters")}</span>
         <span className="title-3">
           {formatWithCommas(MOCK_STUDIO_DATA.characterCount)}
         </span>
       </div>
-      {/* 채팅수 */}
-      <div className="flex flex-1 flex-col gap-2  min-w-27.5">
-        <span className="text-font-2 body-4">채팅수</span>
+
+      <div className="flex min-w-27.5 flex-1 flex-col gap-2">
+        <span className="body-4 text-font-2">{t("stats.chats")}</span>
         <span className="title-3">
           {formatWithCommas(MOCK_STUDIO_DATA.chatCount)}
         </span>
       </div>
-      {/* 본인인증 */}
-      <div className="flex flex-1 flex-col gap-2  min-w-27.5">
-        <span className="text-font-2 body-4">본인인증</span>
+
+      <div className="flex min-w-27.5 flex-1 flex-col gap-2">
+        <span className="body-4 text-font-2">{t("stats.identity")}</span>
         <span className="title-3">
-          {MOCK_STUDIO_DATA.isIdentityVerified ? "인증완료" : "미인증"}
+          {MOCK_STUDIO_DATA.isIdentityVerified
+            ? t("stats.verified")
+            : t("stats.unverified")}
         </span>
       </div>
-      {/* 성인인증 */}
-      <div className="flex flex-1 items-center gap-2 relative min-w-27.5">
-        <div className="flex flex-1 flex-col gap-2 ">
-          <span className="text-font-2 body-4">성인인증</span>
+
+      <div className="relative flex min-w-27.5 flex-1 items-center gap-2">
+        <div className="flex flex-1 flex-col gap-2">
+          <span className="body-4 text-font-2">{t("stats.adult")}</span>
           <span
             className={`title-3 ${!MOCK_STUDIO_DATA.isAdultVerified ? "text-font-disabled" : ""}`}
           >
-            {MOCK_STUDIO_DATA.isAdultVerified ? "인증완료" : "미인증"}
+            {MOCK_STUDIO_DATA.isAdultVerified
+              ? t("stats.verified")
+              : t("stats.unverified")}
           </span>
         </div>
-        {/* 화살표 아이콘 (오른쪽 끝) 추후 성인인증 로직이 생긴다면 경로 입력*/}
-        <Link href={""} className="p-1 rounded-lg hover:bg-btn-hover">
-          <ArrowRight className="w-3 h-3 text-font-2" />
+
+        <Link href="" className="rounded-lg p-1 hover:bg-btn-hover">
+          <ArrowRight className="h-3 w-3 text-font-2" />
         </Link>
       </div>
     </div>

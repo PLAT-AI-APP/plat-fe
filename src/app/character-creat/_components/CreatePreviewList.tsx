@@ -1,17 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
+import { useTranslations } from "next-intl";
 import {
   DragDropContext,
-  Droppable,
   Draggable,
+  Droppable,
   DropResult,
 } from "@hello-pangea/dnd";
 import CharacterChat from "@/components/chat/CharacterChat";
 import Scenario from "@/components/chat/Scenario";
-import Image from "next/image";
-import { Close, Dots, Pen, Trash } from "@/icons";
 import Check from "@/icons/Check";
+import { Close, Dots, Pen, Trash } from "@/icons";
 import { cn } from "@/lib/utils";
 
 interface ContentItem {
@@ -39,6 +40,7 @@ const CreatePreviewList = ({
   onDelete,
   onReorder,
 }: CreatePreviewListProps) => {
+  const t = useTranslations("characterCreate.preview");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editedValue, setEditedValue] = useState("");
 
@@ -48,7 +50,6 @@ const CreatePreviewList = ({
     const items = Array.from(contents);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
-
     onReorder?.(items);
   };
 
@@ -73,7 +74,7 @@ const CreatePreviewList = ({
           <section
             {...provided.droppableProps}
             ref={provided.innerRef}
-            className="flex-1 flex flex-col gap-6"
+            className="flex flex-1 flex-col gap-6"
           >
             {contents.map((item, index) => (
               <Draggable
@@ -81,30 +82,26 @@ const CreatePreviewList = ({
                 draggableId={item.id.toString()}
                 index={index}
               >
-                {(provided, snapshot) => (
-                  <div ref={provided.innerRef} {...provided.draggableProps}>
+                {(dragProvided, snapshot) => (
+                  <div ref={dragProvided.innerRef} {...dragProvided.draggableProps}>
                     <article
                       className={cn(
-                        "relative group w-full rounded-2xl",
+                        "group relative w-full rounded-2xl",
                         item.type === "action" && "px-2 pt-0",
                         editingId === item.id && "bg-transparent p-0",
                       )}
-                      style={{
-                        background: snapshot.isDragging ? "#181C2E" : "",
-                      }}
+                      style={{ background: snapshot.isDragging ? "#181C2E" : "" }}
                     >
-                      {/* 드래그 핸들 */}
                       <div className="flex justify-center">
                         <div
-                          {...provided.dragHandleProps}
-                          className="flex items-center h-4 justify-center p-1.5 rounded-[100px] hover:bg-card cursor-grab"
+                          {...dragProvided.dragHandleProps}
+                          className="flex cursor-grab items-center justify-center rounded-[100px] p-1.5 hover:bg-card"
                         >
-                          <Dots className="text-font-disabled w-5.75" />
+                          <Dots className="w-5.75 text-font-disabled" />
                         </div>
                       </div>
 
                       {editingId === item.id ? (
-                        /* 수정 모드 */
                         <div
                           id="edit-form-container"
                           className="flex flex-col gap-2"
@@ -113,17 +110,17 @@ const CreatePreviewList = ({
                             <div className="flex gap-2">
                               <Image
                                 src={profileImage}
-                                alt={`${characterName} 프로필 이미지`}
+                                alt={t("profileAlt", { name: characterName })}
                                 width={40}
                                 height={40}
-                                className="rounded-full w-10 h-10"
+                                className="h-10 w-10 rounded-full"
                               />
                               <div className="flex-1 text-sm font-medium">
                                 <span className="block">{characterName}</span>
-                                <div className="mt-1.5 px-3 py-2 bg-card rounded-[0px_16px_16px_16px]">
+                                <div className="mt-1.5 rounded-[0px_16px_16px_16px] bg-card px-3 py-2">
                                   <textarea
                                     autoFocus
-                                    className="w-full resize-none bg-bg-darker px-4 py-3 rounded-xl text-sm font-medium outline-none"
+                                    className="w-full resize-none rounded-xl bg-bg-darker px-4 py-3 text-sm font-medium outline-none"
                                     value={editedValue}
                                     onChange={(e) =>
                                       setEditedValue(e.target.value)
@@ -133,15 +130,10 @@ const CreatePreviewList = ({
                               </div>
                             </div>
                           ) : (
-                            <div
-                              className={cn(
-                                "flex flex-1 h-fit gap-2 p-2.5 rounded-2xl",
-                                "bg-card",
-                              )}
-                            >
+                            <div className="flex flex-1 gap-2 rounded-2xl bg-card p-2.5">
                               <textarea
                                 autoFocus
-                                className="w-full resize-none bg-bg-darker p-2.5 rounded-xl text-sm font-medium outline-none"
+                                className="w-full resize-none rounded-xl bg-bg-darker p-2.5 text-sm font-medium outline-none"
                                 value={editedValue}
                                 onChange={(e) => setEditedValue(e.target.value)}
                               />
@@ -151,38 +143,36 @@ const CreatePreviewList = ({
                           {item.type !== "action" && (
                             <div
                               className={cn(
-                                "flex shrink-0 gap-1 text-font-2 h-fit",
+                                "flex h-fit shrink-0 gap-1 text-font-2",
                                 item.type === "chat" && "pl-12",
                               )}
                             >
                               <button
                                 onClick={handleCancel}
-                                className="p-1.5 rounded-lg hover:bg-btn-hover"
+                                className="rounded-lg p-1.5 hover:bg-btn-hover"
                               >
-                                <Close className="w-4 h-4" />
+                                <Close className="h-4 w-4" />
                               </button>
                               <button
                                 onClick={() => handleUpdate(item.id)}
-                                className="p-1.5 rounded-lg hover:bg-btn-hover"
+                                className="rounded-lg p-1.5 hover:bg-btn-hover"
                               >
-                                <Check className="w-4 h-4" />
+                                <Check className="h-4 w-4" />
                               </button>
                             </div>
                           )}
                         </div>
                       ) : (
-                        /* 뷰 모드 */
                         <div
                           id="view-content-container"
                           className={cn(
-                            `flex pb-2`,
+                            "flex pb-2",
                             item.type === "action"
                               ? "flex-col"
                               : "items-end gap-2",
                             item.type === "asset" && "justify-center",
                           )}
                         >
-                          {/* 콘텐츠 렌더링 */}
                           <div className="max-w-[80%]">
                             {item.type === "chat" && (
                               <CharacterChat
@@ -197,40 +187,37 @@ const CreatePreviewList = ({
                             {item.type === "asset" && (
                               <Image
                                 src={item.value}
-                                alt="에셋 이미지"
+                                alt={t("assetImageAlt")}
                                 width={120}
                                 height={120}
                                 unoptimized
-                                className="w-30 h-auto rounded-2xl"
+                                className="h-auto w-30 rounded-2xl"
                               />
                             )}
                           </div>
 
-                          {/* 편집 버튼 세트 */}
                           {isEditable && (
                             <div
                               className={cn(
-                                "flex gap-1 transition-opacity shrink-0",
-                                item.type === "action" ? "pl-12 mt-2" : "mb-1",
+                                "flex shrink-0 gap-1 transition-opacity",
+                                item.type === "action" ? "mt-2 pl-12" : "mb-1",
                               )}
                             >
-                              {/* 수정 버튼 (chat, action 등에서 노출) */}
                               {item.type !== "asset" && (
                                 <button
                                   onClick={() => startEditing(item)}
-                                  className="p-1.5 rounded-lg hover:bg-btn-hover"
+                                  className="rounded-lg p-1.5 hover:bg-btn-hover"
                                 >
-                                  <Pen className="w-4 h-4 text-font-2" />
+                                  <Pen className="h-4 w-4 text-font-2" />
                                 </button>
                               )}
 
-                              {/* 삭제 버튼 (asset, action 등에서 노출) */}
                               {item.type !== "chat" && (
                                 <button
                                   onClick={() => onDelete?.(item.id)}
-                                  className="p-1.5 rounded-lg hover:bg-btn-hover"
+                                  className="rounded-lg p-1.5 hover:bg-btn-hover"
                                 >
-                                  <Trash className="w-4 h-4 text-font-2" />
+                                  <Trash className="h-4 w-4 text-font-2" />
                                 </button>
                               )}
                             </div>
@@ -238,19 +225,20 @@ const CreatePreviewList = ({
                         </div>
                       )}
                     </article>
+
                     {item.type === "action" && editingId === item.id && (
-                      <div className="flex shrink-0 gap-1 pt-2 text-font-2 h-fit">
+                      <div className="flex h-fit shrink-0 gap-1 pt-2 text-font-2">
                         <button
                           onClick={handleCancel}
-                          className="p-1.5 rounded-lg hover:bg-btn-hover"
+                          className="rounded-lg p-1.5 hover:bg-btn-hover"
                         >
-                          <Close className="w-4 h-4" />
+                          <Close className="h-4 w-4" />
                         </button>
                         <button
                           onClick={() => handleUpdate(item.id)}
-                          className="p-1.5 rounded-lg hover:bg-btn-hover"
+                          className="rounded-lg p-1.5 hover:bg-btn-hover"
                         >
-                          <Check className="w-4 h-4" />
+                          <Check className="h-4 w-4" />
                         </button>
                       </div>
                     )}

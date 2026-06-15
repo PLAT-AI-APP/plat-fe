@@ -1,8 +1,8 @@
 "use client";
 
 import { Search } from "@/icons";
-import Check from "@/icons/Check";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { TagFolder, TagPill } from "./TagFolder";
 
@@ -10,11 +10,11 @@ import { TagFolder, TagPill } from "./TagFolder";
 // 카드 클릭 시 tags 배열에 들어있는 태그들이 한 번에 선택됩니다.
 const RECOMMENDED_TAGS = [
   {
-    title: "밝은 햇살캐 클래스 메이트",
+    title: "recommendation1Title",
     tags: ["친구", "다크판타지"],
   },
   {
-    title: "장난꾸러기 소꿉친구",
+    title: "recommendation2Title",
     tags: ["소꿉친구", "햇살느낌"],
   },
 ];
@@ -23,7 +23,7 @@ const RECOMMENDED_TAGS = [
 // 새 카테고리가 필요하면 이 배열에 title과 tags만 추가하면 UI가 자동으로 렌더링됩니다.
 const TAG_FOLDERS = [
   {
-    title: "장르",
+    title: "folderGenre",
     tags: [
       "판타지",
       "로맨스",
@@ -56,7 +56,7 @@ const TAG_FOLDERS = [
     ],
   },
   {
-    title: "종족",
+    title: "folderSpecies",
     tags: [
       "뱀파이어",
       "엘프",
@@ -77,7 +77,7 @@ const TAG_FOLDERS = [
     ],
   },
   {
-    title: "캐릭터",
+    title: "folderCharacter",
     tags: [
       "남자친구",
       "여자친구",
@@ -98,7 +98,7 @@ const TAG_FOLDERS = [
     ],
   },
   {
-    title: "외형",
+    title: "folderAppearance",
     tags: [
       "갈발",
       "은발",
@@ -123,7 +123,7 @@ const TAG_FOLDERS = [
     ],
   },
   {
-    title: "성격",
+    title: "folderPersonality",
     tags: [
       "츤데레",
       "얀데레",
@@ -155,7 +155,7 @@ const TAG_FOLDERS = [
     ],
   },
   {
-    title: "관계",
+    title: "folderRelationship",
     tags: [
       "친구",
       "연인",
@@ -178,7 +178,7 @@ const TAG_FOLDERS = [
     ],
   },
   {
-    title: "서사",
+    title: "folderNarrative",
     tags: [
       "구원",
       "복수",
@@ -208,7 +208,7 @@ const TAG_FOLDERS = [
     ],
   },
   {
-    title: "직업",
+    title: "folderJob",
     tags: [
       "의사",
       "군인",
@@ -246,7 +246,7 @@ const TAG_FOLDERS = [
     ],
   },
   {
-    title: "특수설정",
+    title: "folderSpecial",
     tags: [
       "하렘",
       "역하렘",
@@ -306,6 +306,7 @@ const TagSidebar = ({
   selectedTags,
   onSelectedTagsChange,
 }: TagSidebarProps) => {
+  const t = useTranslations("tagSidebar");
   // 검색어는 사이드바 내부 UI 상태로 관리합니다.
   // 선택 태그는 CategoriesTabContents에서 내려받아 결과 영역과 같은 기준으로 공유합니다.
   const [query, setQuery] = useState("");
@@ -347,7 +348,7 @@ const TagSidebar = ({
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="어떤 태그를 찾고 있나요?"
+            placeholder={t("searchPlaceholder")}
             className="h-[43px] w-full rounded-xl border border-border-main bg-bg-darkest pl-[38px] pr-3 body-5 text-font-1 outline-none transition-colors placeholder:text-font-2 focus:border-font-disabled"
           />
         </label>
@@ -356,13 +357,13 @@ const TagSidebar = ({
       {/* 선택 태그 영역: 현재 선택된 태그를 모아 보여주고 개별/전체 해제가 가능합니다. */}
       <section className="border-y border-border-main px-5 pb-8 pt-6">
         <header className="mb-3 flex h-[21px] items-center justify-between">
-          <h2 className="title-6 text-font-2">선택 태그</h2>
+          <h2 className="title-6 text-font-2">{t("selectedTags")}</h2>
           <button
             type="button"
             onClick={() => onSelectedTagsChange([])}
             className="body-6 text-font-2 underline-offset-2 hover:underline"
           >
-            전체 해제
+            {t("clearAll")}
           </button>
         </header>
 
@@ -385,15 +386,11 @@ const TagSidebar = ({
         className="flex w-full flex-col gap-6 px-5 py-4"
       >
         <TagFolder
-          title="취향 맞춤 태그"
+          title={t("personalizedTags")}
           // titleSuffix={<AiLineIcon className="size-3" />}
         >
           <div className="flex flex-col gap-2">
             {RECOMMENDED_TAGS.map((item) => {
-              const isSelected = item.tags.every((tag) =>
-                selectedTags.includes(tag),
-              );
-
               return (
                 <button
                   key={item.title}
@@ -405,7 +402,7 @@ const TagSidebar = ({
                     <div className="flex items-center gap-1">
                       <AiLineIcon className="size-5 shrink-0 group-hover:text-brand-dark" />
                       <strong className="title-6 truncate text-font-1">
-                        {item.title}
+                        {t(item.title)}
                       </strong>
                     </div>
                     <div className="mt-2 flex gap-1">
@@ -430,7 +427,7 @@ const TagSidebar = ({
         {filteredFolders.map((folder) => (
           <TagFolder
             key={folder.title}
-            title={folder.title}
+            title={t(folder.title)}
             tags={folder.tags}
             selectedTags={selectedTags}
             onTagToggle={toggleTag}

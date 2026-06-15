@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import type { PersonaDeleteDialogProps } from "@/type/dialog";
 import Dialog from "./Dialog";
 
@@ -6,14 +9,16 @@ const PersonaDeleteDialog = ({
   onClose,
   onConfirm,
 }: PersonaDeleteDialogProps) => {
+  const t = useTranslations();
+
   return (
     <Dialog
       onClose={onClose}
       cancelFn={onClose}
-      cancelText="취소하기"
-      confirmText="확인하기"
-      label="페르소나를 삭제할까요?"
-      description={`'${personaName}'이 없어지면 다시 되돌릴 수 없어요.`}
+      cancelText="dialog.personaDelete.cancel"
+      confirmText="dialog.personaDelete.confirm"
+      label="dialog.personaDelete.title"
+      description={t("dialog.personaDelete.description", { personaName })}
       confirmFn={onConfirm}
     />
   );

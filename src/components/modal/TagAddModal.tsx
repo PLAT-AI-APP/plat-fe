@@ -1,45 +1,38 @@
+"use client";
+
 import React, { useState } from "react";
+import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
+import ActiveButton from "../ActiveButton";
+import { ModalLayout } from "../ModalLayout";
+import { useHashtagListQuery } from "@/api/hashtag/getHashtagList";
+import { ArrowRight, Close, Megaphone, Search } from "@/icons";
+import Tag from "@/icons/Tag";
 import { cn } from "@/lib/utils";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
-import { ModalLayout } from "../ModalLayout";
-import Tag from "@/icons/Tag";
-import { ArrowRight, Close, Megaphone, Search } from "@/icons";
-import ActiveButton from "../ActiveButton";
-import { useHashtagListQuery } from "@/api/hashtag/getHashtagList";
-import { TagAddModalProps } from "@/type/modal";
 import { useModalStore } from "@/store/useModalStore";
+import { TagAddModalProps } from "@/type/modal";
 
 const TagAddModal = ({ onClose }: TagAddModalProps) => {
+  const t = useTranslations("characterCreate.tagModal");
   const { control, setValue } = useFormContext<CharacterCreateFormValues>();
-
   const currentTagsWatch = useWatch({ control, name: "tagIds" });
-  // 1. 모달 내부 임시 상태 (문자열 배열)
   const [localSelectedNames, setLocalSelectedNames] = useState<
     { id: number; label: string }[]
   >(() => {
     const currentTags = currentTagsWatch || [];
-
-    return currentTags.map((t) => ({
-      id: t.id,
-      label: t.label,
-    }));
+    return currentTags.map((tag) => ({ id: tag.id, label: tag.label }));
   });
-
   const [searchKeyword, setSearchKeyword] = useState("");
-
   const { data: hashtagListData } = useHashtagListQuery();
   const hashtagList = hashtagListData?.tags || [];
-
-  // 필터링 및 정렬 로직
   const filteredTags = hashtagList
     .filter((tag) =>
       tag.label.toLowerCase().includes(searchKeyword.toLowerCase()),
     )
     .sort((a, b) => {
-      // 💡 some을 사용하여 객체 배열에서 label이 포함되어 있는지 확인
-      const aSelected = localSelectedNames.some((n) => n.label === a.label);
-      const bSelected = localSelectedNames.some((n) => n.label === b.label);
+      const aSelected = localSelectedNames.some((name) => name.label === a.label);
+      const bSelected = localSelectedNames.some((name) => name.label === b.label);
 
       if (aSelected !== bSelected) {
         return aSelected ? -1 : 1;
@@ -47,82 +40,80 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
       return a.label.localeCompare(b.label, "ko");
     });
 
-  // 태그 토글 핸들러
   const handleTagToggle = (tag: { id: number; label: string }) => {
-    // 선택 여부 확인
-    const isAlreadySelected = localSelectedNames.some((n) => n.id === tag.id);
+    const isAlreadySelected = localSelectedNames.some((name) => name.id === tag.id);
 
-    // 이미 선택된 태그라면? (해제)
     if (isAlreadySelected) {
-      setLocalSelectedNames((prev) => prev.filter((n) => n.id !== tag.id));
+      setLocalSelectedNames((prev) => prev.filter((name) => name.id !== tag.id));
       return;
     }
 
-    // 새로 선택하는데 이미 5개라면? (차단)
     if (localSelectedNames.length >= 5) {
-      alert("태그는 최대 5개까지만 선택할 수 있습니다.");
+      alert(t("maxAlert"));
       return;
     }
 
-    // 새로운 객체 추가
     setLocalSelectedNames((prev) => [...prev, tag]);
   };
 
-  // 완료 시 저장
   const handleComplete = () => {
-    const finalTags = localSelectedNames;
-    setValue("tagIds", finalTags, { shouldDirty: true, shouldValidate: true });
+    setValue("tagIds", localSelectedNames, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
     onClose();
   };
 
   const { openModal } = useModalStore();
+
   return (
-    <ModalLayout onClose={onClose} hasBackground className="p-5 w-112.5">
+    <ModalLayout onClose={onClose} hasBackground className="w-112.5 p-5">
       <div id="tag-manager-root" className="flex flex-col">
         <header className="flex items-center justify-between pb-6">
-          <div className="flex gap-3 items-center">
+          <div className="flex items-center gap-3">
             <Tag aria-hidden="true" />
-            <h2 className="title-1">태그</h2>
+            <h2 className="title-1">{t("title")}</h2>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="p-1 flex items-center justify-center w-5.5 h-5.5 rounded-lg hover:bg-btn-hover"
+            className="flex h-5.5 w-5.5 items-center justify-center rounded-lg p-1 hover:bg-btn-hover"
           >
-            <Close className="w-3.5 h-3.5" />
+            <Close className="h-3.5 w-3.5" />
           </button>
         </header>
 
-        <div className="relative flex items-center group w-full pb-3">
+        <div className="group relative flex w-full items-center pb-3">
           <input
             id="search-input"
             type="text"
             value={searchKeyword}
-            className="bg-bg-darker body-4 border border-border-main w-full h-10 px-4 pl-10 rounded-xl focus:outline-none transition-all placeholder:text-font-disabled focus:border-font-1"
-            placeholder="검색어를 입력하세요"
+            className="body-4 h-10 w-full rounded-xl border border-border-main bg-bg-darker px-4 pl-10 transition-all placeholder:text-font-disabled focus:border-font-1 focus:outline-none"
+            placeholder={t("searchPlaceholder")}
             onChange={(e) => setSearchKeyword(e.target.value)}
           />
           <label
             htmlFor="search-input"
-            className="absolute left-4 pointer-events-none"
+            className="pointer-events-none absolute left-4"
           >
-            <Search className="text-font-disabled w-4.5 h-4.5" />
+            <Search className="h-4.5 w-4.5 text-font-disabled" />
           </label>
         </div>
 
         <nav>
-          <ul className="bg-bg-darker rounded-xl flex gap-y-2 gap-x-2.5 p-2.5 flex-wrap max-h-85 min-h-85 overflow-auto">
+          <ul className="flex max-h-85 min-h-85 flex-wrap gap-x-2.5 gap-y-2 overflow-auto rounded-xl bg-bg-darker p-2.5">
             {filteredTags.map((tag) => {
               const isSelected = localSelectedNames.some(
-                (n) => n.id === tag.id,
+                (name) => name.id === tag.id,
               );
+
               return (
                 <li key={tag.id}>
                   <button
                     type="button"
                     onClick={() => handleTagToggle(tag)}
                     className={cn(
-                      "px-1.5 py-0.75 rounded-md bg-card text-xs cursor-pointer hover:bg-card-hover transition-colors border border-transparent",
+                      "cursor-pointer rounded-md border border-transparent bg-card px-1.5 py-0.75 text-xs transition-colors hover:bg-card-hover",
                       isSelected && "bg-brand-opacity text-brand",
                     )}
                   >
@@ -132,31 +123,31 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
               );
             })}
             {filteredTags.length === 0 && (
-              <p className="text-font-disabled text-xs w-full text-center py-10">
-                검색 결과가 없습니다.
+              <p className="w-full py-10 text-center text-xs text-font-disabled">
+                {t("empty")}
               </p>
             )}
           </ul>
         </nav>
 
-        <footer className="flex gap-3 mt-4 h-10.25">
+        <footer className="mt-4 flex h-10.25 gap-3">
           <button
             type="button"
             onClick={() => openModal("TAG_SUGGESTIONS", {})}
-            className="p-3 flex flex-1 items-center justify-between bg-card rounded-xl text-font-2 text-xs hover:bg-card-hover transition-colors"
+            className="flex flex-1 items-center justify-between rounded-xl bg-card p-3 text-xs text-font-2 transition-colors hover:bg-card-hover"
           >
-            <div className="flex gap-2 items-center">
-              <Megaphone className="w-4 h-4" />
-              <span className="body-6">원하는 해시태그가 없나요?</span>
+            <div className="flex items-center gap-2">
+              <Megaphone className="h-4 w-4" />
+              <span className="body-6">{t("request")}</span>
             </div>
-            <ArrowRight className="w-3 h-3" />
+            <ArrowRight className="h-3 w-3" />
           </button>
 
           <ActiveButton
             onClick={handleComplete}
-            text="완료"
+            text={t("complete")}
             isActive
-            className="h-full px-5 py-2.25 w-fit"
+            className="h-full w-fit px-5 py-2.25"
           />
         </footer>
       </div>

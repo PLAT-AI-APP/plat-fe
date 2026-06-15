@@ -37,10 +37,10 @@ const PasswordCheckField = () => {
 
   return (
     <SmartInput
-      label="비밀번호 확인"
+      label="auth.fields.passwordCheckLabel"
       inputType={isShowConfirm.inputType}
       labelFontSize="title-5"
-      placeholder="비밀번호를 다시 입력해주세요"
+      placeholder="auth.fields.passwordCheckPlaceholder"
       {...register("passwordCheck")}
       error={errors.passwordCheck as FieldError}
       helperMessage={

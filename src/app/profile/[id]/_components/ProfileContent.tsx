@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import CharacterShowcase from "@/app/(main)/_components/CharacterShowcase";
 import CharacterSortPopover, {
   CharacterSortOption,
@@ -69,12 +70,13 @@ const CharArray = [
 ];
 
 export default function ProfileContent({ id }: { id: string }) {
-  const [sort, setSort] = useState<CharacterSortOption>("최신순");
+  const t = useTranslations();
+  const [sort, setSort] = useState<CharacterSortOption>("latest");
   const { isOpen, toggle } = useToggle();
   const triggerRef = useRef<HTMLButtonElement>(null);
 
   return (
-    <article className="@container max-w-300 mx-auto flex flex-col gap-11.5 px-10 pt-7.5 pb-11.25">
+    <article className="@container mx-auto flex max-w-300 flex-col gap-11.5 px-10 pt-7.5 pb-11.25">
       <Header userId={id} />
 
       <section
@@ -87,7 +89,7 @@ export default function ProfileContent({ id }: { id: string }) {
               type="button"
               className="title-3 flex w-[102px] items-center justify-center border-b-2 border-brand px-5 py-2.5 text-center text-font-1"
             >
-              캐릭터
+              {t("profile.characterTab")}
             </button>
             <button
               type="button"
@@ -100,7 +102,7 @@ export default function ProfileContent({ id }: { id: string }) {
 
           <header className="flex w-full items-center justify-between">
             <div className="title-5 flex items-center gap-1 text-font-2">
-              <span>작품 목록</span>
+              <span>{t("profile.worksList")}</span>
               <span>{CharArray.length}</span>
             </div>
 
@@ -114,7 +116,7 @@ export default function ProfileContent({ id }: { id: string }) {
                 aria-expanded={isOpen}
               >
                 <Sort className="size-4" />
-                {sort}
+                {t(`profile.sort.${sort}`)}
               </button>
 
               {isOpen && (

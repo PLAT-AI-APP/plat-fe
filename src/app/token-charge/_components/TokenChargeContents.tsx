@@ -1,31 +1,25 @@
-import Token from "@/icons/Token";
+"use client";
+
 import React from "react";
-import PolicyGuide from "./PolicyGuide";
-import Badge from "./Badge";
+import { useTranslations } from "next-intl";
+import Token from "@/icons/Token";
 import { cn, formatWithCommas } from "@/lib/utils";
+import Badge from "./Badge";
+import PolicyGuide from "./PolicyGuide";
 
 export interface ProductItem {
   id: string;
-  title: number; // 상품명 (예: "5,000 노트")
-  bonus?: string; // 추가 증정 문구 (예: "+500개")
-  price: number; // 현재 판매가
-  originalPrice?: number; // 할인 전 가격
-  discountRate?: number; // 할인율 (단위: %)
-  badges?: ("popular" | "firstCharge")[]; // 뱃지 목록
+  title: number;
+  bonus?: string;
+  price: number;
+  originalPrice?: number;
+  discountRate?: number;
+  badges?: ("popular" | "firstCharge")[];
 }
 
 export const MOCK_PRODUCTS: ProductItem[] = [
-  {
-    id: "1",
-    title: 5000,
-    price: 4900,
-  },
-  {
-    id: "2",
-    title: 10000,
-    bonus: "+500",
-    price: 9900,
-  },
+  { id: "1", title: 5000, price: 4900 },
+  { id: "2", title: 10000, bonus: "+500", price: 9900 },
   {
     id: "3",
     title: 20000,
@@ -42,33 +36,30 @@ export const MOCK_PRODUCTS: ProductItem[] = [
     discountRate: 34,
     badges: ["firstCharge"],
   },
-  {
-    id: "5",
-    title: 90000,
-    bonus: "+11,000",
-    price: 89900,
-  },
+  { id: "5", title: 90000, bonus: "+11,000", price: 89900 },
 ];
 
 const TokenChargeContents = () => {
+  const t = useTranslations();
+
   return (
-    <section className="mx-auto max-w-160 w-full pt-5 px-9">
-      <div className="flex flex-col gap-2 mb-9 py-4 px-5 bg-bg-darker border border-border-main rounded-3xl">
-        <span className="body-4 text-font-2">내 노트</span>
-        <div className="flex items-center gap-2 title-1">
-          <Token className="w-6 h-6" /> 9,999
+    <section className="mx-auto w-full max-w-160 px-9 pt-5">
+      <div className="mb-9 flex flex-col gap-2 rounded-3xl border border-border-main bg-bg-darker px-5 py-4">
+        <span className="body-4 text-font-2">{t("tokenCharge.myNote")}</span>
+        <div className="title-1 flex items-center gap-2">
+          <Token className="h-6 w-6" /> 9,999
         </div>
       </div>
 
       <div className="flex flex-col gap-4">
-        <h3 className="title-2 text-white">상품 구매</h3>
+        <h3 className="title-2 text-white">{t("tokenCharge.purchase")}</h3>
 
         <ul className="flex flex-col gap-3">
           {MOCK_PRODUCTS.map((product) => (
             <li
               key={product.id}
               className={cn(
-                "relative hover:bg-btn-hover cursor-pointer rounded-2xl border border-border-main py-4 px-5",
+                "relative cursor-pointer rounded-2xl border border-border-main px-5 py-4 hover:bg-btn-hover",
                 product.badges && "pt-0",
               )}
             >
@@ -82,16 +73,17 @@ const TokenChargeContents = () => {
 
               <div className="flex justify-between">
                 <div className="flex items-center gap-3">
-                  <Token className="w-8 h-8" />
+                  <Token className="h-8 w-8" />
                   <div className="flex gap-2">
-                    <p className="flex gap-1 body-2">
-                      <span>{formatWithCommas(product.title)}</span>{" "}
-                      <span>노트</span>
+                    <p className="body-2 flex gap-1">
+                      <span>{formatWithCommas(product.title)}</span>
+                      <span>{t("tokenCharge.noteUnit")}</span>
                     </p>
 
                     {product.bonus && (
-                      <span className="text-brand-dark title-3">
-                        {product.bonus}노트
+                      <span className="title-3 text-brand-dark">
+                        {product.bonus}
+                        {t("tokenCharge.bonusNoteUnit")}
                       </span>
                     )}
                   </div>
@@ -111,7 +103,8 @@ const TokenChargeContents = () => {
                     )}
 
                     <span className="title-3">
-                      {formatWithCommas(product.price)}원
+                      {formatWithCommas(product.price)}
+                      {t("tokenCharge.priceUnit")}
                     </span>
                   </div>
                 </div>

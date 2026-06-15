@@ -1,10 +1,13 @@
-import React, { useState, ChangeEvent } from "react";
-import { Draggable } from "@hello-pangea/dnd";
+"use client";
+
+import React, { ChangeEvent, useState } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
+import { Draggable } from "@hello-pangea/dnd";
 import { useFormContext, useWatch } from "react-hook-form";
-import { ArrowDown, Dots, Trash, ImageIcon } from "@/icons";
-import CopyFill from "@/icons/CopyFill";
 import SmartInput from "@/components/smart-input";
+import CopyFill from "@/icons/CopyFill";
+import { ArrowDown, Dots, ImageIcon, Trash } from "@/icons";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
 
 interface AssetItemProps {
@@ -15,6 +18,7 @@ interface AssetItemProps {
 }
 
 const AssetItem = ({ id, index, remove, copyAsset }: AssetItemProps) => {
+  const t = useTranslations("characterCreate.asset");
   const {
     register,
     setValue,
@@ -22,7 +26,6 @@ const AssetItem = ({ id, index, remove, copyAsset }: AssetItemProps) => {
     formState: { errors },
   } = useFormContext<CharacterCreateFormValues>();
   const [isActive, setIsActive] = useState(false);
-
   const assetImage = useWatch({ control, name: `asset.${index}.assetImage` });
   const assetName = useWatch({ control, name: `asset.${index}.assetName` });
   const assetSituation = useWatch({
@@ -39,13 +42,13 @@ const AssetItem = ({ id, index, remove, copyAsset }: AssetItemProps) => {
 
     const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
     if (!allowedTypes.includes(file.type)) {
-      alert("jpg, png, webp 이미지 파일만 가능합니다.");
+      alert(t("invalidType"));
       return;
     }
 
     const maxSize = 5 * 1024 * 1024;
     if (file.size > maxSize) {
-      alert("파일 용량은 최대 5MB까지 가능합니다.");
+      alert(t("invalidSize"));
       return;
     }
 
@@ -58,45 +61,36 @@ const AssetItem = ({ id, index, remove, copyAsset }: AssetItemProps) => {
     reader.readAsDataURL(file);
   };
 
-  // const handleCopy = async (text: string) => {
-  //   try {
-  //     await navigator.clipboard.writeText(text);
-  //   } catch (error) {
-  //     console.error("복사 실패:", error);
-  //   }
-  // };
-
   return (
     <Draggable draggableId={id} index={index}>
       {(provided) => (
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
-          className="p-2.5 pt-0.75 bg-bg-darkest border border-border-main rounded-xl"
+          className="rounded-xl border border-border-main bg-bg-darkest p-2.5 pt-0.75"
         >
-          {/* 드래그 핸들 */}
           <div
             {...provided.dragHandleProps}
-            className="flex items-center justify-center pb-0.75 h-3 mb-0.75 cursor-grab active:cursor-grabbing"
+            className="mb-0.75 flex h-3 cursor-grab items-center justify-center pb-0.75 active:cursor-grabbing"
           >
-            <Dots className="text-font-disabled w-5.75" />
+            <Dots className="w-5.75 text-font-disabled" />
           </div>
 
           <article className="flex justify-between">
             <div className="flex gap-2.5">
               <label
                 htmlFor={`asset-image-${index}`}
-                className="relative w-15 h-15 rounded-lg bg-card flex items-center justify-center overflow-hidden cursor-pointer"
+                className="relative flex h-15 w-15 cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-card"
               >
                 {assetImage ? (
                   <Image
                     src={typeof assetImage === "string" ? assetImage : ""}
-                    alt="asset 이미지"
+                    alt={t("imageAlt")}
                     fill
                     className="object-cover"
                   />
                 ) : (
-                  <ImageIcon className="text-font-disabled w-6 h-6" />
+                  <ImageIcon className="h-6 w-6 text-font-disabled" />
                 )}
                 <input
                   id={`asset-image-${index}`}
@@ -107,9 +101,8 @@ const AssetItem = ({ id, index, remove, copyAsset }: AssetItemProps) => {
                 />
               </label>
 
-              <p className="flex gap-1 body-4">
-                {assetName || "에셋이름"}
-                {/* 추후 백엔드가 넘겨주는 에셋의 코드 */}
+              <p className="body-4 flex gap-1">
+                {assetName || t("defaultName")}
                 <span className="text-font-disabled">#3Eabde</span>
               </p>
             </div>
@@ -118,36 +111,36 @@ const AssetItem = ({ id, index, remove, copyAsset }: AssetItemProps) => {
               <button
                 type="button"
                 onClick={() => copyAsset(index)}
-                className="flex items-center justify-center w-7 h-7 rounded-full hover:bg-card"
+                className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-card"
               >
-                <CopyFill className="w-4 h-4" />
+                <CopyFill className="h-4 w-4" />
               </button>
               <button
                 type="button"
                 onClick={() => remove(index)}
-                className="flex items-center justify-center w-7 h-7 rounded-full hover:bg-card"
+                className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-card"
               >
-                <Trash className="w-4 h-4" />
+                <Trash className="h-4 w-4" />
               </button>
               <button
                 type="button"
                 onClick={toggleActive}
-                className={`flex items-center justify-center w-7 h-7 rounded-full hover:bg-card transition-transform ${
+                className={`flex h-7 w-7 items-center justify-center rounded-full transition-transform hover:bg-card ${
                   isActive ? "rotate-180" : ""
                 }`}
               >
-                <ArrowDown className="w-4 h-4" />
+                <ArrowDown className="h-4 w-4" />
               </button>
             </div>
           </article>
 
           {isActive && (
-            <div className="flex flex-col gap-4 mt-4">
+            <div className="mt-4 flex flex-col gap-4">
               <SmartInput
                 {...register(`asset.${index}.assetName` as const)}
-                label="에셋명"
+                label={t("nameLabel")}
                 required
-                placeholder="에셋명을 입력해주세요."
+                placeholder={t("namePlaceholder")}
                 maxLength={15}
                 value={assetName}
                 labelFontSize="title-5"
@@ -155,14 +148,14 @@ const AssetItem = ({ id, index, remove, copyAsset }: AssetItemProps) => {
               />
               <SmartInput
                 {...register(`asset.${index}.assetSituation` as const)}
-                label="상황"
+                label={t("situationLabel")}
                 type="textarea"
                 required
-                placeholder="이미지와 어울리는 상황을 설명해주세요."
+                placeholder={t("situationPlaceholder")}
                 maxLength={50}
                 maxLine={3}
                 minLine={3}
-                description="작성하신 상황이 되면 이미지를 띄워드려요."
+                description={t("situationHelp")}
                 value={assetSituation}
                 labelFontSize="title-5"
                 descFontSize="body-6"

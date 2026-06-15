@@ -1,4 +1,7 @@
+"use client";
+
 import New from "@/icons/New";
+import { useTranslations } from "next-intl";
 import React from "react";
 import CharacterShowcase from "../CharacterShowcase";
 import CharacterExperience from "./_components/character-experience";
@@ -16,12 +19,15 @@ interface HomeTabContentsProps {
   }[];
 }
 const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
+  // 홈 탭 언어는 설정 변경 직후 바로 반영되어야 하므로 클라이언트 번역 컨텍스트를 사용합니다.
+  const t = useTranslations("home");
+
   return (
     <article className="flex flex-col gap-18 mt-7 pb-18">
       {/* 오늘의 PICK 섹션 */}
       <CharacterShowcase
         charArray={charArray}
-        title="오늘의 PICK"
+        title={t("todayPick")}
         allViewLink=""
         cardSize="S"
         columnGap={16}
@@ -34,7 +40,7 @@ const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
       {/* 인기 태그 캐릭터 모음 섹션 */}
       <CharacterShowcase
         charArray={charArray}
-        title="인기 태그 캐릭터 모음"
+        title={t("popularTagCollection")}
         cardSize="S"
         limit={12}
         columnGap={16}
@@ -126,7 +132,7 @@ const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
             ],
           },
         ]}
-        title="인기 캐릭터 이미지 미리보기"
+        title={t("popularCharacterPreview")}
         cardSize="L"
         limit={3}
       />
@@ -134,7 +140,7 @@ const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
       {/* 최근 소문나기 시작한 신작 섹션 */}
       <CharacterShowcase
         charArray={charArray}
-        title="최근 소문나기 시작한 신작"
+        title={t("recentNewCharacters")}
         allViewLink="new"
         cardSize="M"
         limit={10}
@@ -146,7 +152,7 @@ const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
       {/* (유저이름)님을 위한 추천 섹션 */}
       <CharacterShowcase
         charArray={charArray}
-        title="(유저이름)님을 위한 추천"
+        title={t("recommendationForYou")}
         allViewLink="asf"
         cardSize="S"
         limit={24}

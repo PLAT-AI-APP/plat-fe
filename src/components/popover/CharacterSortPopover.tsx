@@ -1,9 +1,12 @@
+"use client";
+
 import React from "react";
+import { useTranslations } from "next-intl";
 import Check from "@/icons/Check";
 import { cn } from "@/lib/utils";
 import { PopoverLayout } from "./layout";
 
-export const CHARACTER_SORT_OPTIONS = ["최신순", "채팅순"] as const;
+export const CHARACTER_SORT_OPTIONS = ["latest", "chats"] as const;
 
 export type CharacterSortOption = (typeof CHARACTER_SORT_OPTIONS)[number];
 
@@ -20,6 +23,8 @@ const CharacterSortPopover = ({
   onClose,
   triggerRef,
 }: CharacterSortPopoverProps) => {
+  const t = useTranslations();
+
   const handleSort = (option: CharacterSortOption) => {
     onChange(option);
     onClose();
@@ -46,7 +51,7 @@ const CharacterSortPopover = ({
                   isSelected && "title-5 text-brand",
                 )}
               >
-                {option}
+                {t(`profile.sort.${option}`)}
                 {isSelected && <Check className="size-4 text-brand" />}
               </li>
             );

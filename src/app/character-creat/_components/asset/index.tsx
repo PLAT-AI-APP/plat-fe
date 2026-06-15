@@ -1,14 +1,17 @@
-import { CharacterCreateFormValues } from "@/schema/character.schema";
-import React, { useRef, ChangeEvent } from "react";
-import { useFieldArray, useFormContext } from "react-hook-form";
+"use client";
+
+import React, { ChangeEvent, useRef } from "react";
+import { useTranslations } from "next-intl";
 import { DragDropContext, Droppable, DropResult } from "@hello-pangea/dnd";
+import { useFieldArray, useFormContext } from "react-hook-form";
 import AssetItem from "./AssetItem";
+import { CharacterCreateFormValues } from "@/schema/character.schema";
 
 const Asset = () => {
+  const t = useTranslations("characterCreate.asset");
   const { control } = useFormContext<CharacterCreateFormValues>();
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const { fields, append, remove, move, insert } = useFieldArray({
+  const { fields, append, remove, move } = useFieldArray({
     control,
     name: "asset",
   });
@@ -19,8 +22,7 @@ const Asset = () => {
   };
 
   const copyAsset = (index: number) => {
-    // const target = watch(`asset.${index}`);
-    // insert(index + 1, { ...target });
+    void index;
   };
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -29,13 +31,13 @@ const Asset = () => {
 
     const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
     if (!allowedTypes.includes(file.type)) {
-      alert("jpg, png, webp 이미지 파일만 가능합니다.");
+      alert(t("invalidType"));
       return;
     }
 
     const maxSize = 5 * 1024 * 1024;
     if (file.size > maxSize) {
-      alert("파일 용량은 최대 5MB까지 가능합니다.");
+      alert(t("invalidSize"));
       return;
     }
 
@@ -54,21 +56,17 @@ const Asset = () => {
   };
 
   const addAsset = () => {
-    if (fields.length + 1 > 50) {
-      return;
-    }
+    if (fields.length + 1 > 50) return;
     fileInputRef.current?.click();
   };
 
   return (
     <section className="flex flex-col gap-5.25">
       <header className="flex flex-col">
-        <div className="flex items-center gap-1 title-3">
-          <span>에셋 등록 ({fields.length}/50)</span>
+        <div className="title-3 flex items-center gap-1">
+          <span>{t("header", { count: fields.length })}</span>
         </div>
-        <p className="body-5 text-font-2">
-          상황에 어울리는 이미지를 등록해보세요. 최대 5MB
-        </p>
+        <p className="body-5 text-font-2">{t("guide")}</p>
       </header>
 
       <div id="asset-management-container" className="flex flex-col gap-1">
@@ -78,7 +76,7 @@ const Asset = () => {
               <div
                 {...provided.droppableProps}
                 ref={provided.innerRef}
-                className="flex flex-col gap-2 max-h-125 overflow-y-auto"
+                className="flex max-h-125 flex-col gap-2 overflow-y-auto"
               >
                 {fields.map((field, i) => (
                   <AssetItem
@@ -98,9 +96,9 @@ const Asset = () => {
         <button
           type="button"
           onClick={addAsset}
-          className="body-4 py-2.5 mt-2 rounded-xl bg-bg-darkest border border-border-main hover:bg-card"
+          className="body-4 mt-2 rounded-xl border border-border-main bg-bg-darkest py-2.5 hover:bg-card"
         >
-          에셋 추가
+          {t("add")}
         </button>
         <input
           ref={fileInputRef}

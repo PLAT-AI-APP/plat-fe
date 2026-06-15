@@ -1,34 +1,23 @@
+"use client";
+
 import Link from "next/link";
 import React from "react";
+import { useTranslations } from "next-intl";
 
 const Footer = () => {
+  const t = useTranslations();
   const menuArray = [
-    {
-      text: "회사 소개",
-      link: "#",
-    },
-    {
-      text: "고객센터",
-      link: "#",
-    },
-    {
-      text: "이용약관",
-      link: "#",
-    },
-    {
-      text: "개인정보처리방침",
-      link: "#",
-    },
-    {
-      text: "청소년 보호정책",
-      link: "#",
-    },
+    { text: t("footer.about"), link: "#" },
+    { text: t("footer.support"), link: "#" },
+    { text: t("footer.terms"), link: "#" },
+    { text: t("footer.privacy"), link: "#" },
+    { text: t("footer.youth"), link: "#" },
   ];
+
   return (
-    <footer id="main-footer" className="p-5 pb-18 flex flex-col gap-4">
-      {/* 푸터 내비게이션 영역 */}
-      <nav id="footer-navigation" aria-label="푸터 메뉴">
-        <ul id="footer-menu-list" className="flex gap-3 p-0 m-0 list-none">
+    <footer id="main-footer" className="flex flex-col gap-4 p-5 pb-18">
+      <nav id="footer-navigation" aria-label={t("footer.menu")}>
+        <ul id="footer-menu-list" className="m-0 flex list-none gap-3 p-0">
           {menuArray.map((menu) => (
             <li key={menu.text} id={`footer-menu-item-${menu.text}`}>
               <Link
@@ -43,26 +32,22 @@ const Footer = () => {
         </ul>
       </nav>
 
-      {/* 사업자 정보 영역: 주소 및 연락처 정보 */}
       <address
         id="footer-business-info"
-        className="not-italic flex flex-wrap gap-3 body-4 text-font-disabled"
+        className="body-4 flex flex-wrap gap-3 text-font-disabled not-italic"
       >
-        <span id="footer-company-name">(주)오비트랩</span>|
-        <span id="footer-representative">대표 김승우</span>|
+        <span id="footer-company-name">{t("footer.companyName")}</span>|
+        <span id="footer-representative">{t("footer.representative")}</span>|
         <span id="footer-phone-number">02-123-4567</span>|
         <span id="footer-registration-number">
-          사업자등록번호: 227-40-01411
+          {t("footer.registrationNumberLabel")}: 227-40-01411
         </span>
         |
-        <span id="footer-office-address">
-          인천광역시 연수구 하모니로178번길 22, 7 층 707호 707-아19호
-        </span>
+        <span id="footer-office-address">{t("footer.address")}</span>
       </address>
 
-      {/* 저작권 표시 영역 */}
       <p id="footer-copyright" className="body-4 text-font-disabled">
-        © 2025 Wrtn. All rights reserved.
+        {t("footer.copyright")}
       </p>
     </footer>
   );

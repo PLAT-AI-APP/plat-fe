@@ -4,6 +4,7 @@ import { ArrowLeft, ArrowRight } from "@/icons";
 import { useCarousel } from "@/hooks/useCarousel";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import React, { useEffect, useState } from "react";
 import CharacterCard from "./character-card";
 import { CharacterCardSkeleton } from "./CharacterCardSkeleton";
@@ -44,6 +45,7 @@ const CharacterShowcase = ({
   layout = "grid",
   selectedTags,
 }: CharacterShowcaseProps) => {
+  const t = useTranslations("characterShowcase");
   const [isLoading, setIsLoading] = useState(true);
   const { viewportRef, scrollPrev, scrollNext } = useCarousel({
     options: {
@@ -77,7 +79,7 @@ const CharacterShowcase = ({
           size={cardSize}
           title={char.name}
           description={char.dec}
-          creatorName={char.creatorName || "Unknown"}
+          creatorName={char.creatorName || t("unknownCreator")}
           chatCount={char.chatCount}
           images={char.img}
           tagList={char.tag}
@@ -105,7 +107,7 @@ const CharacterShowcase = ({
               }}
               className="body-4 font-medium tracking-normal text-font-2 underline"
             >
-              전체보기
+              {t("allView")}
             </Link>
           )}
         </header>
@@ -126,7 +128,7 @@ const CharacterShowcase = ({
           <button
             type="button"
             onClick={scrollPrev}
-            aria-label="Previous items"
+            aria-label={t("previousItems")}
             className="opacity-25 hover:opacity-100 absolute left-[-18px] top-[122.5px] z-10 flex size-9 -translate-y-1/2 items-center justify-center rounded-[20px] bg-white/12 p-2 text-font-0 backdrop-blur-[1.54px] transition-colors hover:bg-white/20"
           >
             <ArrowLeft className="size-5" />
@@ -134,7 +136,7 @@ const CharacterShowcase = ({
           <button
             type="button"
             onClick={scrollNext}
-            aria-label="Next items"
+            aria-label={t("nextItems")}
             className="opacity-25 hover:opacity-100 absolute right-[-18px] top-[122.5px] z-10 flex size-9 -translate-y-1/2 items-center justify-center rounded-[20px] bg-white/12 p-2 text-font-0 backdrop-blur-[1.54px] transition-colors hover:bg-white/20"
           >
             <ArrowRight className="size-5" />

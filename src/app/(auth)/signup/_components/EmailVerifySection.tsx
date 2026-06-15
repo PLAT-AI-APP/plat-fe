@@ -1,29 +1,32 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
-import { AuthFormValues } from "@/schema/auth.schema";
-import { cn } from "@/lib/utils";
-import ActiveButton from "@/components/ActiveButton";
-import SmartInput from "@/components/smart-input";
 import { useEmailVerifyMutation } from "@/api/auth/emailVerify";
 import { useEmailVerifyConfirmMutation } from "@/api/auth/emailVerifyConfirm";
-import { useCountdown } from "@/hooks/useCountdown";
-import { useFieldFeedback } from "@/hooks/useFieldFeedback";
-import { motion, AnimatePresence } from "framer-motion";
+import ActiveButton from "@/components/ActiveButton";
+import SmartInput from "@/components/smart-input";
 import {
   FIELD_FEEDBACK_MESSAGES,
   FIELD_HELPER_MESSAGES,
 } from "@/constants/fieldMessages";
+import { useFieldFeedback } from "@/hooks/useFieldFeedback";
+import { useTranslateText } from "@/hooks/useTranslateText";
+import { useCountdown } from "@/hooks/useCountdown";
+import { cn } from "@/lib/utils";
+import { AuthFormValues } from "@/schema/auth.schema";
 
 interface EmailVerifySectionProps {
   onVerifiedChange?: (isVerified: boolean) => void;
 }
 
 const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
-  // 상태: UI 및 에러 관련
-  const [isOtpSent, setIsOtpSent] = useState(false); // 인증번호 입력창 표시 여부
-  const [isEmailVerified, setIsEmailVerified] = useState(false); // 이메일 인증 최종 성공 여부
+  const t = useTranslations();
+  const translateText = useTranslateText();
+  const [isOtpSent, setIsOtpSent] = useState(false);
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
 
   const { getFeedback, setFeedback, clearFeedback } =
     useFieldFeedback<AuthFormValues>();
@@ -38,11 +41,9 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
     clearErrors,
   } = useFormContext<AuthFormValues>();
 
-  // 데이터: 폼 값 감시
   const email = useWatch({ control, name: "email" });
   const code = useWatch({ control, name: "code" });
 
-  // API 뮤테이션 및 타이머 훅
   const { mutate: emailVerify, isPending: isEmailVerifyPending } =
     useEmailVerifyMutation();
   const { mutate: emailVerifyConfirm } = useEmailVerifyConfirmMutation();
@@ -57,7 +58,6 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
     }
   }, [isOtpSent, isEmailVerified, timeLeft, setError]);
 
-  // 로직: 이메일 인증번호 요청 (인증요청/재전송)
   const handleRequestOtp = async () => {
     const isEmailValid = await trigger("email");
     if (!isEmailValid || !email) return;
@@ -66,12 +66,13 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
     clearFeedback("email");
     setValue("code", "");
     clearErrors("code");
+
     emailVerify(email, {
       onSuccess: (data) => {
         if (data.result === "OK") {
           setIsOtpSent(true);
           setFeedback("email", FIELD_FEEDBACK_MESSAGES.emailVerificationSent);
-          setIsEmailVerified(false); // 재전송 시 인증 상태 초기화
+          setIsEmailVerified(false);
           onVerifiedChange?.(false);
           startTimer();
         }
@@ -79,7 +80,6 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
     });
   };
 
-  // 로직: 인증번호 확인(검증)
   const handleVerifyOtp = () => {
     if (timeLeft <= 0) {
       setError("code", {
@@ -94,9 +94,8 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
       { code: code || "", email },
       {
         onSuccess: (data) => {
-          // alert("이메일 인증 성공");
-          setIsEmailVerified(true); // 인증 완료 상태로 변경
-          setIsOtpSent(false); // 인증번호 입력창 숨김
+          setIsEmailVerified(true);
+          setIsOtpSent(false);
           onVerifiedChange?.(true);
           setFeedback(
             "email",
@@ -116,12 +115,10 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
     );
   };
 
-  // 로직: 인증 버튼 클릭 핸들러 (인증요청 또는 변경)
   const handleEmailBtnClick = () => {
     if (isEmailVerifyPending) return;
 
     if (isEmailVerified) {
-      // 이미 인증된 상태에서 '변경'을 누를 경우
       setIsEmailVerified(false);
       onVerifiedChange?.(false);
       clearFeedback("email");
@@ -129,12 +126,10 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
       setValue("code", "");
       clearErrors("code");
     } else {
-      // 인증 전이거나 재전송인 경우
       handleRequestOtp();
     }
   };
 
-  // 현재 노출할 최종 에러 메시지 결정 로직
   const displayErrorMessage = useMemo(() => {
     if (errors.email?.message) return errors.email.message;
     if (isOtpSent && !isEmailVerified) {
@@ -148,16 +143,16 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
 
   const displayFeedback = getFeedback("email");
   const displayMessage = displayErrorMessage || displayFeedback?.message;
-  const isDisplayMessageError = !!displayErrorMessage;
-  const emailHelperMessage = displayMessage || isOtpSent || isEmailVerified
-    ? undefined
-    : FIELD_HELPER_MESSAGES.emailDomain;
+  const isDisplayMessageError = Boolean(displayErrorMessage);
+  const emailHelperMessage =
+    displayMessage || isOtpSent || isEmailVerified
+      ? undefined
+      : FIELD_HELPER_MESSAGES.emailDomain;
   const isEmailButtonActive =
     Boolean(email) && !errors.email && !isEmailVerifyPending;
 
   return (
-    <section id="email-auth-container" className="flex flex-col ">
-      {/* 이메일 입력 영역 */}
+    <section id="email-auth-container" className="flex flex-col">
       <article className="flex flex-col gap-2">
         <div className="flex items-start gap-2">
           <SmartInput
@@ -170,10 +165,10 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
                 await trigger("email");
               },
             })}
-            label="이메일"
+            label="auth.login.emailLabel"
             labelFontSize="title-5"
             value={email}
-            placeholder="example@gmail.com"
+            placeholder="auth.login.emailPlaceholder"
             inputClassName={cn(
               "bg-black/20 px-4 py-3 text-font-1",
               "focus:border-brand transition-all",
@@ -191,19 +186,18 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
               isEmailVerifyPending
                 ? ""
                 : isEmailVerified
-                  ? "변경"
+                  ? t("auth.emailVerification.change")
                   : isOtpSent
-                    ? "재전송"
-                    : "인증요청"
+                    ? t("auth.emailVerification.resend")
+                    : t("auth.emailVerification.request")
             }
             className={cn(
-              "mt-[29px] px-4 py-3 rounded-xl w-fit max-h-11.75 text-nowrap flex items-center justify-center gap-2",
+              "mt-[29px] flex max-h-11.75 w-fit items-center justify-center gap-2 rounded-xl px-4 py-3 text-nowrap",
               isEmailButtonActive
                 ? "bg-brand text-font-4"
                 : "bg-font-disabled text-font-1",
               isEmailVerified && "bg-brand text-font-4",
-              isOtpSent &&
-                "border border-brand-dark bg-brand/10 text-brand-dark",
+              isOtpSent && "border border-brand-dark bg-brand/10 text-brand-dark",
             )}
             textClassName="body-4"
             onClick={handleEmailBtnClick}
@@ -212,21 +206,17 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
               <>
                 <span
                   aria-hidden="true"
-                  className="w-4 h-4 rounded-full border-2 border-font-4/40 border-t-font-4 animate-spin"
+                  className="h-4 w-4 animate-spin rounded-full border-2 border-font-4/40 border-t-font-4"
                 />
-                <span className="body-4 font-normal">요청 중</span>
+                <span className="body-4 font-normal">
+                  {t("auth.emailVerification.requesting")}
+                </span>
               </>
             )}
           </ActiveButton>
         </div>
-        {/* {errors.email?.message && (
-          <span role="alert" className="pl-2 pt-1.5 text-font-accents text-xs">
-            {errors.email?.message}
-          </span>
-        )} */}
       </article>
 
-      {/* 인증번호 입력 영역 (인증번호 발송 시에만 표시) */}
       <AnimatePresence>
         {isOtpSent && !isEmailVerified && (
           <motion.article
@@ -236,7 +226,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
             transition={{ duration: 0.4, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <div className="flex flex-col gap-2 mt-5.25">
+            <div className="mt-5.25 flex flex-col gap-2">
               <div className="flex items-start gap-2">
                 <SmartInput
                   {...register("code", {
@@ -245,7 +235,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
                       clearErrors("code");
                     },
                   })}
-                  label="인증번호"
+                  label="auth.emailVerification.codeLabel"
                   labelFontSize="title-5"
                   value={code}
                   placeholder="000000"
@@ -257,7 +247,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
                     );
                   }}
                   inputClassName={cn(
-                    "h-11 bg-black/20 rounded-lg px-4 py-3 pr-16 text-sm text-font-1",
+                    "h-11 rounded-lg bg-black/20 px-4 py-3 pr-16 text-sm text-font-1",
                     "placeholder:text-font-2/50 focus:border-brand transition-all",
                     errors.code &&
                       "border-font-accents focus:border-font-accents",
@@ -269,9 +259,9 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
                 <ActiveButton
                   type="button"
                   isActive={(code?.length ?? 0) >= 6 && timeLeft > 0}
-                  text="인증확인"
+                  text={t("auth.emailVerification.confirm")}
                   onClick={handleVerifyOtp}
-                  className="mt-[29px] px-4 py-3 text-sm w-fit max-h-11 text-nowrap"
+                  className="mt-[29px] max-h-11 w-fit px-4 py-3 text-sm text-nowrap"
                 />
               </div>
             </div>
@@ -279,8 +269,6 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
         )}
       </AnimatePresence>
 
-      {/* 3. 통합 에러 메시지 영역 (항상 섹션 최하단) */}
-      {/* 메시지가 사라져도 레이아웃 흔들림 방지 */}
       {displayMessage && (
         <span
           role={isDisplayMessageError ? "alert" : "status"}
@@ -289,7 +277,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
             isDisplayMessageError ? "text-font-accents" : "text-font-2",
           )}
         >
-          {displayMessage}
+          {translateText(displayMessage)}
         </span>
       )}
     </section>

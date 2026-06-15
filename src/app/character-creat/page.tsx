@@ -1,16 +1,16 @@
 import React from "react";
-import CharacterCreateForm from "./_components/CharacterCreateForm";
 import { Metadata } from "next";
+import CharacterCreateForm from "./_components/CharacterCreateForm";
 
 export const metadata: Metadata = {
-  title: "캐릭터 생성",
+  title: "Character Create",
 };
 
 const CharacterCreatPage = () => {
   return (
     <section
       id="character-create-main"
-      className="flex flex-col flex-1 w-full mx-auto max-w-360 min-w-0 p-5"
+      className="mx-auto flex w-full max-w-360 min-w-0 flex-1 flex-col p-5"
     >
       <CharacterCreateForm />
     </section>
