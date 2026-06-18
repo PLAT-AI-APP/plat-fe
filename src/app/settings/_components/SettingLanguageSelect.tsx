@@ -33,12 +33,12 @@ const SettingLanguageSelect = () => {
         type="button"
         aria-expanded={isOpen}
         onClick={() => setIsOpen((prev) => !prev)}
-        className="title-3 flex h-10 w-[140px] items-center justify-between rounded-xl bg-bg-darkest px-4 py-2 text-font-1"
+        className="title-3 flex h-10 min-w-[140px] max-w-[220px] items-center justify-between gap-3 rounded-xl bg-bg-darkest px-4 py-2 text-font-1"
       >
-        {selectedLanguage.name}
+        <span className="truncate">{selectedLanguage.name}</span>
         <ArrowDown
           className={cn(
-            "size-4 text-font-1 transition-transform",
+            "size-4 shrink-0 text-font-1 transition-transform",
             isOpen && "rotate-180",
           )}
         />
@@ -47,7 +47,7 @@ const SettingLanguageSelect = () => {
       {isOpen && (
         <div
           ref={dropdownRef}
-          className="absolute right-0 top-12 z-20 flex w-[140px] flex-col gap-1 rounded-xl bg-bg-darkest p-3 shadow-card-heavy"
+          className="absolute right-0 top-12 z-20 flex min-w-full max-w-[260px] flex-col gap-1 rounded-xl bg-bg-darkest p-3 shadow-card-heavy"
         >
           {LANGUAGE_LIST.map((language) => {
             const isSelected = language.locale === locale;
@@ -63,7 +63,7 @@ const SettingLanguageSelect = () => {
                 )}
               >
                 {/* 언어 선택지는 현재 locale과 무관하게 각 언어의 고유 표기를 유지합니다. */}
-                <span>{language.name}</span>
+                <span className="pr-3 whitespace-nowrap">{language.name}</span>
                 {isSelected && <Check className="size-4 text-font-1" />}
               </button>
             );

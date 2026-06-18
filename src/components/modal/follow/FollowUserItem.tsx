@@ -45,7 +45,7 @@ const FollowUserItem = ({
         type="button"
         onClick={() => onToggleFollow(user.userId, isFollowing)}
         className={cn(
-          "title-6 flex w-[69px] shrink-0 items-center justify-center rounded-[100px] px-3 py-1 text-left transition-none",
+          "title-6 flex min-w-[96px] shrink-0 items-center justify-center whitespace-nowrap rounded-[100px] px-4 py-1 text-left transition-none",
           isFollowing ? "bg-border-main" : "bg-font-1 text-bg-dark",
         )}
       >

@@ -11,7 +11,7 @@ const CharacterCreateBanner = () => {
   return (
     <div
       className={cn(
-        "flex justify-between rounded-3xl border border-border-main bg-bg-darker px-5 py-4",
+        "flex justify-between items-center rounded-3xl border border-border-main bg-bg-darker px-5 py-4",
         "@max-[400px]:flex-col @max-[400px]:gap-6",
       )}
     >

@@ -126,7 +126,7 @@ const FollowEmptyState = ({
     <div className="flex min-h-95 items-center justify-center">
       <div className="flex w-full flex-col items-center gap-4 text-center">
         <div className="flex flex-col items-center gap-1">
-          <p className="body-6 w-[228px] text-font-2">
+          <p className="body-6 max-w-[280px] text-font-2">
             {state.lines.map((line) => (
               <React.Fragment key={line}>
                 {line}
@@ -134,7 +134,7 @@ const FollowEmptyState = ({
               </React.Fragment>
             ))}
           </p>
-          <p className="title-3 w-[228px] text-font-1">{state.title}</p>
+          <p className="title-3 max-w-[280px] text-font-1">{state.title}</p>
         </div>
 
         <button

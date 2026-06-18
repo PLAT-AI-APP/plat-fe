@@ -29,7 +29,7 @@ const PersonaMenuPopover = ({
     <PopoverLayout
       onClose={onClose}
       triggerRef={triggerRef}
-      className="border-none left-1/2 right-auto top-[calc(100%+12px)] w-28 -translate-x-1/2 rounded-xl bg-btn-selected px-1 py-2"
+      className="border-none left-1/2 right-auto top-[calc(100%+12px)] w-max min-w-28 -translate-x-1/2 rounded-xl bg-btn-selected px-1 py-2"
     >
       <menu className="flex flex-col gap-1">
         <button

@@ -87,14 +87,14 @@ export default function ProfileContent({ id }: { id: string }) {
           <nav className="flex w-full items-end border-b-2 border-card-hover">
             <button
               type="button"
-              className="title-3 flex w-[102px] items-center justify-center border-b-2 border-brand px-5 py-2.5 text-center text-font-1"
+              className="title-3 flex w-fit items-center justify-center border-b-2 border-brand px-5 py-2.5 text-center text-font-1"
             >
               {t("profile.characterTab")}
             </button>
             <button
               type="button"
               disabled
-              className="body-2 flex w-[102px] cursor-default items-center justify-center px-5 py-2.5 text-center text-font-disabled"
+              className="body-2 flex w-fit cursor-default items-center justify-center px-5 py-2.5 text-center text-font-disabled"
             >
               -
             </button>

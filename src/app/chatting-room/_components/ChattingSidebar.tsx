@@ -38,11 +38,13 @@ const ChattingSidebar = ({ toggleIsSidebar }: ChattingSidebarProps) => {
               <li
                 key={title}
                 onClick={() => openModal(id)}
-                className="flex w-50 list-none items-center justify-between rounded-lg p-2 hover:bg-btn-hover"
+                className="flex min-w-[200px] max-w-[280px] list-none items-center justify-between rounded-lg p-2 hover:bg-btn-hover"
               >
                 <div className="flex items-center gap-3">
                   <Icon className="h-6 w-6 text-font-2" />
-                  <span className="hover:text-font-2">{title}</span>
+                  <span className="hover:text-font-2 whitespace-nowrap">
+                    {title}
+                  </span>
                 </div>
               </li>
             ))}

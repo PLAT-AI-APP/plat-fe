@@ -40,11 +40,11 @@ const UserNoteModal = ({ onClose }: UserNoteModalProps) => {
     <ModalLayout
       onClose={onClose}
       hasBackground
-      className="top-1/2 left-1/2 h-fit w-screen max-w-112.5 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap p-5"
+      className="top-1/2 left-1/2 h-fit w-screen max-w-112.5 -translate-x-1/2 -translate-y-1/2 p-5"
     >
       <header className="pb-6">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <div className="flex min-w-0 items-center gap-3">
             <Note className="h-6 w-6" />
             <h2 className="title-1">{t("title")}</h2>
           </div>

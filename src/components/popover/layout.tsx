@@ -32,7 +32,7 @@ export const PopoverLayout = ({
       onClick={(e) => e.stopPropagation()}
       onMouseDown={(e) => e.stopPropagation()}
       className={cn(
-        "absolute right-0 top-[calc(100%+10px)] z-50 w-37.5 rounded-xl border border-border-main bg-bg-dark px-2 py-3 shadow-card-heavy",
+        "absolute right-0 top-[calc(100%+10px)] z-50 min-w-37.5 max-w-[calc(100vw-40px)] rounded-xl border border-border-main bg-bg-dark px-2 py-3 shadow-card-heavy",
         className,
       )}
     >

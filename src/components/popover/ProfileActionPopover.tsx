@@ -50,7 +50,7 @@ const ProfileActionPopover = ({
     <PopoverLayout
       onClose={onClose}
       triggerRef={triggerRef}
-      className="left-1/2 w-[161px] -translate-x-1/2 rounded-xl border-0 bg-btn-selected p-2"
+      className="left-1/2 w-max min-w-[161px] max-w-[calc(100vw-40px)] -translate-x-1/2 rounded-xl border-0 bg-btn-selected p-2"
     >
       <menu className="flex flex-col items-center gap-1">
         {profileActions.map(({ icon, label, onClick }) => (

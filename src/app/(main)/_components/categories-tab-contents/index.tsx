@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import CharacterShowcase from "../CharacterShowcase";
 import SearchResultSort from "./_components/SearchResultSort";
@@ -49,13 +49,11 @@ const CategoriesTabContents = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>(
     INITIAL_SELECTED_TAGS,
   );
-  const sidebarRoot = useMemo(
-    () =>
-      typeof document === "undefined"
-        ? null
-        : document.getElementById("categories-tag-sidebar-root"),
-    [],
-  );
+  const [sidebarRoot, setSidebarRoot] = useState<HTMLElement | null>(null);
+
+  useEffect(() => {
+    setSidebarRoot(document.getElementById("categories-tag-sidebar-root"));
+  }, []);
 
   return (
     <>
@@ -87,9 +85,7 @@ const CategoriesTabContents = () => {
           <header className="flex flex-col heading-3">
             <p>{t("recommendedCharacters")}</p>
 
-            <p className="body-2 text-font-2">
-              {t("recommendedDescription")}
-            </p>
+            <p className="body-2 text-font-2">{t("recommendedDescription")}</p>
           </header>
 
           <CharacterShowcase

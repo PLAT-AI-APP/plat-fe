@@ -76,11 +76,11 @@ const PersonaAddModal = ({
     <ModalLayout
       hasBackground
       onClose={onClose}
-      className="top-1/2 left-1/2 h-fit w-screen max-w-125 -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-3xl border border-border-main bg-bg-dark p-5"
+      className="top-1/2 left-1/2 h-fit w-screen max-w-125 -translate-x-1/2 -translate-y-1/2 rounded-3xl border border-border-main bg-bg-dark p-5"
     >
       <header className="pb-6">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <div className="flex min-w-0 items-center gap-3">
             <Persona className="h-6 w-6" />
             <h2 className="title-1 text-font-1">
               {isEditMode ? t("titleEdit") : t("titleAdd")}

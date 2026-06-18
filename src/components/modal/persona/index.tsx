@@ -40,7 +40,7 @@ const PersonaModal = ({ onClose }: PersonaModalProps) => {
     <ModalLayout
       onClose={onClose}
       hasBackground
-      className="w-screen max-w-125 h-fit whitespace-nowrap top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-5 bg-bg-dark"
+      className="top-1/2 left-1/2 h-fit w-screen max-w-125 -translate-x-1/2 -translate-y-1/2 bg-bg-dark p-5"
     >
       <PersonaHeader onClose={onClose} />
 

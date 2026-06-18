@@ -23,10 +23,10 @@ const AddLanguageModal = ({ onClose }: AddLanguageModalProps) => {
     <ModalLayout
       onClose={onClose}
       hasBackground
-      className="w-92.5 whitespace-nowrap rounded-3xl border border-border-main p-5"
+      className="w-screen max-w-[calc(100vw-40px)] sm:max-w-92.5 rounded-3xl border border-border-main p-5"
     >
       <header className="flex items-center justify-between">
-        <div className="flex gap-3 text-[20px] font-semibold">
+        <div className="flex min-w-0 items-center gap-3 text-[20px] font-semibold">
           <Global className="h-6 w-6" /> {t("title")}
         </div>
 
@@ -62,8 +62,8 @@ const AddLanguageModal = ({ onClose }: AddLanguageModalProps) => {
                 <Check className="h-3.5 w-3.5 text-font-disabled" />
               </div>
 
-              <div className="flex items-center gap-1">
-                <span className="text-sm">{name}</span>
+              <div className="flex min-w-0 flex-1 items-center gap-1">
+                <span className="text-sm whitespace-nowrap">{name}</span>
                 <span className="text-xs text-font-2">{eng}</span>
               </div>
             </li>
@@ -75,7 +75,7 @@ const AddLanguageModal = ({ onClose }: AddLanguageModalProps) => {
         isActive={selectedCodes.length > 0}
         text={t("confirm")}
         onClick={onClose}
-        className="float-end h-11.5 w-25"
+        className="float-end h-11.5 min-w-25 px-5"
       />
     </ModalLayout>
   );
