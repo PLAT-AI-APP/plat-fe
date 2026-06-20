@@ -19,6 +19,21 @@ export const TAB_IDS = [
 
 export type TabId = (typeof TAB_IDS)[number];
 
+const REQUIRED_TAB_IDS = new Set<TabId>([
+  "profile",
+  "details",
+  "scenario",
+  "settings",
+]);
+
+const TAB_WIDTH_CLASS_BY_ID: Record<TabId, string> = {
+  profile: "w-[83px]",
+  details: "w-[84px]",
+  assets: "w-[84px]",
+  scenario: "w-[84px]",
+  settings: "w-[83px]",
+};
+
 interface CreateTabsProps {
   currentTabId: TabId;
   setCurrentTabId: (id: TabId) => void;
@@ -57,22 +72,30 @@ const CreateTabs = ({
   };
 
   return (
-    <section className="h-full max-w-125 flex-1 rounded-3xl border border-border-main bg-bg-darker p-5">
-      <nav className="mb-9 flex gap-1 border-b-2 border-font-disabled">
-        {TAB_IDS.map((tabId) => (
-          <button
-            type="button"
-            key={tabId}
-            onClick={() => setCurrentTabId(tabId)}
-            className={cn(
-              "body-4 translate-y-0.5 cursor-pointer p-2.5 text-font-2 outline-none",
-              currentTabId === tabId &&
-                "title-5 border-b-2 border-brand text-font-1",
-            )}
-          >
-            {t(tabId)}
-          </button>
-        ))}
+    <section className="flex h-full w-[491px] min-w-0 shrink-0 flex-col gap-9 overflow-hidden">
+      {/* Tabs are unframed in the Figma design; the border belongs only to the tab row. */}
+      <nav className="flex h-10 shrink-0 gap-1 border-b-2 border-card-selected">
+        {TAB_IDS.map((tabId) => {
+          const isActive = currentTabId === tabId;
+
+          return (
+            <button
+              type="button"
+              key={tabId}
+              onClick={() => setCurrentTabId(tabId)}
+              style={{ transition: "none", animation: "none" }}
+              className={cn(
+                "flex h-10 cursor-pointer items-center justify-center whitespace-nowrap border-b-2 border-transparent p-2.5 text-center text-[16px] font-normal leading-[1.5] text-font-2 outline-none transition-none duration-0",
+                TAB_WIDTH_CLASS_BY_ID[tabId],
+                isActive && "border-brand font-semibold text-font-1",
+              )}
+            >
+              {/* Required markers are visual tab affordances, not part of the locale key. */}
+              {t(tabId)}
+              {REQUIRED_TAB_IDS.has(tabId) && "*"}
+            </button>
+          );
+        })}
       </nav>
 
       {renderActiveTab()}

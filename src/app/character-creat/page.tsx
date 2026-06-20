@@ -10,7 +10,7 @@ const CharacterCreatPage = () => {
   return (
     <section
       id="character-create-main"
-      className="mx-auto flex w-full max-w-360 min-w-0 flex-1 flex-col p-5"
+      className="mx-auto flex w-full max-w-[1200px] min-w-0 flex-1 flex-col px-0 py-4"
     >
       <CharacterCreateForm />
     </section>

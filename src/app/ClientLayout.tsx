@@ -17,10 +17,12 @@ import { refreshAccessToken } from "@/api/auth/postRefresh";
 import axios from "axios";
 
 // 사이드바를 아예 보여주지 않을 경로 리스트
-const HIDE_SIDEBAR_PATHS = ["/character-creat"];
+// 현재는 전역 헤더/사이드바를 숨길 전용 경로가 없어 빈 배열로 유지합니다.
+const HIDE_SIDEBAR_PATHS: string[] = [];
 
 // 헤더를 아예 보여주지 않을 경로 리스트
-const HIDE_HEADER_PATHS = ["/character-creat"];
+// 빈 문자열을 넣으면 모든 pathname이 startsWith("")를 만족하므로 전부 숨겨지게 됩니다.
+const HIDE_HEADER_PATHS: string[] = [];
 
 // 사이드바를 기본으로 접어둘 경로 리스트
 const FOLD_SIDEBAR_PATHS = ["/chatting-room"];

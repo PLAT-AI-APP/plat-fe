@@ -165,16 +165,19 @@ const CharacterCreateForm = () => {
         rejectNavigation={reject}
       />
 
-      <CreateHeader onSave={handleSave} onDraftClick={handleDraftClick} />
+      <div className="flex h-full min-h-0 flex-col gap-4">
+        <CreateHeader onSave={handleSave} onDraftClick={handleDraftClick} />
 
-      <div className="flex min-w-0 flex-1 gap-4">
-        <CreateTabs
-          currentTabId={currentTabId}
-          setCurrentTabId={setCurrentTabId}
-          activeScenarioIndex={activeScenarioIndex}
-          setActiveScenarioIndex={setActiveScenarioIndex}
-        />
-        <CharacterPreview activeScenarioIndex={activeScenarioIndex} />
+        {/* Figma frame keeps the editor and preview as fixed columns inside a 1200px body. */}
+        <div className="flex min-h-0 min-w-0 flex-1 items-start justify-center gap-4">
+          <CreateTabs
+            currentTabId={currentTabId}
+            setCurrentTabId={setCurrentTabId}
+            activeScenarioIndex={activeScenarioIndex}
+            setActiveScenarioIndex={setActiveScenarioIndex}
+          />
+          <CharacterPreview activeScenarioIndex={activeScenarioIndex} />
+        </div>
       </div>
     </FormProvider>
   );

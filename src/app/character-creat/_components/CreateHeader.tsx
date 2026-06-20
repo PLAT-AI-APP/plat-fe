@@ -70,7 +70,7 @@ const CreateHeader = ({ onSave, onDraftClick }: CreateHeaderProps) => {
   };
 
   return (
-    <header className="flex items-center justify-between pb-4">
+    <header className="flex h-[37px] shrink-0 items-center justify-between">
       <h2 className="title-1 flex items-center gap-2">
         <ArrowLineLeft
           onClick={() => handleSafeBack("/")}
