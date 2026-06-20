@@ -29,6 +29,7 @@
     "react": "19.2.3",
     "react-calendar": "^6.0.1",
     "react-dom": "19.2.3",
+    "react-easy-crop": "^6.0.2",
     "react-hook-form": "^7.72.0",
     "react-markdown": "^10.1.0",
     "remark-breaks": "^4.0.0",

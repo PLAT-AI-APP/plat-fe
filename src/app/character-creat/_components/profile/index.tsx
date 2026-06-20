@@ -12,17 +12,24 @@ const Profile = () => {
   const t = useTranslations("characterCreate.profile");
   const { register, control } = useFormContext<CharacterCreateFormValues>();
   const titleValue = useWatch({ control, name: "title" });
-  const nameValue = useWatch({ control, name: "name" });
   const characterIntroduceValue = useWatch({
     control,
     name: "characterIntroduce",
   });
 
   return (
-    <section className="flex flex-col gap-6">
-      <RepresentativeImage />
+    <section className="flex flex-col">
+      <div className="flex flex-col gap-5">
+        <RepresentativeImage />
 
-      <div id="character-basic-info" className="flex flex-col gap-6">
+        {/* The policy notice visually separates image upload from the text fields. */}
+        <div className="body-6 flex w-full items-center justify-center gap-2 rounded-xl bg-card py-3 pl-3 pr-5 text-font-2">
+          <StatusWarning className="size-3.5 shrink-0" />
+          <p className="whitespace-nowrap">{t("policyNotice")}</p>
+        </div>
+      </div>
+
+      <div id="character-basic-info" className="mt-6 flex flex-col gap-6">
         <SmartInput
           label={t("titleLabel")}
           required
@@ -31,36 +38,20 @@ const Profile = () => {
           isBorder
           {...register("title")}
           value={titleValue}
-        />
-
-        <SmartInput
-          label={t("nameLabel")}
-          required
-          maxLength={20}
-          placeholder={t("namePlaceholder")}
-          isBorder
-          {...register("name")}
-          value={nameValue}
+          helperMessage=""
         />
 
         <SmartInput
           label={t("introduceLabel")}
           required
-          maxLength={30}
+          maxLength={20}
           placeholder={t("introducePlaceholder")}
-          type="textarea"
-          maxLine={3}
-          minLine={3}
           isBorder
           {...register("characterIntroduce")}
           value={characterIntroduceValue}
+          helperMessage=""
         />
       </div>
-
-      <footer className="body-6 flex items-center gap-2 rounded-xl bg-card p-3 pr-5 text-font-2">
-        <StatusWarning className="h-5 w-5" />
-        <p>{t("policyNotice")}</p>
-      </footer>
     </section>
   );
 };

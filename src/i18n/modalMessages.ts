@@ -54,6 +54,21 @@ const ko = {
       next: "다음",
       submit: "비밀번호 변경",
     },
+    imageCrop: {
+      title: "이미지 자르기",
+      description: "비율을 선택하고 이미지를 드래그해 대표이미지 영역을 맞춰주세요.",
+      dragGuide: "이미지를 드래그해 위치를 조정할 수 있어요",
+      zoom: "확대",
+      cancel: "취소",
+      apply: "적용",
+      ratios: {
+        original: "원본 비율",
+        square: "1:1",
+        landscape: "4:3",
+        portrait: "3:4",
+        widescreen: "16:9",
+      },
+    },
     personaList: {
       title: "페르소나",
       description:
@@ -141,6 +156,21 @@ const en: typeof ko = {
       next: "Next",
       submit: "Change password",
     },
+    imageCrop: {
+      title: "Crop image",
+      description: "Choose a ratio and drag the image to fit the cover area.",
+      dragGuide: "Drag the image to adjust its position.",
+      zoom: "Zoom",
+      cancel: "Cancel",
+      apply: "Apply",
+      ratios: {
+        original: "Original",
+        square: "1:1",
+        landscape: "4:3",
+        portrait: "3:4",
+        widescreen: "16:9",
+      },
+    },
     personaList: {
       title: "Persona",
       description:
@@ -227,6 +257,22 @@ const ja: typeof ko = {
       next: "次へ",
       submit: "パスワード変更",
     },
+    imageCrop: {
+      title: "画像を切り抜く",
+      description:
+        "比率を選んで画像をドラッグし、代表画像の範囲を合わせてください。",
+      dragGuide: "画像をドラッグして位置を調整できます。",
+      zoom: "拡大",
+      cancel: "キャンセル",
+      apply: "適用",
+      ratios: {
+        original: "元の比率",
+        square: "1:1",
+        landscape: "4:3",
+        portrait: "3:4",
+        widescreen: "16:9",
+      },
+    },
     personaList: {
       title: "ペルソナ",
       description:
@@ -307,6 +353,21 @@ const zh: typeof ko = {
       description: "你可以通过邮箱验证来重设密码。",
       next: "下一步",
       submit: "修改密码",
+    },
+    imageCrop: {
+      title: "裁剪图片",
+      description: "请选择比例并拖动图片，使其适配代表图片区域。",
+      dragGuide: "可以拖动图片来调整位置。",
+      zoom: "缩放",
+      cancel: "取消",
+      apply: "应用",
+      ratios: {
+        original: "原始比例",
+        square: "1:1",
+        landscape: "4:3",
+        portrait: "3:4",
+        widescreen: "16:9",
+      },
     },
     personaList: {
       title: "Persona",
@@ -391,6 +452,21 @@ const th: typeof ko = {
       description: "คุณสามารถรีเซ็ตรหัสผ่านผ่านการยืนยันอีเมลได้",
       next: "ถัดไป",
       submit: "เปลี่ยนรหัสผ่าน",
+    },
+    imageCrop: {
+      title: "ครอปรูปภาพ",
+      description: "เลือกสัดส่วนและลากรูปภาพเพื่อจัดกรอบภาพตัวแทน",
+      dragGuide: "คุณสามารถลากรูปภาพเพื่อปรับตำแหน่งได้",
+      zoom: "ซูม",
+      cancel: "ยกเลิก",
+      apply: "นำไปใช้",
+      ratios: {
+        original: "อัตราส่วนเดิม",
+        square: "1:1",
+        landscape: "4:3",
+        portrait: "3:4",
+        widescreen: "16:9",
+      },
     },
     personaList: {
       title: "Persona",
@@ -477,6 +553,21 @@ const vi: typeof ko = {
       description: "Bạn có thể đặt lại mật khẩu thông qua xác thực email.",
       next: "Tiếp theo",
       submit: "Đổi mật khẩu",
+    },
+    imageCrop: {
+      title: "Cắt ảnh",
+      description: "Chọn tỷ lệ và kéo ảnh để căn vùng ảnh đại diện.",
+      dragGuide: "Bạn có thể kéo ảnh để điều chỉnh vị trí.",
+      zoom: "Thu phóng",
+      cancel: "Hủy",
+      apply: "Áp dụng",
+      ratios: {
+        original: "Tỷ lệ gốc",
+        square: "1:1",
+        landscape: "4:3",
+        portrait: "3:4",
+        widescreen: "16:9",
+      },
     },
     personaList: {
       title: "Persona",

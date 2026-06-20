@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "react-easy-crop/react-easy-crop.css";
 @variant dark (&:where(.dark, .dark *));
 
 :root {
