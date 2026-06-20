@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
-import ActiveButton from "../ActiveButton";
 import { ModalLayout } from "../ModalLayout";
 import { useHashtagListQuery } from "@/api/hashtag/getHashtagList";
 import { ArrowRight, Close, Megaphone, Search } from "@/icons";
@@ -24,11 +23,16 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
     return currentTags.map((tag) => ({ id: tag.id, label: tag.label }));
   });
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
   const { data: hashtagListData } = useHashtagListQuery();
   const hashtagList = hashtagListData?.tags || [];
+  const normalizedSearchKeyword = searchKeyword
+    .replace(/^#\s?/, "")
+    .trim()
+    .toLowerCase();
   const filteredTags = hashtagList
     .filter((tag) =>
-      tag.label.toLowerCase().includes(searchKeyword.toLowerCase()),
+      tag.label.toLowerCase().includes(normalizedSearchKeyword),
     )
     .sort((a, b) => {
       const aSelected = localSelectedNames.some((name) => name.label === a.label);
@@ -40,11 +44,22 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
       return a.label.localeCompare(b.label, "ko");
     });
 
+  const commitSelectedTags = (nextTags: { id: number; label: string }[]) => {
+    // 태그 선택 모달은 별도 완료 버튼이 없어서 선택 상태를 즉시 form 값에 반영합니다.
+    setLocalSelectedNames(nextTags);
+    setValue("tagIds", nextTags, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+  };
+
   const handleTagToggle = (tag: { id: number; label: string }) => {
     const isAlreadySelected = localSelectedNames.some((name) => name.id === tag.id);
 
     if (isAlreadySelected) {
-      setLocalSelectedNames((prev) => prev.filter((name) => name.id !== tag.id));
+      commitSelectedTags(
+        localSelectedNames.filter((name) => name.id !== tag.id),
+      );
       return;
     }
 
@@ -53,25 +68,32 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
       return;
     }
 
-    setLocalSelectedNames((prev) => [...prev, tag]);
+    commitSelectedTags([...localSelectedNames, tag]);
   };
 
-  const handleComplete = () => {
-    setValue("tagIds", localSelectedNames, {
-      shouldDirty: true,
-      shouldValidate: true,
-    });
-    onClose();
+  const handleClearAll = () => {
+    commitSelectedTags([]);
+  };
+
+  const shouldShowSearchPrefix = isSearchFocused || Boolean(searchKeyword);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // # prefix는 별도 시각 요소로만 보여주고, 한글 IME 조합이 깨지지 않게 입력값은 순수 검색어만 저장합니다.
+    setSearchKeyword(e.target.value.replace(/^#\s?/, ""));
   };
 
   const { openModal } = useModalStore();
 
   return (
-    <ModalLayout onClose={onClose} hasBackground className="w-112.5 p-5">
+    <ModalLayout
+      onClose={onClose}
+      hasBackground
+      className="w-[430px] max-w-[calc(100vw-40px)] rounded-3xl border-0 bg-bg-dark p-5"
+    >
       <div id="tag-manager-root" className="flex flex-col">
-        <header className="flex items-center justify-between pb-6">
+        <header className="flex items-center justify-between pb-5">
           <div className="flex items-center gap-3">
-            <Tag aria-hidden="true" />
+            <Tag className="size-6 text-font-1" aria-hidden="true" />
             <h2 className="title-1">{t("title")}</h2>
           </div>
           <button
@@ -88,9 +110,17 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
             id="search-input"
             type="text"
             value={searchKeyword}
-            className="body-4 h-10 w-full rounded-xl border border-border-main bg-bg-darker px-4 pl-10 transition-all placeholder:text-font-disabled focus:border-font-1 focus:outline-none"
-            placeholder={t("searchPlaceholder")}
-            onChange={(e) => setSearchKeyword(e.target.value)}
+            className={cn(
+              "body-4 h-10 w-full rounded-xl px-4 pl-10 text-font-1 outline-none transition-none placeholder:text-font-disabled",
+              shouldShowSearchPrefix && "pl-14",
+              searchKeyword
+                ? "border border-transparent bg-card"
+                : "border border-border-main bg-bg-darkest",
+            )}
+            placeholder={shouldShowSearchPrefix ? "" : t("searchPlaceholder")}
+            onChange={handleSearchChange}
+            onFocus={() => setIsSearchFocused(true)}
+            onBlur={() => setIsSearchFocused(false)}
           />
           <label
             htmlFor="search-input"
@@ -98,10 +128,15 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
           >
             <Search className="h-4.5 w-4.5 text-font-disabled" />
           </label>
+          {shouldShowSearchPrefix && (
+            <span className="body-4 pointer-events-none absolute left-10 text-font-1">
+              #
+            </span>
+          )}
         </div>
 
         <nav>
-          <ul className="flex max-h-85 min-h-85 flex-wrap gap-x-2.5 gap-y-2 overflow-auto rounded-xl bg-bg-darker p-2.5">
+          <ul className="custom-scrollbar flex max-h-85 min-h-85 flex-wrap content-start gap-x-2 gap-y-2 overflow-auto rounded-xl bg-bg-darkest p-3">
             {filteredTags.map((tag) => {
               const isSelected = localSelectedNames.some(
                 (name) => name.id === tag.id,
@@ -113,9 +148,11 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
                     type="button"
                     onClick={() => handleTagToggle(tag)}
                     className={cn(
-                      "cursor-pointer rounded-md border border-transparent bg-card px-1.5 py-0.75 text-xs transition-colors hover:bg-card-hover",
-                      isSelected && "bg-brand-opacity text-brand",
+                      "body-6 flex h-7 items-center rounded-md border border-transparent bg-card px-2.5 text-font-2 transition-none hover:bg-card-hover",
+                      isSelected &&
+                        "border-brand bg-brand/10 font-semibold text-brand",
                     )}
+                    style={{ transition: "none", animation: "none" }}
                   >
                     #{tag.label}
                   </button>
@@ -130,11 +167,44 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
           </ul>
         </nav>
 
-        <footer className="mt-4 flex h-10.25 gap-3">
+        <section className="mt-3 flex flex-col gap-3">
+          <div className="body-6 flex items-center justify-between text-font-2">
+            <span>{t("selectedCount", { count: localSelectedNames.length })}</span>
+            <button
+              type="button"
+              onClick={handleClearAll}
+              className="underline transition-none"
+              style={{ transition: "none", animation: "none" }}
+            >
+              {t("clearAll")}
+            </button>
+          </div>
+
+          {localSelectedNames.length > 0 && (
+            <ul className="no-scrollbar flex max-w-full min-w-0 gap-2 overflow-x-auto whitespace-nowrap pb-1">
+              {localSelectedNames.map((tag) => (
+                <li key={tag.id} className="shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => handleTagToggle(tag)}
+                    className="body-6 flex h-8 items-center gap-1 rounded-md bg-brand/10 px-2.5 font-semibold text-brand transition-none"
+                    style={{ transition: "none", animation: "none" }}
+                  >
+                    #{tag.label}
+                    <Close className="size-3" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+
+        <footer className="mt-5 flex h-10">
           <button
             type="button"
             onClick={() => openModal("TAG_SUGGESTIONS", {})}
-            className="flex flex-1 items-center justify-between rounded-xl bg-card p-3 text-xs text-font-2 transition-colors hover:bg-card-hover"
+            className="flex flex-1 items-center justify-between rounded-xl bg-card p-3 text-xs text-font-2 transition-none hover:bg-card-hover"
+            style={{ transition: "none", animation: "none" }}
           >
             <div className="flex items-center gap-2">
               <Megaphone className="h-4 w-4" />
@@ -142,13 +212,6 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
             </div>
             <ArrowRight className="h-3 w-3" />
           </button>
-
-          <ActiveButton
-            onClick={handleComplete}
-            text={t("complete")}
-            isActive
-            className="h-full w-fit px-5 py-2.25"
-          />
         </footer>
       </div>
     </ModalLayout>

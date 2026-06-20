@@ -40,18 +40,28 @@ const TagSuggestionsModal = ({ onClose }: TagSuggestionsModalProps) => {
   };
 
   return (
-    <ModalLayout onClose={onClose} hasBackground className="w-112.5 p-5">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <header className="flex items-center justify-between pb-6">
+    <ModalLayout
+      onClose={onClose}
+      hasBackground
+      className="h-[695px] w-[450px] max-w-[calc(100vw-40px)] rounded-3xl border-0 bg-bg-dark p-5"
+    >
+      <form onSubmit={handleSubmit(onSubmit)} className="flex h-full flex-col">
+        <header className="flex items-center justify-between pb-7">
           <div className="flex items-center gap-3">
-            <Megaphone aria-hidden="true" />
+            <Megaphone className="size-6 text-font-1" aria-hidden="true" />
             <h2 className="title-1">{t("title")}</h2>
           </div>
-          <button type="button" onClick={onClose} aria-label={t("close")}>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label={t("close")}
+            className="flex size-5.5 items-center justify-center rounded-lg transition-none hover:bg-btn-hover"
+            style={{ transition: "none", animation: "none" }}
+          >
             <Close className="h-3.5 w-3.5 cursor-pointer" />
           </button>
         </header>
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-7">
           <SmartInput
             {...register("name")}
             value={nameValue}
@@ -60,6 +70,8 @@ const TagSuggestionsModal = ({ onClose }: TagSuggestionsModalProps) => {
             placeholder={t("namePlaceholder")}
             required
             error={errors.name}
+            helperMessage=""
+            className="flex-none"
           />
           <SmartInput
             {...register("opinion")}
@@ -67,18 +79,21 @@ const TagSuggestionsModal = ({ onClose }: TagSuggestionsModalProps) => {
             value={opinionValue}
             label={t("opinionLabel")}
             maxLength={200}
-            maxLine={10}
-            minLine={10}
+            maxLine={18}
+            minLine={18}
             placeholder={t("opinionPlaceholder")}
             required
             error={errors.opinion}
+            inputBoxClassName="h-[400px]"
+            className="flex-none"
           />
         </div>
         <ActiveButton
           type="submit"
           isActive={Boolean(opinionValue && nameValue)}
           text={t("submit")}
-          className="mt-6.5 rounded-xl"
+          className="mt-auto h-[42px] rounded-xl transition-none"
+          style={{ transition: "none", animation: "none" }}
         />
       </form>
     </ModalLayout>
