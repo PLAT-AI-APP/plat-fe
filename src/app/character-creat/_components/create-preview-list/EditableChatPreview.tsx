@@ -1,0 +1,70 @@
+import { useEffect, useRef } from "react";
+import Image from "next/image";
+import PreviewEditControls from "./PreviewEditControls";
+import { PreviewEditLabels } from "./types";
+
+interface EditableChatPreviewProps {
+  characterName: string;
+  profileImage: string;
+  profileAlt: string;
+  value: string;
+  labels: Pick<PreviewEditLabels, "cancelEdit" | "confirmEdit">;
+  onChange: (value: string) => void;
+  onCancel: () => void;
+  onConfirm: () => void;
+}
+
+const EditableChatPreview = ({
+  characterName,
+  profileImage,
+  profileAlt,
+  value,
+  labels,
+  onChange,
+  onCancel,
+  onConfirm,
+}: EditableChatPreviewProps) => {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    // Let the chat edit bubble grow with its content instead of showing an inner scrollbar.
+    textarea.style.height = "auto";
+    textarea.style.height = `${textarea.scrollHeight}px`;
+  }, [value]);
+
+  return (
+    <div className="flex items-end gap-3">
+      <Image
+        src={profileImage}
+        alt={profileAlt}
+        width={40}
+        height={40}
+        className="h-10 w-10 self-start rounded-full"
+      />
+      <div className="min-w-0 flex-1 text-sm font-medium">
+        <span className="body-4 block text-font-1">{characterName}</span>
+        <div className="mt-1.5 rounded-[0px_16px_16px_16px] bg-card p-2.5">
+          <textarea
+            ref={textareaRef}
+            autoFocus
+            rows={2}
+            className="body-4 min-h-11 w-full resize-none overflow-hidden rounded-xl border border-border-main bg-bg-darker px-4 py-3 text-font-1 outline-none"
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+          />
+        </div>
+      </div>
+      <PreviewEditControls
+        cancelLabel={labels.cancelEdit}
+        confirmLabel={labels.confirmEdit}
+        onCancel={onCancel}
+        onConfirm={onConfirm}
+      />
+    </div>
+  );
+};
+
+export default EditableChatPreview;
