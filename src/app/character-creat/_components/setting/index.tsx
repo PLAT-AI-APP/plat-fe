@@ -93,12 +93,17 @@ const Setting = () => {
           aria-checked={isPublicWatch}
           onClick={() => handleIsPublic(!isPublicWatch)}
           className={cn(
-            "flex h-6 w-11 items-center rounded-[100px] p-0.5 transition-none",
-            isPublicWatch ? "justify-end bg-brand" : "justify-start bg-card",
+            "relative flex h-6 w-11 items-center rounded-[100px] bg-card p-0.5 transition-colors duration-300 ease-out",
+            isPublicWatch && "bg-brand",
           )}
-          style={{ transition: "none", animation: "none" }}
         >
-          <span className="size-5 rounded-full bg-font-1" aria-hidden="true" />
+          <span
+            className={cn(
+              "size-5 rounded-full bg-font-1 transition-transform duration-300 ease-out",
+              isPublicWatch ? "translate-x-5" : "translate-x-0",
+            )}
+            aria-hidden="true"
+          />
         </button>
       </section>
 
