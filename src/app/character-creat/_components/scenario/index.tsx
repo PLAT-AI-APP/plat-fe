@@ -92,7 +92,7 @@ const Scenario = ({
           onMouseUp={onDragEnd}
           onMouseLeave={onDragEnd}
           className={cn(
-            "no-scrollbar scrollbar-hide flex h-10 max-w-105 select-none items-center gap-1.5 overflow-x-auto overflow-y-hidden whitespace-nowrap py-1",
+            "no-scrollbar scrollbar-hide flex h-8 max-w-[445px] select-none items-center gap-1.5 overflow-x-auto overflow-y-hidden whitespace-nowrap",
             isDrag ? "cursor-grabbing" : "cursor-grab",
           )}
         >
@@ -101,18 +101,19 @@ const Scenario = ({
               key={id}
               onClick={() => !isDrag && selectScenario(i)}
               className={cn(
-                "body-4 shrink-0 rounded-[100px] border border-transparent bg-card px-3 py-1.5 transition-all",
+                "body-4 flex h-8 shrink-0 items-center rounded-[100px] bg-card px-3 text-font-2 transition-none duration-0",
                 activeScenarioIndex === i
-                  ? "title-5 border border-font-1"
-                  : "text-font-2 hover:bg-card-hover",
+                  ? "bg-brand/10 font-semibold text-brand-dark"
+                  : "hover:bg-card-hover",
               )}
+              style={{ transition: "none", animation: "none" }}
             >
               <div className="flex items-center gap-1">
                 {scenarios[i]?.name}
                 {activeScenarioIndex === i && (
                   <Close
                     onClick={(e) => removeScenario(e, i)}
-                    className="h-3 w-3"
+                    className="h-3 w-3 text-brand-dark"
                   />
                 )}
               </div>
@@ -122,7 +123,8 @@ const Scenario = ({
         <button
           type="button"
           onClick={addScenario}
-          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-card hover:bg-card-hover"
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-card text-font-2 transition-none duration-0 hover:bg-card-hover"
+          style={{ transition: "none", animation: "none" }}
         >
           <Plus className="h-4 w-4" />
         </button>
@@ -136,6 +138,7 @@ const Scenario = ({
         required
         maxLength={20}
         value={currentScenarioName}
+        helperMessage=""
       />
     </section>
   );

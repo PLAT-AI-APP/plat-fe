@@ -7,29 +7,63 @@ import SmartInput from "@/components/smart-input";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
 
 const DetailInfo = () => {
-  const t = useTranslations("characterCreate.details");
+  const detailT = useTranslations("characterCreate.details");
   const { register, control } = useFormContext<CharacterCreateFormValues>();
+  const nameValue = useWatch({
+    control,
+    name: "name",
+  });
+  const characterDescriptionValue = useWatch({
+    control,
+    name: "characterDescription",
+  });
   const characterDetailSetting = useWatch({
     control,
     name: "characterDetailSetting",
   });
 
   return (
-    <section className="flex flex-col gap-6">
-      <article>
-        <SmartInput
-          label={t("label")}
-          maxLength={2000}
-          type="textarea"
-          description={t("description")}
-          required
-          maxLine={15}
-          minLine={15}
-          isBorder
-          {...register("characterDetailSetting")}
-          value={characterDetailSetting}
-        />
-      </article>
+    <section className="flex flex-col gap-8">
+      <SmartInput
+        label={detailT("nameLabel")}
+        required
+        maxLength={20}
+        placeholder={detailT("namePlaceholder")}
+        isBorder
+        {...register("name")}
+        value={nameValue}
+        helperMessage=""
+      />
+
+      <SmartInput
+        label={detailT("descriptionLabel")}
+        required
+        maxLength={1000}
+        placeholder={detailT("descriptionPlaceholder")}
+        type="textarea"
+        minLine={3}
+        maxLine={3}
+        isBorder
+        inputBoxClassName="h-[108px]"
+        {...register("characterDescription")}
+        value={characterDescriptionValue}
+        helperMessage=""
+      />
+
+      <SmartInput
+        label={detailT("settingLabel")}
+        required
+        maxLength={2000}
+        placeholder={detailT("settingPlaceholder")}
+        type="textarea"
+        minLine={12}
+        maxLine={12}
+        isBorder
+        inputBoxClassName="h-[277px]"
+        {...register("characterDetailSetting")}
+        value={characterDetailSetting}
+        helperMessage=""
+      />
     </section>
   );
 };

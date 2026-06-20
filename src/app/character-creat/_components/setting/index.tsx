@@ -1,43 +1,38 @@
 "use client";
 
-import React, { MouseEvent, useRef, useState } from "react";
+import React, { MouseEvent, useState } from "react";
 import { useTranslations } from "next-intl";
-import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
-import SmartInput from "@/components/smart-input";
+import { useFormContext, useWatch } from "react-hook-form";
 import TagAddModal from "@/components/modal/TagAddModal";
-import CategorySelectPopover from "@/components/popover/CategorySelectPopover";
-import PublicSelectPopover from "@/components/popover/PublicSelectPopover";
-import TendencySelectPopover from "@/components/popover/TendencySelectPopover";
-import useToggle from "@/hooks/useToggle";
-import { Close } from "@/icons";
+import { ArrowRight } from "@/icons";
+import { cn } from "@/lib/utils";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
+
+const TENDENCY_LIST = ["전체", "남성향", "여성향"] as const;
+
+const CATEGORIES = [
+  "시뮬레이션",
+  "로맨스",
+  "판타지/SF",
+  "드라마",
+  "무협/사극",
+  "GL",
+  "BL",
+  "공포/추리",
+  "액션",
+  "코믹/일상",
+  "스포츠/학원",
+  "기타",
+] as const;
 
 const Setting = () => {
   const t = useTranslations("characterCreate.settings");
   const selectorT = useTranslations("selector");
   const categoryT = useTranslations("category");
-  const { setValue, register, control } =
-    useFormContext<CharacterCreateFormValues>();
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "tagIds",
-  });
+  const { setValue, control } = useFormContext<CharacterCreateFormValues>();
   const tagList = useWatch({ control, name: "tagIds" });
-  const publicTriggerRef = useRef(null);
-  const tendencyTriggerRef = useRef(null);
-  const categoryTriggerRef = useRef(null);
-  const [tagInputValue, setTagInputValue] = useState<{
-    id: number;
-    label: string;
-  }>({ id: 0, label: "" });
-  const publicModal = useToggle();
-  const tendencyModal = useToggle();
-  const categoryModal = useToggle();
+  const isTagFull = tagList.length >= 5;
   const isPublicWatch = useWatch({ control, name: "isPublic" });
-  const characterDescription = useWatch({
-    control,
-    name: "characterDescription",
-  });
   const tendency = useWatch({ control, name: "tendency" });
   const categoryWatch = useWatch({ control, name: "category" });
   const tendencyLabelByValue: Record<string, string> = {
@@ -61,40 +56,21 @@ const Setting = () => {
   };
 
   const handleIsPublic = (isPublic: boolean) => {
-    setValue("isPublic", isPublic);
-    publicModal.close();
+    setValue("isPublic", isPublic, { shouldDirty: true, shouldValidate: true });
   };
 
   const handleTendency = (nextTendency: string) => {
-    setValue("tendency", nextTendency);
-    tendencyModal.close();
+    setValue("tendency", nextTendency, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
   };
 
   const handleCategory = (category: string) => {
-    setValue("category", category);
-    categoryModal.close();
-  };
-
-  const addTag = (e: React.FormEvent) => {
-    e.preventDefault();
-    const trimmedValue = tagInputValue;
-
-    if (!trimmedValue) return;
-    if (fields.length >= 5) {
-      alert(t("tagMaxAlert"));
-      return;
-    }
-    if (fields.some((tag) => tag.id === trimmedValue.id)) {
-      alert(t("tagDuplicateAlert"));
-      return;
-    }
-
-    append({ id: trimmedValue.id, label: trimmedValue.label });
-    setTagInputValue({ id: 0, label: "" });
-  };
-
-  const removeTag = (index: number) => {
-    remove(index);
+    setValue("category", category, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
   };
 
   const [isTagModal, setIsTagModal] = useState(false);
@@ -104,110 +80,125 @@ const Setting = () => {
   };
 
   return (
-    <section className="flex flex-col gap-6">
-      <SmartInput
-        ref={publicTriggerRef}
-        type="modal"
-        label={t("publicLabel")}
-        required
-        value={isPublicWatch ? selectorT("public") : selectorT("private")}
-        isOpen={publicModal.isOpen}
-        toggleIsOpen={publicModal.toggle}
-        modalComponents={
-          publicModal.isOpen && (
-            <PublicSelectPopover
-              handleIsPublic={handleIsPublic}
-              isPublic={isPublicWatch}
-              onClose={publicModal.toggle}
-              publicTriggerRef={publicTriggerRef}
-            />
-          )
-        }
-      />
-
-      <SmartInput
-        {...register("characterDescription")}
-        label={t("descriptionLabel")}
-        required
-        description={t("descriptionHelp")}
-        type="textarea"
-        minLine={10}
-        maxLine={10}
-        maxLength={1000}
-        value={characterDescription}
-        descFontSize="body-6"
-      />
-
-      <SmartInput
-        ref={tendencyTriggerRef}
-        type="modal"
-        label={t("tendencyLabel")}
-        required
-        value={tendencyLabelByValue[tendency] ?? tendency}
-        isOpen={tendencyModal.isOpen}
-        toggleIsOpen={tendencyModal.toggle}
-        description={t("tendencyHelp")}
-        descFontSize="body-6"
-        modalComponents={
-          tendencyModal.isOpen && (
-            <TendencySelectPopover
-              currentTendency={tendency}
-              handleTendency={handleTendency}
-              onClose={tendencyModal.toggle}
-              tendencyTriggerRef={tendencyTriggerRef}
-            />
-          )
-        }
-      />
-
-      <SmartInput
-        ref={categoryTriggerRef}
-        type="modal"
-        label={t("categoryLabel")}
-        required
-        value={categoryLabelByValue[categoryWatch] ?? categoryWatch}
-        placeholder={categoryWatch || t("noCategory")}
-        isOpen={categoryModal.isOpen}
-        toggleIsOpen={categoryModal.toggle}
-        descFontSize="body-6"
-        description={t("categoryHelp")}
-        modalComponents={
-          categoryModal.isOpen && (
-            <CategorySelectPopover
-              categoryTriggerRef={categoryTriggerRef}
-              currentCategory={categoryWatch}
-              handlecategory={handleCategory}
-              onClose={categoryModal.toggle}
-            />
-          )
-        }
-      />
-
-      <form onSubmit={addTag}>
-        <div onClick={toggleIsTagModal}>
-          <SmartInput
-            required
-            type="modal"
-            placeholder={t("tagPlaceholder")}
-            label={t("tagLabel", { count: tagList.length })}
-            inputClassName="cursor-pointer placeholder:text-font-2"
-          />
+    <section className="flex flex-col gap-9">
+      <section className="flex items-center justify-between">
+        <div className="flex flex-col gap-1">
+          <h3 className="title-3 text-font-1">{t("publicLabel")}</h3>
+          <p className="body-5 text-font-2">{t("publicHelp")}</p>
         </div>
 
-        <ul className="flex gap-1 pt-2">
-          {tagList.map((tag, i) => (
-            <li
-              key={i}
-              className="flex items-center gap-1 rounded-md bg-card px-1.25 py-0.5"
-            >
-              <span className="body-6 text-brand">#{tag.label}</span>
-              <Close
-                onClick={() => removeTag(i)}
-                className="h-2 w-2 cursor-pointer text-font-2"
-              />
-            </li>
-          ))}
-        </ul>
+        <button
+          type="button"
+          role="switch"
+          aria-checked={isPublicWatch}
+          onClick={() => handleIsPublic(!isPublicWatch)}
+          className={cn(
+            "flex h-6 w-11 items-center rounded-[100px] p-0.5 transition-none",
+            isPublicWatch ? "justify-end bg-brand" : "justify-start bg-card",
+          )}
+          style={{ transition: "none", animation: "none" }}
+        >
+          <span className="size-5 rounded-full bg-font-1" aria-hidden="true" />
+        </button>
+      </section>
+
+      <section className="flex flex-col gap-4">
+        <div className="flex flex-col gap-1">
+          <h3 className="title-3 text-font-1">{t("tendencyLabel")}</h3>
+          <p className="body-5 text-font-2">{t("tendencyHelp")}</p>
+        </div>
+
+        {/* 성향은 팝오버가 아니라 피그마처럼 즉시 선택 가능한 segmented control로 보여줍니다. */}
+        <div className="grid grid-cols-3 gap-2">
+          {TENDENCY_LIST.map((item) => {
+            const isActive = tendency === item;
+
+            return (
+              <button
+                key={item}
+                type="button"
+                onClick={() => handleTendency(item)}
+                className={cn(
+                  "body-4 flex h-10 items-center justify-center rounded-xl transition-none",
+                  isActive
+                    ? "bg-brand/10 font-semibold text-brand"
+                    : "bg-bg-darkest text-font-2",
+                )}
+                style={{ transition: "none", animation: "none" }}
+              >
+                {tendencyLabelByValue[item]}
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="flex flex-col gap-4">
+        <div className="flex flex-col gap-1">
+          <h3 className="title-3 text-font-1">
+            {t("categoryLabel")} <span className="text-font-accents">*</span>
+          </h3>
+          <p className="body-5 text-font-2">{t("categoryHelp")}</p>
+        </div>
+
+        {/* 카테고리는 전체 후보를 노출해 선택 비용을 줄입니다. */}
+        <div className="flex flex-wrap gap-x-1.5 gap-y-2">
+          {CATEGORIES.map((category) => {
+            const isActive = categoryWatch === category;
+
+            return (
+              <button
+                key={category}
+                type="button"
+                onClick={() => handleCategory(category)}
+                className={cn(
+                  "body-4 flex h-8 items-center rounded-[100px] border px-3 transition-none",
+                  isActive
+                    ? "border-brand bg-brand/10 font-semibold text-brand"
+                    : "border-border-main text-font-1",
+                )}
+                style={{ transition: "none", animation: "none" }}
+              >
+                {categoryLabelByValue[category]}
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      <form>
+        <section className="flex flex-col gap-2">
+          <h3 className="title-3 text-font-1">
+            {t("tagLabel", { count: tagList.length })}{" "}
+            <span className="text-font-accents">*</span>
+          </h3>
+
+          <button
+            type="button"
+            onClick={toggleIsTagModal}
+            className="body-4 flex h-11 items-center justify-between rounded-xl border border-border-main bg-bg-darkest px-4 text-font-2 transition-none"
+            style={{ transition: "none", animation: "none" }}
+          >
+            <span>{isTagFull ? t("tagFullPlaceholder") : t("tagPlaceholder")}</span>
+            <ArrowRight className="size-3 text-font-2" />
+          </button>
+        </section>
+
+        <div className="body-6 mt-2 flex items-center justify-between gap-3 text-font-2">
+          <span className="shrink-0">
+            {t("selectedTagCount", { count: tagList.length })}
+          </span>
+
+          {tagList.length > 0 && (
+            <ul className="no-scrollbar flex min-w-0 justify-end gap-2 overflow-x-auto whitespace-nowrap">
+              {tagList.map((tag) => (
+                <li key={tag.id} className="shrink-0 text-brand">
+                  #{tag.label}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </form>
 
       {isTagModal && <TagAddModal onClose={toggleIsTagModal} />}
