@@ -4,9 +4,10 @@ import React, { ChangeEvent, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
-import { ImageIcon, Plus } from "@/icons";
+import { Close, ImageIcon, Plus } from "@/icons";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
 import RepresentativeImageCropModal from "./RepresentativeImageCropModal";
+import { cn } from "@/lib/utils";
 
 const RepresentativeImage = () => {
   const t = useTranslations("characterCreate.representativeImage");
@@ -57,6 +58,10 @@ const RepresentativeImage = () => {
     setCropTarget(null);
   };
 
+  const handlePreviewDelete = () => {
+    setValue("representativeImage", "");
+  };
+
   return (
     <section>
       <header className="flex flex-col gap-1 pb-3">
@@ -97,8 +102,25 @@ const RepresentativeImage = () => {
             )}
           </div>
 
-          <span className="absolute right-0 top-0 flex size-9 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-xl bg-brand/10 text-brand backdrop-blur-[2px] transition-transform group-hover:scale-105">
-            <Plus className="size-4" />
+          <span
+            onClick={(e) => {
+              if (!preview) return;
+
+              e.preventDefault();
+              e.stopPropagation();
+
+              handlePreviewDelete();
+            }}
+            className={cn(
+              "absolute right-0 top-0 flex size-9 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-xl bg-brand/10 text-brand backdrop-blur-[2px] transition-transform group-hover:scale-105",
+              preview && "text-font-error bg-[#FF383C]/10",
+            )}
+          >
+            {preview ? (
+              <Close className="size-4" />
+            ) : (
+              <Plus className="size-4" />
+            )}
           </span>
         </label>
       </div>
