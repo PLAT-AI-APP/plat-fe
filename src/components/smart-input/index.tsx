@@ -27,6 +27,8 @@ const SmartInput = forwardRef<
     inputType = "text",
     inputClassName,
     inputBoxClassName,
+    placeholderClassName,
+    counterClassName,
     isBorder = true,
     maxLine,
     minLine = 1,
@@ -163,6 +165,7 @@ const SmartInput = forwardRef<
                 }}
                 className={cn(
                   "w-full resize-none overflow-y-auto bg-transparent outline-none placeholder:text-font-disabled custom-scrollbar",
+                  placeholderClassName,
                   inputClassName,
                 )}
                 placeholder={translateText(placeholder)}
@@ -176,6 +179,7 @@ const SmartInput = forwardRef<
                 maxLength={maxLength}
                 isTextarea
                 isError={isLengthExceeded}
+                className={counterClassName}
               />
             </div>
           )}
@@ -188,6 +192,7 @@ const SmartInput = forwardRef<
               type={inputType}
               className={cn(
                 "w-full rounded-xl border border-border-main bg-bg-darkest px-4 py-3 outline-none placeholder:text-font-disabled",
+                placeholderClassName,
                 rightElement && "pr-11",
                 inputClassName,
                 isFocused && "border-brand-dark bg-brand-opacity-3",
@@ -227,6 +232,7 @@ const SmartInput = forwardRef<
               currentLength={currentLength}
               maxLength={maxLength}
               isError={isLengthExceeded}
+              className={counterClassName}
             />
           )}
 

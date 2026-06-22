@@ -142,6 +142,8 @@ const AssetItem = ({ id, index, remove, copyAsset }: AssetItemProps) => {
                 required
                 placeholder={t("namePlaceholder")}
                 maxLength={15}
+                placeholderClassName="placeholder:text-font-2"
+                counterClassName="text-font-disabled"
                 value={assetName}
                 labelFontSize="title-5"
                 error={currentAssetError?.assetName?.message}
@@ -153,6 +155,8 @@ const AssetItem = ({ id, index, remove, copyAsset }: AssetItemProps) => {
                 required
                 placeholder={t("situationPlaceholder")}
                 maxLength={50}
+                placeholderClassName="placeholder:text-font-2"
+                counterClassName="text-font-disabled"
                 maxLine={3}
                 minLine={3}
                 description={t("situationHelp")}

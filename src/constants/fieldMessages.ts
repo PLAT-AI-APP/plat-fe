@@ -60,6 +60,8 @@ export const FIELD_ERROR_MESSAGES = {
   characterNameMaxLength: "field.error.characterNameMaxLength",
   characterIntroduceRequired: "field.error.characterIntroduceRequired",
   characterIntroduceMaxLength: "field.error.characterIntroduceMaxLength",
+  profileSituationRequired: "field.error.profileSituationRequired",
+  profileSituationMaxLength: "field.error.profileSituationMaxLength",
   characterDetailSettingRequired: "field.error.characterDetailSettingRequired",
   characterDetailSettingMaxLength:
     "field.error.characterDetailSettingMaxLength",

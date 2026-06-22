@@ -49,11 +49,13 @@ export const CharacterCounter = ({
   maxLength,
   isTextarea,
   isError,
+  className,
 }: {
   currentLength: number;
   maxLength?: number;
   isTextarea?: boolean;
   isError?: boolean;
+  className?: string;
 }) => {
   if (!maxLength) return null;
 
@@ -63,6 +65,7 @@ export const CharacterCounter = ({
         "absolute right-4 body-6 text-font-2 pointer-events-none",
         isTextarea ? "bottom-3" : "top-1/2 -translate-y-1/2",
         isError && "text-font-error",
+        className,
       )}
     >
       {currentLength}/{maxLength}

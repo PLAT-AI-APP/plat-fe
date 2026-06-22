@@ -203,6 +203,8 @@ const ko = {
       characterDescriptionRequired: "캐릭터 설명을 입력해 주세요",
       characterDescriptionMaxLength:
         "캐릭터 설명은 최대 1000자까지 입력할 수 있어요",
+      profileSituationRequired: "상황 설명을 입력해 주세요",
+      profileSituationMaxLength: "상황 설명은 최대 500자까지 입력할 수 있어요",
       tendencyRequired: "성향을 선택해 주세요",
       categoryRequired: "카테고리를 선택해 주세요",
       tagMaxCount: "태그는 최대 5개까지 등록할 수 있어요",
@@ -420,6 +422,9 @@ const en: Messages = {
       characterDescriptionRequired: "Please enter a character description.",
       characterDescriptionMaxLength:
         "Character descriptions can be up to 1000 characters long",
+      profileSituationRequired: "Please enter a situation description.",
+      profileSituationMaxLength:
+        "Situation descriptions can be up to 500 characters long.",
       tendencyRequired: "Please select a preference.",
       categoryRequired: "Please select a category.",
       tagMaxCount: "You can register up to 5 tags.",
@@ -628,6 +633,8 @@ const ja: Messages = {
       characterDescriptionRequired: "キャラクター説明を入力してください",
       characterDescriptionMaxLength:
         "キャラクター説明は最大1000文字まで入力できます",
+      profileSituationRequired: "状況説明を入力してください",
+      profileSituationMaxLength: "状況説明は最大500文字まで入力できます",
       tendencyRequired: "傾向を選択してください",
       categoryRequired: "カテゴリを選択してください",
       tagMaxCount: "タグは最大5個まで登録できます",
@@ -826,6 +833,8 @@ const zh: Messages = {
       scenarioMaxCount: "场景最多可创建 5 个",
       characterDescriptionRequired: "请输入角色说明",
       characterDescriptionMaxLength: "角色说明最多可输入 1000 个字符",
+      profileSituationRequired: "请输入场景说明",
+      profileSituationMaxLength: "场景说明最多可输入 500 个字符",
       tendencyRequired: "请选择倾向",
       categoryRequired: "请选择分类",
       tagMaxCount: "标签最多可注册 5 个",
@@ -1034,6 +1043,9 @@ const th: Messages = {
       characterDescriptionRequired: "กรุณากรอกคำอธิบายตัวละคร",
       characterDescriptionMaxLength:
         "คำอธิบายตัวละครสามารถกรอกได้สูงสุด 1000 ตัวอักษร",
+      profileSituationRequired: "กรุณากรอกคำอธิบายสถานการณ์",
+      profileSituationMaxLength:
+        "คำอธิบายสถานการณ์สามารถกรอกได้สูงสุด 500 ตัวอักษร",
       tendencyRequired: "กรุณาเลือกแนวโน้ม",
       categoryRequired: "กรุณาเลือกหมวดหมู่",
       tagMaxCount: "สามารถลงทะเบียนแท็กได้สูงสุด 5 รายการ",
@@ -1243,6 +1255,9 @@ const vi: Messages = {
       characterDescriptionRequired: "Vui lòng nhập mô tả nhân vật",
       characterDescriptionMaxLength:
         "Mô tả nhân vật có thể dài tối đa 1000 ký tự",
+      profileSituationRequired: "Vui lòng nhập mô tả tình huống.",
+      profileSituationMaxLength:
+        "Mô tả tình huống có thể dài tối đa 500 ký tự.",
       tendencyRequired: "Vui lòng chọn xu hướng",
       categoryRequired: "Vui lòng chọn danh mục",
       tagMaxCount: "Bạn có thể đăng tối đa 5 thẻ",

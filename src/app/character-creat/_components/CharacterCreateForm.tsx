@@ -22,6 +22,8 @@ const CHARACTER_CREATE_DEFAULT_VALUES: CharacterCreateFormValues = {
   name: "아폴로",
   characterIntroduce:
     "눈부신 외모와 다정한 목소리로 당신의 일상을 지켜주는 빛의 신.",
+  // 프로필 탭의 상황 설명은 짧은 소개용 요약으로 먼저 입력받습니다.
+  profileSituationDescription: "",
   characterDetailSetting:
     "신분: 올림포스의 빛과 음악의 신\n성격: 평소에는 여유롭고 장난스럽지만 당신에게만은 헌신적이고 은근한 집착을 드러낸다.\n배경: 인간계에 호기심을 갖고 내려왔다가 우연히 당신과 마주치며 일상에 스며들게 됨.",
   asset: [

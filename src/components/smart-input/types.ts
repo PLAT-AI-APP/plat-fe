@@ -13,6 +13,8 @@ export interface SmartInputProps extends React.InputHTMLAttributes<
   isOpen?: boolean;
   inputClassName?: string;
   inputBoxClassName?: string;
+  placeholderClassName?: string;
+  counterClassName?: string;
   isBorder?: boolean;
   minLine?: number;
   maxLine?: number;

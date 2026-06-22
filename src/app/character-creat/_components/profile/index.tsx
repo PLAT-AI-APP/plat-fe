@@ -16,16 +16,19 @@ const Profile = () => {
     control,
     name: "characterIntroduce",
   });
+  const profileSituationDescriptionValue = useWatch({
+    control,
+    name: "profileSituationDescription",
+  });
 
   return (
     <section className="flex flex-col">
       <div className="flex flex-col gap-5">
         <RepresentativeImage />
 
-        {/* The policy notice visually separates image upload from the text fields. */}
         <div className="body-6 flex w-full items-center justify-center gap-2 rounded-xl bg-card py-3 pl-3 pr-5 text-font-2">
           <StatusWarning className="size-3.5 shrink-0" />
-          <p className="whitespace-nowrap">{t("policyNotice")}</p>
+          <p>{t("policyNotice")}</p>
         </div>
       </div>
 
@@ -35,6 +38,8 @@ const Profile = () => {
           required
           maxLength={20}
           placeholder={t("titlePlaceholder")}
+          placeholderClassName="placeholder:text-font-2"
+          counterClassName="text-font-disabled"
           isBorder
           {...register("title")}
           value={titleValue}
@@ -46,9 +51,28 @@ const Profile = () => {
           required
           maxLength={20}
           placeholder={t("introducePlaceholder")}
+          placeholderClassName="placeholder:text-font-2"
+          counterClassName="text-font-disabled"
           isBorder
           {...register("characterIntroduce")}
           value={characterIntroduceValue}
+          helperMessage=""
+        />
+
+        <SmartInput
+          label={t("situationLabel")}
+          required
+          maxLength={500}
+          placeholder={t("situationPlaceholder")}
+          placeholderClassName="placeholder:text-font-2"
+          counterClassName="text-font-disabled"
+          type="textarea"
+          minLine={8}
+          maxLine={8}
+          isBorder
+          inputBoxClassName="h-[180px]"
+          {...register("profileSituationDescription")}
+          value={profileSituationDescriptionValue}
           helperMessage=""
         />
       </div>

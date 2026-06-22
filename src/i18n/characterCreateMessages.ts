@@ -20,18 +20,21 @@ const ko = {
     },
     profile: {
       titleLabel: "제목",
-      titlePlaceholder: "제목을 입력해주세요.",
+      titlePlaceholder: "작품의 매력이 보일 제목을 지어주세요.",
       nameLabel: "캐릭터 이름",
       namePlaceholder: "캐릭터 이름을 입력해주세요.",
       introduceLabel: "캐릭터 소개",
-      introducePlaceholder: "캐릭터 소개글을 작성해주세요.",
+      introducePlaceholder: "이 작품을 간단히 소개해 주세요.",
+      situationLabel: "상황 설명",
+      situationPlaceholder:
+        "이 캐릭터와 어떤 곳에서 어떻게 일어나는 이야기인지 설명해 주세요.",
       policyNotice:
         "폭력, 혐오, 성적묘사 등의 표현 및 이미지는 규정에 따라 영구적으로 제재될 수 있어요",
     },
     representativeImage: {
       label: "대표이미지",
       guide:
-        "jpg, png, webp 이미지파일만 가능해요. 최대 5MB, 1:1 비율을 권장해요.",
+        "최대 5MB, 1:1.3 비율의 jpg, png, webp 파일만 가능해요.",
       previewAlt: "대표 이미지 미리보기",
       upload: "업로드",
       invalidType: "jpg, png, webp 이미지 파일만 가능합니다.",
@@ -88,6 +91,7 @@ const ko = {
     preview: {
       defaultCharacterName: "캐릭터",
       messagePlaceholder: "메시지 보내기",
+      scenarioPlaceholder: "시나리오를 입력해 주세요",
       action: "상황",
       asset: "에셋",
       assetImageAlt: "에셋 이미지",
@@ -170,18 +174,21 @@ const en: typeof ko = {
     },
     profile: {
       titleLabel: "Title",
-      titlePlaceholder: "Enter a title.",
+      titlePlaceholder: "Give the title a hint of the character's charm.",
       nameLabel: "Character name",
       namePlaceholder: "Enter the character name.",
       introduceLabel: "Character intro",
-      introducePlaceholder: "Write a short introduction.",
+      introducePlaceholder: "Briefly introduce this work.",
+      situationLabel: "Situation description",
+      situationPlaceholder:
+        "Describe where this character appears and what kind of story happens there.",
       policyNotice:
         "Expressions or images containing violence, hate, or sexual depiction may be permanently restricted under the policy.",
     },
     representativeImage: {
       label: "Cover image",
       guide:
-        "Only jpg, png, and webp files are supported. Up to 5MB, 1:1 ratio recommended.",
+        "Only jpg, png, and webp files are supported. Up to 5MB with a 1:1.3 ratio.",
       previewAlt: "Cover image preview",
       upload: "Upload",
       invalidType: "Only jpg, png, and webp image files are allowed.",
@@ -239,6 +246,7 @@ const en: typeof ko = {
     preview: {
       defaultCharacterName: "Character",
       messagePlaceholder: "Send a message",
+      scenarioPlaceholder: "Enter a scenario",
       action: "Action",
       asset: "Asset",
       assetImageAlt: "Asset image",
@@ -324,18 +332,21 @@ const ja: typeof ko = {
     },
     profile: {
       titleLabel: "タイトル",
-      titlePlaceholder: "タイトルを入力してください。",
+      titlePlaceholder: "作品の魅力が伝わるタイトルをつけてください。",
       nameLabel: "キャラクター名",
       namePlaceholder: "キャラクター名を入力してください。",
       introduceLabel: "キャラクター紹介",
-      introducePlaceholder: "キャラクター紹介文を入力してください。",
+      introducePlaceholder: "作品を簡単に紹介してください。",
+      situationLabel: "状況説明",
+      situationPlaceholder:
+        "このキャラクターがどこでどのように始まる物語なのかを説明してください。",
       policyNotice:
         "暴力、嫌悪、性的描写などの表現や画像は、規定により永久的に制限される場合があります。",
     },
     representativeImage: {
       label: "代表画像",
       guide:
-        "jpg、png、webp のみ対応しています。最大 5MB、1:1 比率を推奨します。",
+        "jpg、png、webp のみ対応しています。最大 5MB、1:1.3 比率です。",
       previewAlt: "代表画像プレビュー",
       upload: "アップロード",
       invalidType: "jpg、png、webp 画像ファイルのみ可能です。",
@@ -392,6 +403,7 @@ const ja: typeof ko = {
     preview: {
       defaultCharacterName: "キャラクター",
       messagePlaceholder: "メッセージを送信",
+      scenarioPlaceholder: "シナリオを入力してください",
       action: "状況",
       asset: "アセット",
       assetImageAlt: "アセット画像",
@@ -476,18 +488,21 @@ const zh: typeof ko = {
     },
     profile: {
       titleLabel: "标题",
-      titlePlaceholder: "请输入标题。",
+      titlePlaceholder: "请起一个能体现作品魅力的标题。",
       nameLabel: "角色名称",
       namePlaceholder: "请输入角色名称。",
       introduceLabel: "角色介绍",
-      introducePlaceholder: "请填写角色介绍。",
+      introducePlaceholder: "请简要介绍这部作品。",
+      situationLabel: "场景说明",
+      situationPlaceholder:
+        "请说明这个角色会在什么地方、以什么方式展开故事。",
       policyNotice:
         "包含暴力、仇恨、性描写等表达或图片的内容，可能会根据规定受到永久限制。",
     },
     representativeImage: {
       label: "代表图片",
       guide:
-        "仅支持 jpg、png、webp。最大 5MB，建议使用 1:1 比例。",
+        "仅支持 jpg、png、webp。最大 5MB，1:1.3 比例。",
       previewAlt: "代表图片预览",
       upload: "上传",
       invalidType: "仅支持 jpg、png、webp 图片文件。",
@@ -543,6 +558,7 @@ const zh: typeof ko = {
     preview: {
       defaultCharacterName: "角色",
       messagePlaceholder: "发送消息",
+      scenarioPlaceholder: "请输入场景",
       action: "场景",
       asset: "素材",
       assetImageAlt: "素材图片",
@@ -622,18 +638,21 @@ const th: typeof ko = {
     },
     profile: {
       titleLabel: "ชื่อเรื่อง",
-      titlePlaceholder: "กรุณากรอกชื่อเรื่อง",
+      titlePlaceholder: "ตั้งชื่อที่สื่อเสน่ห์ของผลงาน",
       nameLabel: "ชื่อตัวละคร",
       namePlaceholder: "กรุณากรอกชื่อตัวละคร",
       introduceLabel: "แนะนำตัวละคร",
-      introducePlaceholder: "กรุณาเขียนคำแนะนำตัวละคร",
+      introducePlaceholder: "กรุณาแนะนำผลงานแบบสั้น ๆ",
+      situationLabel: "คำอธิบายสถานการณ์",
+      situationPlaceholder:
+        "อธิบายว่าตัวละครนี้จะเกิดเรื่องราวแบบไหน และเกิดขึ้นที่ใด",
       policyNotice:
         "ข้อความหรือรูปภาพที่มีความรุนแรง ความเกลียดชัง หรือการพรรณนาทางเพศ อาจถูกจำกัดอย่างถาวรตามนโยบาย",
     },
     representativeImage: {
       label: "รูปหลัก",
       guide:
-        "รองรับเฉพาะไฟล์ jpg, png, webp เท่านั้น สูงสุด 5MB และแนะนำอัตราส่วน 1:1",
+        "รองรับเฉพาะไฟล์ jpg, png, webp เท่านั้น สูงสุด 5MB และอัตราส่วน 1:1.3",
       previewAlt: "พรีวิวรูปหลัก",
       upload: "อัปโหลด",
       invalidType: "อนุญาตเฉพาะไฟล์รูป jpg, png, webp เท่านั้น",
@@ -690,6 +709,7 @@ const th: typeof ko = {
     preview: {
       defaultCharacterName: "ตัวละคร",
       messagePlaceholder: "ส่งข้อความ",
+      scenarioPlaceholder: "กรุณากรอกสถานการณ์",
       action: "สถานการณ์",
       asset: "แอสเซ็ต",
       assetImageAlt: "รูปแอสเซ็ต",
@@ -775,18 +795,21 @@ const vi: typeof ko = {
     },
     profile: {
       titleLabel: "Tiêu đề",
-      titlePlaceholder: "Vui lòng nhập tiêu đề.",
+      titlePlaceholder: "Hãy đặt tiêu đề thể hiện sức hút của tác phẩm.",
       nameLabel: "Tên nhân vật",
       namePlaceholder: "Vui lòng nhập tên nhân vật.",
       introduceLabel: "Giới thiệu nhân vật",
-      introducePlaceholder: "Vui lòng viết phần giới thiệu nhân vật.",
+      introducePlaceholder: "Hãy giới thiệu ngắn gọn về tác phẩm này.",
+      situationLabel: "Mô tả tình huống",
+      situationPlaceholder:
+        "Hãy mô tả nhân vật này sẽ xuất hiện ở đâu và câu chuyện diễn ra như thế nào.",
       policyNotice:
         "Những biểu đạt hoặc hình ảnh có yếu tố bạo lực, thù ghét, miêu tả tình dục có thể bị hạn chế vĩnh viễn theo quy định.",
     },
     representativeImage: {
       label: "Ảnh đại diện",
       guide:
-        "Chỉ hỗ trợ jpg, png, webp. Tối đa 5MB, khuyến nghị tỉ lệ 1:1.",
+        "Chỉ hỗ trợ jpg, png, webp. Tối đa 5MB với tỉ lệ 1:1.3.",
       previewAlt: "Xem trước ảnh đại diện",
       upload: "Tải lên",
       invalidType: "Chỉ cho phép tệp ảnh jpg, png, webp.",
@@ -843,6 +866,7 @@ const vi: typeof ko = {
     preview: {
       defaultCharacterName: "Nhân vật",
       messagePlaceholder: "Gửi tin nhắn",
+      scenarioPlaceholder: "Nhập kịch bản",
       action: "Tình huống",
       asset: "Tài sản",
       assetImageAlt: "Hình ảnh tài sản",

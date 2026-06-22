@@ -137,6 +137,8 @@ const Scenario = ({
         label={t("nameLabel")}
         required
         maxLength={20}
+        placeholderClassName="placeholder:text-font-2"
+        counterClassName="text-font-disabled"
         value={currentScenarioName}
         helperMessage=""
       />
