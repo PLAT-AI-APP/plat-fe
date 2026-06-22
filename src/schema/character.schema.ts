@@ -21,7 +21,6 @@ export const characterCreateSchema = z.object({
   // 프로필 탭의 상황 설명은 상세 설정보다 짧게 보여 주기 위한 별도 입력값입니다.
   profileSituationDescription: z
     .string()
-    .min(1, FIELD_ERROR_MESSAGES.profileSituationRequired)
     .max(500, FIELD_ERROR_MESSAGES.profileSituationMaxLength),
 
   characterDetailSetting: z
