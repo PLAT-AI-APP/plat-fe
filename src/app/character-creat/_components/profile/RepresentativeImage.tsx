@@ -88,7 +88,7 @@ const RepresentativeImage = () => {
           htmlFor="representative-image"
           className="group relative flex w-[120px] cursor-pointer flex-col gap-0"
         >
-          <div className="relative flex aspect-[120/157] w-full items-center justify-center overflow-hidden rounded-xl bg-card">
+          <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-xl bg-card">
             {preview ? (
               <Image
                 src={preview}

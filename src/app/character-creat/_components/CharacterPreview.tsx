@@ -6,7 +6,7 @@ import { useFormContext, useWatch } from "react-hook-form";
 import ActiveButton from "@/components/ActiveButton";
 import CreatePreviewList from "./create-preview-list";
 import { useScrollTimeout } from "@/hooks/useScrollTiemout";
-import { Asterisk, ImageIcon, SendFill } from "@/icons";
+import { Asterisk, ImageIcon, Message, SendFill, User } from "@/icons";
 import Check from "@/icons/Check";
 import { cn } from "@/lib/utils";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
@@ -37,6 +37,11 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
   const [msg, setMsg] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { isScrolling, onScroll } = useScrollTimeout();
+  // Composer chips keep a shared shape so the inactive and active states stay visually aligned.
+  const composerChipClass =
+    "flex h-8 items-center gap-1.5 rounded-[100px] border px-3 body-4";
+  const composerActionClass =
+    "body-4 flex h-8 items-center gap-1.5 rounded-[100px] px-1 text-font-2";
 
   const handleCurrentMode = (mode: ScenarioType) => {
     if (mode === currentMode) {
@@ -198,59 +203,86 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
 
       <form
         onSubmit={handleSubmit}
-        className="mt-1.75 shrink-0 rounded-4xl border border-bg-dark bg-bg-darkest p-4 pb-3"
+        className={cn(
+          "mt-1.75 shrink-0 rounded-4xl border border-bg-dark bg-bg-darkest px-4 py-3",
+          !canEditScenario && "opacity-50",
+        )}
       >
         <textarea
-          rows={2}
+          rows={1}
           ref={textareaRef}
           value={msg}
           onChange={(e) => setMsg(e.target.value)}
           disabled={!canEditScenario}
           placeholder={
             canEditScenario
-              ? t("messagePlaceholder")
+              ? t("scenarioPlaceholder")
               : t("requirementInputPlaceholder")
           }
-          className="mb-2 w-full bg-transparent text-sm outline-none placeholder:text-font-disabled"
+          className="body-4 mb-2 w-full resize-none bg-transparent outline-none placeholder:text-font-disabled"
         />
 
-        <div className="flex justify-between">
-          <div className="flex gap-2 text-sm text-font-2">
-            {!canEditScenario && (
-              <>
-                <button
-                  type="button"
-                  disabled
-                  className="body-4 flex items-center gap-1.5 rounded-[100px] border border-border-main py-1.5 pl-2.5 pr-3 text-font-disabled"
-                >
-                  {t("narrator")}
-                </button>
-                <button
-                  type="button"
-                  disabled
-                  className="body-4 flex items-center gap-1.5 rounded-[100px] border border-border-main py-1.5 pl-2.5 pr-3 text-font-disabled"
-                >
-                  <span className="size-4 rounded-full bg-font-disabled" />
-                  {t("characterNameChip")}
-                </button>
-                <button
-                  type="button"
-                  disabled
-                  className="body-4 flex items-center gap-1.5 rounded-[100px] border border-border-main py-1.5 pl-2.5 pr-3 text-font-disabled"
-                >
-                  {`{user}`}
-                </button>
-              </>
-            )}
+        <div className="flex items-center gap-3">
+          <div className="flex min-w-0 flex-wrap gap-2">
+            <button
+              type="button"
+              disabled={!canEditScenario}
+              className={cn(
+                composerChipClass,
+                canEditScenario
+                  ? "border-border-main bg-transparent text-font-2"
+                  : "border-border-main bg-transparent text-font-disabled",
+              )}
+            >
+              <Message className="size-4 shrink-0" />
+              {t("narrator")}
+            </button>
 
+            <button
+              type="button"
+              disabled={!canEditScenario}
+              className={cn(
+                composerChipClass,
+                canEditScenario
+                  ? "border-border-main bg-transparent text-font-2"
+                  : "border-border-main bg-transparent text-font-disabled",
+              )}
+            >
+              <span
+                className={cn(
+                  "size-4 rounded-full",
+                  canEditScenario ? "bg-font-2" : "bg-font-disabled",
+                )}
+                aria-hidden="true"
+              />
+              {t("characterNameChip")}
+            </button>
+
+            <button
+              type="button"
+              onClick={handleInsertUserToken}
+              disabled={!canEditScenario}
+              className={cn(
+                composerChipClass,
+                canEditScenario
+                  ? "border-border-main bg-transparent text-font-2"
+                  : "border-border-main bg-transparent text-font-disabled",
+              )}
+              >
+                <User className="size-4 shrink-0" />
+                {`{user}`}
+              </button>
+          </div>
+
+          <div className="ml-auto flex shrink-0 items-center gap-2">
+            {/* 상황/에셋 버튼은 전송 버튼 바로 왼쪽에 붙여 Figma의 우측 액션 묶음처럼 배치합니다. */}
             <button
               type="button"
               onClick={() => handleCurrentMode("action")}
               className={cn(
-                "flex items-center gap-1.5 rounded-[100px] border border-border-main bg-[#171D28]/50 py-1.5 pl-2.5 pr-3",
-                !canEditScenario &&
-                  "border-transparent bg-transparent text-font-disabled",
-                currentMode === "action" && "border-brand text-brand",
+                composerActionClass,
+                !canEditScenario && "text-font-disabled",
+                currentMode === "action" && "text-brand",
               )}
               disabled={!canEditScenario}
             >
@@ -261,38 +293,28 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
               type="button"
               onClick={() => handleCurrentMode("asset")}
               className={cn(
-                "flex items-center gap-1.5 rounded-[100px] border border-border-main bg-[#171D28]/50 py-1.5 pl-2.5 pr-3",
-                !canEditScenario &&
-                  "border-transparent bg-transparent text-font-disabled",
-                currentMode === "asset" && "border-brand text-brand",
+                composerActionClass,
+                !canEditScenario && "text-font-disabled",
+                currentMode === "asset" && "text-brand",
               )}
               disabled={!canEditScenario}
             >
               <ImageIcon className="h-4 w-4" />
               {t("asset")}
             </button>
-            {canEditScenario && (
-              <button
-                type="button"
-                onClick={handleInsertUserToken}
-                className="flex items-center gap-1.5 rounded-[100px] border border-border-main bg-[#171D28]/50 py-1.5 pl-2.5 pr-3"
-              >
-                {`{user}`}
-              </button>
-            )}
-          </div>
 
-          <ActiveButton
-            isActive={canEditScenario && msg.length > 0}
-            text=""
-            type="submit"
-            className={cn(
-              "flex h-8.5 w-8.5 items-center justify-center rounded-full",
-              !canEditScenario && "bg-font-disabled text-font-2",
-            )}
-          >
-            <SendFill className="h-4.5 w-4.5" />
-          </ActiveButton>
+            <ActiveButton
+              isActive={canEditScenario && msg.length > 0}
+              text=""
+              type="submit"
+              className={cn(
+                "flex h-8.5 w-8.5 items-center justify-center rounded-full",
+                !canEditScenario && "bg-font-disabled text-font-2",
+              )}
+            >
+              <SendFill className="h-4.5 w-4.5" />
+            </ActiveButton>
+          </div>
         </div>
       </form>
     </section>
