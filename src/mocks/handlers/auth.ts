@@ -1,9 +1,27 @@
 import { http, HttpResponse } from "msw";
 import { endpoint } from "../utils";
+import type { LoginToastType } from "@/api/auth/emailLogin";
 
 const existingNicknames = ["admin", "test", "plat"];
 const verifiedEmails = new Set<string>();
 const firstLoginEmails = new Set(["first@example.com", "taewok0205@gmail.com"]);
+const loginToastTestCases: Record<
+  string,
+  { message: string; toastType: LoginToastType }
+> = {
+  "toast-success@example.com": {
+    toastType: "success",
+    message: "성공 toast 디자인 테스트입니다.",
+  },
+  "toast-info@example.com": {
+    toastType: "info",
+    message: "정보 toast 디자인 테스트입니다.",
+  },
+  "toast-warning@example.com": {
+    toastType: "warning",
+    message: "경고 toast 디자인 테스트입니다.",
+  },
+};
 
 const ok = <T>(data?: T, message?: string) =>
   HttpResponse.json({
@@ -135,6 +153,7 @@ export const authHandlers = [
       username?: string;
       password?: string;
     };
+    const toastTestCase = username ? loginToastTestCases[username] : undefined;
 
     if (!username || !password) {
       return error(400, "FIELD_ERROR", "로그인 정보를 입력해 주세요.", {
@@ -163,10 +182,12 @@ export const authHandlers = [
     return HttpResponse.json(
       {
         result: "OK",
-        message: "로그인되었습니다.",
+        message: toastTestCase?.message ?? "로그인되었습니다.",
         data: {
           accessToken: "mock-access-token",
           isFirstLogin: firstLoginEmails.has(username),
+          // toast 디자인 확인용 MSW 계정에서만 내려주는 테스트 전용 필드입니다.
+          ...(toastTestCase && { toastType: toastTestCase.toastType }),
         },
       },
       {

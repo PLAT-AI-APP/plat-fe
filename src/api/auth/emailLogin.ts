@@ -3,6 +3,8 @@ import { axiosInstance } from "..";
 import { ApiSuccessResponse, AppError } from "@/type/api";
 import { useAuthStore } from "@/store/useAuthStore";
 
+export type LoginToastType = "success" | "info" | "warning";
+
 interface PostEmailLoginProps {
   username: string;
   password: string;
@@ -10,7 +12,11 @@ interface PostEmailLoginProps {
 
 const PostEmailLogin = async (props: PostEmailLoginProps) => {
   const response = await axiosInstance.post<
-    ApiSuccessResponse<{ accessToken: string; isFirstLogin?: boolean }>
+    ApiSuccessResponse<{
+      accessToken: string;
+      isFirstLogin?: boolean;
+      toastType?: LoginToastType;
+    }>
   >("/auth/login", props, {
     withCredentials: true,
   });
@@ -18,6 +24,8 @@ const PostEmailLogin = async (props: PostEmailLoginProps) => {
   return {
     isFirstLogin: Boolean(response.data.data.isFirstLogin),
     serverMessage: response.data.message ?? "",
+    // MSW toast 테스트처럼 서버가 타입을 내려주는 경우에만 성공 콜백에서 toast를 노출합니다.
+    toastType: response.data.data.toastType,
     token: response.data.data.accessToken,
   };
 };
@@ -28,7 +36,12 @@ export const useEmailLoginMutation = () => {
   const setAccessToken = useAuthStore((state) => state.setAccessToken);
   const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
   return useMutation<
-    { isFirstLogin: boolean; serverMessage: string; token: string },
+    {
+      isFirstLogin: boolean;
+      serverMessage: string;
+      toastType?: LoginToastType;
+      token: string;
+    },
     AppError,
     PostEmailLoginProps
   >({

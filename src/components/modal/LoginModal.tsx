@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import React from "react";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
+import { toast } from "sonner";
 import { useEmailLoginMutation } from "@/api/auth/emailLogin";
 import ActiveButton from "@/components/ActiveButton";
 import SocialLoginButton from "@/components/auth/SocialLoginButton";
@@ -19,6 +20,16 @@ import { useModalStore } from "@/store/useModalStore";
 import { LoginModalProps } from "@/type/modal";
 
 const PENDING_WELCOME_CREDIT_DIALOG_KEY = "pending-welcome-credit-dialog";
+
+const showLoginToast = (
+  toastType: "success" | "info" | "warning" | undefined,
+  message: string,
+) => {
+  // MSW 로그인 toast 테스트 계정처럼 서버가 타입을 내려준 경우에만 디자인 확인용 toast를 띄웁니다.
+  if (!toastType || !message) return;
+
+  toast[toastType](message);
+};
 
 const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
   const t = useTranslations();
@@ -82,6 +93,8 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
       { username: email, password: pw },
       {
         onSuccess: (data) => {
+          showLoginToast(data.toastType, data.serverMessage);
+
           if (data.isFirstLogin) {
             handleFirstLoginSuccess();
             return;

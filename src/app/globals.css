@@ -95,16 +95,18 @@ button {
 /* Sonner */
 [data-sonner-toast].sonner-toast {
   width: min(517px, calc(100vw - 32px));
-  min-height: 88px;
+  min-height: auto;
+  position: relative;
   display: flex;
+  justify-items: center;
   align-items: flex-start;
-  gap: 8px;
+  gap: 12px;
   border: 1px solid var(--toast-border, var(--border));
-  border-radius: 12px;
-  background: var(--font-4);
+  border-radius: 16px;
+  background: var(--bg-darkest);
   color: var(--font-1);
   box-shadow: none;
-  padding: 20px 16px;
+  padding: 20px;
   transform-origin: top center;
   transition:
     opacity 500ms ease,
@@ -124,7 +126,7 @@ button {
 .sonner-title {
   text-align: left;
   font-size: 16px;
-  font-weight: 400;
+  font-weight: 600;
   line-height: 1.5;
   letter-spacing: 0;
   color: var(--font-1);
@@ -133,11 +135,11 @@ button {
 }
 
 .sonner-description {
-  margin-top: 4px;
+  margin-top: 2px;
   font-size: 13px;
   font-weight: 400;
   line-height: 1.5;
-  color: var(--font-disabled);
+  color: var(--font-3-disabled);
   white-space: normal;
   word-break: break-word;
 }
@@ -191,15 +193,24 @@ button {
 }
 
 .sonner-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: transparent;
   border: 0;
-  color: var(--font-disabled);
+  color: var(--font-2);
   width: 20px;
   height: 20px;
   padding: 0;
-  align-self: flex-start;
-  margin-left: 24px;
   flex-shrink: 0;
+}
+
+.sonner-close-icon {
+  width: 20px;
+  height: 20px;
 }
 
 .sonner-success {

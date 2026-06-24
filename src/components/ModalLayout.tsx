@@ -39,6 +39,11 @@ export const ModalLayout = ({
   );
 
   const handleClose = triggerRef && !hasBackground ? onClose : () => {};
+
+  // 배경 모달과 팝오버는 기준 위치가 달라 Tailwind 위치 클래스를 분리해 충돌을 막습니다.
+  const modalPositionClass = hasBackground
+    ? "fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+    : "absolute right-0 top-full translate-y-2.5";
   useClickAway(modalRef, handleClose, triggerRef);
 
   const modalContent = (
@@ -64,9 +69,9 @@ export const ModalLayout = ({
         onClick={(e) => e.stopPropagation()}
         onMouseDown={(e) => e.stopPropagation()}
         className={cn(
-          "px-2 py-3 right-0 top-full translate-y-2.5 absolute z-101 bg-bg-dark rounded-xl shadow-card-heavy border border-border-main",
-          hasBackground &&
-            "fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 right-auto",
+          "z-101 rounded-xl border border-border-main bg-bg-dark shadow-card-heavy",
+          !hasBackground && "px-2 py-3",
+          modalPositionClass,
           className,
         )}
       >
