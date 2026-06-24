@@ -178,7 +178,6 @@ const SmartInput = forwardRef<
                 currentLength={currentLength}
                 maxLength={maxLength}
                 isTextarea
-                isError={isLengthExceeded}
                 className={counterClassName}
               />
             </div>
@@ -231,7 +230,6 @@ const SmartInput = forwardRef<
             <CharacterCounter
               currentLength={currentLength}
               maxLength={maxLength}
-              isError={isLengthExceeded}
               className={counterClassName}
             />
           )}

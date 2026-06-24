@@ -6,10 +6,11 @@ import { useFormContext, useWatch } from "react-hook-form";
 import ActiveButton from "@/components/ActiveButton";
 import CreatePreviewList from "./create-preview-list";
 import { useScrollTimeout } from "@/hooks/useScrollTiemout";
-import { Asterisk, ImageIcon, Message, SendFill, User } from "@/icons";
+import { Asterisk, ImageIcon, Message, Redo, SendFill, User } from "@/icons";
 import Check from "@/icons/Check";
 import { cn } from "@/lib/utils";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
+import { useScenarioPreviewHistoryStore } from "@/store/useScenarioPreviewHistoryStore";
 import { ScenarioContentItem, ScenarioType } from "@/type/character";
 
 interface CharacterPreviewProps {
@@ -30,6 +31,21 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
   const characterName = name || t("defaultCharacterName");
   const scenarioName = scenarios?.[activeScenarioIndex]?.name;
   const contents = scenarios?.[activeScenarioIndex]?.contents || [];
+  const scenarioHistoryKey = `scenario-${activeScenarioIndex}`;
+  const scenarioHistory = useScenarioPreviewHistoryStore(
+    (state) => state.histories[scenarioHistoryKey],
+  );
+  const recordScenarioChange = useScenarioPreviewHistoryStore(
+    (state) => state.recordChange,
+  );
+  const undoScenarioChange = useScenarioPreviewHistoryStore(
+    (state) => state.undo,
+  );
+  const redoScenarioChange = useScenarioPreviewHistoryStore(
+    (state) => state.redo,
+  );
+  const canUndoScenario = (scenarioHistory?.past.length ?? 0) > 0;
+  const canRedoScenario = (scenarioHistory?.future.length ?? 0) > 0;
   const hasRepresentativeImage = Boolean(representativeImage);
   const hasCharacterName = Boolean(name?.trim());
   const canEditScenario = hasRepresentativeImage && hasCharacterName;
@@ -42,6 +58,22 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
     "flex h-8 items-center gap-1.5 rounded-[100px] border px-3 body-4";
   const composerActionClass =
     "body-4 flex h-8 items-center gap-1.5 rounded-[100px] px-1 text-font-2";
+  const historyButtonClass =
+    "flex size-6.5 items-center justify-center rounded-lg bg-bg-dark text-font-2 transition-colors hover:bg-card-selected disabled:cursor-not-allowed disabled:text-font-disabled disabled:hover:bg-bg-dark";
+
+  const applyScenarioContents = (
+    nextContents: ScenarioContentItem[],
+    shouldRecord = true,
+  ) => {
+    // 프리뷰 변경은 React Hook Form 값과 Zustand 히스토리를 함께 갱신해 undo/redo 기준을 일치시킵니다.
+    if (shouldRecord) {
+      recordScenarioChange(scenarioHistoryKey, contents, nextContents);
+    }
+
+    setValue(`scenarios.${activeScenarioIndex}.contents`, nextContents, {
+      shouldValidate: true,
+    });
+  };
 
   const handleCurrentMode = (mode: ScenarioType) => {
     if (mode === currentMode) {
@@ -56,22 +88,30 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
     const updatedContents = contents.map((item) =>
       item.id === id ? { ...item, value: newValue } : item,
     );
-    setValue(`scenarios.${activeScenarioIndex}.contents`, updatedContents, {
-      shouldValidate: true,
-    });
+    applyScenarioContents(updatedContents);
   };
 
   const handleDeleteContent = (id: string) => {
     const updatedContents = contents.filter((item) => item.id !== id);
-    setValue(`scenarios.${activeScenarioIndex}.contents`, updatedContents, {
-      shouldValidate: true,
-    });
+    applyScenarioContents(updatedContents);
   };
 
   const handleReorderContents = (newContents: ScenarioContentItem[]) => {
-    setValue(`scenarios.${activeScenarioIndex}.contents`, newContents, {
-      shouldValidate: true,
-    });
+    applyScenarioContents(newContents);
+  };
+
+  const handleUndoScenario = () => {
+    const previousContents = undoScenarioChange(scenarioHistoryKey);
+    if (!previousContents) return;
+
+    applyScenarioContents(previousContents, false);
+  };
+
+  const handleRedoScenario = () => {
+    const nextContents = redoScenarioChange(scenarioHistoryKey);
+    if (!nextContents) return;
+
+    applyScenarioContents(nextContents, false);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -86,11 +126,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
 
     const currentContents =
       getValues(`scenarios.${activeScenarioIndex}.contents`) || [];
-    setValue(
-      `scenarios.${activeScenarioIndex}.contents`,
-      [...currentContents, newContent],
-      { shouldValidate: true },
-    );
+    applyScenarioContents([...currentContents, newContent]);
     setMsg("");
 
     requestAnimationFrame(() => {
@@ -129,11 +165,36 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
     <section className="flex h-[919px] w-[693px] shrink-0 flex-col justify-between rounded-3xl bg-bg-darker p-4">
       <div className="mb-6 flex shrink-0 flex-col gap-2 rounded-2xl bg-bg-darkest px-4 py-3">
         <div className="flex items-end gap-1.5">
-          <strong className="body-2 text-font-1">
-            {scenarioName ||
-              t("scenarioFallback", { index: activeScenarioIndex + 1 })}
-          </strong>
-          <span className="body-5 text-font-disabled">{t("scenarioEdit")}</span>
+          <div className="flex min-w-0 items-end gap-1.5">
+            <strong className="body-2 truncate text-font-1">
+              {scenarioName ||
+                t("scenarioFallback", { index: activeScenarioIndex + 1 })}
+            </strong>
+            <span className="body-5 shrink-0 text-font-disabled">
+              {t("scenarioEdit")}
+            </span>
+          </div>
+
+          <div className="ml-auto flex shrink-0 items-center gap-1">
+            <button
+              type="button"
+              onClick={handleUndoScenario}
+              disabled={!canUndoScenario}
+              className={historyButtonClass}
+              aria-label={t("undoScenario")}
+            >
+              <Redo className="size-3.5 scale-x-[-1]" />
+            </button>
+            <button
+              type="button"
+              onClick={handleRedoScenario}
+              disabled={!canRedoScenario}
+              className={historyButtonClass}
+              aria-label={t("redoScenario")}
+            >
+              <Redo className="size-3.5" />
+            </button>
+          </div>
         </div>
         <p className="body-6 text-font-2">{t("scenarioGuide")}</p>
       </div>
