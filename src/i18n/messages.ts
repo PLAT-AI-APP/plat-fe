@@ -179,14 +179,14 @@ const ko = {
       personaNameMaxLength: "이름은 최대 20자까지 입력할 수 있어요",
       personaInfoMaxLength: "정보는 최대 200자까지 입력할 수 있어요",
       representativeImageRequired: "대표 이미지를 등록해 주세요",
+      characterProfileImageRequired: "캐릭터 프로필 이미지를 등록해 주세요",
       characterTitleRequired: "제목을 입력해 주세요",
       characterTitleMaxLength: "제목은 최대 20자까지 입력할 수 있어요",
       characterNameRequired: "캐릭터 이름을 입력해 주세요",
       characterNameMaxLength:
         "캐릭터 이름은 최대 20자까지 입력할 수 있어요",
       characterIntroduceRequired: "캐릭터 소개를 입력해 주세요",
-      characterIntroduceMaxLength:
-        "캐릭터 소개는 최대 30자까지 입력할 수 있어요",
+      characterIntroduceMaxLength: "한 줄 소개는 최대 20자까지 입력할 수 있어요",
       characterDetailSettingRequired: "캐릭터 상세 설정을 입력해 주세요",
       characterDetailSettingMaxLength:
         "상세 설정은 최대 2000자까지 입력할 수 있어요",
@@ -204,7 +204,7 @@ const ko = {
       characterDescriptionMaxLength:
         "캐릭터 설명은 최대 1000자까지 입력할 수 있어요",
       profileSituationRequired: "상황 설명을 입력해 주세요",
-      profileSituationMaxLength: "상황 설명은 최대 500자까지 입력할 수 있어요",
+      profileSituationMaxLength: "프롤로그 소개는 최대 2000자까지 입력할 수 있어요",
       tendencyRequired: "성향을 선택해 주세요",
       categoryRequired: "카테고리를 선택해 주세요",
       tagMaxCount: "태그는 최대 5개까지 등록할 수 있어요",
@@ -397,14 +397,15 @@ const en: Messages = {
       personaNameMaxLength: "Names can be up to 20 characters long",
       personaInfoMaxLength: "Info can be up to 200 characters long",
       representativeImageRequired: "Please upload a representative image.",
+      characterProfileImageRequired:
+        "Please upload a character profile image.",
       characterTitleRequired: "Please enter a title.",
       characterTitleMaxLength: "Titles can be up to 20 characters long",
       characterNameRequired: "Please enter the character name.",
       characterNameMaxLength:
         "Character names can be up to 20 characters long",
       characterIntroduceRequired: "Please enter a character introduction.",
-      characterIntroduceMaxLength:
-        "Character introductions can be up to 30 characters long",
+      characterIntroduceMaxLength: "One-line intro can be up to 20 characters long",
       characterDetailSettingRequired:
         "Please enter the character detail settings.",
       characterDetailSettingMaxLength:
@@ -423,8 +424,7 @@ const en: Messages = {
       characterDescriptionMaxLength:
         "Character descriptions can be up to 1000 characters long",
       profileSituationRequired: "Please enter a situation description.",
-      profileSituationMaxLength:
-        "Situation descriptions can be up to 500 characters long.",
+      profileSituationMaxLength: "Prologue intro can be up to 2000 characters long.",
       tendencyRequired: "Please select a preference.",
       categoryRequired: "Please select a category.",
       tagMaxCount: "You can register up to 5 tags.",
@@ -609,14 +609,15 @@ const ja: Messages = {
       personaNameMaxLength: "名前は最大20文字まで入力できます",
       personaInfoMaxLength: "情報は最大200文字まで入力できます",
       representativeImageRequired: "代表画像を登録してください",
+      characterProfileImageRequired:
+        "キャラクタープロフィール画像を登録してください",
       characterTitleRequired: "タイトルを入力してください",
       characterTitleMaxLength: "タイトルは最大20文字まで入力できます",
       characterNameRequired: "キャラクター名を入力してください",
       characterNameMaxLength:
         "キャラクター名は最大20文字まで入力できます",
       characterIntroduceRequired: "キャラクター紹介を入力してください",
-      characterIntroduceMaxLength:
-        "キャラクター紹介は最大30文字まで入力できます",
+      characterIntroduceMaxLength: "一言紹介は最大20文字まで入力できます",
       characterDetailSettingRequired:
         "キャラクター詳細設定を入力してください",
       characterDetailSettingMaxLength:
@@ -634,7 +635,7 @@ const ja: Messages = {
       characterDescriptionMaxLength:
         "キャラクター説明は最大1000文字まで入力できます",
       profileSituationRequired: "状況説明を入力してください",
-      profileSituationMaxLength: "状況説明は最大500文字まで入力できます",
+      profileSituationMaxLength: "プロローグ紹介は最大2000文字まで入力できます",
       tendencyRequired: "傾向を選択してください",
       categoryRequired: "カテゴリを選択してください",
       tagMaxCount: "タグは最大5個まで登録できます",
@@ -814,12 +815,13 @@ const zh: Messages = {
       personaNameMaxLength: "名称最多可输入 20 个字符",
       personaInfoMaxLength: "信息最多可输入 200 个字符",
       representativeImageRequired: "请上传代表图片",
+      characterProfileImageRequired: "请上传角色资料图片",
       characterTitleRequired: "请输入标题",
       characterTitleMaxLength: "标题最多可输入 20 个字符",
       characterNameRequired: "请输入角色名称",
       characterNameMaxLength: "角色名称最多可输入 20 个字符",
       characterIntroduceRequired: "请输入角色介绍",
-      characterIntroduceMaxLength: "角色介绍最多可输入 30 个字符",
+      characterIntroduceMaxLength: "一句话介绍最多可输入 20 个字符",
       characterDetailSettingRequired: "请输入角色详细设定",
       characterDetailSettingMaxLength: "详细设定最多可输入 2000 个字符",
       assetNameRequired: "请输入素材名称",
@@ -834,7 +836,7 @@ const zh: Messages = {
       characterDescriptionRequired: "请输入角色说明",
       characterDescriptionMaxLength: "角色说明最多可输入 1000 个字符",
       profileSituationRequired: "请输入场景说明",
-      profileSituationMaxLength: "场景说明最多可输入 500 个字符",
+      profileSituationMaxLength: "序章介绍最多可输入 2000 个字符",
       tendencyRequired: "请选择倾向",
       categoryRequired: "请选择分类",
       tagMaxCount: "标签最多可注册 5 个",
@@ -1018,14 +1020,14 @@ const th: Messages = {
       personaNameMaxLength: "ชื่อสามารถกรอกได้สูงสุด 20 ตัวอักษร",
       personaInfoMaxLength: "ข้อมูลสามารถกรอกได้สูงสุด 200 ตัวอักษร",
       representativeImageRequired: "กรุณาอัปโหลดรูปตัวแทน",
+      characterProfileImageRequired: "กรุณาอัปโหลดรูปโปรไฟล์ตัวละคร",
       characterTitleRequired: "กรุณากรอกชื่อเรื่อง",
       characterTitleMaxLength: "ชื่อเรื่องสามารถกรอกได้สูงสุด 20 ตัวอักษร",
       characterNameRequired: "กรุณากรอกชื่อตัวละคร",
       characterNameMaxLength:
         "ชื่อตัวละครสามารถกรอกได้สูงสุด 20 ตัวอักษร",
       characterIntroduceRequired: "กรุณากรอกคำแนะนำตัวละคร",
-      characterIntroduceMaxLength:
-        "คำแนะนำตัวละครสามารถกรอกได้สูงสุด 30 ตัวอักษร",
+      characterIntroduceMaxLength: "แนะนำสั้น ๆ สามารถกรอกได้สูงสุด 20 ตัวอักษร",
       characterDetailSettingRequired: "กรุณากรอกรายละเอียดตัวละคร",
       characterDetailSettingMaxLength:
         "รายละเอียดสามารถกรอกได้สูงสุด 2000 ตัวอักษร",
@@ -1044,8 +1046,7 @@ const th: Messages = {
       characterDescriptionMaxLength:
         "คำอธิบายตัวละครสามารถกรอกได้สูงสุด 1000 ตัวอักษร",
       profileSituationRequired: "กรุณากรอกคำอธิบายสถานการณ์",
-      profileSituationMaxLength:
-        "คำอธิบายสถานการณ์สามารถกรอกได้สูงสุด 500 ตัวอักษร",
+      profileSituationMaxLength: "แนะนำบทนำสามารถกรอกได้สูงสุด 2000 ตัวอักษร",
       tendencyRequired: "กรุณาเลือกแนวโน้ม",
       categoryRequired: "กรุณาเลือกหมวดหมู่",
       tagMaxCount: "สามารถลงทะเบียนแท็กได้สูงสุด 5 รายการ",
@@ -1231,13 +1232,13 @@ const vi: Messages = {
       personaNameMaxLength: "Tên có thể dài tối đa 20 ký tự",
       personaInfoMaxLength: "Thông tin có thể dài tối đa 200 ký tự",
       representativeImageRequired: "Vui lòng đăng ảnh đại diện",
+      characterProfileImageRequired: "Vui lòng tải lên ảnh hồ sơ nhân vật",
       characterTitleRequired: "Vui lòng nhập tiêu đề",
       characterTitleMaxLength: "Tiêu đề có thể dài tối đa 20 ký tự",
       characterNameRequired: "Vui lòng nhập tên nhân vật",
       characterNameMaxLength: "Tên nhân vật có thể dài tối đa 20 ký tự",
       characterIntroduceRequired: "Vui lòng nhập phần giới thiệu nhân vật",
-      characterIntroduceMaxLength:
-        "Phần giới thiệu nhân vật có thể dài tối đa 30 ký tự",
+      characterIntroduceMaxLength: "Phần giới thiệu một dòng có thể dài tối đa 20 ký tự",
       characterDetailSettingRequired:
         "Vui lòng nhập thiết lập chi tiết nhân vật",
       characterDetailSettingMaxLength:
@@ -1256,8 +1257,7 @@ const vi: Messages = {
       characterDescriptionMaxLength:
         "Mô tả nhân vật có thể dài tối đa 1000 ký tự",
       profileSituationRequired: "Vui lòng nhập mô tả tình huống.",
-      profileSituationMaxLength:
-        "Mô tả tình huống có thể dài tối đa 500 ký tự.",
+      profileSituationMaxLength: "Phần giới thiệu mở đầu có thể dài tối đa 2000 ký tự.",
       tendencyRequired: "Vui lòng chọn xu hướng",
       categoryRequired: "Vui lòng chọn danh mục",
       tagMaxCount: "Bạn có thể đăng tối đa 5 thẻ",

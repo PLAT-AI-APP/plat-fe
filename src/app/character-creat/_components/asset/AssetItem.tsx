@@ -33,6 +33,9 @@ const AssetItem = ({ id, index, remove, copyAsset }: AssetItemProps) => {
     name: `asset.${index}.assetSituation`,
   });
   const currentAssetError = errors.asset?.[index];
+  // 카드 헤더에는 입력 중인 이름을 바로 반영하고, 비어 있으면 기본 라벨을 보여줍니다.
+  const displayAssetName = assetName || t("defaultName");
+  const displayAssetCode = "#3Eabde";
 
   const toggleActive = () => setIsActive((prev) => !prev);
 
@@ -67,20 +70,24 @@ const AssetItem = ({ id, index, remove, copyAsset }: AssetItemProps) => {
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
-          className="rounded-xl border border-border-main bg-bg-darkest p-2.5 pt-0.75"
+          className={`min-h-[95px] rounded-xl border border-border-main bg-bg-darkest px-4 pb-4 pt-1 ${
+            isActive ? "h-auto" : "h-[95px]"
+          }`}
         >
           <div
-            {...provided.dragHandleProps}
-            className="mb-0.75 flex h-3 cursor-grab items-center justify-center pb-0.75 active:cursor-grabbing"
+            className="mb-[3px] flex h-3 items-center justify-center"
           >
             <Dots className="w-5.75 text-font-disabled" />
           </div>
 
-          <article className="flex justify-between">
+          <article
+            {...provided.dragHandleProps}
+            className="flex cursor-grab justify-between active:cursor-grabbing"
+          >
             <div className="flex gap-2.5">
               <label
                 htmlFor={`asset-image-${index}`}
-                className="relative flex h-15 w-15 cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-card"
+                className="relative flex size-[60px] cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-card"
               >
                 {assetImage ? (
                   <Image
@@ -102,8 +109,8 @@ const AssetItem = ({ id, index, remove, copyAsset }: AssetItemProps) => {
               </label>
 
               <p className="body-4 flex gap-1">
-                {assetName || t("defaultName")}
-                <span className="text-font-disabled">#3Eabde</span>
+                {displayAssetName}
+                <span className="text-font-disabled">{displayAssetCode}</span>
               </p>
             </div>
 
@@ -111,14 +118,14 @@ const AssetItem = ({ id, index, remove, copyAsset }: AssetItemProps) => {
               <button
                 type="button"
                 onClick={() => copyAsset(index)}
-                className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-card"
+                className="flex size-7 items-center justify-center rounded-full hover:bg-card"
               >
                 <CopyFill className="h-4 w-4" />
               </button>
               <button
                 type="button"
                 onClick={() => remove(index)}
-                className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-card"
+                className="flex size-7 items-center justify-center rounded-full hover:bg-card"
               >
                 <Trash className="h-4 w-4" />
               </button>

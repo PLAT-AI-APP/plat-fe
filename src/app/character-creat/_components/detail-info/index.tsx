@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
 import SmartInput from "@/components/smart-input";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
+import CharacterProfileImage from "./_components/CharacterProfileImage";
 
 const DetailInfo = () => {
   const detailT = useTranslations("characterCreate.details");
@@ -24,6 +25,8 @@ const DetailInfo = () => {
 
   return (
     <section className="flex flex-col gap-8">
+      <CharacterProfileImage />
+
       <SmartInput
         label={detailT("nameLabel")}
         required
@@ -45,10 +48,10 @@ const DetailInfo = () => {
         placeholderClassName="placeholder:text-font-2"
         counterClassName="text-font-disabled"
         type="textarea"
-        minLine={3}
-        maxLine={3}
+        minLine={4}
+        maxLine={4}
         isBorder
-        inputBoxClassName="h-[108px]"
+        inputBoxClassName="h-[109px]"
         {...register("characterDescription")}
         value={characterDescriptionValue}
         helperMessage=""

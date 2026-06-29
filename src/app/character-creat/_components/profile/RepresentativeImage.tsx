@@ -74,7 +74,7 @@ const RepresentativeImage = () => {
 
       <div
         id="image-upload-wrapper"
-        className="flex h-[175px] w-[138px] flex-col justify-end"
+        className="mt-3 flex h-[175px] w-[138px] flex-col justify-end"
       >
         <input
           id="representative-image"
@@ -86,9 +86,9 @@ const RepresentativeImage = () => {
 
         <label
           htmlFor="representative-image"
-          className="group relative flex w-[120px] cursor-pointer flex-col gap-0"
+          className="group relative flex justify-end w-[120px] h-full cursor-pointer flex-col gap-0"
         >
-          <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-xl bg-card">
+          <div className="relative flex aspect-square w-[120px] h-[157px] items-center justify-center rounded-xl bg-card">
             {preview ? (
               <Image
                 src={preview}
@@ -100,28 +100,28 @@ const RepresentativeImage = () => {
             ) : (
               <ImageIcon className="h-7.5 w-7.5 text-font-disabled" />
             )}
+
+            <span
+              onClick={(e) => {
+                if (!preview) return;
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                handlePreviewDelete();
+              }}
+              className={cn(
+                "absolute right-0 top-0 flex size-9 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-xl bg-brand/10 text-brand backdrop-blur-[2px] transition-transform group-hover:scale-105",
+                preview && "text-font-error bg-[#FF383C]/10",
+              )}
+            >
+              {preview ? (
+                <Close className="size-4" />
+              ) : (
+                <Plus className="size-4" />
+              )}
+            </span>
           </div>
-
-          <span
-            onClick={(e) => {
-              if (!preview) return;
-
-              e.preventDefault();
-              e.stopPropagation();
-
-              handlePreviewDelete();
-            }}
-            className={cn(
-              "absolute right-0 top-0 flex size-9 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-xl bg-brand/10 text-brand backdrop-blur-[2px] transition-transform group-hover:scale-105",
-              preview && "text-font-error bg-[#FF383C]/10",
-            )}
-          >
-            {preview ? (
-              <Close className="size-4" />
-            ) : (
-              <Plus className="size-4" />
-            )}
-          </span>
         </label>
       </div>
 

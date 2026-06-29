@@ -2,24 +2,21 @@
 
 import React, { ChangeEvent, useRef } from "react";
 import { useTranslations } from "next-intl";
-import { DragDropContext, Droppable, DropResult } from "@hello-pangea/dnd";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { Droppable } from "@hello-pangea/dnd";
+import { UseFieldArrayReturn } from "react-hook-form";
+import AssetGuidePanel from "./AssetGuidePanel";
 import AssetItem from "./AssetItem";
+import { Plus } from "@/icons";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
 
-const Asset = () => {
-  const t = useTranslations("characterCreate.asset");
-  const { control } = useFormContext<CharacterCreateFormValues>();
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const { fields, append, remove, move } = useFieldArray({
-    control,
-    name: "asset",
-  });
+interface AssetProps {
+  assetFieldArray: UseFieldArrayReturn<CharacterCreateFormValues, "asset", "id">;
+}
 
-  const onDragEnd = (result: DropResult) => {
-    if (!result.destination) return;
-    move(result.source.index, result.destination.index);
-  };
+const Asset = ({ assetFieldArray }: AssetProps) => {
+  const t = useTranslations("characterCreate.asset");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { fields, append, remove } = assetFieldArray;
 
   const copyAsset = (index: number) => {
     void index;
@@ -61,7 +58,7 @@ const Asset = () => {
   };
 
   return (
-    <section className="flex flex-col gap-5.25">
+    <section className="flex flex-col">
       <header className="flex flex-col">
         <div className="title-3 flex items-center gap-1">
           <span>{t("header", { count: fields.length })}</span>
@@ -69,35 +66,34 @@ const Asset = () => {
         <p className="body-5 text-font-2">{t("guide")}</p>
       </header>
 
-      <div id="asset-management-container" className="flex flex-col gap-1">
-        <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable droppableId="asset-list-droppable">
-            {(provided) => (
-              <div
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-                className="flex max-h-125 flex-col gap-2 overflow-y-auto"
-              >
-                {fields.map((field, i) => (
-                  <AssetItem
-                    key={field.id}
-                    id={field.id}
-                    index={i}
-                    remove={remove}
-                    copyAsset={copyAsset}
-                  />
-                ))}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext>
+      <div id="asset-management-container" className="mt-5 flex flex-col">
+        <Droppable droppableId="asset-list-droppable">
+          {(provided) => (
+            <div
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              className="flex max-h-125 flex-col gap-2 overflow-y-auto"
+            >
+              {fields.map((field, i) => (
+                <AssetItem
+                  key={field.id}
+                  id={field.id}
+                  index={i}
+                  remove={remove}
+                  copyAsset={copyAsset}
+                />
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
 
         <button
           type="button"
           onClick={addAsset}
-          className="body-4 mt-2 rounded-xl border border-border-main bg-bg-darkest py-2.5 hover:bg-card"
+          className="body-4 mt-2 flex h-[45px] items-center justify-center gap-2 rounded-xl bg-bg-darkest text-font-2 hover:bg-card"
         >
+          <Plus className="size-4" />
           {t("add")}
         </button>
         <input
@@ -108,6 +104,8 @@ const Asset = () => {
           onChange={handleFileChange}
         />
       </div>
+
+      <AssetGuidePanel />
     </section>
   );
 };

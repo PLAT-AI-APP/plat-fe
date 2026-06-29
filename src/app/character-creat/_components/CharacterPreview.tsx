@@ -1,21 +1,25 @@
 "use client";
 
 import React, { memo, useRef, useState } from "react";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
-import ActiveButton from "@/components/ActiveButton";
 import CreatePreviewList from "./create-preview-list";
 import { useScrollTimeout } from "@/hooks/useScrollTiemout";
-import { Asterisk, ImageIcon, Message, Redo, SendFill, User } from "@/icons";
-import Check from "@/icons/Check";
+import { ArrowLeft, ArrowRight, Asterisk, User } from "@/icons";
 import { cn } from "@/lib/utils";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
 import { useScenarioPreviewHistoryStore } from "@/store/useScenarioPreviewHistoryStore";
+import { useUserStore } from "@/store/useUserStore";
 import { ScenarioContentItem, ScenarioType } from "@/type/character";
+import Upload from "@/icons/Upload";
 
 interface CharacterPreviewProps {
   activeScenarioIndex: number;
 }
+
+// 프로필 이미지를 아직 등록하지 않아도 채팅 프리뷰의 Next Image가 깨지지 않도록 표시용 이미지만 둡니다.
+const PREVIEW_PROFILE_FALLBACK_IMAGE = "/images/sample.png";
 
 const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
   const t = useTranslations("characterCreate.preview");
@@ -28,7 +32,14 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
     control,
     name: "representativeImage",
   });
+  const characterProfileImage = useWatch({
+    control,
+    name: "characterProfileImage",
+  });
+  const userNickname = useUserStore((state) => state.user?.nickname);
   const characterName = name || t("defaultCharacterName");
+  const characterChipText = name?.trim() || t("characterNameChip");
+  const userChipText = userNickname?.trim() || t("userNameChip");
   const scenarioName = scenarios?.[activeScenarioIndex]?.name;
   const contents = scenarios?.[activeScenarioIndex]?.contents || [];
   const scenarioHistoryKey = `scenario-${activeScenarioIndex}`;
@@ -46,20 +57,12 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
   );
   const canUndoScenario = (scenarioHistory?.past.length ?? 0) > 0;
   const canRedoScenario = (scenarioHistory?.future.length ?? 0) > 0;
-  const hasRepresentativeImage = Boolean(representativeImage);
-  const hasCharacterName = Boolean(name?.trim());
-  const canEditScenario = hasRepresentativeImage && hasCharacterName;
   const [currentMode, setCurrentMode] = useState<ScenarioType>("chat");
   const [msg, setMsg] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { isScrolling, onScroll } = useScrollTimeout();
-  // Composer chips keep a shared shape so the inactive and active states stay visually aligned.
-  const composerChipClass =
-    "flex h-8 items-center gap-1.5 rounded-[100px] border px-3 body-4";
-  const composerActionClass =
-    "body-4 flex h-8 items-center gap-1.5 rounded-[100px] px-1 text-font-2";
-  const historyButtonClass =
-    "flex size-6.5 items-center justify-center rounded-lg bg-bg-dark text-font-2 transition-colors hover:bg-card-selected disabled:cursor-not-allowed disabled:text-font-disabled disabled:hover:bg-bg-dark";
+  const previewProfileImage =
+    representativeImage || PREVIEW_PROFILE_FALLBACK_IMAGE;
 
   const applyScenarioContents = (
     nextContents: ScenarioContentItem[],
@@ -96,10 +99,6 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
     applyScenarioContents(updatedContents);
   };
 
-  const handleReorderContents = (newContents: ScenarioContentItem[]) => {
-    applyScenarioContents(newContents);
-  };
-
   const handleUndoScenario = () => {
     const previousContents = undoScenarioChange(scenarioHistoryKey);
     if (!previousContents) return;
@@ -114,21 +113,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
     applyScenarioContents(nextContents, false);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!canEditScenario || !msg.trim()) return;
-
-    const newContent = {
-      id: String(Date.now()),
-      type: currentMode,
-      value: msg,
-    };
-
-    const currentContents =
-      getValues(`scenarios.${activeScenarioIndex}.contents`) || [];
-    applyScenarioContents([...currentContents, newContent]);
-    setMsg("");
-
+  const scrollPreviewToBottom = () => {
     requestAnimationFrame(() => {
       if (!scrollContainerRef.current) return;
 
@@ -140,64 +125,76 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
     });
   };
 
-  const handleInsertUserToken = () => {
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!msg.trim()) return;
+
+    const newContent = {
+      id: String(Date.now()),
+      type: currentMode,
+      value: msg,
+    };
+
+    const currentContents =
+      getValues(`scenarios.${activeScenarioIndex}.contents`) || [];
+    applyScenarioContents([...currentContents, newContent]);
+    setMsg("");
+    setCurrentMode("chat");
+    scrollPreviewToBottom();
+  };
+
+  const insertComposerText = (text: string) => {
+    // 커서 위치에 토큰/이름을 삽입해 사용자가 긴 문장을 다시 작성하지 않게 합니다.
     const textarea = textareaRef.current;
-    if (!textarea) return;
+    if (!textarea) {
+      setMsg((prev) => `${prev}${text}`);
+      return;
+    }
 
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
-    const token = "{{user}}";
-    const text = msg;
-    const before = text.substring(0, start);
-    const after = text.substring(end);
-    const newText = `${before}${token}${after}`;
+    const before = msg.substring(0, start);
+    const after = msg.substring(end);
+    const nextText = `${before}${text}${after}`;
 
-    setMsg(newText);
+    setMsg(nextText);
 
-    setTimeout(() => {
+    window.setTimeout(() => {
       textarea.focus();
-      const newCursorPos = start + token.length;
-      textarea.setSelectionRange(newCursorPos, newCursorPos);
+      const nextCursorPosition = start + text.length;
+      textarea.setSelectionRange(nextCursorPosition, nextCursorPosition);
     }, 0);
   };
 
   return (
-    <section className="flex h-[919px] w-[693px] shrink-0 flex-col justify-between rounded-3xl bg-bg-darker p-4">
-      <div className="mb-6 flex shrink-0 flex-col gap-2 rounded-2xl bg-bg-darkest px-4 py-3">
-        <div className="flex items-end gap-1.5">
-          <div className="flex min-w-0 items-end gap-1.5">
-            <strong className="body-2 truncate text-font-1">
-              {scenarioName ||
-                t("scenarioFallback", { index: activeScenarioIndex + 1 })}
-            </strong>
-            <span className="body-5 shrink-0 text-font-disabled">
-              {t("scenarioEdit")}
-            </span>
-          </div>
+    <section className="flex h-[919px] w-[693px] shrink-0 flex-col gap-[66px] rounded-3xl bg-bg-darker p-4">
+      <header className="flex h-12 shrink-0 items-center justify-between rounded-2xl bg-bg-darkest px-4 py-3">
+        <strong className="title-3 truncate text-font-1">
+          {scenarioName ||
+            t("scenarioFallback", { index: activeScenarioIndex + 1 })}
+        </strong>
 
-          <div className="ml-auto flex shrink-0 items-center gap-1">
-            <button
-              type="button"
-              onClick={handleUndoScenario}
-              disabled={!canUndoScenario}
-              className={historyButtonClass}
-              aria-label={t("undoScenario")}
-            >
-              <Redo className="size-3.5 scale-x-[-1]" />
-            </button>
-            <button
-              type="button"
-              onClick={handleRedoScenario}
-              disabled={!canRedoScenario}
-              className={historyButtonClass}
-              aria-label={t("redoScenario")}
-            >
-              <Redo className="size-3.5" />
-            </button>
-          </div>
+        <div className="flex shrink-0 items-center gap-1">
+          <button
+            type="button"
+            onClick={handleUndoScenario}
+            disabled={!canUndoScenario}
+            className="flex size-6.5 items-center justify-center rounded-lg text-font-2 transition-colors hover:bg-card-selected"
+            aria-label={t("undoScenario")}
+          >
+            <ArrowLeft className="size-3.5" />
+          </button>
+          <button
+            type="button"
+            onClick={handleRedoScenario}
+            disabled={!canRedoScenario}
+            className="flex size-6.5 items-center justify-center rounded-lg text-font-2 transition-colors hover:bg-card-selected"
+            aria-label={t("redoScenario")}
+          >
+            <ArrowRight className="size-3.5" />
+          </button>
         </div>
-        <p className="body-6 text-font-2">{t("scenarioGuide")}</p>
-      </div>
+      </header>
 
       <div
         onScroll={onScroll}
@@ -207,174 +204,106 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
           isScrolling && "is-scrolling",
         )}
       >
-        {canEditScenario ? (
-          <CreatePreviewList
-            contents={contents}
-            characterName={characterName}
-            profileImage={representativeImage}
-            isEditable
-            onUpdate={handleUpdateContent}
-            onDelete={handleDeleteContent}
-            onReorder={handleReorderContents}
-          />
-        ) : (
-          <div className="flex h-full flex-col items-center justify-center gap-8 text-center">
-            <div className="body-3 flex flex-col text-font-2">
-              <p>{t("requirementTitle")}</p>
-              <p>{t("requirementSubtitle")}</p>
-            </div>
-
-            {/* 시나리오 작성 가능 여부를 사용자가 바로 확인할 수 있게 최소 조건을 노출합니다. */}
-            <div className="flex w-[336px] flex-col gap-5 rounded-3xl bg-bg-darkest px-5 py-6 text-left">
-              <p className="body-5 text-font-2">{t("requirementGuide")}</p>
-              <ul className="flex flex-col gap-3 pl-[68px]">
-                <li className="body-5 flex items-center gap-2 text-font-1">
-                  <span
-                    className={cn(
-                      "flex size-4 items-center justify-center rounded-sm border",
-                      hasRepresentativeImage
-                        ? "border-font-1 bg-font-1 text-bg-darkest"
-                        : "border-font-2 text-font-2",
-                    )}
-                    aria-hidden="true"
-                  >
-                    {hasRepresentativeImage && <Check className="size-2.5" />}
-                  </span>
-                  {t("representativeImageReady")}
-                </li>
-                <li className="body-5 flex items-center gap-2 text-font-1">
-                  <span
-                    className={cn(
-                      "flex size-4 items-center justify-center rounded-sm border",
-                      hasCharacterName
-                        ? "border-font-1 bg-font-1 text-bg-darkest"
-                        : "border-font-2 text-font-2",
-                    )}
-                    aria-hidden="true"
-                  >
-                    {hasCharacterName && <Check className="size-2.5" />}
-                  </span>
-                  {t("characterNameReady")}
-                </li>
-              </ul>
-            </div>
-          </div>
-        )}
+        <CreatePreviewList
+          contents={contents}
+          characterName={characterName}
+          profileImage={previewProfileImage}
+          isEditable
+          onUpdate={handleUpdateContent}
+          onDelete={handleDeleteContent}
+        />
       </div>
 
       <form
         onSubmit={handleSubmit}
-        className={cn(
-          "mt-1.75 shrink-0 rounded-4xl border border-bg-dark bg-bg-darkest px-4 py-3",
-          !canEditScenario && "opacity-50",
-        )}
+        className="flex w-full shrink-0 flex-col gap-4 rounded-3xl border border-bg-dark bg-bg-darkest px-4 pb-3 pt-4"
       >
         <textarea
           rows={1}
           ref={textareaRef}
           value={msg}
           onChange={(e) => setMsg(e.target.value)}
-          disabled={!canEditScenario}
-          placeholder={
-            canEditScenario
-              ? t("scenarioPlaceholder")
-              : t("requirementInputPlaceholder")
-          }
-          className="body-4 mb-2 w-full resize-none bg-transparent outline-none placeholder:text-font-disabled"
+          placeholder={t("scenarioPlaceholder")}
+          className="body-4 min-h-[42px] w-full resize-none bg-transparent outline-none placeholder:text-font-disabled"
         />
 
-        <div className="flex items-center gap-3">
-          <div className="flex min-w-0 flex-wrap gap-2">
-            <button
-              type="button"
-              disabled={!canEditScenario}
-              className={cn(
-                composerChipClass,
-                canEditScenario
-                  ? "border-border-main bg-transparent text-font-2"
-                  : "border-border-main bg-transparent text-font-disabled",
-              )}
-            >
-              <Message className="size-4 shrink-0" />
-              {t("narrator")}
-            </button>
-
-            <button
-              type="button"
-              disabled={!canEditScenario}
-              className={cn(
-                composerChipClass,
-                canEditScenario
-                  ? "border-border-main bg-transparent text-font-2"
-                  : "border-border-main bg-transparent text-font-disabled",
-              )}
-            >
-              <span
-                className={cn(
-                  "size-4 rounded-full",
-                  canEditScenario ? "bg-font-2" : "bg-font-disabled",
-                )}
-                aria-hidden="true"
-              />
-              {t("characterNameChip")}
-            </button>
-
-            <button
-              type="button"
-              onClick={handleInsertUserToken}
-              disabled={!canEditScenario}
-              className={cn(
-                composerChipClass,
-                canEditScenario
-                  ? "border-border-main bg-transparent text-font-2"
-                  : "border-border-main bg-transparent text-font-disabled",
-              )}
-              >
-                <User className="size-4 shrink-0" />
-                {`{user}`}
-              </button>
-          </div>
-
-          <div className="ml-auto flex shrink-0 items-center gap-2">
-            {/* 상황/에셋 버튼은 전송 버튼 바로 왼쪽에 붙여 Figma의 우측 액션 묶음처럼 배치합니다. */}
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex min-w-0 shrink-0 gap-2">
             <button
               type="button"
               onClick={() => handleCurrentMode("action")}
               className={cn(
-                composerActionClass,
-                !canEditScenario && "text-font-disabled",
-                currentMode === "action" && "text-brand",
+                "body-4 flex h-8 items-center justify-center gap-1.5 rounded-[100px] border border-border-main bg-bg-dark py-1.5 pl-2.5 pr-3 text-font-2",
+                currentMode === "action" && "border-brand text-brand",
               )}
-              disabled={!canEditScenario}
             >
-              <Asterisk className="h-4 w-4" />
+              <Asterisk className="size-4 shrink-0" />
               {t("action")}
             </button>
+
             <button
               type="button"
-              onClick={() => handleCurrentMode("asset")}
+              onClick={() => setCurrentMode("chat")}
               className={cn(
-                composerActionClass,
-                !canEditScenario && "text-font-disabled",
-                currentMode === "asset" && "text-brand",
+                "body-4 flex h-8 items-center justify-center gap-1.5 rounded-[100px] border border-border-main bg-bg-dark py-1.5 pl-2.5 pr-3 text-font-2",
+                currentMode === "chat" && "border-brand text-brand",
               )}
-              disabled={!canEditScenario}
             >
-              <ImageIcon className="h-4 w-4" />
-              {t("asset")}
+              {characterProfileImage ? (
+                <Image
+                  src={characterProfileImage}
+                  alt={characterChipText}
+                  width={16}
+                  height={16}
+                  className="size-4 rounded-full object-cover"
+                />
+              ) : (
+                <span className="size-4 rounded-full bg-font-2" aria-hidden />
+              )}
+              {characterChipText}
             </button>
 
-            <ActiveButton
-              isActive={canEditScenario && msg.length > 0}
-              text=""
-              type="submit"
+            <button
+              type="button"
+              onClick={() => setCurrentMode("userChat")}
               className={cn(
-                "flex h-8.5 w-8.5 items-center justify-center rounded-full",
-                !canEditScenario && "bg-font-disabled text-font-2",
+                "body-4 flex h-8 items-center justify-center gap-1.5 rounded-[100px] border border-border-main bg-bg-dark py-1.5 pl-2.5 pr-3 text-font-2",
+                currentMode === "userChat" && "border-brand text-brand",
               )}
             >
-              <SendFill className="h-4.5 w-4.5" />
-            </ActiveButton>
+              <User className="size-4 shrink-0" />
+              {userChipText}
+            </button>
+          </div>
+
+          <div className="flex shrink-0 items-center gap-3">
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => insertComposerText("{{user}}")}
+                className="body-4 flex h-8 items-center px-2 py-1.5 text-font-2"
+              >
+                {"{{user}}"}
+              </button>
+              <button
+                type="button"
+                onClick={() => insertComposerText("{{img:}}")}
+                className="body-4 flex h-8 items-center px-2 py-1.5 text-font-2"
+              >
+                {"{{img:}}"}
+              </button>
+            </div>
+
+            <button
+              type="submit"
+              className={cn(
+                "flex size-8.5 items-center justify-center rounded-full text-font-4 transition-colors",
+                msg.trim() ? "bg-brand" : "bg-font-disabled",
+              )}
+              aria-label={t("submitScenario")}
+            >
+              <Upload className="size-6 text-font-1" />
+            </button>
           </div>
         </div>
       </form>

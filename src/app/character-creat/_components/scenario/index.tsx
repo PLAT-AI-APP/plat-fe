@@ -39,7 +39,8 @@ const Scenario = ({
     }
 
     append({
-      name: t("defaultName"),
+      // 새 탭을 만들 때 보이는 기본 이름을 실제 input 값에도 같이 넣습니다.
+      name: t("fallbackName", { index: fields.length + 1 }),
       contents: [],
     });
   };
@@ -109,7 +110,7 @@ const Scenario = ({
               style={{ transition: "none", animation: "none" }}
             >
               <div className="flex items-center gap-1">
-                {scenarios[i]?.name}
+                {scenarios[i]?.name || t("fallbackName", { index: i + 1 })}
                 {activeScenarioIndex === i && (
                   <Close
                     onClick={(e) => removeScenario(e, i)}

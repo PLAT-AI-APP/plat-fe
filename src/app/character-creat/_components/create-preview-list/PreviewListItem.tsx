@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { ScenarioContentItem } from "@/type/character";
 import EditableChatPreview from "./EditableChatPreview";
 import EditableScenarioPreview from "./EditableScenarioPreview";
+import EditableUserChatPreview from "./EditableUserChatPreview";
 import PreviewContentView from "./PreviewContentView";
 import PreviewDragHandle from "./PreviewDragHandle";
 import PreviewEditControls from "./PreviewEditControls";
@@ -64,7 +65,7 @@ const PreviewListItem = ({
           <div
             id="edit-form-container"
             className={cn(
-              "flex flex-col gap-2",
+              "flex flex-col gap-2 pb-2",
               item.type === "action" && "gap-4",
             )}
           >
@@ -73,6 +74,14 @@ const PreviewListItem = ({
                 characterName={characterName}
                 profileImage={profileImage}
                 profileAlt={profileAlt}
+                value={editedValue}
+                labels={labels}
+                onChange={onEditValueChange}
+                onCancel={onCancelEdit}
+                onConfirm={onConfirmEdit}
+              />
+            ) : item.type === "userChat" ? (
+              <EditableUserChatPreview
                 value={editedValue}
                 labels={labels}
                 onChange={onEditValueChange}
@@ -92,10 +101,16 @@ const PreviewListItem = ({
             className={cn(
               "flex pb-2",
               item.type === "action" ? "flex-col" : "items-end gap-2",
+              item.type === "userChat" && "justify-end",
               item.type === "asset" && "justify-center",
             )}
           >
-            <div className="max-w-[80%]">
+            <div
+              className={cn(
+                "max-w-[80%]",
+                item.type === "userChat" && "order-2",
+              )}
+            >
               <PreviewContentView
                 item={item}
                 assetImageAlt={assetImageAlt}
@@ -109,6 +124,7 @@ const PreviewListItem = ({
                 className={cn(
                   "flex shrink-0 gap-1 transition-opacity",
                   item.type === "action" && "mt-2 pl-12",
+                  item.type === "userChat" && "order-1",
                 )}
               >
                 <PreviewItemActions

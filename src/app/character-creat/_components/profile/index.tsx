@@ -61,7 +61,7 @@ const Profile = () => {
 
         <SmartInput
           label={t("situationLabel")}
-          maxLength={500}
+          maxLength={2000}
           placeholder={t("situationPlaceholder")}
           placeholderClassName="placeholder:text-font-2"
           counterClassName="text-font-disabled"

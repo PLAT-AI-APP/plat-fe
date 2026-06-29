@@ -15,6 +15,7 @@ interface postChatacterCreateProps {
   visibility: string;
   description: string;
   tendency: string;
+  category: string[];
   tagIds: number[];
 }
 

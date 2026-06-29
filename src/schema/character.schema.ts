@@ -1,11 +1,14 @@
 import { z } from "zod";
 import { FIELD_ERROR_MESSAGES } from "@/constants/fieldMessages";
 
-/** 캐릭터 생성 form의 유효성 검사 */
+/** 캐릭터 생성 form의 필수값과 입력 제한을 한 곳에서 검증합니다. */
 export const characterCreateSchema = z.object({
   representativeImage: z
     .string()
     .min(1, FIELD_ERROR_MESSAGES.representativeImageRequired),
+  characterProfileImage: z
+    .string()
+    .min(1, FIELD_ERROR_MESSAGES.characterProfileImageRequired),
   title: z
     .string()
     .min(1, FIELD_ERROR_MESSAGES.characterTitleRequired)
@@ -17,11 +20,11 @@ export const characterCreateSchema = z.object({
   characterIntroduce: z
     .string()
     .min(1, FIELD_ERROR_MESSAGES.characterIntroduceRequired)
-    .max(30, FIELD_ERROR_MESSAGES.characterIntroduceMaxLength),
-  // 프로필 탭의 상황 설명은 상세 설정보다 짧게 보여 주기 위한 별도 입력값입니다.
+    .max(20, FIELD_ERROR_MESSAGES.characterIntroduceMaxLength),
+  // 프롤로그 소개는 긴 도입부 설명을 받을 수 있어 한 줄 소개와 별도 길이로 검증합니다.
   profileSituationDescription: z
     .string()
-    .max(500, FIELD_ERROR_MESSAGES.profileSituationMaxLength),
+    .max(2000, FIELD_ERROR_MESSAGES.profileSituationMaxLength),
 
   characterDetailSetting: z
     .string()
@@ -53,7 +56,7 @@ export const characterCreateSchema = z.object({
         contents: z.array(
           z.object({
             id: z.string(),
-            type: z.enum(["chat", "action", "asset"]),
+            type: z.enum(["chat", "userChat", "action", "asset"]),
             value: z
               .string()
               .min(1, FIELD_ERROR_MESSAGES.scenarioContentRequired)
@@ -71,7 +74,7 @@ export const characterCreateSchema = z.object({
     .max(1000, FIELD_ERROR_MESSAGES.characterDescriptionMaxLength),
 
   tendency: z.string().min(1, FIELD_ERROR_MESSAGES.tendencyRequired),
-  category: z.string().min(1, FIELD_ERROR_MESSAGES.categoryRequired),
+  category: z.array(z.string()).min(1, FIELD_ERROR_MESSAGES.categoryRequired),
   tagIds: z
     .array(
       z.object({

@@ -2,12 +2,14 @@
 
 import React from "react";
 import { useTranslations } from "next-intl";
+import { UseFieldArrayReturn } from "react-hook-form";
 import { cn } from "@/lib/utils";
 import Asset from "./asset";
 import DetailInfo from "./detail-info";
 import Profile from "./profile";
 import Scenario from "./scenario";
 import Setting from "./setting";
+import { CharacterCreateFormValues } from "@/schema/character.schema";
 
 export const TAB_IDS = [
   "profile",
@@ -39,6 +41,7 @@ interface CreateTabsProps {
   setCurrentTabId: (id: TabId) => void;
   activeScenarioIndex: number;
   setActiveScenarioIndex: (index: number) => void;
+  assetFieldArray: UseFieldArrayReturn<CharacterCreateFormValues, "asset", "id">;
 }
 
 const CreateTabs = ({
@@ -46,6 +49,7 @@ const CreateTabs = ({
   setCurrentTabId,
   activeScenarioIndex,
   setActiveScenarioIndex,
+  assetFieldArray,
 }: CreateTabsProps) => {
   const t = useTranslations("characterCreate.tabs");
 
@@ -56,7 +60,7 @@ const CreateTabs = ({
       case "details":
         return <DetailInfo />;
       case "assets":
-        return <Asset />;
+        return <Asset assetFieldArray={assetFieldArray} />;
       case "scenario":
         return (
           <Scenario

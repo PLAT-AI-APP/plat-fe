@@ -54,6 +54,7 @@ export const FIELD_ERROR_MESSAGES = {
   personaNameMaxLength: "field.error.personaNameMaxLength",
   personaInfoMaxLength: "field.error.personaInfoMaxLength",
   representativeImageRequired: "field.error.representativeImageRequired",
+  characterProfileImageRequired: "field.error.characterProfileImageRequired",
   characterTitleRequired: "field.error.characterTitleRequired",
   characterTitleMaxLength: "field.error.characterTitleMaxLength",
   characterNameRequired: "field.error.characterNameRequired",

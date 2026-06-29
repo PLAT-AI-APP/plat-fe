@@ -67,7 +67,13 @@ const Setting = () => {
   };
 
   const handleCategory = (category: string) => {
-    setValue("category", category, {
+    // 카테고리는 복수 선택이므로 기존 배열에서 선택값을 토글해 관리합니다.
+    const currentCategories = categoryWatch ?? [];
+    const nextCategory = currentCategories.includes(category)
+      ? currentCategories.filter((selectedCategory) => selectedCategory !== category)
+      : [...currentCategories, category];
+
+    setValue("category", nextCategory, {
       shouldDirty: true,
       shouldValidate: true,
     });
@@ -126,7 +132,7 @@ const Setting = () => {
                 className={cn(
                   "body-4 flex h-10 items-center justify-center rounded-xl transition-none",
                   isActive
-                    ? "bg-brand/10 font-semibold text-brand"
+                    ? "bg-brand/10 text-brand-dark"
                     : "bg-bg-darkest text-font-2",
                 )}
                 style={{ transition: "none", animation: "none" }}
@@ -149,7 +155,9 @@ const Setting = () => {
         {/* 카테고리는 전체 후보를 노출해 선택 비용을 줄입니다. */}
         <div className="flex flex-wrap gap-x-1.5 gap-y-2">
           {CATEGORIES.map((category) => {
-            const isActive = categoryWatch === category;
+            const selectedCategories = categoryWatch ?? [];
+            const isActive = selectedCategories.includes(category);
+            const isInactive = selectedCategories.length > 0 && !isActive;
 
             return (
               <button
@@ -157,10 +165,10 @@ const Setting = () => {
                 type="button"
                 onClick={() => handleCategory(category)}
                 className={cn(
-                  "body-4 flex h-8 items-center rounded-[100px] border px-3 transition-none",
-                  isActive
-                    ? "border-brand bg-brand/10 font-semibold text-brand"
-                    : "border-border-main text-font-1",
+                  "bg-bg-dark body-4 flex h-8 items-center rounded-[100px] px-3 border border-border-main transition-none",
+                  isActive && "bg-brand/10 text-brand-dark",
+                  selectedCategories.length === 0 && "text-font-1",
+                  isInactive && "text-font-disabled",
                 )}
                 style={{ transition: "none", animation: "none" }}
               >
@@ -184,7 +192,9 @@ const Setting = () => {
             className="body-4 flex h-11 items-center justify-between rounded-xl border border-border-main bg-bg-darkest px-4 text-font-2 transition-none"
             style={{ transition: "none", animation: "none" }}
           >
-            <span>{isTagFull ? t("tagFullPlaceholder") : t("tagPlaceholder")}</span>
+            <span>
+              {isTagFull ? t("tagFullPlaceholder") : t("tagPlaceholder")}
+            </span>
             <ArrowRight className="size-3 text-font-2" />
           </button>
         </section>

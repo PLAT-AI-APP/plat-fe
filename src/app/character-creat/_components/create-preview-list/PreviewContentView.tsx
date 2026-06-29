@@ -1,6 +1,7 @@
 import Image from "next/image";
 import CharacterChat from "@/components/chat/CharacterChat";
 import Scenario from "@/components/chat/Scenario";
+import UserChatBubble from "@/components/chat/UserChatBubble";
 import { ScenarioContentItem } from "@/type/character";
 
 interface PreviewContentViewProps {
@@ -24,6 +25,10 @@ const PreviewContentView = ({
         image={profileImage}
       />
     );
+  }
+
+  if (item.type === "userChat") {
+    return <UserChatBubble text={item.value} />;
   }
 
   if (item.type === "action") {

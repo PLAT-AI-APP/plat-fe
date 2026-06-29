@@ -38,7 +38,7 @@ const CreateHeader = ({ onSave, onDraftClick }: CreateHeaderProps) => {
 
     const currentFormData = getValues();
     const payload = {
-      profileImage: currentFormData.representativeImage,
+      profileImage: currentFormData.characterProfileImage,
       name: currentFormData.name,
       introduce: currentFormData.characterIntroduce,
       detailSetting: currentFormData.characterDetailSetting,
@@ -49,11 +49,12 @@ const CreateHeader = ({ onSave, onDraftClick }: CreateHeaderProps) => {
           image: asset.assetImage,
         })) || [],
       visibility: currentFormData.isPublic ? "PUBLIC" : "PRIVATE",
-      // 프로필 탭의 짧은 상황 설명이 있으면 우선 보내고, 없을 때는 상세 설명을 사용합니다.
+      // 프로필 탭의 프롤로그 소개가 있으면 우선 보내고, 없을 때는 상세 설명을 사용합니다.
       description:
         currentFormData.profileSituationDescription ||
         currentFormData.characterDescription,
       tendency: currentFormData.tendency,
+      category: currentFormData.category,
       tagIds: currentFormData.tagIds.map((tag) => tag.id),
     };
 

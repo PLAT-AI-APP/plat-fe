@@ -46,11 +46,11 @@ const EditableChatPreview = ({
       />
       <div className="min-w-0 flex-1 text-sm font-medium">
         <span className="body-4 block text-font-1">{characterName}</span>
-        <div className="mt-1.5 rounded-[0px_16px_16px_16px] bg-card p-2.5">
+        <div className="mt-1.5 flex items-center rounded-[0px_16px_16px_16px] bg-card p-2.5">
           <textarea
             ref={textareaRef}
             autoFocus
-            rows={2}
+            rows={1}
             className="body-4 min-h-11 w-full resize-none overflow-hidden rounded-xl border border-border-main bg-bg-darker px-4 py-3 text-font-1 outline-none"
             value={value}
             onChange={(e) => onChange(e.target.value)}

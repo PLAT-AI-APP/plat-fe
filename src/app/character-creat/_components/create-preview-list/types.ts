@@ -7,7 +7,6 @@ export interface CreatePreviewListProps {
   isEditable?: boolean;
   onUpdate?: (id: string, newValue: string) => void;
   onDelete?: (id: string) => void;
-  onReorder?: (newContents: ScenarioContentItem[]) => void;
 }
 
 export interface PreviewEditLabels {
