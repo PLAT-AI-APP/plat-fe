@@ -21,7 +21,7 @@ const RECOMMENDED_TAGS = [
 
 // 사이드바에 표시할 태그 폴더 데이터입니다.
 // 새 카테고리가 필요하면 이 배열에 title과 tags만 추가하면 UI가 자동으로 렌더링됩니다.
-const TAG_FOLDERS = [
+export const TAG_FOLDERS = [
   {
     title: "folderGenre",
     tags: [

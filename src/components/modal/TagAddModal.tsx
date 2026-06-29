@@ -1,50 +1,72 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
 import { ModalLayout } from "../ModalLayout";
-import { useHashtagListQuery } from "@/api/hashtag/getHashtagList";
-import { ArrowRight, Close, Megaphone, Search } from "@/icons";
+import { TAG_FOLDERS } from "@/app/(main)/_components/categories-tab-contents/_components/tag-sidebar";
+import { ArrowDown, ArrowRight, Close, Megaphone, Search } from "@/icons";
 import Tag from "@/icons/Tag";
 import { cn } from "@/lib/utils";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
 import { useModalStore } from "@/store/useModalStore";
 import { TagAddModalProps } from "@/type/modal";
 
+type TagOption = { id: number; label: string };
+
+interface TagFolderSection {
+  title: string;
+  tags: TagOption[];
+}
+
+const TAG_ID_OFFSET = 1;
+
 const TagAddModal = ({ onClose }: TagAddModalProps) => {
   const t = useTranslations("characterCreate.tagModal");
+  const tagSidebarT = useTranslations("tagSidebar");
   const { control, setValue } = useFormContext<CharacterCreateFormValues>();
   const currentTagsWatch = useWatch({ control, name: "tagIds" });
-  const [localSelectedNames, setLocalSelectedNames] = useState<
-    { id: number; label: string }[]
-  >(() => {
+  const [localSelectedNames, setLocalSelectedNames] = useState<TagOption[]>(() => {
     const currentTags = currentTagsWatch || [];
     return currentTags.map((tag) => ({ id: tag.id, label: tag.label }));
   });
   const [searchKeyword, setSearchKeyword] = useState("");
   const [isSearchFocused, setIsSearchFocused] = useState(false);
-  const { data: hashtagListData } = useHashtagListQuery();
-  const hashtagList = hashtagListData?.tags || [];
+  const [closedFolderTitles, setClosedFolderTitles] = useState<string[]>([]);
   const normalizedSearchKeyword = searchKeyword
     .replace(/^#\s?/, "")
     .trim()
     .toLowerCase();
-  const filteredTags = hashtagList
-    .filter((tag) =>
-      tag.label.toLowerCase().includes(normalizedSearchKeyword),
-    )
-    .sort((a, b) => {
-      const aSelected = localSelectedNames.some((name) => name.label === a.label);
-      const bSelected = localSelectedNames.some((name) => name.label === b.label);
+  const isSearchMode = Boolean(normalizedSearchKeyword);
 
-      if (aSelected !== bSelected) {
-        return aSelected ? -1 : 1;
-      }
-      return a.label.localeCompare(b.label, "ko");
-    });
+  const tagFolderSections = useMemo<TagFolderSection[]>(() => {
+    const tagIdByLabel = new Map(
+      Array.from(new Set(TAG_FOLDERS.flatMap((folder) => folder.tags))).map(
+        (label, index) => [label, index + TAG_ID_OFFSET] as const,
+      ),
+    );
 
-  const commitSelectedTags = (nextTags: { id: number; label: string }[]) => {
+    // 실제 API 연결 전까지는 TAG_FOLDERS 목 데이터를 태그 선택 모달의 단일 원본으로 사용합니다.
+    return TAG_FOLDERS.map((folder) => ({
+      title: folder.title,
+      tags: folder.tags.map((label) => ({
+        id: tagIdByLabel.get(label) ?? TAG_ID_OFFSET,
+        label,
+      })),
+    }));
+  }, []);
+
+  const hasTags = tagFolderSections.some((folder) => folder.tags.length > 0);
+  const matchedTags = useMemo(() => {
+    if (!isSearchMode) return [];
+
+    // 검색어와 일치하는 태그는 기존 목록에서 빼지 않고, 상단의 별도 영역에만 모아 보여줍니다.
+    return tagFolderSections
+      .flatMap((folder) => folder.tags)
+      .filter((tag) => tag.label.toLowerCase().includes(normalizedSearchKeyword));
+  }, [isSearchMode, normalizedSearchKeyword, tagFolderSections]);
+
+  const commitSelectedTags = (nextTags: TagOption[]) => {
     // 태그 선택 모달은 별도 완료 버튼이 없어서 선택 상태를 즉시 form 값에 반영합니다.
     setLocalSelectedNames(nextTags);
     setValue("tagIds", nextTags, {
@@ -53,7 +75,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
     });
   };
 
-  const handleTagToggle = (tag: { id: number; label: string }) => {
+  const handleTagToggle = (tag: TagOption) => {
     const isAlreadySelected = localSelectedNames.some((name) => name.id === tag.id);
 
     if (isAlreadySelected) {
@@ -78,8 +100,16 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
   const shouldShowSearchPrefix = isSearchFocused || Boolean(searchKeyword);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // # prefix는 별도 시각 요소로만 보여주고, 한글 IME 조합이 깨지지 않게 입력값은 순수 검색어만 저장합니다.
+    // # prefix는 시각 요소로만 보여주고, 한글 IME 조합이 깨지지 않게 실제 검색어만 저장합니다.
     setSearchKeyword(e.target.value.replace(/^#\s?/, ""));
+  };
+
+  const toggleFolderOpen = (title: string) => {
+    setClosedFolderTitles((prev) =>
+      prev.includes(title)
+        ? prev.filter((folderTitle) => folderTitle !== title)
+        : [...prev, title],
+    );
   };
 
   const { openModal } = useModalStore();
@@ -135,36 +165,101 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
           )}
         </div>
 
-        <nav>
-          <ul className="custom-scrollbar flex max-h-85 min-h-85 flex-wrap content-start gap-x-2 gap-y-2 overflow-auto rounded-xl bg-bg-darkest p-3">
-            {filteredTags.map((tag) => {
-              const isSelected = localSelectedNames.some(
-                (name) => name.id === tag.id,
-              );
+        <nav className="custom-scrollbar flex max-h-85 min-h-85 flex-col gap-5 overflow-auto rounded-xl bg-bg-darkest p-4">
+          {matchedTags.length > 0 && (
+            <section>
+              <h3 className="body-4 text-font-2">{t("matchedSearch")}</h3>
+              <ul className="mt-3 flex flex-wrap content-start gap-x-2 gap-y-2">
+                {matchedTags.map((tag) => {
+                  const isSelected = localSelectedNames.some(
+                    (name) => name.id === tag.id,
+                  );
 
-              return (
-                <li key={tag.id}>
-                  <button
-                    type="button"
-                    onClick={() => handleTagToggle(tag)}
-                    className={cn(
-                      "body-6 flex h-7 items-center rounded-md border border-transparent bg-card px-2.5 text-font-2 transition-none hover:bg-card-hover",
-                      isSelected &&
-                        "border-brand bg-brand/10 font-semibold text-brand",
+                  return (
+                    <li key={`matched-${tag.label}`}>
+                      <button
+                        type="button"
+                        onClick={() => handleTagToggle(tag)}
+                        className={cn(
+                          "body-6 flex h-7 items-center rounded-md border border-font-2 bg-bg-dark px-2.5 text-font-1 transition-none hover:bg-card-hover",
+                          isSelected &&
+                            "border-brand bg-brand/10 font-semibold text-brand",
+                        )}
+                        style={{ transition: "none", animation: "none" }}
+                      >
+                        #{tag.label}
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </section>
+          )}
+
+          {tagFolderSections.map((folder) => {
+            const isOpen = !closedFolderTitles.includes(folder.title);
+            const selectedCount = folder.tags.filter((tag) =>
+              localSelectedNames.some((selected) => selected.id === tag.id),
+            ).length;
+
+            return (
+              <section key={folder.title}>
+                <button
+                  type="button"
+                  onClick={() => toggleFolderOpen(folder.title)}
+                  className="flex h-6 w-full items-center justify-between text-left"
+                >
+                  <span className="body-4 flex min-w-0 items-center gap-1.5 text-font-2">
+                    <span className="truncate">{tagSidebarT(folder.title)}</span>
+                    {!isOpen && selectedCount > 0 && (
+                      <span className="shrink-0 text-brand-dark">
+                        +{selectedCount}
+                      </span>
                     )}
-                    style={{ transition: "none", animation: "none" }}
-                  >
-                    #{tag.label}
-                  </button>
-                </li>
-              );
-            })}
-            {filteredTags.length === 0 && (
-              <p className="w-full py-10 text-center text-xs text-font-disabled">
-                {t("empty")}
-              </p>
-            )}
-          </ul>
+                  </span>
+                  <ArrowDown
+                    className={cn(
+                      "size-4 shrink-0 text-font-2 transition-none",
+                      !isOpen && "-rotate-180",
+                    )}
+                  />
+                </button>
+
+                {isOpen && (
+                  <ul className="mt-3 flex flex-wrap content-start gap-x-2 gap-y-2">
+                    {folder.tags.map((tag) => {
+                      const isSelected = localSelectedNames.some(
+                        (name) => name.id === tag.id,
+                      );
+
+                      return (
+                        <li key={`${folder.title}-${tag.label}`}>
+                          <button
+                            type="button"
+                            onClick={() => handleTagToggle(tag)}
+                            className={cn(
+                              "body-6 flex h-7 items-center rounded-md border border-transparent bg-card px-2.5 text-font-2 transition-none hover:bg-card-hover",
+                              isSelected &&
+                                "border-brand bg-brand/10 font-semibold text-brand",
+                            )}
+                            style={{ transition: "none", animation: "none" }}
+                          >
+                            #{tag.label}
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                )}
+              </section>
+            );
+          })}
+
+          {!hasTags && (
+            <p className="w-full py-10 text-center text-xs text-font-disabled">
+              {t("empty")}
+            </p>
+          )}
         </nav>
 
         <section className="mt-3 flex flex-col gap-3">
