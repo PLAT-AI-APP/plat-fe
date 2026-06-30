@@ -13,9 +13,6 @@ const PostemailVerifyConfirm = async ({
   const response = await axiosInstance.post<ApiSuccessResponse>(
     "/auth/email/verify/confirm",
     { email: email, code: code },
-    {
-      timeout: 15000,
-    },
   );
 
   return {

@@ -8,7 +8,6 @@ const PostEmailVerify = async (email: string) => {
     "/auth/email/verify",
     { email: email },
     {
-      timeout: 30000,
       headers: {
         "X-Device-ID": getOrCreateDeviceId(),
       },
