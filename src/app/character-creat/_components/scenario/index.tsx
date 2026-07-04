@@ -27,6 +27,8 @@ const Scenario = ({
   const currentIndex = activeScenarioIndex;
   const currentScenarioName =
     useWatch({ control, name: `scenarios.${currentIndex}.name` }) || "";
+  const currentScenarioDescription =
+    useWatch({ control, name: `scenarios.${currentIndex}.description` }) || "";
 
   const selectScenario = (index: number) => {
     setActiveScenarioIndex(index);
@@ -41,6 +43,7 @@ const Scenario = ({
     append({
       // 새 탭을 만들 때 보이는 기본 이름을 실제 input 값에도 같이 넣습니다.
       name: t("fallbackName", { index: fields.length + 1 }),
+      description: "",
       contents: [],
     });
   };
@@ -142,6 +145,18 @@ const Scenario = ({
         counterClassName="text-font-disabled"
         value={currentScenarioName}
         helperMessage=""
+      />
+
+      <SmartInput
+        {...register(`scenarios.${currentIndex}.description`)}
+        label={t("descriptionLabel")}
+        type="textarea"
+        maxLength={100}
+        minLine={2}
+        placeholder={t("descriptionPlaceholder")}
+        placeholderClassName="placeholder:text-font-2"
+        counterClassName="text-font-disabled"
+        value={currentScenarioDescription}
       />
     </section>
   );

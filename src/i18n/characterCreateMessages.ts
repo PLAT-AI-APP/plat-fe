@@ -102,6 +102,8 @@ const ko = {
       defaultName: "다른 시나리오",
       fallbackName: "시나리오 {index}",
       nameLabel: "시나리오명",
+      descriptionLabel: "시나리오 설명",
+      descriptionPlaceholder: "어떤 시나리오인지 설명해 주세요",
     },
     preview: {
       defaultCharacterName: "캐릭터",
@@ -296,6 +298,8 @@ const en: typeof ko = {
       defaultName: "Another scenario",
       fallbackName: "Scenario {index}",
       nameLabel: "Scenario name",
+      descriptionLabel: "Scenario description",
+      descriptionPlaceholder: "Describe what kind of scenario this is",
     },
     preview: {
       defaultCharacterName: "Character",
@@ -491,6 +495,8 @@ const ja: typeof ko = {
       defaultName: "別のシナリオ",
       fallbackName: "シナリオ {index}",
       nameLabel: "シナリオ名",
+      descriptionLabel: "シナリオ説明",
+      descriptionPlaceholder: "どのようなシナリオか説明してください",
     },
     preview: {
       defaultCharacterName: "キャラクター",
@@ -683,6 +689,8 @@ const zh: typeof ko = {
       defaultName: "其他场景",
       fallbackName: "场景 {index}",
       nameLabel: "场景名称",
+      descriptionLabel: "场景说明",
+      descriptionPlaceholder: "请说明这是怎样的场景",
     },
     preview: {
       defaultCharacterName: "角色",
@@ -872,6 +880,8 @@ const th: typeof ko = {
       defaultName: "สถานการณ์อื่น",
       fallbackName: "สถานการณ์ {index}",
       nameLabel: "ชื่อสถานการณ์",
+      descriptionLabel: "คำอธิบายสถานการณ์",
+      descriptionPlaceholder: "อธิบายว่านี่เป็นสถานการณ์แบบไหน",
     },
     preview: {
       defaultCharacterName: "ตัวละคร",
@@ -1067,6 +1077,8 @@ const vi: typeof ko = {
       defaultName: "Kịch bản khác",
       fallbackName: "Kịch bản {index}",
       nameLabel: "Tên kịch bản",
+      descriptionLabel: "Mô tả kịch bản",
+      descriptionPlaceholder: "Hãy mô tả đây là kịch bản như thế nào",
     },
     preview: {
       defaultCharacterName: "Nhân vật",

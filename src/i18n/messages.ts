@@ -197,6 +197,8 @@ const ko = {
         "상황 설명은 최대 50자까지 입력할 수 있어요",
       assetMaxCount: "에셋은 최대 50개까지 등록할 수 있어요",
       scenarioNameRequired: "시나리오 이름을 입력해 주세요",
+      scenarioDescriptionMaxLength:
+        "시나리오 설명은 최대 100자까지 입력할 수 있어요",
       scenarioContentRequired: "내용을 입력해 주세요",
       scenarioContentMaxLength: "내용은 최대 1500자까지 입력할 수 있어요",
       scenarioMaxCount: "시나리오는 최대 5개까지 생성할 수 있어요",
@@ -417,6 +419,8 @@ const en: Messages = {
         "Situation descriptions can be up to 50 characters long",
       assetMaxCount: "You can register up to 50 assets.",
       scenarioNameRequired: "Please enter the scenario name.",
+      scenarioDescriptionMaxLength:
+        "Scenario descriptions can be up to 100 characters long",
       scenarioContentRequired: "Please enter the content.",
       scenarioContentMaxLength: "Content can be up to 1500 characters long",
       scenarioMaxCount: "You can create up to 5 scenarios.",
@@ -628,6 +632,8 @@ const ja: Messages = {
       assetSituationMaxLength: "状況説明は最大50文字まで入力できます",
       assetMaxCount: "アセットは最大50個まで登録できます",
       scenarioNameRequired: "シナリオ名を入力してください",
+      scenarioDescriptionMaxLength:
+        "シナリオ説明は最大100文字まで入力できます",
       scenarioContentRequired: "内容を入力してください",
       scenarioContentMaxLength: "内容は最大1500文字まで入力できます",
       scenarioMaxCount: "シナリオは最大5個まで作成できます",
@@ -830,6 +836,7 @@ const zh: Messages = {
       assetSituationMaxLength: "情境说明最多可输入 50 个字符",
       assetMaxCount: "素材最多可注册 50 个",
       scenarioNameRequired: "请输入场景名称",
+      scenarioDescriptionMaxLength: "场景说明最多可输入 100 个字符",
       scenarioContentRequired: "请输入内容",
       scenarioContentMaxLength: "内容最多可输入 1500 个字符",
       scenarioMaxCount: "场景最多可创建 5 个",
@@ -1038,6 +1045,8 @@ const th: Messages = {
         "คำอธิบายสถานการณ์สามารถกรอกได้สูงสุด 50 ตัวอักษร",
       assetMaxCount: "สามารถลงทะเบียนแอสเซ็ตได้สูงสุด 50 รายการ",
       scenarioNameRequired: "กรุณากรอกชื่อสถานการณ์",
+      scenarioDescriptionMaxLength:
+        "คำอธิบายสถานการณ์สามารถกรอกได้สูงสุด 100 ตัวอักษร",
       scenarioContentRequired: "กรุณากรอกเนื้อหา",
       scenarioContentMaxLength:
         "เนื้อหาสามารถกรอกได้สูงสุด 1500 ตัวอักษร",
@@ -1250,6 +1259,7 @@ const vi: Messages = {
         "Mô tả tình huống có thể dài tối đa 50 ký tự",
       assetMaxCount: "Bạn có thể đăng tối đa 50 tài sản",
       scenarioNameRequired: "Vui lòng nhập tên kịch bản",
+      scenarioDescriptionMaxLength: "Mô tả kịch bản có thể dài tối đa 100 ký tự",
       scenarioContentRequired: "Vui lòng nhập nội dung",
       scenarioContentMaxLength: "Nội dung có thể dài tối đa 1500 ký tự",
       scenarioMaxCount: "Bạn có thể tạo tối đa 5 kịch bản",

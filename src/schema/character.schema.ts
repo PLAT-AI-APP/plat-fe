@@ -59,6 +59,10 @@ export const characterCreateSchema = z.object({
     .array(
       z.object({
         name: z.string().min(1, FIELD_ERROR_MESSAGES.scenarioNameRequired),
+        // 시나리오 설명은 선택 입력값이지만 저장 전 최대 길이는 스키마에서 함께 검증합니다.
+        description: z
+          .string()
+          .max(100, FIELD_ERROR_MESSAGES.scenarioDescriptionMaxLength),
         contents: z.array(
           z.object({
             id: z.string(),

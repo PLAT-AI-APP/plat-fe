@@ -34,6 +34,7 @@ const createCharacterCreateDefaultValues = (
   scenarios: [
     {
       name: defaultScenarioName,
+      description: "",
       contents: [],
     },
   ],
