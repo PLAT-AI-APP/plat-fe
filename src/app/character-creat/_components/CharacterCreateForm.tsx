@@ -22,7 +22,9 @@ const createCharacterCreateDefaultValues = (
   defaultScenarioName: string,
 ): CharacterCreateFormValues => ({
   representativeImage: "",
+  representativeImageId: null,
   characterProfileImage: "",
+  characterProfileImageId: null,
   title: "",
   name: "",
   characterIntroduce: "",

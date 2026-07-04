@@ -4,7 +4,9 @@ import React, { ChangeEvent, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
+import { useFileUploadMutation } from "@/api/file/postFileUpload";
 import { Close, ImageIcon, Plus } from "@/icons";
+import { dataUrlToFile } from "@/lib/file";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
 import RepresentativeImageCropModal from "../../profile/RepresentativeImageCropModal";
 import { cn } from "@/lib/utils";
@@ -19,6 +21,7 @@ const CharacterProfileImage = () => {
   const representativeT = useTranslations("characterCreate.representativeImage");
   const { setValue, control } = useFormContext<CharacterCreateFormValues>();
   const preview = useWatch({ control, name: "characterProfileImage" });
+  const { mutateAsync: uploadFile } = useFileUploadMutation();
   const [cropTarget, setCropTarget] = useState<{
     src: string;
     type: string;
@@ -54,16 +57,41 @@ const CharacterProfileImage = () => {
     e.target.value = "";
   };
 
-  const handleCropApply = (croppedImage: string) => {
-    setValue("characterProfileImage", croppedImage, {
-      shouldDirty: true,
-      shouldValidate: true,
-    });
-    setCropTarget(null);
+  const handleCropApply = async (croppedImage: string) => {
+    if (!cropTarget) return;
+
+    try {
+      const croppedFile = await dataUrlToFile(
+        croppedImage,
+        `character-profile-image.${cropTarget.type.split("/")[1] || "webp"}`,
+        cropTarget.type,
+      );
+      const uploadedImage = await uploadFile({
+        fileType: "CHARACTER_PROFILE",
+        file: croppedFile,
+      });
+
+      setValue("characterProfileImage", croppedImage, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+      setValue("characterProfileImageId", uploadedImage.originalFileId, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+      setCropTarget(null);
+    } catch (error) {
+      console.error("Character profile image upload failed:", error);
+      alert(representativeT("uploadFailed"));
+    }
   };
 
   const handlePreviewDelete = () => {
     setValue("characterProfileImage", "", {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+    setValue("characterProfileImageId", null, {
       shouldDirty: true,
       shouldValidate: true,
     });

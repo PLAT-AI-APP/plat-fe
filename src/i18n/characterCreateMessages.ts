@@ -39,6 +39,7 @@ const ko = {
       upload: "업로드",
       invalidType: "jpg, png, webp 이미지 파일만 가능합니다.",
       invalidSize: "파일 용량은 최대 5MB까지 가능합니다.",
+      uploadFailed: "이미지 업로드에 실패했습니다. 다시 시도해 주세요.",
     },
     details: {
       profileImageLabel: "캐릭터 프로필",
@@ -93,6 +94,7 @@ const ko = {
       closeGuide: "에셋 안내 닫기",
       invalidType: "jpg, png, webp 이미지 파일만 가능합니다.",
       invalidSize: "파일 용량은 최대 5MB까지 가능합니다.",
+      uploadFailed: "에셋 이미지 업로드에 실패했습니다. 다시 시도해 주세요.",
     },
     scenario: {
       addLimitAlert: "최대 5개까지 추가 가능합니다.",
@@ -230,6 +232,7 @@ const en: typeof ko = {
       upload: "Upload",
       invalidType: "Only jpg, png, and webp image files are allowed.",
       invalidSize: "File size can be up to 5MB.",
+      uploadFailed: "Failed to upload the image. Please try again.",
     },
     details: {
       profileImageLabel: "Character profile",
@@ -285,6 +288,7 @@ const en: typeof ko = {
       closeGuide: "Close asset guide",
       invalidType: "Only jpg, png, and webp image files are allowed.",
       invalidSize: "File size can be up to 5MB.",
+      uploadFailed: "Failed to upload the asset image. Please try again.",
     },
     scenario: {
       addLimitAlert: "You can add up to 5 scenarios.",
@@ -424,6 +428,7 @@ const ja: typeof ko = {
       upload: "アップロード",
       invalidType: "jpg、png、webp 画像ファイルのみ可能です。",
       invalidSize: "ファイル容量は最大 5MB まで可能です。",
+      uploadFailed: "画像のアップロードに失敗しました。もう一度お試しください。",
     },
     details: {
       profileImageLabel: "キャラクタープロフィール",
@@ -478,6 +483,7 @@ const ja: typeof ko = {
       closeGuide: "アセット案内を閉じる",
       invalidType: "jpg、png、webp 画像ファイルのみ可能です。",
       invalidSize: "ファイル容量は最大 5MB まで可能です。",
+      uploadFailed: "アセット画像のアップロードに失敗しました。もう一度お試しください。",
     },
     scenario: {
       addLimitAlert: "最大 5 個まで追加できます。",
@@ -616,6 +622,7 @@ const zh: typeof ko = {
       upload: "上传",
       invalidType: "仅支持 jpg、png、webp 图片文件。",
       invalidSize: "文件大小最多为 5MB。",
+      uploadFailed: "图片上传失败。请重试。",
     },
     details: {
       profileImageLabel: "角色资料",
@@ -668,6 +675,7 @@ const zh: typeof ko = {
       closeGuide: "关闭素材指南",
       invalidType: "仅支持 jpg、png、webp 图片文件。",
       invalidSize: "文件大小最多为 5MB。",
+      uploadFailed: "素材图片上传失败。请重试。",
     },
     scenario: {
       addLimitAlert: "最多可添加 5 个场景。",
@@ -801,6 +809,7 @@ const th: typeof ko = {
       upload: "อัปโหลด",
       invalidType: "อนุญาตเฉพาะไฟล์รูป jpg, png, webp เท่านั้น",
       invalidSize: "ขนาดไฟล์สูงสุดคือ 5MB",
+      uploadFailed: "อัปโหลดรูปภาพไม่สำเร็จ โปรดลองอีกครั้ง",
     },
     details: {
       profileImageLabel: "โปรไฟล์ตัวละคร",
@@ -855,6 +864,7 @@ const th: typeof ko = {
       closeGuide: "ปิดคู่มือแอสเซ็ต",
       invalidType: "อนุญาตเฉพาะไฟล์รูป jpg, png, webp เท่านั้น",
       invalidSize: "ขนาดไฟล์สูงสุดคือ 5MB",
+      uploadFailed: "อัปโหลดรูปภาพแอสเซ็ตไม่สำเร็จ โปรดลองอีกครั้ง",
     },
     scenario: {
       addLimitAlert: "สามารถเพิ่มได้สูงสุด 5 สถานการณ์",
@@ -994,6 +1004,7 @@ const vi: typeof ko = {
       upload: "Tải lên",
       invalidType: "Chỉ cho phép tệp ảnh jpg, png, webp.",
       invalidSize: "Dung lượng tệp tối đa là 5MB.",
+      uploadFailed: "Tải ảnh lên thất bại. Vui lòng thử lại.",
     },
     details: {
       profileImageLabel: "Hồ sơ nhân vật",
@@ -1048,6 +1059,7 @@ const vi: typeof ko = {
       closeGuide: "Đóng hướng dẫn tài sản",
       invalidType: "Chỉ cho phép tệp ảnh jpg, png, webp.",
       invalidSize: "Dung lượng tệp tối đa là 5MB.",
+      uploadFailed: "Tải ảnh asset lên thất bại. Vui lòng thử lại.",
     },
     scenario: {
       addLimitAlert: "Bạn có thể thêm tối đa 5 kịch bản.",

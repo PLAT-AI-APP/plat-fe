@@ -25,6 +25,7 @@ const SignupForm = () => {
     control,
     formState: { errors },
     handleSubmit,
+    reset,
   } = useFormContext<AuthFormValues>();
 
   const {
@@ -69,6 +70,19 @@ const SignupForm = () => {
       },
       {
         onSuccess: () => {
+          // 회원가입이 완료되면 이전 입력값과 인증 상태를 비워 다음 회원가입 진입 시 빈 폼으로 시작합니다.
+          reset({
+            nickname: "",
+            email: "",
+            code: "",
+            password: "",
+            passwordCheck: "",
+            isPrivacyAgreed: false,
+            isTermsAgreed: false,
+            isAgeAgreed: false,
+          });
+          setIsEmailVerified(false);
+
           openDialog("SIGNUP_COMPLETE", {
             nickname: data.nickname,
             onLogin: handleLoginAfterSignup,

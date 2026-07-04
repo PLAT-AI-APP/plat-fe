@@ -38,7 +38,8 @@ const CreateHeader = ({ onSave, onDraftClick }: CreateHeaderProps) => {
 
     const currentFormData = getValues();
     const payload = {
-      profileImage: currentFormData.characterProfileImage,
+      representativeImageId: currentFormData.representativeImageId,
+      profileImageId: currentFormData.characterProfileImageId,
       name: currentFormData.name,
       introduce: currentFormData.characterIntroduce,
       detailSetting: currentFormData.characterDetailSetting,
@@ -46,7 +47,7 @@ const CreateHeader = ({ onSave, onDraftClick }: CreateHeaderProps) => {
         currentFormData.asset?.map((asset) => ({
           name: asset.assetName,
           situation: asset.assetSituation,
-          image: asset.assetImage,
+          imageId: asset.assetImageId,
         })) || [],
       visibility: currentFormData.isPublic ? "PUBLIC" : "PRIVATE",
       // 프로필 탭의 프롤로그 소개가 있으면 우선 보내고, 없을 때는 상세 설명을 사용합니다.

@@ -4,7 +4,9 @@ import React, { ChangeEvent, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
+import { useFileUploadMutation } from "@/api/file/postFileUpload";
 import { Close, ImageIcon, Plus } from "@/icons";
+import { dataUrlToFile } from "@/lib/file";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
 import RepresentativeImageCropModal from "./RepresentativeImageCropModal";
 import { cn } from "@/lib/utils";
@@ -13,6 +15,7 @@ const RepresentativeImage = () => {
   const t = useTranslations("characterCreate.representativeImage");
   const { setValue, control } = useFormContext<CharacterCreateFormValues>();
   const preview = useWatch({ control, name: "representativeImage" });
+  const { mutateAsync: uploadFile } = useFileUploadMutation();
   const [cropTarget, setCropTarget] = useState<{
     src: string;
     type: string;
@@ -50,16 +53,38 @@ const RepresentativeImage = () => {
     e.target.value = "";
   };
 
-  const handleCropApply = (croppedImage: string) => {
-    setValue("representativeImage", croppedImage, {
-      shouldDirty: true,
-      shouldValidate: true,
-    });
-    setCropTarget(null);
+  const handleCropApply = async (croppedImage: string) => {
+    if (!cropTarget) return;
+
+    try {
+      const croppedFile = await dataUrlToFile(
+        croppedImage,
+        `representative-image.${cropTarget.type.split("/")[1] || "webp"}`,
+        cropTarget.type,
+      );
+      const uploadedImage = await uploadFile({
+        fileType: "CHARACTER_PROFILE",
+        file: croppedFile,
+      });
+
+      setValue("representativeImage", croppedImage, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+      setValue("representativeImageId", uploadedImage.originalFileId, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+      setCropTarget(null);
+    } catch (error) {
+      console.error("Representative image upload failed:", error);
+      alert(t("uploadFailed"));
+    }
   };
 
   const handlePreviewDelete = () => {
     setValue("representativeImage", "");
+    setValue("representativeImageId", null);
   };
 
   return (

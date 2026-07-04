@@ -88,7 +88,7 @@ const ko = {
     },
     personaDelete: {
       title: "페르소나를 삭제할까요?",
-      description: "'{personaName}'는 삭제 후 복구할 수 없어요.",
+      description: "는 삭제 후 복구할 수 없어요.",
       cancel: "취소하기",
       confirm: "확인하기",
     },
@@ -302,7 +302,7 @@ const en: Messages = {
     },
     personaDelete: {
       title: "Delete this persona?",
-      description: "'{personaName}' cannot be restored after deletion.",
+      description: " cannot be restored after deletion.",
       cancel: "Cancel",
       confirm: "Confirm",
     },
@@ -517,7 +517,7 @@ const ja: Messages = {
     },
     personaDelete: {
       title: "ペルソナを削除しますか？",
-      description: "「{personaName}」は削除後に復元できません。",
+      description: "は削除後に復元できません。",
       cancel: "キャンセル",
       confirm: "確認",
     },
@@ -727,7 +727,7 @@ const zh: Messages = {
     },
     personaDelete: {
       title: "要删除这个人格吗？",
-      description: "“{personaName}”删除后将无法恢复。",
+      description: "删除后将无法恢复。",
       cancel: "取消",
       confirm: "确认",
     },
@@ -928,7 +928,7 @@ const th: Messages = {
     },
     personaDelete: {
       title: "ลบเพอร์โซนานี้หรือไม่?",
-      description: "'{personaName}' จะไม่สามารถกู้คืนได้หลังจากลบ",
+      description: " จะไม่สามารถกู้คืนได้หลังจากลบ",
       cancel: "ยกเลิก",
       confirm: "ยืนยัน",
     },
@@ -1139,7 +1139,7 @@ const vi: Messages = {
     },
     personaDelete: {
       title: "Xóa persona này?",
-      description: "'{personaName}' sẽ không thể khôi phục sau khi xóa.",
+      description: " sẽ không thể khôi phục sau khi xóa.",
       cancel: "Hủy",
       confirm: "Xác nhận",
     },

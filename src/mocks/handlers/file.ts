@@ -37,44 +37,47 @@ const createMockFileUploadResponse = (
 };
 
 export const fileHandlers = [
-  http.post(/\/files\/([^/]+)(?:\?.*)?$/, async ({ request, params }) => {
-    const fileType = params[0] as FileUploadType;
+  http.post(
+    /\/files\/upload\/([^/]+)(?:\?.*)?$/,
+    async ({ request, params }) => {
+      const fileType = params[0] as FileUploadType;
 
-    if (!fileUploadTypes.includes(fileType)) {
-      return HttpResponse.json(
-        {
-          result: "ERROR",
-          code: "FIELD_ERROR",
-          message: "지원하지 않는 파일 업로드 유형입니다.",
-        },
-        { status: 400 },
-      );
-    }
+      if (!fileUploadTypes.includes(fileType)) {
+        return HttpResponse.json(
+          {
+            result: "ERROR",
+            code: "FIELD_ERROR",
+            message: "지원하지 않는 파일 업로드 유형입니다.",
+          },
+          { status: 400 },
+        );
+      }
 
-    const formData = await request.formData();
-    const file = formData.get("file");
+      const formData = await request.formData();
+      const file = formData.get("file");
 
-    if (!(file instanceof File)) {
-      return HttpResponse.json(
-        {
-          result: "ERROR",
-          code: "FIELD_ERROR",
-          message: "업로드할 이미지 파일을 선택해 주세요.",
-          data: {
-            fields: {
-              file: "파일을 선택해 주세요.",
+      if (!(file instanceof File)) {
+        return HttpResponse.json(
+          {
+            result: "ERROR",
+            code: "FIELD_ERROR",
+            message: "업로드할 이미지 파일을 선택해 주세요.",
+            data: {
+              fields: {
+                file: "파일을 선택해 주세요.",
+              },
             },
           },
-        },
-        { status: 400 },
-      );
-    }
+          { status: 400 },
+        );
+      }
 
-    return HttpResponse.json({
-      result: "OK",
-      code: null,
-      data: createMockFileUploadResponse(fileType, file),
-      message: null,
-    });
-  }),
+      return HttpResponse.json({
+        result: "OK",
+        code: null,
+        data: createMockFileUploadResponse(fileType, file),
+        message: null,
+      });
+    },
+  ),
 ];

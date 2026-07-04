@@ -1,14 +1,19 @@
 import { z } from "zod";
 import { FIELD_ERROR_MESSAGES } from "@/constants/fieldMessages";
 
+// 파일 업로드 ID는 백엔드 직렬화 정책에 따라 숫자 또는 문자열로 올 수 있어 두 타입을 모두 허용합니다.
+const fileUploadIdSchema = z.union([z.number(), z.string()]);
+
 /** 캐릭터 생성 form의 필수값과 입력 제한을 한 곳에서 검증합니다. */
 export const characterCreateSchema = z.object({
   representativeImage: z
     .string()
     .min(1, FIELD_ERROR_MESSAGES.representativeImageRequired),
+  representativeImageId: fileUploadIdSchema.nullable(),
   characterProfileImage: z
     .string()
     .min(1, FIELD_ERROR_MESSAGES.characterProfileImageRequired),
+  characterProfileImageId: fileUploadIdSchema.nullable(),
   title: z
     .string()
     .min(1, FIELD_ERROR_MESSAGES.characterTitleRequired)
@@ -36,6 +41,7 @@ export const characterCreateSchema = z.object({
       z.object({
         assetFile: z.any().nullable(),
         assetImage: z.string(),
+        assetImageId: fileUploadIdSchema.nullable(),
         assetName: z
           .string()
           .min(1, FIELD_ERROR_MESSAGES.assetNameRequired)

@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 interface RepresentativeImageCropModalProps {
   imageSrc: string;
   imageType: string;
-  onApply: (croppedImage: string) => void;
+  onApply: (croppedImage: string) => void | Promise<void>;
   onClose: () => void;
 }
 
@@ -51,7 +51,7 @@ const RepresentativeImageCropModal = ({
         outputType: imageType === "image/png" ? "image/png" : "image/jpeg",
       });
 
-      onApply(croppedImage);
+      await onApply(croppedImage);
     } finally {
       setIsApplying(false);
     }

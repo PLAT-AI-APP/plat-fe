@@ -6,6 +6,7 @@ import { Droppable } from "@hello-pangea/dnd";
 import { UseFieldArrayReturn } from "react-hook-form";
 import AssetGuidePanel from "./AssetGuidePanel";
 import AssetItem from "./AssetItem";
+import { useFileUploadMutation } from "@/api/file/postFileUpload";
 import { Plus } from "@/icons";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
 
@@ -17,37 +18,50 @@ const Asset = ({ assetFieldArray }: AssetProps) => {
   const t = useTranslations("characterCreate.asset");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { fields, append, remove } = assetFieldArray;
+  const { mutateAsync: uploadFile } = useFileUploadMutation();
 
   const copyAsset = (index: number) => {
     void index;
   };
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
     if (!allowedTypes.includes(file.type)) {
       alert(t("invalidType"));
+      e.target.value = "";
       return;
     }
 
     const maxSize = 5 * 1024 * 1024;
     if (file.size > maxSize) {
       alert(t("invalidSize"));
+      e.target.value = "";
       return;
     }
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      append({
-        assetFile: null,
-        assetName: file.name.split(".").slice(0, -1).join("."),
-        assetImage: reader.result as string,
-        assetSituation: "",
+    try {
+      const uploadedImage = await uploadFile({
+        fileType: "CHARACTER_ASSET",
+        file,
       });
-    };
-    reader.readAsDataURL(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        append({
+          assetFile: null,
+          assetName: file.name.split(".").slice(0, -1).join("."),
+          assetImage: reader.result as string,
+          assetImageId: uploadedImage.originalFileId,
+          assetSituation: "",
+        });
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      console.error("Asset image upload failed:", error);
+      alert(t("uploadFailed"));
+    }
 
     e.target.value = "";
   };

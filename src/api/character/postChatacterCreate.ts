@@ -1,16 +1,18 @@
 import { useMutation } from "@tanstack/react-query";
 import { authAxios } from "..";
+import { FileUploadId } from "@/api/file/postFileUpload";
 import { ApiSuccessResponse, AppError } from "@/type/api";
 
 interface postChatacterCreateProps {
-  profileImage?: string;
+  representativeImageId?: FileUploadId | null;
+  profileImageId?: FileUploadId | null;
   name: string;
   introduce: string;
   detailSetting: string;
   assets?: {
     name: string;
     situation: string;
-    image: string;
+    imageId: FileUploadId | null;
   }[];
   visibility: string;
   description: string;

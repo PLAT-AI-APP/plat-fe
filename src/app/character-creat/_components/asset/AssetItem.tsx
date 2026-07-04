@@ -7,6 +7,7 @@ import { Draggable } from "@hello-pangea/dnd";
 import { useFormContext, useWatch } from "react-hook-form";
 import SmartInput from "@/components/smart-input";
 import CopyFill from "@/icons/CopyFill";
+import { useFileUploadMutation } from "@/api/file/postFileUpload";
 import { ArrowDown, Dots, ImageIcon, Trash } from "@/icons";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
 
@@ -26,6 +27,7 @@ const AssetItem = ({ id, index, remove, copyAsset }: AssetItemProps) => {
     formState: { errors },
   } = useFormContext<CharacterCreateFormValues>();
   const [isActive, setIsActive] = useState(false);
+  const { mutateAsync: uploadFile } = useFileUploadMutation();
   const assetImage = useWatch({ control, name: `asset.${index}.assetImage` });
   const assetName = useWatch({ control, name: `asset.${index}.assetName` });
   const assetSituation = useWatch({
@@ -39,29 +41,47 @@ const AssetItem = ({ id, index, remove, copyAsset }: AssetItemProps) => {
 
   const toggleActive = () => setIsActive((prev) => !prev);
 
-  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
     if (!allowedTypes.includes(file.type)) {
       alert(t("invalidType"));
+      e.target.value = "";
       return;
     }
 
     const maxSize = 5 * 1024 * 1024;
     if (file.size > maxSize) {
       alert(t("invalidSize"));
+      e.target.value = "";
       return;
     }
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setValue(`asset.${index}.assetImage`, reader.result as string, {
-        shouldValidate: true,
+    try {
+      const uploadedImage = await uploadFile({
+        fileType: "CHARACTER_ASSET",
+        file,
       });
-    };
-    reader.readAsDataURL(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setValue(`asset.${index}.assetImage`, reader.result as string, {
+          shouldDirty: true,
+          shouldValidate: true,
+        });
+        setValue(`asset.${index}.assetImageId`, uploadedImage.originalFileId, {
+          shouldDirty: true,
+          shouldValidate: true,
+        });
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      console.error("Asset image upload failed:", error);
+      alert(t("uploadFailed"));
+    }
+
+    e.target.value = "";
   };
 
   return (

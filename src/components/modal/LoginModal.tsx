@@ -61,7 +61,8 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
   const email = useWatch({ control, name: "email" }) ?? "";
   const pw = useWatch({ control, name: "pw" }) ?? "";
 
-  const { mutate: emailLogin } = useEmailLoginMutation();
+  const { mutate: emailLogin, isPending: isEmailLoginPending } =
+    useEmailLoginMutation();
 
   const handleLoginSuccess = () => {
     // 회원가입 화면에서만 홈으로 보내고, 그 외에는 현재 경로 위에서 인증 상태만 갱신합니다.
@@ -89,6 +90,9 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
   };
 
   const onSubmit = () => {
+    // 로그인 요청이 진행 중일 때는 추가 submit을 막아 이전 요청이 취소된 것처럼 보이는 중복 호출을 방지합니다.
+    if (isEmailLoginPending) return;
+
     emailLogin(
       { username: email, password: pw },
       {
@@ -191,7 +195,7 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
               id="btn-login-submit"
               text={t("auth.login.submit")}
               type="submit"
-              isActive={email.length > 0 && pw.length > 0}
+              isActive={email.length > 0 && pw.length > 0 && !isEmailLoginPending}
               className="mt-2 h-12 rounded-lg"
             />
           </form>
