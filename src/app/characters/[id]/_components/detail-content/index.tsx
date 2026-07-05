@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { useCharacterDetailQuery } from "@/api/character/getCharacterDetail";
 import { useModalStore } from "@/store/useModalStore";
 import CommentsPanel from "./_components/CommentsPanel";
@@ -16,6 +17,7 @@ interface CharacterDetailContentProps {
 const CharacterDetailContent = ({ characterId }: CharacterDetailContentProps) => {
   const { data: character, isLoading, isError } =
     useCharacterDetailQuery(characterId);
+  const t = useTranslations("characterDetail");
   const openModal = useModalStore((state) => state.openModal);
   const [currentTab, setCurrentTab] = useState<CharacterDetailTab>("settings");
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
@@ -132,7 +134,7 @@ const CharacterDetailContent = ({ characterId }: CharacterDetailContentProps) =>
   if (isError || !character) {
     return (
       <article className="flex w-full justify-center px-5 pb-25 pt-5">
-        <p className="body-2 text-font-2">캐릭터 정보를 불러오지 못했어요.</p>
+        <p className="body-2 text-font-2">{t("loadFailed")}</p>
       </article>
     );
   }

@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { ArrowDown, ArrowLeft, ArrowRight } from "@/icons";
 import { CharacterDetail, CharacterImageItem } from "@/type/character";
 import { cn } from "@/lib/utils";
@@ -22,6 +23,7 @@ const ExpandableText = ({
   children: string;
   maxHeight: number;
 }) => {
+  const t = useTranslations("characterDetail");
   const contentRef = useRef<HTMLDivElement>(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const [shouldShowMoreButton, setShouldShowMoreButton] = useState(false);
@@ -64,7 +66,7 @@ const ExpandableText = ({
           onClick={() => setIsExpanded((prev) => !prev)}
           className="body-4 flex h-11 w-full items-center justify-center gap-1 rounded-xl border border-border-main text-font-2 hover:bg-card"
         >
-          {isExpanded ? "접기" : "더 보기"}
+          {isExpanded ? t("collapse") : t("expand")}
           <ArrowDown className={cn("size-4", isExpanded && "rotate-180")} />
         </button>
       )}
@@ -79,6 +81,7 @@ const SettingsPanel = ({
   onStartChat,
   selectedImage,
 }: SettingsPanelProps) => {
+  const t = useTranslations("characterDetail");
   // 선택된 미리보기 이미지가 없다면 기존 대표 이미지를 기본 렌더링 대상으로 사용합니다.
   const currentImageUrl = selectedImage?.url ?? character.mainImage;
   const currentImageKey = selectedImage?.id ?? character.mainImage;
@@ -116,14 +119,14 @@ const SettingsPanel = ({
             {isPrivateImage && (
               <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-bg-darkest/80">
                 <p className="title-2 text-center text-font-1">
-                  캐릭터의 다른 모습을 보고 싶다면?
+                  {t("privateImagePrompt")}
                 </p>
                 <button
                   type="button"
                   onClick={onStartChat}
                   className="title-3 rounded-xl border border-brand-dark bg-bg-darkest/40 px-4 py-2 text-brand backdrop-blur-md"
                 >
-                  대화하기
+                  {t("chatStart")}
                 </button>
               </div>
             )}
@@ -133,7 +136,7 @@ const SettingsPanel = ({
           type="button"
           onClick={onPreviousImage}
           className="absolute left-3 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center text-font-2 opacity-30 transition-opacity hover:opacity-100"
-          aria-label="이전 이미지"
+          aria-label={t("previousImage")}
         >
           <ArrowLeft className="size-6" />
         </button>
@@ -141,23 +144,25 @@ const SettingsPanel = ({
           type="button"
           onClick={onNextImage}
           className="absolute right-3 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center text-font-2 opacity-30 transition-opacity hover:opacity-100"
-          aria-label="다음 이미지"
+          aria-label={t("nextImage")}
         >
           <ArrowRight className="size-6" />
         </button>
       </div>
 
       <section className="flex flex-col gap-4">
-        <h2 className="title-3 text-font-1">프롤로그</h2>
+        <h2 className="title-3 text-font-1">{t("prologue")}</h2>
         <ExpandableText maxHeight={400}>{character.prologue}</ExpandableText>
       </section>
 
       <section className="flex flex-col gap-4">
-        <h2 className="title-3 text-font-1">캐릭터 소개</h2>
+        <h2 className="title-3 text-font-1">
+          {t("characterIntroduction")}
+        </h2>
         <div className="flex items-center gap-2">
           <Image
             src={character.profileImage}
-            alt={`${character.title} 프로필`}
+            alt={t("profileAlt", { name: character.title })}
             width={32}
             height={32}
             className="size-8 rounded-full object-cover"

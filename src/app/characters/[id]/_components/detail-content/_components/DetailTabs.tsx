@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 
 export type CharacterDetailTab = "settings" | "scenario" | "comments";
 
@@ -7,13 +8,27 @@ interface DetailTabsProps {
   onChange: (tab: CharacterDetailTab, targetId: string) => void;
 }
 
-const tabs: { id: CharacterDetailTab; label: string; targetId: string }[] = [
-  { id: "settings", label: "설정", targetId: "character-detail-settings" },
-  { id: "scenario", label: "시나리오", targetId: "character-detail-scenario" },
-  { id: "comments", label: "댓글", targetId: "character-detail-comments" },
+const tabs: { id: CharacterDetailTab; labelKey: string; targetId: string }[] = [
+  {
+    id: "settings",
+    labelKey: "tabs.settings",
+    targetId: "character-detail-settings",
+  },
+  {
+    id: "scenario",
+    labelKey: "tabs.scenario",
+    targetId: "character-detail-scenario",
+  },
+  {
+    id: "comments",
+    labelKey: "tabs.comments",
+    targetId: "character-detail-comments",
+  },
 ];
 
 const DetailTabs = ({ currentTab, onChange }: DetailTabsProps) => {
+  const t = useTranslations("characterDetail");
+
   return (
     <nav className="flex w-full gap-1 border-b border-border-main bg-bg-dark">
       {tabs.map((tab) => {
@@ -32,7 +47,7 @@ const DetailTabs = ({ currentTab, onChange }: DetailTabsProps) => {
               isActive && "title-3 border-brand text-font-1",
             )}
           >
-            {tab.label}
+            {t(tab.labelKey)}
           </a>
         );
       })}

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { CharacterDetail } from "@/type/character";
 import CommentExpandableBody from "./CommentExpandableBody";
 import CommentInputBox from "./CommentInputBox";
@@ -9,11 +10,12 @@ interface CommentsPanelProps {
 }
 
 const CommentsPanel = ({ character }: CommentsPanelProps) => {
+  const t = useTranslations("characterDetail");
+
   return (
     <section className="flex flex-col gap-6">
       <h2 className="body-2 text-font-1">
-        <span className="text-font-2">댓글 </span>
-        {character.comments.length}개
+        {t("commentsCount", { count: character.comments.length })}
       </h2>
 
       <CommentInputBox />
@@ -23,7 +25,7 @@ const CommentsPanel = ({ character }: CommentsPanelProps) => {
           <li key={comment.id} className="flex gap-2">
             <Image
               src={comment.authorImage}
-              alt={`${comment.authorName} 프로필`}
+              alt={t("profileAlt", { name: comment.authorName })}
               width={36}
               height={36}
               className="size-9 rounded-full object-cover"

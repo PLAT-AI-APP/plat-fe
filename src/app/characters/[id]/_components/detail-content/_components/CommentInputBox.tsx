@@ -2,25 +2,27 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useUserStore } from "@/store/useUserStore";
 
 const CommentInputBox = () => {
+  const t = useTranslations("characterDetail");
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const profileImage = useUserStore((state) => state.user?.profileImage);
   const [comment, setComment] = useState("");
 
   // 로그인 상태에 따라 입력 가능 여부와 안내 문구를 분기해 댓글 작성 UX를 한 곳에서 관리합니다.
   const placeholder = isLoggedIn
-    ? "타인에게 부적절한 댓글은 삭제될 수 있어요"
-    : "로그인 후 댓글을 달 수 있어요";
+    ? t("loggedInCommentPlaceholder")
+    : t("loggedOutCommentPlaceholder");
 
   return (
     <div className="flex gap-2">
       <Image
         src={profileImage || "/p1.png"}
-        alt="내 프로필"
+        alt={t("myProfileAlt")}
         width={40}
         height={40}
         className="size-10 rounded-full object-cover"
@@ -46,7 +48,7 @@ const CommentInputBox = () => {
             isLoggedIn ? "text-font-1" : "text-font-disabled",
           )}
         >
-          등록
+          {t("submitComment")}
         </button>
       </div>
     </div>

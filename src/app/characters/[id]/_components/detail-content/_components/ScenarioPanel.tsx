@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import ScenarioSelectPopover from "@/components/popover/ScenarioSelectPopover";
 import { ArrowDown, Message } from "@/icons";
 import { cn } from "@/lib/utils";
@@ -14,6 +15,7 @@ interface ScenarioPanelProps {
 const SCENARIO_CONTENT_MAX_HEIGHT = 1471;
 
 const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
+  const t = useTranslations("characterDetail");
   // 시나리오 변경 버튼을 팝오버 위치 기준으로 사용하기 위해 ref로 보관합니다.
   const scenarioSelectTriggerRef = useRef<HTMLButtonElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -110,7 +112,7 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
                 <Image
                   key={content.id}
                   src={content.value}
-                  alt={`${selectedScenario.name} 에셋`}
+                  alt={t("assetAlt", { name: selectedScenario.name })}
                   width={482}
                   height={289}
                   className="h-[289px] w-[482px] rounded-2xl object-cover"
@@ -155,7 +157,7 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
             onClick={() => setIsExpanded((prev) => !prev)}
             className="body-4 flex w-full items-center justify-center gap-1 rounded-xl border border-border-main bg-bg-darkest py-3 text-font-2 transition-colors hover:bg-bg-dark hover:text-font-1"
           >
-            {isExpanded ? "접기" : "더 보기"}
+            {isExpanded ? t("collapse") : t("expand")}
             <ArrowDown
               className={cn("size-[18px]", isExpanded && "rotate-180")}
             />

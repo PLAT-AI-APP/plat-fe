@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import ActiveButton from "@/components/ActiveButton";
 import { ChatFill } from "@/icons";
 import { cn, formatStatCount } from "@/lib/utils";
@@ -17,12 +18,14 @@ const SidebarSummary = ({
   onSelectImage,
   onStartChat,
 }: SidebarSummaryProps) => {
+  const t = useTranslations("characterDetail");
+
   return (
     <aside className="sticky top-24 flex w-[391px] shrink-0 flex-col gap-5 self-start">
       <section className="flex flex-col gap-4">
         {character.isOfficial && (
           <span className="body-6 w-fit rounded-xl bg-brand/10 px-3 py-2 text-brand-dark">
-            plat 공식 캐릭터
+            {t("officialCharacter")}
           </span>
         )}
 
@@ -50,11 +53,17 @@ const SidebarSummary = ({
             type="button"
             onClick={() => onSelectImage(index)}
             className="relative size-[73px] shrink-0 overflow-hidden rounded-lg"
-            aria-label={`${character.title} 미리보기 ${index + 1}`}
+            aria-label={t("previewImageLabel", {
+              title: character.title,
+              index: index + 1,
+            })}
           >
             <Image
               src={image.url}
-              alt={`${character.title} 미리보기 ${index + 1}`}
+              alt={t("previewImageLabel", {
+                title: character.title,
+                index: index + 1,
+              })}
               fill
               className={cn(
                 "object-cover",
@@ -69,7 +78,7 @@ const SidebarSummary = ({
       </div>
 
       <ActiveButton
-        text="대화하기"
+        text={t("chatStart")}
         isActive
         type="button"
         onClick={onStartChat}
@@ -82,7 +91,9 @@ const SidebarSummary = ({
             <div className="flex min-w-0 items-center gap-2">
               <Image
                 src={character.creator.profileImage}
-                alt={`${character.creator.nickname} 프로필`}
+                alt={t("creatorProfileAlt", {
+                  nickname: character.creator.nickname,
+                })}
                 width={48}
                 height={48}
                 className="size-12 rounded-full object-cover"
@@ -92,7 +103,9 @@ const SidebarSummary = ({
                   {character.creator.nickname}
                 </p>
                 <p className="body-6 text-font-2">
-                  팔로잉 {character.creator.followingCount}명
+                  {t("followingCount", {
+                    count: character.creator.followingCount,
+                  })}
                 </p>
               </div>
             </div>
@@ -100,13 +113,13 @@ const SidebarSummary = ({
               type="button"
               className="title-5 rounded-full bg-border-main px-3 py-1 text-font-1"
             >
-              {character.creator.isFollowing ? "팔로잉" : "팔로우"}
+              {character.creator.isFollowing ? t("following") : t("follow")}
             </button>
           </div>
 
           <div className="body-6 flex gap-4 text-font-2">
-            <span>캐릭터 제작일 {character.createdAt}</span>
-            <span>마지막 수정일 {character.updatedAt}</span>
+            <span>{t("createdAt", { date: character.createdAt })}</span>
+            <span>{t("updatedAt", { date: character.updatedAt })}</span>
           </div>
         </div>
       </section>

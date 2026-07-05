@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
 interface CommentExpandableBodyProps {
@@ -10,6 +11,7 @@ interface CommentExpandableBodyProps {
 const COMMENT_BODY_MAX_HEIGHT = 120;
 
 const CommentExpandableBody = ({ content }: CommentExpandableBodyProps) => {
+  const t = useTranslations("characterDetail");
   const contentRef = useRef<HTMLParagraphElement>(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const [shouldShowMoreButton, setShouldShowMoreButton] = useState(false);
@@ -63,7 +65,7 @@ const CommentExpandableBody = ({ content }: CommentExpandableBodyProps) => {
           onClick={() => setIsExpanded((prev) => !prev)}
           className="body-6 w-fit text-font-2"
         >
-          {isExpanded ? "접기" : "더보기"}
+          {isExpanded ? t("collapse") : t("expandCompact")}
         </button>
       )}
     </div>
