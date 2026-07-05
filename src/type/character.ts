@@ -14,4 +14,48 @@ export interface CharacterScenario {
   situation: string;
   firstDialogue: string;
   lang: string;
+  description?: string;
+  contents?: ScenarioContentItem[];
+}
+
+export interface CharacterDetailComment {
+  id: string;
+  authorName: string;
+  authorImage: string;
+  content: string;
+  createdAt: string;
+  isCreator?: boolean;
+}
+
+export type CharacterImageVisibility = "PUBLIC" | "PRIVATE";
+
+export interface CharacterImageItem {
+  id: string;
+  url: string;
+  visibility: CharacterImageVisibility;
+}
+
+export interface CharacterDetail {
+  characterId: string;
+  title: string;
+  introduce: string;
+  prologue: string;
+  characterDescription: string;
+  chatCount: number;
+  tags: string[];
+  isOfficial: boolean;
+  images: CharacterImageItem[];
+  mainImage: string;
+  profileImage: string;
+  createdAt: string;
+  updatedAt: string;
+  creator: {
+    id: string;
+    nickname: string;
+    profileImage: string;
+    followingCount: number;
+    isFollowing: boolean;
+  };
+  scenarios: CharacterScenario[];
+  comments: CharacterDetailComment[];
 }

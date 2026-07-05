@@ -317,7 +317,7 @@ export default function ClientLayout({
           id="page-content"
           onScroll={onScroll}
           className={cn(
-            "flex-1 overflow-y-auto overflow-x-hidden",
+            "flex-1 overflow-y-auto overflow-x-hidden scroll-smooth",
             "min-h-0 w-full mx-auto",
             isScrolling && "is-scrolling",
           )}
