@@ -21,7 +21,7 @@ const SidebarSummary = ({
   const t = useTranslations("characterDetail");
 
   return (
-    <aside className="sticky top-24 flex w-[391px] shrink-0 flex-col gap-5 self-start">
+    <aside className="sticky top-0 flex w-[391px] shrink-0 flex-col gap-5 self-start">
       <section className="flex flex-col gap-4">
         {character.isOfficial && (
           <span className="body-6 w-fit rounded-xl bg-brand/10 px-3 py-2 text-brand-dark">
