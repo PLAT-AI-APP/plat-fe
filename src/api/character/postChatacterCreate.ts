@@ -13,6 +13,7 @@ interface postChatacterCreateProps {
     name: string;
     situation: string;
     imageId: FileUploadId | null;
+    visibility: "PUBLIC" | "PRIVATE";
   }[];
   visibility: string;
   description: string;

@@ -6,19 +6,17 @@ import { useTranslations } from "next-intl";
 import { Draggable } from "@hello-pangea/dnd";
 import { useFormContext, useWatch } from "react-hook-form";
 import SmartInput from "@/components/smart-input";
-import CopyFill from "@/icons/CopyFill";
 import { useFileUploadMutation } from "@/api/file/postFileUpload";
-import { ArrowDown, Dots, ImageIcon, Trash } from "@/icons";
+import { ArrowDown, Dots, ImageIcon, LockLine, Trash, UnlockLine } from "@/icons";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
 
 interface AssetItemProps {
   id: string;
   index: number;
   remove: (index: number) => void;
-  copyAsset: (index: number) => void;
 }
 
-const AssetItem = ({ id, index, remove, copyAsset }: AssetItemProps) => {
+const AssetItem = ({ id, index, remove }: AssetItemProps) => {
   const t = useTranslations("characterCreate.asset");
   const {
     register,
@@ -34,12 +32,29 @@ const AssetItem = ({ id, index, remove, copyAsset }: AssetItemProps) => {
     control,
     name: `asset.${index}.assetSituation`,
   });
+  const assetVisibility =
+    useWatch({
+      control,
+      name: `asset.${index}.assetVisibility`,
+    }) ?? "PUBLIC";
   const currentAssetError = errors.asset?.[index];
-  // 카드 헤더에는 입력 중인 이름을 바로 반영하고, 비어 있으면 기본 라벨을 보여줍니다.
+  // 카드 헤더에는 입력 중인 에셋명을 즉시 반영하고, 비어 있으면 기본 이름을 보여줍니다.
   const displayAssetName = assetName || t("defaultName");
-  const displayAssetCode = "#3Eabde";
 
   const toggleActive = () => setIsActive((prev) => !prev);
+  const isPublicAsset = assetVisibility === "PUBLIC";
+
+  // 공개 상태는 에셋별 RHF 값으로 저장해 생성 API payload까지 그대로 전달합니다.
+  const toggleAssetVisibility = () => {
+    setValue(
+      `asset.${index}.assetVisibility`,
+      isPublicAsset ? "PRIVATE" : "PUBLIC",
+      {
+        shouldDirty: true,
+        shouldValidate: true,
+      },
+    );
+  };
 
   const handleImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -90,24 +105,22 @@ const AssetItem = ({ id, index, remove, copyAsset }: AssetItemProps) => {
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
-          className={`min-h-[95px] rounded-xl border border-border-main bg-bg-darkest px-4 pb-4 pt-1 ${
-            isActive ? "h-auto" : "h-[95px]"
+          className={`min-h-[110px] overflow-hidden rounded-xl border border-border-main bg-bg-darkest px-4 pb-4 pt-1 ${
+            isActive ? "h-auto" : "h-[110px]"
           }`}
         >
           <div
-            className="mb-[3px] flex h-3 items-center justify-center"
+            {...provided.dragHandleProps}
+            className="mb-[3px] flex h-3 cursor-grab items-center justify-center active:cursor-grabbing"
           >
             <Dots className="w-5.75 text-font-disabled" />
           </div>
 
-          <article
-            {...provided.dragHandleProps}
-            className="flex cursor-grab justify-between active:cursor-grabbing"
-          >
-            <div className="flex gap-2.5">
+          <article className="flex justify-between gap-3">
+            <div className="flex min-w-0 flex-1 gap-3">
               <label
                 htmlFor={`asset-image-${index}`}
-                className="relative flex size-[60px] cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-card"
+                className="relative flex size-[73px] shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-[10px] bg-card opacity-80"
               >
                 {assetImage ? (
                   <Image
@@ -128,20 +141,17 @@ const AssetItem = ({ id, index, remove, copyAsset }: AssetItemProps) => {
                 />
               </label>
 
-              <p className="body-4 flex gap-1">
-                {displayAssetName}
-                <span className="text-font-disabled">{displayAssetCode}</span>
-              </p>
+              <div className="flex min-w-0 flex-1 flex-col justify-center gap-2">
+                <p className="title-4 truncate text-font-1">
+                  {displayAssetName}
+                </p>
+                <p className="body-6 line-clamp-2 text-font-2">
+                  {assetSituation}
+                </p>
+              </div>
             </div>
 
             <div className="flex gap-2 text-font-2">
-              <button
-                type="button"
-                onClick={() => copyAsset(index)}
-                className="flex size-7 items-center justify-center rounded-full hover:bg-card"
-              >
-                <CopyFill className="h-4 w-4" />
-              </button>
               <button
                 type="button"
                 onClick={() => remove(index)}
@@ -162,7 +172,7 @@ const AssetItem = ({ id, index, remove, copyAsset }: AssetItemProps) => {
           </article>
 
           {isActive && (
-            <div className="mt-4 flex flex-col gap-4">
+            <div className="mt-4 flex flex-col items-end gap-5">
               <SmartInput
                 {...register(`asset.${index}.assetName` as const)}
                 label={t("nameLabel")}
@@ -192,6 +202,22 @@ const AssetItem = ({ id, index, remove, copyAsset }: AssetItemProps) => {
                 descFontSize="body-6"
                 error={currentAssetError?.assetSituation?.message}
               />
+              <button
+                type="button"
+                onClick={toggleAssetVisibility}
+                className={`title-6 flex items-center gap-1 rounded-lg px-2 py-1 ${
+                  isPublicAsset
+                    ? "bg-font-1 text-font-4"
+                    : "bg-font-disabled text-font-1"
+                }`}
+              >
+                {isPublicAsset ? (
+                  <UnlockLine className="size-4" />
+                ) : (
+                  <LockLine className="size-4" />
+                )}
+                {isPublicAsset ? t("public") : t("private")}
+              </button>
             </div>
           )}
         </div>

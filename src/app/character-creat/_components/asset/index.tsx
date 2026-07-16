@@ -20,10 +20,6 @@ const Asset = ({ assetFieldArray }: AssetProps) => {
   const { fields, append, remove } = assetFieldArray;
   const { mutateAsync: uploadFile } = useFileUploadMutation();
 
-  const copyAsset = (index: number) => {
-    void index;
-  };
-
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -55,6 +51,7 @@ const Asset = ({ assetFieldArray }: AssetProps) => {
           assetImage: reader.result as string,
           assetImageId: uploadedImage.originalFileId,
           assetSituation: "",
+          assetVisibility: "PUBLIC",
         });
       };
       reader.readAsDataURL(file);
@@ -94,7 +91,6 @@ const Asset = ({ assetFieldArray }: AssetProps) => {
                   id={field.id}
                   index={i}
                   remove={remove}
-                  copyAsset={copyAsset}
                 />
               ))}
               {provided.placeholder}

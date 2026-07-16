@@ -50,6 +50,7 @@ export const characterCreateSchema = z.object({
           .string()
           .min(1, FIELD_ERROR_MESSAGES.assetSituationRequired)
           .max(50, FIELD_ERROR_MESSAGES.assetSituationMaxLength),
+        assetVisibility: z.enum(["PUBLIC", "PRIVATE"]),
       }),
     )
     .max(50, FIELD_ERROR_MESSAGES.assetMaxCount)
