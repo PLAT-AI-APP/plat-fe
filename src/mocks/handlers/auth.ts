@@ -1,13 +1,13 @@
 import { http, HttpResponse } from "msw";
 import { endpoint } from "../utils";
-import type { LoginToastType } from "@/api/auth/emailLogin";
+import type { LoginToastSize, LoginToastType } from "@/api/auth/emailLogin";
 
 const existingNicknames = ["admin", "test", "plat"];
 const verifiedEmails = new Set<string>();
 const firstLoginEmails = new Set(["first@example.com", "taewok0205@gmail.com"]);
 const loginToastTestCases: Record<
   string,
-  { message: string; toastType: LoginToastType }
+  { message: string; toastSize?: LoginToastSize; toastType: LoginToastType }
 > = {
   "toast-success@example.com": {
     toastType: "success",
@@ -20,6 +20,30 @@ const loginToastTestCases: Record<
   "toast-warning@example.com": {
     toastType: "warning",
     message: "경고 toast 디자인 테스트입니다.",
+  },
+  "toast-error@example.com": {
+    toastType: "error",
+    message: "Error toast design test.",
+  },
+  "toast-success-s@example.com": {
+    toastSize: "s",
+    toastType: "success",
+    message: "Small success toast test.",
+  },
+  "toast-info-s@example.com": {
+    toastSize: "s",
+    toastType: "info",
+    message: "Small info toast test.",
+  },
+  "toast-warning-s@example.com": {
+    toastSize: "s",
+    toastType: "warning",
+    message: "Small warning toast test.",
+  },
+  "toast-error-s@example.com": {
+    toastSize: "s",
+    toastType: "error",
+    message: "Small error toast test.",
   },
 };
 
@@ -187,7 +211,10 @@ export const authHandlers = [
           accessToken: "mock-access-token",
           isFirstLogin: firstLoginEmails.has(username),
           // toast 디자인 확인용 MSW 계정에서만 내려주는 테스트 전용 필드입니다.
-          ...(toastTestCase && { toastType: toastTestCase.toastType }),
+          ...(toastTestCase && {
+            toastSize: toastTestCase.toastSize,
+            toastType: toastTestCase.toastType,
+          }),
         },
       },
       {

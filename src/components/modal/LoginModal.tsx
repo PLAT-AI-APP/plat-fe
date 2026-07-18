@@ -6,8 +6,11 @@ import { usePathname, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import React from "react";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
-import { toast } from "sonner";
-import { useEmailLoginMutation } from "@/api/auth/emailLogin";
+import {
+  LoginToastSize,
+  LoginToastType,
+  useEmailLoginMutation,
+} from "@/api/auth/emailLogin";
 import ActiveButton from "@/components/ActiveButton";
 import SocialLoginButton from "@/components/auth/SocialLoginButton";
 import PasswordField from "@/components/field/PasswordField";
@@ -15,6 +18,7 @@ import { ModalLayout } from "@/components/ModalLayout";
 import SmartInput from "@/components/smart-input";
 import { ChatFill, Google } from "@/icons";
 import useRouteEffect from "@/hooks/useRouteEffect";
+import { showAppToast } from "@/lib/toast";
 import { loginFormSchema, LoginFormValues } from "@/schema/auth.schema";
 import { useModalStore } from "@/store/useModalStore";
 import { LoginModalProps } from "@/type/modal";
@@ -22,13 +26,14 @@ import { LoginModalProps } from "@/type/modal";
 const PENDING_WELCOME_CREDIT_DIALOG_KEY = "pending-welcome-credit-dialog";
 
 const showLoginToast = (
-  toastType: "success" | "info" | "warning" | undefined,
+  toastType: LoginToastType | undefined,
+  toastSize: LoginToastSize | undefined,
   message: string,
 ) => {
   // MSW 로그인 toast 테스트 계정처럼 서버가 타입을 내려준 경우에만 디자인 확인용 toast를 띄웁니다.
   if (!toastType || !message) return;
 
-  toast[toastType](message);
+  showAppToast(toastType, message, { size: toastSize });
 };
 
 const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
@@ -97,7 +102,7 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
       { username: email, password: pw },
       {
         onSuccess: (data) => {
-          showLoginToast(data.toastType, data.serverMessage);
+          showLoginToast(data.toastType, data.toastSize, data.serverMessage);
 
           if (data.isFirstLogin) {
             handleFirstLoginSuccess();

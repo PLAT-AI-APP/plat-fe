@@ -2,8 +2,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "..";
 import { ApiSuccessResponse, AppError } from "@/type/api";
 import { useAuthStore } from "@/store/useAuthStore";
+import type { AppToastSize, AppToastType } from "@/lib/toast";
 
-export type LoginToastType = "success" | "info" | "warning";
+export type LoginToastSize = AppToastSize;
+export type LoginToastType = AppToastType;
 
 interface PostEmailLoginProps {
   username: string;
@@ -15,6 +17,7 @@ const PostEmailLogin = async (props: PostEmailLoginProps) => {
     ApiSuccessResponse<{
       accessToken: string;
       isFirstLogin?: boolean;
+      toastSize?: LoginToastSize;
       toastType?: LoginToastType;
     }>
   >("/auth/login", props, {
@@ -25,6 +28,7 @@ const PostEmailLogin = async (props: PostEmailLoginProps) => {
     isFirstLogin: Boolean(response.data.data.isFirstLogin),
     serverMessage: response.data.message ?? "",
     // MSW toast 테스트처럼 서버가 타입을 내려주는 경우에만 성공 콜백에서 toast를 노출합니다.
+    toastSize: response.data.data.toastSize,
     toastType: response.data.data.toastType,
     token: response.data.data.accessToken,
   };
@@ -39,6 +43,7 @@ export const useEmailLoginMutation = () => {
     {
       isFirstLogin: boolean;
       serverMessage: string;
+      toastSize?: LoginToastSize;
       toastType?: LoginToastType;
       token: string;
     },

@@ -55,6 +55,7 @@ export { default as Trash } from "./Trash";
 export { default as Dots } from "./Dots";
 export { default as DotsVertical } from "./DotsVertical";
 export { default as Close } from "./Close";
+export { default as CloseLine } from "./CloseLine";
 export { default as Asterisk } from "./Asterisk";
 export { default as ViewGrid } from "./ViewGrid";
 export { default as ViewList } from "./ViewList";

@@ -114,6 +114,15 @@ button {
     filter 500ms ease;
 }
 
+[data-sonner-toast].sonner-toast.sonner-size-s {
+  width: min(430px, calc(100vw - 32px));
+  align-items: center;
+  gap: 32px;
+  border-radius: 12px;
+  padding: 12px 16px;
+  backdrop-filter: blur(3.25px);
+}
+
 [data-sonner-toast].sonner-toast[data-mounted="true"] {
   animation: sonner-toast-in 180ms ease-out;
 }
@@ -144,11 +153,25 @@ button {
   word-break: break-word;
 }
 
+[data-sonner-toast].sonner-toast.sonner-size-s .sonner-title {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+[data-sonner-toast].sonner-toast.sonner-size-s .sonner-description {
+  display: none;
+}
+
 [data-sonner-toast].sonner-toast [data-icon] {
   width: 24px;
   height: 24px;
   margin: 0;
   color: var(--toast-border, var(--brand));
+}
+
+[data-sonner-toast].sonner-toast.sonner-size-s [data-icon] {
+  width: 20px;
+  height: 20px;
 }
 
 [data-sonner-toast].sonner-toast [data-content] {
@@ -170,6 +193,11 @@ button {
   width: 24px;
   height: 24px;
   color: inherit;
+}
+
+[data-sonner-toast].sonner-toast.sonner-size-s .sonner-status-icon {
+  width: 20px;
+  height: 20px;
 }
 
 .sonner-action {
@@ -208,26 +236,85 @@ button {
   flex-shrink: 0;
 }
 
+[data-sonner-toaster] [data-sonner-toast].sonner-toast
+  [data-close-button].sonner-close {
+  left: auto;
+  right: 20px;
+  top: 20px;
+  transform: none;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--font-3-disabled);
+}
+
+[data-sonner-toaster] [data-sonner-toast].sonner-toast
+  [data-close-button].sonner-close:hover {
+  border: 0;
+  background: transparent;
+  color: var(--font-2);
+}
+
+[data-sonner-toast].sonner-toast.sonner-size-s .sonner-close {
+  position: static;
+  top: auto;
+  right: auto;
+  width: 18px;
+  height: 18px;
+}
+
+[data-sonner-toaster] [data-sonner-toast].sonner-toast.sonner-size-s
+  [data-close-button].sonner-close {
+  position: static;
+  inset: auto;
+  align-self: center;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  transform: none;
+}
+
 .sonner-close-icon {
   width: 20px;
   height: 20px;
+}
+
+[data-sonner-toast].sonner-toast.sonner-size-s .sonner-close-icon {
+  width: 18px;
+  height: 18px;
 }
 
 .sonner-success {
   --toast-border: #00c925;
 }
 
+.sonner-success.sonner-size-s {
+  background: rgba(0, 201, 37, 0.05);
+}
+
 .sonner-error {
   --toast-border: var(--font-error);
 }
 
+.sonner-error.sonner-size-s {
+  background: rgba(255, 56, 66, 0.05);
+}
+
 .sonner-warning {
   /* 요청한 피그마 노드(1311:2148)의 상태색을 그대로 따릅니다. */
-  --toast-border: var(--font-error);
+  --toast-border: var(--brand-dark);
+}
+
+.sonner-warning.sonner-size-s {
+  background: var(--brand-opacity);
 }
 
 .sonner-info {
-  --toast-border: var(--font-disabled);
+  --toast-border: var(--font-3-disabled);
+}
+
+.sonner-info.sonner-size-s {
+  background: rgba(92, 97, 128, 0.05);
 }
 
 @keyframes sonner-toast-in {
