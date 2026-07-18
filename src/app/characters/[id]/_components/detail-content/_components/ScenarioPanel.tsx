@@ -131,7 +131,7 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
                     className="size-10 rounded-full object-cover"
                   />
                   <div className="flex min-w-0 flex-1 flex-col items-start gap-1.5">
-                    <p className="body-4 text-font-1">이윤아</p>
+                    <p className="body-4 text-font-1">{character.title}</p>
                     <p className="body-4 rounded-bl-2xl rounded-br-2xl rounded-tr-2xl bg-card px-3 py-2 text-font-1">
                       {content.value}
                     </p>

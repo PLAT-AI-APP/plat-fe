@@ -29,6 +29,7 @@ const FOLD_SIDEBAR_PATHS = ["/chatting-room"];
 const FOLD_SIDEBAR_FULL_PATHS = ["/?tab=categories"];
 const SKIP_AUTH_ALERT_ONCE_KEY = "skip-auth-alert-once";
 const PENDING_WELCOME_CREDIT_DIALOG_KEY = "pending-welcome-credit-dialog";
+const PENDING_SIGNUP_COMPLETE_DIALOG_KEY = "pending-signup-complete-dialog";
 const PROTECTED_ROUTES = [
   "/my-chatting",
   "/chatting-room",
@@ -287,6 +288,27 @@ export default function ClientLayout({
   useEffect(() => {
     if (pathname !== "/" || typeof window === "undefined") return;
 
+    const pendingSignupCompleteDialog = sessionStorage.getItem(
+      PENDING_SIGNUP_COMPLETE_DIALOG_KEY,
+    );
+
+    if (pendingSignupCompleteDialog) {
+      sessionStorage.removeItem(PENDING_SIGNUP_COMPLETE_DIALOG_KEY);
+
+      const parsedDialogData = JSON.parse(pendingSignupCompleteDialog) as {
+        nickname?: string;
+      };
+
+      // 회원가입 페이지에서 홈으로 이동한 뒤 완료 Dialog를 열어 라우팅과 레이어 순서를 분리합니다.
+      openDialog("SIGNUP_COMPLETE", {
+        nickname: parsedDialogData.nickname || "",
+        onLogin: () => {
+          openModal("LOGIN", { triggerRef: undefined });
+        },
+      });
+      return;
+    }
+
     const shouldOpenWelcomeDialog =
       sessionStorage.getItem(PENDING_WELCOME_CREDIT_DIALOG_KEY) === "true";
 
@@ -295,7 +317,7 @@ export default function ClientLayout({
     // 홈에 진입한 뒤 한 번만 소비해 로그인 모달이 닫힌 다음 환영 다이얼로그가 뜨도록 맞춥니다.
     sessionStorage.removeItem(PENDING_WELCOME_CREDIT_DIALOG_KEY);
     openDialog("WELCOME_CREDIT", {});
-  }, [openDialog, pathname]);
+  }, [openDialog, openModal, pathname]);
 
   if (isProtectedRoute && (isAuthChecking || !isLoggedIn)) {
     return null;

@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 export type CharacterDetailTab = "settings" | "scenario" | "comments";
 
 interface DetailTabsProps {
+  commentsCount: number;
   currentTab: CharacterDetailTab;
   onChange: (tab: CharacterDetailTab, targetId: string) => void;
 }
@@ -26,13 +27,19 @@ const tabs: { id: CharacterDetailTab; labelKey: string; targetId: string }[] = [
   },
 ];
 
-const DetailTabs = ({ currentTab, onChange }: DetailTabsProps) => {
+const DetailTabs = ({
+  commentsCount,
+  currentTab,
+  onChange,
+}: DetailTabsProps) => {
   const t = useTranslations("characterDetail");
 
   return (
     <nav className="flex w-full gap-1 border-b border-border-main bg-bg-dark">
       {tabs.map((tab) => {
         const isActive = currentTab === tab.id;
+
+        const isCommentsTab = tab.id === "comments";
 
         return (
           <a
@@ -43,11 +50,25 @@ const DetailTabs = ({ currentTab, onChange }: DetailTabsProps) => {
               onChange(tab.id, tab.targetId);
             }}
             className={cn(
-              "body-2 flex h-11 w-[84px] items-center justify-center border-b-2 border-transparent text-font-2 transition-none",
-              isActive && "title-3 border-brand text-font-1",
+              "flex h-11 items-center justify-center border-b-2 border-transparent text-font-2 transition-none",
+              isCommentsTab ? "w-[104px]" : "w-[88px]",
+              isActive && "border-brand text-font-1",
             )}
           >
-            {t(tab.labelKey)}
+            {isCommentsTab ? (
+              <>
+                <span className={isActive ? "title-3" : "body-2"}>
+                  {t(tab.labelKey)}
+                </span>
+                <span className={isActive ? "title-6" : "body-5"}>
+                  {t("tabs.commentsCount", { count: commentsCount })}
+                </span>
+              </>
+            ) : (
+              <span className={isActive ? "title-3" : "body-2"}>
+                {t(tab.labelKey)}
+              </span>
+            )}
           </a>
         );
       })}

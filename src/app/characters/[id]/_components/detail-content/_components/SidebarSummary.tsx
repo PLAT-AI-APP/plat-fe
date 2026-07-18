@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import ActiveButton from "@/components/ActiveButton";
 import { ChatFill } from "@/icons";
-import { cn, formatStatCount } from "@/lib/utils";
+import { formatStatCount } from "@/lib/utils";
 import { CharacterDetail } from "@/type/character";
 
 interface SidebarSummaryProps {
@@ -29,11 +29,21 @@ const SidebarSummary = ({
           </span>
         )}
 
+        <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-card">
+          <Image
+            src={character.mainImage}
+            alt={t("profileAlt", { name: character.title })}
+            fill
+            className="object-contain"
+            priority
+          />
+        </div>
+
         <div className="flex flex-col gap-2">
-          <h1 className="heading-3 text-font-1">{character.title}</h1>
-          <p className="body-2 text-font-1">{character.introduce}</p>
+          <h1 className="heading-1 text-font-1">{character.title}</h1>
+          <p className="body-1 text-font-1">{character.introduce}</p>
           <div className="flex flex-col gap-0.5">
-            <div className="body-4 flex flex-wrap gap-x-2 gap-y-1 text-font-2">
+            <div className="body-3 flex flex-wrap gap-x-2 gap-y-1 text-font-2">
               {character.tags.map((tag) => (
                 <span key={tag}>#{tag}</span>
               ))}
@@ -65,14 +75,8 @@ const SidebarSummary = ({
                 index: index + 1,
               })}
               fill
-              className={cn(
-                "object-cover",
-                image.visibility === "PRIVATE" && "blur-[3px]",
-              )}
+              className="object-cover"
             />
-            {image.visibility === "PRIVATE" && (
-              <span className="absolute inset-0 bg-bg-darkest/45" />
-            )}
           </button>
         ))}
       </div>
@@ -99,10 +103,10 @@ const SidebarSummary = ({
                 className="size-12 rounded-full object-cover"
               />
               <div className="flex min-w-0 flex-col gap-1">
-                <p className="body-2 truncate text-font-1">
+                <p className="title-4 truncate text-font-1">
                   {character.creator.nickname}
                 </p>
-                <p className="body-6 text-font-2">
+                <p className="body-5 text-font-2">
                   {t("followingCount", {
                     count: character.creator.followingCount,
                   })}
@@ -111,13 +115,13 @@ const SidebarSummary = ({
             </div>
             <button
               type="button"
-              className="title-5 rounded-full bg-border-main px-3 py-1 text-font-1"
+              className="title-6 rounded-full bg-border-main px-3 py-1 text-font-1"
             >
               {character.creator.isFollowing ? t("following") : t("follow")}
             </button>
           </div>
 
-          <div className="body-6 flex gap-4 text-font-2">
+          <div className="body-5 flex gap-4 text-font-2">
             <span>{t("createdAt", { date: character.createdAt })}</span>
             <span>{t("updatedAt", { date: character.updatedAt })}</span>
           </div>

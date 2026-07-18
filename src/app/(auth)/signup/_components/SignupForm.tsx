@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
 import { useAuthRegisterMutation } from "@/api/auth/authRegister";
@@ -10,15 +11,14 @@ import PasswordCheckField from "@/components/field/PasswordCheckField";
 import PasswordField from "@/components/field/PasswordField";
 import { useFormServerError } from "@/hooks/useFormServerError";
 import { AuthFormValues } from "@/schema/auth.schema";
-import { useDialogStore } from "@/store/useDialogStore";
-import { useModalStore } from "@/store/useModalStore";
 import Agreed from "./Agreed";
 import EmailVerifySection from "./EmailVerifySection";
 
+const PENDING_SIGNUP_COMPLETE_DIALOG_KEY = "pending-signup-complete-dialog";
+
 const SignupForm = () => {
   const t = useTranslations();
-  const openModal = useModalStore((state) => state.openModal);
-  const openDialog = useDialogStore((state) => state.openDialog);
+  const router = useRouter();
   const [isEmailVerified, setIsEmailVerified] = useState(false);
 
   const {
@@ -54,11 +54,6 @@ const SignupForm = () => {
   const { mutate: authRegister } = useAuthRegisterMutation();
   const { setFieldErrors } = useFormServerError<AuthFormValues>();
 
-  const handleLoginAfterSignup = () => {
-    // 회원가입 직후에는 같은 화면 위에서 바로 로그인 모달을 열어 다음 행동을 자연스럽게 이어갑니다.
-    openModal("LOGIN", { triggerRef: undefined });
-  };
-
   const onSubmit = (data: AuthFormValues) => {
     authRegister(
       {
@@ -83,10 +78,12 @@ const SignupForm = () => {
           });
           setIsEmailVerified(false);
 
-          openDialog("SIGNUP_COMPLETE", {
-            nickname: data.nickname,
-            onLogin: handleLoginAfterSignup,
-          });
+          // 회원가입 완료 다이얼로그는 홈으로 이동한 뒤 열어 회원가입 화면 위에 레이어가 남지 않게 합니다.
+          sessionStorage.setItem(
+            PENDING_SIGNUP_COMPLETE_DIALOG_KEY,
+            JSON.stringify({ nickname: data.nickname }),
+          );
+          router.replace("/");
         },
         onError: (error) => {
           // 서버에서 내려온 필드별 에러를 RHF 에러 상태로 매핑해 입력 필드 아래에 표시합니다.

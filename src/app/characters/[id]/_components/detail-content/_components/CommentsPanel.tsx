@@ -36,8 +36,8 @@ const CommentsPanel = ({ character }: CommentsPanelProps) => {
                   <span
                     className={
                       comment.isCreator
-                        ? "body-4 rounded bg-font-1 px-1.5 py-0.5 text-bg-dark"
-                        : "title-5 text-font-1"
+                        ? "rounded bg-font-1 px-1.5 py-0.5 text-[14px] font-medium leading-[1.4] tracking-[-0.35px] text-bg-dark"
+                        : "title-6 text-font-1"
                     }
                   >
                     {comment.authorName}

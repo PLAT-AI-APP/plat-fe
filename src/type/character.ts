@@ -27,12 +27,9 @@ export interface CharacterDetailComment {
   isCreator?: boolean;
 }
 
-export type CharacterImageVisibility = "PUBLIC" | "PRIVATE";
-
 export interface CharacterImageItem {
   id: string;
   url: string;
-  visibility: CharacterImageVisibility;
 }
 
 export interface CharacterDetail {

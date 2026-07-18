@@ -148,7 +148,11 @@ const CharacterDetailContent = ({ characterId }: CharacterDetailContentProps) =>
   };
 
   // 이미지 선택은 왼쪽 썸네일과 중앙 슬라이드 버튼이 같은 상태를 공유하도록 상위에서 관리합니다.
-  const selectedImage = character.images[selectedImageIndex] ?? character.images[0];
+  const selectedImage =
+    selectedImageIndex < character.images.length
+      ? character.images[selectedImageIndex]
+      : undefined;
+  const shouldShowImageCta = selectedImageIndex >= character.images.length;
   const moveSelectedImage = (direction: "previous" | "next") => {
     setSelectedImageIndex((prevIndex) => {
       const imageCount = character.images.length;
@@ -156,8 +160,8 @@ const CharacterDetailContent = ({ characterId }: CharacterDetailContentProps) =>
       if (imageCount === 0) return 0;
 
       return direction === "previous"
-        ? (prevIndex - 1 + imageCount) % imageCount
-        : (prevIndex + 1) % imageCount;
+        ? Math.max(prevIndex - 1, 0)
+        : Math.min(prevIndex + 1, imageCount);
     });
   };
 
@@ -171,8 +175,12 @@ const CharacterDetailContent = ({ characterId }: CharacterDetailContentProps) =>
         />
 
         <main className="flex min-w-0 flex-col">
-          <div className="sticky top-0 z-20 bg-bg-dark">
-            <DetailTabs currentTab={currentTab} onChange={handleTabChange} />
+          <div className="sticky top-0 z-[1] bg-bg-dark">
+            <DetailTabs
+              commentsCount={character.comments.length}
+              currentTab={currentTab}
+              onChange={handleTabChange}
+            />
           </div>
 
           <div className="mt-6 flex flex-col gap-16">
@@ -183,6 +191,7 @@ const CharacterDetailContent = ({ characterId }: CharacterDetailContentProps) =>
             >
               <SettingsPanel
                 character={character}
+                isImageCtaVisible={shouldShowImageCta}
                 onNextImage={() => moveSelectedImage("next")}
                 onPreviousImage={() => moveSelectedImage("previous")}
                 onStartChat={openChatStartModal}

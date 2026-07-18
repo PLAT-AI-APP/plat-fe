@@ -18,7 +18,7 @@ const CloseLine = ({
       <path
         d="M6 6L18 18M18 6L6 18"
         stroke="currentColor"
-        strokeWidth="2"
+        strokeWidth="1.5"
         strokeLinecap="round"
       />
     </svg>
