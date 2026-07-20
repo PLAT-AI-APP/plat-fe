@@ -2,8 +2,8 @@
 
 import React, { useState } from "react";
 import { createPortal } from "react-dom";
-import { Dots } from "@/icons";
 import AiModelSelect from "@/components/chat/AiModeSelect";
+import { Dots } from "@/icons";
 import { AIModelType } from "@/type/chat";
 import ChattingSidebar from "../ChattingSidebar";
 
@@ -31,7 +31,7 @@ const ChattingRoomHeader = ({
         {characterName}
       </h1>
 
-      <div className="flex items-center gap-3">
+      <div className="ml-auto flex shrink-0 items-center gap-3">
         <AiModelSelect
           currentAi={currentAi}
           handleCurrentAi={handleCurrentAi}
