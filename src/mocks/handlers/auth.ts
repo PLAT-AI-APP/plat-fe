@@ -7,23 +7,56 @@ const verifiedEmails = new Set<string>();
 const firstLoginEmails = new Set(["first@example.com", "taewok0205@gmail.com"]);
 const loginToastTestCases: Record<
   string,
-  { message: string; toastSize?: LoginToastSize; toastType: LoginToastType }
+  {
+    description?: string;
+    message: string;
+    toastSize?: LoginToastSize;
+    toastType: LoginToastType;
+  }
 > = {
   "toast-success@example.com": {
+    description: "Medium success toast description test.",
     toastType: "success",
     message: "성공 toast 디자인 테스트입니다.",
   },
   "toast-info@example.com": {
+    description: "Medium info toast description test.",
     toastType: "info",
     message: "정보 toast 디자인 테스트입니다.",
   },
   "toast-warning@example.com": {
+    description: "Medium warning toast description test.",
     toastType: "warning",
     message: "경고 toast 디자인 테스트입니다.",
   },
   "toast-error@example.com": {
+    description: "Medium error toast description test.",
     toastType: "error",
     message: "Error toast design test.",
+  },
+  "toast-success-m@example.com": {
+    description: "Medium success toast description test.",
+    toastSize: "m",
+    toastType: "success",
+    message: "Medium success toast test.",
+  },
+  "toast-info-m@example.com": {
+    description: "Medium info toast description test.",
+    toastSize: "m",
+    toastType: "info",
+    message: "Medium info toast test.",
+  },
+  "toast-warning-m@example.com": {
+    description: "Medium warning toast description test.",
+    toastSize: "m",
+    toastType: "warning",
+    message: "Medium warning toast test.",
+  },
+  "toast-error-m@example.com": {
+    description: "Medium error toast description test.",
+    toastSize: "m",
+    toastType: "error",
+    message: "Medium error toast test.",
   },
   "toast-success-s@example.com": {
     toastSize: "s",
@@ -212,6 +245,7 @@ export const authHandlers = [
           isFirstLogin: firstLoginEmails.has(username),
           // toast 디자인 확인용 MSW 계정에서만 내려주는 테스트 전용 필드입니다.
           ...(toastTestCase && {
+            toastDescription: toastTestCase.description,
             toastSize: toastTestCase.toastSize,
             toastType: toastTestCase.toastType,
           }),

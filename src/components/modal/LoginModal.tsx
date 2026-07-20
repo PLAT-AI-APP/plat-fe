@@ -29,11 +29,12 @@ const showLoginToast = (
   toastType: LoginToastType | undefined,
   toastSize: LoginToastSize | undefined,
   message: string,
+  description?: string,
 ) => {
   // MSW 로그인 toast 테스트 계정처럼 서버가 타입을 내려준 경우에만 디자인 확인용 toast를 띄웁니다.
   if (!toastType || !message) return;
 
-  showAppToast(toastType, message, { size: toastSize });
+  showAppToast(toastType, message, { description, size: toastSize });
 };
 
 const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
@@ -102,7 +103,12 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
       { username: email, password: pw },
       {
         onSuccess: (data) => {
-          showLoginToast(data.toastType, data.toastSize, data.serverMessage);
+          showLoginToast(
+            data.toastType,
+            data.toastSize,
+            data.serverMessage,
+            data.toastDescription,
+          );
 
           if (data.isFirstLogin) {
             handleFirstLoginSuccess();
