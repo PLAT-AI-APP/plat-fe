@@ -1,6 +1,6 @@
+import React from "react";
 import { Close, Pen, Trash } from "@/icons";
 import Check from "@/icons/Check";
-import React from "react";
 
 interface UserChatBubbleProps {
   text: string;
@@ -8,6 +8,7 @@ interface UserChatBubbleProps {
   onUpdate?: (newContent: string) => void;
   onDelete?: () => void;
 }
+
 const UserChatBubble = ({
   text,
   isEditable = false,
@@ -33,57 +34,62 @@ const UserChatBubble = ({
 
   if (isEditing) {
     return (
-      <div className="flex gap-2 items-end">
-        <div className="flex shrink-0 gap-1 text-font-2 h-fit">
+      <div className="flex items-end justify-end gap-2">
+        <div className="flex h-fit shrink-0 gap-1 text-font-2">
           <button
+            type="button"
             onClick={handleCancel}
-            className="p-1.5 rounded-lg hover:bg-btn-hover flex items-center justify-center"
+            className="flex items-center justify-center rounded-lg p-1.5 hover:bg-btn-hover"
           >
-            <Close className="w-4 h-4" />
+            <Close className="size-4" />
           </button>
           <button
+            type="button"
             onClick={handleUpdate}
-            className="p-1.5 rounded-lg hover:bg-btn-hover flex items-center justify-center"
+            className="flex items-center justify-center rounded-lg p-1.5 hover:bg-btn-hover"
           >
-            <Check className="w-4 h-4" />
+            <Check className="size-4" />
           </button>
         </div>
 
-        <div className="flex flex-1 gap-2 bg-card p-2.5 rounded-[16px_0px_16px_16px]">
-          <textarea
-            className="w-full bg-card-hover p-2.5 rounded-[16px_0px_16px_16px] body-4 outline-none"
-            rows={2}
-            value={editedText}
-            onChange={(e) => setEditedText(e.target.value)}
-          />
+        <div className="flex flex-1 justify-end">
+          <div className="flex w-full max-w-[520px] items-center rounded-[16px_16px_0px_16px] bg-brand-opacity-2 p-2.5">
+            <textarea
+              className="body-4 w-full resize-none rounded-[16px_16px_0px_16px] bg-card-hover p-2.5 text-font-1 outline-none"
+              rows={2}
+              value={editedText}
+              onChange={(event) => setEditedText(event.target.value)}
+            />
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex items-end justify-end gap-1 group">
+    <div className="group flex items-end justify-end gap-1">
       {isEditable && (
-        <div className="flex gap-1 pl-12 -mt-4">
+        <div className="flex gap-1">
           <button
+            type="button"
             onClick={() => setIsEditing(true)}
-            className="p-1.5 rounded-lg hover:bg-btn-hover"
+            className="rounded-lg p-1.5 hover:bg-btn-hover"
           >
-            <Pen className="w-4 h-4 text-font-2" />
+            <Pen className="size-4 text-font-2" />
           </button>
           <button
+            type="button"
             onClick={onDelete}
-            className="p-1.5 rounded-lg hover:bg-btn-hover"
+            className="rounded-lg p-1.5 hover:bg-btn-hover"
           >
-            <Trash className="w-4 h-4 text-font-2" />
+            <Trash className="size-4 text-font-2" />
           </button>
         </div>
       )}
-      <div className="flex justify-end">
-        <span className="body-4 bg-[#B25500] px-3 py-2 rounded-[16px_0px_16px_16px]">
-          {text}
-        </span>
-      </div>
+
+      <span className="body-4 rounded-[16px_16px_0px_16px] bg-brand-opacity-2 px-3 py-2 text-font-1">
+        {text}
+      </span>
     </div>
   );
 };

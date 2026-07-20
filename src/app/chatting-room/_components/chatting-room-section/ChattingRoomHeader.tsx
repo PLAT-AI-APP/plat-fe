@@ -1,38 +1,52 @@
 "use client";
+
 import React, { useState } from "react";
-import { ArrowLeft, Dots } from "@/icons";
-import ChattingSidebar from "../ChattingSidebar";
 import { createPortal } from "react-dom";
+import { Dots } from "@/icons";
+import AiModelSelect from "@/components/chat/AiModeSelect";
+import { AIModelType } from "@/type/chat";
+import ChattingSidebar from "../ChattingSidebar";
 
 interface ChattingRoomHeaderProps {
   characterName: string;
-  // onBack?: () => void;
+  currentAi: AIModelType;
+  handleCurrentAi: (model: AIModelType) => void;
 }
 
 const ChattingRoomHeader = ({
   characterName,
-  // onBack,
+  currentAi,
+  handleCurrentAi,
 }: ChattingRoomHeaderProps) => {
   const [isSidebar, setIsSidebar] = useState(false);
+
   const toggleIsSidebar = () => {
-    setIsSidebar(!isSidebar);
+    // 채팅방 설정 사이드바 열림 상태
+    setIsSidebar((prev) => !prev);
   };
+
   return (
-    <header className="flex items-center justify-between sticky top-0 bg-bg-dark z-10">
-      <div
-        // onClick={onBack}
-        className="flex items-center gap-6.25 px-4 py-4.25 title-1"
-      >
-        {/* <ArrowLeft className="w-7 h-7" /> */}
+    <header className="sticky top-0 z-10 flex items-center justify-between bg-bg-dark p-4">
+      <h1 className="text-[20px] font-medium leading-[1.4] tracking-[-0.5px] text-font-1">
         {characterName}
+      </h1>
+
+      <div className="flex items-center gap-3">
+        <AiModelSelect
+          currentAi={currentAi}
+          handleCurrentAi={handleCurrentAi}
+        />
+
+        <button
+          type="button"
+          onClick={toggleIsSidebar}
+          className="flex size-8.5 items-center justify-center rounded-lg bg-btn-hover p-1.5 text-font-2 transition-colors hover:bg-btn-selected"
+          aria-label="채팅방 설정 열기"
+        >
+          <Dots className="size-5.5" />
+        </button>
       </div>
-      <button
-        onClick={toggleIsSidebar}
-        className="flex items-center justify-center w-8.5 h-8.5 rounded-lg hover:bg-btn-hover transition-colors"
-      >
-        <Dots className="w-5.5 h-5.5" />
-      </button>
-      {/* 구조는 그대로 두되, 실제 렌더링 위치만 document.body로 */}
+
       {isSidebar &&
         typeof document !== "undefined" &&
         createPortal(

@@ -17,13 +17,16 @@ const CharacterChat = ({
       <Image
         src={image}
         alt={`${CharacterName} 프로필 이미지`}
-        width={40}
-        height={40}
-        className="rounded-full w-10 h-10"
+        width={36}
+        height={36}
+        className="size-9 rounded-full object-cover"
       />
+
       <div id="chat-bubble-container" className="body-4">
-        <span className="block">{CharacterName}</span>
-        <div className="w-fit mt-1.5 px-3 py-2 bg-card rounded-[0px_16px_16px_16px]">
+        <span className="body-5 mb-1.5 block text-font-1">
+          {CharacterName}
+        </span>
+        <div className="w-fit rounded-[0px_16px_16px_16px] bg-card px-3 py-2 text-font-1">
           {chatText}
         </div>
       </div>

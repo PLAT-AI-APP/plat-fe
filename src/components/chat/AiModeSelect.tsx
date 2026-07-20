@@ -92,14 +92,14 @@ const AiModelSelect = ({ currentAi, handleCurrentAi }: AiModelSelectProps) => {
         id="ai-model-selector-trigger"
         onClick={() => setIsAiModelSelect((prev) => !prev)}
         ref={triggerRef}
-        className="relative flex cursor-pointer items-center gap-2.5 whitespace-nowrap rounded-full border border-border-main py-1.25 pl-2 pr-3 hover:bg-btn-hover"
+        className="relative flex h-8.5 cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-full border border-border-main bg-[#171D28]/50 py-1.25 pl-2 pr-3 text-font-1 transition-colors hover:bg-btn-hover"
       >
         <Image
           src={currentAi.icon}
           alt={t("chatUI.modelIcon", { name: currentAi.name })}
           width={24}
           height={24}
-          className="h-6 min-w-6 rounded-full"
+          className="size-6 rounded-full"
         />
         <span className="body-4">{currentAi.name}</span>
 

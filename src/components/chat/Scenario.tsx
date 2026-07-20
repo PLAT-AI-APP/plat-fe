@@ -1,5 +1,5 @@
-import { Message } from "@/icons";
 import React from "react";
+import { Message } from "@/icons";
 
 interface ScenarioProps {
   text: string;
@@ -8,9 +8,9 @@ interface ScenarioProps {
 
 const Scenario = ({ text, className = "" }: ScenarioProps) => {
   return (
-    <section id="scenario-item" className={`flex gap-5 ${className || ""}`}>
-      <Message className="w-7 h-7 text-font-2 shrink-0" />
-      <p className="body-4 text-font-2">{text}</p>
+    <section id="scenario-item" className={`flex gap-5 ${className}`}>
+      <Message className="size-6 shrink-0 text-font-2" />
+      <p className="body-4 whitespace-pre-wrap text-font-2">{text}</p>
     </section>
   );
 };
