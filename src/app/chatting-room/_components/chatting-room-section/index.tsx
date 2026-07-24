@@ -33,10 +33,11 @@ const ChattingRoomSection = () => {
   const { isScrolling, onScroll } = useScrollTimeout();
   const [messages, setMessages] =
     useState<ChatMessageType[]>(INITIAL_MESSAGES);
+  const [isSuggestedReplyOn, setIsSuggestedReplyOn] = useState(true);
   const [currentAi, setCurrentAi] = useState<AIModelType>({
     id: "Claude Opus 4.6",
     name: "Opus 4.6",
-    description: "섬세한 대화와 긴 문맥 유지에 강한 AI 모델",
+    description: t("chatUI.claudeOpus46Description"),
     price: 1.2,
     unit: t("chatUI.perChat"),
     icon: "/ai-logo/claude.png",
@@ -76,9 +77,16 @@ const ChattingRoomSection = () => {
             characterName="캐릭터 이름"
             currentAi={currentAi}
             handleCurrentAi={handleCurrentAi}
+            isSuggestedReplyOn={isSuggestedReplyOn}
+            onSuggestedReplyToggle={() =>
+              setIsSuggestedReplyOn((prevState) => !prevState)
+            }
           />
           <ChattingRoomNotice />
-          <MessageList messages={messages} />
+          <MessageList
+            messages={messages}
+            isAiSuggestedChat={isSuggestedReplyOn}
+          />
         </div>
 
         <ChatForm onSendMessage={handleSendMessage} />

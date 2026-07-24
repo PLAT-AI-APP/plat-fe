@@ -1,5 +1,8 @@
+"use client";
+
 import Image from "next/image";
 import React from "react";
+import { useTranslations } from "next-intl";
 
 interface CharacterChatProps {
   image: string;
@@ -12,11 +15,13 @@ const CharacterChat = ({
   chatText,
   image,
 }: CharacterChatProps) => {
+  const t = useTranslations();
+
   return (
     <article className="flex gap-2">
       <Image
         src={image}
-        alt={`${CharacterName} 프로필 이미지`}
+        alt={t("chatUI.characterProfileAlt", { name: CharacterName })}
         width={36}
         height={36}
         className="size-9 rounded-full object-cover"

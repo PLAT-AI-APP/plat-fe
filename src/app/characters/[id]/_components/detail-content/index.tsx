@@ -14,9 +14,14 @@ interface CharacterDetailContentProps {
   characterId: string;
 }
 
-const CharacterDetailContent = ({ characterId }: CharacterDetailContentProps) => {
-  const { data: character, isLoading, isError } =
-    useCharacterDetailQuery(characterId);
+const CharacterDetailContent = ({
+  characterId,
+}: CharacterDetailContentProps) => {
+  const {
+    data: character,
+    isLoading,
+    isError,
+  } = useCharacterDetailQuery(characterId);
   const t = useTranslations("characterDetail");
   const openModal = useModalStore((state) => state.openModal);
   const [currentTab, setCurrentTab] = useState<CharacterDetailTab>("settings");
@@ -25,9 +30,9 @@ const CharacterDetailContent = ({ characterId }: CharacterDetailContentProps) =>
   const scenarioRef = useRef<HTMLElement>(null);
   const commentsRef = useRef<HTMLElement>(null);
   const isProgrammaticScrollRef = useRef(false);
-  const programmaticScrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
-    null,
-  );
+  const programmaticScrollTimeoutRef = useRef<ReturnType<
+    typeof setTimeout
+  > | null>(null);
   const sectionRefs = useMemo(
     () => ({
       settings: settingsRef,

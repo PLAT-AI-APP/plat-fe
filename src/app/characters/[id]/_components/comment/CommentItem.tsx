@@ -2,6 +2,7 @@
 import React, { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import dayjs from "@/lib/dayjs";
 import { cn } from "@/lib/utils";
 import { CommentType } from "@/type/comment";
@@ -18,6 +19,7 @@ interface Props {
 }
 
 const CommentItem = ({ comment }: Props) => {
+  const t = useTranslations("characterDetail");
   const textRef = useRef<HTMLParagraphElement>(null);
   const triggerRef = useRef(null);
 
@@ -44,7 +46,7 @@ const CommentItem = ({ comment }: Props) => {
         <aside className="flex flex-col items-center w-9 shrink-0">
           <Image
             src={comment.author.profileImage}
-            alt={`${comment.author.name}님의 프로필 이미지`}
+            alt={t("commentAuthorProfileAlt", { name: comment.author.name })}
             width={36}
             height={36}
             className="w-9 h-9 rounded-full shrink-0"
@@ -100,7 +102,7 @@ const CommentItem = ({ comment }: Props) => {
                 onClick={() => setIsExpanded(true)}
                 className="text-font-2 body-6 w-fit mt-1 hover:underline"
               >
-                자세히 보기
+                {t("viewMore")}
               </button>
             )}
 

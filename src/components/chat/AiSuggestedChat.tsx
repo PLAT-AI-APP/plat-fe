@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslations } from "next-intl";
 import { Pen } from "@/icons";
 
 const MOCK_AI_RESPONSES = [
@@ -20,6 +21,8 @@ const MOCK_AI_RESPONSES = [
 ];
 
 const AiSuggestedChat = () => {
+  const t = useTranslations();
+
   return (
     <section className="flex gap-5">
       <Pen size={24} className="size-6 shrink-0 text-font-2" />
@@ -32,7 +35,11 @@ const AiSuggestedChat = () => {
           >
             <span>{`"${res.quote}"`}</span>{" "}
             <span className="text-font-2">{res.narration}</span>
-            {index === 0 && <span className="sr-only">선택된 추천 응답</span>}
+            {index === 0 && (
+              <span className="sr-only">
+                {t("chatUI.selectedSuggestedReply")}
+              </span>
+            )}
           </li>
         ))}
       </ul>

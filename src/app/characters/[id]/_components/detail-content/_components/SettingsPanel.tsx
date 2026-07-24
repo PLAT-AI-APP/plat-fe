@@ -93,7 +93,7 @@ const SettingsPanel = ({
     selectedImage?.id ?? character.images.at(-1)?.id ?? character.mainImage;
 
   return (
-    <section className="flex flex-col gap-8 pb-16">
+    <section className="flex flex-col gap-8 pb-0">
       <div className="relative h-[332px] overflow-hidden rounded-2xl bg-bg-darkest">
         <AnimatePresence mode="wait">
           <motion.div
@@ -170,9 +170,7 @@ const SettingsPanel = ({
       </section>
 
       <section className="flex flex-col gap-4">
-        <h2 className="title-3 text-font-1">
-          {t("characterIntroduction")}
-        </h2>
+        <h2 className="title-3 text-font-1">{t("characterIntroduction")}</h2>
         <div className="flex items-center gap-2">
           <Image
             src={character.profileImage}

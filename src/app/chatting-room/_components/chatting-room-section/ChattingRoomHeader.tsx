@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { createPortal } from "react-dom";
+import { useTranslations } from "next-intl";
 import AiModelSelect from "@/components/chat/AiModeSelect";
 import { Dots } from "@/icons";
 import { AIModelType } from "@/type/chat";
@@ -11,13 +12,18 @@ interface ChattingRoomHeaderProps {
   characterName: string;
   currentAi: AIModelType;
   handleCurrentAi: (model: AIModelType) => void;
+  isSuggestedReplyOn: boolean;
+  onSuggestedReplyToggle: () => void;
 }
 
 const ChattingRoomHeader = ({
   characterName,
   currentAi,
   handleCurrentAi,
+  isSuggestedReplyOn,
+  onSuggestedReplyToggle,
 }: ChattingRoomHeaderProps) => {
+  const t = useTranslations("chatRoom.sidebar");
   const [isSidebar, setIsSidebar] = useState(false);
 
   const toggleIsSidebar = () => {
@@ -40,8 +46,8 @@ const ChattingRoomHeader = ({
         <button
           type="button"
           onClick={toggleIsSidebar}
-          className="flex size-8.5 items-center justify-center rounded-lg bg-btn-hover p-1.5 text-font-2 transition-colors hover:bg-btn-selected"
-          aria-label="채팅방 설정 열기"
+          className="flex size-8.5 items-center justify-center rounded-lg p-1.5 text-font-2 transition-colors hover:bg-btn-hover"
+          aria-label={t("openSettings")}
         >
           <Dots className="size-5.5" />
         </button>
@@ -50,7 +56,11 @@ const ChattingRoomHeader = ({
       {isSidebar &&
         typeof document !== "undefined" &&
         createPortal(
-          <ChattingSidebar toggleIsSidebar={toggleIsSidebar} />,
+          <ChattingSidebar
+            toggleIsSidebar={toggleIsSidebar}
+            isSuggestedReplyOn={isSuggestedReplyOn}
+            onSuggestedReplyToggle={onSuggestedReplyToggle}
+          />,
           document.body,
         )}
     </header>

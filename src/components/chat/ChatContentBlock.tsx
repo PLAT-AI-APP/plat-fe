@@ -2,6 +2,7 @@
 
 import React, { useMemo } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import CharacterChat from "@/components/chat/CharacterChat";
 import Scenario from "@/components/chat/Scenario";
 import { Close, Pen, Trash } from "@/icons";
@@ -25,6 +26,7 @@ const ChatContentBlock = ({
   onUpdate,
   onDelete,
 }: ChatContentBlockProps) => {
+  const t = useTranslations();
   const [isEditing, setIsEditing] = React.useState(false);
   const [editedContent, setEditedContent] = React.useState(rawData);
 
@@ -100,7 +102,7 @@ const ChatContentBlock = ({
             <Image
               key={index}
               src={block.code}
-              alt="대화 상황 이미지"
+              alt={t("chatUI.chatAssetAlt")}
               width={171}
               height={250}
               unoptimized

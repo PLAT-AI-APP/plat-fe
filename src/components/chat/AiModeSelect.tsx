@@ -17,13 +17,6 @@ interface AiModelListItemProps {
   onSelect: (model: AIModelType) => void;
 }
 
-/** 모델 가격 표시 텍스트 */
-const formatModelPrice = (price: number) => {
-  if (price === 0) return "무료";
-
-  return `${price}${price % 1 === 0 ? "" : ""}코인`;
-};
-
 /** 모델 아이콘 배경색 */
 const getModelIconClassName = (modelId: string) => {
   if (modelId.includes("Claude")) return "bg-[#d77655]";
@@ -34,6 +27,8 @@ const getModelIconClassName = (modelId: string) => {
 };
 
 const AiModelListItem = ({ model, onSelect }: AiModelListItemProps) => {
+  const t = useTranslations();
+
   return (
     <li>
       <button
@@ -71,11 +66,13 @@ const AiModelListItem = ({ model, onSelect }: AiModelListItemProps) => {
               <div className="flex items-center gap-1 whitespace-nowrap">
                 {model.originalPrice && (
                   <span className="body-2 text-font-disabled line-through">
-                    {model.originalPrice}
+                    {t("chatUI.modelPrice", { price: model.originalPrice })}
                   </span>
                 )}
                 <span className="title-3 text-brand">
-                  {formatModelPrice(model.price)}
+                  {model.price === 0
+                    ? t("chatUI.free")
+                    : t("chatUI.modelPrice", { price: model.price })}
                 </span>
                 {model.price > 0 && (
                   <span className="body-6 text-font-2">/ {model.unit}</span>
@@ -100,7 +97,7 @@ const AiModelSelect = ({ currentAi, handleCurrentAi }: AiModelSelectProps) => {
     {
       id: "Gemini 3.1 Pro",
       name: "3.1 Pro",
-      description: "향상된 성능과 표현력을 갖춘 최신 AI 모델",
+      description: t("chatUI.gemini31Description"),
       price: 1.2,
       unit: t("chatUI.perChat"),
       icon: "/ai-logo/gemini.png",
@@ -108,7 +105,7 @@ const AiModelSelect = ({ currentAi, handleCurrentAi }: AiModelSelectProps) => {
     {
       id: "Gemini 3.0 Pro",
       name: "3.0 Pro",
-      description: "몰입도 있는 대화를 즐길 수 있는 최신 AI 모델",
+      description: t("chatUI.gemini30Description"),
       price: 1,
       originalPrice: 1.2,
       discountRate: 17,
@@ -118,7 +115,7 @@ const AiModelSelect = ({ currentAi, handleCurrentAi }: AiModelSelectProps) => {
     {
       id: "Gemini 2.5 Pro",
       name: "2.5 Pro",
-      description: "최신 고성능 AI 모델로 장문의 대화에 적합",
+      description: t("chatUI.gemini25Description"),
       price: 1,
       unit: t("chatUI.perChat"),
       icon: "/ai-logo/gemini.png",
@@ -126,7 +123,7 @@ const AiModelSelect = ({ currentAi, handleCurrentAi }: AiModelSelectProps) => {
     {
       id: "Claude Opus 4.6",
       name: "Opus 4.6",
-      description: "최고 수준의 지능과 창의적인 대화를 제공하는 프리미엄 모델",
+      description: t("chatUI.claudeOpus46Description"),
       price: 2,
       unit: t("chatUI.perChat"),
       icon: "/ai-logo/claude.png",
@@ -134,7 +131,7 @@ const AiModelSelect = ({ currentAi, handleCurrentAi }: AiModelSelectProps) => {
     {
       id: "Claude Sonnet 4.6",
       name: "Sonnet 4.6",
-      description: "자연스럽고 창의적인 대화를 제공하는 고급 모델",
+      description: t("chatUI.claudeSonnet46Description"),
       price: 1.2,
       unit: t("chatUI.perChat"),
       icon: "/ai-logo/claude.png",
@@ -142,7 +139,7 @@ const AiModelSelect = ({ currentAi, handleCurrentAi }: AiModelSelectProps) => {
     {
       id: "Gemini 3 Flash",
       name: "3 Flash",
-      description: "빠른 응답과 풍부한 지식을 갖춘 모델",
+      description: t("chatUI.gemini3FlashDescription"),
       price: 0.4,
       unit: t("chatUI.perChat"),
       icon: "/ai-logo/gemini.png",
@@ -150,7 +147,7 @@ const AiModelSelect = ({ currentAi, handleCurrentAi }: AiModelSelectProps) => {
     {
       id: "GPT-5.1",
       name: "GPT-5.1",
-      description: "풍부한 감정선과 섬세한 표현이 강점인 모델",
+      description: t("chatUI.gpt51Description"),
       price: 1.1,
       unit: t("chatUI.perChat"),
       icon: "/ai-logo/chatgpt.png",
@@ -158,7 +155,7 @@ const AiModelSelect = ({ currentAi, handleCurrentAi }: AiModelSelectProps) => {
     {
       id: "Free",
       name: "Free",
-      description: "균형잡힌 속도와 이해도를 가진 안전한 대화 모델",
+      description: t("chatUI.freeDescription"),
       price: 0,
       unit: t("chatUI.perChat"),
       icon: "/ai-logo/free.png",

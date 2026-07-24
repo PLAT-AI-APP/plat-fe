@@ -154,11 +154,32 @@ const en = {
     modelSelect: "Select AI model",
     modelIcon: "{name} icon",
     coin: "coins",
+    free: "Free",
+    modelPrice: "{price} coins",
     perChat: "chat",
     messageForm: "Message input form",
     messagePlaceholder: "Send a message",
     situation: "Situation",
     suggestedReply: "Suggested reply",
+    selectedSuggestedReply: "Selected suggested reply",
+    characterProfileAlt: "{name} profile image",
+    chatAssetAlt: "Chat scene image",
+    gemini31Description:
+      "The latest AI model with improved performance and expression.",
+    gemini30Description:
+      "The latest AI model for more immersive conversations.",
+    gemini25Description:
+      "A high-performance AI model suited for long conversations.",
+    claudeOpus46Description:
+      "A premium model offering top-tier intelligence and creative dialogue.",
+    claudeSonnet46Description:
+      "An advanced model for natural and creative conversations.",
+    gemini3FlashDescription:
+      "A model with fast replies and a wide knowledge base.",
+    gpt51Description:
+      "A model strong in emotional nuance and delicate expression.",
+    freeDescription:
+      "A safe conversation model with balanced speed and understanding.",
   },
   characterDetail: {
     noScenario: "No scenario has been registered.",
@@ -176,6 +197,8 @@ const en = {
     creatorImageAlt: "Character creator image",
     mainImageAlt: "Main character image",
     scenarioTitle: "Scenario",
+    commentAuthorProfileAlt: "{name}'s profile image",
+    viewMore: "View more",
   },
   loading: {
     text: "Loading...",
@@ -335,11 +358,26 @@ const ko: RuntimeMessages = {
     modelSelect: "AI 모델 선택",
     modelIcon: "{name} 아이콘",
     coin: "코인",
+    free: "무료",
+    modelPrice: "{price}코인",
     perChat: "채팅",
     messageForm: "메시지 입력 양식",
     messagePlaceholder: "메시지 보내기",
     situation: "상황",
     suggestedReply: "추천답변",
+    selectedSuggestedReply: "선택된 추천 응답",
+    characterProfileAlt: "{name} 프로필 이미지",
+    chatAssetAlt: "대화 상황 이미지",
+    gemini31Description: "향상된 성능과 표현력을 갖춘 최신 AI 모델",
+    gemini30Description: "몰입도 있는 대화를 즐길 수 있는 최신 AI 모델",
+    gemini25Description: "최신 고성능 AI 모델로 장문의 대화에 적합",
+    claudeOpus46Description:
+      "최고 수준의 지능과 창의적인 대화를 제공하는 프리미엄 모델",
+    claudeSonnet46Description:
+      "자연스럽고 창의적인 대화를 제공하는 고급 모델",
+    gemini3FlashDescription: "빠른 응답과 풍부한 지식을 갖춘 모델",
+    gpt51Description: "풍부한 감정선과 섬세한 표현이 강점인 모델",
+    freeDescription: "균형잡힌 속도와 이해도를 가진 안전한 대화 모델",
   },
   characterDetail: {
     noScenario: "등록된 시나리오가 없습니다.",
@@ -357,6 +395,8 @@ const ko: RuntimeMessages = {
     creatorImageAlt: "캐릭터 제작자 이미지",
     mainImageAlt: "메인 캐릭터 이미지",
     scenarioTitle: "시나리오",
+    commentAuthorProfileAlt: "{name}님의 프로필 이미지",
+    viewMore: "자세히 보기",
   },
   loading: {
     text: "로딩중...",
@@ -518,11 +558,25 @@ const ja: RuntimeMessages = {
     modelSelect: "AIモデル選択",
     modelIcon: "{name} アイコン",
     coin: "コイン",
+    free: "無料",
+    modelPrice: "{price}コイン",
     perChat: "チャット",
     messageForm: "メッセージ入力フォーム",
     messagePlaceholder: "メッセージを送信",
     situation: "状況",
     suggestedReply: "おすすめ返信",
+    selectedSuggestedReply: "選択されたおすすめ返信",
+    characterProfileAlt: "{name}のプロフィール画像",
+    chatAssetAlt: "会話シーン画像",
+    gemini31Description: "性能と表現力が向上した最新AIモデル",
+    gemini30Description: "没入感のある会話を楽しめる最新AIモデル",
+    gemini25Description: "長文の会話に適した最新高性能AIモデル",
+    claudeOpus46Description:
+      "最高水準の知能と創造的な会話を提供するプレミアムモデル",
+    claudeSonnet46Description: "自然で創造的な会話を提供する上級モデル",
+    gemini3FlashDescription: "高速な応答と豊富な知識を備えたモデル",
+    gpt51Description: "豊かな感情表現と繊細な描写が強みのモデル",
+    freeDescription: "速度と理解力のバランスが取れた安全な会話モデル",
   },
   characterDetail: {
     noScenario: "登録されたシナリオがありません。",
@@ -540,6 +594,8 @@ const ja: RuntimeMessages = {
     creatorImageAlt: "キャラクター制作者の画像",
     mainImageAlt: "メインキャラクター画像",
     scenarioTitle: "シナリオ",
+    commentAuthorProfileAlt: "{name}のプロフィール画像",
+    viewMore: "詳しく見る",
   },
   loading: {
     text: "読み込み中...",
@@ -698,11 +754,24 @@ const zh: RuntimeMessages = {
     modelSelect: "选择 AI 模型",
     modelIcon: "{name} 图标",
     coin: "金币",
+    free: "免费",
+    modelPrice: "{price}金币",
     perChat: "聊天",
     messageForm: "消息输入表单",
     messagePlaceholder: "发送消息",
     situation: "情境",
     suggestedReply: "推荐回复",
+    selectedSuggestedReply: "已选择的推荐回复",
+    characterProfileAlt: "{name} 的头像",
+    chatAssetAlt: "聊天情境图片",
+    gemini31Description: "具备更强性能和表现力的最新 AI 模型",
+    gemini30Description: "可享受沉浸式对话的最新 AI 模型",
+    gemini25Description: "适合长篇对话的最新高性能 AI 模型",
+    claudeOpus46Description: "提供顶级智能和创意对话的高级模型",
+    claudeSonnet46Description: "提供自然且富有创意对话的高级模型",
+    gemini3FlashDescription: "具备快速回复和丰富知识的模型",
+    gpt51Description: "擅长丰富情感和细腻表达的模型",
+    freeDescription: "速度和理解力均衡的安全对话模型",
   },
   characterDetail: {
     noScenario: "没有已注册的场景。",
@@ -720,6 +789,8 @@ const zh: RuntimeMessages = {
     creatorImageAlt: "角色创作者图片",
     mainImageAlt: "主角色图片",
     scenarioTitle: "场景",
+    commentAuthorProfileAlt: "{name} 的头像",
+    viewMore: "查看更多",
   },
   loading: {
     text: "加载中...",
@@ -881,11 +952,29 @@ const th: RuntimeMessages = {
     modelSelect: "เลือกโมเดล AI",
     modelIcon: "ไอคอน {name}",
     coin: "เหรียญ",
+    free: "ฟรี",
+    modelPrice: "{price} เหรียญ",
     perChat: "แชต",
     messageForm: "แบบฟอร์มป้อนข้อความ",
     messagePlaceholder: "ส่งข้อความ",
     situation: "สถานการณ์",
     suggestedReply: "คำตอบแนะนำ",
+    selectedSuggestedReply: "คำตอบแนะนำที่เลือก",
+    characterProfileAlt: "รูปโปรไฟล์ของ {name}",
+    chatAssetAlt: "รูปสถานการณ์ในแชต",
+    gemini31Description: "โมเดล AI ล่าสุดที่มีประสิทธิภาพและการสื่อสารดีขึ้น",
+    gemini30Description: "โมเดล AI ล่าสุดสำหรับบทสนทนาที่สมจริงยิ่งขึ้น",
+    gemini25Description: "โมเดล AI ประสิทธิภาพสูง เหมาะกับบทสนทนายาว",
+    claudeOpus46Description:
+      "โมเดลพรีเมียมที่ให้ความฉลาดระดับสูงและบทสนทนาเชิงสร้างสรรค์",
+    claudeSonnet46Description:
+      "โมเดลขั้นสูงสำหรับบทสนทนาที่เป็นธรรมชาติและสร้างสรรค์",
+    gemini3FlashDescription:
+      "โมเดลที่ตอบสนองรวดเร็วและมีฐานความรู้กว้างขวาง",
+    gpt51Description:
+      "โมเดลที่เด่นด้านอารมณ์ละเอียดอ่อนและการสื่อสารที่ประณีต",
+    freeDescription:
+      "โมเดลสนทนาที่ปลอดภัย พร้อมความเร็วและความเข้าใจที่สมดุล",
   },
   characterDetail: {
     noScenario: "ยังไม่มีสถานการณ์ที่ลงทะเบียนไว้",
@@ -903,6 +992,8 @@ const th: RuntimeMessages = {
     creatorImageAlt: "รูปผู้สร้างตัวละคร",
     mainImageAlt: "รูปตัวละครหลัก",
     scenarioTitle: "สถานการณ์",
+    commentAuthorProfileAlt: "รูปโปรไฟล์ของ {name}",
+    viewMore: "ดูเพิ่มเติม",
   },
   loading: {
     text: "กำลังโหลด...",
@@ -1064,11 +1155,32 @@ const vi: RuntimeMessages = {
     modelSelect: "Chọn mô hình AI",
     modelIcon: "Biểu tượng {name}",
     coin: "coin",
+    free: "Miễn phí",
+    modelPrice: "{price} coin",
     perChat: "chat",
     messageForm: "Biểu mẫu nhập tin nhắn",
     messagePlaceholder: "Gửi tin nhắn",
     situation: "Tình huống",
     suggestedReply: "Trả lời gợi ý",
+    selectedSuggestedReply: "Câu trả lời gợi ý đã chọn",
+    characterProfileAlt: "Ảnh hồ sơ của {name}",
+    chatAssetAlt: "Ảnh tình huống trong chat",
+    gemini31Description:
+      "Mô hình AI mới nhất với hiệu năng và khả năng biểu đạt được cải thiện.",
+    gemini30Description:
+      "Mô hình AI mới nhất cho các cuộc trò chuyện nhập vai hơn.",
+    gemini25Description:
+      "Mô hình AI hiệu năng cao phù hợp với các cuộc trò chuyện dài.",
+    claudeOpus46Description:
+      "Mô hình cao cấp mang đến trí tuệ hàng đầu và hội thoại sáng tạo.",
+    claudeSonnet46Description:
+      "Mô hình nâng cao cho các cuộc trò chuyện tự nhiên và sáng tạo.",
+    gemini3FlashDescription:
+      "Mô hình có phản hồi nhanh và nền tảng kiến thức phong phú.",
+    gpt51Description:
+      "Mô hình mạnh về sắc thái cảm xúc và cách diễn đạt tinh tế.",
+    freeDescription:
+      "Mô hình hội thoại an toàn với tốc độ và khả năng hiểu cân bằng.",
   },
   characterDetail: {
     noScenario: "Không có kịch bản nào được đăng ký.",
@@ -1086,6 +1198,8 @@ const vi: RuntimeMessages = {
     creatorImageAlt: "Ảnh người tạo nhân vật",
     mainImageAlt: "Ảnh nhân vật chính",
     scenarioTitle: "Kịch bản",
+    commentAuthorProfileAlt: "Ảnh hồ sơ của {name}",
+    viewMore: "Xem thêm",
   },
   loading: {
     text: "Đang tải...",

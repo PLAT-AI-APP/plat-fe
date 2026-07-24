@@ -1,8 +1,8 @@
 "use client";
 
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import { ArrowUp, Asterisk } from "@/icons";
+import { Asterisk, MoveUp } from "@/icons";
 import { cn } from "@/lib/utils";
 import ActiveButton from "../ActiveButton";
 
@@ -13,6 +13,7 @@ interface ChatFormProps {
 const ChatForm = ({ onSendMessage }: ChatFormProps) => {
   const t = useTranslations();
   const [msg, setMsg] = useState("");
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const hasMessage = msg.trim().length > 0;
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -25,6 +26,24 @@ const ChatForm = ({ onSendMessage }: ChatFormProps) => {
     setMsg("");
   };
 
+  const handleSituationInsert = () => {
+    const textarea = textareaRef.current;
+
+    if (!textarea) return;
+
+    const selectionStart = textarea.selectionStart;
+    const selectionEnd = textarea.selectionEnd;
+    const nextMessage = `${msg.slice(0, selectionStart)}**${msg.slice(selectionEnd)}`;
+    const nextCursorPosition = selectionStart + 1;
+
+    // 별표 사이에 커서를 두는 상황 입력 토큰
+    setMsg(nextMessage);
+    requestAnimationFrame(() => {
+      textarea.focus();
+      textarea.setSelectionRange(nextCursorPosition, nextCursorPosition);
+    });
+  };
+
   return (
     <form className="shrink-0" onSubmit={handleSubmit}>
       <fieldset
@@ -34,6 +53,7 @@ const ChatForm = ({ onSendMessage }: ChatFormProps) => {
         <legend className="sr-only">{t("chatUI.messageForm")}</legend>
 
         <textarea
+          ref={textareaRef}
           value={msg}
           onChange={(event) => setMsg(event.target.value)}
           placeholder={t("chatUI.messagePlaceholder")}
@@ -43,6 +63,7 @@ const ChatForm = ({ onSendMessage }: ChatFormProps) => {
         <footer className="flex justify-end gap-3">
           <button
             type="button"
+            onClick={handleSituationInsert}
             className="body-4 flex h-8 items-center justify-center gap-1.5 rounded-[100px] border border-border-main bg-[#171D28]/50 py-1.5 pl-2.5 pr-3 text-font-2 transition-colors hover:bg-btn-hover"
           >
             <Asterisk className="size-4" />
@@ -58,7 +79,7 @@ const ChatForm = ({ onSendMessage }: ChatFormProps) => {
               !hasMessage && "bg-font-disabled text-font-4",
             )}
           >
-            <ArrowUp className="size-6" />
+            <MoveUp className="size-6 text-white" />
           </ActiveButton>
         </footer>
       </fieldset>
