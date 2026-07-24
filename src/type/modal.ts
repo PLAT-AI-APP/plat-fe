@@ -35,8 +35,6 @@ export interface PersonaAddModalProps extends GlobalModalProps {
 
 export type ProfileEditModalProps = GlobalModalProps;
 
-export type StorageModalProps = GlobalModalProps;
-
 export type TagAddModalProps = GlobalModalProps;
 
 export type TagSuggestionsModalProps = GlobalModalProps;

@@ -8,7 +8,6 @@ import {
   PersonaAddModalProps,
   PersonaModalProps,
   ProfileEditModalProps,
-  StorageModalProps,
   TagAddModalProps,
   TagSuggestionsModalProps,
   UserNoteModalProps,
@@ -24,7 +23,6 @@ export type ModalTypeMap = {
   LOGIN: LoginModalProps;
   PERSONA_ADD: PersonaAddModalProps;
   PROFILE_EDIT: ProfileEditModalProps;
-  STORAGE: StorageModalProps;
   TAG_ADD: TagAddModalProps;
   TAG_SUGGESTIONS: TagSuggestionsModalProps;
   USER_NOTE: UserNoteModalProps;
@@ -64,7 +62,6 @@ const requiresAuthModalTypes: (keyof ModalTypeMap)[] = [
   "PROFILE_EDIT",
   "FOLLOW",
   "USER_NOTE",
-  "STORAGE",
   "TAG_ADD",
   "TAG_SUGGESTIONS",
 ];

@@ -331,7 +331,10 @@ export default function ClientLayout({
         )}
       >
         {!isSidebarHidden && (
-          <Sidebar isFolded={isFolded} onFoldToggle={handleFoldToggle} />
+          <Sidebar
+            isFolded={isFolded}
+            onFoldToggle={isHeaderHidden ? handleFoldToggle : undefined}
+          />
         )}
 
         <div

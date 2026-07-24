@@ -8,7 +8,6 @@ import FollowModal from "./follow";
 import LoginModal from "./LoginModal";
 import PersonaAddModal from "./PersonaAddModal";
 import ProfileEditModal from "./ProfileEditModal";
-import StorageModal from "./StorageModal";
 import TagAddModal from "./TagAddModal";
 import TagSuggestionsModal from "./TagSuggestionsModal";
 import UserNoteModal from "./UserNoteModal";
@@ -25,7 +24,6 @@ export const MODAL_COMPONENTS: {
   LOGIN: LoginModal,
   PERSONA_ADD: PersonaAddModal,
   PROFILE_EDIT: ProfileEditModal,
-  STORAGE: StorageModal,
   TAG_ADD: TagAddModal,
   TAG_SUGGESTIONS: TagSuggestionsModal,
   USER_NOTE: UserNoteModal,

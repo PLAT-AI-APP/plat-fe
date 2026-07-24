@@ -48,8 +48,6 @@ export const FIELD_ERROR_MESSAGES = {
   tagNameMaxLength: "field.error.tagNameMaxLength",
   opinionRequired: "field.error.opinionRequired",
   opinionMaxLength: "field.error.opinionMaxLength",
-  longTermMemoryRequired: "field.error.longTermMemoryRequired",
-  longTermMemoryMaxLength: "field.error.longTermMemoryMaxLength",
   personaNameRequired: "field.error.personaNameRequired",
   personaNameMaxLength: "field.error.personaNameMaxLength",
   personaInfoMaxLength: "field.error.personaInfoMaxLength",

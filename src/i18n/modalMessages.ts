@@ -33,13 +33,6 @@ const ko = {
       changePassword: "비밀번호 변경",
       submit: "저장",
     },
-    storage: {
-      title: "장기기억",
-      description:
-        "대화내용이 자동으로 요약되어 캐릭터가 오래 기억할 수 있어요",
-      placeholder: "장기기억을 생성하려면 더 많은 대화가 필요해요...",
-      submit: "저장",
-    },
     userNote: {
       title: "유저노트",
       description:
@@ -132,14 +125,6 @@ const en: typeof ko = {
     profileEdit: {
       title: "Edit profile",
       changePassword: "Change password",
-      submit: "Save",
-    },
-    storage: {
-      title: "Long-term memory",
-      description:
-        "The conversation is summarized automatically so the character can remember it longer.",
-      placeholder:
-        "You need more conversation before long-term memory can be created...",
       submit: "Save",
     },
     userNote: {
@@ -235,14 +220,6 @@ const ja: typeof ko = {
       changePassword: "パスワード変更",
       submit: "保存",
     },
-    storage: {
-      title: "長期記憶",
-      description:
-        "会話内容が自動で要約され、キャラクターが長く記憶できます。",
-      placeholder:
-        "長期記憶を作るには、もう少し会話が必要です...",
-      submit: "保存",
-    },
     userNote: {
       title: "ユーザーノート",
       description:
@@ -336,12 +313,6 @@ const zh: typeof ko = {
       changePassword: "修改密码",
       submit: "保存",
     },
-    storage: {
-      title: "长期记忆",
-      description: "对话内容会自动总结，角色可以记住更久。",
-      placeholder: "需要更多对话后才能生成长期记忆...",
-      submit: "保存",
-    },
     userNote: {
       title: "用户笔记",
       description: "对话内容会自动总结，角色可以记住更久。",
@@ -429,14 +400,6 @@ const th: typeof ko = {
     profileEdit: {
       title: "แก้ไขโปรไฟล์",
       changePassword: "เปลี่ยนรหัสผ่าน",
-      submit: "บันทึก",
-    },
-    storage: {
-      title: "ความทรงจำระยะยาว",
-      description:
-        "บทสนทนาจะถูกสรุปอัตโนมัติ เพื่อให้ตัวละครจดจำได้ยาวนานขึ้น",
-      placeholder:
-        "ต้องมีบทสนทนาเพิ่มอีกเล็กน้อยจึงจะสร้างความทรงจำระยะยาวได้...",
       submit: "บันทึก",
     },
     userNote: {
@@ -530,14 +493,6 @@ const vi: typeof ko = {
     profileEdit: {
       title: "Chỉnh sửa hồ sơ",
       changePassword: "Đổi mật khẩu",
-      submit: "Lưu",
-    },
-    storage: {
-      title: "Ký ức dài hạn",
-      description:
-        "Nội dung trò chuyện được tóm tắt tự động để nhân vật ghi nhớ lâu hơn.",
-      placeholder:
-        "Cần thêm nhiều cuộc trò chuyện hơn để tạo ký ức dài hạn...",
       submit: "Lưu",
     },
     userNote: {

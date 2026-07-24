@@ -22,6 +22,7 @@ import Note from "@/icons/Note";
 import { cn } from "@/lib/utils";
 import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
+import ChattingMemoryView from "./chatting-memory-view";
 
 interface ChattingSidebarProps {
   toggleIsSidebar: () => void;
@@ -44,6 +45,9 @@ interface SidebarToggleProps {
 interface AssetGalleryViewProps {
   onBack: () => void;
 }
+
+// 사이드바 내부에서 전환되는 하위 화면 종류
+type SidebarDepth = "SETTINGS" | "MEMORY" | "ASSET_GALLERY";
 
 const ASSET_ITEMS = Array.from({ length: 12 }, (_, index) => ({
   id: `asset-${index + 1}`,
@@ -179,9 +183,12 @@ const ChattingSidebar = ({
   const openDialog = useDialogStore((state) => state.openDialog);
   const { openModal } = useModalStore();
   const [isAssetViewOn, setIsAssetViewOn] = useState(true);
-  const [isAssetGalleryVisible, setIsAssetGalleryVisible] = useState(false);
+  const [sidebarDepth, setSidebarDepth] = useState<SidebarDepth>("SETTINGS");
 
-  const handleOpenModal = (modalId: "STORAGE" | "PERSONA" | "USER_NOTE") => {
+  // 배경 클릭 시 사이드바보다 먼저 닫을 하위 화면 여부
+  const isDepthViewOpen = sidebarDepth !== "SETTINGS";
+
+  const handleOpenModal = (modalId: "PERSONA" | "USER_NOTE") => {
     // 사이드바 액션 후 레이어가 겹치지 않도록 먼저 닫는 흐름
     toggleIsSidebar();
     openModal(modalId);
@@ -195,13 +202,18 @@ const ChattingSidebar = ({
   const handleAssetGalleryBack = () => {
     // 갤러리에서 설정 화면으로 돌아가는 상태
     setIsAssetViewOn(false);
-    setIsAssetGalleryVisible(false);
+    setSidebarDepth("SETTINGS");
+  };
+
+  const handleDepthBack = () => {
+    // 사이드바 하위 뎁스에서 설정 화면으로 복귀
+    setSidebarDepth("SETTINGS");
   };
 
   const handleOverlayClick = () => {
     // 배경 클릭 시 가장 위에 열린 사이드바 뎁스부터 닫는 흐름
-    if (isAssetGalleryVisible) {
-      handleAssetGalleryBack();
+    if (isDepthViewOpen) {
+      handleDepthBack();
       return;
     }
 
@@ -233,7 +245,7 @@ const ChattingSidebar = ({
       onClick={handleOverlayClick}
       className={cn(
         "fixed inset-0 z-20 flex justify-end font-medium",
-        isAssetGalleryVisible ? "bg-[#0D0E11]/70" : "bg-[#0D0E11]/50",
+        isDepthViewOpen ? "bg-[#0D0E11]/70" : "bg-[#0D0E11]/50",
       )}
     >
       <div
@@ -241,7 +253,9 @@ const ChattingSidebar = ({
         onClick={(event) => event.stopPropagation()}
         className="h-screen w-[336px] border border-border-main bg-bg-dark"
       >
-        {isAssetGalleryVisible ? (
+        {sidebarDepth === "MEMORY" ? (
+          <ChattingMemoryView onBack={handleDepthBack} />
+        ) : sidebarDepth === "ASSET_GALLERY" ? (
           <AssetGalleryView onBack={handleAssetGalleryBack} />
         ) : (
           <div className="flex h-full flex-col justify-between p-5">
@@ -300,14 +314,14 @@ const ChattingSidebar = ({
                       <SidebarMenuItem
                         icon={Storage}
                         label={t("memory")}
-                        onClick={() => handleOpenModal("STORAGE")}
+                        onClick={() => setSidebarDepth("MEMORY")}
                       />
                     </li>
                     <li>
                       <SidebarMenuItem
                         icon={ImageIcon}
                         label={t("assetGallery")}
-                        onClick={() => setIsAssetGalleryVisible(true)}
+                        onClick={() => setSidebarDepth("ASSET_GALLERY")}
                       />
                     </li>
                   </menu>

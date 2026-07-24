@@ -6,6 +6,7 @@ const en = {
     myChatting: "My chats",
     studio: "Studio",
     navigation: "Sidebar menu",
+    toggle: "Fold or expand sidebar",
     recentChats: "Recent chats",
   },
   footer: {
@@ -215,6 +216,7 @@ const ko: RuntimeMessages = {
     myChatting: "내 채팅",
     studio: "스튜디오",
     navigation: "사이드바 메뉴",
+    toggle: "사이드바 접기/펼치기",
     recentChats: "최근 대화",
   },
   footer: {
@@ -414,6 +416,7 @@ const ja: RuntimeMessages = {
     myChatting: "マイチャット",
     studio: "スタジオ",
     navigation: "サイドバーメニュー",
+    toggle: "サイドバーを折りたたむ/展開",
     recentChats: "最近の会話",
   },
   footer: {
@@ -615,6 +618,7 @@ const zh: RuntimeMessages = {
     myChatting: "我的聊天",
     studio: "工作室",
     navigation: "侧边栏菜单",
+    toggle: "折叠或展开侧边栏",
     recentChats: "最近对话",
   },
   footer: {
@@ -812,6 +816,7 @@ const th: RuntimeMessages = {
     myChatting: "แชตของฉัน",
     studio: "สตูดิโอ",
     navigation: "เมนูแถบด้านข้าง",
+    toggle: "พับหรือขยายแถบด้านข้าง",
     recentChats: "บทสนทนาล่าสุด",
   },
   footer: {
@@ -1017,6 +1022,7 @@ const vi: RuntimeMessages = {
     myChatting: "Chat của tôi",
     studio: "Studio",
     navigation: "Menu thanh bên",
+    toggle: "Thu gọn hoặc mở rộng thanh bên",
     recentChats: "Cuộc trò chuyện gần đây",
   },
   footer: {

@@ -26,16 +26,6 @@ export const tagSuggestionFormSchema = z.object({
 
 export type TagSuggestionFormValues = z.input<typeof tagSuggestionFormSchema>;
 
-export const storageFormSchema = z.object({
-  longTermMemory: z
-    .string()
-    .trim()
-    .min(1, FIELD_ERROR_MESSAGES.longTermMemoryRequired)
-    .max(2000, FIELD_ERROR_MESSAGES.longTermMemoryMaxLength),
-});
-
-export type StorageFormValues = z.input<typeof storageFormSchema>;
-
 export const personaFormSchema = z.object({
   name: z
     .string()
