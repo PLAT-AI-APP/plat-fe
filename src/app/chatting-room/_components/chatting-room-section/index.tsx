@@ -80,7 +80,7 @@ const ChattingRoomSection = () => {
   }, []);
 
   return (
-    <section className="flex h-[calc(100vh-60px)] flex-1 justify-center bg-bg-dark pt-2">
+    <section className="flex h-full min-h-0 flex-1 justify-center bg-bg-dark pt-2">
       <div className="flex h-full w-full max-w-[867px] flex-col">
         <div
           onScroll={onScroll}

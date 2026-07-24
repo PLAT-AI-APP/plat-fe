@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 
 const ChattingRoomPage = () => {
   return (
-    <section className="flex gap-4 h-[calc(100vh-60px)]">
+    <section className="flex h-full min-h-0">
       <ChattingRoomSection />
     </section>
   );

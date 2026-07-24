@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Camera, Chat, Home } from "@/icons";
+import { Camera, Chat, Fold, Home } from "@/icons";
 import { cn } from "@/lib/utils";
 
 export const RECENT_CHATS_MOCK = [
@@ -63,9 +63,10 @@ export const RECENT_CHATS_MOCK = [
 
 interface SidebarProps {
   isFolded: boolean;
+  onFoldToggle?: () => void;
 }
 
-const Sidebar = ({ isFolded = false }: SidebarProps) => {
+const Sidebar = ({ isFolded = false, onFoldToggle }: SidebarProps) => {
   const pathname = usePathname();
   const t = useTranslations();
 
@@ -84,13 +85,27 @@ const Sidebar = ({ isFolded = false }: SidebarProps) => {
       animate={{ width: sidebarWidth }}
       style={{ width: sidebarWidth }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      className="sticky top-0 flex h-fit flex-col gap-2 overflow-hidden bg-background pt-4 pr-2 pl-4"
+      className="sticky top-0 flex h-full flex-col gap-2 overflow-hidden bg-bg-dark pt-4 pr-2 pl-4"
     >
       <nav
         id="sidebar-navigation"
         aria-label={t("sidebar.navigation")}
         className="w-full"
       >
+        {onFoldToggle && (
+          <div className="mb-4 flex px-[7px]">
+            <button
+              id="sidebar-toggle-button"
+              type="button"
+              aria-label={t("sidebar.toggle")}
+              onClick={onFoldToggle}
+              className="flex size-8 items-center justify-center rounded-lg bg-transparent text-font-2 transition-colors hover:bg-btn-hover hover:text-font-1"
+            >
+              <Fold id="icon-sidebar-fold" className="size-6" />
+            </button>
+          </div>
+        )}
+
         <ul
           id="sidebar-menu-list"
           className="m-0 flex list-none flex-col gap-2 p-0"

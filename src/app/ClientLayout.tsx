@@ -16,16 +16,14 @@ import { useModalStore } from "@/store/useModalStore";
 import { refreshAccessToken } from "@/api/auth/postRefresh";
 import axios from "axios";
 
-// 사이드바를 아예 보여주지 않을 경로 리스트
-// 현재는 전역 헤더/사이드바를 숨길 전용 경로가 없어 빈 배열로 유지합니다.
+// 사이드바 없이 전용 화면을 쓰는 경로
 const HIDE_SIDEBAR_PATHS: string[] = [];
 
-// 헤더를 아예 보여주지 않을 경로 리스트
-// 빈 문자열을 넣으면 모든 pathname이 startsWith("")를 만족하므로 전부 숨겨지게 됩니다.
-const HIDE_HEADER_PATHS: string[] = [];
+// 헤더 없이 전용 상단 UI를 쓰는 경로
+const HIDE_HEADER_PATHS = ["/chatting-room"];
 
-// 사이드바를 기본으로 접어둘 경로 리스트
-const FOLD_SIDEBAR_PATHS = ["/chatting-room"];
+// 진입 시 사이드바를 접어두는 경로
+const FOLD_SIDEBAR_PATHS: string[] = [];
 const FOLD_SIDEBAR_FULL_PATHS = ["/?tab=categories"];
 const SKIP_AUTH_ALERT_ONCE_KEY = "skip-auth-alert-once";
 const PENDING_WELCOME_CREDIT_DIALOG_KEY = "pending-welcome-credit-dialog";
@@ -71,12 +69,11 @@ export default function ClientLayout({
     pathname?.startsWith(path),
   );
 
-  // 사이드바 접힘 조건 판단 함수 (fullPath 활용)
+  // 사이드바 접힘 조건 계산
   const shouldFoldSidebar = () => {
     const isFoldedPath = FOLD_SIDEBAR_PATHS.some((path) =>
       pathname?.startsWith(path),
     );
-    // 통합된 fullPath로 바로 비교
     const isFoldedFullPath = FOLD_SIDEBAR_FULL_PATHS.includes(fullPath);
     return isFoldedPath || isFoldedFullPath;
   };
@@ -333,14 +330,17 @@ export default function ClientLayout({
           isHeaderHidden ? "h-screen" : "h-[calc(100vh-60px)]",
         )}
       >
-        {!isSidebarHidden && <Sidebar isFolded={isFolded} />}
+        {!isSidebarHidden && (
+          <Sidebar isFolded={isFolded} onFoldToggle={handleFoldToggle} />
+        )}
 
         <div
           id="page-content"
           onScroll={onScroll}
           className={cn(
-            "flex-1 overflow-y-auto overflow-x-hidden scroll-smooth",
+            "flex-1 overflow-x-hidden scroll-smooth",
             "min-h-0 w-full mx-auto",
+            isHeaderHidden ? "overflow-hidden" : "overflow-y-auto",
             isScrolling && "is-scrolling",
           )}
         >
