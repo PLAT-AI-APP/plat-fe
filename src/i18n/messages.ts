@@ -66,6 +66,19 @@ const ko = {
     },
   },
   dialog: {
+    chatRestart: {
+      title: "대화를 새로 할까요?",
+      description:
+        "이 캐릭터와의 새로운 채팅방이 생성되며, 새로운 채팅방으로\n이동해요",
+      cancel: "취소하기",
+      confirm: "새로하기",
+    },
+    chatLeave: {
+      title: "정말 채팅방을 나갈까요?",
+      description: "그 동안의 캐릭터와 진행한 대화는 복구할 수 없어요",
+      cancel: "취소하기",
+      confirm: "나가기",
+    },
     loginRequired: {
       title: "로그인이 필요해요",
       description: "로그인 후 이용할 수 있는 기능입니다.",
@@ -282,6 +295,19 @@ const en: Messages = {
     },
   },
   dialog: {
+    chatRestart: {
+      title: "Start a new conversation?",
+      description:
+        "A new chat room with this character will be created,\nand you'll move to the new chat room.",
+      cancel: "Cancel",
+      confirm: "Restart",
+    },
+    chatLeave: {
+      title: "Leave this chat room?",
+      description: "The conversation you had with this character cannot be restored.",
+      cancel: "Cancel",
+      confirm: "Leave",
+    },
     loginRequired: {
       title: "Login is required",
       description: "This feature is available after logging in.",
@@ -499,6 +525,19 @@ const ja: Messages = {
     },
   },
   dialog: {
+    chatRestart: {
+      title: "会話を新しく始めますか？",
+      description:
+        "このキャラクターとの新しいチャットルームが作成され、\n新しいチャットルームへ移動します。",
+      cancel: "キャンセル",
+      confirm: "新しく始める",
+    },
+    chatLeave: {
+      title: "本当にチャットルームを退出しますか？",
+      description: "このキャラクターとのこれまでの会話は復元できません。",
+      cancel: "キャンセル",
+      confirm: "退出",
+    },
     loginRequired: {
       title: "ログインが必要です",
       description: "ログイン後に利用できる機能です。",
@@ -712,6 +751,19 @@ const zh: Messages = {
     },
   },
   dialog: {
+    chatRestart: {
+      title: "要重新开始对话吗？",
+      description:
+        "将为这个角色创建新的聊天室，\n并移动到新的聊天室。",
+      cancel: "取消",
+      confirm: "重新开始",
+    },
+    chatLeave: {
+      title: "确定要退出聊天室吗？",
+      description: "与该角色进行过的对话将无法恢复。",
+      cancel: "取消",
+      confirm: "退出",
+    },
     loginRequired: {
       title: "需要登录",
       description: "登录后才可以使用此功能。",
@@ -914,6 +966,19 @@ const th: Messages = {
     },
   },
   dialog: {
+    chatRestart: {
+      title: "เริ่มบทสนทนาใหม่หรือไม่?",
+      description:
+        "ระบบจะสร้างห้องแชตใหม่กับตัวละครนี้\nและย้ายคุณไปยังห้องแชตใหม่",
+      cancel: "ยกเลิก",
+      confirm: "เริ่มใหม่",
+    },
+    chatLeave: {
+      title: "ต้องการออกจากห้องแชตจริงหรือไม่?",
+      description: "บทสนทนาที่คุณมีกับตัวละครนี้จะไม่สามารถกู้คืนได้",
+      cancel: "ยกเลิก",
+      confirm: "ออก",
+    },
     loginRequired: {
       title: "จำเป็นต้องเข้าสู่ระบบ",
       description: "ฟังก์ชันนี้ใช้งานได้หลังจากเข้าสู่ระบบ",
@@ -1126,6 +1191,19 @@ const vi: Messages = {
     },
   },
   dialog: {
+    chatRestart: {
+      title: "Bắt đầu lại cuộc trò chuyện?",
+      description:
+        "Một phòng chat mới với nhân vật này sẽ được tạo,\nvà bạn sẽ chuyển sang phòng chat mới.",
+      cancel: "Hủy",
+      confirm: "Bắt đầu lại",
+    },
+    chatLeave: {
+      title: "Bạn thật sự muốn rời phòng chat?",
+      description: "Cuộc trò chuyện với nhân vật này sẽ không thể khôi phục.",
+      cancel: "Hủy",
+      confirm: "Rời đi",
+    },
     loginRequired: {
       title: "Cần đăng nhập",
       description: "Đây là tính năng chỉ dùng được sau khi đăng nhập.",

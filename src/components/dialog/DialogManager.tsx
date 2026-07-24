@@ -3,6 +3,8 @@
 import type { ComponentType } from "react";
 import { useDialogStore } from "@/store/useDialogStore";
 import type { DialogTypeMap } from "@/type/dialog";
+import ChatLeaveDialog from "./ChatLeaveDialog";
+import ChatRestartDialog from "./ChatRestartDialog";
 import DraftOverwriteDialog from "./DraftOverwriteDialog";
 import LoginRequiredDialog from "./LoginRequiredDialog";
 import PersonaDeleteDialog from "./PersonaDeleteDialog";
@@ -18,6 +20,8 @@ const DIALOG_COMPONENTS: {
     DialogTypeMap[K] & { onClose: () => void }
   >;
 } = {
+  CHAT_LEAVE: ChatLeaveDialog,
+  CHAT_RESTART: ChatRestartDialog,
   DRAFT_OVERWRITE: DraftOverwriteDialog,
   LOGIN_REQUIRED: LoginRequiredDialog,
   PERSONA_DELETE: PersonaDeleteDialog,

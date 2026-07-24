@@ -6,9 +6,10 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
-  Chat,
+  ChatPlus,
   Eye,
   EyeOff,
+  GalleryViewLine,
   ImageIcon,
   LockLine,
   Logout,
@@ -19,6 +20,7 @@ import {
 } from "@/icons";
 import Note from "@/icons/Note";
 import { cn } from "@/lib/utils";
+import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
 
 interface ChattingSidebarProps {
@@ -105,7 +107,7 @@ const SidebarToggle = ({ isOn, onClick }: SidebarToggleProps) => {
           isOn ? "left-[26px] bg-brand" : "left-0.5 bg-font-disabled",
         )}
       >
-        <ToggleIcon className="size-4 text-font-4" />
+        <ToggleIcon className="size-4 text-white" />
       </span>
     </button>
   );
@@ -174,8 +176,9 @@ const ChattingSidebar = ({
 }: ChattingSidebarProps) => {
   const t = useTranslations("chatRoom.sidebar");
   const router = useRouter();
+  const openDialog = useDialogStore((state) => state.openDialog);
   const { openModal } = useModalStore();
-  const [isAssetViewOn, setIsAssetViewOn] = useState(false);
+  const [isAssetViewOn, setIsAssetViewOn] = useState(true);
   const [isAssetGalleryVisible, setIsAssetGalleryVisible] = useState(false);
 
   const handleOpenModal = (modalId: "STORAGE" | "PERSONA" | "USER_NOTE") => {
@@ -185,9 +188,8 @@ const ChattingSidebar = ({
   };
 
   const handleAssetViewToggle = () => {
-    // 에셋 보기 토글과 갤러리 화면 전환 상태
+    // 채팅 화면 안의 에셋 표시 여부만 바꾸는 토글
     setIsAssetViewOn((prevState) => !prevState);
-    setIsAssetGalleryVisible((prevState) => !prevState);
   };
 
   const handleAssetGalleryBack = () => {
@@ -196,16 +198,47 @@ const ChattingSidebar = ({
     setIsAssetGalleryVisible(false);
   };
 
-  const handleLeaveChat = () => {
-    // 채팅방을 벗어나는 하단 고정 액션
+  const handleOverlayClick = () => {
+    // 배경 클릭 시 가장 위에 열린 사이드바 뎁스부터 닫는 흐름
+    if (isAssetGalleryVisible) {
+      handleAssetGalleryBack();
+      return;
+    }
+
+    toggleIsSidebar();
+  };
+
+  const handleConfirmLeaveChat = () => {
+    // 채팅방 나가기 확정 후 홈으로 이동
     toggleIsSidebar();
     router.push("/");
   };
 
+  const handleLeaveChat = () => {
+    // 채팅방 나가기 전 복구 불가 안내 확인
+    openDialog("CHAT_LEAVE", {
+      onConfirm: handleConfirmLeaveChat,
+    });
+  };
+
+  const handleRestartChat = () => {
+    // 새 채팅방 생성 API 연결 전까지 다이얼로그 확인 흐름만 먼저 연결
+    openDialog("CHAT_RESTART", {
+      onConfirm: toggleIsSidebar,
+    });
+  };
+
   return (
-    <aside className="fixed inset-0 z-20 flex justify-end bg-black/50 font-medium">
+    <aside
+      onClick={handleOverlayClick}
+      className={cn(
+        "fixed inset-0 z-20 flex justify-end font-medium",
+        isAssetGalleryVisible ? "bg-[#0D0E11]/70" : "bg-[#0D0E11]/50",
+      )}
+    >
       <div
         id="sidebar-container"
+        onClick={(event) => event.stopPropagation()}
         className="h-screen w-[336px] border border-border-main bg-bg-dark"
       >
         {isAssetGalleryVisible ? (
@@ -223,18 +256,11 @@ const ChattingSidebar = ({
                   <ArrowLeft className="size-5" />
                 </button>
 
-                <div className="flex items-center rounded-lg bg-[#181C2E] px-3 py-2">
-                  <div className="flex items-center gap-3">
-                    <span className="body-5 whitespace-nowrap text-font-2">
-                      {t("ownedNotes")}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Token className="size-6" />
-                      <span className="body-2 whitespace-nowrap text-white">
-                        1,234
-                      </span>
-                    </span>
-                  </div>
+                <div className="flex items-center gap-1.5 rounded-lg bg-card px-3 py-2">
+                  <Token className="size-[21px]" />
+                  <span className="body-4 whitespace-nowrap text-white">
+                    1,234
+                  </span>
                 </div>
               </header>
 
@@ -304,7 +330,7 @@ const ChattingSidebar = ({
                     </li>
                     <li>
                       <SidebarMenuItem
-                        icon={ImageIcon}
+                        icon={GalleryViewLine}
                         label={t("assetView")}
                         trailing={
                           <SidebarToggle
@@ -315,7 +341,11 @@ const ChattingSidebar = ({
                       />
                     </li>
                     <li>
-                      <SidebarMenuItem icon={Chat} label={t("restartChat")} />
+                      <SidebarMenuItem
+                        icon={ChatPlus}
+                        label={t("restartChat")}
+                        onClick={handleRestartChat}
+                      />
                     </li>
                   </menu>
                 </section>
@@ -325,7 +355,7 @@ const ChattingSidebar = ({
             <button
               type="button"
               onClick={handleLeaveChat}
-              className="body-4 flex items-center gap-2 self-end py-3 text-font-2 transition-colors hover:text-font-1"
+              className="body-4 flex w-full items-center gap-2 px-2 py-3 text-font-2 transition-colors hover:text-font-1"
             >
               <Logout className="size-6 scale-x-[-1]" />
               <span>{t("leaveChat")}</span>

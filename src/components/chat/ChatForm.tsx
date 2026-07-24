@@ -48,7 +48,7 @@ const ChatForm = ({ onSendMessage }: ChatFormProps) => {
     <form className="shrink-0" onSubmit={handleSubmit}>
       <fieldset
         id="chat-input-container"
-        className="flex flex-col rounded-[28px] border border-bg-dark bg-bg-darker px-4 pb-4 pt-5"
+        className="flex flex-col gap-6 rounded-[28px] border border-bg-dark bg-bg-darker px-4 pb-4 pt-5"
       >
         <legend className="sr-only">{t("chatUI.messageForm")}</legend>
 
@@ -57,7 +57,7 @@ const ChatForm = ({ onSendMessage }: ChatFormProps) => {
           value={msg}
           onChange={(event) => setMsg(event.target.value)}
           placeholder={t("chatUI.messagePlaceholder")}
-          className="body-4 min-h-10 resize-none bg-transparent text-font-1 outline-none placeholder:text-font-disabled"
+          className="body-4 min-h-5 resize-none bg-transparent text-font-1 outline-none placeholder:text-font-disabled"
         />
 
         <footer className="flex justify-end gap-3">

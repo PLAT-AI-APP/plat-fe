@@ -16,6 +16,16 @@ export interface DraftOverwriteDialogProps {
   onConfirm?: () => void;
 }
 
+export interface ChatRestartDialogProps {
+  onClose: () => void;
+  onConfirm?: () => void;
+}
+
+export interface ChatLeaveDialogProps {
+  onClose: () => void;
+  onConfirm: () => void;
+}
+
 export interface LoginRequiredDialogProps {
   confirmText?: string;
   description?: string;
@@ -70,6 +80,8 @@ type DialogWithoutManagerClose<T extends { onClose: () => void }> = Omit<
 >;
 
 export type DialogTypeMap = {
+  CHAT_LEAVE: DialogWithoutManagerClose<ChatLeaveDialogProps>;
+  CHAT_RESTART: DialogWithoutManagerClose<ChatRestartDialogProps>;
   DRAFT_OVERWRITE: DialogWithoutManagerClose<DraftOverwriteDialogProps>;
   LOGIN_REQUIRED: DialogWithoutManagerClose<LoginRequiredDialogProps>;
   PERSONA_DELETE: DialogWithoutManagerClose<PersonaDeleteDialogProps>;

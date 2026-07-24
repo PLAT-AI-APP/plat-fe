@@ -1,4 +1,6 @@
 export { default } from "./Dialog";
+export { default as ChatLeaveDialog } from "./ChatLeaveDialog";
+export { default as ChatRestartDialog } from "./ChatRestartDialog";
 export { default as Dialog } from "./Dialog";
 export { default as DraftOverwriteDialog } from "./DraftOverwriteDialog";
 export { default as LoginRequiredDialog } from "./LoginRequiredDialog";

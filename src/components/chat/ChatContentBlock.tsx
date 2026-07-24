@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import CharacterChat from "@/components/chat/CharacterChat";
 import Scenario from "@/components/chat/Scenario";
-import { Close, Pen, Trash } from "@/icons";
+import { ChatRetry, ChatTrash, Close, Pen, Trash } from "@/icons";
 import Check from "@/icons/Check";
 import { parsePlat } from "@/lib/platParse";
 
@@ -16,6 +16,7 @@ interface ChatContentBlockProps {
   isEditMode?: boolean;
   onUpdate?: (newContent: string) => void;
   onDelete?: () => void;
+  onRetry?: () => void;
 }
 
 const ChatContentBlock = ({
@@ -25,6 +26,7 @@ const ChatContentBlock = ({
   isEditMode = false,
   onUpdate,
   onDelete,
+  onRetry,
 }: ChatContentBlockProps) => {
   const t = useTranslations();
   const [isEditing, setIsEditing] = React.useState(false);
@@ -140,6 +142,27 @@ const ChatContentBlock = ({
             className="rounded-lg bg-card p-1.5 hover:bg-btn-hover"
           >
             <Trash className="size-4 text-font-2" />
+          </button>
+        </div>
+      )}
+
+      {!isEditMode && (onDelete || onRetry) && (
+        <div className="-mt-4 flex gap-1 pl-11">
+          <button
+            type="button"
+            onClick={onDelete}
+            className="flex size-7 items-center justify-center rounded-[9px] bg-card p-1.5 text-font-2 transition-colors hover:bg-btn-hover"
+            aria-label={t("chatUI.deleteResponse")}
+          >
+            <ChatTrash className="size-4" />
+          </button>
+          <button
+            type="button"
+            onClick={onRetry}
+            className="flex size-7 items-center justify-center rounded-lg bg-card p-1.5 text-font-2 transition-colors hover:bg-btn-hover"
+            aria-label={t("chatUI.retryResponse")}
+          >
+            <ChatRetry className="size-4" />
           </button>
         </div>
       )}

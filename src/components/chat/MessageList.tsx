@@ -9,6 +9,7 @@ interface MessageListProps {
   isEditable?: boolean;
   onUpdateMessage?: (id: string, newContent: string) => void;
   onDeleteMessage?: (id: string) => void;
+  onRetryMessage?: (id: string) => void;
   isAiSuggestedChat?: boolean;
 }
 
@@ -18,6 +19,7 @@ const MessageList = memo(
     isEditable = false,
     onUpdateMessage,
     onDeleteMessage,
+    onRetryMessage,
     isAiSuggestedChat = true,
   }: MessageListProps) => {
     // 마지막 AI 답변 아래에 추천 응답을 이어 붙이는 기준
@@ -43,6 +45,7 @@ const MessageList = memo(
                   isEditMode={isEditable}
                   onUpdate={(newContent) => onUpdateMessage?.(msg.id, newContent)}
                   onDelete={() => onDeleteMessage?.(msg.id)}
+                  onRetry={() => onRetryMessage?.(msg.id)}
                 />
                 {index === lastAssistantIndex && isAiSuggestedChat && (
                   <AiSuggestedChat />

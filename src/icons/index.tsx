@@ -21,6 +21,7 @@ export { default as Star } from "./Star";
 export { default as Camera } from "./Camera";
 export { default as CameraFill } from "./CameraFill";
 export { default as Edit } from "./Edit";
+export { default as GalleryViewLine } from "./GalleryViewLine";
 export { default as Pen } from "./Pen";
 export { default as PenSparkle } from "./PenSparkle";
 export { default as Reload } from "./Reload";
@@ -29,6 +30,9 @@ export { default as ImageIcon } from "./ImageIcon";
 // 4. 채팅 및 메시지
 export { default as Chat } from "./Chat";
 export { default as ChatFill } from "./ChatFill";
+export { default as ChatPlus } from "./ChatPlus";
+export { default as ChatRetry } from "./ChatRetry";
+export { default as ChatTrash } from "./ChatTrash";
 export { default as Message } from "./Message";
 export { default as Email } from "./Email";
 export { default as SendFill } from "./SendFill";

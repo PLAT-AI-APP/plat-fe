@@ -63,9 +63,25 @@ const ChattingRoomSection = () => {
     ]);
   }, []);
 
+  const handleDeleteMessage = useCallback((messageId: string) => {
+    // AI 응답 하단 삭제 액션에서 해당 메시지를 목록에서 제거
+    setMessages((prevMessages) =>
+      prevMessages.filter((message) => message.id !== messageId),
+    );
+  }, []);
+
+  const handleRetryMessage = useCallback((messageId: string) => {
+    // 재생성 API 연결 전까지는 같은 응답을 유지하며 다시하기 액션 자리만 보존
+    setMessages((prevMessages) =>
+      prevMessages.map((message) =>
+        message.id === messageId ? { ...message } : message,
+      ),
+    );
+  }, []);
+
   return (
-    <section className="flex h-[calc(100vh-60px)] flex-1 justify-center bg-bg-dark">
-      <div className="flex h-full w-full max-w-[867px] flex-col gap-[7px]">
+    <section className="flex h-[calc(100vh-60px)] flex-1 justify-center bg-bg-dark pt-2">
+      <div className="flex h-full w-full max-w-[867px] flex-col">
         <div
           onScroll={onScroll}
           className={cn(
@@ -86,10 +102,14 @@ const ChattingRoomSection = () => {
           <MessageList
             messages={messages}
             isAiSuggestedChat={isSuggestedReplyOn}
+            onDeleteMessage={handleDeleteMessage}
+            onRetryMessage={handleRetryMessage}
           />
         </div>
 
-        <ChatForm onSendMessage={handleSendMessage} />
+        <div className="shrink-0 bg-bg-dark py-4">
+          <ChatForm onSendMessage={handleSendMessage} />
+        </div>
       </div>
     </section>
   );

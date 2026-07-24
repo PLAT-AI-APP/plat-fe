@@ -5,6 +5,7 @@ const ko = {
     generatedNotice: "캐릭터가 보내는 메시지는 모두 생성된 내용이에요",
     sidebar: {
       title: "채팅방 설정",
+      back: "뒤로가기",
       openSettings: "채팅방 설정 열기",
       close: "채팅방 설정 닫기",
       backToSettings: "채팅방 설정으로 돌아가기",
@@ -31,6 +32,7 @@ const en: typeof ko = {
       "All messages sent by the character are AI-generated content.",
     sidebar: {
       title: "Chat room settings",
+      back: "Go back",
       openSettings: "Open chat room settings",
       close: "Close chat room settings",
       backToSettings: "Back to chat room settings",
@@ -57,6 +59,7 @@ const ja: typeof ko = {
       "キャラクターが送信するメッセージはすべて生成された内容です。",
     sidebar: {
       title: "チャットルーム設定",
+      back: "戻る",
       openSettings: "チャットルーム設定を開く",
       close: "チャットルーム設定を閉じる",
       backToSettings: "チャットルーム設定に戻る",
@@ -82,6 +85,7 @@ const zh: typeof ko = {
     generatedNotice: "角色发送的所有消息均为生成内容。",
     sidebar: {
       title: "聊天室设置",
+      back: "返回",
       openSettings: "打开聊天室设置",
       close: "关闭聊天室设置",
       backToSettings: "返回聊天室设置",
@@ -107,6 +111,7 @@ const th: typeof ko = {
     generatedNotice: "ข้อความทั้งหมดที่ตัวละครส่งเป็นเนื้อหาที่สร้างขึ้น",
     sidebar: {
       title: "ตั้งค่าห้องแชต",
+      back: "ย้อนกลับ",
       openSettings: "เปิดการตั้งค่าห้องแชต",
       close: "ปิดการตั้งค่าห้องแชต",
       backToSettings: "กลับไปที่การตั้งค่าห้องแชต",
@@ -133,6 +138,7 @@ const vi: typeof ko = {
       "Tất cả tin nhắn do nhân vật gửi đều là nội dung được tạo.",
     sidebar: {
       title: "Cài đặt phòng chat",
+      back: "Quay lại",
       openSettings: "Mở cài đặt phòng chat",
       close: "Đóng cài đặt phòng chat",
       backToSettings: "Quay lại cài đặt phòng chat",
