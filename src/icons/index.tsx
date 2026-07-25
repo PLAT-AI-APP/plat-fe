@@ -55,6 +55,7 @@ export { default as Search } from "./Search";
 export { default as Date } from "./Date";
 export { default as Clock } from "./Clock";
 export { default as Check } from "./Check";
+export { default as Save } from "./Save";
 export { default as Sort } from "./Sort";
 export { default as Trash } from "./Trash";
 export { default as Dots } from "./Dots";

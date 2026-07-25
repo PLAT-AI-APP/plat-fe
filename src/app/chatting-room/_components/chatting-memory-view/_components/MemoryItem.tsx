@@ -3,18 +3,12 @@
 import { useTranslations } from "next-intl";
 import { Close, Pen, Save, Trash } from "@/icons";
 import { cn } from "@/lib/utils";
-
-export interface MemoryEntry {
-  content: string;
-  createdAt: string;
-  id: string;
-  turn: number;
-}
+import type { ChatMemoryEntry } from "@/type/chat";
 
 interface MemoryItemProps {
   draft: string;
   isEditing: boolean;
-  memory: MemoryEntry;
+  memory: ChatMemoryEntry;
   onCancelEdit: () => void;
   onChangeDraft: (value: string) => void;
   onDelete: () => void;

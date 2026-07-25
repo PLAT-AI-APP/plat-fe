@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import React, { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
@@ -11,7 +10,6 @@ import {
   EyeOff,
   GalleryViewLine,
   ImageIcon,
-  LockLine,
   Logout,
   PenSparkle,
   Persona,
@@ -22,6 +20,7 @@ import Note from "@/icons/Note";
 import { cn } from "@/lib/utils";
 import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
+import ChattingAssetGalleryView from "./chatting-asset-gallery-view";
 import ChattingMemoryView from "./chatting-memory-view";
 
 interface ChattingSidebarProps {
@@ -42,18 +41,8 @@ interface SidebarToggleProps {
   onClick: () => void;
 }
 
-interface AssetGalleryViewProps {
-  onBack: () => void;
-}
-
 // 사이드바 내부에서 전환되는 하위 화면 종류
 type SidebarDepth = "SETTINGS" | "MEMORY" | "ASSET_GALLERY";
-
-const ASSET_ITEMS = Array.from({ length: 12 }, (_, index) => ({
-  id: `asset-${index + 1}`,
-  imageUrl: "/images/sample.png",
-  isLocked: index >= 6,
-}));
 
 const SidebarMenuItem = ({
   icon: Icon,
@@ -117,62 +106,6 @@ const SidebarToggle = ({ isOn, onClick }: SidebarToggleProps) => {
   );
 };
 
-const AssetGalleryView = ({ onBack }: AssetGalleryViewProps) => {
-  const t = useTranslations("chatRoom.sidebar");
-
-  return (
-    <div className="flex h-full flex-col gap-5 overflow-hidden bg-bg-dark p-5">
-      <button
-        type="button"
-        onClick={onBack}
-        className="flex size-5 items-center justify-center text-font-2 transition-colors hover:text-font-1"
-        aria-label={t("backToSettings")}
-      >
-        <ArrowLeft className="size-5" />
-      </button>
-
-      <header className="flex w-full items-center justify-between">
-        <div className="flex items-center gap-2">
-          <ImageIcon className="size-6 text-font-2" />
-          <h2 className="body-2 text-font-1">{t("assetGallery")}</h2>
-        </div>
-        <span className="body-6 whitespace-pre text-font-2">
-          {t("assetTotal", { count: 90 })}
-        </span>
-      </header>
-
-      <div className="grid flex-1 grid-cols-2 gap-x-[9px] gap-y-[9px] overflow-y-auto">
-        {ASSET_ITEMS.map((asset) => (
-          <button
-            key={asset.id}
-            type="button"
-            className="relative aspect-square w-full overflow-hidden rounded-xl bg-[#d9d9d9]"
-          >
-            <Image
-              src={asset.imageUrl}
-              alt=""
-              fill
-              sizes="calc((336px - 40px - 9px) / 2)"
-              className={cn(
-                "rounded-xl object-cover",
-                asset.isLocked && "blur-[4px]",
-              )}
-            />
-            {asset.isLocked && (
-              <>
-                <span className="absolute inset-0 rounded-xl bg-black/50" />
-                <span className="absolute inset-0 flex items-center justify-center">
-                  <LockLine className="size-[30px] text-white" />
-                </span>
-              </>
-            )}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-};
-
 const ChattingSidebar = ({
   toggleIsSidebar,
   isSuggestedReplyOn,
@@ -200,8 +133,7 @@ const ChattingSidebar = ({
   };
 
   const handleAssetGalleryBack = () => {
-    // 갤러리에서 설정 화면으로 돌아가는 상태
-    setIsAssetViewOn(false);
+    // 에셋 갤러리 뎁스에서 설정 화면으로 복귀
     setSidebarDepth("SETTINGS");
   };
 
@@ -256,7 +188,7 @@ const ChattingSidebar = ({
         {sidebarDepth === "MEMORY" ? (
           <ChattingMemoryView onBack={handleDepthBack} />
         ) : sidebarDepth === "ASSET_GALLERY" ? (
-          <AssetGalleryView onBack={handleAssetGalleryBack} />
+          <ChattingAssetGalleryView onBack={handleAssetGalleryBack} />
         ) : (
           <div className="flex h-full flex-col justify-between p-5">
             <div className="flex flex-col gap-5">

@@ -1,49 +1,46 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import { useChatMemoryListQuery } from "@/api/chat/getChatMemoryList";
 import { ArrowLeft, Storage } from "@/icons";
-import MemoryItem, { MemoryEntry } from "./_components/MemoryItem";
+import type { ChatMemoryEntry } from "@/type/chat";
+import MemoryItem from "./_components/MemoryItem";
 
 interface ChattingMemoryViewProps {
   onBack: () => void;
 }
 
-// 장기기억 카드 높이와 줄바꿈 확인용 문장
-const MEMORY_CONTENT =
-  "내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용내용";
-
-// API 연결 전 장기기억 뎁스 확인용 데이터
-const INITIAL_MEMORY_ENTRIES: MemoryEntry[] = Array.from(
-  { length: 5 },
-  (_, index) => ({
-    id: `memory-${index + 1}`,
-    turn: 5 - index,
-    createdAt: "26.7.18 오후 3:33",
-    content: MEMORY_CONTENT,
-  }),
-);
+/** Temporary room id until the real chat room route id is connected */
+const MOCK_CHAT_ROOM_ID = "mock-room";
 
 const ChattingMemoryView = ({ onBack }: ChattingMemoryViewProps) => {
   const t = useTranslations("chatRoom.sidebar");
-  const [memories, setMemories] = useState(INITIAL_MEMORY_ENTRIES);
+  const { data: fetchedMemories = [] } =
+    useChatMemoryListQuery(MOCK_CHAT_ROOM_ID);
+  const [memories, setMemories] = useState<ChatMemoryEntry[]>([]);
   const [editingMemoryId, setEditingMemoryId] = useState<string | null>(null);
   const [draft, setDraft] = useState("");
 
-  const handleStartEdit = (memory: MemoryEntry) => {
-    // 선택한 장기기억을 수정 상태로 전환
+  useEffect(() => {
+    // Copy API/MSW data into local state for sidebar-only edit/delete interactions.
+    setMemories(fetchedMemories);
+  }, [fetchedMemories]);
+
+  const handleStartEdit = (memory: ChatMemoryEntry) => {
+    // Keep the selected memory content isolated while editing.
     setEditingMemoryId(memory.id);
     setDraft(memory.content);
   };
 
   const handleCancelEdit = () => {
-    // 수정 중인 장기기억 원복
+    // Clear temporary edit state without changing the memory list.
     setEditingMemoryId(null);
     setDraft("");
   };
 
   const handleSaveEdit = () => {
-    // 현재 입력값을 장기기억 목록에 반영
+    // Apply the current draft to the local memory list until a save API exists.
     if (!editingMemoryId) return;
 
     setMemories((prevMemories) =>
@@ -56,7 +53,7 @@ const ChattingMemoryView = ({ onBack }: ChattingMemoryViewProps) => {
   };
 
   const handleDeleteMemory = (memoryId: string) => {
-    // 선택한 장기기억 항목 제거
+    // Remove the selected memory from the local list until a delete API exists.
     setMemories((prevMemories) =>
       prevMemories.filter((memory) => memory.id !== memoryId),
     );

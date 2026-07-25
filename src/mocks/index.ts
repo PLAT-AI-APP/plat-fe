@@ -4,6 +4,7 @@ import { userHandlers } from "./handlers/user";
 import { followHandlers } from "./handlers/follow";
 import { hashtagHandlers } from "./handlers/hashtag";
 import { characterHandlers } from "./handlers/character";
+import { chatHandlers } from "./handlers/chat";
 import { fileHandlers } from "./handlers/file";
 import { noticeHandlers } from "./handlers/notice";
 import { noteHandler } from "./handlers/note";
@@ -19,6 +20,7 @@ export const handlers = [
   ...userHandlers,
   ...hashtagHandlers,
   ...characterHandlers,
+  ...chatHandlers,
   ...fileHandlers,
   ...noticeHandlers,
   ...noteHandler,

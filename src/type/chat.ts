@@ -27,3 +27,25 @@ interface UserMessageType {
 
 /** 최종 메시지 유니온 타입 */
 export type ChatMessageType = AssistantMessageType | UserMessageType;
+
+/** Chat room long-term memory item */
+export interface ChatMemoryEntry {
+  content: string;
+  createdAt: string;
+  id: string;
+  turn: number;
+}
+
+/** Chat room asset gallery image item */
+export interface ChatAssetGalleryItem {
+  id: string;
+  imageUrl: string;
+  isLocked: boolean;
+}
+
+/** Chat room asset gallery list summary */
+export interface ChatAssetGalleryResponse {
+  items: ChatAssetGalleryItem[];
+  totalCount: number;
+  visibleCount: number;
+}
