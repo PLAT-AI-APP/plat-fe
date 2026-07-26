@@ -13,6 +13,7 @@ const SonnerProvider = () => {
       closeButton
       duration={2000}
       offset={40}
+      visibleToasts={3}
       theme="dark"
       icons={{
         success: <StatusSuccess className="sonner-status-icon" />,
