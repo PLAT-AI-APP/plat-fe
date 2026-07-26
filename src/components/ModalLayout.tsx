@@ -95,7 +95,8 @@ export const ModalLayout = ({
         onClick={(event) => event.stopPropagation()}
         onMouseDown={(event) => event.stopPropagation()}
         className={cn(
-          "z-101 rounded-xl border border-border-main bg-bg-dark shadow-card-heavy",
+          "z-101 rounded-xl border border-border-main bg-bg-dark",
+          hasBackground ? "shadow-card-heavy" : "shadow-popover",
           !hasBackground && "px-2 py-3",
           modalPositionClass,
           className,

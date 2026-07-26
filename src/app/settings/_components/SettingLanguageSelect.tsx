@@ -47,7 +47,7 @@ const SettingLanguageSelect = () => {
       {isOpen && (
         <div
           ref={dropdownRef}
-          className="absolute right-0 top-12 z-20 flex min-w-full max-w-[260px] flex-col gap-1 rounded-xl bg-bg-darkest p-3 shadow-card-heavy"
+          className="absolute right-0 top-12 z-20 flex min-w-full max-w-[260px] flex-col gap-1 rounded-xl bg-bg-darkest p-3 shadow-popover"
         >
           {LANGUAGE_LIST.map((language) => {
             const isSelected = language.locale === locale;

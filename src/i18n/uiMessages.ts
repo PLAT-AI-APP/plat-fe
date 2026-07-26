@@ -76,7 +76,7 @@ const ko = {
       settings: "설정",
       scenario: "시나리오",
       comments: "댓글",
-      commentsCount: "({count}개)",
+      commentsCount: "({count})",
     },
     officialCharacter: "PLAT 공식 캐릭터",
     chatStart: "대화하기",

@@ -48,6 +48,7 @@ input:-webkit-autofill:active {
 
 @theme inline {
   --shadow-card-heavy: 0 10px 40px 0 rgba(0, 0, 0, 0.5);
+  --shadow-popover: 0 8px 24px 0 rgba(0, 0, 0, 0.2);
 
   --color-font-0: var(--font-0);
   --color-font-1: var(--font-1);
@@ -154,7 +155,8 @@ button {
   word-break: break-word;
 }
 
-[data-sonner-toaster] [data-sonner-toast].sonner-toast
+[data-sonner-toaster]
+  [data-sonner-toast].sonner-toast
   [data-description].sonner-description {
   color: var(--font-3-disabled);
 }
@@ -256,7 +258,8 @@ button {
   flex-shrink: 0;
 }
 
-[data-sonner-toaster] [data-sonner-toast].sonner-toast
+[data-sonner-toaster]
+  [data-sonner-toast].sonner-toast
   [data-close-button].sonner-close {
   left: auto;
   right: auto;
@@ -269,7 +272,8 @@ button {
   color: var(--font-3-disabled);
 }
 
-[data-sonner-toaster] [data-sonner-toast].sonner-toast
+[data-sonner-toaster]
+  [data-sonner-toast].sonner-toast
   [data-close-button].sonner-close:hover {
   border: 0;
   background: transparent;
@@ -284,7 +288,8 @@ button {
   height: 18px;
 }
 
-[data-sonner-toaster] [data-sonner-toast].sonner-toast.sonner-size-s
+[data-sonner-toaster]
+  [data-sonner-toast].sonner-toast.sonner-size-s
   [data-close-button].sonner-close {
   position: static;
   inset: auto;

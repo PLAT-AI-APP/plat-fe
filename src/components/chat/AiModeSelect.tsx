@@ -191,7 +191,7 @@ const AiModelSelect = ({ currentAi, handleCurrentAi }: AiModelSelectProps) => {
         <ModalLayout
           onClose={() => setIsAiModelSelect(false)}
           triggerRef={triggerRef}
-          className="right-0 top-full h-[500px] w-[360px] translate-y-2.5 overflow-hidden rounded-[24px] border-border-main bg-bg-dark px-2 py-3 shadow-[0px_10px_40px_0px_rgba(0,0,0,0.5)]"
+          className="right-0 top-full h-[500px] w-[360px] translate-y-2.5 overflow-hidden rounded-[24px] border-border-main bg-bg-dark px-2 py-3"
         >
           <ul
             id="ai-model-list"
