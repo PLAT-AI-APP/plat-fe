@@ -29,9 +29,9 @@ const modalOverlayMotion = {
 
 /** 모달 본문 등장 애니메이션 */
 const modalContentMotion = {
-  initial: { opacity: 0, scale: 0.96, y: 8 },
+  initial: { opacity: 0, scale: 0.86, y: 8 },
   animate: { opacity: 1, scale: 1, y: 0 },
-  exit: { opacity: 0, scale: 0.96, y: 8 },
+  exit: { opacity: 0, scale: 0.86, y: 8 },
 };
 
 /** 빠르고 부드러운 모달 전환 */
