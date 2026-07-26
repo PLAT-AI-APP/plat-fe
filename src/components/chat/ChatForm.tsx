@@ -21,7 +21,7 @@ const ChatForm = ({ onSendMessage }: ChatFormProps) => {
 
     if (!hasMessage) return;
 
-    // 입력 후 바로 다음 대화를 준비하는 메시지 전송 흐름
+    // 입력값 전송 후 다음 입력을 위해 메시지 초기화
     onSendMessage(msg);
     setMsg("");
   };
@@ -33,14 +33,21 @@ const ChatForm = ({ onSendMessage }: ChatFormProps) => {
 
     const selectionStart = textarea.selectionStart;
     const selectionEnd = textarea.selectionEnd;
-    const nextMessage = `${msg.slice(0, selectionStart)}**${msg.slice(selectionEnd)}`;
-    const nextCursorPosition = selectionStart + 1;
+    const selectedText = msg.slice(selectionStart, selectionEnd);
+    const hasSelectedText = selectedText.length > 0;
+    const nextMessage = hasSelectedText
+      ? `${msg.slice(0, selectionStart)}*${selectedText}*${msg.slice(selectionEnd)}`
+      : `${msg.slice(0, selectionStart)}**${msg.slice(selectionEnd)}`;
+    const nextSelectionStart = selectionStart + 1;
+    const nextSelectionEnd = hasSelectedText
+      ? nextSelectionStart + selectedText.length
+      : nextSelectionStart;
 
-    // 별표 사이에 커서를 두는 상황 입력 토큰
+    // 선택된 텍스트가 있으면 감싸고, 없으면 별표 사이에 커서 배치
     setMsg(nextMessage);
     requestAnimationFrame(() => {
       textarea.focus();
-      textarea.setSelectionRange(nextCursorPosition, nextCursorPosition);
+      textarea.setSelectionRange(nextSelectionStart, nextSelectionEnd);
     });
   };
 
