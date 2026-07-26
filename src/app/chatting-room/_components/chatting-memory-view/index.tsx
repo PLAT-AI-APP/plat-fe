@@ -11,7 +11,7 @@ interface ChattingMemoryViewProps {
   onBack: () => void;
 }
 
-/** Temporary room id until the real chat room route id is connected */
+/** 실제 채팅방 id 연결 전 임시 room id */
 const MOCK_CHAT_ROOM_ID = "mock-room";
 
 const ChattingMemoryView = ({ onBack }: ChattingMemoryViewProps) => {
@@ -23,24 +23,24 @@ const ChattingMemoryView = ({ onBack }: ChattingMemoryViewProps) => {
   const [draft, setDraft] = useState("");
 
   useEffect(() => {
-    // Copy API/MSW data into local state for sidebar-only edit/delete interactions.
+    // API/MSW 데이터를 사이드바 편집용 로컬 상태로 복사
     setMemories(fetchedMemories);
   }, [fetchedMemories]);
 
   const handleStartEdit = (memory: ChatMemoryEntry) => {
-    // Keep the selected memory content isolated while editing.
+    // 선택한 장기기억 내용을 수정 상태로 분리
     setEditingMemoryId(memory.id);
     setDraft(memory.content);
   };
 
   const handleCancelEdit = () => {
-    // Clear temporary edit state without changing the memory list.
+    // 목록 변경 없이 임시 수정 상태 초기화
     setEditingMemoryId(null);
     setDraft("");
   };
 
   const handleSaveEdit = () => {
-    // Apply the current draft to the local memory list until a save API exists.
+    // 저장 API 연결 전까지 현재 입력값을 로컬 목록에 반영
     if (!editingMemoryId) return;
 
     setMemories((prevMemories) =>
@@ -53,7 +53,7 @@ const ChattingMemoryView = ({ onBack }: ChattingMemoryViewProps) => {
   };
 
   const handleDeleteMemory = (memoryId: string) => {
-    // Remove the selected memory from the local list until a delete API exists.
+    // 삭제 API 연결 전까지 선택한 장기기억을 로컬 목록에서 제거
     setMemories((prevMemories) =>
       prevMemories.filter((memory) => memory.id !== memoryId),
     );

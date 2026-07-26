@@ -9,7 +9,7 @@ interface ChattingAssetGalleryViewProps {
   onBack: () => void;
 }
 
-/** Temporary room id until the real chat room route id is connected */
+/** 실제 채팅방 id 연결 전 임시 room id */
 const MOCK_CHAT_ROOM_ID = "mock-room";
 
 const ChattingAssetGalleryView = ({

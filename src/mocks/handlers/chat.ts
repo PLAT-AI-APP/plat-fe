@@ -5,7 +5,7 @@ import type {
   ChatMemoryEntry,
 } from "@/type/chat";
 
-/** Mock long-term memory list for the chat room sidebar */
+/** 채팅방 사이드바 장기기억 목 목록 */
 const chatMemoryList: ChatMemoryEntry[] = [
   {
     id: "memory-1",
@@ -44,7 +44,7 @@ const chatMemoryList: ChatMemoryEntry[] = [
   },
 ];
 
-/** Mock image list for the chat room asset gallery */
+/** 채팅방 에셋 갤러리 목 이미지 목록 */
 const chatAssetGalleryItems: ChatAssetGalleryItem[] = [
   {
     id: "asset-1",
@@ -108,7 +108,7 @@ const chatAssetGalleryItems: ChatAssetGalleryItem[] = [
   },
 ];
 
-/** Mock asset gallery counter and item payload */
+/** 에셋 갤러리 목 카운트와 목록 응답 */
 const chatAssetGallery: ChatAssetGalleryResponse = {
   items: chatAssetGalleryItems,
   totalCount: 50,

@@ -28,7 +28,7 @@ interface UserMessageType {
 /** 최종 메시지 유니온 타입 */
 export type ChatMessageType = AssistantMessageType | UserMessageType;
 
-/** Chat room long-term memory item */
+/** 채팅방 장기기억 항목 */
 export interface ChatMemoryEntry {
   content: string;
   createdAt: string;
@@ -36,14 +36,14 @@ export interface ChatMemoryEntry {
   turn: number;
 }
 
-/** Chat room asset gallery image item */
+/** 채팅방 에셋 갤러리 이미지 항목 */
 export interface ChatAssetGalleryItem {
   id: string;
   imageUrl: string;
   isLocked: boolean;
 }
 
-/** Chat room asset gallery list summary */
+/** 채팅방 에셋 갤러리 목록 요약 */
 export interface ChatAssetGalleryResponse {
   items: ChatAssetGalleryItem[];
   totalCount: number;

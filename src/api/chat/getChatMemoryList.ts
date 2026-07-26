@@ -3,7 +3,7 @@ import { authAxios } from "..";
 import { ApiSuccessResponse, AppError } from "@/type/api";
 import type { ChatMemoryEntry } from "@/type/chat";
 
-/** Fetch chat room long-term memories */
+/** 채팅방 장기기억 목록 조회 */
 export const getChatMemoryList = async (chatRoomId: string) => {
   const response = await authAxios.get<ApiSuccessResponse<ChatMemoryEntry[]>>(
     `/chat-rooms/${chatRoomId}/memories`,
@@ -12,7 +12,7 @@ export const getChatMemoryList = async (chatRoomId: string) => {
   return response.data.data;
 };
 
-/** Query hook for chat room long-term memories */
+/** 채팅방 장기기억 목록 조회 hook */
 export const useChatMemoryListQuery = (chatRoomId: string) => {
   return useQuery<ChatMemoryEntry[], AppError>({
     queryKey: ["get-chat-memory-list", chatRoomId],

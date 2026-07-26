@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { createPortal } from "react-dom";
+import { AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import AiModelSelect from "@/components/chat/AiModeSelect";
@@ -66,14 +67,17 @@ const ChattingRoomHeader = ({
         </button>
       </div>
 
-      {isSidebar &&
-        typeof document !== "undefined" &&
+      {typeof document !== "undefined" &&
         createPortal(
-          <ChattingSidebar
-            toggleIsSidebar={toggleIsSidebar}
-            isSuggestedReplyOn={isSuggestedReplyOn}
-            onSuggestedReplyToggle={onSuggestedReplyToggle}
-          />,
+          <AnimatePresence>
+            {isSidebar && (
+              <ChattingSidebar
+                toggleIsSidebar={toggleIsSidebar}
+                isSuggestedReplyOn={isSuggestedReplyOn}
+                onSuggestedReplyToggle={onSuggestedReplyToggle}
+              />
+            )}
+          </AnimatePresence>,
           document.body,
         )}
     </header>
