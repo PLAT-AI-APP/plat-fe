@@ -47,6 +47,8 @@ input:-webkit-autofill:active {
 }
 
 @theme inline {
+  /* hover 전환 기본 시간 */
+  --default-transition-duration: 0.2s;
   --shadow-card-heavy: 0 10px 40px 0 rgba(0, 0, 0, 0.5);
   --shadow-popover: 0 8px 24px 0 rgba(0, 0, 0, 0.2);
 
@@ -89,8 +91,8 @@ textarea {
 
 button {
   cursor: pointer;
-  transition-duration: 0.5s;
-  animation-duration: 0.5s;
+  transition-duration: 0.2s;
+  animation-duration: 0.2s;
 }
 
 /* Sonner */
@@ -490,7 +492,7 @@ button {
   min-height: 40px;
   /* 5.5s는 너무 길어 0.3s로 수정했습니다. */
   transition:
-    background-color 0.3s ease,
+    background-color 0.2s ease,
     border-width 0.2s ease;
 }
 ::-webkit-scrollbar-thumb:hover {

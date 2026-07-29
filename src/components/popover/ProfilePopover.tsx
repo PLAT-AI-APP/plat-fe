@@ -209,7 +209,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
         if (!tab.link) {
           return (
             <div key={tab.name} onClick={tab.onClick}>
-              <div className="relative cursor-pointer flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg hover:bg-btn-hover transition-colors duration-300 ease-in-out text-font-1 hover:text-font-1">
+              <div className="relative cursor-pointer flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg hover:bg-btn-hover transition-colors duration-200 ease-in-out text-font-1 hover:text-font-1">
                 <div className="flex items-center gap-2 body-4">
                   <Icon
                     size={18}
@@ -249,7 +249,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
                         <li
                           key={name}
                           onClick={() => handleCurrentTendency(name)}
-                          className="body-5 cursor-pointer flex justify-between px-3.5 py-2.5 rounded-2xl hover:bg-btn-hover transition-colors duration-300 ease-in-out"
+                          className="body-5 cursor-pointer flex justify-between px-3.5 py-2.5 rounded-2xl hover:bg-btn-hover transition-colors duration-200 ease-in-out"
                         >
                           <div className="flex items-center gap-2">
                             <div
@@ -276,7 +276,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
           <Link
             key={tab.name}
             href={tab.link}
-            className="relative cursor-pointer flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg hover:bg-btn-hover transition-colors duration-300 ease-in-out text-font-1 hover:text-font-1 text-sm"
+            className="relative cursor-pointer flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg hover:bg-btn-hover transition-colors duration-200 ease-in-out text-font-1 hover:text-font-1 text-sm"
           >
             <div className="flex items-center gap-2">
               <Icon
@@ -318,7 +318,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
           <hr className="text-border-main pb-2.5 mt-2.5" />
           <div
             onClick={() => logout()}
-            className="cursor-pointer flex items-center gap-2 px-3 py-2.5 rounded-xl hover:bg-btn-hover transition-colors duration-300 ease-in-out text-font-1 hover:text-font-1 body-4"
+            className="cursor-pointer flex items-center gap-2 px-3 py-2.5 rounded-xl hover:bg-btn-hover transition-colors duration-200 ease-in-out text-font-1 hover:text-font-1 body-4"
           >
             <Logout size={18} className="text-font-2 shrink-0" />
             {t("logout")}

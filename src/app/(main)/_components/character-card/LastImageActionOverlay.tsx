@@ -14,14 +14,14 @@ const LastImageActionOverlay = ({ isVisible }: LastImageActionOverlayProps) => {
     <>
       <div
         className={cn(
-          "pointer-events-none absolute inset-0 z-10 bg-[#0D0E11]/80 transition-opacity duration-300",
+          "pointer-events-none absolute inset-0 z-10 bg-[#0D0E11]/80 transition-opacity duration-200",
           isVisible ? "opacity-100" : "opacity-0",
         )}
       />
 
       <div
         className={cn(
-          "pointer-events-none absolute left-1/2 top-27.25 z-10 flex -translate-x-1/2 flex-col items-center gap-3 transition-all duration-500 ease-out",
+          "pointer-events-none absolute left-1/2 top-27.25 z-10 flex -translate-x-1/2 flex-col items-center gap-3 transition-all duration-200 ease-out",
           isVisible ? "translate-y-0 opacity-100" : "translate-y-5 opacity-0",
         )}
       >
