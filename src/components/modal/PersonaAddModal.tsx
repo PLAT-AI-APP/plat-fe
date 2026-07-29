@@ -37,8 +37,10 @@ const PersonaAddModal = ({
     },
   });
 
+  // 목록에서 받은 수정 초기값 존재 여부
+  const hasInitialPersona = Boolean(initialName || initialDescription);
   const { data: personaDetail } = useDetailPersonaQuery(personaId as string, {
-    enabled: isEditMode && !!personaId,
+    enabled: isEditMode && !!personaId && !hasInitialPersona,
   });
 
   useEffect(() => {
@@ -56,7 +58,13 @@ const PersonaAddModal = ({
         info: personaDetail.description,
       });
     }
-  }, [initialDescription, initialName, isEditMode, personaDetail, reset]);
+  }, [
+    initialDescription,
+    initialName,
+    isEditMode,
+    personaDetail,
+    reset,
+  ]);
 
   const { mutate: addPersona } = useAddPersonaMutation();
   const { mutate: editPersona } = useEditPersonaMutation();
