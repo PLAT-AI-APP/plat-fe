@@ -79,7 +79,7 @@ const FollowEmptyState = ({
       following: {
         variant: "other",
         lines: [
-          t("otherFollowingLine1"),
+          t("otherFollowingLine1", { nickname }),
           t("otherFollowingLine2", { nickname }),
         ],
         title: t("otherTitle"),
