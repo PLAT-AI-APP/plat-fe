@@ -8,15 +8,20 @@ export interface GetFollowCountResponse {
   followingCount: number;
 }
 
+const DEFAULT_FOLLOW_COUNT = {
+  followerCount: 0,
+  followingCount: 0,
+};
+
 const getFollowCount = async (userId: string) => {
   const response = await axiosInstance.get<
     ApiSuccessResponse<GetFollowCountResponse>
   >(`/follow/${userId}/count`);
 
-  return response.data.data;
+  return response.data.data ?? DEFAULT_FOLLOW_COUNT;
 };
 
-/** 내 팔로워/팔로잉 수 조회 */
+/** 팔로워/팔로잉 수 조회 */
 export const useFollowCountQuery = (userId: string) => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
@@ -24,6 +29,6 @@ export const useFollowCountQuery = (userId: string) => {
     queryKey: ["get-follow-count", userId],
     queryFn: () => getFollowCount(userId),
     staleTime: 1000 * 60 * 5,
-    enabled: isLoggedIn,
+    enabled: isLoggedIn && !!userId,
   });
 };

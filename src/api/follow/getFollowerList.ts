@@ -24,7 +24,7 @@ const getFollowerList = async ({
     },
   });
 
-  return response.data.data;
+  return response.data.data ?? response.data;
 };
 
 /** 사용자의 팔로워 목록 조회 */
