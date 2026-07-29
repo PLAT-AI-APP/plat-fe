@@ -3,7 +3,6 @@
 import React, { FormEvent, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Asterisk, MoveUp } from "@/icons";
-import { cn } from "@/lib/utils";
 import ActiveButton from "../ActiveButton";
 
 interface ChatFormProps {
@@ -78,13 +77,10 @@ const ChatForm = ({ onSendMessage }: ChatFormProps) => {
           </button>
 
           <ActiveButton
-            isActive={hasMessage}
+            isActive
             text=""
             type="submit"
-            className={cn(
-              "flex size-8.5 items-center justify-center rounded-full p-0",
-              !hasMessage && "bg-font-disabled text-font-4",
-            )}
+            className="flex size-8.5 items-center justify-center rounded-full p-0"
           >
             <MoveUp className="size-6 text-white" />
           </ActiveButton>
