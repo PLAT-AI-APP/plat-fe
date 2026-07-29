@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence, motion } from "framer-motion";
 import { useState, useEffect, useCallback } from "react";
 import Header from "@/components/header";
 import Sidebar from "@/components/Sidebar";
@@ -45,6 +46,19 @@ const isProtectedPath = (path: string) =>
 const isAuthExpiredError = (error: unknown) =>
   axios.isAxiosError(error) &&
   (error.response?.status === 401 || error.response?.status === 403);
+
+/** 사이드바 바깥 화면 오버레이 전환 */
+const sidebarOverlayMotion = {
+  initial: { opacity: 0, backdropFilter: "blur(0px)" },
+  animate: { opacity: 1, backdropFilter: "blur(6px)" },
+  exit: { opacity: 0, backdropFilter: "blur(0px)" },
+};
+
+/** 사이드바 펼침 속도에 맞춘 오버레이 전환 */
+const sidebarOverlayTransition = {
+  duration: 0.2,
+  ease: "easeOut",
+} as const;
 
 export default function ClientLayout({
   children,
@@ -341,12 +355,31 @@ export default function ClientLayout({
           id="page-content"
           onScroll={onScroll}
           className={cn(
-            "flex-1 overflow-x-hidden scroll-smooth",
+            "relative flex-1 overflow-x-hidden scroll-smooth",
             "min-h-0 w-full mx-auto",
             isHeaderHidden ? "overflow-hidden" : "overflow-y-auto",
             isScrolling && "is-scrolling",
           )}
         >
+          <AnimatePresence>
+            {/* 사이드바 펼침 시 사이드바를 제외한 화면만 흐리게 처리 */}
+            {!isSidebarHidden && !isFolded && (
+              <motion.div
+                role="button"
+                tabIndex={0}
+                {...sidebarOverlayMotion}
+                transition={sidebarOverlayTransition}
+                className="absolute inset-0 z-20 bg-[#0D0E11]/50"
+                aria-label="사이드바 접기"
+                onClick={handleFoldToggle}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    handleFoldToggle();
+                  }
+                }}
+              />
+            )}
+          </AnimatePresence>
           {children}
           <ModalManager />
           <DialogManager />
