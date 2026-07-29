@@ -61,6 +61,7 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
     handleSubmit,
     formState: { errors },
     setError,
+    clearErrors,
     control,
   } = methods;
 
@@ -99,14 +100,18 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
     // 로그인 요청이 진행 중일 때는 추가 submit을 막아 이전 요청이 취소된 것처럼 보이는 중복 호출을 방지합니다.
     if (isEmailLoginPending) return;
 
+    // 이전 로그인 실패에서 남은 서버 에러 border를 새 요청 전에 초기화
+    clearErrors(["email", "pw"]);
+
     emailLogin(
       { username: email, password: pw },
       {
         onSuccess: (data) => {
+          clearErrors(["email", "pw"]);
           showLoginToast(
             data.toastType,
             data.toastSize,
-            data.serverMessage,
+            data.toastMessage ?? "",
             data.toastDescription,
           );
 

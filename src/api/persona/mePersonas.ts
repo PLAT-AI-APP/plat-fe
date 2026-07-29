@@ -1,40 +1,75 @@
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { authAxios } from "..";
-import { ApiSuccessResponse, AppError } from "@/type/api";
+import { AppError } from "@/type/api";
 import { Persona } from "@/type/persona";
 
-export interface MePersonasResponse {
-  data: Persona[];
+interface MePersonasApiResponse {
+  code?: string;
+  errorCode?: string;
+  message?: string;
+  result?: "OK";
+  content?: Persona[];
+  data?:
+    | Persona[]
+    | {
+        content?: Persona[];
+        data?: Persona[];
+        items?: Persona[];
+        personas?: Persona[];
+      };
+  items?: Persona[];
+  personas?: Persona[];
 }
 
-const getNormalizedPersonas = (
-  payload: MePersonasResponse | Persona[],
-): Persona[] => {
-  // 백엔드/목업 응답이 `Persona[]` 또는 `{ data: Persona[] }` 형태로 섞여 와도
-  // UI에서는 항상 배열만 받도록 여기서 한 번 정규화합니다.
+/** 페르소나 목록 후보 배열 추출 */
+const getPersonaListCandidate = (payload: MePersonasApiResponse) => {
   if (Array.isArray(payload)) {
     return payload;
   }
 
-  if (Array.isArray(payload?.data)) {
+  if (Array.isArray(payload.data)) {
     return payload.data;
   }
+
+  return (
+    payload.data?.personas ??
+    payload.data?.items ??
+    payload.data?.content ??
+    payload.data?.data ??
+    payload.personas ??
+    payload.items ??
+    payload.content
+  );
+};
+
+/** 페르소나 목록 응답 보정 */
+const getNormalizedPersonas = (payload: MePersonasApiResponse): Persona[] => {
+  const personas = getPersonaListCandidate(payload);
+
+  if (Array.isArray(personas)) {
+    return personas;
+  }
+
+  if (payload.result) {
+    return [];
+  }
+
+  console.warn("/users/me/personas 응답에서 페르소나 배열을 찾지 못했습니다.", {
+    payload,
+  });
 
   return [];
 };
 
 const GetMePersonas = async () => {
   const response =
-    await authAxios.get<ApiSuccessResponse<MePersonasResponse | Persona[]>>(
-      "/users/me/personas",
-    );
+    await authAxios.get<MePersonasApiResponse>("/users/me/personas");
 
-  return getNormalizedPersonas(response.data.data);
+  return getNormalizedPersonas(response.data);
 };
 
 /** 페르소나 목록 조회 */
 export const useMePersonasQuery = (
-  // queryFn 단계에서 배열로 정규화하므로 UI는 Persona[]만 신뢰하면 됩니다.
   options?: Partial<UseQueryOptions<Persona[], AppError, Persona[]>>,
 ) => {
   return useQuery<Persona[], AppError, Persona[]>({

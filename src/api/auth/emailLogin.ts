@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "..";
-import { ApiSuccessResponse, AppError } from "@/type/api";
+import { AppError } from "@/type/api";
 import { useAuthStore } from "@/store/useAuthStore";
 import type { AppToastSize, AppToastType } from "@/lib/toast";
 
@@ -12,27 +12,72 @@ interface PostEmailLoginProps {
   password: string;
 }
 
+interface EmailLoginResponse {
+  result: "OK";
+  accessToken?: string;
+  data?: {
+    accessToken?: string;
+    isFirstLogin?: boolean;
+    token?: string;
+    toastDescription?: string;
+    toastMessage?: string;
+    toastSize?: LoginToastSize;
+    toastType?: LoginToastType;
+  };
+}
+
+/** Authorization 헤더와 응답 body를 모두 지원하는 토큰 추출 */
+const getAccessTokenFromLoginResponse = (
+  authorizationHeader?: string,
+  accessToken?: string,
+  token?: string,
+) => {
+  if (accessToken) {
+    return accessToken;
+  }
+
+  if (token) {
+    return token;
+  }
+
+  if (authorizationHeader?.startsWith("Bearer ")) {
+    return authorizationHeader.replace("Bearer ", "");
+  }
+
+  return authorizationHeader;
+};
+
 const PostEmailLogin = async (props: PostEmailLoginProps) => {
-  const response = await axiosInstance.post<
-    ApiSuccessResponse<{
-      accessToken: string;
-      isFirstLogin?: boolean;
-      toastDescription?: string;
-      toastSize?: LoginToastSize;
-      toastType?: LoginToastType;
-    }>
-  >("/auth/login", props, {
-    withCredentials: true,
-  });
+  const response = await axiosInstance.post<EmailLoginResponse>(
+    "/auth/login",
+    props,
+    {
+      withCredentials: true,
+    },
+  );
+  const responseData = response.data.data;
+  const token = getAccessTokenFromLoginResponse(
+    response.headers.authorization,
+    responseData?.accessToken ?? response.data.accessToken,
+    responseData?.token,
+  );
+
+  if (!token) {
+    throw {
+      code: "MESSAGE",
+      fields: {},
+      message: "로그인 응답에서 토큰을 찾을 수 없습니다.",
+    } satisfies AppError;
+  }
 
   return {
-    isFirstLogin: Boolean(response.data.data.isFirstLogin),
-    serverMessage: response.data.message ?? "",
-    // MSW toast 테스트처럼 서버가 타입을 내려주는 경우에만 성공 콜백에서 toast를 노출합니다.
-    toastDescription: response.data.data.toastDescription,
-    toastSize: response.data.data.toastSize,
-    toastType: response.data.data.toastType,
-    token: response.data.data.accessToken,
+    isFirstLogin: Boolean(responseData?.isFirstLogin),
+    // MSW toast 테스트 계정에서만 내려주는 검수용 필드
+    toastDescription: responseData?.toastDescription,
+    toastMessage: responseData?.toastMessage,
+    toastSize: responseData?.toastSize,
+    toastType: responseData?.toastType,
+    token,
   };
 };
 
@@ -44,8 +89,8 @@ export const useEmailLoginMutation = () => {
   return useMutation<
     {
       isFirstLogin: boolean;
-      serverMessage: string;
       toastDescription?: string;
+      toastMessage?: string;
       toastSize?: LoginToastSize;
       toastType?: LoginToastType;
       token: string;
@@ -54,10 +99,11 @@ export const useEmailLoginMutation = () => {
     PostEmailLoginProps
   >({
     mutationFn: PostEmailLogin,
-    onSuccess: async (data) => {
+    onSuccess: (data) => {
       setAccessToken(data.token);
       setLoggedIn(true);
-      await queryClient.invalidateQueries({ queryKey: ["get-my-info"] });
+      // 로그인 성공 UI 흐름을 막지 않도록 내 정보 갱신은 백그라운드로 실행
+      void queryClient.invalidateQueries({ queryKey: ["get-my-info"] });
     },
   });
 };

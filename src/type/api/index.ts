@@ -18,7 +18,6 @@ export interface ApiErrorResponse {
 // 성공 응답
 export interface ApiSuccessResponse<T = void> {
   result: "OK";
-  message?: string;
   data: T;
 }
 

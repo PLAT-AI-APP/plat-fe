@@ -6,20 +6,16 @@ interface PostHashtagSuggestProps {
   name: string;
   opinion: string;
 }
+
 const postHashtagSuggest = async (params: PostHashtagSuggestProps) => {
-  const response = await authAxios.post<ApiSuccessResponse>(
-    `/hashtag/suggest`,
-    {
-      params,
-    },
-  );
-  // alert(response.data.message);
-  return response.data;
+  await authAxios.post<ApiSuccessResponse>(`/hashtag/suggest`, {
+    params,
+  });
 };
 
-/** 해시태그 제안하기 */
+/** 해시태그 제안 */
 export const useHashtagSuggestMutation = () => {
-  return useMutation<ApiSuccessResponse, AppError, PostHashtagSuggestProps>({
+  return useMutation<void, AppError, PostHashtagSuggestProps>({
     mutationKey: ["post-hashtag-suggest"],
     mutationFn: postHashtagSuggest,
   });

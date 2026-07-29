@@ -80,10 +80,9 @@ const loginToastTestCases: Record<
   },
 };
 
-const ok = <T>(data?: T, message?: string) =>
+const ok = <T>(data?: T, _message?: string) =>
   HttpResponse.json({
     result: "OK",
-    ...(message && { message }),
     ...(data !== undefined && { data }),
   });
 
@@ -239,13 +238,13 @@ export const authHandlers = [
     return HttpResponse.json(
       {
         result: "OK",
-        message: toastTestCase?.message ?? "로그인되었습니다.",
         data: {
           accessToken: "mock-access-token",
           isFirstLogin: firstLoginEmails.has(username),
           // toast 디자인 확인용 MSW 계정에서만 내려주는 테스트 전용 필드입니다.
           ...(toastTestCase && {
             toastDescription: toastTestCase.description,
+            toastMessage: toastTestCase.message,
             toastSize: toastTestCase.toastSize,
             toastType: toastTestCase.toastType,
           }),

@@ -9,25 +9,17 @@ interface PatchEditPersonaProps {
 }
 
 const PatchEditPersona = async (props: PatchEditPersonaProps) => {
-  const response = await authAxios.patch<ApiSuccessResponse>(
+  await authAxios.patch<ApiSuccessResponse>(
     `/users/me/personas/${props.personaId}`,
     props,
   );
-
-  return {
-    serverMessage: response.data.message ?? "",
-  };
 };
 
-/** 페르소나 추가 */
+/** 페르소나 수정 */
 export const useEditPersonaMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<
-    { serverMessage: string },
-    AppError,
-    PatchEditPersonaProps
-  >({
+  return useMutation<void, AppError, PatchEditPersonaProps>({
     mutationFn: PatchEditPersona,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["me-persona-list"] });

@@ -1,32 +1,25 @@
 import { useMutation } from "@tanstack/react-query";
 import { axiosInstance } from "..";
-import { ApiSuccessResponse } from "@/type/api";
+import { ApiSuccessResponse, AppError } from "@/type/api";
 
-interface PostemailVerifyConfirmProps {
+interface PostEmailVerifyConfirmProps {
   email: string;
   code: string;
 }
-const PostemailVerifyConfirm = async ({
+
+const PostEmailVerifyConfirm = async ({
   code,
   email,
-}: PostemailVerifyConfirmProps) => {
-  const response = await axiosInstance.post<ApiSuccessResponse>(
-    "/auth/email/verify/confirm",
-    { email: email, code: code },
-  );
-
-  return {
-    serverMessage: response.data.message, // 서버에서 보내준 "인증에 성공하였습니다."
-  };
+}: PostEmailVerifyConfirmProps) => {
+  await axiosInstance.post<ApiSuccessResponse>("/auth/email/verify/confirm", {
+    email,
+    code,
+  });
 };
 
-/** email 인증코드 확인 */
+/** 이메일 인증코드 확인 */
 export const useEmailVerifyConfirmMutation = () => {
-  return useMutation({
-    mutationFn: ({ code, email }: PostemailVerifyConfirmProps) =>
-      PostemailVerifyConfirm({ email, code }),
-    // onSuccess: (data) => {
-    //   alert(data.serverMessage || "인증번호가 발송되었습니다.");
-    // },
+  return useMutation<void, AppError, PostEmailVerifyConfirmProps>({
+    mutationFn: PostEmailVerifyConfirm,
   });
 };

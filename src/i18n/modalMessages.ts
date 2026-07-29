@@ -68,6 +68,8 @@ const ko = {
         "페르소나로 설정한 역할에 맞춰 캐릭터와 대화할 수 있어요",
       helper: "페르소나는 최대 5개까지 만들 수 있어요",
       add: "페르소나 추가",
+      emptyTitle: "아직 페르소나가 없어요",
+      emptyDescription: "새 페르소나를 추가해 역할을 설정해 보세요",
       menuAria: "{name} 페르소나 메뉴 열기",
     },
     follow: {
@@ -162,6 +164,8 @@ const en: typeof ko = {
         "You can talk with the character according to the role set in the persona.",
       helper: "You can create up to 5 personas.",
       add: "Add persona",
+      emptyTitle: "No personas yet",
+      emptyDescription: "Add a persona and set its role.",
       menuAria: "Open {name} persona menu",
     },
     follow: {
@@ -256,6 +260,8 @@ const ja: typeof ko = {
         "ペルソナに設定した役割に合わせてキャラクターと会話できます。",
       helper: "ペルソナは最大5個まで作成できます。",
       add: "ペルソナ追加",
+      emptyTitle: "ペルソナはまだありません",
+      emptyDescription: "新しいペルソナを追加して役割を設定してみましょう。",
       menuAria: "{name} ペルソナメニューを開く",
     },
     follow: {
@@ -345,6 +351,8 @@ const zh: typeof ko = {
       description: "你可以根据 Persona 中设定的角色与角色聊天。",
       helper: "最多可以创建 5 个 Persona。",
       add: "添加 Persona",
+      emptyTitle: "还没有 Persona",
+      emptyDescription: "添加新的 Persona 并设置角色。",
       menuAria: "打开 {name} 的 Persona 菜单",
     },
     follow: {
@@ -436,6 +444,8 @@ const th: typeof ko = {
       description: "คุณสามารถคุยกับตัวละครตามบทบาทที่ตั้งไว้ใน Persona ได้",
       helper: "คุณสามารถสร้าง Persona ได้สูงสุด 5 รายการ",
       add: "เพิ่ม Persona",
+      emptyTitle: "ยังไม่มี Persona",
+      emptyDescription: "เพิ่ม Persona ใหม่แล้วตั้งค่าบทบาท",
       menuAria: "เปิดเมนู Persona ของ {name}",
     },
     follow: {
@@ -530,6 +540,8 @@ const vi: typeof ko = {
         "Bạn có thể trò chuyện với nhân vật theo vai trò được đặt trong Persona.",
       helper: "Bạn có thể tạo tối đa 5 Persona.",
       add: "Thêm Persona",
+      emptyTitle: "Chưa có Persona",
+      emptyDescription: "Thêm Persona mới và thiết lập vai trò.",
       menuAria: "Mở menu Persona của {name}",
     },
     follow: {

@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect } from "react";
 import PersonaHeader from "./PersonaHeader";
 import PersonaItem from "./PersonaItem";
 import PersonaFooter from "./PersonaFooter";
+import PersonaEmptyState from "./PersonaEmptyState";
 import { ModalLayout } from "../../ModalLayout";
 import { useMePersonasQuery } from "@/api/persona/mePersonas";
 import SkeletonPersona from "../../skeleton/SkeletonPersona";
@@ -26,6 +27,7 @@ const PersonaModal = ({ onClose }: PersonaModalProps) => {
   });
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const hasPersonas = Boolean(personas?.length);
 
   const handleCurrentPersona = useCallback((personaId: string) => {
     setSelectedId((prevSelectedId) =>
@@ -47,6 +49,8 @@ const PersonaModal = ({ onClose }: PersonaModalProps) => {
       <div className="mt-4">
         {isDataLoading ? (
           <SkeletonPersona />
+        ) : !hasPersonas ? (
+          <PersonaEmptyState />
         ) : (
           <ul className="flex flex-col gap-4">
             {personas?.map((persona) => (

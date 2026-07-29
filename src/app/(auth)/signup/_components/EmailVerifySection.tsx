@@ -68,14 +68,12 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
     clearErrors("code");
 
     emailVerify(email, {
-      onSuccess: (data) => {
-        if (data.result === "OK") {
-          setIsOtpSent(true);
-          setFeedback("email", FIELD_FEEDBACK_MESSAGES.emailVerificationSent);
-          setIsEmailVerified(false);
-          onVerifiedChange?.(false);
-          startTimer();
-        }
+      onSuccess: () => {
+        setIsOtpSent(true);
+        setFeedback("email", FIELD_FEEDBACK_MESSAGES.emailVerificationSent);
+        setIsEmailVerified(false);
+        onVerifiedChange?.(false);
+        startTimer();
       },
     });
   };
@@ -93,14 +91,13 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
     emailVerifyConfirm(
       { code: code || "", email },
       {
-        onSuccess: (data) => {
+        onSuccess: () => {
           setIsEmailVerified(true);
           setIsOtpSent(false);
           onVerifiedChange?.(true);
           setFeedback(
             "email",
-            data.serverMessage ||
-              FIELD_FEEDBACK_MESSAGES.emailVerificationComplete,
+            FIELD_FEEDBACK_MESSAGES.emailVerificationComplete,
           );
           clearErrors("code");
           stopTimer();

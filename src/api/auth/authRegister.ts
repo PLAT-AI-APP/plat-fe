@@ -11,23 +11,12 @@ interface PostAuthRegisterProps {
 }
 
 const PostAuthRegister = async (props: PostAuthRegisterProps) => {
-  const response = await axiosInstance.post<ApiSuccessResponse>(
-    "/auth/signup",
-    props,
-  );
-
-  return {
-    serverMessage: response.data.message ?? "",
-  };
+  await axiosInstance.post<ApiSuccessResponse>("/auth/signup", props);
 };
 
 /** 최종 회원가입 */
 export const useAuthRegisterMutation = () => {
-  return useMutation<
-    { serverMessage: string },
-    AppError,
-    PostAuthRegisterProps
-  >({
+  return useMutation<void, AppError, PostAuthRegisterProps>({
     mutationFn: PostAuthRegister,
   });
 };

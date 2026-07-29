@@ -8,24 +8,14 @@ interface PostPasswordResetProps {
   password: string;
   passwordCheck: string;
 }
-const postPasswordReset = async (props: PostPasswordResetProps) => {
-  const response = await axiosInstance.post<ApiSuccessResponse>(
-    "/auth/password/reset",
-    props,
-  );
 
-  return {
-    serverMessage: response.data.message ?? "",
-  };
+const postPasswordReset = async (props: PostPasswordResetProps) => {
+  await axiosInstance.post<ApiSuccessResponse>("/auth/password/reset", props);
 };
 
-/** 비밀번호 찾기 api */
+/** 비밀번호 재설정 */
 export const usePasswordResetMutation = () => {
-  return useMutation<
-    { serverMessage: string },
-    AppError,
-    PostPasswordResetProps
-  >({
-    mutationFn: (props) => postPasswordReset(props),
+  return useMutation<void, AppError, PostPasswordResetProps>({
+    mutationFn: postPasswordReset,
   });
 };

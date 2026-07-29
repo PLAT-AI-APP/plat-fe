@@ -8,23 +8,16 @@ interface PostAddPersonaProps {
 }
 
 const PostAddPersona = async (props: PostAddPersonaProps) => {
-  const response = await authAxios.post<ApiSuccessResponse>(
-    "/users/me/personas",
-    props,
-  );
-
-  return {
-    serverMessage: response.data.message ?? "",
-  };
+  await authAxios.post<ApiSuccessResponse>("/users/me/personas", props);
 };
 
 /** 페르소나 추가 */
 export const useAddPersonaMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<{ serverMessage: string }, AppError, PostAddPersonaProps>({
+  return useMutation<void, AppError, PostAddPersonaProps>({
     mutationFn: PostAddPersona,
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["me-persona-list"] });
     },
   });
