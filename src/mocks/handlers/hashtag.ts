@@ -37,16 +37,14 @@ export const hashtagHandlers = [
     });
   }),
 
-  http.post(endpoint("/hashtag/suggest"), async ({ request }) => {
+  http.post(endpoint("/feedback/report"), async ({ request }) => {
     const body = (await request.json()) as {
-      params?: {
-        name?: string;
-        opinion?: string;
-      };
-      name?: string;
-      opinion?: string;
+      content?: string;
+      targetId?: string;
+      title?: string;
+      type?: "HASHTAG";
     };
-    const name = body.params?.name ?? body.name ?? "";
+    const name = body.title ?? body.targetId ?? "";
 
     if (!name) {
       return HttpResponse.json(
@@ -89,7 +87,6 @@ export const hashtagHandlers = [
 
     return HttpResponse.json({
       result: "OK",
-      message: "해시태그 제안이 접수되었습니다.",
     });
   }),
 ];

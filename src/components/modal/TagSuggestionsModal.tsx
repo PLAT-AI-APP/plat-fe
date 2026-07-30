@@ -8,7 +8,7 @@ import ActiveButton from "../ActiveButton";
 import SmartInput from "@/components/smart-input";
 import { ModalLayout } from "../ModalLayout";
 import { Close, Megaphone } from "@/icons";
-import { useHashtagSuggestMutation } from "@/api/hashtag/postHashtagSuggest";
+import { useFeedbackReportMutation } from "@/api/feedback/postFeedbackReport";
 import {
   tagSuggestionFormSchema,
   TagSuggestionFormValues,
@@ -31,11 +31,17 @@ const TagSuggestionsModal = ({ onClose }: TagSuggestionsModalProps) => {
   });
   const nameValue = useWatch({ control, name: "name" });
   const opinionValue = useWatch({ control, name: "opinion" });
-  const { mutate: hashtagSuggest } = useHashtagSuggestMutation();
+  const { mutate: reportFeedback } = useFeedbackReportMutation();
 
   const onSubmit = (data: TagSuggestionFormValues) => {
     const { name, opinion } = data;
-    hashtagSuggest({ name, opinion });
+    // 해시태그 제안은 범용 피드백 API의 HASHTAG 타입으로 전송
+    reportFeedback({
+      type: "HASHTAG",
+      targetId: "",
+      title: name,
+      content: opinion,
+    });
     onClose();
   };
 
