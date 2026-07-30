@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import CharacterShowcase from "../CharacterShowcase";
 import SearchResultSort from "./_components/SearchResultSort";
@@ -47,11 +47,18 @@ export const DUMMY_CHARACTERS = [
 const CategoriesTabContents = () => {
   const t = useTranslations("categoriesPage");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  // 포털 대상은 브라우저 렌더링 시점에만 조회합니다.
-  const sidebarRoot =
-    typeof document === "undefined"
-      ? null
-      : document.getElementById("categories-tag-sidebar-root");
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    // 포털 렌더링은 hydration 이후로 미뤄 서버/클라이언트 초기 HTML을 맞춥니다.
+    const frameId = requestAnimationFrame(() => setIsHydrated(true));
+
+    return () => cancelAnimationFrame(frameId);
+  }, []);
+
+  const sidebarRoot = isHydrated
+    ? document.getElementById("categories-tag-sidebar-root")
+    : null;
 
   return (
     <>
