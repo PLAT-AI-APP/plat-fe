@@ -264,16 +264,6 @@ export const TAG_FOLDERS = [
   },
 ];
 
-// 디자인 시안에서 선택된 상태로 보이던 태그들입니다.
-// 추후 서버/URL query 상태와 연결되면 이 초기값만 외부 값으로 바꾸면 됩니다.
-export const INITIAL_SELECTED_TAGS = [
-  "판타지",
-  "다크판타지",
-  "사이버펑크",
-  "시뮬레이션",
-  "아포칼립스",
-];
-
 interface TagSidebarProps {
   selectedTags: string[];
   onSelectedTagsChange: Dispatch<SetStateAction<string[]>>;

@@ -1,11 +1,11 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { createPortal } from "react-dom";
 import CharacterShowcase from "../CharacterShowcase";
 import SearchResultSort from "./_components/SearchResultSort";
-import TagSidebar, { INITIAL_SELECTED_TAGS } from "./_components/tag-sidebar";
+import TagSidebar from "./_components/tag-sidebar";
 import CharacterCreatePrompt from "./_components/CharacterCreatePrompt";
 
 export const DUMMY_CHARACTERS = [
@@ -46,14 +46,12 @@ export const DUMMY_CHARACTERS = [
 
 const CategoriesTabContents = () => {
   const t = useTranslations("categoriesPage");
-  const [selectedTags, setSelectedTags] = useState<string[]>(
-    INITIAL_SELECTED_TAGS,
-  );
-  const [sidebarRoot, setSidebarRoot] = useState<HTMLElement | null>(null);
-
-  useEffect(() => {
-    setSidebarRoot(document.getElementById("categories-tag-sidebar-root"));
-  }, []);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  // 포털 대상은 브라우저 렌더링 시점에만 조회합니다.
+  const sidebarRoot =
+    typeof document === "undefined"
+      ? null
+      : document.getElementById("categories-tag-sidebar-root");
 
   return (
     <>
