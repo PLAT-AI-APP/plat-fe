@@ -24,17 +24,17 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   // 1. 기본 메타데이터 및 타이틀 템플릿
   title: {
-    default: "Plat | 나만의 AI 페르소나 플랫폼",
-    template: "%s | Plat", // 하위 페이지에서 "회원가입" 입력 시 "회원가입 | Plat"으로 표시
+    default: "PLAT | 나만의 AI 페르소나 플랫폼",
+    template: "%s | PLAT", // 하위 페이지에서 "회원가입" 입력 시 "회원가입 | PLAT"으로 표시
   },
   description:
-    "Plat에서 당신만의 AI 페르소나를 생성하고, 깊이 있는 대화를 통해 새로운 영감을 얻으세요. 당신의 상상이 현실이 되는 AI 공간입니다.",
+    "PLAT에서 당신만의 AI 페르소나를 생성하고, 깊이 있는 대화를 통해 새로운 영감을 얻으세요. 당신의 상상이 현실이 되는 AI 공간입니다.",
   keywords: [
     "AI 페르소나",
     "인공지능 대화",
     "AI 캐릭터",
     "플랫",
-    "Plat",
+    "PLAT",
     "대화형 AI",
     "커스텀 AI",
   ],
@@ -66,16 +66,16 @@ export const metadata: Metadata = {
   // 4. Open Graph (전역 공통)
   openGraph: {
     type: "website",
-    siteName: "Plat",
+    siteName: "PLAT",
     locale: "ko_KR",
-    title: "Plat | 나만의 AI 페르소나 플랫폼",
+    title: "PLAT | 나만의 AI 페르소나 플랫폼",
     description: "당신만의 AI 페르소나와 대화를 시작하세요.",
     // images: [
     //   {
     //     url: "/images/og-default.png", // 퍼블릭 폴더 내 기본 OG 이미지
     //     width: 1200,
     //     height: 630,
-    //     alt: "Plat - AI Persona Platform",
+    //     alt: "PLAT - AI Persona Platform",
     //   },
     // ],
   },
@@ -83,10 +83,10 @@ export const metadata: Metadata = {
   // 5. Twitter (전역 공통)
   twitter: {
     card: "summary_large_image",
-    title: "Plat | 나만의 AI 페르소나 플랫폼",
+    title: "PLAT | 나만의 AI 페르소나 플랫폼",
     description: "당신만의 AI 페르소나와 대화를 시작하세요.",
     // images: ["/images/og-default.png"],
-    creator: "@Plat_Official",
+    creator: "@PLAT_Official",
   },
 };
 
