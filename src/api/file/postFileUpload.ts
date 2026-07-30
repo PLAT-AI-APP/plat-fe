@@ -34,7 +34,10 @@ const createFileUploadFormData = (file: File) => {
   return formData;
 };
 
-const postFileUpload = async ({ fileType, file }: PostFileUploadParams) => {
+export const postFileUpload = async ({
+  fileType,
+  file,
+}: PostFileUploadParams) => {
   // 문서상 fileType은 Path Variable이므로 /files/upload/{fileType} 형태로 전달합니다.
   const response = await authAxios.post<ApiSuccessResponse<FileUploadResponse>>(
     `/files/upload/${fileType}`,
