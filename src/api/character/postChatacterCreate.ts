@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { FileUploadId } from "@/api/file/postFileUpload";
-import { ApiSuccessResponse, AppError } from "@/type/api";
+import { AppError } from "@/type/api";
 
 interface postChatacterCreateProps {
   representativeImageId?: FileUploadId | null;
@@ -23,20 +23,12 @@ interface postChatacterCreateProps {
 }
 
 const postChatacterCreate = async (props: postChatacterCreateProps) => {
-  const response = await authAxios.post<ApiSuccessResponse<null>>(
-    `/character`,
-    props,
-  );
-  return response.data;
+  await authAxios.post(`/character`, props);
 };
 
 /** 캐릭터 생성 api */
 export const useChatacterCreateMutation = () => {
-  return useMutation<
-    ApiSuccessResponse<null>,
-    AppError,
-    { props: postChatacterCreateProps }
-  >({
+  return useMutation<void, AppError, { props: postChatacterCreateProps }>({
     mutationKey: ["post-character-create"],
     mutationFn: ({ props }) => postChatacterCreate(props),
   });

@@ -45,8 +45,7 @@ export const fileHandlers = [
       if (!fileUploadTypes.includes(fileType)) {
         return HttpResponse.json(
           {
-            result: "ERROR",
-            code: "FIELD_ERROR",
+            code: "FILE_TYPE_INVALID",
             message: "지원하지 않는 파일 업로드 유형입니다.",
           },
           { status: 400 },
@@ -59,25 +58,17 @@ export const fileHandlers = [
       if (!(file instanceof File)) {
         return HttpResponse.json(
           {
-            result: "ERROR",
-            code: "FIELD_ERROR",
+            code: "FILE_EMPTY",
             message: "업로드할 이미지 파일을 선택해 주세요.",
-            data: {
-              fields: {
-                file: "파일을 선택해 주세요.",
-              },
+            fields: {
+              file: "파일을 선택해 주세요.",
             },
           },
           { status: 400 },
         );
       }
 
-      return HttpResponse.json({
-        result: "OK",
-        code: null,
-        data: createMockFileUploadResponse(fileType, file),
-        message: null,
-      });
+      return HttpResponse.json(createMockFileUploadResponse(fileType, file));
     },
   ),
 ];

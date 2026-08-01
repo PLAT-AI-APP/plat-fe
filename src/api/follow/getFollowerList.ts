@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { authAxios } from "..";
-import { ApiSuccessResponse, AppError, PageResponse } from "@/type/api";
+import { AppError, PageResponse } from "@/type/api";
 
 export interface GetFollowerListResponse {
   userId: string;
@@ -16,15 +16,16 @@ const getFollowerList = async ({
   pageParam = 0,
   //   size = 20,
 }: GetFollowerListProps) => {
-  const response = await authAxios.get<
-    ApiSuccessResponse<PageResponse<GetFollowerListResponse>>
-  >(`/follow/followers`, {
+  const response = await authAxios.get<PageResponse<GetFollowerListResponse>>(
+    `/follow/followers`,
+    {
     params: {
       page: pageParam,
     },
-  });
+    },
+  );
 
-  return response.data.data ?? response.data;
+  return response.data;
 };
 
 /** 사용자의 팔로워 목록 조회 */

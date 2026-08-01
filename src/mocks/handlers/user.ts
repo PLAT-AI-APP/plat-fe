@@ -47,10 +47,7 @@ const parsePatchUserBody = async (request: Request): Promise<PatchUserBody> => {
 
 export const userHandlers = [
   http.get(endpoint("/users/me"), async () => {
-    return HttpResponse.json({
-      result: "OK",
-      data: mockUser,
-    });
+    return HttpResponse.json(mockUser);
   }),
 
   http.patch(endpoint("/users/me"), async ({ request }) => {
@@ -68,10 +65,9 @@ export const userHandlers = [
     if (Object.keys(fields).length > 0) {
       return HttpResponse.json(
         {
-          result: "ERROR",
-          code: "FIELD_ERROR",
+          code: "INVALID_INPUT",
           message: "입력값을 확인해 주세요.",
-          data: { fields },
+          fields,
         },
         { status: 400 },
       );
@@ -81,8 +77,7 @@ export const userHandlers = [
     if (nickname === "toast-alert") {
       return HttpResponse.json(
         {
-          result: "ERROR",
-          code: "ALERT",
+          code: "TOO_MANY_REQUESTS",
           message: "지금은 프로필을 수정할 수 없어요. 잠시 후 다시 시도해 주세요.",
         },
         { status: 429 },
@@ -102,17 +97,10 @@ export const userHandlers = [
           : mockUser.profileImage,
     };
 
-    return HttpResponse.json({
-      result: "OK",
-      data: mockUser,
-      message: "내 정보가 수정되었습니다.",
-    });
+    return HttpResponse.json(mockUser);
   }),
 
   http.delete(endpoint("/users/me"), async () => {
-    return HttpResponse.json({
-      result: "OK",
-      message: "회원탈퇴가 완료되었습니다.",
-    });
+    return new HttpResponse(null, { status: 204 });
   }),
 ];

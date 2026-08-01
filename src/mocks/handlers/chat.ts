@@ -117,20 +117,10 @@ const chatAssetGallery: ChatAssetGalleryResponse = {
 
 export const chatHandlers = [
   http.get(/\/chat-rooms\/([^/]+)\/memories(?:\?.*)?$/, () => {
-    return HttpResponse.json({
-      result: "OK",
-      code: null,
-      data: chatMemoryList,
-      message: null,
-    });
+    return HttpResponse.json(chatMemoryList);
   }),
 
   http.get(/\/chat-rooms\/([^/]+)\/assets(?:\?.*)?$/, () => {
-    return HttpResponse.json({
-      result: "OK",
-      code: null,
-      data: chatAssetGallery,
-      message: null,
-    });
+    return HttpResponse.json(chatAssetGallery);
   }),
 ];

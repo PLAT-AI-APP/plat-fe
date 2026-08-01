@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { axiosInstance } from "..";
-import { ApiSuccessResponse, AppError } from "@/type/api";
+import { AppError } from "@/type/api";
 
 interface PostPasswordResetProps {
   email: string;
@@ -10,7 +10,7 @@ interface PostPasswordResetProps {
 }
 
 const postPasswordReset = async (props: PostPasswordResetProps) => {
-  await axiosInstance.post<ApiSuccessResponse>("/auth/password/reset", props);
+  await axiosInstance.post("/auth/password/reset", props);
 };
 
 /** 비밀번호 재설정 */

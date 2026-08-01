@@ -1,14 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { authAxios } from "..";
-import { ApiSuccessResponse, AppError } from "@/type/api";
+import { AppError } from "@/type/api";
 import { CharacterScenario } from "@/type/character";
 
 export const getCharacterScenarioList = async (characterId: string) => {
-  const response = await authAxios.get<ApiSuccessResponse<CharacterScenario[]>>(
+  const response = await authAxios.get<CharacterScenario[]>(
     `/character/${characterId}/scenarios`,
   );
 
-  return response.data.data;
+  return response.data;
 };
 
 /** 특정 캐릭터의 등록된 시나리오 list 조회 */

@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authAxios } from "..";
-import { ApiSuccessResponse, AppError } from "@/type/api";
+import { AppError } from "@/type/api";
 
 const DeletePersona = async (personaId: string) => {
-  await authAxios.delete<ApiSuccessResponse>(`/users/me/personas/${personaId}`);
+  await authAxios.delete(`/users/me/personas/${personaId}`);
 };
 
 /** 페르소나 삭제 */

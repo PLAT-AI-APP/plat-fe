@@ -80,24 +80,43 @@ const loginToastTestCases: Record<
   },
 };
 
-const ok = <T>(data?: T, _message?: string) =>
-  HttpResponse.json({
-    result: "OK",
-    ...(data !== undefined && { data }),
-  });
+const ok = <T>(data?: T, _message?: string) => {
+  void _message;
+
+  if (data === undefined || data === null) {
+    return new HttpResponse(null, { status: 204 });
+  }
+
+  return HttpResponse.json(data);
+};
+
+type LegacyMockErrorCode = "MESSAGE" | "ALERT" | "FIELD_ERROR";
+
+/** 예전 mock 코드명을 현재 백엔드 오류 코드 형식으로 변환합니다. */
+const normalizeMockErrorCode = (
+  code: LegacyMockErrorCode,
+  status: number,
+) => {
+  if (code === "FIELD_ERROR") return "INVALID_INPUT";
+  if (code === "ALERT") return "TOO_MANY_REQUESTS";
+  if (status === 401) return "LOGIN_FAILED";
+  if (status === 404) return "NOT_FOUND";
+  if (status === 409) return "CONFLICT";
+
+  return "INVALID_REQUEST";
+};
 
 const error = (
   status: number,
-  code: "MESSAGE" | "ALERT" | "FIELD_ERROR",
+  code: LegacyMockErrorCode,
   message: string,
   fields?: Record<string, string>,
 ) =>
   HttpResponse.json(
     {
-      result: "ERROR",
-      code,
+      code: normalizeMockErrorCode(code, status),
       message,
-      ...(fields && { data: { fields } }),
+      ...(fields && { fields }),
     },
     { status },
   );
@@ -237,18 +256,15 @@ export const authHandlers = [
 
     return HttpResponse.json(
       {
-        result: "OK",
-        data: {
-          accessToken: "mock-access-token",
-          isFirstLogin: firstLoginEmails.has(username),
-          // toast 디자인 확인용 MSW 계정에서만 내려주는 테스트 전용 필드입니다.
-          ...(toastTestCase && {
-            toastDescription: toastTestCase.description,
-            toastMessage: toastTestCase.message,
-            toastSize: toastTestCase.toastSize,
-            toastType: toastTestCase.toastType,
-          }),
-        },
+        accessToken: "mock-access-token",
+        isFirstLogin: firstLoginEmails.has(username),
+        // toast 디자인 확인용 MSW 계정에서만 내려주는 테스트 전용 필드입니다.
+        ...(toastTestCase && {
+          toastDescription: toastTestCase.description,
+          toastMessage: toastTestCase.message,
+          toastSize: toastTestCase.toastSize,
+          toastType: toastTestCase.toastType,
+        }),
       },
       {
         status: 200,

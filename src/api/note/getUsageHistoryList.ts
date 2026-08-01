@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { authAxios } from "..";
-import { ApiSuccessResponse, AppError, PageResponse } from "@/type/api";
+import { AppError, PageResponse } from "@/type/api";
 import { UsageHistoryItemType } from "@/type/note";
 
 interface GetUsageHistoryListProps {
@@ -11,16 +11,17 @@ const getUsageHistoryList = async ({
   page,
   size,
 }: GetUsageHistoryListProps) => {
-  const response = await authAxios.get<
-    ApiSuccessResponse<PageResponse<UsageHistoryItemType>>
-  >(`/credit/transactions`, {
+  const response = await authAxios.get<PageResponse<UsageHistoryItemType>>(
+    `/credit/transactions`,
+    {
     params: {
       page,
       size,
     },
-  });
+    },
+  );
 
-  return response.data.data;
+  return response.data;
 };
 
 /** 노트 사용내역 조회 */

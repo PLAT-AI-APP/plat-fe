@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { authAxios } from "..";
-import { ApiSuccessResponse, AppError } from "@/type/api";
+import { AppError } from "@/type/api";
 
 export type FeedbackReportType = "HASHTAG";
 
@@ -12,7 +12,7 @@ export interface PostFeedbackReportPayload {
 }
 
 const postFeedbackReport = async (payload: PostFeedbackReportPayload) => {
-  await authAxios.post<ApiSuccessResponse>("/feedback/report", payload);
+  await authAxios.post("/feedback/report", payload);
 };
 
 /** 피드백 등록 */

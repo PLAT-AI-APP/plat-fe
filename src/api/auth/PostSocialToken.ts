@@ -2,15 +2,19 @@ import { useMutation } from "@tanstack/react-query";
 import { plainAxios } from "..";
 import { useAuthStore } from "@/store/useAuthStore";
 
+interface SocialTokenResponse {
+  accessToken?: string;
+}
+
 export const postSocialToken = async (code: string) => {
-  const response = await plainAxios.post(
+  const response = await plainAxios.post<SocialTokenResponse>(
     "/auth/social/token",
     { code },
     {
       withCredentials: true,
     },
   );
-  return response.data.data;
+  return response.data;
 };
 
 /** 소셜 토큰 검증 및 로그인 */

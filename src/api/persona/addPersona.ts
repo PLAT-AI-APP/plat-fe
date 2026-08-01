@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authAxios } from "..";
-import { ApiSuccessResponse, AppError } from "@/type/api";
+import { AppError } from "@/type/api";
 
 interface PostAddPersonaProps {
   name: string;
@@ -8,7 +8,7 @@ interface PostAddPersonaProps {
 }
 
 const PostAddPersona = async (props: PostAddPersonaProps) => {
-  await authAxios.post<ApiSuccessResponse>("/users/me/personas", props);
+  await authAxios.post("/users/me/personas", props);
 };
 
 /** 페르소나 추가 */

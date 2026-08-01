@@ -13,17 +13,13 @@ interface PostEmailLoginProps {
 }
 
 interface EmailLoginResponse {
-  result: "OK";
   accessToken?: string;
-  data?: {
-    accessToken?: string;
-    isFirstLogin?: boolean;
-    token?: string;
-    toastDescription?: string;
-    toastMessage?: string;
-    toastSize?: LoginToastSize;
-    toastType?: LoginToastType;
-  };
+  isFirstLogin?: boolean;
+  token?: string;
+  toastDescription?: string;
+  toastMessage?: string;
+  toastSize?: LoginToastSize;
+  toastType?: LoginToastType;
 }
 
 /** Authorization 헤더와 응답 body를 모두 지원하는 토큰 추출 */
@@ -55,10 +51,10 @@ const PostEmailLogin = async (props: PostEmailLoginProps) => {
       withCredentials: true,
     },
   );
-  const responseData = response.data.data;
+  const responseData = response.data;
   const token = getAccessTokenFromLoginResponse(
     response.headers.authorization,
-    responseData?.accessToken ?? response.data.accessToken,
+    responseData?.accessToken,
     responseData?.token,
   );
 

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authAxios } from "..";
-import { ApiSuccessResponse, AppError } from "@/type/api";
+import { AppError } from "@/type/api";
 
 interface PatchMyInfoProps {
   nickname: string;
@@ -45,7 +45,7 @@ const createProfileFormData = (
 const PatchMyInfo = async (data: PatchMyInfoProps) => {
   const payload = createProfilePayload(data);
 
-  await authAxios.patch<ApiSuccessResponse>(
+  await authAxios.patch(
     "/users/me",
     createProfileFormData(payload, data.profileImgFile),
   );

@@ -28,12 +28,9 @@ export const hashtagHandlers = [
     const lang = url.searchParams.get("lang") || "KO";
 
     return HttpResponse.json({
-      result: "OK",
-      data: {
-        lang,
-        isAdult: false,
-        tags: TAGS,
-      },
+      lang,
+      isAdult: false,
+      tags: TAGS,
     });
   }),
 
@@ -49,13 +46,10 @@ export const hashtagHandlers = [
     if (!name) {
       return HttpResponse.json(
         {
-          result: "ERROR",
-          code: "FIELD_ERROR",
+          code: "INVALID_INPUT",
           message: "태그명을 입력해 주세요.",
-          data: {
-            fields: {
-              name: "태그명을 입력해 주세요.",
-            },
+          fields: {
+            name: "태그명을 입력해 주세요.",
           },
         },
         { status: 400 },
@@ -66,8 +60,7 @@ export const hashtagHandlers = [
     if (name === "toast-alert") {
       return HttpResponse.json(
         {
-          result: "ERROR",
-          code: "ALERT",
+          code: "TOO_MANY_REQUESTS",
           message: "태그 제안이 잠시 제한되었어요. 조금 뒤 다시 시도해 주세요.",
         },
         { status: 429 },
@@ -77,16 +70,13 @@ export const hashtagHandlers = [
     if (TAGS.some((tag) => tag.label === name)) {
       return HttpResponse.json(
         {
-          result: "ERROR",
-          code: "MESSAGE",
+          code: "CONFLICT",
           message: "이미 존재하는 태그입니다.",
         },
         { status: 409 },
       );
     }
 
-    return HttpResponse.json({
-      result: "OK",
-    });
+    return new HttpResponse(null, { status: 204 });
   }),
 ];

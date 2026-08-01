@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { authAxios } from "..";
-import { ApiSuccessResponse, AppError } from "@/type/api";
+import { AppError } from "@/type/api";
 
 export interface GetHashtagListResponse {
   lang: string;
@@ -9,15 +9,13 @@ export interface GetHashtagListResponse {
 }
 
 const getHashtagList = async () => {
-  const response = await authAxios.get<
-    ApiSuccessResponse<GetHashtagListResponse>
-  >(`/hashtag/list`, {
+  const response = await authAxios.get<GetHashtagListResponse>(`/hashtag/list`, {
     params: {
       lang: "KO",
     },
   });
 
-  return response.data.data;
+  return response.data;
 };
 
 /** 해시태그 목록 조회 */

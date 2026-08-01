@@ -5,24 +5,14 @@ import axios, {
   AxiosError,
   AxiosResponse,
 } from "axios";
-import { toast } from "sonner";
 import { refreshAccessToken } from "./auth/postRefresh";
+import type { ApiErrorResponse, ApiSuccessResponse } from "@/type/api";
 
 /** 1. Axios 모듈 확장: _retry 속성 정의 */
 declare module "axios" {
   interface InternalAxiosRequestConfig {
     _retry?: boolean;
   }
-}
-
-/** 서버 공통 응답 규격 */
-interface ApiErrorResponse {
-  result: string;
-  code: string;
-  message: string;
-  data?: {
-    fields?: Record<string, string>;
-  };
 }
 
 /** 최종 에러 객체 타입 */
@@ -40,6 +30,32 @@ const BASE_CONFIG = {
 const isAuthExpiredError = (error: unknown) =>
   axios.isAxiosError(error) &&
   (error.response?.status === 401 || error.response?.status === 403);
+
+/** 기존 공통 응답 봉투만 골라내는 가드입니다. */
+const isLegacyApiSuccessEnvelope = <T>(
+  responseData: ApiSuccessResponse<T>,
+): responseData is { data: T; result?: "OK" } =>
+  Boolean(
+    responseData &&
+      typeof responseData === "object" &&
+      "result" in responseData &&
+      responseData.result === "OK" &&
+      "data" in responseData,
+  );
+
+/** 신규 DTO 응답과 기존 { result: "OK", data } 봉투 응답을 함께 해석합니다. */
+export const unwrapApiData = <T>(responseData: ApiSuccessResponse<T>): T => {
+  if (isLegacyApiSuccessEnvelope(responseData)) return responseData.data;
+
+  return responseData as T;
+};
+
+/** 응답 data를 API 함수들이 바로 사용할 DTO 형태로 정규화합니다. */
+const onResponseSuccess = (response: AxiosResponse): AxiosResponse => {
+  response.data = unwrapApiData(response.data);
+
+  return response;
+};
 
 // 인터셉터 없는 순수 axios
 export const plainAxios = axios.create(BASE_CONFIG);
@@ -127,16 +143,12 @@ const onResponseError = async (
 
   // [B] 에러 포맷팅
   if (err.response?.data) {
-    const { code, data, message } = err.response.data;
+    const { code, fields, message } = err.response.data;
     const formattedError: AppError = {
       code: code || "UNKNOWN_ERROR",
-      fields: data?.fields || {},
+      fields: fields || {},
       message: message || "알 수 없는 에러가 발생했습니다.",
     };
-
-    if (code?.toUpperCase() === "ALERT") {
-      toast.error(formattedError.message);
-    }
 
     return Promise.reject(formattedError);
   }
@@ -145,9 +157,11 @@ const onResponseError = async (
 };
 
 // 인터셉터 연결
+plainAxios.interceptors.response.use(onResponseSuccess);
+
 axiosInstance.interceptors.request.use((c) => onRequest(c));
 axiosInstance.interceptors.response.use(
-  (res) => res,
+  onResponseSuccess,
   (err: AxiosError<ApiErrorResponse>) => {
     // 2. 기존 에러 처리 함수 실행
     return onResponseError(err, axiosInstance);
@@ -157,7 +171,7 @@ axiosInstance.interceptors.response.use(
 // 인증이 필요한 API용 인터셉터
 authAxios.interceptors.request.use((c) => onRequest(c, true));
 authAxios.interceptors.response.use(
-  (res) => res,
+  onResponseSuccess,
   (err: AxiosError<ApiErrorResponse>) => {
     // 1. 콘솔에 백엔드 에러 출력
     if (err.response?.data) {

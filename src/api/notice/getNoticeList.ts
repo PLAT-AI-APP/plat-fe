@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { axiosInstance } from "..";
-import { ApiSuccessResponse, AppError, PageResponse } from "@/type/api";
+import { AppError, PageResponse } from "@/type/api";
 
 export interface NoticeListResponseData {
   noticeId: string;
@@ -21,7 +21,7 @@ const getNoticeList = async (
   pageParam: number,
 ) => {
   const response = await axiosInstance.get<
-    ApiSuccessResponse<PageResponse<NoticeListResponseData>>
+    PageResponse<NoticeListResponseData>
   >(`/notice`, {
     params: {
       page: pageParam,
@@ -30,7 +30,7 @@ const getNoticeList = async (
     },
   });
 
-  return response.data.data;
+  return response.data;
 };
 
 /** 공지사항 목록 조회 */

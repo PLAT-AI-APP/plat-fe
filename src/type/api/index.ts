@@ -1,25 +1,13 @@
-export type ApiErrorCode =
-  | "MESSAGE"
-  | "ALERT"
-  | "FIELD_ERROR"
-  | "message"
-  | "alert"
-  | "field_error";
+export type ApiErrorCode = string;
 
 export interface ApiErrorResponse {
-  result: "ERROR";
-  code?: ApiErrorCode;
-  message?: string;
-  data?: {
-    fields?: Record<string, string>;
-  };
+  code: ApiErrorCode;
+  message: string;
+  fields?: Record<string, string>;
 }
 
-// 성공 응답
-export interface ApiSuccessResponse<T = void> {
-  result: "OK";
-  data: T;
-}
+// 성공 응답은 신규 DTO 직접 응답과 기존 MSW 봉투 응답을 함께 허용합니다.
+export type ApiSuccessResponse<T = void> = T | { data: T; result?: "OK" };
 
 /** 페이지네이션을 포함한 공통 응답 인터페이스 (없다면 정의) */
 export interface PageResponse<T> {

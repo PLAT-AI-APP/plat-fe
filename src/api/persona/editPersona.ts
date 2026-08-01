@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authAxios } from "..";
-import { ApiSuccessResponse, AppError } from "@/type/api";
+import { AppError } from "@/type/api";
 
 interface PatchEditPersonaProps {
   personaId: string;
@@ -9,10 +9,7 @@ interface PatchEditPersonaProps {
 }
 
 const PatchEditPersona = async (props: PatchEditPersonaProps) => {
-  await authAxios.patch<ApiSuccessResponse>(
-    `/users/me/personas/${props.personaId}`,
-    props,
-  );
+  await authAxios.patch(`/users/me/personas/${props.personaId}`, props);
 };
 
 /** 페르소나 수정 */

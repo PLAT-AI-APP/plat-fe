@@ -51,8 +51,7 @@ export const followHandlers = [
     if (userId === "999") {
       return HttpResponse.json(
         {
-          result: "ERROR",
-          code: "MESSAGE",
+          code: "USER_NOT_FOUND",
           message: "존재하지 않는 유저입니다.",
         },
         { status: 404 },
@@ -60,11 +59,8 @@ export const followHandlers = [
     }
 
     return HttpResponse.json({
-      result: "OK",
-      data: {
-        followerCount: MOCK_FOLLOWERS.length,
-        followingCount: MOCK_FOLLOWINGS.length,
-      },
+      followerCount: MOCK_FOLLOWERS.length,
+      followingCount: MOCK_FOLLOWINGS.length,
     });
   }),
 
@@ -73,10 +69,7 @@ export const followHandlers = [
     const page = Number(url.searchParams.get("page") || 0);
     const size = Number(url.searchParams.get("size") || 20);
 
-    return HttpResponse.json({
-      result: "OK",
-      data: createPageResponse(MOCK_FOLLOWINGS, page, size),
-    });
+    return HttpResponse.json(createPageResponse(MOCK_FOLLOWINGS, page, size));
   }),
 
   http.get(endpoint("/follow/followers"), ({ request }) => {
@@ -84,10 +77,7 @@ export const followHandlers = [
     const page = Number(url.searchParams.get("page") || 0);
     const size = Number(url.searchParams.get("size") || 20);
 
-    return HttpResponse.json({
-      result: "OK",
-      data: createPageResponse(MOCK_FOLLOWERS, page, size),
-    });
+    return HttpResponse.json(createPageResponse(MOCK_FOLLOWERS, page, size));
   }),
 
   http.delete(/\/follow\/[^/]+(?:\?.*)?$/, ({ request }) => {
@@ -97,7 +87,6 @@ export const followHandlers = [
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return HttpResponse.json(
         {
-          result: "ERROR",
           code: "UNAUTHORIZED",
           message: "인증이 필요한 서비스입니다.",
         },
@@ -108,8 +97,7 @@ export const followHandlers = [
     if (userId === "999") {
       return HttpResponse.json(
         {
-          result: "ERROR",
-          code: "MESSAGE",
+          code: "USER_NOT_FOUND",
           message: "존재하지 않는 유저입니다.",
         },
         { status: 404 },
@@ -119,18 +107,14 @@ export const followHandlers = [
     if (userId === "888") {
       return HttpResponse.json(
         {
-          result: "ERROR",
-          code: "MESSAGE",
+          code: "FOLLOW_NOT_EXISTS",
           message: "팔로우하지 않은 유저입니다.",
         },
         { status: 409 },
       );
     }
 
-    return HttpResponse.json({
-      result: "OK",
-      message: "팔로우를 취소했습니다.",
-    });
+    return new HttpResponse(null, { status: 204 });
   }),
 
   http.post(/\/follow\/[^/]+(?:\?.*)?$/, ({ request }) => {
@@ -140,7 +124,6 @@ export const followHandlers = [
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return HttpResponse.json(
         {
-          result: "ERROR",
           code: "UNAUTHORIZED",
           message: "인증이 필요한 서비스입니다.",
         },
@@ -151,8 +134,7 @@ export const followHandlers = [
     if (userId === "999") {
       return HttpResponse.json(
         {
-          result: "ERROR",
-          code: "MESSAGE",
+          code: "USER_NOT_FOUND",
           message: "존재하지 않는 유저입니다.",
         },
         { status: 404 },
@@ -162,8 +144,7 @@ export const followHandlers = [
     if (userId === "777") {
       return HttpResponse.json(
         {
-          result: "ERROR",
-          code: "MESSAGE",
+          code: "FOLLOW_SELF_NOT_ALLOWED",
           message: "자기 자신을 팔로우할 수 없습니다.",
         },
         { status: 409 },
@@ -173,17 +154,13 @@ export const followHandlers = [
     if (userId === "666") {
       return HttpResponse.json(
         {
-          result: "ERROR",
-          code: "MESSAGE",
+          code: "FOLLOW_ALREADY_EXISTS",
           message: "이미 팔로우 중인 유저입니다.",
         },
         { status: 409 },
       );
     }
 
-    return HttpResponse.json({
-      result: "OK",
-      message: "팔로우했습니다.",
-    });
+    return new HttpResponse(null, { status: 204 });
   }),
 ];

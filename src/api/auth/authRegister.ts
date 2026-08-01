@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { axiosInstance } from "..";
-import { ApiSuccessResponse, AppError } from "@/type/api";
+import { AppError } from "@/type/api";
 
 interface PostAuthRegisterProps {
   email: string;
@@ -11,7 +11,7 @@ interface PostAuthRegisterProps {
 }
 
 const PostAuthRegister = async (props: PostAuthRegisterProps) => {
-  await axiosInstance.post<ApiSuccessResponse>("/auth/signup", props);
+  await axiosInstance.post("/auth/signup", props);
 };
 
 /** 최종 회원가입 */

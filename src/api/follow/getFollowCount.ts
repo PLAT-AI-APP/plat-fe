@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "..";
-import { ApiSuccessResponse, AppError } from "@/type/api";
+import { AppError } from "@/type/api";
 import { useAuthStore } from "@/store/useAuthStore";
 
 export interface GetFollowCountResponse {
@@ -14,11 +14,11 @@ const DEFAULT_FOLLOW_COUNT = {
 };
 
 const getFollowCount = async (userId: string) => {
-  const response = await axiosInstance.get<
-    ApiSuccessResponse<GetFollowCountResponse>
-  >(`/follow/${userId}/count`);
+  const response = await axiosInstance.get<GetFollowCountResponse>(
+    `/follow/${userId}/count`,
+  );
 
-  return response.data.data ?? DEFAULT_FOLLOW_COUNT;
+  return response.data ?? DEFAULT_FOLLOW_COUNT;
 };
 
 /** 팔로워/팔로잉 수 조회 */

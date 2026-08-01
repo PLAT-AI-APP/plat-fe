@@ -45,16 +45,13 @@ export const noteHandler = [
     const totalPages = Math.ceil(usageItems.length / size);
 
     return HttpResponse.json({
-      result: "OK",
-      data: {
-        content,
-        totalElements: usageItems.length,
-        totalPages,
-        number: page,
-        size,
-        first: page === 0,
-        last: page >= totalPages - 1,
-      },
+      content,
+      totalElements: usageItems.length,
+      totalPages,
+      number: page,
+      size,
+      first: page === 0,
+      last: page >= totalPages - 1,
     });
   }),
 ];

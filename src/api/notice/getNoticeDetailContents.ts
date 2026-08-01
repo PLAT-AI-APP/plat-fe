@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "..";
-import { ApiSuccessResponse, AppError } from "@/type/api";
+import { AppError } from "@/type/api";
 
 export interface NoticeListResponseData {
   noticeId: string;
@@ -19,11 +19,11 @@ export interface GetNoticeDetailContentsProps {
 const getNoticeDetailContents = async ({
   noticeId,
 }: GetNoticeDetailContentsProps) => {
-  const response = await axiosInstance.get<
-    ApiSuccessResponse<NoticeListResponseData>
-  >(`/notice/${noticeId}`);
+  const response = await axiosInstance.get<NoticeListResponseData>(
+    `/notice/${noticeId}`,
+  );
 
-  return response.data.data;
+  return response.data;
 };
 
 /** 공지사항 상세내용 조회 */

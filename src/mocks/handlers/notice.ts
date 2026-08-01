@@ -80,16 +80,13 @@ export const noticeHandlers = [
     const paginatedContent = filteredNotices.slice(startIndex, endIndex);
 
     return HttpResponse.json({
-      result: "OK",
-      data: {
-        content: paginatedContent,
-        totalElements,
-        totalPages,
-        number: page,
-        size,
-        first: page === 0,
-        last: page >= totalPages - 1 || totalPages === 0,
-      },
+      content: paginatedContent,
+      totalElements,
+      totalPages,
+      number: page,
+      size,
+      first: page === 0,
+      last: page >= totalPages - 1 || totalPages === 0,
     });
   }),
 
@@ -106,17 +103,14 @@ export const noticeHandlers = [
       });
     }
 
-    // result: "OK" 없이 데이터 객체만 바로 반환
+    // 성공 응답은 공통 봉투 없이 데이터 객체만 바로 반환
     return HttpResponse.json({
-      result: "OK",
-      data: {
-        noticeId: notice.noticeId,
-        type: notice.type,
-        title: notice.title,
-        content: notice.content,
-        createdAt: notice.createdAt,
-        updatedAt: notice.updatedAt,
-      },
+      noticeId: notice.noticeId,
+      type: notice.type,
+      title: notice.title,
+      content: notice.content,
+      createdAt: notice.createdAt,
+      updatedAt: notice.updatedAt,
     });
   }),
 ];

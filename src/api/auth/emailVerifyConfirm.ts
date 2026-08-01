@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { axiosInstance } from "..";
-import { ApiSuccessResponse, AppError } from "@/type/api";
+import { AppError } from "@/type/api";
 
 interface PostEmailVerifyConfirmProps {
   email: string;
@@ -11,7 +11,7 @@ const PostEmailVerifyConfirm = async ({
   code,
   email,
 }: PostEmailVerifyConfirmProps) => {
-  await axiosInstance.post<ApiSuccessResponse>("/auth/email/verify/confirm", {
+  await axiosInstance.post("/auth/email/verify/confirm", {
     email,
     code,
   });

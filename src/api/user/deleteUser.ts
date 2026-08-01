@@ -1,9 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
 import { authAxios } from "..";
-import { ApiSuccessResponse, AppError } from "@/type/api";
+import { AppError } from "@/type/api";
 
 const deleteUser = async () => {
-  await authAxios.delete<ApiSuccessResponse>(`/users/me`);
+  await authAxios.delete(`/users/me`);
 };
 
 /** 회원탈퇴 */

@@ -9,14 +9,14 @@ type RefreshResponse = {
 let refreshPromise: Promise<string | null> | null = null;
 
 export const postRefresh = async () => {
-  const response = await plainAxios.post(
+  const response = await plainAxios.post<RefreshResponse>(
     "/auth/refresh", // 이 경로가 핸들러에 등록된 경로와 토씨 하나 안 틀리고 같아야 합니다.
     {},
     {
       withCredentials: true,
     },
   );
-  return response.data.data as RefreshResponse;
+  return response.data;
 };
 
 export const refreshAccessToken = async () => {

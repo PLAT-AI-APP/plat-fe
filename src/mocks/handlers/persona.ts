@@ -19,12 +19,7 @@ let mockPersonas: Persona[] = [
 
 export const personaHandlers = [
   http.get(endpoint("/users/me/personas"), async () => {
-    return HttpResponse.json({
-      result: "OK",
-      data: {
-        data: mockPersonas,
-      },
-    });
+    return HttpResponse.json(mockPersonas);
   }),
 
   http.get(/\/users\/me\/personas\/[^/]+(?:\?.*)?$/, async ({ request }) => {
@@ -36,18 +31,14 @@ export const personaHandlers = [
     if (!targetPersona) {
       return HttpResponse.json(
         {
-          result: "ERROR",
-          code: "MESSAGE",
+          code: "PERSONA_NOT_FOUND",
           message: "존재하지 않는 페르소나입니다.",
         },
         { status: 404 },
       );
     }
 
-    return HttpResponse.json({
-      result: "OK",
-      data: targetPersona,
-    });
+    return HttpResponse.json(targetPersona);
   }),
 
   http.post(endpoint("/users/me/personas"), async ({ request }) => {
@@ -59,13 +50,10 @@ export const personaHandlers = [
     if (!name) {
       return HttpResponse.json(
         {
-          result: "ERROR",
-          code: "FIELD_ERROR",
+          code: "INVALID_INPUT",
           message: "입력값을 확인해 주세요.",
-          data: {
-            fields: {
-              name: "페르소나 이름을 입력해 주세요.",
-            },
+          fields: {
+            name: "페르소나 이름을 입력해 주세요.",
           },
         },
         { status: 400 },
@@ -82,13 +70,7 @@ export const personaHandlers = [
       },
     ];
 
-    return HttpResponse.json(
-      {
-        result: "OK",
-        message: "페르소나가 추가되었습니다.",
-      },
-      { status: 201 },
-    );
+    return new HttpResponse(null, { status: 204 });
   }),
 
   http.patch(/\/users\/me\/personas\/[^/]+(?:\?.*)?$/, async ({ request }) => {
@@ -104,8 +86,7 @@ export const personaHandlers = [
     if (targetIndex < 0) {
       return HttpResponse.json(
         {
-          result: "ERROR",
-          code: "MESSAGE",
+          code: "PERSONA_NOT_FOUND",
           message: "존재하지 않는 페르소나입니다.",
         },
         { status: 404 },
@@ -118,10 +99,7 @@ export const personaHandlers = [
       ...(description !== undefined && { description }),
     };
 
-    return HttpResponse.json({
-      result: "OK",
-      message: "페르소나가 수정되었습니다.",
-    });
+    return new HttpResponse(null, { status: 204 });
   }),
 
   http.delete(/\/users\/me\/personas\/[^/]+(?:\?.*)?$/, async ({ request }) => {
@@ -133,8 +111,7 @@ export const personaHandlers = [
     if (!exists) {
       return HttpResponse.json(
         {
-          result: "ERROR",
-          code: "MESSAGE",
+          code: "PERSONA_NOT_FOUND",
           message: "존재하지 않는 페르소나입니다.",
         },
         { status: 404 },
@@ -145,9 +122,6 @@ export const personaHandlers = [
       (persona) => persona.personaId !== personaId,
     );
 
-    return HttpResponse.json({
-      result: "OK",
-      message: "페르소나가 삭제되었습니다.",
-    });
+    return new HttpResponse(null, { status: 204 });
   }),
 ];

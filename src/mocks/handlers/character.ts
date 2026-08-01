@@ -185,18 +185,14 @@ export const characterHandlers = [
     if (characterId === "999") {
       return HttpResponse.json(
         {
-          result: "ERROR",
-          code: "MESSAGE",
+          code: "CHARACTER_NOT_FOUND",
           message: "존재하지 않는 캐릭터입니다.",
         },
         { status: 404 },
       );
     }
 
-    return HttpResponse.json({
-      result: "OK",
-      data: mockScenarios,
-    });
+    return HttpResponse.json(mockScenarios);
   }),
 
   http.get(/\/character\/([^/]+)(?:\?.*)?$/, ({ request }) => {
@@ -205,8 +201,7 @@ export const characterHandlers = [
     if (characterId === "999") {
       return HttpResponse.json(
         {
-          result: "ERROR",
-          code: "MESSAGE",
+          code: "CHARACTER_NOT_FOUND",
           message: "존재하지 않는 캐릭터입니다.",
         },
         { status: 404 },
@@ -214,11 +209,8 @@ export const characterHandlers = [
     }
 
     return HttpResponse.json({
-      result: "OK",
-      data: {
-        ...mockCharacterDetail,
-        characterId: characterId || mockCharacterDetail.characterId,
-      },
+      ...mockCharacterDetail,
+      characterId: characterId || mockCharacterDetail.characterId,
     });
   }),
 
@@ -232,23 +224,16 @@ export const characterHandlers = [
     if (!body.name) {
       return HttpResponse.json(
         {
-          result: "ERROR",
-          code: "FIELD_ERROR",
+          code: "INVALID_INPUT",
           message: "입력값을 확인해 주세요.",
-          data: {
-            fields: {
-              name: "캐릭터 이름을 입력해 주세요.",
-            },
+          fields: {
+            name: "캐릭터 이름을 입력해 주세요.",
           },
         },
         { status: 400 },
       );
     }
 
-    return HttpResponse.json({
-      result: "OK",
-      data: null,
-      message: "캐릭터가 생성되었습니다.",
-    });
+    return new HttpResponse(null, { status: 204 });
   }),
 ];

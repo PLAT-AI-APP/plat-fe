@@ -1,6 +1,6 @@
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { authAxios } from "..";
-import { ApiSuccessResponse, AppError } from "@/type/api";
+import { AppError } from "@/type/api";
 
 interface CheckNicknameResponse {
   available: boolean;
@@ -22,11 +22,11 @@ const getNormalizedCheckNickname = (
 };
 
 const GetCheckNickname = async (nickname: string) => {
-  const response = await authAxios.get<
-    ApiSuccessResponse<CheckNicknameResponse>
-  >(`/auth/nickname?nickname=${encodeURIComponent(nickname)}`);
+  const response = await authAxios.get<CheckNicknameResponse>(
+    `/auth/nickname?nickname=${encodeURIComponent(nickname)}`,
+  );
 
-  return getNormalizedCheckNickname(response.data.data);
+  return getNormalizedCheckNickname(response.data);
 };
 
 /** 닉네임 중복 조회 */
