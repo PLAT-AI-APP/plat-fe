@@ -4,6 +4,7 @@ import React from "react";
 import { useTranslations } from "next-intl";
 import Token from "@/icons/Token";
 import { cn, formatWithCommas } from "@/lib/utils";
+import { useWalletStore } from "@/store/useWalletStore";
 import Badge from "./Badge";
 import PolicyGuide from "./PolicyGuide";
 
@@ -41,13 +42,16 @@ export const MOCK_PRODUCTS: ProductItem[] = [
 
 const TokenChargeContents = () => {
   const t = useTranslations();
+  const availableBalance = useWalletStore(
+    (state) => state.balance?.availableBalance ?? 0,
+  );
 
   return (
     <section className="mx-auto w-full max-w-160 px-9 pt-5">
       <div className="mb-9 flex flex-col gap-2 rounded-3xl border border-border-main bg-bg-darker px-5 py-4">
         <span className="body-4 text-font-2">{t("tokenCharge.myNote")}</span>
         <div className="title-1 flex items-center gap-2">
-          <Token className="h-6 w-6" /> 9,999
+          <Token className="h-6 w-6" /> {formatWithCommas(availableBalance)}
         </div>
       </div>
 

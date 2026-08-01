@@ -8,6 +8,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useScrollTimeout } from "@/hooks/useScrollTiemout";
 import { cn } from "@/lib/utils";
 import { useMyInfoQuery } from "@/api/user/getMyInfo";
+import { useWalletBalanceQuery } from "@/api/wallet/getWalletBalance";
 import { ModalManager } from "@/components/modal/ModalManager";
 import ModalNavigationGuard from "@/components/modal/ModalNavigationGuard";
 import DialogManager from "@/components/dialog/DialogManager";
@@ -73,6 +74,7 @@ export default function ClientLayout({
   const fullPath = queryString ? `${pathname}?${queryString}` : pathname;
 
   useMyInfoQuery();
+  useWalletBalanceQuery();
 
   // 현재 경로가 사이드바 숨김 대상인지 확인
   const isSidebarHidden = HIDE_SIDEBAR_PATHS.some((path) =>

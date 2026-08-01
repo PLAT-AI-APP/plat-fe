@@ -3,7 +3,7 @@
 import React, { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
+import { cn, formatWithCommas } from "@/lib/utils";
 import {
   ArrowRight,
   Google,
@@ -26,6 +26,7 @@ import { useModalStore } from "@/store/useModalStore";
 import useRouteEffect from "@/hooks/useRouteEffect";
 import Token from "@/icons/Token";
 import { useTranslations } from "next-intl";
+import { useWalletStore } from "@/store/useWalletStore";
 
 interface ProfilePopoverProps {
   onClose: () => void;
@@ -135,6 +136,10 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
   const profileImage = useUserStore((state) => state.user?.profileImage);
   const nickname = useUserStore((state) => state.user?.nickname);
   const userId = useUserStore((state) => state.user?.id);
+  // 프로필 팝오버의 보유 캐시는 헤더와 같은 지갑 잔액을 사용합니다.
+  const availableBalance = useWalletStore(
+    (state) => state.balance?.availableBalance ?? 0,
+  );
 
   const handleRouterPush = () => {
     router.push(`/profile/${userId}`);
@@ -166,7 +171,8 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
             <div className="flex flex-col gap-0.5">
               <span className="title-5 text-font-1">{nickname}</span>
               <span className="flex items-center gap-0.5 body-4 text-font-1">
-                <Token className="w-4 h-4" /> 1100
+                <Token className="w-4 h-4" />{" "}
+                {formatWithCommas(availableBalance)}
               </span>
             </div>
           </div>

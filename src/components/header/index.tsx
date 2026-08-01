@@ -7,9 +7,11 @@ import Profile from "./Profile";
 import Link from "next/link";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useUserStore } from "@/store/useUserStore";
+import { useWalletStore } from "@/store/useWalletStore";
 import ProfilePopover from "../popover/ProfilePopover";
 import useToggle from "@/hooks/useToggle";
 import Token from "@/icons/Token";
+import { formatWithCommas } from "@/lib/utils";
 
 interface HeaderProps {
   handleFoldToggle: () => void;
@@ -22,6 +24,10 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
   const triggerRef = useRef<HTMLImageElement>(null);
 
   const profileImage = useUserStore((state) => state.user?.profileImage);
+  // 헤더의 보유 캐시는 전역 지갑 잔액 기준으로 표시합니다.
+  const availableBalance = useWalletStore(
+    (state) => state.balance?.availableBalance ?? 0,
+  );
   return (
     <header
       id="main-header"
@@ -76,7 +82,7 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
             >
               <Token className="w-5 h-5" />
               <span id="user-point-value" className="body-2">
-                1,100
+                {formatWithCommas(availableBalance)}
               </span>
             </Link>
           )}

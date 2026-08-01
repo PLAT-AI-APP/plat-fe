@@ -18,9 +18,10 @@ import {
   Token,
 } from "@/icons";
 import Note from "@/icons/Note";
-import { cn } from "@/lib/utils";
+import { cn, formatWithCommas } from "@/lib/utils";
 import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
+import { useWalletStore } from "@/store/useWalletStore";
 import ChattingAssetGalleryView from "./chatting-asset-gallery-view";
 import ChattingMemoryView from "./chatting-memory-view";
 
@@ -142,6 +143,9 @@ const ChattingSidebar = ({
   const router = useRouter();
   const openDialog = useDialogStore((state) => state.openDialog);
   const { openModal } = useModalStore();
+  const availableBalance = useWalletStore(
+    (state) => state.balance?.availableBalance ?? 0,
+  );
   const [isAssetViewOn, setIsAssetViewOn] = useState(true);
   const [sidebarDepth, setSidebarDepth] = useState<SidebarDepth>("SETTINGS");
 
@@ -242,7 +246,7 @@ const ChattingSidebar = ({
                     <div className="flex items-center gap-1.5 rounded-lg bg-card px-3 py-2">
                       <Token className="size-[21px]" />
                       <span className="body-4 whitespace-nowrap text-white">
-                        1,234
+                        {formatWithCommas(availableBalance)}
                       </span>
                     </div>
                   </header>

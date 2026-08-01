@@ -11,6 +11,7 @@ import { useDeleteUserMutation } from "@/api/user/deleteUser";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useDialogStore } from "@/store/useDialogStore";
 import { useUserStore } from "@/store/useUserStore";
+import { useWalletStore } from "@/store/useWalletStore";
 
 const SKIP_AUTH_ALERT_ONCE_KEY = "skip-auth-alert-once";
 
@@ -19,6 +20,7 @@ const WithdrawalContents = () => {
   const router = useRouter();
   const user = useUserStore((state) => state.user);
   const clearUser = useUserStore((state) => state.clearUser);
+  const clearBalance = useWalletStore((state) => state.clearBalance);
   const logout = useAuthStore((state) => state.logout);
   const { isPending } = useDeleteUserMutation();
   const openDialog = useDialogStore((state) => state.openDialog);
@@ -57,6 +59,7 @@ const WithdrawalContents = () => {
     sessionStorage.setItem(SKIP_AUTH_ALERT_ONCE_KEY, "true");
     logout();
     clearUser();
+    clearBalance();
     window.location.replace("/");
   };
 
