@@ -25,7 +25,7 @@ const HIDE_SIDEBAR_PATHS: string[] = [];
 const HIDE_HEADER_PATHS = ["/chatting-room"];
 
 // 진입 시 사이드바를 접어두는 경로
-const FOLD_SIDEBAR_PATHS: string[] = [];
+const FOLD_SIDEBAR_PATHS: string[] = ["/chatting-room"];
 const FOLD_SIDEBAR_FULL_PATHS = ["/?tab=categories"];
 const SKIP_AUTH_ALERT_ONCE_KEY = "skip-auth-alert-once";
 const PENDING_WELCOME_CREDIT_DIALOG_KEY = "pending-welcome-credit-dialog";

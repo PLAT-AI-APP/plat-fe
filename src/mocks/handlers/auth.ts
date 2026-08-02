@@ -59,21 +59,25 @@ const loginToastTestCases: Record<
     message: "Medium error toast test.",
   },
   "toast-success-s@example.com": {
+    description: "Small success toast description test.",
     toastSize: "s",
     toastType: "success",
     message: "Small success toast test.",
   },
   "toast-info-s@example.com": {
+    description: "Small info toast description test.",
     toastSize: "s",
     toastType: "info",
     message: "Small info toast test.",
   },
   "toast-warning-s@example.com": {
+    description: "Small warning toast description test.",
     toastSize: "s",
     toastType: "warning",
     message: "Small warning toast test.",
   },
   "toast-error-s@example.com": {
+    description: "Small error toast description test.",
     toastSize: "s",
     toastType: "error",
     message: "Small error toast test.",
