@@ -23,18 +23,18 @@ const ChattingMemoryView = ({ onBack }: ChattingMemoryViewProps) => {
   const [draft, setDraft] = useState("");
 
   useEffect(() => {
-    // API/MSW 데이터를 사이드바 편집용 로컬 상태로 복사
+    // API/MSW 장기기억 목록을 사이드바 편집용 로컬 상태로 복사
     setMemories(fetchedMemories);
   }, [fetchedMemories]);
 
   const handleStartEdit = (memory: ChatMemoryEntry) => {
-    // 선택한 장기기억 내용을 수정 상태로 분리
+    // 선택한 장기기억 내용을 편집 상태로 분리
     setEditingMemoryId(memory.id);
     setDraft(memory.content);
   };
 
   const handleCancelEdit = () => {
-    // 목록 변경 없이 임시 수정 상태 초기화
+    // 목록 변경 없이 임시 편집 상태 초기화
     setEditingMemoryId(null);
     setDraft("");
   };
@@ -79,7 +79,9 @@ const ChattingMemoryView = ({ onBack }: ChattingMemoryViewProps) => {
         <header className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
             <Storage className="size-6 text-font-2" />
-            <h2 className="body-2 text-font-1">{t("memory")}</h2>
+            <h2 className="body-2 text-font-1">
+              {t("pastConversations")}
+            </h2>
           </div>
           <p className="body-5 text-font-2">{t("memoryDescription")}</p>
         </header>

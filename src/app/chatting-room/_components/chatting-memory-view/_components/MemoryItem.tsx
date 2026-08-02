@@ -1,7 +1,10 @@
 "use client";
 
+import { useRef } from "react";
 import { useTranslations } from "next-intl";
-import { Close, Pen, Save, Trash } from "@/icons";
+import PastConversationPopover from "@/components/popover/PastConversationPopover";
+import useToggle from "@/hooks/useToggle";
+import { Dots } from "@/icons";
 import { cn } from "@/lib/utils";
 import type { ChatMemoryEntry } from "@/type/chat";
 
@@ -27,6 +30,8 @@ const MemoryItem = ({
   onStartEdit,
 }: MemoryItemProps) => {
   const t = useTranslations("chatRoom.sidebar");
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const { isOpen: isPopoverOpen, toggle, close: closePopover } = useToggle();
 
   return (
     <article
@@ -36,66 +41,76 @@ const MemoryItem = ({
       )}
     >
       <header className="flex w-full items-center justify-between gap-3">
-        <div className="body-6 flex min-w-0 items-center gap-[7px] whitespace-nowrap">
-          <span className={cn(isEditing ? "text-font-2" : "text-font-1")}>
-            {t("memoryTurn", { turn: memory.turn })}
-          </span>
-          <time className="text-font-2">{memory.createdAt}</time>
-        </div>
-
-        <div className="flex shrink-0 items-center gap-2">
-          {isEditing ? (
-            <>
-              <button
-                type="button"
-                onClick={onSave}
-                className="flex size-[19px] items-center justify-center text-brand-dark transition-colors hover:text-brand"
-                aria-label={t("saveMemory")}
-              >
-                <Save className="size-[19px]" />
-              </button>
-              <button
-                type="button"
-                onClick={onCancelEdit}
-                className="flex size-[19px] items-center justify-center text-font-2 transition-colors hover:text-font-1"
-                aria-label={t("cancelMemory")}
-              >
-                <Close className="size-[19px]" />
-              </button>
-            </>
-          ) : (
-            <>
-              <button
-                type="button"
-                onClick={onStartEdit}
-                className="flex size-[19px] items-center justify-center text-font-1 transition-colors hover:text-font-2"
-                aria-label={t("editMemory")}
-              >
-                <Pen className="size-[19px]" />
-              </button>
-              <button
-                type="button"
-                onClick={onDelete}
-                className="flex size-[19px] items-center justify-center text-font-error transition-colors hover:text-font-accents"
-                aria-label={t("deleteMemory")}
-              >
-                <Trash className="size-[19px]" />
-              </button>
-            </>
+        <span
+          className={cn(
+            "body-6 whitespace-nowrap",
+            isEditing ? "text-font-2" : "text-font-1",
           )}
-        </div>
+        >
+          {t("memoryTurn", { turn: memory.turn })}
+        </span>
+
+        {isEditing ? (
+          <span className="size-[19px]" aria-hidden="true" />
+        ) : (
+          <div className="relative shrink-0">
+            <button
+              ref={menuButtonRef}
+              type="button"
+              onClick={toggle}
+              className="flex size-[18px] items-center justify-center text-font-1 transition-colors hover:text-font-2"
+              aria-label={t("editMemory")}
+              aria-haspopup="menu"
+              aria-expanded={isPopoverOpen}
+            >
+              <Dots className="size-[18px]" />
+            </button>
+
+            {isPopoverOpen && (
+              <PastConversationPopover
+                triggerRef={menuButtonRef}
+                onClose={closePopover}
+                onEdit={onStartEdit}
+                onDelete={onDelete}
+              />
+            )}
+          </div>
+        )}
       </header>
 
       {isEditing ? (
-        <textarea
-          value={draft}
-          onChange={(event) => onChangeDraft(event.target.value)}
-          className="body-5 min-h-[153px] w-full resize-none rounded-lg border border-border-main bg-bg-darkest px-2 py-3 text-font-0 outline-none"
-        />
+        <>
+          <div className="flex w-full rounded-lg border border-border-main bg-bg-darkest px-2 py-3">
+            <textarea
+              value={draft}
+              onChange={(event) => onChangeDraft(event.target.value)}
+              className="body-4 min-h-[153px] w-full resize-none bg-transparent text-font-0 outline-none"
+            />
+          </div>
+
+          <div className="flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={onCancelEdit}
+              className="body-6 rounded border border-border-main bg-btn-hover px-3 py-1 text-font-1 transition-colors hover:bg-card-selected"
+            >
+              {t("memoryCancelButton")}
+            </button>
+            <button
+              type="button"
+              onClick={onSave}
+              className="body-6 rounded border border-border-main bg-btn-hover px-3 py-1 text-font-1 transition-colors hover:bg-card-selected"
+            >
+              {t("memorySaveButton")}
+            </button>
+          </div>
+        </>
       ) : (
-        <p className="body-6 rounded-lg px-2 py-3 text-font-1">
-          {memory.content}
-        </p>
+        <>
+          <p className="body-5 rounded-lg px-2 py-3 text-font-1">
+            {memory.content}
+          </p>
+        </>
       )}
     </article>
   );
