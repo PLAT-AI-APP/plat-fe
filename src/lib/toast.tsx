@@ -40,6 +40,9 @@ const SMALL_TOAST_ICON_BY_TYPE = {
   error: <StatusError className="app-toast-s__status-icon" />,
 } satisfies Record<AppToastType, React.ReactNode>;
 
+/** 모든 toast 노출 시간 */
+const APP_TOAST_DURATION = 3_000;
+
 const showSmallAppToast = (
   type: AppToastType,
   message: string,
@@ -72,7 +75,7 @@ const showSmallAppToast = (
     ),
     {
       className: "sonner-custom-s",
-      duration: 30_000,
+      duration: APP_TOAST_DURATION,
     },
   );
 };
@@ -92,5 +95,6 @@ export const showAppToast = (
 
   toast[type](message, {
     description,
+    duration: APP_TOAST_DURATION,
   });
 };
