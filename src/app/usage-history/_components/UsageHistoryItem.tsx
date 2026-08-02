@@ -1,69 +1,85 @@
 "use client";
+
 import React, { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import dayjs from "@/lib/dayjs";
-import { cn } from "@/lib/utils";
-import { motion, AnimatePresence } from "framer-motion";
+import { cn, formatWithCommas } from "@/lib/utils";
 import { ArrowDown } from "@/icons";
 import Copy from "@/icons/Copy";
 import { UsageHistoryItemType } from "@/type/note";
 
-/** 개별 리스트 아이템 컴포넌트 */
+/** 만료일 노출이 필요한 지급성 내역인지 확인합니다. */
+const shouldShowExpiryDate = (amount: number) => amount > 0;
+
+/** 노트 만료일 표기 */
+const getExpiryDateLabel = (createdAt: string) => {
+  const expiryDate = dayjs(createdAt).add(1, "year");
+
+  return `~ ${expiryDate.format("YYYY.MM.DD")} 까지`;
+};
+
+/** 상세설명에 보여줄 API 참조 정보를 고릅니다. */
+const getLedgerDetailText = (item: UsageHistoryItemType) =>
+  item.referenceType || item.description;
+
+/** 개별 사용내역 아이템 */
 const UsageHistoryItem = ({ item }: { item: UsageHistoryItemType }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const isPlusNote = item.amount > 0;
-  const expiryDate = new Date(item.createdAt);
-  expiryDate.setFullYear(expiryDate.getFullYear() + 1);
+  const isExpiryVisible = shouldShowExpiryDate(item.amount);
+  const amountText = `${isPlusNote ? "+" : ""}${formatWithCommas(item.amount)}`;
 
-  const handleCopy = (e: React.MouseEvent) => {
-    e.stopPropagation(); // li 클릭 이벤트 전파 방지
-    navigator.clipboard.writeText(item.transactionHash);
+  const handleCopy = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    navigator.clipboard.writeText(item.referenceId);
     alert("거래번호가 복사되었습니다.");
   };
 
   return (
     <li
       className={cn(
-        "cursor-pointer px-5 py-3 rounded-2xl hover:bg-btn-hover transition-colors",
-        isOpen && "bg-btn-hover",
+        "w-full cursor-pointer overflow-hidden rounded-2xl px-5 py-3 transition-colors",
+        isOpen ? "bg-btn-hover" : "bg-bg-dark hover:bg-btn-hover",
       )}
-      onClick={() => setIsOpen(!isOpen)}
+      onClick={() => setIsOpen((prev) => !prev)}
     >
-      <header className="flex justify-between">
-        <div className="flex flex-col gap-1">
-          <span className="body-6 text-font-2">
-            {dayjs(item.createdAt).format("M월 DD일 HH:mm")}
-          </span>
-          <strong className="title-5 font-normal">{item.description}</strong>
+      <header className="flex items-center justify-between gap-4">
+        <div className="flex w-[117px] shrink-0 flex-col gap-1">
+          <time className="body-6 text-font-2">
+            {dayjs(item.createdAt).format("M월 D일 HH:mm")}
+          </time>
+          <strong className="title-5 text-font-1">{item.description}</strong>
         </div>
 
-        <div className="flex items-center gap-1.5">
-          <div className="flex flex-col items-end">
-            <p className="flex gap-1">
+        <div className="flex shrink-0 items-center justify-center gap-1.5">
+          <div className="flex flex-col items-end justify-center gap-0.5">
+            <p className="body-4 flex items-center gap-1 whitespace-nowrap">
               <span
-                className={cn("title-5", isPlusNote && "text-font-accents")}
+                className={cn("title-5", isPlusNote && "text-brand-dark")}
               >
-                {isPlusNote && "+"}
-                {item.amount}
+                {amountText}
               </span>
-              <span className="text-font-2 body-4">노트</span>
+              <span className="text-font-2">노트</span>
             </p>
-            <time className="body-6 text-font-2">
-              ~ {expiryDate.toLocaleDateString()}
-            </time>
+
+            {isExpiryVisible && (
+              <time className="body-6 whitespace-nowrap text-font-2">
+                {getExpiryDateLabel(item.createdAt)}
+              </time>
+            )}
           </div>
 
-          {/* 화살표 회전 애니메이션 */}
           <motion.div
             animate={{ rotate: isOpen ? 180 : 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
+            className="flex w-3.5 shrink-0 items-center justify-center rounded-md p-0.5"
           >
-            <ArrowDown className="w-2.5 h-2.5 text-font-2" />
+            <ArrowDown className="size-2.5 text-font-2" />
           </motion.div>
         </div>
       </header>
 
-      {/* 상세 내용 애니메이션 (AnimatePresence로 마운트/언마운트 감지) */}
       <AnimatePresence initial={false}>
         {isOpen && (
           <motion.div
@@ -71,22 +87,24 @@ const UsageHistoryItem = ({ item }: { item: UsageHistoryItemType }) => {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
+            transition={{ duration: 0.2, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <hr className="my-3 text-border-main" />
-
-            <div className="flex flex-col gap-1 body-6 text-font-2 pb-1">
-              <p>상세설명: {item.detailDescription}</p>
-              <p className="flex items-center gap-1">
-                거래번호: {item.transactionHash}
-                <button type="button" onClick={handleCopy} className="p-1">
-                  <Copy className="w-4 h-4 hover:text-font-1 transition-colors" />
+            <div className="mt-3 flex flex-col gap-1 border-t border-border-main pt-3 body-6 text-font-2">
+              <p>상세설명: {getLedgerDetailText(item)}</p>
+              <p className="flex items-end gap-1">
+                <span className="truncate">거래번호: {item.referenceId}</span>
+                <button
+                  type="button"
+                  onClick={handleCopy}
+                  className="flex size-4 shrink-0 items-center justify-center rounded p-0.5 transition-colors hover:text-font-1"
+                  aria-label="거래번호 복사"
+                >
+                  <Copy className="size-3" />
                 </button>
               </p>
               <p>
-                거래일시:{" "}
-                {dayjs(item.createdAt).format("YYYY. MM. DD HH:mm:ss")}
+                거래일시: {dayjs(item.createdAt).format("YYYY. MM. DD HH:mm:ss")}
               </p>
             </div>
           </motion.div>

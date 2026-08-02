@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import Token from "@/icons/Token";
 import { cn, formatWithCommas } from "@/lib/utils";
@@ -48,11 +49,20 @@ const TokenChargeContents = () => {
 
   return (
     <section className="mx-auto w-full max-w-160 px-9 pt-5">
-      <div className="mb-9 flex flex-col gap-2 rounded-3xl border border-border-main bg-bg-darker px-5 py-4">
-        <span className="body-4 text-font-2">{t("tokenCharge.myNote")}</span>
-        <div className="title-1 flex items-center gap-2">
-          <Token className="h-6 w-6" /> {formatWithCommas(availableBalance)}
+      <div className="mb-9 flex items-center justify-between gap-4 rounded-3xl border border-border-main bg-bg-darker px-5 py-4">
+        <div className="flex flex-col gap-2">
+          <span className="body-4 text-font-2">{t("tokenCharge.myNote")}</span>
+          <div className="title-1 flex items-center gap-2">
+            <Token className="h-6 w-6" /> {formatWithCommas(availableBalance)}
+          </div>
         </div>
+
+        <Link
+          href="/usage-history"
+          className="body-4 shrink-0 rounded-2xl bg-border-main px-4 py-2 text-white transition-colors hover:bg-btn-hover"
+        >
+          {t("tokenCharge.viewUsageHistory")}
+        </Link>
       </div>
 
       <div className="flex flex-col gap-4">

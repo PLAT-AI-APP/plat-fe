@@ -102,6 +102,7 @@ const en = {
   tokenCharge: {
     title: "Token charge",
     myNote: "My notes",
+    viewUsageHistory: "History",
     purchase: "Purchase products",
     noteUnit: "Notes",
     bonusNoteUnit: "Notes",
@@ -311,6 +312,7 @@ const ko: RuntimeMessages = {
   tokenCharge: {
     title: "토큰 충전",
     myNote: "내 노트",
+    viewUsageHistory: "내역",
     purchase: "상품 구매",
     noteUnit: "노트",
     bonusNoteUnit: "노트",
@@ -512,6 +514,7 @@ const ja: RuntimeMessages = {
   tokenCharge: {
     title: "トークンチャージ",
     myNote: "マイノート",
+    viewUsageHistory: "履歴",
     purchase: "商品購入",
     noteUnit: "ノート",
     bonusNoteUnit: "ノート",
@@ -713,6 +716,7 @@ const zh: RuntimeMessages = {
   tokenCharge: {
     title: "代币充值",
     myNote: "我的笔记",
+    viewUsageHistory: "记录",
     purchase: "购买商品",
     noteUnit: "笔记",
     bonusNoteUnit: "笔记",
@@ -912,6 +916,7 @@ const th: RuntimeMessages = {
   tokenCharge: {
     title: "เติมโทเค็น",
     myNote: "โน้ตของฉัน",
+    viewUsageHistory: "ประวัติ",
     purchase: "ซื้อสินค้า",
     noteUnit: "โน้ต",
     bonusNoteUnit: "โน้ต",
@@ -1118,6 +1123,7 @@ const vi: RuntimeMessages = {
   tokenCharge: {
     title: "Nạp token",
     myNote: "Note của tôi",
+    viewUsageHistory: "Lịch sử",
     purchase: "Mua sản phẩm",
     noteUnit: "Note",
     bonusNoteUnit: "Note",

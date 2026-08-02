@@ -23,7 +23,8 @@ const UsageHistoryContents = () => {
     },
   });
 
-  const usageHistoryList = usageHistoryListData?.pages[0].content;
+  const usageHistoryList =
+    usageHistoryListData?.pages.flatMap((page) => page.content) ?? [];
 
   // 로딩 및 에러 처리
   if (isLoading) return <div>로딩 중...</div>;
@@ -33,7 +34,7 @@ const UsageHistoryContents = () => {
     <section className="max-w-135 w-full mx-auto pt-5">
       <ul id="usage-history-list" className="flex flex-col gap-2">
         {usageHistoryList?.map((item) => {
-          return <UsageHistoryItem key={item.transactionId} item={item} />;
+          return <UsageHistoryItem key={item.ledgerId} item={item} />;
         })}
 
         <div ref={targetRef}></div>
