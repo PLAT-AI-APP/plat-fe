@@ -75,6 +75,12 @@ input:-webkit-autofill:active {
   --color-font-accents: var(--font-accents);
 }
 
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
 body {
   background-color: var(--bg-dark);
   color: var(--font-1);

@@ -7,7 +7,6 @@ import { FormProvider, useForm } from "react-hook-form";
 import EmailVerifySection from "@/app/(auth)/signup/_components/EmailVerifySection";
 import ActiveButton from "@/components/ActiveButton";
 import { ModalLayout } from "@/components/ModalLayout";
-import { cn } from "@/lib/utils";
 import {
   passwordResetFormSchema,
   PasswordResetFormSchemaValues,
@@ -63,7 +62,7 @@ const FindPasswordModal = ({ onClose, stackIndex }: FindPasswordModalProps) => {
               text={t("next")}
               isActive={isEmailVerified}
               onClick={onNextStep}
-              className={cn("mt-9 h-[45px] rounded-xl bg-card text-font-2")}
+              className="mt-9 h-[45px] rounded-xl"
               textClassName="title-5"
             />
           </section>

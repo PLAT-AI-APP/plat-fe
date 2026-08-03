@@ -17,6 +17,11 @@ import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
 import { refreshAccessToken } from "@/api/auth/postRefresh";
 import axios from "axios";
+import {
+  LOGOUT_REDIRECT_IN_PROGRESS_KEY,
+  SKIP_AUTH_ALERT_ONCE_KEY,
+  isProtectedPath,
+} from "@/constants/auth";
 
 // 사이드바 없이 전용 화면을 쓰는 경로
 const HIDE_SIDEBAR_PATHS: string[] = [];
@@ -27,22 +32,8 @@ const HIDE_HEADER_PATHS = ["/chatting-room"];
 // 진입 시 사이드바를 접어두는 경로
 const FOLD_SIDEBAR_PATHS: string[] = ["/chatting-room"];
 const FOLD_SIDEBAR_FULL_PATHS = ["/?tab=categories"];
-const SKIP_AUTH_ALERT_ONCE_KEY = "skip-auth-alert-once";
 const PENDING_WELCOME_CREDIT_DIALOG_KEY = "pending-welcome-credit-dialog";
 const PENDING_SIGNUP_COMPLETE_DIALOG_KEY = "pending-signup-complete-dialog";
-const PROTECTED_ROUTES = [
-  "/my-chatting",
-  "/chatting-room",
-  "/character-creat",
-  "/studio",
-  "/usage-history",
-  "/token-charge",
-  "/withdrawal",
-  "/profile",
-];
-
-const isProtectedPath = (path: string) =>
-  PROTECTED_ROUTES.some((route) => path.startsWith(route));
 
 const isAuthExpiredError = (error: unknown) =>
   axios.isAxiosError(error) &&
@@ -332,6 +323,12 @@ export default function ClientLayout({
     openDialog("WELCOME_CREDIT", {});
   }, [openDialog, openModal, pathname]);
 
+  useEffect(() => {
+    if (pathname !== "/" || typeof window === "undefined") return;
+
+    sessionStorage.removeItem(LOGOUT_REDIRECT_IN_PROGRESS_KEY);
+  }, [pathname]);
+
   if (isProtectedRoute && (isAuthChecking || !isLoggedIn)) {
     return null;
   }
@@ -371,7 +368,11 @@ export default function ClientLayout({
                 tabIndex={0}
                 {...sidebarOverlayMotion}
                 transition={sidebarOverlayTransition}
-                className="absolute inset-0 z-20 bg-[#0D0E11]/50"
+                style={{
+                  left: 240,
+                  top: isHeaderHidden ? 0 : 60,
+                }}
+                className="fixed bottom-0 right-0 z-20 bg-[#0D0E11]/50"
                 aria-label="사이드바 접기"
                 onClick={handleFoldToggle}
                 onKeyDown={(event) => {
