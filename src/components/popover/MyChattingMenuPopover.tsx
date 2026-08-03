@@ -1,14 +1,16 @@
 "use client";
 
 import React from "react";
-import { PenSparkle, Trash } from "@/icons";
+import { PenSparkle, Pin, Trash } from "@/icons";
 import { useTranslations } from "next-intl";
+import { cn } from "@/lib/utils";
 import { PopoverLayout } from "./layout";
 
 interface MyChattingMenuPopoverProps {
   onClose: () => void;
   triggerRef: React.RefObject<HTMLElement | null>;
   onEdit: () => void;
+  onPin: () => void;
   onDelete: () => void;
 }
 
@@ -17,40 +19,65 @@ const MyChattingMenuPopover = ({
   triggerRef,
   onDelete,
   onEdit,
+  onPin,
 }: MyChattingMenuPopoverProps) => {
   const t = useTranslations("popover");
 
-  // 로직 / 함수
   const handleAction = (action?: () => void) => {
+    // 액션 실행 뒤 팝오버 닫기
     action?.();
     onClose();
   };
 
+  // 내 채팅 아이템 팝오버 액션 목록
+  const menuActions = [
+    {
+      icon: <PenSparkle className="size-4 shrink-0" />,
+      label: t("newChat"),
+      onClick: onEdit,
+      textClassName: "text-font-1",
+    },
+    {
+      icon: <Pin className="size-4 shrink-0" />,
+      label: t("pinChat"),
+      onClick: onPin,
+      textClassName: "text-font-1",
+    },
+    {
+      icon: <Trash className="size-4 shrink-0" />,
+      label: t("delete"),
+      onClick: onDelete,
+      textClassName: "text-font-accents",
+    },
+  ];
+
   return (
-    <PopoverLayout onClose={onClose} triggerRef={triggerRef}>
+    <PopoverLayout
+      onClose={onClose}
+      triggerRef={triggerRef}
+      className="right-0 top-[calc(100%+10px)] w-[150px] overflow-hidden rounded-xl border-border-main bg-bg-dark px-2 py-3 shadow-[0_10px_40px_rgba(0,0,0,0.5)]"
+    >
       <nav
         id="chat-menu-nav"
-        className="antialiased flex flex-col gap-1 whitespace-nowrap font-medium body-4"
+        className="body-4 flex flex-col gap-1 whitespace-nowrap"
         onClick={(e) => e.stopPropagation()}
       >
-        <ul className="flex flex-col gap-1">
-          <li>
-            <button
-              onClick={() => handleAction(onEdit)}
-              className="items-center w-full hover:bg-btn-hover rounded-lg px-2.5 py-2 flex gap-2"
-            >
-              <PenSparkle className="w-4 h-4" /> {t("newChat")}
-            </button>
-          </li>
-
-          <li>
-            <button
-              onClick={() => handleAction(onDelete)}
-              className="items-center w-full rounded-lg px-2.5 py-2 flex gap-2 text-font-accents hover:bg-btn-hover"
-            >
-              <Trash className="w-4 h-4" /> {t("delete")}
-            </button>
-          </li>
+        <ul className="flex w-full flex-col gap-1">
+          {menuActions.map(({ icon, label, onClick, textClassName }) => (
+            <li key={label} className="w-full">
+              <button
+                type="button"
+                onClick={() => handleAction(onClick)}
+                className={cn(
+                  "flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left transition-colors duration-200 hover:bg-btn-hover",
+                  textClassName,
+                )}
+              >
+                {icon}
+                <span>{label}</span>
+              </button>
+            </li>
+          ))}
         </ul>
       </nav>
     </PopoverLayout>
