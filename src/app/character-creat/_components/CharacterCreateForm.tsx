@@ -17,6 +17,7 @@ import {
   CharacterCreateFormValues,
 } from "@/schema/character.schema";
 import { useScenarioPreviewHistoryStore } from "@/store/useScenarioPreviewHistoryStore";
+import { LOGOUT_REDIRECT_IN_PROGRESS_KEY } from "@/constants/auth";
 
 const createCharacterCreateDefaultValues = (
   defaultScenarioName: string,
@@ -174,7 +175,13 @@ const CharacterCreateForm = () => {
   };
 
   const { reject } = useNavigationGuard({
-    enabled: isDirty,
+    enabled: () => {
+      const isLogoutRedirecting =
+        typeof window !== "undefined" &&
+        sessionStorage.getItem(LOGOUT_REDIRECT_IN_PROGRESS_KEY) === "true";
+
+      return isDirty && !isLogoutRedirecting;
+    },
     confirm: (info) => {
       setPendingPath(info.to);
       setActiveModal("UNSAVED");

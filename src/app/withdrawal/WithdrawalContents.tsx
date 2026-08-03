@@ -12,8 +12,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useDialogStore } from "@/store/useDialogStore";
 import { useUserStore } from "@/store/useUserStore";
 import { useWalletStore } from "@/store/useWalletStore";
-
-const SKIP_AUTH_ALERT_ONCE_KEY = "skip-auth-alert-once";
+import { SKIP_AUTH_ALERT_ONCE_KEY } from "@/constants/auth";
 
 const WithdrawalContents = () => {
   const t = useTranslations();

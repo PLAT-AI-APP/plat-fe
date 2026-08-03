@@ -4,9 +4,30 @@ import { AppError } from "@/type/api";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useUserStore } from "@/store/useUserStore";
 import { useWalletStore } from "@/store/useWalletStore";
+import {
+  LOGOUT_REDIRECT_IN_PROGRESS_KEY,
+  SKIP_AUTH_ALERT_ONCE_KEY,
+  isProtectedPath,
+} from "@/constants/auth";
 
 const PostLogout = async () => {
   await authAxios.post("/auth/logout");
+};
+
+/** 로그아웃 후 이동 처리 */
+const redirectAfterLogout = () => {
+  if (typeof window === "undefined") return;
+
+  const shouldMoveHome = isProtectedPath(window.location.pathname);
+
+  if (shouldMoveHome) {
+    sessionStorage.setItem(SKIP_AUTH_ALERT_ONCE_KEY, "true");
+    sessionStorage.setItem(LOGOUT_REDIRECT_IN_PROGRESS_KEY, "true");
+    window.location.replace("/");
+    return;
+  }
+
+  window.location.reload();
 };
 
 /** 로그아웃 */
@@ -23,8 +44,8 @@ export const useLogoutMutation = () => {
       clearBalance();
       queryClient.removeQueries({ queryKey: ["get-my-info"] });
       queryClient.removeQueries({ queryKey: ["get-wallet-balance"] });
-      // 로그아웃 후 현재 경로를 기준으로 브라우저를 새로고침
-      window.location.reload();
+      // 보호 화면에서는 홈으로 이동하고, 그 외 화면에서는 기존처럼 새로고침
+      redirectAfterLogout();
     },
   });
 };
