@@ -85,8 +85,8 @@ export default function ClientLayout({
     return isFoldedPath || isFoldedFullPath;
   };
 
-  // 초기값 설정 시 조건 반영
-  const [isFolded, setIsFolded] = useState(shouldFoldSidebar());
+  // 첫 진입과 새로고침 시 사이드바는 접힌 상태로 시작
+  const [isFolded, setIsFolded] = useState(true);
 
   const [prevFullPath, setPrevFullPath] = useState(fullPath);
 
