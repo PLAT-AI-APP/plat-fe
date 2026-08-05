@@ -63,7 +63,7 @@ const ChattingItem = ({
               <div className="flex items-center gap-1.5">
                 <h3 className="title-3 truncate text-font-1">{title}</h3>
                 {isPinned && (
-                  <Pin className="size-3 shrink-0 text-font-2" aria-hidden />
+                  <Pin className="size-4 shrink-0 text-font-2" aria-hidden />
                 )}
               </div>
 
