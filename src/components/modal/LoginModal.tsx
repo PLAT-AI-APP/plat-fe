@@ -22,8 +22,7 @@ import { showAppToast } from "@/lib/toast";
 import { loginFormSchema, LoginFormValues } from "@/schema/auth.schema";
 import { useModalStore } from "@/store/useModalStore";
 import { LoginModalProps } from "@/type/modal";
-
-const PENDING_WELCOME_CREDIT_DIALOG_KEY = "pending-welcome-credit-dialog";
+import { PENDING_WELCOME_CREDIT_DIALOG_KEY } from "@/constants/auth";
 
 const showLoginToast = (
   toastType: LoginToastType | undefined,

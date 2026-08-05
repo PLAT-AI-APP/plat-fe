@@ -19,6 +19,8 @@ import { refreshAccessToken } from "@/api/auth/postRefresh";
 import axios from "axios";
 import {
   LOGOUT_REDIRECT_IN_PROGRESS_KEY,
+  PENDING_SIGNUP_COMPLETE_DIALOG_KEY,
+  PENDING_WELCOME_CREDIT_DIALOG_KEY,
   SKIP_AUTH_ALERT_ONCE_KEY,
   isProtectedPath,
 } from "@/constants/auth";
@@ -32,8 +34,6 @@ const HIDE_HEADER_PATHS = ["/chatting-room"];
 // 진입 시 사이드바를 접어두는 경로
 const FOLD_SIDEBAR_PATHS: string[] = ["/chatting-room"];
 const FOLD_SIDEBAR_FULL_PATHS = ["/?tab=categories"];
-const PENDING_WELCOME_CREDIT_DIALOG_KEY = "pending-welcome-credit-dialog";
-const PENDING_SIGNUP_COMPLETE_DIALOG_KEY = "pending-signup-complete-dialog";
 
 const isAuthExpiredError = (error: unknown) =>
   axios.isAxiosError(error) &&
@@ -291,6 +291,15 @@ export default function ClientLayout({
 
   useEffect(() => {
     if (pathname !== "/" || typeof window === "undefined") return;
+
+    const isLogoutRedirecting =
+      sessionStorage.getItem(LOGOUT_REDIRECT_IN_PROGRESS_KEY) === "true";
+
+    if (isLogoutRedirecting) {
+      sessionStorage.removeItem(PENDING_SIGNUP_COMPLETE_DIALOG_KEY);
+      sessionStorage.removeItem(PENDING_WELCOME_CREDIT_DIALOG_KEY);
+      return;
+    }
 
     const pendingSignupCompleteDialog = sessionStorage.getItem(
       PENDING_SIGNUP_COMPLETE_DIALOG_KEY,

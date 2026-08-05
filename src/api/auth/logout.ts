@@ -6,6 +6,8 @@ import { useUserStore } from "@/store/useUserStore";
 import { useWalletStore } from "@/store/useWalletStore";
 import {
   LOGOUT_REDIRECT_IN_PROGRESS_KEY,
+  PENDING_SIGNUP_COMPLETE_DIALOG_KEY,
+  PENDING_WELCOME_CREDIT_DIALOG_KEY,
   SKIP_AUTH_ALERT_ONCE_KEY,
   isProtectedPath,
 } from "@/constants/auth";
@@ -19,6 +21,9 @@ const redirectAfterLogout = () => {
   if (typeof window === "undefined") return;
 
   const shouldMoveHome = isProtectedPath(window.location.pathname);
+
+  sessionStorage.removeItem(PENDING_SIGNUP_COMPLETE_DIALOG_KEY);
+  sessionStorage.removeItem(PENDING_WELCOME_CREDIT_DIALOG_KEY);
 
   if (shouldMoveHome) {
     sessionStorage.setItem(SKIP_AUTH_ALERT_ONCE_KEY, "true");
