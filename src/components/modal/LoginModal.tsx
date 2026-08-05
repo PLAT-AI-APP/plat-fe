@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import React from "react";
+import React, { useEffect } from "react";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import {
   LoginToastSize,
@@ -62,6 +62,7 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
     setError,
     clearErrors,
     control,
+    setFocus,
   } = methods;
 
   const email = useWatch({ control, name: "email" }) ?? "";
@@ -69,6 +70,16 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
 
   const { mutate: emailLogin, isPending: isEmailLoginPending } =
     useEmailLoginMutation();
+
+  useEffect(() => {
+    const frameId = window.requestAnimationFrame(() => {
+      setFocus("email");
+    });
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+    };
+  }, [setFocus]);
 
   const handleLoginSuccess = () => {
     // 회원가입 화면에서만 홈으로 보내고, 그 외에는 현재 경로 위에서 인증 상태만 갱신합니다.
@@ -129,6 +140,18 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
     );
   };
 
+  const submitLoginForm = handleSubmit(onSubmit);
+
+  const handleFormKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {
+    if (event.key !== "Enter" || event.nativeEvent.isComposing) return;
+
+    const target = event.target as HTMLElement;
+    if (target.tagName !== "INPUT") return;
+
+    event.preventDefault();
+    void submitLoginForm();
+  };
+
   useRouteEffect(onClose);
 
   const handleFindPasswordClick = () => {
@@ -166,7 +189,8 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
           <form
             id="email-auth-form"
             className="flex flex-col gap-5"
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={submitLoginForm}
+            onKeyDown={handleFormKeyDown}
           >
             <fieldset
               id="login-input-fields"
