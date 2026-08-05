@@ -107,7 +107,7 @@ const MemoryItem = ({
         </>
       ) : (
         <>
-          <p className="body-5 rounded-lg px-2 py-3 text-font-1">
+          <p className="body-5 line-clamp-[20] rounded-lg px-2 py-3 text-font-1">
             {memory.content}
           </p>
         </>
