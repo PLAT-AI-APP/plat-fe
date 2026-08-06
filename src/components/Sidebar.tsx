@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Camera, Chat, Fold, Home } from "@/icons";
+import { Camera, Chat, Fold, Home, NoteLine } from "@/icons";
 import { cn } from "@/lib/utils";
 
 export const RECENT_CHATS_MOCK = [
@@ -74,6 +74,7 @@ const Sidebar = ({ isFolded = false, onFoldToggle }: SidebarProps) => {
     { name: t("sidebar.home"), link: "/", icon: Home },
     { name: t("sidebar.myChatting"), link: "/my-chatting", icon: Chat },
     { name: t("sidebar.studio"), link: "/studio/1", icon: Camera },
+    { name: t("sidebar.noteCharge"), link: "/token-charge", icon: NoteLine },
   ];
 
   const sidebarWidth = isFolded ? "70px" : "240px";

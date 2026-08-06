@@ -9,7 +9,7 @@ import SonnerProvider from "@/providers/SonnerProvider";
 import ClientLayout from "./ClientLayout";
 import "pretendard/dist/web/static/pretendard.css";
 import { NavigationGuardProvider } from "next-navigation-guard";
-import MSWProvider from "@/providers/MSWProvider";
+// import MSWProvider from "@/providers/MSWProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -100,20 +100,20 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <MSWProvider>
-          <ReactQueryProvider>
-            <IntlProvider>
-              <ThemeProvider>
-                <NavigationGuardProvider>
-                  <Suspense fallback={null}>
-                    <ClientLayout>{children}</ClientLayout>
-                    <SonnerProvider />
-                  </Suspense>
-                </NavigationGuardProvider>
-              </ThemeProvider>
-            </IntlProvider>
-          </ReactQueryProvider>
-        </MSWProvider>
+        {/* <MSWProvider> */}
+        <ReactQueryProvider>
+          <IntlProvider>
+            <ThemeProvider>
+              <NavigationGuardProvider>
+                <Suspense fallback={null}>
+                  <ClientLayout>{children}</ClientLayout>
+                  <SonnerProvider />
+                </Suspense>
+              </NavigationGuardProvider>
+            </ThemeProvider>
+          </IntlProvider>
+        </ReactQueryProvider>
+        {/* </MSWProvider> */}
       </body>
     </html>
   );
