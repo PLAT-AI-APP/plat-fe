@@ -76,6 +76,7 @@ export { default as Sun } from "./Sun";
 export { default as Pin } from "./Pin";
 export { default as Storage } from "./Storage";
 export { default as StorageFill } from "./StorageFill";
+export { default as NoteLine } from "./NoteLine";
 export { default as Token } from "./Token";
 export { default as Headphone } from "./Headphone";
 export { default as Finfill } from "./Finfill";
