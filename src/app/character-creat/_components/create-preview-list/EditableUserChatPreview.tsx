@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useAutoResizeTextarea } from "@/hooks/useAutoResizeTextarea";
 import PreviewEditControls from "./PreviewEditControls";
 import { PreviewEditLabels } from "./types";
 
@@ -17,16 +17,7 @@ const EditableUserChatPreview = ({
   onCancel,
   onConfirm,
 }: EditableUserChatPreviewProps) => {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  useEffect(() => {
-    const textarea = textareaRef.current;
-    if (!textarea) return;
-
-    // 사용자 대사 수정 영역은 입력 길이에 맞춰 늘어나 내부 스크롤을 만들지 않습니다.
-    textarea.style.height = "auto";
-    textarea.style.height = `${textarea.scrollHeight}px`;
-  }, [value]);
+  const { textareaRef } = useAutoResizeTextarea({ value });
 
   return (
     <div className="flex items-end justify-end gap-3">

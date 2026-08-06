@@ -1,56 +1,35 @@
 "use client";
 
-import React, {
-  FormEvent,
-  useCallback,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { FormEvent, useCallback, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Asterisk, MoveUp } from "@/icons";
+import { useAutoResizeTextarea } from "@/hooks/useAutoResizeTextarea";
 import ActiveButton from "../ActiveButton";
 
 interface ChatFormProps {
   onSendMessage: (message: string) => void;
 }
 
-const TEXTAREA_LINE_HEIGHT = 21;
-const TEXTAREA_MAX_ROWS = 5;
-const TEXTAREA_VERTICAL_PADDING = 12;
-const TEXTAREA_MAX_HEIGHT =
-  TEXTAREA_LINE_HEIGHT * TEXTAREA_MAX_ROWS + TEXTAREA_VERTICAL_PADDING;
-
 const ChatForm = ({ onSendMessage }: ChatFormProps) => {
   const t = useTranslations();
   const [msg, setMsg] = useState("");
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const hasMessage = msg.trim().length > 0;
+  const { textareaRef, resizeTextarea } = useAutoResizeTextarea({
+    maxRows: 5,
+    value: msg,
+  });
 
-  const syncTextareaHeight = useCallback(() => {
-    const textarea = textareaRef.current;
+  const submitMessage = useCallback(() => {
+    if (!hasMessage) return;
 
-    if (!textarea) return;
-
-    textarea.style.height = "auto";
-    const nextHeight = Math.min(textarea.scrollHeight, TEXTAREA_MAX_HEIGHT);
-    textarea.style.height = `${nextHeight}px`;
-    textarea.style.overflowY =
-      textarea.scrollHeight > TEXTAREA_MAX_HEIGHT ? "auto" : "hidden";
-  }, []);
-
-  useLayoutEffect(() => {
-    syncTextareaHeight();
-  }, [msg, syncTextareaHeight]);
+    onSendMessage(msg);
+    setMsg("");
+    requestAnimationFrame(resizeTextarea);
+  }, [hasMessage, msg, onSendMessage, resizeTextarea]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    if (!hasMessage) return;
-    // 입력값 전송 후 다음 입력을 위해 메시지 초기화
-    onSendMessage(msg);
-    setMsg("");
-    requestAnimationFrame(syncTextareaHeight);
+    submitMessage();
   };
 
   const handleTextareaKeyDown = (
@@ -65,12 +44,7 @@ const ChatForm = ({ onSendMessage }: ChatFormProps) => {
     }
 
     event.preventDefault();
-
-    if (!hasMessage) return;
-
-    onSendMessage(msg);
-    setMsg("");
-    requestAnimationFrame(syncTextareaHeight);
+    submitMessage();
   };
 
   const handleSituationInsert = () => {
@@ -90,11 +64,11 @@ const ChatForm = ({ onSendMessage }: ChatFormProps) => {
       ? nextSelectionStart + selectedText.length
       : nextSelectionStart;
 
-    // 선택된 텍스트가 있으면 감싸고, 없으면 별표 사이에 커서 배치
     setMsg(nextMessage);
     requestAnimationFrame(() => {
       textarea.focus();
       textarea.setSelectionRange(nextSelectionStart, nextSelectionEnd);
+      resizeTextarea();
     });
   };
 
@@ -113,7 +87,7 @@ const ChatForm = ({ onSendMessage }: ChatFormProps) => {
           onKeyDown={handleTextareaKeyDown}
           placeholder={t("chatUI.messagePlaceholder")}
           rows={1}
-          className="body-4 min-h-[21px] flex-1 resize-none bg-transparent py-1.5 text-font-1 outline-none placeholder:text-font-disabled"
+          className="body-4 custom-scrollbar min-h-[21px] flex-1 resize-none bg-transparent py-1.5 text-font-1 outline-none placeholder:text-font-disabled"
         />
 
         <footer className="flex shrink-0 items-center gap-3">

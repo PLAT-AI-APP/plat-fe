@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import CharacterChat from "@/components/chat/CharacterChat";
 import Scenario from "@/components/chat/Scenario";
 import { ChatRetry, ChatTrash, Close, Pen, Trash } from "@/icons";
+import { useAutoResizeTextarea } from "@/hooks/useAutoResizeTextarea";
 import Check from "@/icons/Check";
 import { parsePlat } from "@/lib/platParse";
 
@@ -36,6 +37,11 @@ const ChatContentBlock = ({
     setEditedContent(rawData);
   }, [rawData]);
 
+  const { textareaRef } = useAutoResizeTextarea({
+    enabled: isEditing,
+    value: editedContent,
+  });
+
   const handleUpdate = () => {
     onUpdate?.(editedContent);
     setIsEditing(false);
@@ -54,11 +60,7 @@ const ChatContentBlock = ({
       <div className="flex items-end gap-2">
         <div className="flex h-fit flex-1 gap-2 rounded-[0px_16px_16px_16px] bg-card p-2.5">
           <textarea
-            ref={(el) => {
-              if (!el) return;
-              el.style.height = "auto";
-              el.style.height = `${el.scrollHeight}px`;
-            }}
+            ref={textareaRef}
             className="w-full resize-none overflow-hidden rounded-[0px_16px_16px_16px] bg-card-hover p-2.5 text-sm font-medium outline-none"
             value={editedContent}
             onChange={(event) => setEditedContent(event.target.value)}

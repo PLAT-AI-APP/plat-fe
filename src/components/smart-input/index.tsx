@@ -10,7 +10,8 @@ import {
   HelperMessage,
   LabelSection,
 } from "./SubComponents";
-import { useAutoResize, useLeftPadding } from "./hooks";
+import { useAutoResizeTextarea } from "@/hooks/useAutoResizeTextarea";
+import { useLeftPadding } from "./hooks";
 import { SmartInputProps } from "./types";
 
 const SmartInput = forwardRef<
@@ -63,14 +64,18 @@ const SmartInput = forwardRef<
   const currentDisplayValue =
     value !== undefined ? String(value ?? "") : displayValue;
 
-  const { textareaRef, adjustHeight } = useAutoResize(value, isTextarea);
+  const { textareaRef, resizeTextarea } = useAutoResizeTextarea({
+    enabled: isTextarea,
+    value,
+  });
   const { iconRef, paddingLeft } = useLeftPadding(leftElement);
 
-  const handleTextareaRef = (node: HTMLTextAreaElement) => {
+  const handleTextareaRef = (node: HTMLTextAreaElement | null) => {
     textareaRef.current = node;
     if (typeof ref === "function") ref(node);
     else if (ref)
-      (ref as React.MutableRefObject<HTMLTextAreaElement>).current = node;
+      (ref as React.MutableRefObject<HTMLTextAreaElement | null>).current =
+        node;
   };
 
   const handleValueChange = (
@@ -80,7 +85,7 @@ const SmartInput = forwardRef<
       setDisplayValue(e.target.value);
     }
     onChange?.(e);
-    if (isTextarea) adjustHeight();
+    if (isTextarea) resizeTextarea();
   };
 
   const isNavigationType =

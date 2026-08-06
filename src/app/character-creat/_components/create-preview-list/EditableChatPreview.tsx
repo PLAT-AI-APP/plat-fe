@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react";
 import Image from "next/image";
+import { useAutoResizeTextarea } from "@/hooks/useAutoResizeTextarea";
 import PreviewEditControls from "./PreviewEditControls";
 import { PreviewEditLabels } from "./types";
 
@@ -24,16 +24,7 @@ const EditableChatPreview = ({
   onCancel,
   onConfirm,
 }: EditableChatPreviewProps) => {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-
-  useEffect(() => {
-    const textarea = textareaRef.current;
-    if (!textarea) return;
-
-    // Let the chat edit bubble grow with its content instead of showing an inner scrollbar.
-    textarea.style.height = "auto";
-    textarea.style.height = `${textarea.scrollHeight}px`;
-  }, [value]);
+  const { textareaRef } = useAutoResizeTextarea({ value });
 
   return (
     <div className="flex items-end gap-3">
