@@ -172,7 +172,7 @@ const CharacterDetailContent = ({
 
   return (
     <article className="flex w-full justify-center px-5 pb-25 pt-5">
-      <div className="grid w-full max-w-[1200px] grid-cols-[391px_minmax(0,782px)] gap-[27px]">
+      <div className="grid w-full max-w-[1200px] grid-cols-[389px_minmax(0,782px)] gap-[27px]">
         <SidebarSummary
           character={character}
           onSelectImage={setSelectedImageIndex}
