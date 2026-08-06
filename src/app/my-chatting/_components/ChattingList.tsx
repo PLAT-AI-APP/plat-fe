@@ -2,8 +2,7 @@ import { Fragment } from "react";
 import type { MyChattingSortOption } from "@/components/popover/MyChattingSortPopover";
 import ChattingItem from "./ChattingItem";
 
-// 내 채팅 목록 퍼블리싱 확인용 목업 데이터
-const PERSONA_LIST_MOCK = [
+const CHATTING_LIST_MOCK = [
   {
     id: "1",
     title: "미스터리 탐정 셜록",
@@ -58,12 +57,21 @@ const PERSONA_LIST_MOCK = [
 ];
 
 interface ChattingListProps {
+  searchQuery: string;
   sortOption: MyChattingSortOption;
 }
 
-const ChattingList = ({ sortOption }: ChattingListProps) => {
-  // 선택한 정렬 기준을 목업 목록에 반영
-  const sortedChattingList = [...PERSONA_LIST_MOCK].sort((prev, next) => {
+const ChattingList = ({ searchQuery, sortOption }: ChattingListProps) => {
+  const normalizedSearchQuery = searchQuery.trim().toLowerCase();
+  const filteredChattingList = CHATTING_LIST_MOCK.filter((chat) => {
+    if (!normalizedSearchQuery) return true;
+
+    return [chat.title, chat.description, chat.creator].some((value) =>
+      value.toLowerCase().includes(normalizedSearchQuery),
+    );
+  });
+
+  const sortedChattingList = [...filteredChattingList].sort((prev, next) => {
     if (sortOption === "chatCount") {
       return next.chatCount - prev.chatCount;
     }
@@ -76,7 +84,7 @@ const ChattingList = ({ sortOption }: ChattingListProps) => {
 
   return (
     <section>
-      <ul className="flex flex-col">
+      <ul className="flex flex-col gap-2">
         {sortedChattingList.map(
           (
             {
@@ -104,7 +112,10 @@ const ChattingList = ({ sortOption }: ChattingListProps) => {
               />
 
               {index < sortedChattingList.length - 1 && (
-                <li className="h-px w-full bg-border-main" aria-hidden="true" />
+                <li
+                  className="mx-10 h-px bg-border-main"
+                  aria-hidden="true"
+                />
               )}
             </Fragment>
           ),

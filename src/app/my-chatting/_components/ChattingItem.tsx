@@ -1,12 +1,12 @@
 "use client";
 
-import { Dots, Message, Pin, User } from "@/icons";
-import React, { useRef } from "react";
-import dayjs from "@/lib/dayjs";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import React, { useRef } from "react";
 import MyChattingMenuPopover from "@/components/popover/MyChattingMenuPopover";
 import useToggle from "@/hooks/useToggle";
+import { Dots, Message, Pin, User } from "@/icons";
+import dayjs from "@/lib/dayjs";
 
 interface ChattingItemProps {
   chatCount: number;
@@ -30,13 +30,11 @@ const ChattingItem = ({
   updatedAt,
 }: ChattingItemProps) => {
   const router = useRouter();
-
   const { close, isOpen, toggle } = useToggle();
   const triggerRef = useRef<HTMLSpanElement>(null);
 
-  // 채팅방 상세 화면 이동
   const chattingItemOnClick = () => {
-    router.push(`/chatting-room`);
+    router.push("/chatting-room");
   };
 
   return (
@@ -67,15 +65,18 @@ const ChattingItem = ({
                 )}
               </div>
 
-              <p className="body-3 line-clamp-1 min-w-full whitespace-nowrap text-font-2">
+              <p className="body-3 w-full min-w-0 truncate text-font-2">
                 {description}
               </p>
             </div>
 
             <span ref={triggerRef} className="relative flex shrink-0">
               <button
-                onClick={toggle}
                 type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  toggle();
+                }}
                 className="flex size-7 items-center justify-center rounded-lg text-font-2 transition-colors duration-200 hover:text-font-1"
               >
                 <Dots className="size-5" />

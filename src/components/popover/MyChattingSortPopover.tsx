@@ -77,7 +77,7 @@ const MyChattingSortPopover = ({
     <PopoverLayout
       onClose={onClose}
       triggerRef={triggerRef}
-      className="right-0 top-[calc(100%+8px)] w-28 gap-2 rounded-xl border-border-main bg-bg-dark px-2 py-3 shadow-popover"
+      className="left-0 top-[calc(100%+8px)] w-[114px] min-w-[114px] max-w-[114px] gap-2 rounded-xl border-border-main bg-bg-dark px-2 py-3 shadow-[0_10px_20px_rgba(0,0,0,0.5)]"
     >
       <nav aria-label="내 채팅 정렬">
         <ul className="flex flex-col gap-2" role="listbox">
@@ -87,8 +87,8 @@ const MyChattingSortPopover = ({
                 type="button"
                 onClick={() => handleSelect(option)}
                 className={cn(
-                  "title-5 flex w-full items-center px-2 py-1 text-left text-font-2 transition-colors duration-200 hover:text-font-1",
-                  value === option && "text-font-1",
+                  "title-5 flex w-full items-center rounded-lg px-2 py-1 text-left text-font-2 transition-colors duration-200 hover:bg-card hover:text-font-1",
+                  value === option && "bg-card",
                 )}
               >
                 {labels[option]}
