@@ -75,6 +75,7 @@ export default function ClientLayout({
   const isHeaderHidden = HIDE_HEADER_PATHS.some((path) =>
     pathname?.startsWith(path),
   );
+  const isHomePath = pathname === "/";
 
   // 사이드바 접힘 조건 계산
   const shouldFoldSidebar = () => {
@@ -86,7 +87,9 @@ export default function ClientLayout({
   };
 
   // 첫 진입과 새로고침 시 사이드바는 접힌 상태로 시작
-  const [isFolded, setIsFolded] = useState(true);
+  const [isFolded, setIsFolded] = useState(
+    () => !isHomePath || shouldFoldSidebar(),
+  );
 
   const [prevFullPath, setPrevFullPath] = useState(fullPath);
 
@@ -107,6 +110,8 @@ export default function ClientLayout({
 
     if (shouldFoldSidebar()) {
       setIsFolded(true);
+    } else if (isHomePath) {
+      setIsFolded(false);
     }
   }
 
@@ -371,7 +376,7 @@ export default function ClientLayout({
         >
           <AnimatePresence>
             {/* 사이드바 펼침 시 사이드바를 제외한 화면만 흐리게 처리 */}
-            {!isSidebarHidden && !isFolded && (
+            {!isSidebarHidden && !isFolded && !isHomePath && (
               <motion.div
                 role="button"
                 tabIndex={0}
