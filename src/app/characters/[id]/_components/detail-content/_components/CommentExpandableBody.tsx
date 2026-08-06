@@ -1,8 +1,8 @@
 "use client";
 
+import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import { cn } from "@/lib/utils";
 
 interface CommentExpandableBodyProps {
   content: string;
@@ -15,6 +15,7 @@ const CommentExpandableBody = ({ content }: CommentExpandableBodyProps) => {
   const contentRef = useRef<HTMLParagraphElement>(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const [shouldShowMoreButton, setShouldShowMoreButton] = useState(false);
+  const [contentHeight, setContentHeight] = useState(0);
 
   useEffect(() => {
     if (!contentRef.current) return;
@@ -23,6 +24,7 @@ const CommentExpandableBody = ({ content }: CommentExpandableBodyProps) => {
 
     // 댓글 본문의 실제 높이가 기준값을 넘는 경우에만 더보기 시스템을 노출합니다.
     const updateCommentOverflowState = () => {
+      setContentHeight(contentElement.scrollHeight);
       setShouldShowMoreButton(
         contentElement.scrollHeight > COMMENT_BODY_MAX_HEIGHT,
       );
@@ -38,11 +40,17 @@ const CommentExpandableBody = ({ content }: CommentExpandableBodyProps) => {
 
   return (
     <div className="flex w-full flex-col gap-2">
-      <div
-        className={cn(
-          "relative w-full overflow-hidden",
-          shouldShowMoreButton && !isExpanded && "max-h-[120px]",
-        )}
+      <motion.div
+        initial={false}
+        animate={{
+          height: shouldShowMoreButton
+            ? isExpanded
+              ? contentHeight
+              : COMMENT_BODY_MAX_HEIGHT
+            : "auto",
+        }}
+        transition={{ duration: 0.24, ease: "easeInOut" }}
+        className="relative w-full overflow-hidden"
       >
         <p
           ref={contentRef}
@@ -51,19 +59,25 @@ const CommentExpandableBody = ({ content }: CommentExpandableBodyProps) => {
           {content}
         </p>
 
-        {shouldShowMoreButton && !isExpanded && (
-          <span
-            className="pointer-events-none absolute inset-x-0 bottom-0 h-7 bg-linear-to-t from-bg-dark to-bg-dark/0"
-            aria-hidden="true"
-          />
-        )}
-      </div>
+        <AnimatePresence>
+          {shouldShowMoreButton && !isExpanded && (
+            <motion.span
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.18 }}
+              className="pointer-events-none absolute inset-x-0 bottom-0 h-7 bg-linear-to-t from-bg-dark to-bg-dark/0"
+              aria-hidden="true"
+            />
+          )}
+        </AnimatePresence>
+      </motion.div>
 
       {shouldShowMoreButton && (
         <button
           type="button"
           onClick={() => setIsExpanded((prev) => !prev)}
-          className="body-6 w-fit text-font-2"
+          className="body-6 w-fit text-font-2 transition-colors hover:text-font-1"
         >
           {isExpanded ? t("collapse") : t("expandCompact")}
         </button>
