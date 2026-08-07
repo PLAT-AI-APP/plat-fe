@@ -61,19 +61,12 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
       {/* 오른쪽 영역: 검색, 언어, 포인트, 알림, 프로필 */}
       <div
         id="header-right-section"
-        className="flex flex-1 justify-end items-center h-10 gap-6"
+        className="flex h-10 flex-1 items-center justify-end gap-2"
       >
         <div
           id="header-utility-group"
-          className="flex justify-between gap-4 items-center"
+          className="flex items-center gap-2"
         >
-          {/* SearchBar 내부에서 너비가 유동적으로 변하도록 스타일을 확인해야 합니다 */}
-          <div className="flex-1 max-w-100 min-w-20">
-            <SearchBar />
-          </div>
-
-          {/* <LanguageSelector /> */}
-
           {/* 포인트 표시 영역 */}
           {isLoggedIn && (
             <Link
@@ -86,6 +79,13 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
               </span>
             </Link>
           )}
+
+          {/* SearchBar 내부에서 너비가 유동적으로 변하도록 스타일을 확인해야 합니다 */}
+          <div className="shrink-0">
+            <SearchBar />
+          </div>
+
+          {/* <LanguageSelector /> */}
 
           {/* 알림 버튼 */}
           {/* {isLoggedIn && (

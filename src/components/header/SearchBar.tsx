@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Close, Search } from "@/icons";
 import { useRecentSearch } from "@/hooks/useRecentSearch";
@@ -10,7 +10,10 @@ import { ModalLayout } from "../ModalLayout";
 export const SearchBar = () => {
   const t = useTranslations();
   const triggerRef = useRef<HTMLFormElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [isActive, setIsActive] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
   const { removeKeyword, keywords, clearAll } = useRecentSearch();
 
   const popularKeyword = [
@@ -26,37 +29,73 @@ export const SearchBar = () => {
     "아카데미",
   ];
 
+  const handleExpand = () => {
+    setIsExpanded(true);
+    setIsActive(true);
+  };
+
+  const handleCloseSearch = () => {
+    setIsActive(false);
+    setIsExpanded(false);
+  };
+
+  useEffect(() => {
+    if (!isExpanded) return;
+
+    inputRef.current?.focus();
+  }, [isExpanded]);
+
   return (
     <form
       id="search-bar-form"
       role="search"
       ref={triggerRef}
-      className="group relative flex min-w-[260px] items-center"
+      className={cn(
+        "group relative flex h-10 items-center transition-all duration-200 ease-out",
+        isExpanded ? "w-[340px] min-w-[260px]" : "w-10 min-w-10",
+      )}
       onSubmit={(e) => e.preventDefault()}
     >
-      <input
-        id="search-input"
-        type="text"
-        className="body-4 h-10 w-full cursor-pointer rounded-xl border border-border-main px-4 pl-10 transition-all placeholder:body-4 placeholder:text-font-disabled focus:cursor-text focus:border-font-1 focus:outline-none"
-        placeholder={t("searchBar.placeholder")}
-        onFocus={() => setIsActive(true)}
-      />
+      {!isExpanded ? (
+        <button
+          id="search-icon-button"
+          type="button"
+          aria-label={t("searchBar.placeholder")}
+          onClick={handleExpand}
+          className="flex size-10 items-center justify-center rounded-xl text-font-2 transition-colors "
+        >
+          <Search id="icon-search-glass" className="size-6" />
+        </button>
+      ) : (
+        <>
+          <input
+            ref={inputRef}
+            id="search-input"
+            type="text"
+            value={searchValue}
+            className="body-4 h-10 w-full cursor-pointer rounded-xl border border-border-main px-4 pl-10 transition-all placeholder:body-4 placeholder:text-font-disabled focus:cursor-text focus:border-font-1 focus:outline-none"
+            placeholder={t("searchBar.placeholder")}
+            onChange={(event) => setSearchValue(event.target.value)}
+            onFocus={() => setIsActive(true)}
+          />
 
-      <label
-        id="search-icon-wrapper"
-        htmlFor="search-input"
-        className="pointer-events-none absolute left-4 cursor-pointer"
-      >
-        <Search
-          id="icon-search-glass"
-          className="h-4.5 w-4.5 text-font-disabled"
-        />
-      </label>
+          <label
+            id="search-icon-wrapper"
+            htmlFor="search-input"
+            className="pointer-events-none absolute left-4 cursor-pointer"
+          >
+            <Search
+              id="icon-search-glass"
+              className="size-6 text-font-disabled"
+            />
+          </label>
+        </>
+      )}
 
-      {isActive && (
+      {isExpanded && isActive && (
         <ModalLayout
           triggerRef={triggerRef || null}
-          onClose={() => setIsActive(false)}
+          onClose={handleCloseSearch}
           className="flex w-85 flex-col gap-6.5 p-5"
         >
           {keywords.length > 0 && (
