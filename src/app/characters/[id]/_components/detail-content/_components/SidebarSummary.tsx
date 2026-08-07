@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import ActiveButton from "@/components/ActiveButton";
 import { ChatFill, Gear } from "@/icons";
 import { formatStatCount } from "@/lib/utils";
+import { useUserStore } from "@/store/useUserStore";
 import { CharacterDetail } from "@/type/character";
 
 interface SidebarSummaryProps {
@@ -19,19 +20,23 @@ const SidebarSummary = ({
   onStartChat,
 }: SidebarSummaryProps) => {
   const t = useTranslations("characterDetail");
+  const userId = useUserStore((state) => state.user?.id);
+  const isCreator = userId === character.creator.id;
 
   return (
     <aside className="sticky top-0 flex w-[389px] shrink-0 flex-col gap-5 self-start">
       <section className="flex flex-col gap-4">
-        <button
-          type="button"
-          className="body-4 flex w-fit items-center gap-1 rounded-xl border border-btn-selected bg-bg-darker px-3 py-2 text-font-2 transition-colors hover:bg-card"
-        >
-          <Gear className="size-5 shrink-0" aria-hidden="true" />
-          {t("editCharacter")}
-        </button>
+        {isCreator && (
+          <button
+            type="button"
+            className="body-4 flex w-fit items-center gap-1 rounded-xl border border-btn-selected bg-bg-darker px-3 py-2 text-font-2 transition-colors hover:bg-card"
+          >
+            <Gear className="size-5 shrink-0" aria-hidden="true" />
+            {t("editCharacter")}
+          </button>
+        )}
 
-        {character.isOfficial && (
+        {!isCreator && character.isOfficial && (
           <span className="body-6 w-fit rounded-xl bg-brand/10 px-3 py-2 text-brand-dark">
             {t("officialCharacter")}
           </span>
