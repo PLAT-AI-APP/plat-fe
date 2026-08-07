@@ -56,6 +56,9 @@ const ko = {
     settings: {
       publicLabel: "유저 공개",
       publicHelp: "다른 유저들도 대화할 수 있어요",
+      commentAllowLabel: "댓글 허용",
+      commentAllowHelp:
+        "자유롭게 소통해 보세요! 원하실 때 언제든 댓글을 허용하거나 제한할 수 있어요",
       descriptionLabel: "캐릭터 설명",
       descriptionHelp:
         "캐릭터의 성격이나 서사, 사건 등 상세한 내용을 작성해주세요.",
@@ -253,6 +256,9 @@ const en: typeof ko = {
     settings: {
       publicLabel: "User visibility",
       publicHelp: "Other users can also chat with this character",
+      commentAllowLabel: "Allow comments",
+      commentAllowHelp:
+        "Communicate freely! You can allow or restrict comments whenever you want.",
       descriptionLabel: "Character description",
       descriptionHelp:
         "Write detailed information such as the character's personality, narrative, or key events.",
@@ -453,6 +459,9 @@ const ja: typeof ko = {
     settings: {
       publicLabel: "ユーザー公開",
       publicHelp: "他のユーザーも会話できます",
+      commentAllowLabel: "コメントを許可",
+      commentAllowHelp:
+        "自由に交流しましょう。必要なときはいつでもコメントを許可または制限できます。",
       descriptionLabel: "キャラクター説明",
       descriptionHelp:
         "性格や叙事、事件などキャラクターの詳しい内容を入力してください。",
@@ -650,6 +659,9 @@ const zh: typeof ko = {
     settings: {
       publicLabel: "用户公开",
       publicHelp: "其他用户也可以与该角色聊天",
+      commentAllowLabel: "允许评论",
+      commentAllowHelp:
+        "自由交流吧！你可以随时允许或限制评论。",
       descriptionLabel: "角色说明",
       descriptionHelp:
         "请填写角色的性格、叙事、事件等更详细的内容。",
@@ -842,6 +854,9 @@ const th: typeof ko = {
     settings: {
       publicLabel: "เปิดเผยต่อผู้ใช้",
       publicHelp: "ผู้ใช้อื่นก็สามารถสนทนาด้วยได้",
+      commentAllowLabel: "อนุญาตความคิดเห็น",
+      commentAllowHelp:
+        "สื่อสารได้อย่างอิสระ! คุณสามารถอนุญาตหรือจำกัดความคิดเห็นได้ทุกเมื่อ",
       descriptionLabel: "คำอธิบายตัวละคร",
       descriptionHelp:
         "กรุณาเขียนรายละเอียด เช่น บุคลิก เรื่องราว หรือเหตุการณ์ของตัวละคร",
@@ -1041,6 +1056,9 @@ const vi: typeof ko = {
     settings: {
       publicLabel: "Công khai với người dùng",
       publicHelp: "Người dùng khác cũng có thể trò chuyện",
+      commentAllowLabel: "Cho phép bình luận",
+      commentAllowHelp:
+        "Hãy giao tiếp tự do! Bạn có thể cho phép hoặc giới hạn bình luận bất cứ lúc nào.",
       descriptionLabel: "Mô tả nhân vật",
       descriptionHelp:
         "Hãy viết nội dung chi tiết như tính cách, cốt truyện hoặc sự kiện của nhân vật.",

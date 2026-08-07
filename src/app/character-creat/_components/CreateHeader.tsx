@@ -51,6 +51,7 @@ const CreateHeader = ({ onSave, onDraftClick }: CreateHeaderProps) => {
           visibility: asset.assetVisibility,
         })) || [],
       visibility: currentFormData.isPublic ? "PUBLIC" : "PRIVATE",
+      allowComments: currentFormData.allowComments,
       // 프로필 탭의 프롤로그 소개가 있으면 우선 보내고, 없을 때는 상세 설명을 사용합니다.
       description:
         currentFormData.profileSituationDescription ||

@@ -16,6 +16,7 @@ interface postChatacterCreateProps {
     visibility: "PUBLIC" | "PRIVATE";
   }[];
   visibility: string;
+  allowComments: boolean;
   description: string;
   tendency: string;
   category: string[];

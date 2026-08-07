@@ -40,6 +40,7 @@ const createCharacterCreateDefaultValues = (
     },
   ],
   isPublic: true,
+  allowComments: true,
   characterDescription: "",
   tendency: "",
   category: [],

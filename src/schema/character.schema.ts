@@ -79,6 +79,7 @@ export const characterCreateSchema = z.object({
     .max(5, FIELD_ERROR_MESSAGES.scenarioMaxCount),
 
   isPublic: z.boolean(),
+  allowComments: z.boolean(),
   characterDescription: z
     .string()
     .min(1, FIELD_ERROR_MESSAGES.characterDescriptionRequired)

@@ -33,6 +33,7 @@ const Setting = () => {
   const tagList = useWatch({ control, name: "tagIds" });
   const isTagFull = tagList.length >= 5;
   const isPublicWatch = useWatch({ control, name: "isPublic" });
+  const allowComments = useWatch({ control, name: "allowComments" });
   const tendency = useWatch({ control, name: "tendency" });
   const categoryWatch = useWatch({ control, name: "category" });
   const tendencyLabelByValue: Record<string, string> = {
@@ -57,6 +58,13 @@ const Setting = () => {
 
   const handleIsPublic = (isPublic: boolean) => {
     setValue("isPublic", isPublic, { shouldDirty: true, shouldValidate: true });
+  };
+
+  const handleAllowComments = (nextAllowComments: boolean) => {
+    setValue("allowComments", nextAllowComments, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
   };
 
   const handleTendency = (nextTendency: string) => {
@@ -107,6 +115,32 @@ const Setting = () => {
             className={cn(
               "size-5 rounded-full bg-font-1 transition-transform duration-300 ease-out",
               isPublicWatch ? "translate-x-5" : "translate-x-0",
+            )}
+            aria-hidden="true"
+          />
+        </button>
+      </section>
+
+      <section className="flex items-center justify-between">
+        <div className="flex flex-col gap-1">
+          <h3 className="title-3 text-font-1">{t("commentAllowLabel")}</h3>
+          <p className="body-6 text-font-2">{t("commentAllowHelp")}</p>
+        </div>
+
+        <button
+          type="button"
+          role="switch"
+          aria-checked={allowComments}
+          onClick={() => handleAllowComments(!allowComments)}
+          className={cn(
+            "relative h-6 w-[45px] rounded-[70.588px] bg-card transition-colors duration-300 ease-out",
+            allowComments && "bg-brand",
+          )}
+        >
+          <span
+            className={cn(
+              "absolute left-[3px] top-1/2 size-[18px] -translate-y-1/2 rounded-full bg-font-1 transition-transform duration-300 ease-out",
+              allowComments && "translate-x-[21px]",
             )}
             aria-hidden="true"
           />
