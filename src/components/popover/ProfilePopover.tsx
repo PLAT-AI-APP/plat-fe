@@ -6,6 +6,7 @@ import Link from "next/link";
 import { cn, formatWithCommas } from "@/lib/utils";
 import {
   ArrowRight,
+  Gear,
   Google,
   Headphone,
   Kakao,
@@ -47,6 +48,7 @@ interface ActivityTab {
 
 const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
   const t = useTranslations("profilePopover");
+  const rootT = useTranslations();
   const selectorT = useTranslations("selector");
   const router = useRouter();
   const { mutate: logout } = useLogoutMutation();
@@ -60,6 +62,11 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
       name: t("customerService"),
       link: "/customer-service",
       icon: Headphone,
+    },
+    {
+      name: rootT("characterDetail.tabs.settings"),
+      link: "/settings",
+      icon: Gear,
     },
   ];
   const tendencyArray = [
@@ -75,6 +82,11 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
 
   const activityArray: ActivityTab[] = [
     {
+      name: rootT("sidebar.noteCharge"),
+      icon: Token,
+      link: "/token-charge",
+    },
+    {
       name: t("persona"),
       icon: Persona,
       onClick: handlePersonaModalOpen,
@@ -89,6 +101,10 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
 
   // 로그인 상태가 아닐 때는 개인화 기능으로 이어지는 항목을 숨깁니다.
   const filteredActivityArray = activityArray.filter((item) => {
+    if (item.link === "/token-charge") {
+      return isLoggedIn;
+    }
+
     if (item.name === t("persona")) {
       return isLoggedIn;
     }
@@ -152,31 +168,32 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
     <PopoverLayout
       triggerRef={triggerRef}
       onClose={handleProfilePopoverClose}
-      className="w-75 transition-colors"
+      className={cn(
+        "transition-colors",
+        isLoggedIn
+          ? "w-[240px] min-w-[240px] overflow-hidden px-2 py-3 shadow-[0_10px_40px_0_rgba(0,0,0,0.5)]"
+          : "w-75",
+      )}
     >
       {isLoggedIn ? (
         <Link
           onClick={handleRouterPush}
           href={`/profile/${userId}`}
-          className="flex p-2 items-center justify-between hover:bg-btn-hover rounded-lg cursor-pointer"
+          className="flex items-center justify-between rounded-lg p-2 transition-colors hover:bg-btn-hover"
         >
-          <div className="flex items-center gap-3">
+          <div className="flex min-w-0 items-center gap-2">
             <Image
               src={profileImage || "/p1.png"}
               alt={t("profileImageAlt")}
-              width={40}
-              height={40}
-              className="w-10 h-10 rounded-full"
+              width={28}
+              height={28}
+              className="size-7 rounded-full object-cover"
             />
-            <div className="flex flex-col gap-0.5">
-              <span className="title-5 text-font-1">{nickname}</span>
-              <span className="flex items-center gap-0.5 body-4 text-font-1">
-                <Token className="w-4 h-4" />{" "}
-                {formatWithCommas(availableBalance)}
-              </span>
-            </div>
+            <span className="title-5 min-w-0 truncate text-font-1">
+              {nickname}
+            </span>
           </div>
-          <ArrowRight className="w-2.5 h-2.5 text-font-disabled" />
+          <ArrowRight className="size-2.5 shrink-0 text-font-disabled" />
         </Link>
       ) : (
         <div className="p-2 flex flex-col gap-3 text-sm font-medium">
@@ -204,129 +221,156 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
         </div>
       )}
 
-      <hr className="text-border-main pb-2.5 mt-2.5" />
+      <div className="py-2.5">
+        <div className="h-px w-full bg-border-main" />
+      </div>
 
-      <h3 className="pb-1.5 pl-2.5 caption-1 text-font-2 font-medium">
+      <h3 className="caption-1 pb-1.5 pl-2.5 text-font-2">
         {t("activity")}
       </h3>
-      {filteredActivityArray.map((tab) => {
-        const Icon = tab.icon;
+      <div className="flex flex-col gap-1.5">
+        {filteredActivityArray.map((tab) => {
+          const Icon = tab.icon;
+          const isTokenCharge = tab.link === "/token-charge";
 
-        if (!tab.link) {
-          return (
-            <div key={tab.name} onClick={tab.onClick}>
-              <div className="relative cursor-pointer flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg hover:bg-btn-hover transition-colors duration-200 ease-in-out text-font-1 hover:text-font-1">
-                <div className="flex items-center gap-2 body-4">
-                  <Icon
-                    size={18}
-                    strokeWidth={0.5}
-                    className={cn("shrink-0 text-font-2")}
-                  />
-                  {tab.name}
-                </div>
-
-                {tab.hasTendencyOptions && (
-                  <div className="flex items-center gap-1">
-                    <span className="title-6 text-font-1">
-                      {currentTendency}
-                    </span>
-                    <ArrowRight
-                      className={cn(
-                        "w-2.5 h-2.5 text-font-disabled",
-                        tendency.isOpen && "rotate-90",
-                      )}
+          if (!tab.link) {
+            return (
+              <div key={tab.name}>
+                <button
+                  type="button"
+                  onClick={tab.onClick}
+                  className="body-4 flex w-full items-center justify-between gap-2 rounded-lg px-2.5 py-2 text-left text-font-1 transition-colors duration-200 ease-in-out hover:bg-btn-hover"
+                >
+                  <span className="flex min-w-0 items-center gap-2">
+                    <Icon
+                      size={18}
+                      strokeWidth={0.5}
+                      className={cn("size-[18px] shrink-0 text-font-2")}
                     />
-                  </div>
-                )}
+                    <span className="truncate">{tab.name}</span>
+                  </span>
+
+                  {tab.hasTendencyOptions && (
+                    <span className="flex shrink-0 items-center gap-1">
+                      <span className="title-6 text-font-1">
+                        {currentTendency}
+                      </span>
+                      <ArrowRight
+                        className={cn(
+                          "size-2.5 text-font-disabled transition-transform",
+                          tendency.isOpen && "rotate-90",
+                        )}
+                      />
+                    </span>
+                  )}
+                </button>
+
+                <AnimatePresence>
+                  {tab.hasTendencyOptions && tendency.isOpen && (
+                    <motion.div
+                      onClick={(e) => e.stopPropagation()}
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      className="overflow-hidden"
+                    >
+                      <ul className="flex flex-col gap-1 p-2.5">
+                        {tendencyArray.map(({ color, name }) => (
+                          <li
+                            key={name}
+                            onClick={() => handleCurrentTendency(name)}
+                            className="body-5 flex cursor-pointer justify-between rounded-xl px-2.5 py-2 transition-colors duration-200 ease-in-out hover:bg-btn-hover"
+                          >
+                            <div className="flex items-center gap-2">
+                              <div
+                                className="size-2.5 rounded-full"
+                                style={{ backgroundColor: color }}
+                              />
+                              {name}
+                            </div>
+
+                            {currentTendency === name && (
+                              <Check className="size-[18px] text-brand" />
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
+            );
+          }
 
-              <AnimatePresence>
-                {tab.hasTendencyOptions && tendency.isOpen && (
-                  <motion.div
-                    onClick={(e) => e.stopPropagation()}
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3, ease: "easeInOut" }}
-                    className="overflow-hidden"
-                  >
-                    <ul className="flex flex-col gap-1 p-2.5">
-                      {tendencyArray.map(({ color, name }) => (
-                        <li
-                          key={name}
-                          onClick={() => handleCurrentTendency(name)}
-                          className="body-5 cursor-pointer flex justify-between px-3.5 py-2.5 rounded-2xl hover:bg-btn-hover transition-colors duration-200 ease-in-out"
-                        >
-                          <div className="flex items-center gap-2">
-                            <div
-                              className="w-2.5 h-2.5 rounded-full"
-                              style={{ backgroundColor: color }}
-                            />
-                            {name}
-                          </div>
+          return (
+            <Link
+              key={tab.name}
+              href={tab.link}
+              className={cn(
+                "body-4 flex items-center justify-between gap-2 rounded-lg px-2.5 py-2 text-font-1 transition-colors duration-200 ease-in-out hover:bg-btn-hover",
+                !isTokenCharge && "text-sm",
+              )}
+            >
+              <span className="flex min-w-0 items-center gap-2">
+                <Icon
+                  size={18}
+                  strokeWidth={0.5}
+                  className={cn("size-[18px] shrink-0 text-font-2")}
+                />
+                <span className="truncate">{tab.name}</span>
+              </span>
 
-                          {currentTendency === name && (
-                            <Check className="w-4 h-4 text-brand" />
-                          )}
-                        </li>
-                      ))}
-                    </ul>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+              {isTokenCharge && (
+                <span className="flex shrink-0 items-center gap-1">
+                  <span className="title-6 text-font-1">
+                    {formatWithCommas(availableBalance)}
+                  </span>
+                  <ArrowRight className="size-2.5 text-font-disabled" />
+                </span>
+              )}
+            </Link>
           );
-        }
+        })}
+      </div>
 
-        return (
-          <Link
-            key={tab.name}
-            href={tab.link}
-            className="relative cursor-pointer flex items-center justify-between gap-2 px-3 py-2.5 rounded-lg hover:bg-btn-hover transition-colors duration-200 ease-in-out text-font-1 hover:text-font-1 text-sm"
-          >
-            <div className="flex items-center gap-2">
+      <div className="py-2.5">
+        <div className="h-px w-full bg-border-main" />
+      </div>
+
+      <h3 className="caption-1 pb-1.5 pl-2.5 text-font-2">
+        {t("inquiryAndSettings")}
+      </h3>
+      <div className="flex flex-col gap-1.5">
+        {supportArray.map((tab) => {
+          const Icon = tab.icon;
+          return (
+            <Link
+              key={tab.name}
+              href={tab.link}
+              className="body-4 flex items-center gap-2 rounded-lg px-2.5 py-2 text-font-1 transition-colors hover:bg-btn-hover"
+            >
               <Icon
                 size={18}
                 strokeWidth={0.5}
-                className={cn("shrink-0 text-font-2")}
+                className={cn("size-[18px] shrink-0 text-font-2")}
               />
-              {tab.name}
-            </div>
-          </Link>
-        );
-      })}
-
-      <hr className="text-border-main pb-2.5 mt-2.5" />
-
-      <h3 className="pb-1.5 pl-2.5 caption-1 text-font-2">
-        {t("inquiryAndSettings")}
-      </h3>
-      {supportArray.map((tab) => {
-        const Icon = tab.icon;
-        return (
-          <Link
-            key={tab.name}
-            href={tab.link}
-            className="flex items-center gap-2 px-3 py-2.5 rounded-lg hover:bg-btn-hover transition-colors text-font-1 hover:text-font-1 body-4"
-          >
-            <Icon
-              size={18}
-              strokeWidth={0.5}
-              className={cn("shrink-0 text-font-2")}
-            />
-            {tab.name}
-          </Link>
-        );
-      })}
+              <span className="truncate">{tab.name}</span>
+            </Link>
+          );
+        })}
+      </div>
 
       {isLoggedIn && (
         <>
-          <hr className="text-border-main pb-2.5 mt-2.5" />
+          <div className="py-2.5">
+            <div className="h-px w-full bg-border-main" />
+          </div>
           <div
             onClick={() => logout()}
-            className="cursor-pointer flex items-center gap-2 px-3 py-2.5 rounded-xl hover:bg-btn-hover transition-colors duration-200 ease-in-out text-font-1 hover:text-font-1 body-4"
+            className="body-4 flex cursor-pointer items-center gap-2 rounded-lg px-2.5 py-2 text-font-1 transition-colors duration-200 ease-in-out hover:bg-btn-hover"
           >
-            <Logout size={18} className="text-font-2 shrink-0" />
+            <Logout size={18} className="size-[18px] shrink-0 text-font-2" />
             {t("logout")}
           </div>
         </>
