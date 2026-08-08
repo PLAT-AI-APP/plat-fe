@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import {
@@ -243,12 +244,15 @@ const ChattingSidebar = ({
                       <ArrowLeft className="size-5" />
                     </button>
 
-                    <div className="flex items-center gap-1.5 rounded-lg bg-card px-3 py-2">
+                    <Link
+                      href="/token-charge"
+                      className="flex items-center gap-1.5 rounded-lg bg-card px-3 py-2 transition-colors hover:bg-card-hover"
+                    >
                       <Token className="size-[21px]" />
                       <span className="body-4 whitespace-nowrap text-white">
                         {formatWithCommas(availableBalance)}
                       </span>
-                    </div>
+                    </Link>
                   </header>
 
                   <nav className="flex flex-col gap-6">
