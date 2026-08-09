@@ -45,7 +45,7 @@ const FindPasswordModal = ({ onClose, stackIndex }: FindPasswordModalProps) => {
     >
       <FormProvider {...methods}>
         {step === 1 ? (
-          <section className="w-screen max-w-97 rounded-3xl border border-border-main bg-bg-darker px-6 py-9">
+          <section className="w-screen max-w-97 rounded-3xl border border-main bg-darker px-6 py-9">
             <header className="flex flex-col gap-1.5 pb-9">
               <h1 className="heading-3">{t("title")}</h1>
               <p className="body-4 text-font-2">{t("description")}</p>

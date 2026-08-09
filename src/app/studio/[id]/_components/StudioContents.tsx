@@ -24,9 +24,9 @@ const StudioContents = ({ id, sort, viewMode }: StudioContentsProps) => {
     <section className="@container mx-auto w-full max-w-175 pt-7.5">
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-3">
-          <div className="flex flex-col gap-3 rounded-3xl border border-border-main bg-bg-darker p-5">
+          <div className="flex flex-col gap-3 rounded-3xl border border-main bg-darker p-5">
             <Header id={id} />
-            <hr className="text-border-main" />
+            <hr className="text-main" />
             <StudioStats />
           </div>
 

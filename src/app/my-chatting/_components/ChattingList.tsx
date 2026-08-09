@@ -113,7 +113,7 @@ const ChattingList = ({ searchQuery, sortOption }: ChattingListProps) => {
 
               {index < sortedChattingList.length - 1 && (
                 <li
-                  className="mx-10 h-px bg-border-main"
+                  className="mx-10 h-px bg-main"
                   aria-hidden="true"
                 />
               )}

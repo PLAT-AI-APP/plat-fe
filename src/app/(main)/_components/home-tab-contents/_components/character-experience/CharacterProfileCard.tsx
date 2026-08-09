@@ -16,7 +16,7 @@ const CharacterProfileCard = ({ index }: CharacterProfileCardProps) => {
         height={100}
         className="absolute inset-0 h-full w-full object-cover"
       />
-      <header className="absolute bottom-0 left-0 flex w-full flex-col items-start justify-center gap-1 self-stretch bg-linear-to-b from-black/0 via-black/80 to-black/100 px-6 pb-7 pt-9">
+      <header className="absolute bottom-0 left-0 flex w-full flex-col items-start justify-center gap-1 self-stretch bg-mainar-to-b from-black/0 via-black/80 to-black/100 px-6 pb-7 pt-9">
         <div className="inline-flex items-center gap-2.5">
           <h2 className="text-font-0 title-2">제목제목제목제목제목{index}</h2>
         </div>

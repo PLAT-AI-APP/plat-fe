@@ -15,7 +15,7 @@ export const SIZE_CONFIG: Record<CardSize, SizeConfig> = {
   M: {
     wrapper: "w-[227.2px]",
     imageArea: "w-full h-[227.2px] rounded-tl-2xl rounded-tr-2xl",
-    infoArea: "px-4 py-5 gap-0.5 bg-bg-darkest rounded-bl-2xl rounded-br-2xl",
+    infoArea: "px-4 py-5 gap-0.5 bg-darkest rounded-bl-2xl rounded-br-2xl",
     title: "title-3 text-font-0",
     desc: "body-4 text-font-2",
     isIntegrated: false,
@@ -38,7 +38,7 @@ export const SIZE_CONFIG: Record<CardSize, SizeConfig> = {
   XL: {
     wrapper: "w-96.5 justify-between",
     imageArea: "w-full h-96 rounded-t-2xl",
-    infoArea: "px-5 py-6 bg-bg-darkest rounded-b-2xl gap-2",
+    infoArea: "px-5 py-6 bg-darkest rounded-b-2xl gap-2",
     title: "title-1 ",
     desc: "body-2 ",
     isIntegrated: true,

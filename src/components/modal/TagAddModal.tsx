@@ -118,7 +118,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
     <ModalLayout
       onClose={onClose}
       hasBackground
-      className="w-[430px] max-w-[calc(100vw-40px)] rounded-3xl border-0 bg-bg-dark p-5"
+      className="w-[430px] max-w-[calc(100vw-40px)] rounded-3xl border-0 bg-dark p-5"
     >
       <div id="tag-manager-root" className="flex flex-col">
         <header className="flex items-center justify-between pb-5">
@@ -145,7 +145,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
               shouldShowSearchPrefix && "pl-14",
               searchKeyword
                 ? "border border-transparent bg-card"
-                : "border border-border-main bg-bg-darkest",
+                : "border border-main bg-darkest",
             )}
             placeholder={shouldShowSearchPrefix ? "" : t("searchPlaceholder")}
             onChange={handleSearchChange}
@@ -165,7 +165,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
           )}
         </div>
 
-        <nav className="custom-scrollbar flex max-h-85 min-h-85 flex-col gap-5 overflow-auto rounded-xl bg-bg-darkest p-4">
+        <nav className="custom-scrollbar flex max-h-85 min-h-85 flex-col gap-5 overflow-auto rounded-xl bg-darkest p-4">
           {matchedTags.length > 0 && (
             <section>
               <h3 className="body-4 text-font-2">{t("matchedSearch")}</h3>
@@ -181,7 +181,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
                         type="button"
                         onClick={() => handleTagToggle(tag)}
                         className={cn(
-                          "body-6 flex h-7 items-center rounded-md border border-font-2 bg-bg-dark px-2.5 text-font-1 transition-none hover:bg-card-hover",
+                          "body-6 flex h-7 items-center rounded-md border border-font-2 bg-dark px-2.5 text-font-1 transition-none hover:bg-card-hover",
                           isSelected &&
                             "border-brand bg-brand/10 font-semibold text-brand",
                         )}

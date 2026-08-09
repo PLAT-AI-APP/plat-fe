@@ -77,7 +77,7 @@ const MyChattingSortPopover = ({
     <PopoverLayout
       onClose={onClose}
       triggerRef={triggerRef}
-      className="left-0 top-[calc(100%+8px)] w-[114px] min-w-[114px] max-w-[114px] gap-2 rounded-xl border-border-main bg-bg-dark px-2 py-3 shadow-[0_10px_20px_rgba(0,0,0,0.5)]"
+      className="left-0 top-[calc(100%+8px)] w-[114px] min-w-[114px] max-w-[114px] gap-2 rounded-xl border-main bg-dark px-2 py-3 shadow-[0_10px_20px_rgba(0,0,0,0.5)]"
     >
       <nav aria-label="내 채팅 정렬">
         <ul className="flex flex-col gap-2" role="listbox">

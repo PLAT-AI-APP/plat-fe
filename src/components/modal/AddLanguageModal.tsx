@@ -23,7 +23,7 @@ const AddLanguageModal = ({ onClose }: AddLanguageModalProps) => {
     <ModalLayout
       onClose={onClose}
       hasBackground
-      className="w-screen max-w-[calc(100vw-40px)] sm:max-w-92.5 rounded-3xl border border-border-main p-5"
+      className="w-screen max-w-[calc(100vw-40px)] sm:max-w-92.5 rounded-3xl border border-main p-5"
     >
       <header className="flex items-center justify-between">
         <div className="flex min-w-0 items-center gap-3 text-[20px] font-semibold">

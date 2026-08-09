@@ -167,7 +167,7 @@ const Setting = () => {
                   "body-4 flex h-10 items-center justify-center rounded-xl transition-none",
                   isActive
                     ? "bg-brand/10 text-brand-dark"
-                    : "bg-bg-darkest text-font-2",
+                    : "bg-darkest text-font-2",
                 )}
                 style={{ transition: "none", animation: "none" }}
               >
@@ -199,7 +199,7 @@ const Setting = () => {
                 type="button"
                 onClick={() => handleCategory(category)}
                 className={cn(
-                  "bg-bg-dark body-4 flex h-8 items-center rounded-[100px] px-3 border border-border-main transition-none",
+                  "bg-dark body-4 flex h-8 items-center rounded-[100px] px-3 border border-main transition-none",
                   isActive && "bg-brand/10 text-brand-dark",
                   selectedCategories.length === 0 && "text-font-1",
                   isInactive && "text-font-disabled",
@@ -223,7 +223,7 @@ const Setting = () => {
           <button
             type="button"
             onClick={toggleIsTagModal}
-            className="body-4 flex h-11 items-center justify-between rounded-xl border border-border-main bg-bg-darkest px-4 text-font-2 transition-none"
+            className="body-4 flex h-11 items-center justify-between rounded-xl border border-main bg-darkest px-4 text-font-2 transition-none"
             style={{ transition: "none", animation: "none" }}
           >
             <span>

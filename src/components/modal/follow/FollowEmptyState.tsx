@@ -140,7 +140,7 @@ const FollowEmptyState = ({
         <button
           type="button"
           onClick={handleClick}
-          className="title-5 rounded-xl bg-font-1 px-8 py-2 text-bg-dark"
+          className="title-5 rounded-xl bg-font-1 px-8 py-2 text-dark"
         >
           {state.buttonText}
         </button>

@@ -49,7 +49,7 @@ const TagSuggestionsModal = ({ onClose }: TagSuggestionsModalProps) => {
     <ModalLayout
       onClose={onClose}
       hasBackground
-      className="h-[695px] w-[450px] max-w-[calc(100vw-40px)] rounded-3xl border-0 bg-bg-dark p-5"
+      className="h-[695px] w-[450px] max-w-[calc(100vw-40px)] rounded-3xl border-0 bg-dark p-5"
     >
       <form onSubmit={handleSubmit(onSubmit)} className="flex h-full flex-col">
         <header className="flex items-center justify-between pb-7">

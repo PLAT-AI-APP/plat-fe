@@ -199,7 +199,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
         <div className="p-2 flex flex-col gap-3 text-sm font-medium">
           <div
             onClick={() => handleLoginBtn("KAKAO")}
-            className="flex cursor-pointer items-center justify-center relative body-4 text-center h-11.5 rounded-lg bg-[#FEE500] w-full py-2 text-bg-darkest"
+            className="flex cursor-pointer items-center justify-center relative body-4 text-center h-11.5 rounded-lg bg-[#FEE500] w-full py-2 text-darkest"
           >
             <Kakao className="absolute w-5.5 h-5.5 top-1/2 left-7.5 -translate-y-1/2" />
             {t("loginWithKakao")}
@@ -222,7 +222,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
       )}
 
       <div className="py-2.5">
-        <div className="h-px w-full bg-border-main" />
+        <div className="h-px w-full bg-main" />
       </div>
 
       <h3 className="caption-1 pb-1.5 pl-2.5 text-font-2">
@@ -335,7 +335,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
       </div>
 
       <div className="py-2.5">
-        <div className="h-px w-full bg-border-main" />
+        <div className="h-px w-full bg-main" />
       </div>
 
       <h3 className="caption-1 pb-1.5 pl-2.5 text-font-2">
@@ -364,7 +364,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
       {isLoggedIn && (
         <>
           <div className="py-2.5">
-            <div className="h-px w-full bg-border-main" />
+            <div className="h-px w-full bg-main" />
           </div>
           <div
             onClick={() => logout()}

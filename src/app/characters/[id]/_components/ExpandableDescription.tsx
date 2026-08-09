@@ -42,7 +42,7 @@ export const ExpandableDescription = ({
           "relative",
           shouldShowExpand &&
             !isExpanded &&
-            "after:pointer-events-none after:absolute after:bottom-0 after:left-0 after:h-full after:w-full after:bg-linear-to-t after:from-bg-dark after:to-transparent",
+            "after:pointer-events-none after:absolute after:bottom-0 after:left-0 after:h-full after:w-full after:bg-mainar-to-t after:from-dark after:to-transparent",
         )}
       >
         <p

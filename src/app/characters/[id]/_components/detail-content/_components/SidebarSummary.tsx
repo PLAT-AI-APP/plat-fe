@@ -78,7 +78,7 @@ const SidebarSummary = ({
         {isCreator && (
           <button
             type="button"
-            className="body-4 flex w-fit items-center gap-1 rounded-xl border border-btn-selected bg-bg-darker px-3 py-2 text-font-2 transition-colors hover:bg-card"
+            className="body-4 flex w-fit items-center gap-1 rounded-xl border border-btn-selected bg-darker px-3 py-2 text-font-2 transition-colors hover:bg-card"
           >
             <Gear className="size-5 shrink-0" aria-hidden="true" />
             {t("editCharacter")}
@@ -183,8 +183,8 @@ const SidebarSummary = ({
                 className={cn(
                   "title-6 rounded-full px-3 py-1 transition-colors",
                   isFollowingCreator
-                    ? "bg-border-main text-font-1"
-                    : "bg-font-1 text-bg-dark",
+                    ? "bg-main text-font-1"
+                    : "bg-font-1 text-dark",
                   isFollowPending && "cursor-wait opacity-70",
                 )}
               >

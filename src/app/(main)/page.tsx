@@ -36,7 +36,7 @@ const Home = async ({ searchParams }: HomePageProps) => {
       id="home-container"
       className={cn(
         "w-full min-h-[calc(100vh-60px)] flex",
-        isCategories && "bg-bg-darker",
+        isCategories && "bg-darker",
       )}
     >
       {/* 메인 콘텐츠 영역 */}

@@ -20,7 +20,7 @@ const PersonaFooter = ({ isMaxPersona }: PersonaFooterProps) => {
         onClick={() => !isMaxPersona && openModal("PERSONA_ADD")}
         type="button"
         className={cn(
-          "group mt-3 flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-card-hover bg-bg-dark py-3 title-3",
+          "group mt-3 flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-card-hover bg-dark py-3 title-3",
           isMaxPersona && "bg-card text-font-2",
           !isMaxPersona &&
             "hover:border-none hover:bg-brand/10 hover:text-brand-dark",

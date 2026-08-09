@@ -197,7 +197,7 @@ const Header = ({ userId }: HeaderProps) => {
             <button
               type="button"
               onClick={handleProfileEdit}
-              className="title-3 w-fit text-nowrap flex h-12 items-center justify-center rounded-2xl border border-card-hover bg-bg-dark px-4 py-3 text-font-1"
+              className="title-3 w-fit text-nowrap flex h-12 items-center justify-center rounded-2xl border border-card-hover bg-dark px-4 py-3 text-font-1"
             >
               {t("profile.editProfile")}
             </button>
@@ -209,8 +209,8 @@ const Header = ({ userId }: HeaderProps) => {
               className={cn(
                 "title-3 flex h-11 items-center justify-center rounded-[20px] px-4 py-2.5",
                 isFollowing
-                  ? "bg-border-main text-font-1"
-                  : "bg-font-1 text-bg-dark",
+                  ? "bg-main text-font-1"
+                  : "bg-font-1 text-dark",
                 isFollowPending && "cursor-wait opacity-70",
               )}
             >

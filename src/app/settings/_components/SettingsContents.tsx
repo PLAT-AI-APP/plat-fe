@@ -22,7 +22,7 @@ const SettingsContents = () => {
   };
 
   return (
-    <section className="flex min-h-full w-full justify-center bg-bg-dark px-6">
+    <section className="flex min-h-full w-full justify-center bg-dark px-6">
       <div className="flex w-[592px] max-w-full flex-col gap-6 pt-[30px]">
         <header className="flex w-full items-center py-4">
           <h1 className="heading-2 text-font-1">{t("settings.title")}</h1>
@@ -46,7 +46,7 @@ const SettingsContents = () => {
           {/* 비회원 설정 화면은 피그마 기준으로 환경설정만 노출하고, 계정 전용 항목은 숨깁니다. */}
           {isLoggedIn && (
             <>
-              <hr className="w-full border-border-main" />
+              <hr className="w-full border-main" />
 
               <SettingSection title={t("settings.sections.notifications")}>
                 <SettingRow title={t("settings.rows.blockedUsers")}>
@@ -60,7 +60,7 @@ const SettingsContents = () => {
                 </SettingRow>
               </SettingSection>
 
-              <hr className="w-full border-border-main" />
+              <hr className="w-full border-main" />
 
               <Link
                 href="/withdrawal"

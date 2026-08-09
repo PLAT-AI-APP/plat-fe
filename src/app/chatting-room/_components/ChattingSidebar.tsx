@@ -119,7 +119,7 @@ const SidebarToggle = ({ isOn, onClick }: SidebarToggleProps) => {
         "relative h-6 w-12 rounded-[22.588px] border transition-colors",
         isOn
           ? "border-brand/40 bg-brand-opacity-2"
-          : "border-border-main/40 bg-bg-darkest",
+          : "border-main/40 bg-darkest",
       )}
       aria-pressed={isOn}
     >
@@ -218,7 +218,7 @@ const ChattingSidebar = ({
         onClick={(event) => event.stopPropagation()}
         {...sidebarPanelMotion}
         transition={sidebarTransition}
-        className="h-screen w-[336px] overflow-hidden border border-border-main bg-bg-dark"
+        className="h-screen w-[336px] overflow-hidden border border-main bg-dark"
       >
         <AnimatePresence mode="wait" initial={false}>
           <motion.div

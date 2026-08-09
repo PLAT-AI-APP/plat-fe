@@ -34,7 +34,7 @@ const Dialog = ({
     <ModalLayout
       hasBackground
       onClose={onClose}
-      className="w-[385px] max-w-[calc(100vw-40px)] overflow-hidden rounded-3xl border border-border-main bg-bg-dark px-6 pb-6 pt-8"
+      className="w-[385px] max-w-[calc(100vw-40px)] overflow-hidden rounded-3xl border border-main bg-dark px-6 pb-6 pt-8"
     >
       <div className="flex w-full flex-col items-center gap-8">
         <div className="flex w-full flex-col items-start gap-3">

@@ -49,7 +49,7 @@ const TokenChargeContents = () => {
 
   return (
     <section className="mx-auto w-full max-w-160 px-9 pt-5">
-      <div className="mb-9 flex items-center justify-between gap-4 rounded-3xl border border-border-main bg-bg-darker px-5 py-4">
+      <div className="mb-9 flex items-center justify-between gap-4 rounded-3xl border border-main bg-darker px-5 py-4">
         <div className="flex flex-col gap-2">
           <span className="body-4 text-font-2">{t("tokenCharge.myNote")}</span>
           <div className="title-1 flex items-center gap-2">
@@ -59,7 +59,7 @@ const TokenChargeContents = () => {
 
         <Link
           href="/usage-history"
-          className="body-4 shrink-0 rounded-2xl bg-border-main px-4 py-2 text-white transition-colors hover:bg-btn-hover"
+          className="body-4 shrink-0 rounded-2xl bg-main px-4 py-2 text-white transition-colors hover:bg-btn-hover"
         >
           {t("tokenCharge.viewUsageHistory")}
         </Link>
@@ -73,7 +73,7 @@ const TokenChargeContents = () => {
             <li
               key={product.id}
               className={cn(
-                "relative cursor-pointer rounded-2xl border border-border-main px-5 py-4 hover:bg-btn-hover",
+                "relative cursor-pointer rounded-2xl border border-main px-5 py-4 hover:bg-btn-hover",
                 product.badges && "pt-0",
               )}
             >

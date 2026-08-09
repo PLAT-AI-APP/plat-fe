@@ -167,8 +167,8 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
   };
 
   return (
-    <section className="flex h-[919px] w-[693px] shrink-0 flex-col gap-[66px] rounded-3xl bg-bg-darker p-4">
-      <header className="flex h-12 shrink-0 items-center justify-between rounded-2xl bg-bg-darkest px-4 py-3">
+    <section className="flex h-[919px] w-[693px] shrink-0 flex-col gap-[66px] rounded-3xl bg-darker p-4">
+      <header className="flex h-12 shrink-0 items-center justify-between rounded-2xl bg-darkest px-4 py-3">
         <strong className="title-3 truncate text-font-1">
           {scenarioName ||
             t("scenarioFallback", { index: activeScenarioIndex + 1 })}
@@ -216,7 +216,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
 
       <form
         onSubmit={handleSubmit}
-        className="flex w-full shrink-0 flex-col gap-4 rounded-3xl border border-bg-dark bg-bg-darkest px-4 pb-3 pt-4"
+        className="flex w-full shrink-0 flex-col gap-4 rounded-3xl border border-dark bg-darkest px-4 pb-3 pt-4"
       >
         <textarea
           rows={1}
@@ -233,7 +233,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
               type="button"
               onClick={() => handleCurrentMode("action")}
               className={cn(
-                "body-4 flex h-8 items-center justify-center gap-1.5 rounded-[100px] border border-border-main bg-bg-dark py-1.5 pl-2.5 pr-3 text-font-2",
+                "body-4 flex h-8 items-center justify-center gap-1.5 rounded-[100px] border border-main bg-dark py-1.5 pl-2.5 pr-3 text-font-2",
                 currentMode === "action" && "border-brand text-brand",
               )}
             >
@@ -245,7 +245,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
               type="button"
               onClick={() => setCurrentMode("chat")}
               className={cn(
-                "body-4 flex h-8 items-center justify-center gap-1.5 rounded-[100px] border border-border-main bg-bg-dark py-1.5 pl-2.5 pr-3 text-font-2",
+                "body-4 flex h-8 items-center justify-center gap-1.5 rounded-[100px] border border-main bg-dark py-1.5 pl-2.5 pr-3 text-font-2",
                 currentMode === "chat" && "border-brand text-brand",
               )}
             >
@@ -267,7 +267,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
               type="button"
               onClick={() => setCurrentMode("userChat")}
               className={cn(
-                "body-4 flex h-8 items-center justify-center gap-1.5 rounded-[100px] border border-border-main bg-bg-dark py-1.5 pl-2.5 pr-3 text-font-2",
+                "body-4 flex h-8 items-center justify-center gap-1.5 rounded-[100px] border border-main bg-dark py-1.5 pl-2.5 pr-3 text-font-2",
                 currentMode === "userChat" && "border-brand text-brand",
               )}
             >

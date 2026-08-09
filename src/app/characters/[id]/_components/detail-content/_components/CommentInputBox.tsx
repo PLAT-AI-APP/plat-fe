@@ -44,7 +44,7 @@ const CommentInputBox = () => {
           type="button"
           disabled={!isLoggedIn}
           className={cn(
-            "body-4 rounded-xl bg-border-main px-4 py-1.5",
+            "body-4 rounded-xl bg-main px-4 py-1.5",
             isLoggedIn ? "text-font-1" : "text-font-disabled",
           )}
         >

@@ -28,7 +28,7 @@ const AssetGuideVisual = ({ type }: { type: (typeof GUIDE_ITEMS)[number]["type"]
   if (type === "buttons") {
     return (
       <div className="flex size-full items-center justify-center gap-2">
-        <span className="flex size-7 items-center justify-center rounded-full bg-bg-darkest text-font-2">
+        <span className="flex size-7 items-center justify-center rounded-full bg-darkest text-font-2">
           <CopyFill className="size-4" />
         </span>
         <span className="flex size-7 items-center justify-center rounded-full text-font-2">
@@ -65,7 +65,7 @@ const AssetGuidePanel = () => {
   if (!isVisible) return null;
 
   return (
-    <aside className="mt-9 flex w-full flex-col rounded-3xl bg-bg-darkest px-4 py-5">
+    <aside className="mt-9 flex w-full flex-col rounded-3xl bg-darkest px-4 py-5">
       <header className="flex items-start justify-between gap-4">
         <div className="min-w-0">
           <h3 className="title-3 text-font-1">{t("guidePanelTitle")}</h3>

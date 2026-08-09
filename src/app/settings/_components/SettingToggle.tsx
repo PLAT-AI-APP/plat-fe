@@ -17,7 +17,7 @@ const SettingToggle = ({ checked, label, onChange }: SettingToggleProps) => {
       onClick={() => onChange(!checked)}
       className={cn(
         "relative h-8.5 w-16.5 rounded-4xl transition-colors",
-        checked ? "bg-brand/20" : "bg-bg-darkest",
+        checked ? "bg-brand/20" : "bg-darkest",
       )}
     >
       <span

@@ -73,7 +73,7 @@ export const SearchBar = () => {
             id="search-input"
             type="text"
             value={searchValue}
-            className="body-4 h-10 w-full cursor-pointer rounded-xl border border-border-main px-4 pl-10 transition-all placeholder:body-4 placeholder:text-font-disabled focus:cursor-text focus:border-font-1 focus:outline-none"
+            className="body-4 h-10 w-full cursor-pointer rounded-xl border border-main px-4 pl-10 transition-all placeholder:body-4 placeholder:text-font-disabled focus:cursor-text focus:border-font-1 focus:outline-none"
             placeholder={t("searchBar.placeholder")}
             onChange={(event) => setSearchValue(event.target.value)}
             onFocus={() => setIsActive(true)}
@@ -117,7 +117,7 @@ export const SearchBar = () => {
                   <li
                     key={keyword}
                     className={cn(
-                      "body-4 flex cursor-pointer items-center justify-between gap-2 rounded-[100px] border border-border-main py-1.5 pr-2 pl-3 transition-colors",
+                      "body-4 flex cursor-pointer items-center justify-between gap-2 rounded-[100px] border border-main py-1.5 pr-2 pl-3 transition-colors",
                       "[&:not(:has(.close-btn:hover))]:hover:bg-btn-hover",
                     )}
                   >

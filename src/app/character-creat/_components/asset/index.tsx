@@ -101,7 +101,7 @@ const Asset = ({ assetFieldArray }: AssetProps) => {
         <button
           type="button"
           onClick={addAsset}
-          className="body-4 mt-2 flex h-[45px] items-center justify-center gap-2 rounded-xl bg-bg-darkest text-font-2 hover:bg-card"
+          className="body-4 mt-2 flex h-[45px] items-center justify-center gap-2 rounded-xl bg-darkest text-font-2 hover:bg-card"
         >
           <Plus className="size-4" />
           {t("add")}

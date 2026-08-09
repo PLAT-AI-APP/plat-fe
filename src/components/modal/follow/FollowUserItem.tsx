@@ -25,7 +25,7 @@ const FollowUserItem = ({
   const commonT = useTranslations("modalUi.common");
 
   return (
-    <li className="flex w-full items-center gap-3 rounded-2xl bg-bg-dark p-3 transition-none hover:bg-btn-hover">
+    <li className="flex w-full items-center gap-3 rounded-2xl bg-dark p-3 transition-none hover:bg-btn-hover">
       <div className="flex min-w-0 flex-1 items-center gap-3">
         <Image
           src={user.profileImage || "/p1.png"}
@@ -49,7 +49,7 @@ const FollowUserItem = ({
         disabled={isPending}
         className={cn(
           "title-6 flex min-w-[96px] shrink-0 items-center justify-center whitespace-nowrap rounded-[100px] px-4 py-1 text-left transition-none",
-          isFollowing ? "bg-border-main" : "bg-font-1 text-bg-dark",
+          isFollowing ? "bg-main" : "bg-font-1 text-dark",
           isPending && "cursor-wait opacity-70",
         )}
       >

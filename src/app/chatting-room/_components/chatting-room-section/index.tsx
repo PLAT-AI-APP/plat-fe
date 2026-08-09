@@ -80,7 +80,7 @@ const ChattingRoomSection = () => {
   }, []);
 
   return (
-    <section className="flex h-full min-h-0 flex-1 justify-center bg-bg-dark pt-2">
+    <section className="flex h-full min-h-0 flex-1 justify-center bg-dark pt-2">
       <div className="flex h-full w-full max-w-[867px] flex-col">
         <div
           onScroll={onScroll}
@@ -107,7 +107,7 @@ const ChattingRoomSection = () => {
           />
         </div>
 
-        <div className="shrink-0 bg-bg-dark py-4">
+        <div className="shrink-0 bg-dark py-4">
           <ChatForm onSendMessage={handleSendMessage} />
         </div>
       </div>

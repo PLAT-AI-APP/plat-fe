@@ -35,7 +35,7 @@ const DetailTabs = ({
   const t = useTranslations("characterDetail");
 
   return (
-    <nav className="flex w-full gap-1 border-b border-border-main bg-bg-dark">
+    <nav className="flex w-full gap-1 border-b border-main bg-dark">
       {tabs.map((tab) => {
         const isActive = currentTab === tab.id;
 

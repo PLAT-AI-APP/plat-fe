@@ -73,7 +73,7 @@ const Agreed = () => {
         <span className="text-font-1 body-2">약관 전체 동의</span>
       </article>
 
-      <hr className="border-border-main" />
+      <hr className="border-main" />
 
       <ul id="agreement-list" className="flex flex-col gap-4">
         {AGREEMENT_ITEMS.map(({ id, title, link }) => {

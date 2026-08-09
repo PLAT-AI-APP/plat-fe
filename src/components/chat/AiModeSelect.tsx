@@ -175,7 +175,7 @@ const AiModelSelect = ({ currentAi, handleCurrentAi }: AiModelSelectProps) => {
         id="ai-model-selector-trigger"
         onClick={() => setIsAiModelSelect((prev) => !prev)}
         ref={triggerRef}
-        className="flex h-[34px] min-w-[108px] cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-border-main bg-[#171D28]/50 py-[5px] pl-2 pr-3 text-font-1 transition-colors hover:bg-btn-hover"
+        className="flex h-[34px] min-w-[108px] cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-main bg-[#171D28]/50 py-[5px] pl-2 pr-3 text-font-1 transition-colors hover:bg-btn-hover"
       >
         <Image
           src={currentAi.icon}
@@ -191,7 +191,7 @@ const AiModelSelect = ({ currentAi, handleCurrentAi }: AiModelSelectProps) => {
         <ModalLayout
           onClose={() => setIsAiModelSelect(false)}
           triggerRef={triggerRef}
-          className="right-0 top-full h-[500px] w-[360px] translate-y-2.5 overflow-hidden rounded-[24px] border-border-main bg-bg-dark px-2 py-3"
+          className="right-0 top-full h-[500px] w-[360px] translate-y-2.5 overflow-hidden rounded-[24px] border-main bg-dark px-2 py-3"
         >
           <ul
             id="ai-model-list"

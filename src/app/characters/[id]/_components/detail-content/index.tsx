@@ -180,7 +180,7 @@ const CharacterDetailContent = ({
         />
 
         <main className="flex min-w-0 flex-col">
-          <div className="sticky top-0 z-[1] bg-bg-dark">
+          <div className="sticky top-0 z-[1] bg-dark">
             <DetailTabs
               commentsCount={character.comments.length}
               currentTab={currentTab}

@@ -80,7 +80,7 @@ const MemoryItem = ({
 
       {isEditing ? (
         <>
-          <div className="flex w-full rounded-lg border border-border-main bg-bg-darkest px-2 py-3">
+          <div className="flex w-full rounded-lg border border-main bg-darkest px-2 py-3">
             <textarea
               value={draft}
               onChange={(event) => onChangeDraft(event.target.value)}
@@ -92,14 +92,14 @@ const MemoryItem = ({
             <button
               type="button"
               onClick={onCancelEdit}
-              className="body-6 rounded border border-border-main bg-btn-hover px-3 py-1 text-font-1 transition-colors hover:bg-card-selected"
+              className="body-6 rounded border border-main bg-btn-hover px-3 py-1 text-font-1 transition-colors hover:bg-card-selected"
             >
               {t("memoryCancelButton")}
             </button>
             <button
               type="button"
               onClick={onSave}
-              className="body-6 rounded border border-border-main bg-btn-hover px-3 py-1 text-font-1 transition-colors hover:bg-card-selected"
+              className="body-6 rounded border border-main bg-btn-hover px-3 py-1 text-font-1 transition-colors hover:bg-card-selected"
             >
               {t("memorySaveButton")}
             </button>

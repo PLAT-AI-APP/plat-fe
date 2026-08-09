@@ -58,10 +58,11 @@ input:-webkit-autofill:active {
   --color-font-error: var(--font-error);
   --color-font-disabled: var(--font-3-disabled);
   --color-font-4: var(--font-4);
-  --color-border-main: var(--border);
-  --color-bg-dark: var(--bg-dark);
-  --color-bg-darker: var(--bg-darker);
-  --color-bg-darkest: var(--bg-darkest);
+  /* 유틸리티 접두사(bg-/border-)가 이름에 중복되지 않도록 접두사를 뺀 이름 사용 */
+  --color-main: var(--border);
+  --color-dark: var(--bg-dark);
+  --color-darker: var(--bg-darker);
+  --color-darkest: var(--bg-darkest);
   --color-card: var(--bg-card);
   --color-card-hover: var(--bg-card-hover);
   --color-card-selected: var(--bg-card-selected);

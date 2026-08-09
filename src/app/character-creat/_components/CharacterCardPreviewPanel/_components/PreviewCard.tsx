@@ -38,7 +38,7 @@ const PreviewCard = ({
         className={
           isSmall
             ? "mt-2 flex w-[187px] flex-col items-start gap-0.5"
-            : "flex w-[227px] flex-col items-start gap-0.5 rounded-b-2xl bg-bg-darkest px-4 py-5"
+            : "flex w-[227px] flex-col items-start gap-0.5 rounded-b-2xl bg-darkest px-4 py-5"
         }
       >
         <strong className="title-3 max-w-full truncate text-font-0">

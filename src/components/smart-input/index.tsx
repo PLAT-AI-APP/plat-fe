@@ -152,8 +152,8 @@ const SmartInput = forwardRef<
           {isTextarea && (
             <div
               className={cn(
-                "relative flex rounded-xl bg-bg-darkest px-4 pb-7.25 pt-3",
-                isBorder && "border border-border-main",
+                "relative flex rounded-xl bg-darkest px-4 pb-7.25 pt-3",
+                isBorder && "border border-main",
                 isFocused && "border-brand-dark bg-brand-opacity-3",
                 hasError && "border-font-accents",
                 isFocused && hasError && "border-brand-dark",
@@ -195,7 +195,7 @@ const SmartInput = forwardRef<
               style={{ paddingLeft: `${paddingLeft}px` }}
               type={inputType}
               className={cn(
-                "w-full rounded-xl border border-border-main bg-bg-darkest px-4 py-3 outline-none placeholder:text-font-disabled",
+                "w-full rounded-xl border border-main bg-darkest px-4 py-3 outline-none placeholder:text-font-disabled",
                 placeholderClassName,
                 rightElement && "pr-11",
                 inputClassName,
@@ -218,7 +218,7 @@ const SmartInput = forwardRef<
               onClick={toggleIsOpen}
               style={{ paddingLeft: `${paddingLeft}px` }}
               className={cn(
-                "relative flex cursor-pointer items-center justify-between rounded-xl border border-border-main bg-bg-darkest px-4 py-3 body-4",
+                "relative flex cursor-pointer items-center justify-between rounded-xl border border-main bg-darkest px-4 py-3 body-4",
                 hasError && "border-font-accents",
                 inputBoxClassName,
               )}

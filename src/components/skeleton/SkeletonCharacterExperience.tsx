@@ -4,7 +4,7 @@ const SkeletonCharacterExperience = () => {
   return (
     <div className="w-300 inline-flex justify-start items-center">
       <div className="w-[380px] h-[380px] bg-card-hover rounded-tl-2xl rounded-bl-2xl" />
-      <div className="flex-1 h-[380px] pl-9 pr-4 py-14 bg-bg-darkest rounded-tr-2xl rounded-br-2xl flex justify-start items-center gap-5">
+      <div className="flex-1 h-[380px] pl-9 pr-4 py-14 bg-darkest rounded-tr-2xl rounded-br-2xl flex justify-start items-center gap-5">
         <div className="size- flex justify-start items-start gap-5">
           <div className="size-14 bg-card-hover rounded-full" />
           <div className="size- inline-flex flex-col justify-start items-start gap-11">

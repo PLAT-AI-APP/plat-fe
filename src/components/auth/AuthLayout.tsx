@@ -5,7 +5,7 @@ interface LoginLayoutProps {
 }
 const AuthLayout = ({ children }: LoginLayoutProps) => {
   return (
-    <article className="relative flex min-h-[calc(100vh-60px)] w-full items-center justify-center bg-bg-dark">
+    <article className="relative flex min-h-[calc(100vh-60px)] w-full items-center justify-center bg-dark">
       {children}
     </article>
   );

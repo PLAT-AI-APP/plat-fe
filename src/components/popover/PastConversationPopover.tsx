@@ -46,7 +46,7 @@ const PastConversationPopover = ({
     <PopoverLayout
       onClose={onClose}
       triggerRef={triggerRef}
-      className="right-0 top-[calc(100%+8px)] w-[102px] min-w-0 rounded-xl border-border-main bg-bg-dark px-2 py-3 shadow-[0_10px_40px_0_rgba(0,0,0,0.5)]"
+      className="right-0 top-[calc(100%+8px)] w-[102px] min-w-0 rounded-xl border-main bg-dark px-2 py-3 shadow-[0_10px_40px_0_rgba(0,0,0,0.5)]"
     >
       <menu className="flex flex-col gap-1">
         {pastConversationActions.map(({ icon, label, onClick, textClassName }) => (

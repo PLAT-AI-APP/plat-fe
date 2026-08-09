@@ -86,7 +86,7 @@ const Sidebar = ({ isFolded = false, onFoldToggle }: SidebarProps) => {
       animate={{ width: sidebarWidth }}
       style={{ width: sidebarWidth }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      className="sticky top-0 flex h-full flex-col gap-2 overflow-hidden bg-bg-dark pt-4 pr-2 pl-4"
+      className="sticky top-0 flex h-full flex-col gap-2 overflow-hidden bg-dark pt-4 pr-2 pl-4"
     >
       <nav
         id="sidebar-navigation"
@@ -176,7 +176,7 @@ const Sidebar = ({ isFolded = false, onFoldToggle }: SidebarProps) => {
           })}
         </ul>
 
-        <hr className="my-4 text-border-main" />
+        <hr className="my-4 text-main" />
 
         <div className="flex flex-col gap-3">
           <AnimatePresence>

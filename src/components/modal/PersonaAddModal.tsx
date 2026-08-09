@@ -84,7 +84,7 @@ const PersonaAddModal = ({
     <ModalLayout
       hasBackground
       onClose={onClose}
-      className="top-1/2 left-1/2 h-fit w-screen max-w-125 -translate-x-1/2 -translate-y-1/2 rounded-3xl border border-border-main bg-bg-dark p-5"
+      className="top-1/2 left-1/2 h-fit w-screen max-w-125 -translate-x-1/2 -translate-y-1/2 rounded-3xl border border-main bg-dark p-5"
     >
       <header className="pb-6">
         <div className="flex items-center justify-between">

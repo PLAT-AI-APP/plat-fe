@@ -76,7 +76,7 @@ const ChatForm = ({ onSendMessage }: ChatFormProps) => {
     <form className="shrink-0" onSubmit={handleSubmit}>
       <fieldset
         id="chat-input-container"
-        className="flex items-end gap-3 rounded-[28px] border border-bg-dark bg-bg-darker px-4 py-3"
+        className="flex items-end gap-3 rounded-[28px] border border-dark bg-darker px-4 py-3"
       >
         <legend className="sr-only">{t("chatUI.messageForm")}</legend>
 
@@ -94,7 +94,7 @@ const ChatForm = ({ onSendMessage }: ChatFormProps) => {
           <button
             type="button"
             onClick={handleSituationInsert}
-            className="body-4 flex h-8 items-center justify-center gap-1.5 rounded-[100px] border border-border-main bg-[#171D28]/50 py-1.5 pl-2.5 pr-3 text-font-2 transition-colors hover:bg-btn-hover"
+            className="body-4 flex h-8 items-center justify-center gap-1.5 rounded-[100px] border border-main bg-[#171D28]/50 py-1.5 pl-2.5 pr-3 text-font-2 transition-colors hover:bg-btn-hover"
           >
             <Asterisk className="size-4" />
             {t("chatUI.situation")}

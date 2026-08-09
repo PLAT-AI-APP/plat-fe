@@ -25,7 +25,7 @@ export const ScenarioSelect = ({
       ref={triggerRef}
       type="button"
       onClick={toggle}
-      className="relative flex justify-between px-4 py-2.5 bg-card hover:bg-card-hover border border-border-main rounded-xl w-full text-left"
+      className="relative flex justify-between px-4 py-2.5 bg-card hover:bg-card-hover border border-main rounded-xl w-full text-left"
     >
       <span className="title-5 text-font-1">{currentScenario.name}</span>
       {isOpen ? (

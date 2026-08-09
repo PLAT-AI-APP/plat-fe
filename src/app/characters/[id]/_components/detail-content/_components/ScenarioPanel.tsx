@@ -71,13 +71,13 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
         )}
       </header>
 
-      <div className="flex flex-col gap-5 rounded-2xl bg-bg-darkest px-5 py-7">
+      <div className="flex flex-col gap-5 rounded-2xl bg-darkest px-5 py-7">
         <div className="relative">
           <button
             ref={scenarioSelectTriggerRef}
             type="button"
             onClick={() => setIsScenarioPopoverOpen((prev) => !prev)}
-            className="title-5 flex h-11 w-full items-center justify-between rounded-xl border border-border-main bg-card px-4 py-2.5 text-font-1"
+            className="title-5 flex h-11 w-full items-center justify-between rounded-xl border border-main bg-card px-4 py-2.5 text-font-1"
           >
             {selectedScenario.name}
             <ArrowDown
@@ -155,7 +155,7 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
           <button
             type="button"
             onClick={() => setIsExpanded((prev) => !prev)}
-            className="body-4 flex w-full items-center justify-center gap-1 rounded-xl border border-border-main bg-bg-darkest py-3 text-font-2 transition-colors hover:bg-bg-dark hover:text-font-1"
+            className="body-4 flex w-full items-center justify-center gap-1 rounded-xl border border-main bg-darkest py-3 text-font-2 transition-colors hover:bg-dark hover:text-font-1"
           >
             {isExpanded ? t("collapse") : t("expand")}
             <ArrowDown

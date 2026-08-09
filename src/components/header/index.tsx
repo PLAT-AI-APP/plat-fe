@@ -31,7 +31,7 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
   return (
     <header
       id="main-header"
-      className="h-15 flex items-center justify-between px-5 sticky top-0 bg-bg-dark z-20"
+      className="h-15 flex items-center justify-between px-5 sticky top-0 bg-dark z-20"
     >
       {/* 왼쪽 영역: 사이드바 토글 및 로고 */}
       <div id="header-left-section" className="flex gap-3.75 items-center">

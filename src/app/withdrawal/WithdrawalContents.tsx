@@ -63,7 +63,7 @@ const WithdrawalContents = () => {
   };
 
   return (
-    <section className="flex min-h-full w-full items-center justify-center bg-bg-dark px-5 py-16">
+    <section className="flex min-h-full w-full items-center justify-center bg-dark px-5 py-16">
       <div className="flex w-full max-w-148 flex-col gap-18">
         <h1 className="heading-2 text-font-1">
           {t("withdrawalPage.title")}
@@ -81,7 +81,7 @@ const WithdrawalContents = () => {
             </header>
 
             <div className="flex w-full flex-col gap-1">
-              <div className="rounded-2xl bg-bg-darkest px-4 py-6">
+              <div className="rounded-2xl bg-darkest px-4 py-6">
                 <ul className="body-4 list-disc space-y-0 pl-5 text-font-disabled">
                   {notices.map((notice) => (
                     <li key={notice}>{notice}</li>

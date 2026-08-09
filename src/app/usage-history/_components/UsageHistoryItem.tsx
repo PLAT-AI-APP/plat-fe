@@ -40,7 +40,7 @@ const UsageHistoryItem = ({ item }: { item: UsageHistoryItemType }) => {
     <li
       className={cn(
         "w-full cursor-pointer overflow-hidden rounded-2xl px-5 py-3 transition-colors",
-        isOpen ? "bg-btn-hover" : "bg-bg-dark hover:bg-btn-hover",
+        isOpen ? "bg-btn-hover" : "bg-dark hover:bg-btn-hover",
       )}
       onClick={() => setIsOpen((prev) => !prev)}
     >
@@ -90,7 +90,7 @@ const UsageHistoryItem = ({ item }: { item: UsageHistoryItemType }) => {
             transition={{ duration: 0.2, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <div className="mt-3 flex flex-col gap-1 border-t border-border-main pt-3 body-6 text-font-2">
+            <div className="mt-3 flex flex-col gap-1 border-t border-main pt-3 body-6 text-font-2">
               <p>상세설명: {getLedgerDetailText(item)}</p>
               <p className="flex items-end gap-1">
                 <span className="truncate">거래번호: {item.referenceId}</span>

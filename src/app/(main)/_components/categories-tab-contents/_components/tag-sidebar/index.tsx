@@ -330,7 +330,7 @@ const TagSidebar = ({
   };
 
   return (
-    <aside className="sticky top-[0px] h-[calc(100vh-60px)] w-[300px] shrink-0 overflow-y-auto bg-bg-dark no-scrollbar">
+    <aside className="sticky top-[0px] h-[calc(100vh-60px)] w-[300px] shrink-0 overflow-y-auto bg-dark no-scrollbar">
       {/* 검색 영역: 입력값은 폴더 태그 목록을 클라이언트에서 즉시 필터링합니다. */}
       <div className="px-5 py-4">
         <label className="relative block">
@@ -339,13 +339,13 @@ const TagSidebar = ({
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder={t("searchPlaceholder")}
-            className="h-[43px] w-full rounded-xl border border-border-main bg-bg-darkest pl-[38px] pr-3 body-5 text-font-1 outline-none transition-colors placeholder:text-font-2 focus:border-font-disabled"
+            className="h-[43px] w-full rounded-xl border border-main bg-darkest pl-[38px] pr-3 body-5 text-font-1 outline-none transition-colors placeholder:text-font-2 focus:border-font-disabled"
           />
         </label>
       </div>
 
       {/* 선택 태그 영역: 현재 선택된 태그를 모아 보여주고 개별/전체 해제가 가능합니다. */}
-      <section className="border-y border-border-main px-5 pb-8 pt-6">
+      <section className="border-y border-main px-5 pb-8 pt-6">
         <header className="mb-3 flex h-[21px] items-center justify-between">
           <h2 className="title-6 text-font-2">{t("selectedTags")}</h2>
           <button
@@ -386,7 +386,7 @@ const TagSidebar = ({
                   key={item.title}
                   type="button"
                   onClick={() => selectRecommendation(item.tags)}
-                  className="group flex w-full items-center justify-between rounded-xl bg-bg-darkest p-3 text-left transition-colors hover:bg-brand/10"
+                  className="group flex w-full items-center justify-between rounded-xl bg-darkest p-3 text-left transition-colors hover:bg-brand/10"
                 >
                   <div className="min-w-0">
                     <div className="flex items-center gap-1">
@@ -405,7 +405,7 @@ const TagSidebar = ({
                   {/* <Check
                     className={cn(
                       "size-4 shrink-0 transition-colors",
-                      isSelected ? "text-brand" : "text-border-main",
+                      isSelected ? "text-brand" : "text-main",
                     )}
                   /> */}
                 </button>

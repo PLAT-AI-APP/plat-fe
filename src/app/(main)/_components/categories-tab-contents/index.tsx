@@ -62,7 +62,7 @@ const CategoriesTabContents = () => {
 
   return (
     <>
-      <article className="flex flex-col gap-18 w-full mt-7 bg-bg-darker">
+      <article className="flex flex-col gap-18 w-full mt-7 bg-darker">
         {/* 검색결과 */}
         <div className="flex-1 flex flex-col gap-7 justify-start">
           <header className="flex items-center justify-between heading-3R">

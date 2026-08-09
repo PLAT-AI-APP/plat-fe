@@ -24,7 +24,7 @@ const ViewToggle = ({ viewMode }: ViewToggleProps) => {
     <button
       id="view-mode-toggle"
       onClick={toggleViewMode}
-      className="relative flex h-8.5 w-16.5 cursor-pointer items-center overflow-hidden rounded-full border border-border-main bg-bg-darkest p-1"
+      className="relative flex h-8.5 w-16.5 cursor-pointer items-center overflow-hidden rounded-full border border-main bg-darkest p-1"
       aria-label={viewMode === "list" ? t("switchToGrid") : t("switchToList")}
     >
       <motion.div

@@ -3,7 +3,7 @@ import { ChatBubble, NarrativeBlock, ActionFooter } from "./SubComponents";
 
 const ChatPreview = () => {
   return (
-    <section className="relative pr-4 flex-1 h-full min-w-0 bg-bg-darker rounded-tr-2xl rounded-br-2xl flex flex-col overflow-hidden">
+    <section className="relative pr-4 flex-1 h-full min-w-0 bg-darker rounded-tr-2xl rounded-br-2xl flex flex-col overflow-hidden">
       <div
         id="preview-chat-container"
         className="w-full h-full p-9 inline-flex flex-col justify-start items-start gap-6"

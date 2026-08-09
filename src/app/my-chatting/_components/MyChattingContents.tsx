@@ -47,7 +47,7 @@ const MyChattingContents = () => {
 
         <label
           htmlFor="my-chatting-search"
-          className="group flex h-10 w-[354px] items-center gap-2 rounded-xl border border-border-main bg-bg-dark px-4 py-2 transition-colors focus-within:bg-bg-darker"
+          className="group flex h-10 w-[354px] items-center gap-2 rounded-xl border border-main bg-dark px-4 py-2 transition-colors focus-within:bg-darker"
         >
           <Search className="size-[18px] shrink-0 text-font-disabled transition-colors group-focus-within:text-font-1" />
           <input

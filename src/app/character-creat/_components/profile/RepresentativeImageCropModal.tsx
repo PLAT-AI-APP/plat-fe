@@ -71,7 +71,7 @@ const RepresentativeImageCropModal = ({
     <ModalLayout
       onClose={onClose}
       hasBackground
-      className="w-screen max-w-[513px] rounded-[32px] border border-border-main bg-bg-dark px-6 pb-6 pt-8"
+      className="w-screen max-w-[513px] rounded-[32px] border border-main bg-dark px-6 pb-6 pt-8"
     >
       <div className="flex flex-col gap-8">
         <header className="flex items-start justify-between gap-4">

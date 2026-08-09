@@ -74,7 +74,7 @@ export function MainBannerCarousel() {
                   <h2 className="text-3xl md:text-4xl font-bold font-['Pretendard'] leading-tight">
                     {banner.title}
                   </h2>
-                  <p className="text-zinc-400 text-base md:text-lg font-normal font-['Pretendard'] leading-relaxed whitespace-pre-line">
+                  <p className="text-zinc-400 text-dark md:text-lg font-normal font-['Pretendard'] leading-relaxed whitespace-pre-line">
                     {banner.desc}
                   </p>
 
@@ -85,7 +85,7 @@ export function MainBannerCarousel() {
                         key={i}
                         className="px-2 py-1 bg-black/50 rounded-[5px] backdrop-blur-[2px]"
                       >
-                        <span className="text-orange-500 text-sm md:text-base font-normal font-['Pretendard']">
+                        <span className="text-orange-500 text-sm md:text-dark font-normal font-['Pretendard']">
                           {tag}
                         </span>
                       </li>
@@ -95,7 +95,7 @@ export function MainBannerCarousel() {
               </div>
 
               {/* 하단 그라데이션 어둡게 처리 */}
-              <div className="absolute inset-x-0 bottom-0 h-28 bg-linear-to-t from-neutral-900 to-transparent z-10" />
+              <div className="absolute inset-x-0 bottom-0 h-28 bg-mainar-to-t from-neutral-900 to-transparent z-10" />
             </div>
           ))}
         </div>

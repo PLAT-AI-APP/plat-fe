@@ -60,7 +60,7 @@ const NoticeList = ({ currentFilter }: NoticeListProps) => {
           <li
             key={noticeId}
             className={cn(
-              "hover:bg-btn-hover cursor-pointer border-b border-border-main",
+              "hover:bg-btn-hover cursor-pointer border-b border-main",
               isPinned && "bg-btn-hover",
             )}
           >

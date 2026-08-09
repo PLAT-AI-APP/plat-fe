@@ -35,7 +35,7 @@ const ChattingRoomHeader = ({
   };
 
   return (
-    <header className="sticky top-0 z-10 flex items-center justify-between border-b border-border-main bg-bg-dark p-4">
+    <header className="sticky top-0 z-10 flex items-center justify-between border-b border-main bg-dark p-4">
       <div className="flex min-w-0 items-center gap-1">
         <button
           type="button"

@@ -105,7 +105,7 @@ const AssetItem = ({ id, index, remove }: AssetItemProps) => {
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
-          className={`min-h-[110px] overflow-hidden rounded-xl border border-border-main bg-bg-darkest px-4 pb-4 pt-1 ${
+          className={`min-h-[110px] overflow-hidden rounded-xl border border-main bg-darkest px-4 pb-4 pt-1 ${
             isActive ? "h-auto" : "h-[110px]"
           }`}
         >

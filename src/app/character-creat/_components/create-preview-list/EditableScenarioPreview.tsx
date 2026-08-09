@@ -13,7 +13,7 @@ const EditableScenarioPreview = ({
       <textarea
         autoFocus
         rows={5}
-        className="body-4 min-h-[152px] w-full resize-none rounded-xl border border-border-main bg-bg-darker px-4 py-3 text-font-1 outline-none"
+        className="body-4 min-h-[152px] w-full resize-none rounded-xl border border-main bg-darker px-4 py-3 text-font-1 outline-none"
         value={value}
         onChange={(e) => onChange(e.target.value)}
       />

@@ -65,7 +65,7 @@ const ChattingMemoryView = ({ onBack }: ChattingMemoryViewProps) => {
   };
 
   return (
-    <div className="flex h-full flex-col gap-5 overflow-hidden bg-bg-dark p-5">
+    <div className="flex h-full flex-col gap-5 overflow-hidden bg-dark p-5">
       <button
         type="button"
         onClick={onBack}

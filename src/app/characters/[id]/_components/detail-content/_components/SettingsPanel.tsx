@@ -57,7 +57,7 @@ const ExpandableText = ({
           "relative overflow-hidden whitespace-pre-wrap body-4 leading-relaxed text-font-2",
           shouldShowMoreButton &&
             !isExpanded &&
-            "after:absolute after:inset-x-0 after:bottom-0 after:h-12 after:bg-linear-to-t after:from-bg-dark after:to-transparent",
+            "after:absolute after:inset-x-0 after:bottom-0 after:h-12 after:bg-mainar-to-t after:from-dark after:to-transparent",
         )}
       >
         {children}
@@ -66,7 +66,7 @@ const ExpandableText = ({
         <button
           type="button"
           onClick={() => setIsExpanded((prev) => !prev)}
-          className="body-4 flex h-11 w-full items-center justify-center gap-1 rounded-xl border border-border-main text-font-2 hover:bg-card"
+          className="body-4 flex h-11 w-full items-center justify-center gap-1 rounded-xl border border-main text-font-2 hover:bg-card"
         >
           {isExpanded ? t("collapse") : t("expand")}
           <ArrowDown className={cn("size-4", isExpanded && "rotate-180")} />
@@ -94,7 +94,7 @@ const SettingsPanel = ({
 
   return (
     <section className="flex flex-col gap-8 pb-0">
-      <div className="relative h-[332px] overflow-hidden rounded-2xl bg-bg-darkest">
+      <div className="relative h-[332px] overflow-hidden rounded-2xl bg-darkest">
         <AnimatePresence mode="wait">
           <motion.div
             key={currentImageKey}
@@ -124,7 +124,7 @@ const SettingsPanel = ({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.45, ease: "easeOut" }}
-                className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-bg-darkest/80"
+                className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-darkest/80"
               >
                 <p className="title-2 text-center text-font-1">
                   {t("moreImagesPrompt")}
@@ -132,7 +132,7 @@ const SettingsPanel = ({
                 <button
                   type="button"
                   onClick={onStartChat}
-                  className="title-3 rounded-xl border border-brand-dark bg-bg-darkest/40 px-4 py-2 text-brand backdrop-blur-md"
+                  className="title-3 rounded-xl border border-brand-dark bg-darkest/40 px-4 py-2 text-brand backdrop-blur-md"
                 >
                   {t("chatStart")}
                 </button>

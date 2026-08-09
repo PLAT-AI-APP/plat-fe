@@ -33,7 +33,7 @@ const SettingLanguageSelect = () => {
         type="button"
         aria-expanded={isOpen}
         onClick={() => setIsOpen((prev) => !prev)}
-        className="title-3 flex h-10 min-w-[140px] max-w-[220px] items-center justify-between gap-3 rounded-xl bg-bg-darkest px-4 py-2 text-font-1"
+        className="title-3 flex h-10 min-w-[140px] max-w-[220px] items-center justify-between gap-3 rounded-xl bg-darkest px-4 py-2 text-font-1"
       >
         <span className="truncate">{selectedLanguage.name}</span>
         <ArrowDown
@@ -47,7 +47,7 @@ const SettingLanguageSelect = () => {
       {isOpen && (
         <div
           ref={dropdownRef}
-          className="absolute right-0 top-12 z-20 flex min-w-full max-w-[260px] flex-col gap-1 rounded-xl bg-bg-darkest p-3 shadow-popover"
+          className="absolute right-0 top-12 z-20 flex min-w-full max-w-[260px] flex-col gap-1 rounded-xl bg-darkest p-3 shadow-popover"
         >
           {LANGUAGE_LIST.map((language) => {
             const isSelected = language.locale === locale;
@@ -58,8 +58,8 @@ const SettingLanguageSelect = () => {
                 type="button"
                 onClick={() => handleSelect(language.locale)}
                 className={cn(
-                  "body-2 flex h-8 w-full items-center justify-between rounded-lg px-3 py-1 text-font-1 transition-colors hover:bg-bg-dark",
-                  isSelected && "bg-bg-dark",
+                  "body-2 flex h-8 w-full items-center justify-between rounded-lg px-3 py-1 text-font-1 transition-colors hover:bg-dark",
+                  isSelected && "bg-dark",
                 )}
               >
                 {/* 언어 선택지는 현재 locale과 무관하게 각 언어의 고유 표기를 유지합니다. */}

@@ -55,7 +55,7 @@ const MyChattingMenuPopover = ({
     <PopoverLayout
       onClose={onClose}
       triggerRef={triggerRef}
-      className="right-0 top-[calc(100%+10px)] w-[150px] overflow-hidden rounded-xl border-border-main bg-bg-dark px-2 py-3 shadow-[0_10px_40px_rgba(0,0,0,0.5)]"
+      className="right-0 top-[calc(100%+10px)] w-[150px] overflow-hidden rounded-xl border-main bg-dark px-2 py-3 shadow-[0_10px_40px_rgba(0,0,0,0.5)]"
     >
       <nav
         id="chat-menu-nav"
