@@ -11,12 +11,14 @@ interface FollowUserItemProps {
     description: string;
   };
   isFollowing: boolean;
+  isPending?: boolean;
   onToggleFollow: (userId: string, isFollowing: boolean) => void;
 }
 
 const FollowUserItem = ({
   user,
   isFollowing,
+  isPending = false,
   onToggleFollow,
 }: FollowUserItemProps) => {
   const t = useTranslations("modalUi.follow");
@@ -44,9 +46,11 @@ const FollowUserItem = ({
       <button
         type="button"
         onClick={() => onToggleFollow(user.userId, isFollowing)}
+        disabled={isPending}
         className={cn(
           "title-6 flex min-w-[96px] shrink-0 items-center justify-center whitespace-nowrap rounded-[100px] px-4 py-1 text-left transition-none",
           isFollowing ? "bg-border-main" : "bg-font-1 text-bg-dark",
+          isPending && "cursor-wait opacity-70",
         )}
       >
         {isFollowing ? commonT("following") : commonT("follow")}

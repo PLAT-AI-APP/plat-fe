@@ -1,10 +1,14 @@
 "use client";
 
+import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { useUnFollowMutation } from "@/api/follow/deleteFollow";
+import { useFollowMutation } from "@/api/follow/postFollow";
 import ActiveButton from "@/components/ActiveButton";
 import { ChatFill, Gear } from "@/icons";
-import { formatStatCount } from "@/lib/utils";
+import { cn, formatStatCount } from "@/lib/utils";
 import { useUserStore } from "@/store/useUserStore";
 import { CharacterDetail } from "@/type/character";
 
@@ -20,8 +24,53 @@ const SidebarSummary = ({
   onStartChat,
 }: SidebarSummaryProps) => {
   const t = useTranslations("characterDetail");
+  const queryClient = useQueryClient();
   const userId = useUserStore((state) => state.user?.id);
   const isCreator = userId === character.creator.id;
+  const [optimisticIsFollowingCreator, setOptimisticIsFollowingCreator] =
+    useState<boolean | null>(null);
+  const { mutate: follow, isPending: isFollowMutating } = useFollowMutation();
+  const { mutate: unFollow, isPending: isUnFollowMutating } =
+    useUnFollowMutation();
+  const isFollowPending = isFollowMutating || isUnFollowMutating;
+  const isFollowingCreator =
+    optimisticIsFollowingCreator ?? character.creator.isFollowing;
+
+  const invalidateFollowQueries = () => {
+    queryClient.invalidateQueries({
+      queryKey: ["get-character-detail", character.characterId],
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["get-follow-count", character.creator.id],
+    });
+    queryClient.invalidateQueries({ queryKey: ["get-following-list"] });
+    queryClient.invalidateQueries({ queryKey: ["get-follower-list"] });
+  };
+
+  const handleCreatorFollowToggle = () => {
+    if (isFollowPending) return;
+
+    if (isFollowingCreator) {
+      setOptimisticIsFollowingCreator(false);
+      unFollow(
+        { userId: character.creator.id },
+        {
+          onSuccess: invalidateFollowQueries,
+          onError: () => setOptimisticIsFollowingCreator(true),
+        },
+      );
+      return;
+    }
+
+    setOptimisticIsFollowingCreator(true);
+    follow(
+      { userId: character.creator.id },
+      {
+        onSuccess: invalidateFollowQueries,
+        onError: () => setOptimisticIsFollowingCreator(false),
+      },
+    );
+  };
 
   return (
     <aside className="sticky top-0 flex w-[389px] shrink-0 flex-col gap-5 self-start">
@@ -126,12 +175,22 @@ const SidebarSummary = ({
                 </p>
               </div>
             </div>
-            <button
-              type="button"
-              className="title-6 rounded-full bg-border-main px-3 py-1 text-font-1"
-            >
-              {character.creator.isFollowing ? t("following") : t("follow")}
-            </button>
+            {!isCreator && (
+              <button
+                type="button"
+                onClick={handleCreatorFollowToggle}
+                disabled={isFollowPending}
+                className={cn(
+                  "title-6 rounded-full px-3 py-1 transition-colors",
+                  isFollowingCreator
+                    ? "bg-border-main text-font-1"
+                    : "bg-font-1 text-bg-dark",
+                  isFollowPending && "cursor-wait opacity-70",
+                )}
+              >
+                {isFollowingCreator ? t("following") : t("follow")}
+              </button>
+            )}
           </div>
 
           <div className="body-5 flex gap-4 text-font-2">

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useRef, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useUnFollowMutation } from "@/api/follow/deleteFollow";
 import { useFollowCountQuery } from "@/api/follow/getFollowCount";
@@ -54,15 +55,19 @@ const StatDivider = () => (
 
 const Header = ({ userId }: HeaderProps) => {
   const t = useTranslations();
+  const queryClient = useQueryClient();
   const { data: followCount } = useFollowCountQuery(userId);
   const { followerCount = 0, followingCount = 0 } = followCount ?? {};
   const { openModal } = useModalStore();
   const { user } = useUserStore();
-  const { mutate: follow } = useFollowMutation();
-  const { mutate: unFollow } = useUnFollowMutation();
+  const { mutate: follow, isPending: isFollowMutating } = useFollowMutation();
+  const { mutate: unFollow, isPending: isUnFollowMutating } =
+    useUnFollowMutation();
   const openDialog = useDialogStore((state) => state.openDialog);
   const closeDialog = useDialogStore((state) => state.closeDialog);
-  const [isFollowing, setIsFollowing] = useState(false);
+  const [optimisticIsFollowing, setOptimisticIsFollowing] = useState<
+    boolean | null
+  >(null);
   const [isActionPopoverOpen, setIsActionPopoverOpen] = useState(false);
   const actionTriggerRef = useRef<HTMLButtonElement>(null);
 
@@ -71,6 +76,14 @@ const Header = ({ userId }: HeaderProps) => {
   const nickname = user?.nickname || t("profile.defaultName");
   const bio = user?.bio || "";
   const chatCount = 0;
+  const isFollowPending = isFollowMutating || isUnFollowMutating;
+  const isFollowing = optimisticIsFollowing ?? false;
+
+  const invalidateFollowQueries = () => {
+    queryClient.invalidateQueries({ queryKey: ["get-follow-count", userId] });
+    queryClient.invalidateQueries({ queryKey: ["get-following-list"] });
+    queryClient.invalidateQueries({ queryKey: ["get-follower-list"] });
+  };
 
   const openFollowModal = (tab: "followers" | "following") => {
     // 팔로워/팔로잉 목록은 본인만 볼 수 있으므로 타인 프로필에서는 모달을 열지 않습니다.
@@ -91,14 +104,28 @@ const Header = ({ userId }: HeaderProps) => {
   };
 
   const handleFollowToggle = () => {
-    setIsFollowing((prev) => !prev);
+    if (isFollowPending) return;
 
     if (isFollowing) {
-      unFollow({ userId });
+      setOptimisticIsFollowing(false);
+      unFollow(
+        { userId },
+        {
+          onSuccess: invalidateFollowQueries,
+          onError: () => setOptimisticIsFollowing(true),
+        },
+      );
       return;
     }
 
-    follow({ userId });
+    setOptimisticIsFollowing(true);
+    follow(
+      { userId },
+      {
+        onSuccess: invalidateFollowQueries,
+        onError: () => setOptimisticIsFollowing(false),
+      },
+    );
   };
 
   const handleShareProfile = () => {
@@ -178,11 +205,13 @@ const Header = ({ userId }: HeaderProps) => {
             <button
               type="button"
               onClick={handleFollowToggle}
+              disabled={isFollowPending}
               className={cn(
                 "title-3 flex h-11 items-center justify-center rounded-[20px] px-4 py-2.5",
                 isFollowing
                   ? "bg-border-main text-font-1"
                   : "bg-font-1 text-bg-dark",
+                isFollowPending && "cursor-wait opacity-70",
               )}
             >
               {isFollowing ? t("profile.following") : t("profile.follow")}

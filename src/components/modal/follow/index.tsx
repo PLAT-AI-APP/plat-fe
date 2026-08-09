@@ -4,6 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import React, {
+  useCallback,
   useEffect,
   useLayoutEffect,
   useMemo,
@@ -40,17 +41,42 @@ const FollowModal = ({
   );
   const [activeTabs, setActiveTabs] = useState<FollowTab>(activeTab);
   const [followChangeIds, setFollowChangeIds] = useState<string[]>([]);
-  const { mutate: follow } = useFollowMutation();
-  const { mutate: unFollow } = useUnFollowMutation();
+  const { mutate: follow, isPending: isFollowMutating } = useFollowMutation();
+  const { mutate: unFollow, isPending: isUnFollowMutating } =
+    useUnFollowMutation();
   const displayNickname = nickname || t("fallbackNickname");
+  const isFollowPending = isFollowMutating || isUnFollowMutating;
+
+  const invalidateFollowQueries = useCallback(
+    (targetUserId?: string) => {
+      queryClient.invalidateQueries({ queryKey: ["get-following-list"] });
+      queryClient.invalidateQueries({ queryKey: ["get-follower-list"] });
+      queryClient.invalidateQueries({
+        queryKey: ["get-follow-count", userId],
+      });
+
+      if (!targetUserId) return;
+
+      queryClient.invalidateQueries({
+        queryKey: ["get-follow-count", targetUserId],
+      });
+    },
+    [queryClient, userId],
+  );
+
+  const toggleFollowChangeId = useCallback((targetUserId: string) => {
+    setFollowChangeIds((prev) =>
+      prev.includes(targetUserId)
+        ? prev.filter((id) => id !== targetUserId)
+        : [...prev, targetUserId],
+    );
+  }, []);
 
   useEffect(() => {
     return () => {
-      queryClient.invalidateQueries({ queryKey: ["get-following-list"] });
-      queryClient.invalidateQueries({ queryKey: ["get-follower-list"] });
-      queryClient.invalidateQueries({ queryKey: ["get-follow-count", userId] });
+      invalidateFollowQueries();
     };
-  }, [queryClient, userId]);
+  }, [invalidateFollowQueries]);
 
   const ulRef = useRef<HTMLUListElement>(null);
   useLayoutEffect(() => {
@@ -76,18 +102,32 @@ const FollowModal = ({
   });
 
   const handleToggleFollow = (targetUserId: string, isFollowing: boolean) => {
-    setFollowChangeIds((prev) =>
-      prev.includes(targetUserId)
-        ? prev.filter((id) => id !== targetUserId)
-        : [...prev, targetUserId],
-    );
+    if (isFollowPending) return;
+
+    toggleFollowChangeId(targetUserId);
+
+    const mutationOptions = {
+      onSuccess: () => invalidateFollowQueries(targetUserId),
+      onError: () => toggleFollowChangeId(targetUserId),
+    };
 
     if (isFollowing) {
-      unFollow({ userId: targetUserId });
+      unFollow({ userId: targetUserId }, mutationOptions);
       return;
     }
 
-    follow({ userId: targetUserId });
+    follow({ userId: targetUserId }, mutationOptions);
+  };
+
+  const handleFollowEmptyProfile = () => {
+    if (isFollowPending) return;
+
+    follow(
+      { userId },
+      {
+        onSuccess: () => invalidateFollowQueries(userId),
+      },
+    );
   };
 
   const moveWithModalClose = (href: string) => {
@@ -146,7 +186,7 @@ const FollowModal = ({
           nickname={displayNickname}
           onCreateCharacter={() => moveWithModalClose("/character-creat")}
           onExploreCharacter={() => moveWithModalClose("/")}
-          onFollow={() => follow({ userId })}
+          onFollow={handleFollowEmptyProfile}
         />
       ) : (
         <ul
@@ -155,14 +195,17 @@ const FollowModal = ({
         >
           {listData.map((user) => {
             const isToggled = followChangeIds.includes(user.userId);
-            const isFollowing =
-              activeTabs === "followers" ? isToggled : !isToggled;
+            const baseIsFollowing = activeTabs === "following";
+            const isFollowing = isToggled
+              ? !baseIsFollowing
+              : baseIsFollowing;
 
             return (
               <FollowUserItem
                 key={user.userId}
                 user={user}
                 isFollowing={isFollowing}
+                isPending={isFollowPending}
                 onToggleFollow={handleToggleFollow}
               />
             );
