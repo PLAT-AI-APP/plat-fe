@@ -69,7 +69,6 @@ export interface WithdrawalCompleteDialogProps {
 }
 
 export interface WithdrawalConfirmDialogProps {
-  isPending: boolean;
   onClose: () => void;
   onConfirm: () => void;
 }

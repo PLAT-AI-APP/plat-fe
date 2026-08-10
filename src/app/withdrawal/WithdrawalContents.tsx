@@ -21,8 +21,9 @@ const WithdrawalContents = () => {
   const clearUser = useUserStore((state) => state.clearUser);
   const clearBalance = useWalletStore((state) => state.clearBalance);
   const logout = useAuthStore((state) => state.logout);
-  const { isPending } = useDeleteUserMutation();
+  const { mutate: deleteUser, isPending } = useDeleteUserMutation();
   const openDialog = useDialogStore((state) => state.openDialog);
+  const closeDialog = useDialogStore((state) => state.closeDialog);
   const [isConfirmed, setIsConfirmed] = useState(false);
 
   const notices = [
@@ -37,8 +38,13 @@ const WithdrawalContents = () => {
   const canSubmit = isConfirmed && !isPending;
 
   const handleDeleteConfirm = () => {
-    // 탈퇴 API가 연결되면 이 분기에서 실제 요청을 호출하면 됩니다.
-    openCompleteDialog();
+    if (isPending) return;
+
+    deleteUser(undefined, {
+      onSuccess: openCompleteDialog,
+      // 실패 사유는 응답 인터셉터가 토스트로 안내하므로 확인 다이얼로그만 닫습니다.
+      onError: closeDialog,
+    });
   };
 
   const openCompleteDialog = () => {
@@ -49,7 +55,6 @@ const WithdrawalContents = () => {
 
   const openConfirmDialog = () => {
     openDialog("WITHDRAWAL_CONFIRM", {
-      isPending,
       onConfirm: handleDeleteConfirm,
     });
   };
