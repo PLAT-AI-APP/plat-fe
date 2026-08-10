@@ -19,10 +19,11 @@ const getHashtagList = async () => {
 };
 
 /** 해시태그 목록 조회 */
-export const useHashtagListQuery = () => {
+export const useHashtagListQuery = (enabled = true) => {
   return useQuery<GetHashtagListResponse, AppError>({
     queryKey: ["get-hashtag-list"],
     queryFn: getHashtagList,
     staleTime: 1000 * 60 * 5,
+    enabled,
   });
 };

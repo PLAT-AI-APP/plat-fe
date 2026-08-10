@@ -1,5 +1,6 @@
 "use client";
 
+import { useHashtagListQuery } from "@/api/hashtag/getHashtagList";
 import { Search } from "@/icons";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
@@ -297,21 +298,34 @@ const TagSidebar = ({
   onSelectedTagsChange,
 }: TagSidebarProps) => {
   const t = useTranslations("tagSidebar");
+  const { data: hashtagList } = useHashtagListQuery();
   // 검색어는 사이드바 내부 UI 상태로 관리합니다.
   // 선택 태그는 CategoriesTabContents에서 내려받아 결과 영역과 같은 기준으로 공유합니다.
   const [query, setQuery] = useState("");
+  const tagFolders = useMemo(() => {
+    const apiTags = hashtagList?.tags.map((tag) => tag.label) ?? [];
+
+    if (apiTags.length === 0) return TAG_FOLDERS;
+
+    return [
+      {
+        title: t.has("allTags") ? t("allTags") : "태그",
+        tags: apiTags,
+      },
+    ];
+  }, [hashtagList, t]);
 
   // 검색어가 있으면 각 폴더의 태그를 필터링하고, 결과가 없는 폴더는 숨깁니다.
   // 데이터 원본(TAG_FOLDERS)은 건드리지 않도록 map/filter 결과만 렌더링합니다.
   const filteredFolders = useMemo(() => {
     const trimmedQuery = query.trim();
-    if (!trimmedQuery) return TAG_FOLDERS;
+    if (!trimmedQuery) return tagFolders;
 
-    return TAG_FOLDERS.map((folder) => ({
+    return tagFolders.map((folder) => ({
       ...folder,
       tags: folder.tags.filter((tag) => tag.includes(trimmedQuery)),
     })).filter((folder) => folder.tags.length > 0);
-  }, [query]);
+  }, [query, tagFolders]);
 
   // 태그를 누를 때 선택/해제를 토글합니다.
   // 선택된 태그는 하단 "선택 태그" 영역에도 같은 상태로 표시됩니다.
@@ -417,7 +431,7 @@ const TagSidebar = ({
         {filteredFolders.map((folder) => (
           <TagFolder
             key={folder.title}
-            title={t(folder.title)}
+            title={t.has(folder.title) ? t(folder.title) : folder.title}
             tags={folder.tags}
             selectedTags={selectedTags}
             onTagToggle={toggleTag}

@@ -4,6 +4,7 @@ import React, { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
 import { ModalLayout } from "../ModalLayout";
+import { useHashtagListQuery } from "@/api/hashtag/getHashtagList";
 import { TAG_FOLDERS } from "@/app/(main)/_components/categories-tab-contents/_components/tag-sidebar";
 import { ArrowDown, ArrowRight, Close, Megaphone, Search } from "@/icons";
 import Tag from "@/icons/Tag";
@@ -24,6 +25,7 @@ const TAG_ID_OFFSET = 1;
 const TagAddModal = ({ onClose }: TagAddModalProps) => {
   const t = useTranslations("characterCreate.tagModal");
   const tagSidebarT = useTranslations("tagSidebar");
+  const { data: hashtagList } = useHashtagListQuery();
   const { control, setValue } = useFormContext<CharacterCreateFormValues>();
   const currentTagsWatch = useWatch({ control, name: "tagIds" });
   const [localSelectedNames, setLocalSelectedNames] = useState<TagOption[]>(() => {
@@ -40,6 +42,17 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
   const isSearchMode = Boolean(normalizedSearchKeyword);
 
   const tagFolderSections = useMemo<TagFolderSection[]>(() => {
+    const apiTags = hashtagList?.tags ?? [];
+
+    if (apiTags.length > 0) {
+      return [
+        {
+          title: tagSidebarT.has("allTags") ? tagSidebarT("allTags") : "태그",
+          tags: apiTags,
+        },
+      ];
+    }
+
     const tagIdByLabel = new Map(
       Array.from(new Set(TAG_FOLDERS.flatMap((folder) => folder.tags))).map(
         (label, index) => [label, index + TAG_ID_OFFSET] as const,
@@ -54,7 +67,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
         label,
       })),
     }));
-  }, []);
+  }, [hashtagList, tagSidebarT]);
 
   const hasTags = tagFolderSections.some((folder) => folder.tags.length > 0);
   const matchedTags = useMemo(() => {
@@ -210,7 +223,11 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
                   className="flex h-6 w-full items-center justify-between text-left"
                 >
                   <span className="body-4 flex min-w-0 items-center gap-1.5 text-font-2">
-                    <span className="truncate">{tagSidebarT(folder.title)}</span>
+                    <span className="truncate">
+                      {tagSidebarT.has(folder.title)
+                        ? tagSidebarT(folder.title)
+                        : folder.title}
+                    </span>
                     {!isOpen && selectedCount > 0 && (
                       <span className="shrink-0 text-brand-dark">
                         +{selectedCount}
