@@ -106,11 +106,10 @@ const MemoryItem = ({
           </div>
         </>
       ) : (
-        <>
-          <p className="body-5 line-clamp-[20] rounded-lg px-2 py-3 text-font-1">
-            {memory.content}
-          </p>
-        </>
+        // 패딩이 클램프된 요소에 있으면 잘린 다음 줄이 하단 여백에 비치므로 패딩은 바깥에 둡니다.
+        <div className="rounded-lg px-2 py-3">
+          <p className="body-5 line-clamp-[20] text-font-1">{memory.content}</p>
+        </div>
       )}
     </article>
   );
