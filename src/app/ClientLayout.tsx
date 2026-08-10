@@ -16,7 +16,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
 import { refreshAccessToken } from "@/api/auth/postRefresh";
-import axios from "axios";
+import { isAuthExpiredError } from "@/api";
 import {
   LOGOUT_REDIRECT_IN_PROGRESS_KEY,
   PENDING_SIGNUP_COMPLETE_DIALOG_KEY,
@@ -30,11 +30,6 @@ const HIDE_SIDEBAR_PATHS: string[] = [];
 
 // 헤더 없이 전용 상단 UI를 쓰는 경로
 const HIDE_HEADER_PATHS = ["/chatting-room"];
-
-// 진입 시 사이드바를 접어두는 경로
-const isAuthExpiredError = (error: unknown) =>
-  axios.isAxiosError(error) &&
-  (error.response?.status === 401 || error.response?.status === 403);
 
 /** 사이드바 바깥 화면 오버레이 전환 */
 const sidebarOverlayMotion = {

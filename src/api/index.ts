@@ -1,4 +1,6 @@
 import { useAuthStore } from "@/store/useAuthStore";
+import { useDialogStore } from "@/store/useDialogStore";
+import { useModalStore } from "@/store/useModalStore";
 import { showAppToast } from "@/lib/toast";
 import axios, {
   InternalAxiosRequestConfig,
@@ -21,6 +23,8 @@ export interface AppError {
   code: string;
   fields: Record<string, string>;
   message: string;
+  /** 인터셉터가 AxiosError를 가공한 뒤에도 상태 코드로 인증 만료를 판별하기 위해 보존합니다. */
+  status?: number;
 }
 
 const DEFAULT_API_ERROR_MESSAGE = "알 수 없는 에러가 발생했습니다.";
@@ -38,9 +42,66 @@ const BASE_CONFIG = {
   headers: { "Content-Type": "application/json" },
 };
 
-const isAuthExpiredError = (error: unknown) =>
-  axios.isAxiosError(error) &&
-  (error.response?.status === 401 || error.response?.status === 403);
+const isAuthExpiredStatus = (status?: number) =>
+  status === 401 || status === 403;
+
+/** 가공 전(AxiosError)·가공 후(AppError) 모두에서 인증 만료를 판별합니다. */
+export const isAuthExpiredError = (error: unknown) => {
+  if (axios.isAxiosError(error)) {
+    return isAuthExpiredStatus(error.response?.status);
+  }
+
+  if (typeof error === "object" && error !== null && "status" in error) {
+    return isAuthExpiredStatus((error as AppError).status);
+  }
+
+  return false;
+};
+
+/** 만료 응답이 여러 요청에서 동시에 와도 안내는 한 번만 노출합니다. */
+let isSessionExpiredHandled = false;
+
+/**
+ * 클라이언트는 로그인 상태인데 서버가 401을 준 경우의 공통 처리.
+ * 저장된 인증 상태를 비우고 다시 로그인하도록 안내합니다.
+ */
+const handleSessionExpired = () => {
+  const { isLoggedIn, logout } = useAuthStore.getState();
+
+  logout();
+
+  if (typeof window === "undefined" || isSessionExpiredHandled) return;
+
+  // 애초에 로그아웃 상태였다면 만료 안내가 아니라 일반 권한 에러이므로 건너뜁니다.
+  if (!isLoggedIn) return;
+
+  isSessionExpiredHandled = true;
+
+  const { clearModals, openModal } = useModalStore.getState();
+  clearModals();
+
+  useDialogStore.getState().openDialog("LOGIN_REQUIRED", {
+    label: "dialog.sessionExpired.title",
+    description: "dialog.sessionExpired.description",
+    confirmText: "dialog.loginRequired.confirm",
+    onConfirm: () => {
+      isSessionExpiredHandled = false;
+      openModal("LOGIN", { triggerRef: undefined });
+    },
+  });
+};
+
+/** 재로그인 이후 만료 안내를 다시 띄울 수 있도록 초기화합니다. */
+export const resetSessionExpiredNotice = () => {
+  isSessionExpiredHandled = false;
+};
+
+// 안내를 닫고 헤더에서 로그인한 경우에도 플래그가 남지 않도록 로그인 전환을 감시합니다.
+useAuthStore.subscribe((state, prevState) => {
+  if (!prevState.isLoggedIn && state.isLoggedIn) {
+    resetSessionExpiredNotice();
+  }
+});
 
 const showGlobalApiErrorToast = (message?: string) => {
   if (typeof window === "undefined") return;
@@ -132,10 +193,12 @@ const onResponseError = async (
   instance: AxiosInstance,
 ): Promise<AxiosResponse | never> => {
   const originalRequest = err.config;
-  const { logout, setAccessToken, setLoggedIn } = useAuthStore.getState();
+  const { setAccessToken, setLoggedIn } = useAuthStore.getState();
 
   // 현재 에러가 발생한 API의 URL 경로를 추출합니다.
   const requestUrl = originalRequest?.url || "";
+  const isAuthEndpoint =
+    requestUrl.includes("/auth/login") || requestUrl.includes("/auth/refresh");
 
   // [A] 토큰 갱신 로직 (401 에러 시)
   if (
@@ -152,13 +215,14 @@ const onResponseError = async (
       const newAccessToken = await refreshAccessToken();
 
       if (!newAccessToken) {
-        logout();
+        handleSessionExpired();
         return Promise.reject(err);
       }
 
       // 2. Zustand 스토어 업데이트
       setAccessToken(newAccessToken);
       setLoggedIn(true);
+      resetSessionExpiredNotice();
 
       // 3. 실패했던 기존 요청의 헤더를 새 토큰으로 교체
       originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
@@ -166,12 +230,17 @@ const onResponseError = async (
       // 4. 원래의 요청 재시도
       return instance(originalRequest);
     } catch (refreshError) {
-      // 리프레시 실패 시 로그아웃 처리
+      // 재발급까지 실패하면 서버 세션이 끊긴 상태이므로 클라이언트 인증 상태도 비웁니다.
       if (isAuthExpiredError(refreshError)) {
-        logout();
+        handleSessionExpired();
       }
       return Promise.reject(refreshError);
     }
+  }
+
+  // [A-1] 재시도 후에도 남은 401은 더 이상 복구할 수 없는 만료 상태입니다.
+  if (err.response?.status === 401 && !isAuthEndpoint) {
+    handleSessionExpired();
   }
 
   // [B] 에러 포맷팅
@@ -182,9 +251,15 @@ const onResponseError = async (
       code: code || "UNKNOWN_ERROR",
       fields: fields || {},
       message: errorMessage,
+      status: err.response.status,
     };
 
-    showGlobalApiErrorToast(errorMessage);
+    // 세션 만료 안내는 Dialog로 보여주므로 토스트까지 겹치지 않게 합니다.
+    // 로그인 실패(/auth/login) 401은 사유를 알려야 하므로 그대로 노출합니다.
+    const isSessionExpired = err.response.status === 401 && !isAuthEndpoint;
+    if (!isSessionExpired) {
+      showGlobalApiErrorToast(errorMessage);
+    }
 
     return Promise.reject(formattedError);
   }
@@ -204,6 +279,8 @@ const onPlainResponseError = (
       code: code || "UNKNOWN_ERROR",
       fields: fields || {},
       message: errorMessage,
+      // 재발급 실패를 호출부에서 인증 만료로 판별할 수 있도록 상태 코드를 남깁니다.
+      status: err.response.status,
     };
 
     if (!requestUrl.includes("/auth/refresh")) {

@@ -84,6 +84,10 @@ const ko = {
       description: "로그인 후 이용할 수 있는 기능입니다.",
       confirm: "로그인",
     },
+    sessionExpired: {
+      title: "세션이 만료되었어요",
+      description: "다시 로그인한 뒤 이용해 주세요.",
+    },
     signupComplete: {
       greeting: "안녕하세요 {nickname}님,",
       title: "회원가입을 축하드려요",
@@ -309,6 +313,10 @@ const en: Messages = {
       title: "Login is required",
       description: "This feature is available after logging in.",
       confirm: "Log in",
+    },
+    sessionExpired: {
+      title: "Your session has expired",
+      description: "Please log in again to continue.",
     },
     signupComplete: {
       greeting: "Hello {nickname},",
@@ -537,6 +545,10 @@ const ja: Messages = {
       description: "ログイン後に利用できる機能です。",
       confirm: "ログイン",
     },
+    sessionExpired: {
+      title: "セッションの有効期限が切れました",
+      description: "もう一度ログインしてご利用ください。",
+    },
     signupComplete: {
       greeting: "{nickname}さん、こんにちは。",
       title: "会員登録おめでとうございます",
@@ -761,6 +773,10 @@ const zh: Messages = {
       description: "登录后才可以使用此功能。",
       confirm: "登录",
     },
+    sessionExpired: {
+      title: "登录状态已过期",
+      description: "请重新登录后继续使用。",
+    },
     signupComplete: {
       greeting: "你好，{nickname}。",
       title: "恭喜你完成注册",
@@ -973,6 +989,10 @@ const th: Messages = {
       title: "จำเป็นต้องเข้าสู่ระบบ",
       description: "ฟังก์ชันนี้ใช้งานได้หลังจากเข้าสู่ระบบ",
       confirm: "เข้าสู่ระบบ",
+    },
+    sessionExpired: {
+      title: "เซสชันหมดอายุแล้ว",
+      description: "กรุณาเข้าสู่ระบบอีกครั้งเพื่อใช้งานต่อ",
     },
     signupComplete: {
       greeting: "สวัสดี {nickname}",
@@ -1195,6 +1215,10 @@ const vi: Messages = {
       title: "Cần đăng nhập",
       description: "Đây là tính năng chỉ dùng được sau khi đăng nhập.",
       confirm: "Đăng nhập",
+    },
+    sessionExpired: {
+      title: "Phiên đăng nhập đã hết hạn",
+      description: "Vui lòng đăng nhập lại để tiếp tục.",
     },
     signupComplete: {
       greeting: "Xin chào {nickname},",
