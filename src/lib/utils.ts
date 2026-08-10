@@ -41,6 +41,28 @@ export const formatStatCount = (count: number): string => {
  * @param value - 포맷팅할 숫자 또는 숫자형 문자열
  * @returns 콤마가 포함된 문자열 (ex: 1,234,567)
  */
+/** 소수 단위가 없는 통화 목록 (amountMinor가 곧 표시 금액) */
+const ZERO_DECIMAL_CURRENCIES = ["KRW", "JPY", "VND"];
+
+/** 결제 API의 최소 단위 금액(amountMinor)을 화면에 표시할 금액으로 변환합니다. */
+export const toMajorAmount = (amountMinor: number, currency: string): number => {
+  if (ZERO_DECIMAL_CURRENCIES.includes(currency.toUpperCase())) {
+    return amountMinor;
+  }
+
+  return amountMinor / 100;
+};
+
+/** 정가 대비 할인율(%)을 계산합니다. 할인이 없으면 0을 반환합니다. */
+export const calcDiscountRate = (
+  amountMinor: number,
+  listAmountMinor?: number,
+): number => {
+  if (!listAmountMinor || listAmountMinor <= amountMinor) return 0;
+
+  return Math.round((1 - amountMinor / listAmountMinor) * 100);
+};
+
 export const formatWithCommas = (value: number | string): string => {
   const num = typeof value === "string" ? Number(value) : value;
 

@@ -3,49 +3,88 @@
 import React from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { useProductsQuery } from "@/api/product/getProducts";
 import Token from "@/icons/Token";
-import { cn, formatWithCommas } from "@/lib/utils";
+import { calcDiscountRate, formatWithCommas, toMajorAmount } from "@/lib/utils";
 import { useWalletStore } from "@/store/useWalletStore";
-import Badge from "./Badge";
+import type { Product } from "@/type/product";
 import PolicyGuide from "./PolicyGuide";
 
-export interface ProductItem {
-  id: string;
-  title: number;
-  bonus?: string;
-  price: number;
-  originalPrice?: number;
-  discountRate?: number;
-  badges?: ("popular" | "firstCharge")[];
+interface ProductListItemProps {
+  product: Product;
 }
 
-export const MOCK_PRODUCTS: ProductItem[] = [
-  { id: "1", title: 5000, price: 4900 },
-  { id: "2", title: 10000, bonus: "+500", price: 9900 },
-  {
-    id: "3",
-    title: 20000,
-    bonus: "+2,500",
-    price: 19900,
-    badges: ["firstCharge", "popular"],
-  },
-  {
-    id: "4",
-    title: 46000,
-    bonus: "+5,000",
-    price: 30900,
-    originalPrice: 45900,
-    discountRate: 34,
-    badges: ["firstCharge"],
-  },
-  { id: "5", title: 90000, bonus: "+11,000", price: 89900 },
-];
+const ProductListItem = ({ product }: ProductListItemProps) => {
+  const t = useTranslations();
+  const { credits, price } = product;
+  const displayPrice = toMajorAmount(price.amountMinor, price.currency);
+  const discountRate = calcDiscountRate(price.amountMinor, price.listAmountMinor);
+  const listPrice = price.listAmountMinor
+    ? toMajorAmount(price.listAmountMinor, price.currency)
+    : 0;
+
+  return (
+    <li className="relative cursor-pointer rounded-2xl border border-main px-5 py-4 hover:bg-btn-hover">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Token className="h-8 w-8" />
+          <div className="flex items-center gap-2">
+            <p className="body-2 flex gap-1">
+              <span>{formatWithCommas(credits.base)}</span>
+              <span>{t("tokenCharge.noteUnit")}</span>
+            </p>
+
+            {credits.bonus > 0 && (
+              <span className="title-3 text-brand-dark">
+                +{formatWithCommas(credits.bonus)}
+                {t("tokenCharge.bonusNoteUnit")}
+              </span>
+            )}
+          </div>
+        </div>
+
+        <div className="flex flex-col items-end">
+          {discountRate > 0 && (
+            <span className="body-5 text-font-disabled line-through">
+              {formatWithCommas(listPrice)}
+              {t("tokenCharge.priceUnit")}
+            </span>
+          )}
+
+          <div className="flex items-center gap-1.5">
+            {discountRate > 0 && (
+              <span className="title-5 text-brand">{discountRate}%</span>
+            )}
+
+            <span className="title-3">
+              {formatWithCommas(displayPrice)}
+              {t("tokenCharge.priceUnit")}
+            </span>
+          </div>
+        </div>
+      </div>
+    </li>
+  );
+};
+
+/** 상품 목록을 불러오는 동안 목록 자리를 유지하는 스켈레톤 */
+const ProductListSkeleton = () => (
+  <ul className="flex animate-pulse flex-col gap-3">
+    {Array.from({ length: 5 }).map((_, index) => (
+      <li
+        key={index}
+        className="h-[74px] rounded-2xl border border-main bg-darker"
+      />
+    ))}
+  </ul>
+);
 
 const TokenChargeContents = () => {
   const t = useTranslations();
   const availableBalance = useWalletStore(
     (state) => state.balance?.availableBalance ?? 0,
   );
+  const { data: products, isPending, isError } = useProductsQuery();
 
   return (
     <section className="mx-auto w-full max-w-160 px-9 pt-5">
@@ -68,64 +107,27 @@ const TokenChargeContents = () => {
       <div className="flex flex-col gap-4">
         <h3 className="title-2 text-white">{t("tokenCharge.purchase")}</h3>
 
-        <ul className="flex flex-col gap-3">
-          {MOCK_PRODUCTS.map((product) => (
-            <li
-              key={product.id}
-              className={cn(
-                "relative cursor-pointer rounded-2xl border border-main px-5 py-4 hover:bg-btn-hover",
-                product.badges && "pt-0",
-              )}
-            >
-              {product.badges && (
-                <div className="flex gap-2 pb-3">
-                  {product.badges.map((badge) => (
-                    <Badge type={badge} key={badge} />
-                  ))}
-                </div>
-              )}
+        {isPending && <ProductListSkeleton />}
 
-              <div className="flex justify-between">
-                <div className="flex items-center gap-3">
-                  <Token className="h-8 w-8" />
-                  <div className="flex gap-2">
-                    <p className="body-2 flex gap-1">
-                      <span>{formatWithCommas(product.title)}</span>
-                      <span>{t("tokenCharge.noteUnit")}</span>
-                    </p>
+        {isError && (
+          <p className="body-4 py-10 text-center text-font-2">
+            {t("tokenCharge.loadFailed")}
+          </p>
+        )}
 
-                    {product.bonus && (
-                      <span className="title-3 text-brand-dark">
-                        {product.bonus}
-                        {t("tokenCharge.bonusNoteUnit")}
-                      </span>
-                    )}
-                  </div>
-                </div>
+        {products && products.length === 0 && (
+          <p className="body-4 py-10 text-center text-font-2">
+            {t("tokenCharge.empty")}
+          </p>
+        )}
 
-                <div className="flex flex-col items-end">
-                  {product.discountRate && (
-                    <span className="body-5 text-font-disabled line-through">
-                      {product.originalPrice}
-                    </span>
-                  )}
-                  <div className="flex items-center gap-1.5">
-                    {product.discountRate && (
-                      <span className="title-5 text-brand">
-                        {product.discountRate}%
-                      </span>
-                    )}
-
-                    <span className="title-3">
-                      {formatWithCommas(product.price)}
-                      {t("tokenCharge.priceUnit")}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </li>
-          ))}
-        </ul>
+        {products && products.length > 0 && (
+          <ul className="flex flex-col gap-3">
+            {products.map((product) => (
+              <ProductListItem key={product.productId} product={product} />
+            ))}
+          </ul>
+        )}
       </div>
 
       <PolicyGuide />

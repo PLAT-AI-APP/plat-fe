@@ -9,6 +9,7 @@ import { fileHandlers } from "./handlers/file";
 import { noticeHandlers } from "./handlers/notice";
 import { noteHandler } from "./handlers/note";
 import { walletHandlers } from "./handlers/wallet";
+import { productHandlers } from "./handlers/product";
 
 /**
  * 모든 핸들러를 하나의 배열로 통합합니다.
@@ -26,4 +27,5 @@ export const handlers = [
   ...noticeHandlers,
   ...noteHandler,
   ...walletHandlers,
+  ...productHandlers,
 ];
