@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import Header from "@/components/header";
 import Sidebar from "@/components/Sidebar";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -32,9 +32,6 @@ const HIDE_SIDEBAR_PATHS: string[] = [];
 const HIDE_HEADER_PATHS = ["/chatting-room"];
 
 // 진입 시 사이드바를 접어두는 경로
-const FOLD_SIDEBAR_PATHS: string[] = ["/chatting-room"];
-const FOLD_SIDEBAR_FULL_PATHS = ["/?tab=categories"];
-
 const isAuthExpiredError = (error: unknown) =>
   axios.isAxiosError(error) &&
   (error.response?.status === 401 || error.response?.status === 403);
@@ -78,20 +75,14 @@ export default function ClientLayout({
   const isHomePath = pathname === "/";
 
   // 사이드바 접힘 조건 계산
-  const shouldFoldSidebar = () => {
-    const isFoldedPath = FOLD_SIDEBAR_PATHS.some((path) =>
-      pathname?.startsWith(path),
-    );
-    const isFoldedFullPath = FOLD_SIDEBAR_FULL_PATHS.includes(fullPath);
-    return isFoldedPath || isFoldedFullPath;
-  };
+  const shouldFoldSidebar = useMemo(() => !isHomePath, [isHomePath]);
 
   // 첫 진입과 새로고침 시 사이드바는 접힌 상태로 시작
-  const [isFolded, setIsFolded] = useState(
-    () => !isHomePath || shouldFoldSidebar(),
-  );
+  const [isFolded, setIsFolded] = useState(() => shouldFoldSidebar);
 
-  const [prevFullPath, setPrevFullPath] = useState(fullPath);
+  useEffect(() => {
+    setIsFolded(shouldFoldSidebar);
+  }, [fullPath, shouldFoldSidebar]);
 
   // 반응형 미디어 쿼리 제어 (기존 로직 유지)
   useEffect(() => {
@@ -105,16 +96,6 @@ export default function ClientLayout({
   }, [pathname]);
 
   // 한 번의 비교로 경로와 쿼리스트링 변경 모두 감지
-  if (fullPath !== prevFullPath) {
-    setPrevFullPath(fullPath);
-
-    if (shouldFoldSidebar()) {
-      setIsFolded(true);
-    } else if (isHomePath) {
-      setIsFolded(false);
-    }
-  }
-
   const handleFoldToggle = () => setIsFolded((prev) => !prev);
   const { isScrolling, onScroll } = useScrollTimeout();
 

@@ -1,4 +1,5 @@
 import { useAuthStore } from "@/store/useAuthStore";
+import { showAppToast } from "@/lib/toast";
 import axios, {
   InternalAxiosRequestConfig,
   AxiosInstance,
@@ -22,6 +23,16 @@ export interface AppError {
   message: string;
 }
 
+const DEFAULT_API_ERROR_MESSAGE = "알 수 없는 에러가 발생했습니다.";
+const API_ERROR_TOAST_COOLDOWN_MS = 1_000;
+
+let lastApiErrorToast:
+  | {
+      message: string;
+      shownAt: number;
+    }
+  | undefined;
+
 const BASE_CONFIG = {
   baseURL: process.env.NEXT_PUBLIC_BASE_URI,
   headers: { "Content-Type": "application/json" },
@@ -30,6 +41,28 @@ const BASE_CONFIG = {
 const isAuthExpiredError = (error: unknown) =>
   axios.isAxiosError(error) &&
   (error.response?.status === 401 || error.response?.status === 403);
+
+const showGlobalApiErrorToast = (message?: string) => {
+  if (typeof window === "undefined") return;
+
+  const normalizedMessage = message?.trim();
+  if (!normalizedMessage) return;
+
+  const now = Date.now();
+  if (
+    lastApiErrorToast?.message === normalizedMessage &&
+    now - lastApiErrorToast.shownAt < API_ERROR_TOAST_COOLDOWN_MS
+  ) {
+    return;
+  }
+
+  lastApiErrorToast = {
+    message: normalizedMessage,
+    shownAt: now,
+  };
+
+  showAppToast("error", normalizedMessage, { size: "s" });
+};
 
 /** 기존 공통 응답 봉투만 골라내는 가드입니다. */
 const isLegacyApiSuccessEnvelope = <T>(
@@ -144,11 +177,14 @@ const onResponseError = async (
   // [B] 에러 포맷팅
   if (err.response?.data) {
     const { code, fields, message } = err.response.data;
+    const errorMessage = message || DEFAULT_API_ERROR_MESSAGE;
     const formattedError: AppError = {
       code: code || "UNKNOWN_ERROR",
       fields: fields || {},
-      message: message || "알 수 없는 에러가 발생했습니다.",
+      message: errorMessage,
     };
+
+    showGlobalApiErrorToast(errorMessage);
 
     return Promise.reject(formattedError);
   }
@@ -157,7 +193,30 @@ const onResponseError = async (
 };
 
 // 인터셉터 연결
-plainAxios.interceptors.response.use(onResponseSuccess);
+const onPlainResponseError = (
+  err: AxiosError<ApiErrorResponse>,
+): Promise<never> => {
+  if (err.response?.data) {
+    const requestUrl = err.config?.url || "";
+    const { code, fields, message } = err.response.data;
+    const errorMessage = message || DEFAULT_API_ERROR_MESSAGE;
+    const formattedError: AppError = {
+      code: code || "UNKNOWN_ERROR",
+      fields: fields || {},
+      message: errorMessage,
+    };
+
+    if (!requestUrl.includes("/auth/refresh")) {
+      showGlobalApiErrorToast(errorMessage);
+    }
+
+    return Promise.reject(formattedError);
+  }
+
+  return Promise.reject(err);
+};
+
+plainAxios.interceptors.response.use(onResponseSuccess, onPlainResponseError);
 
 axiosInstance.interceptors.request.use((c) => onRequest(c));
 axiosInstance.interceptors.response.use(
