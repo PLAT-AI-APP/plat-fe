@@ -57,7 +57,7 @@ const ExpandableText = ({
           "relative overflow-hidden whitespace-pre-wrap body-4 leading-relaxed text-font-2",
           shouldShowMoreButton &&
             !isExpanded &&
-            "after:absolute after:inset-x-0 after:bottom-0 after:h-12 after:bg-mainar-to-t after:from-dark after:to-transparent",
+            "after:absolute after:inset-x-0 after:bottom-0 after:h-12 after:bg-linear-to-t after:from-dark after:to-transparent",
         )}
       >
         {children}

@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import ScenarioSelectPopover from "@/components/popover/ScenarioSelectPopover";
 import { ArrowDown, Message } from "@/icons";
@@ -25,6 +26,7 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
   const [isScenarioPopoverOpen, setIsScenarioPopoverOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [shouldShowMoreButton, setShouldShowMoreButton] = useState(false);
+  const [contentHeight, setContentHeight] = useState(0);
   const selectedScenario = useMemo(
     () =>
       character.scenarios.find(
@@ -39,7 +41,9 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
     const contentElement = contentRef.current;
 
     // 시나리오 콘텐츠 실제 높이가 기준값 이상이면 하단에 더 보기 버튼을 노출합니다.
+    // 펼침 애니메이션의 목표 높이로도 쓰이므로 실제 높이를 함께 보관합니다.
     const updateContentOverflowState = () => {
+      setContentHeight(contentElement.scrollHeight);
       setShouldShowMoreButton(
         contentElement.scrollHeight >= SCENARIO_CONTENT_MAX_HEIGHT,
       );
@@ -99,57 +103,65 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
           )}
         </div>
 
-        <div
-          ref={contentRef}
-          className={cn(
-            "flex flex-col items-center gap-5 overflow-hidden",
-            !isExpanded && "max-h-[1471px]",
-          )}
+        <motion.div
+          initial={false}
+          animate={{
+            height: shouldShowMoreButton
+              ? isExpanded
+                ? contentHeight
+                : SCENARIO_CONTENT_MAX_HEIGHT
+              : "auto",
+          }}
+          transition={{ duration: 0.24, ease: "easeInOut" }}
+          className="overflow-hidden"
         >
-          {selectedScenario.contents?.map((content) => {
-            if (content.type === "asset") {
-              return (
-                <Image
-                  key={content.id}
-                  src={content.value}
-                  alt={t("assetAlt", { name: selectedScenario.name })}
-                  width={482}
-                  height={289}
-                  className="h-[289px] w-[482px] rounded-2xl object-cover"
-                />
-              );
-            }
-
-            if (content.type === "chat") {
-              return (
-                <div key={content.id} className="flex w-full gap-2">
+          {/* 높이 측정은 애니메이션 대상 바깥에서 해야 실제 콘텐츠 높이를 얻을 수 있습니다. */}
+          <div ref={contentRef} className="flex flex-col items-center gap-5">
+            {selectedScenario.contents?.map((content) => {
+              if (content.type === "asset") {
+                return (
                   <Image
-                    src={character.profileImage}
-                    alt={character.title}
-                    width={40}
-                    height={40}
-                    className="size-10 rounded-full object-cover"
+                    key={content.id}
+                    src={content.value}
+                    alt={t("assetAlt", { name: selectedScenario.name })}
+                    width={482}
+                    height={289}
+                    className="h-[289px] w-[482px] rounded-2xl object-cover"
                   />
-                  <div className="flex min-w-0 flex-1 flex-col items-start gap-1.5">
-                    <p className="body-4 text-font-1">{character.title}</p>
-                    <p className="body-4 rounded-bl-2xl rounded-br-2xl rounded-tr-2xl bg-card px-3 py-2 text-font-1">
-                      {content.value}
-                    </p>
+                );
+              }
+
+              if (content.type === "chat") {
+                return (
+                  <div key={content.id} className="flex w-full gap-2">
+                    <Image
+                      src={character.profileImage}
+                      alt={character.title}
+                      width={40}
+                      height={40}
+                      className="size-10 rounded-full object-cover"
+                    />
+                    <div className="flex min-w-0 flex-1 flex-col items-start gap-1.5">
+                      <p className="body-4 text-font-1">{character.title}</p>
+                      <p className="body-4 rounded-bl-2xl rounded-br-2xl rounded-tr-2xl bg-card px-3 py-2 text-font-1">
+                        {content.value}
+                      </p>
+                    </div>
                   </div>
+                );
+              }
+
+              return (
+                <div key={content.id} className="flex w-full gap-5">
+                  <Message className="size-7 shrink-0 text-font-2" />
+                  <p className="body-4 min-w-0 flex-1 whitespace-pre-wrap text-font-2">
+                    {content.value}
+                  </p>
                 </div>
               );
-            }
-
-            return (
-              <div key={content.id} className="flex w-full gap-5">
-                <Message className="size-7 shrink-0 text-font-2" />
-                <p className="body-4 min-w-0 flex-1 whitespace-pre-wrap text-font-2">
-                  {content.value}
-                </p>
-              </div>
-            );
-          })}
-        </div>
+            })}
+          </div>
+        </motion.div>
 
         {shouldShowMoreButton && (
           <button
@@ -159,7 +171,10 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
           >
             {isExpanded ? t("collapse") : t("expand")}
             <ArrowDown
-              className={cn("size-[18px]", isExpanded && "rotate-180")}
+              className={cn(
+                "size-[18px] transition-transform",
+                isExpanded && "rotate-180",
+              )}
             />
           </button>
         )}

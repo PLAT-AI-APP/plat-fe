@@ -12,6 +12,8 @@ const SonnerProvider = () => {
       position="top-center"
       closeButton
       duration={2000}
+      expand
+      gap={12}
       offset={40}
       visibleToasts={3}
       theme="dark"

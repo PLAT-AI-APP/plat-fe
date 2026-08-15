@@ -23,7 +23,7 @@ const Badge = ({ text, type = "popular", className }: BadgeProps) => {
         inline-flex h-6.25 w-13.5 items-center justify-center
         whitespace-nowrap rounded-b-lg px-2.5 py-1
         text-xs leading-none font-semibold text-white
-        bg-mainar-to-r ${variantStyles[type]}
+        bg-linear-to-r ${variantStyles[type]}
         ${className}
       `}
     >

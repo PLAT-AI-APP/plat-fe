@@ -5,7 +5,7 @@ import React from "react";
 export const CharacterAvatar = () => (
   <div
     data-property-1="P6"
-    className="size-10 relative bg-mainar-225 from-orange-500 to-red-500 rounded-[100px] overflow-hidden shrink-0"
+    className="size-10 relative bg-linear-225 from-orange-500 to-red-500 rounded-[100px] overflow-hidden shrink-0"
   >
     <div className="w-8 h-9 left-[33.51px] top-[16.50px] absolute origin-top-left rotate-[142.81deg] bg-orange-300 rounded-full" />
     <div className="size-[1.53px] left-[18.29px] top-[21.02px] absolute bg-font-2 rounded-full" />
@@ -45,7 +45,7 @@ export const ActionFooter = ({ isActive = true }: { isActive: boolean }) => (
   <footer className="w-full right-0 bottom-0 absolute inline-flex flex-col justify-start items-center gap-1">
     <div
       className="w-full h-25 left-0 bottom-0 absolute 
-             bg-mainar-to-b from-neutral-900/0 via-neutral-900/50 to-neutral-900 
+             bg-linear-to-b from-neutral-900/0 via-neutral-900/50 to-neutral-900 
              rounded-br-2xl backdrop-blur-[1.5px]
              mask-[linear-gradient(to_bottom,transparent,black_20%)]"
     />

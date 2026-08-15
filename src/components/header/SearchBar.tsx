@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Close, Search } from "@/icons";
 import { useRecentSearch } from "@/hooks/useRecentSearch";
@@ -9,12 +10,13 @@ import { ModalLayout } from "../ModalLayout";
 
 export const SearchBar = () => {
   const t = useTranslations();
+  const router = useRouter();
   const triggerRef = useRef<HTMLFormElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [isExpanded, setIsExpanded] = useState(false);
   const [isActive, setIsActive] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  const { removeKeyword, keywords, clearAll } = useRecentSearch();
+  const { addKeyword, removeKeyword, keywords, clearAll } = useRecentSearch();
 
   const popularKeyword = [
     "오늘일만보걸었다",
@@ -39,6 +41,21 @@ export const SearchBar = () => {
     setIsExpanded(false);
   };
 
+  // 최근/인기 검색어 클릭과 폼 제출이 같은 검색 실행 흐름을 공유합니다.
+  const handleSearch = (rawKeyword: string) => {
+    const trimmedKeyword = rawKeyword.trim();
+    if (!trimmedKeyword) return;
+
+    addKeyword(trimmedKeyword);
+    handleCloseSearch();
+    router.push(`/search?q=${encodeURIComponent(trimmedKeyword)}`);
+  };
+
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
+    handleSearch(searchValue);
+  };
+
   useEffect(() => {
     if (!isExpanded) return;
 
@@ -54,7 +71,7 @@ export const SearchBar = () => {
         "group relative flex h-10 items-center transition-all duration-200 ease-out",
         isExpanded ? "w-[340px] min-w-[260px]" : "w-10 min-w-10",
       )}
-      onSubmit={(e) => e.preventDefault()}
+      onSubmit={handleSubmit}
     >
       {!isExpanded ? (
         <button
@@ -116,6 +133,7 @@ export const SearchBar = () => {
                 {keywords.map((keyword) => (
                   <li
                     key={keyword}
+                    onClick={() => handleSearch(keyword)}
                     className={cn(
                       "body-4 flex cursor-pointer items-center justify-between gap-2 rounded-[100px] border border-main py-1.5 pr-2 pl-3 transition-colors",
                       "[&:not(:has(.close-btn:hover))]:hover:bg-btn-hover",
@@ -124,7 +142,10 @@ export const SearchBar = () => {
                     {keyword}
                     <button
                       id={`remove-keyword-${keyword}`}
-                      onClick={() => removeKeyword(keyword)}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        removeKeyword(keyword);
+                      }}
                       className="close-btn flex h-4 w-4 items-center justify-center rounded-full transition-colors hover:bg-btn-hover"
                     >
                       <Close className="h-3 w-3 text-font-2" />
@@ -155,6 +176,7 @@ export const SearchBar = () => {
                       {index + 1}
                     </span>
                     <span
+                      onClick={() => handleSearch(item)}
                       className={cn(
                         "body-4 cursor-pointer hover:underline",
                         isTopThree ? "title-5 text-font-1" : "text-font-2",

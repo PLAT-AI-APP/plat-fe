@@ -66,7 +66,7 @@ const CommentExpandableBody = ({ content }: CommentExpandableBodyProps) => {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.18 }}
-              className="pointer-events-none absolute inset-x-0 bottom-0 h-7 bg-mainar-to-t from-dark to-dark/0"
+              className="pointer-events-none absolute inset-x-0 bottom-0 h-7 bg-linear-to-t from-dark to-dark/0"
               aria-hidden="true"
             />
           )}
