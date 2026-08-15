@@ -41,6 +41,46 @@ export const DUMMY_CHARACTERS = [
     tag: ["판타지", "카리스마", "연상", "로맨스"],
     img: "/images/sample.png",
   },
+  {
+    id: "398296",
+    name: "사이버펑크 해커 리온",
+    creatorName: "네온드리머",
+    dec: "네온 사인이 깜빡이는 뒷골목. 어떤 정보를 찾으러 왔어?",
+    tag: ["사이버펑크", "해커", "도시", "미스터리"],
+    img: "/images/sample.png",
+  },
+  {
+    id: "398297",
+    name: "판타지 엘프 마법사",
+    creatorName: "숲의이야기꾼",
+    dec: "고대 숲의 깊은 곳. 은빛 머리카락이 흩날리는 그녀가 손을 내밉니다.",
+    tag: ["판타지", "엘프", "마법", "숲"],
+    img: "/images/sample.png",
+  },
+  {
+    id: "398298",
+    name: "냉혹한 춤꾼",
+    creatorName: "무대위의그림자",
+    dec: "음악이 멈추면 모든 게 끝나는 거야. 마지막 춤을 출 준비는 됐어?",
+    tag: ["느와르", "카리스마", "긴장감"],
+    img: "/images/sample.png",
+  },
+  {
+    id: "398299",
+    name: "우주 정거장 AI 안나",
+    creatorName: "스페이스오페라",
+    dec: "현재 산소 포화도 98%입니다. 다음 목적지 궤도를 수정할까요?",
+    tag: ["SF", "우주", "AI", "미래"],
+    img: "/images/sample.png",
+  },
+  {
+    id: "398300",
+    name: "조선 시대 무사 강혁",
+    creatorName: "역사덕후",
+    dec: "이 칼 끝은 오직 정의만을 향한다. 도적이 이곳에 숨어 있다고 생각하느냐?",
+    tag: ["사극", "무사", "정의", "액션"],
+    img: "/images/sample.png",
+  },
   // 필요에 따라 객체를 더 복사해서 사용하세요.
 ];
 
