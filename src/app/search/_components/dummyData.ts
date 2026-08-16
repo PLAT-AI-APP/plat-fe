@@ -37,6 +37,22 @@ export const DUMMY_SEARCH_WORLDS: SearchCharacterResult[] = Array.from(
   }),
 );
 
+export interface LiveSearchKeyword {
+  rank: number;
+  keyword: string;
+  count: number;
+  trend: "up" | "down";
+}
+
+export const DUMMY_LIVE_SEARCH_KEYWORDS: LiveSearchKeyword[] = [
+  { rank: 1, keyword: "오늘일만보걸었다", count: 123, trend: "up" },
+  { rank: 2, keyword: "오늘일만보걸었다", count: 123, trend: "down" },
+  { rank: 3, keyword: "오늘일만보걸었다", count: 123, trend: "up" },
+  { rank: 4, keyword: "오늘일만보걸었다", count: 123, trend: "up" },
+  { rank: 5, keyword: "오늘일만보걸었다", count: 123, trend: "down" },
+  { rank: 6, keyword: "오늘일만보걸었다", count: 123, trend: "up" },
+];
+
 export const DUMMY_SEARCH_USERS: SearchUserResult[] = Array.from(
   { length: 3 },
   (_, index) => ({

@@ -80,7 +80,6 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
             </Link>
           )}
 
-          {/* SearchBar 내부에서 너비가 유동적으로 변하도록 스타일을 확인해야 합니다 */}
           <div className="shrink-0">
             <SearchBar />
           </div>

@@ -5,13 +5,13 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import CharacterCard from "@/app/(main)/_components/character-card";
 import { useRecentSearch } from "@/hooks/useRecentSearch";
-import { Close, CloseLine, Search } from "@/icons";
 import { cn } from "@/lib/utils";
 import {
   DUMMY_SEARCH_CHARACTERS,
   DUMMY_SEARCH_USERS,
   DUMMY_SEARCH_WORLDS,
 } from "./dummyData";
+import SearchQueryBar from "./SearchQueryBar";
 import UserResultCard from "./UserResultCard";
 
 type SearchTab = "all" | "character" | "world" | "user";
@@ -80,7 +80,11 @@ const SearchResultsContents = ({
   const handleQuerySubmit = (event: React.FormEvent) => {
     event.preventDefault();
     const trimmedQuery = queryDraft.trim();
-    if (!trimmedQuery) return;
+
+    if (!trimmedQuery) {
+      router.push("/search");
+      return;
+    }
 
     addKeyword(trimmedQuery);
     router.push(`/search?q=${encodeURIComponent(trimmedQuery)}`);
@@ -89,75 +93,16 @@ const SearchResultsContents = ({
   return (
     // 카드 6개(186.67px) + 간격 5개(16px) ≈ 1200px가 한 줄에 들어가도록
     // 좌우 패딩(px-9=72px)을 더한 폭으로 컨테이너를 잡습니다.
-    <section className="mx-auto flex w-full max-w-[1280px] flex-col gap-6.5 px-9 pt-5">
-      <div className="flex flex-col gap-2.5">
-        <form
-          onSubmit={handleQuerySubmit}
-          className="flex items-center justify-between rounded-2xl border border-main bg-darkest px-4 py-3"
-        >
-          <div className="flex flex-1 items-center gap-3">
-            <Search className="size-7 shrink-0 text-font-disabled" />
-            <span className="text-lg text-font-disabled">|</span>
-            <input
-              value={queryDraft}
-              onChange={(event) => setQueryDraft(event.target.value)}
-              placeholder={t("searchBar.placeholder")}
-              aria-label={t("searchBar.placeholder")}
-              className="body-2 w-full bg-transparent text-font-1 outline-none placeholder:text-font-disabled"
-            />
-          </div>
-
-          <button
-            type="button"
-            aria-label={t("searchResults.close")}
-            onClick={() => setQueryDraft("")}
-            className="flex size-7 shrink-0 items-center justify-center opacity-24 transition-opacity hover:opacity-60"
-          >
-            <Close className="size-4 text-font-2" />
-          </button>
-        </form>
-
-        {keywords.length > 0 && (
-          <div className="flex items-center justify-between px-0.5">
-            <div className="flex flex-wrap items-center gap-3">
-              <span className="body-4 text-font-2">
-                {t("searchBar.recentTitle")}
-              </span>
-              <span className="body-4 text-font-disabled">|</span>
-
-              <ul className="flex flex-wrap items-center gap-2">
-                {keywords.map((keyword) => (
-                  <li
-                    key={keyword}
-                    onClick={() => setQueryDraft(keyword)}
-                    className="body-4 flex cursor-pointer items-center gap-1 rounded-lg bg-card py-2 pl-3 pr-2 text-font-2"
-                  >
-                    {keyword}
-                    <button
-                      type="button"
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        removeKeyword(keyword);
-                      }}
-                      className="flex size-[18px] items-center justify-center"
-                    >
-                      <CloseLine className="size-[18px] text-font-2" />
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <button
-              type="button"
-              onClick={clearAll}
-              className="body-4 text-font-disabled underline decoration-from-font hover:text-font-2"
-            >
-              {t("searchBar.clearAll")}
-            </button>
-          </div>
-        )}
-      </div>
+    <section className="mx-auto flex w-full max-w-[1272px] flex-col gap-6.5 px-9 pt-5">
+      <SearchQueryBar
+        queryDraft={queryDraft}
+        onQueryDraftChange={setQueryDraft}
+        onSubmit={handleQuerySubmit}
+        keywords={keywords}
+        onKeywordClick={setQueryDraft}
+        onKeywordRemove={removeKeyword}
+        onClearAll={clearAll}
+      />
 
       <div className="flex items-center gap-1 border-b border-main">
         {tabs.map((tab) => (

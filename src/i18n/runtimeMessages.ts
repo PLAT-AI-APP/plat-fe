@@ -30,6 +30,11 @@ const en = {
     clearAll: "Clear all",
     popularTitle: "Popular searches",
   },
+  searchLanding: {
+    liveSearchTitle: "Live popular searches",
+    popularCharactersTitle: "Characters people have searched recently",
+    viewAllRanking: "View full ranking",
+  },
   mainTabs: {
     navigation: "Character categories",
     home: "Home",
@@ -245,6 +250,11 @@ const ko: RuntimeMessages = {
     clearAll: "전체삭제",
     popularTitle: "인기 검색어",
   },
+  searchLanding: {
+    liveSearchTitle: "실시간 인기 검색어",
+    popularCharactersTitle: "최근 많은 사람들이 찾아본 캐릭터",
+    viewAllRanking: "전체 랭킹 보기",
+  },
   mainTabs: {
     navigation: "캐릭터 카테고리",
     home: "홈",
@@ -451,6 +461,11 @@ const ja: RuntimeMessages = {
     recentTitle: "最近の検索語",
     clearAll: "すべて削除",
     popularTitle: "人気検索語",
+  },
+  searchLanding: {
+    liveSearchTitle: "リアルタイム人気検索語",
+    popularCharactersTitle: "最近多くの人が探したキャラクター",
+    viewAllRanking: "全体ランキングを見る",
   },
   mainTabs: {
     navigation: "キャラクターカテゴリ",
@@ -659,6 +674,11 @@ const zh: RuntimeMessages = {
     clearAll: "全部删除",
     popularTitle: "热门搜索词",
   },
+  searchLanding: {
+    liveSearchTitle: "实时热门搜索词",
+    popularCharactersTitle: "最近很多人搜索过的角色",
+    viewAllRanking: "查看完整排行",
+  },
   mainTabs: {
     navigation: "角色分类",
     home: "首页",
@@ -863,6 +883,11 @@ const th: RuntimeMessages = {
     recentTitle: "คำค้นหาล่าสุด",
     clearAll: "ลบทั้งหมด",
     popularTitle: "คำค้นหายอดนิยม",
+  },
+  searchLanding: {
+    liveSearchTitle: "คำค้นหายอดนิยมแบบเรียลไทม์",
+    popularCharactersTitle: "ตัวละครที่มีคนค้นหาเยอะเมื่อเร็ว ๆ นี้",
+    viewAllRanking: "ดูอันดับทั้งหมด",
   },
   mainTabs: {
     navigation: "หมวดหมู่ตัวละคร",
@@ -1075,6 +1100,11 @@ const vi: RuntimeMessages = {
     recentTitle: "Từ khóa tìm kiếm gần đây",
     clearAll: "Xóa tất cả",
     popularTitle: "Từ khóa phổ biến",
+  },
+  searchLanding: {
+    liveSearchTitle: "Từ khóa tìm kiếm phổ biến theo thời gian thực",
+    popularCharactersTitle: "Nhân vật được nhiều người tìm kiếm gần đây",
+    viewAllRanking: "Xem toàn bộ bảng xếp hạng",
   },
   mainTabs: {
     navigation: "Danh mục nhân vật",
