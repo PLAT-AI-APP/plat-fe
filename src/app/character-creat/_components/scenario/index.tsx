@@ -29,6 +29,8 @@ const Scenario = ({
     useWatch({ control, name: `scenarios.${currentIndex}.name` }) || "";
   const currentScenarioDescription =
     useWatch({ control, name: `scenarios.${currentIndex}.description` }) || "";
+  const currentScenarioDifficulty =
+    useWatch({ control, name: `scenarios.${currentIndex}.difficulty` }) || "";
 
   const selectScenario = (index: number) => {
     setActiveScenarioIndex(index);
@@ -44,6 +46,7 @@ const Scenario = ({
       // 새 탭을 만들 때 보이는 기본 이름을 실제 input 값에도 같이 넣습니다.
       name: t("fallbackName", { index: fields.length + 1 }),
       description: "",
+      difficulty: "",
       contents: [],
     });
   };
@@ -88,6 +91,11 @@ const Scenario = ({
 
   return (
     <section className="flex flex-col gap-6.5">
+      <header className="flex flex-col">
+        <p className="title-3">{t("title")}</p>
+        <p className="body-5 text-font-2">{t("guide")}</p>
+      </header>
+
       <div className="flex items-center gap-1.5">
         <ul
           ref={scrollRef}
@@ -157,6 +165,18 @@ const Scenario = ({
         placeholderClassName="placeholder:text-font-2"
         counterClassName="text-font-disabled"
         value={currentScenarioDescription}
+      />
+
+      <SmartInput
+        {...register(`scenarios.${currentIndex}.difficulty`)}
+        label={t("difficultyLabel")}
+        type="textarea"
+        maxLength={500}
+        minLine={3}
+        placeholder={t("difficultyPlaceholder")}
+        placeholderClassName="placeholder:text-font-2"
+        counterClassName="text-font-disabled"
+        value={currentScenarioDifficulty}
       />
     </section>
   );

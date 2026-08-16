@@ -102,6 +102,8 @@ const ko = {
       uploadFailed: "에셋 이미지 업로드에 실패했습니다. 다시 시도해 주세요.",
     },
     scenario: {
+      title: "시나리오 제작",
+      guide: "시나리오는 최대 5개까지 생성과 관리가 가능해요.",
       addLimitAlert: "최대 5개까지 추가 가능합니다.",
       minRequiredAlert: "최소 한 개의 시나리오는 있어야 합니다.",
       defaultName: "다른 시나리오",
@@ -109,6 +111,9 @@ const ko = {
       nameLabel: "시나리오명",
       descriptionLabel: "시나리오 설명",
       descriptionPlaceholder: "어떤 시나리오인지 설명해 주세요",
+      difficultyLabel: "시나리오 난이도",
+      difficultyPlaceholder:
+        "이 시나리오 속 캐릭터와의 친밀도가 얼마나 까다로운지, 관계에 어떤 걸림돌이 있는지 알려주세요",
     },
     preview: {
       defaultCharacterName: "캐릭터",
@@ -303,6 +308,8 @@ const en: typeof ko = {
       uploadFailed: "Failed to upload the asset image. Please try again.",
     },
     scenario: {
+      title: "Create scenario",
+      guide: "You can create and manage up to 5 scenarios.",
       addLimitAlert: "You can add up to 5 scenarios.",
       minRequiredAlert: "At least one scenario is required.",
       defaultName: "Another scenario",
@@ -310,6 +317,9 @@ const en: typeof ko = {
       nameLabel: "Scenario name",
       descriptionLabel: "Scenario description",
       descriptionPlaceholder: "Describe what kind of scenario this is",
+      difficultyLabel: "Scenario difficulty",
+      difficultyPlaceholder:
+        "Tell us how challenging the relationship with the character is in this scenario, and what obstacles stand in the way",
     },
     preview: {
       defaultCharacterName: "Character",
@@ -505,6 +515,8 @@ const ja: typeof ko = {
       uploadFailed: "アセット画像のアップロードに失敗しました。もう一度お試しください。",
     },
     scenario: {
+      title: "シナリオ制作",
+      guide: "シナリオは最大5個まで作成・管理できます。",
       addLimitAlert: "最大 5 個まで追加できます。",
       minRequiredAlert: "少なくとも 1 つのシナリオが必要です。",
       defaultName: "別のシナリオ",
@@ -512,6 +524,9 @@ const ja: typeof ko = {
       nameLabel: "シナリオ名",
       descriptionLabel: "シナリオ説明",
       descriptionPlaceholder: "どのようなシナリオか説明してください",
+      difficultyLabel: "シナリオ難易度",
+      difficultyPlaceholder:
+        "このシナリオでのキャラクターとの親密度がどれくらい難しいか、関係にどんな障害があるか教えてください",
     },
     preview: {
       defaultCharacterName: "キャラクター",
@@ -704,6 +719,8 @@ const zh: typeof ko = {
       uploadFailed: "素材图片上传失败。请重试。",
     },
     scenario: {
+      title: "场景制作",
+      guide: "场景最多可创建并管理 5 个。",
       addLimitAlert: "最多可添加 5 个场景。",
       minRequiredAlert: "至少需要一个场景。",
       defaultName: "其他场景",
@@ -711,6 +728,8 @@ const zh: typeof ko = {
       nameLabel: "场景名称",
       descriptionLabel: "场景说明",
       descriptionPlaceholder: "请说明这是怎样的场景",
+      difficultyLabel: "场景难度",
+      difficultyPlaceholder: "请说明在这个场景中与角色的亲密度有多难，关系中有哪些障碍",
     },
     preview: {
       defaultCharacterName: "角色",
@@ -900,6 +919,8 @@ const th: typeof ko = {
       uploadFailed: "อัปโหลดรูปภาพแอสเซ็ตไม่สำเร็จ โปรดลองอีกครั้ง",
     },
     scenario: {
+      title: "สร้างสถานการณ์",
+      guide: "สามารถสร้างและจัดการสถานการณ์ได้สูงสุด 5 รายการ",
       addLimitAlert: "สามารถเพิ่มได้สูงสุด 5 สถานการณ์",
       minRequiredAlert: "ต้องมีอย่างน้อย 1 สถานการณ์",
       defaultName: "สถานการณ์อื่น",
@@ -907,6 +928,9 @@ const th: typeof ko = {
       nameLabel: "ชื่อสถานการณ์",
       descriptionLabel: "คำอธิบายสถานการณ์",
       descriptionPlaceholder: "อธิบายว่านี่เป็นสถานการณ์แบบไหน",
+      difficultyLabel: "ความยากของสถานการณ์",
+      difficultyPlaceholder:
+        "โปรดบอกว่าความสนิทสนมกับตัวละครในสถานการณ์นี้ยากแค่ไหน และมีอุปสรรคอะไรในความสัมพันธ์",
     },
     preview: {
       defaultCharacterName: "ตัวละคร",
@@ -1102,6 +1126,8 @@ const vi: typeof ko = {
       uploadFailed: "Tải ảnh asset lên thất bại. Vui lòng thử lại.",
     },
     scenario: {
+      title: "Tạo kịch bản",
+      guide: "Bạn có thể tạo và quản lý tối đa 5 kịch bản.",
       addLimitAlert: "Bạn có thể thêm tối đa 5 kịch bản.",
       minRequiredAlert: "Cần ít nhất một kịch bản.",
       defaultName: "Kịch bản khác",
@@ -1109,6 +1135,9 @@ const vi: typeof ko = {
       nameLabel: "Tên kịch bản",
       descriptionLabel: "Mô tả kịch bản",
       descriptionPlaceholder: "Hãy mô tả đây là kịch bản như thế nào",
+      difficultyLabel: "Độ khó kịch bản",
+      difficultyPlaceholder:
+        "Hãy cho biết mức độ thân thiết với nhân vật trong kịch bản này khó khăn ra sao và có trở ngại gì trong mối quan hệ",
     },
     preview: {
       defaultCharacterName: "Nhân vật",

@@ -36,6 +36,7 @@ const createCharacterCreateDefaultValues = (
     {
       name: defaultScenarioName,
       description: "",
+      difficulty: "",
       contents: [],
     },
   ],

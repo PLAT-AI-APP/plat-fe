@@ -64,6 +64,10 @@ export const characterCreateSchema = z.object({
         description: z
           .string()
           .max(100, FIELD_ERROR_MESSAGES.scenarioDescriptionMaxLength),
+        // 시나리오 난이도도 선택 입력값이며 최대 길이만 검증합니다.
+        difficulty: z
+          .string()
+          .max(500, FIELD_ERROR_MESSAGES.scenarioDifficultyMaxLength),
         contents: z.array(
           z.object({
             id: z.string(),
