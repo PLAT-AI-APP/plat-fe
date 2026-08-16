@@ -85,6 +85,7 @@ const en = {
     followingTab: "Following",
     chatCount: "Chats",
     characterTab: "Characters",
+    wishTab: "Wishlist",
     worksList: "Works",
     sort: {
       latest: "Latest",
@@ -299,6 +300,7 @@ const ko: RuntimeMessages = {
     followingTab: "팔로잉",
     chatCount: "대화량",
     characterTab: "캐릭터",
+    wishTab: "찜",
     worksList: "작품 목록",
     sort: {
       latest: "최신순",
@@ -505,6 +507,7 @@ const ja: RuntimeMessages = {
     followingTab: "フォロー中",
     chatCount: "会話数",
     characterTab: "キャラクター",
+    wishTab: "お気に入り",
     worksList: "作品一覧",
     sort: {
       latest: "最新順",
@@ -711,6 +714,7 @@ const zh: RuntimeMessages = {
     followingTab: "关注中",
     chatCount: "对话量",
     characterTab: "角色",
+    wishTab: "收藏",
     worksList: "作品列表",
     sort: {
       latest: "最新顺",
@@ -915,6 +919,7 @@ const th: RuntimeMessages = {
     followingTab: "กำลังติดตาม",
     chatCount: "จำนวนบทสนทนา",
     characterTab: "ตัวละคร",
+    wishTab: "รายการโปรด",
     worksList: "รายการผลงาน",
     sort: {
       latest: "ล่าสุด",
@@ -1126,6 +1131,7 @@ const vi: RuntimeMessages = {
     followingTab: "Đang theo dõi",
     chatCount: "Lượng trò chuyện",
     characterTab: "Nhân vật",
+    wishTab: "Yêu thích",
     worksList: "Danh sách tác phẩm",
     sort: {
       latest: "Mới nhất",

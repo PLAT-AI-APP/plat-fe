@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
+import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import CharacterShowcase from "@/app/(main)/_components/CharacterShowcase";
 import CharacterSortPopover, {
@@ -8,7 +9,10 @@ import CharacterSortPopover, {
 } from "@/components/popover/CharacterSortPopover";
 import useToggle from "@/hooks/useToggle";
 import { Sort } from "@/icons";
+import { cn } from "@/lib/utils";
 import Header from "./Header";
+
+type ProfileTab = "character" | "wish";
 
 const CharArray = [
   {
@@ -69,14 +73,46 @@ const CharArray = [
   },
 ];
 
+const WishArray = [
+  {
+    name: "밤하늘의 약속",
+    chatCount: 87,
+    dec: "별을 보며 나눈 이야기를 잊지 않는 캐릭터입니다.",
+    tag: ["판타지", "감성"],
+    img: "https://picsum.photos/210/300",
+  },
+  {
+    name: "카페 사장 리나",
+    chatCount: 54,
+    dec: "단골손님을 반갑게 맞아주는 카페 사장님입니다.",
+    tag: ["일상", "힐링"],
+    img: "https://picsum.photos/211/300",
+  },
+  {
+    name: "탐정 조수 케이",
+    chatCount: 210,
+    dec: "사건을 함께 추리하며 실마리를 찾아가는 조수입니다.",
+    tag: ["미스터리", "추리"],
+    img: "https://picsum.photos/212/300",
+  },
+];
+
+const TAB_ITEMS: { key: ProfileTab; labelKey: string }[] = [
+  { key: "character", labelKey: "profile.characterTab" },
+  { key: "wish", labelKey: "profile.wishTab" },
+];
+
 export default function ProfileContent({ id }: { id: string }) {
   const t = useTranslations();
+  const [activeTab, setActiveTab] = useState<ProfileTab>("character");
   const [sort, setSort] = useState<CharacterSortOption>("latest");
   const { isOpen, toggle } = useToggle();
   const triggerRef = useRef<HTMLButtonElement>(null);
 
+  const displayArray = activeTab === "character" ? CharArray : WishArray;
+
   return (
-    <article className="@container mx-auto flex max-w-300 flex-col gap-11.5 px-10 pt-7.5 pb-11.25">
+    <article className="@container mx-auto flex w-[1200px] max-w-full flex-col gap-11.5 pt-7.5 pb-11.25">
       <Header userId={id} />
 
       <section
@@ -85,25 +121,44 @@ export default function ProfileContent({ id }: { id: string }) {
       >
         <div className="flex min-w-0 flex-1 flex-col gap-4">
           <nav className="flex w-full items-end border-b-2 border-card-hover">
-            <button
-              type="button"
-              className="title-3 flex w-fit items-center justify-center border-b-2 border-brand px-5 py-2.5 text-center text-font-1"
-            >
-              {t("profile.characterTab")}
-            </button>
-            <button
-              type="button"
-              disabled
-              className="body-2 flex w-fit cursor-default items-center justify-center px-5 py-2.5 text-center text-font-disabled"
-            >
-              -
-            </button>
+            {TAB_ITEMS.map(({ key, labelKey }) => (
+              <React.Fragment key={key}>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab(key)}
+                  className={cn(
+                    "relative flex w-fit items-center justify-center px-5 py-2.5 text-center",
+                    activeTab === key
+                      ? "title-3 text-font-1"
+                      : "body-2 text-font-disabled",
+                  )}
+                >
+                  {t(labelKey)}
+                  {activeTab === key && (
+                    <motion.span
+                      layoutId="profile-tab-underline"
+                      className="absolute inset-x-0 -bottom-0.5 h-0.5 bg-brand"
+                      transition={{ type: "spring", stiffness: 500, damping: 40 }}
+                    />
+                  )}
+                </button>
+                {key === "character" && (
+                  <button
+                    type="button"
+                    disabled
+                    className="body-2 flex w-fit cursor-default items-center justify-center px-5 py-2.5 text-center text-font-disabled"
+                  >
+                    -
+                  </button>
+                )}
+              </React.Fragment>
+            ))}
           </nav>
 
           <header className="flex w-full items-center justify-between">
             <div className="title-5 flex items-center gap-1 text-font-2">
               <span>{t("profile.worksList")}</span>
-              <span>{CharArray.length}</span>
+              <span>{displayArray.length}</span>
             </div>
 
             <div id="sort-filter-container" className="relative">
@@ -136,10 +191,10 @@ export default function ProfileContent({ id }: { id: string }) {
           className="flex h-auto w-full flex-col justify-center gap-4"
         >
           <CharacterShowcase
-            charArray={CharArray}
+            charArray={displayArray}
             cardSize="S"
-            rowGap={12}
-            columnGap={12}
+            rowGap={28}
+            columnGap={16}
           />
         </section>
       </section>
