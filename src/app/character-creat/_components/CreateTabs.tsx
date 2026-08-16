@@ -1,8 +1,10 @@
 "use client";
 
 import React from "react";
+import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { UseFieldArrayReturn } from "react-hook-form";
+import { useTabUnderline } from "@/hooks/useTabUnderline";
 import { cn } from "@/lib/utils";
 import Asset from "./asset";
 import DetailInfo from "./detail-info";
@@ -52,6 +54,11 @@ const CreateTabs = ({
   assetFieldArray,
 }: CreateTabsProps) => {
   const t = useTranslations("characterCreate.tabs");
+  const {
+    containerRef: tabNavRef,
+    setTabRef,
+    rect: underlineRect,
+  } = useTabUnderline(currentTabId);
 
   const renderActiveTab = () => {
     switch (currentTabId) {
@@ -78,7 +85,10 @@ const CreateTabs = ({
   return (
     <section className="flex h-full w-[491px] min-w-0 shrink-0 flex-col gap-9 overflow-hidden">
       {/* Tabs are unframed in the Figma design; the border belongs only to the tab row. */}
-      <nav className="flex h-10 shrink-0 gap-1 border-b-2 border-card-selected">
+      <nav
+        ref={tabNavRef as React.RefObject<HTMLElement>}
+        className="relative flex h-10 shrink-0 gap-1 border-b-2 border-card-selected"
+      >
         {TAB_IDS.map((tabId) => {
           const isActive = currentTabId === tabId;
 
@@ -86,12 +96,13 @@ const CreateTabs = ({
             <button
               type="button"
               key={tabId}
+              ref={(el) => setTabRef(tabId, el)}
               onClick={() => setCurrentTabId(tabId)}
               style={{ transition: "none", animation: "none" }}
               className={cn(
-                "flex h-10 cursor-pointer items-center justify-center whitespace-nowrap border-b-2 border-transparent p-2.5 text-center text-[16px] font-normal leading-[1.5] text-font-2 outline-none transition-none duration-0",
+                "flex h-10 cursor-pointer items-center justify-center whitespace-nowrap p-2.5 text-center text-[16px] font-normal leading-[1.5] text-font-2 outline-none transition-none duration-0",
                 TAB_WIDTH_CLASS_BY_ID[tabId],
-                isActive && "border-brand font-semibold text-font-1",
+                isActive && "font-semibold text-font-1",
               )}
             >
               {/* Required markers are visual tab affordances, not part of the locale key. */}
@@ -100,6 +111,13 @@ const CreateTabs = ({
             </button>
           );
         })}
+
+        <motion.span
+          className="absolute bottom-0 h-0.5 bg-brand"
+          initial={false}
+          animate={{ x: underlineRect.left, width: underlineRect.width }}
+          transition={{ type: "spring", stiffness: 500, damping: 40 }}
+        />
       </nav>
 
       {renderActiveTab()}

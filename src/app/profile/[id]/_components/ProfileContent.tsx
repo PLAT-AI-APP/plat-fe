@@ -8,6 +8,7 @@ import CharacterSortPopover, {
   CharacterSortOption,
 } from "@/components/popover/CharacterSortPopover";
 import useToggle from "@/hooks/useToggle";
+import { useTabUnderline } from "@/hooks/useTabUnderline";
 import { Sort } from "@/icons";
 import { cn } from "@/lib/utils";
 import Header from "./Header";
@@ -108,6 +109,11 @@ export default function ProfileContent({ id }: { id: string }) {
   const [sort, setSort] = useState<CharacterSortOption>("latest");
   const { isOpen, toggle } = useToggle();
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const {
+    containerRef: tabNavRef,
+    setTabRef,
+    rect: underlineRect,
+  } = useTabUnderline(activeTab);
 
   const displayArray = activeTab === "character" ? CharArray : WishArray;
 
@@ -120,27 +126,24 @@ export default function ProfileContent({ id }: { id: string }) {
         className="flex min-w-0 flex-1 flex-col gap-3.5"
       >
         <div className="flex min-w-0 flex-1 flex-col gap-4">
-          <nav className="flex w-full items-end border-b-2 border-card-hover">
+          <nav
+            ref={tabNavRef as React.RefObject<HTMLElement>}
+            className="relative flex w-full items-end border-b-2 border-card-hover"
+          >
             {TAB_ITEMS.map(({ key, labelKey }) => (
               <React.Fragment key={key}>
                 <button
                   type="button"
+                  ref={(el) => setTabRef(key, el)}
                   onClick={() => setActiveTab(key)}
                   className={cn(
-                    "relative flex w-fit items-center justify-center px-5 py-2.5 text-center",
+                    "flex w-fit items-center justify-center px-5 py-2.5 text-center",
                     activeTab === key
                       ? "title-3 text-font-1"
                       : "body-2 text-font-disabled",
                   )}
                 >
                   {t(labelKey)}
-                  {activeTab === key && (
-                    <motion.span
-                      layoutId="profile-tab-underline"
-                      className="absolute inset-x-0 -bottom-0.5 h-0.5 bg-brand"
-                      transition={{ type: "spring", stiffness: 500, damping: 40 }}
-                    />
-                  )}
                 </button>
                 {key === "character" && (
                   <button
@@ -153,6 +156,13 @@ export default function ProfileContent({ id }: { id: string }) {
                 )}
               </React.Fragment>
             ))}
+
+            <motion.span
+              className="absolute bottom-0 h-0.5 bg-brand"
+              initial={false}
+              animate={{ x: underlineRect.left, width: underlineRect.width }}
+              transition={{ type: "spring", stiffness: 500, damping: 40 }}
+            />
           </nav>
 
           <header className="flex w-full items-center justify-between">

@@ -1,6 +1,7 @@
 "use client";
 
 import { useQueryClient } from "@tanstack/react-query";
+import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import React, {
@@ -17,6 +18,7 @@ import { useFollowingListQuery } from "@/api/follow/getFollowingList";
 import { useFollowMutation } from "@/api/follow/postFollow";
 import { ModalLayout } from "@/components/ModalLayout";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+import { useTabUnderline } from "@/hooks/useTabUnderline";
 import { Close } from "@/icons";
 import { cn } from "@/lib/utils";
 import { useModalStore } from "@/store/useModalStore";
@@ -41,6 +43,11 @@ const FollowModal = ({
   );
   const [activeTabs, setActiveTabs] = useState<FollowTab>(activeTab);
   const [followChangeIds, setFollowChangeIds] = useState<string[]>([]);
+  const {
+    containerRef: tabNavRef,
+    setTabRef,
+    rect: underlineRect,
+  } = useTabUnderline(activeTabs);
   const { mutate: follow, isPending: isFollowMutating } = useFollowMutation();
   const { mutate: unFollow, isPending: isUnFollowMutating } =
     useUnFollowMutation();
@@ -148,21 +155,31 @@ const FollowModal = ({
       className="w-112.5 overflow-hidden p-5"
     >
       <header className="mb-8 flex items-center justify-between">
-        <nav className="flex gap-1">
+        <nav
+          ref={tabNavRef as React.RefObject<HTMLElement>}
+          className="relative flex gap-1"
+        >
           {FOLLOW_TAB_IDS.map((tabId) => (
             <button
               type="button"
               key={tabId}
+              ref={(el) => setTabRef(tabId, el)}
               onClick={() => setActiveTabs(tabId)}
               className={cn(
                 "body-2 translate-y-0.5 cursor-pointer px-5 py-2.5 text-font-disabled transition-none",
-                activeTabs === tabId &&
-                  "title-3 border-b-2 border-brand text-font-1",
+                activeTabs === tabId && "title-3 text-font-1",
               )}
             >
               {tabTitles[tabId]}
             </button>
           ))}
+
+          <motion.span
+            className="absolute bottom-0 h-0.5 bg-brand"
+            initial={false}
+            animate={{ x: underlineRect.left, width: underlineRect.width }}
+            transition={{ type: "spring", stiffness: 500, damping: 40 }}
+          />
         </nav>
 
         <button
