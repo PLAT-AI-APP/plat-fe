@@ -81,6 +81,10 @@ const SmartInput = forwardRef<
   const handleValueChange = (
     e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>,
   ) => {
+    // 붙여넣기나 IME 조합 확정 시 maxLength를 넘어설 수 있어 네이티브 속성과 별개로 한 번 더 잘라냅니다.
+    if (typeof maxLength === "number" && e.target.value.length > maxLength) {
+      e.target.value = e.target.value.slice(0, maxLength);
+    }
     if (value === undefined) {
       setDisplayValue(e.target.value);
     }
@@ -174,6 +178,7 @@ const SmartInput = forwardRef<
                   inputClassName,
                 )}
                 placeholder={translateText(placeholder)}
+                maxLength={maxLength}
                 value={value}
                 onChange={handleValueChange}
                 onFocus={handleFocus}
@@ -205,6 +210,7 @@ const SmartInput = forwardRef<
                 isLengthExceeded && "border-font-error",
               )}
               placeholder={translateText(placeholder)}
+              maxLength={maxLength}
               value={value}
               onChange={handleValueChange}
               onFocus={handleFocus}
