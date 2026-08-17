@@ -33,6 +33,7 @@ const CharacterCard = ({
   isNew = false,
   isOfficial = false,
   selectedTags,
+  rank,
 }: CharacterCardProps) => {
   const t = useTranslations("characterCard");
   const config = SIZE_CONFIG[size];
@@ -203,6 +204,12 @@ const CharacterCard = ({
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
+
+        {typeof rank === "number" && (
+          <span className="pointer-events-none absolute bottom-3 left-3 text-[40px] leading-none font-extrabold text-font-0 [text-shadow:0px_4px_6.7px_rgba(0,0,0,0.4)]">
+            {rank}
+          </span>
+        )}
 
         {hasIndicator && (
           <SlideIndicators

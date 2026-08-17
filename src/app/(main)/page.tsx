@@ -1,7 +1,6 @@
 import Footer from "@/components/Footer";
 import { MainBannerCarousel } from "@/app/(main)/_components/MainBannerCarousel";
 import MenuTab from "./_components/MenuTab";
-import { cn } from "@/lib/utils";
 import { Metadata } from "next";
 import HomeTabContents from "./_components/home-tab-contents";
 import RankingTabContents from "./_components/ranking-tab-contents";
@@ -29,20 +28,15 @@ const Home = async ({ searchParams }: HomePageProps) => {
     categories: <CategoriesTabContents />,
   };
 
-  const isCategories = currentTab === "categories";
-
   return (
     <article
       id="home-container"
-      className={cn(
-        "w-full min-h-[calc(100vh-60px)] flex",
-        isCategories && "bg-darker",
-      )}
+      className="w-full min-h-[calc(100vh-60px)] flex"
     >
       {/* 메인 콘텐츠 영역 */}
       <section className="flex flex-col w-full min-h-[calc(100vh-60px)]">
-        {/* 메인 비주얼/슬라이드 영역 */}
-        {currentTab === "all" && <MainBannerCarousel />}
+        {/* 메인 비주얼/슬라이드 영역: 탭과 무관하게 항상 노출되고, 아래 탭 콘텐츠만 바뀝니다. */}
+        <MainBannerCarousel />
 
         <div className="w-full max-w-300 mx-auto @container flex-1 flex flex-col">
           <MenuTab currentTab={currentTab} />
@@ -96,11 +90,6 @@ const Home = async ({ searchParams }: HomePageProps) => {
           </div>
         </div>
       </section>
-
-      {/* 사이드바 영역: CategoriesTabContents가 선택 태그 상태를 소유하고 이 위치로 렌더링합니다. */}
-      {isCategories && (
-        <div id="categories-tag-sidebar-root" className="contents" />
-      )}
     </article>
   );
 };

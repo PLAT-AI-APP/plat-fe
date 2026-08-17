@@ -12,6 +12,7 @@ export interface CharacterCardProps {
   isNew?: boolean;
   isOfficial?: boolean;
   selectedTags?: string | string[];
+  rank?: number;
 }
 
 export interface SizeConfig {
