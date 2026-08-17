@@ -23,7 +23,7 @@ const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
   const t = useTranslations("home");
 
   return (
-    <article className="flex flex-col gap-18 mt-7 pb-18">
+    <article className="flex flex-col gap-18 mt-7">
       {/* 오늘의 PICK 섹션 */}
       <CharacterShowcase
         charArray={charArray}

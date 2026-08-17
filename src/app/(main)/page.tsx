@@ -83,7 +83,10 @@ const Home = async ({ searchParams }: HomePageProps) => {
               },
             ]}
           /> */}
-          <div id="contents-wrapper" className="flex flex-col grow w-full">
+          <div
+            id="contents-wrapper"
+            className="flex flex-col grow w-full pb-18"
+          >
             {TabComponents[currentTab]}
           </div>
 
