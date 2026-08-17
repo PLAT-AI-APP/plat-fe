@@ -43,6 +43,10 @@ const ko = {
     title: "PLAT의 공식캐릭터",
     sortByChats: "대화량 순",
   },
+  newPage: {
+    title: "이달의 신규 캐릭터",
+    updatedAt: "{date}일 기준 집계",
+  },
   searchResults: {
     tabAll: "전체",
     tabCharacter: "캐릭터",
@@ -211,6 +215,10 @@ const en = {
   officialPage: {
     title: "PLAT's official characters",
     sortByChats: "Most chatted",
+  },
+  newPage: {
+    title: "New characters this month",
+    updatedAt: "As of {date}",
   },
   searchResults: {
     tabAll: "All",
@@ -381,6 +389,10 @@ const ja = {
     title: "PLATの公式キャラクター",
     sortByChats: "会話量順",
   },
+  newPage: {
+    title: "今月の新作キャラクター",
+    updatedAt: "{date}時点の集計",
+  },
   searchResults: {
     tabAll: "すべて",
     tabCharacter: "キャラクター",
@@ -549,6 +561,10 @@ const zh = {
   officialPage: {
     title: "PLAT官方角色",
     sortByChats: "按对话量排序",
+  },
+  newPage: {
+    title: "本月新角色",
+    updatedAt: "截至{date}统计",
   },
   searchResults: {
     tabAll: "全部",
@@ -719,6 +735,10 @@ const th = {
     title: "ตัวละครทางการของ PLAT",
     sortByChats: "เรียงตามจำนวนแชต",
   },
+  newPage: {
+    title: "ตัวละครใหม่ประจำเดือนนี้",
+    updatedAt: "ข้อมูล ณ {date}",
+  },
   searchResults: {
     tabAll: "ทั้งหมด",
     tabCharacter: "ตัวละคร",
@@ -887,6 +907,10 @@ const vi = {
   officialPage: {
     title: "Nhân vật chính thức của PLAT",
     sortByChats: "Theo lượt chat",
+  },
+  newPage: {
+    title: "Nhân vật mới trong tháng",
+    updatedAt: "Tính đến {date}",
   },
   searchResults: {
     tabAll: "Tất cả",

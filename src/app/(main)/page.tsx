@@ -7,6 +7,7 @@ import RankingTabContents from "./_components/ranking-tab-contents";
 import { CHARACTERS_DUMMY } from "@/mocks/dummyData";
 import CategoriesTabContents from "./_components/categories-tab-contents";
 import OfficialTabContents from "./_components/official-tab-contents";
+import NewTabContents from "./_components/new-tab-contents";
 // import OverflowTagList from "@/components/OverflowTagList";
 
 export const metadata: Metadata = {
@@ -26,6 +27,7 @@ const Home = async ({ searchParams }: HomePageProps) => {
   const TabComponents: { [key: string]: React.ReactNode } = {
     all: <HomeTabContents charArray={CHARACTERS_DUMMY} />,
     ranking: <RankingTabContents />,
+    new: <NewTabContents />,
     official: <OfficialTabContents />,
     categories: <CategoriesTabContents />,
   };
