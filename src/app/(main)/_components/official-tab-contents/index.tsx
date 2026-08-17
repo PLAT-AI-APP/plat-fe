@@ -1,0 +1,36 @@
+"use client";
+
+import { useTranslations } from "next-intl";
+import CharacterCard from "../character-card";
+import OfficialSortDropdown from "./_components/OfficialSortDropdown";
+import { DUMMY_OFFICIAL_CHARACTERS } from "./dummyData";
+
+const OfficialTabContents = () => {
+  const t = useTranslations("officialPage");
+
+  return (
+    <article className="flex w-full flex-col gap-5 pt-5">
+      <div className="flex w-full items-center justify-between">
+        <h2 className="title-2 text-font-1">{t("title")}</h2>
+        <OfficialSortDropdown />
+      </div>
+
+      <div className="flex w-full flex-wrap gap-x-4 gap-y-7">
+        {DUMMY_OFFICIAL_CHARACTERS.map((character) => (
+          <CharacterCard
+            key={character.id}
+            size="S"
+            title={character.title}
+            description={character.description}
+            creatorName={character.creatorName}
+            chatCount={character.chatCount}
+            images={character.image}
+            isOfficial
+          />
+        ))}
+      </div>
+    </article>
+  );
+};
+
+export default OfficialTabContents;

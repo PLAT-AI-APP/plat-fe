@@ -39,6 +39,10 @@ const ko = {
     sortRecommended: "맞춤 추천순",
     sortWish: "찜",
   },
+  officialPage: {
+    title: "PLAT의 공식캐릭터",
+    sortByChats: "대화량 순",
+  },
   searchResults: {
     tabAll: "전체",
     tabCharacter: "캐릭터",
@@ -203,6 +207,10 @@ const en = {
     sortChats: "Most chatted",
     sortRecommended: "Recommended for you",
     sortWish: "Wishlist",
+  },
+  officialPage: {
+    title: "PLAT's official characters",
+    sortByChats: "Most chatted",
   },
   searchResults: {
     tabAll: "All",
@@ -369,6 +377,10 @@ const ja = {
     sortRecommended: "おすすめ順",
     sortWish: "お気に入り",
   },
+  officialPage: {
+    title: "PLATの公式キャラクター",
+    sortByChats: "会話量順",
+  },
   searchResults: {
     tabAll: "すべて",
     tabCharacter: "キャラクター",
@@ -533,6 +545,10 @@ const zh = {
     sortChats: "对话量",
     sortRecommended: "个性化推荐顺",
     sortWish: "收藏",
+  },
+  officialPage: {
+    title: "PLAT官方角色",
+    sortByChats: "按对话量排序",
   },
   searchResults: {
     tabAll: "全部",
@@ -699,6 +715,10 @@ const th = {
     sortRecommended: "ตามคำแนะนำเฉพาะคุณ",
     sortWish: "รายการโปรด",
   },
+  officialPage: {
+    title: "ตัวละครทางการของ PLAT",
+    sortByChats: "เรียงตามจำนวนแชต",
+  },
   searchResults: {
     tabAll: "ทั้งหมด",
     tabCharacter: "ตัวละคร",
@@ -863,6 +883,10 @@ const vi = {
     sortChats: "Theo lượt chat",
     sortRecommended: "Đề xuất riêng cho bạn",
     sortWish: "Yêu thích",
+  },
+  officialPage: {
+    title: "Nhân vật chính thức của PLAT",
+    sortByChats: "Theo lượt chat",
   },
   searchResults: {
     tabAll: "Tất cả",
