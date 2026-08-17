@@ -103,6 +103,22 @@ button {
 }
 
 /* Sonner */
+/* toast 노출 시간과 사라지는 시간 (src/lib/toast.tsx의 APP_TOAST_DURATION과 값을 맞춰야 합니다.) */
+[data-sonner-toaster] {
+  --app-toast-duration: 5000ms;
+  --app-toast-fade-out-duration: 900ms;
+  --app-toast-ease: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* hover 시 sonner가 data-expanded=true로 바꿔 쌓인 toast를 펼치는 것을 막고, 겹쳐 쌓인 배치를 그대로 유지합니다.
+   (sonner의 접힘 상태 규칙과 동일한 계산식이며, --scale은 값이 아니라 식으로 치환되는 sonner의 방식을 따릅니다.) */
+[data-sonner-toast][data-mounted="true"][data-expanded="true"][data-front="false"] {
+  --scale: var(--toasts-before) * 0.05 + 1;
+  --y: translateY(calc(var(--lift-amount) * var(--toasts-before)))
+    scale(calc(-1 * var(--scale)));
+  height: var(--front-toast-height);
+}
+
 [data-sonner-toast].sonner-toast {
   width: min(517px, calc(100vw - 32px));
   min-height: auto;
@@ -120,10 +136,12 @@ button {
   padding: 20px 16px;
   backdrop-filter: blur(3.25px);
   transform-origin: top center;
+  /* 위치 이동은 빠르게 붙는 이징이 자연스럽지만, 투명도는 같은 이징을 쓰면
+     초반에 확 사라져 깜빡이는 느낌이라 고르게 변하는 이징을 씁니다. */
   transition:
-    opacity 500ms ease,
-    transform 500ms ease,
-    filter 500ms ease;
+    opacity 480ms ease-in-out,
+    transform 480ms var(--app-toast-ease),
+    filter 480ms ease-in-out;
 }
 
 [data-sonner-toast].sonner-toast.sonner-size-s {
@@ -142,13 +160,30 @@ button {
   backdrop-filter: blur(3.25px);
 }
 
+/* sonner는 노출 시간이 끝난 뒤 200ms만에 DOM에서 제거해 버리므로,
+   퇴장 애니메이션을 노출 시간이 끝나기 전부터 미리 재생해 서서히 사라지게 합니다. */
 [data-sonner-toast].sonner-toast[data-mounted="true"] {
-  animation: sonner-toast-in 180ms ease-out;
+  animation:
+    sonner-toast-in 340ms var(--app-toast-ease),
+    sonner-toast-out var(--app-toast-fade-out-duration) ease-in-out
+      calc(var(--app-toast-duration) - var(--app-toast-fade-out-duration))
+      forwards;
 }
 
+/* toaster에 hover하면 sonner가 자동 닫힘 타이머를 멈추므로, 사라지는 애니메이션도 같이 멈춰 둡니다. */
+[data-sonner-toast].sonner-toast[data-expanded="true"] {
+  animation-play-state: paused;
+}
+
+/* sonner가 removed 200ms 뒤 DOM에서 제거하므로, 닫기 버튼으로 즉시 닫을 때도
+   전환이 잘리지 않도록 그 시간 안에 끝나는 길이로 맞춥니다. */
 [data-sonner-toast].sonner-toast[data-removed="true"] {
   opacity: 0;
   filter: blur(2px);
+  transition:
+    opacity 200ms ease-in,
+    transform 200ms var(--app-toast-ease),
+    filter 200ms ease-in;
 }
 
 .sonner-title {
@@ -409,9 +444,9 @@ button {
   flex-direction: column;
   align-items: flex-end;
   gap: 20px;
-  border: 1px solid var(--toast-border, var(--font-error));
+  border: 1px solid var(--border);
   border-radius: 12px;
-  background: var(--font-4, #0d0e11);
+  background: var(--bg-dark, #11141f);
   padding: 16px;
   font-family: "Pretendard", sans-serif;
   backdrop-filter: blur(3.25px);
@@ -472,49 +507,66 @@ button {
   height: 38px;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--toast-border, var(--font-error));
   border-radius: 8px;
-  background: var(--toast-action-bg, rgba(255, 56, 66, 0.1));
+  background: var(--toast-action-bg, rgba(255, 56, 66, 0.2));
   color: var(--toast-border, var(--font-error));
   padding: 0 12px;
   transition: none;
 }
 
 .app-toast-s__action:hover {
-  border-color: var(--toast-border, var(--font-error));
-  background: var(--toast-action-bg, rgba(255, 56, 66, 0.1));
+  background: var(--toast-action-bg, rgba(255, 56, 66, 0.2));
   color: var(--toast-border, var(--font-error));
 }
 
 .app-toast-s-success {
   --toast-border: #00c925;
-  --toast-action-bg: rgba(0, 201, 37, 0.1);
+  --toast-action-bg: rgba(0, 201, 37, 0.2);
 }
 
 .app-toast-s-error {
   --toast-border: var(--font-error);
-  --toast-action-bg: rgba(255, 56, 66, 0.1);
+  --toast-action-bg: rgba(255, 56, 66, 0.2);
 }
 
 .app-toast-s-warning {
   --toast-border: var(--brand-dark);
-  --toast-action-bg: var(--brand-opacity);
+  --toast-action-bg: rgba(255, 154, 60, 0.2);
 }
 
 .app-toast-s-info {
   --toast-border: var(--font-3-disabled);
-  --toast-action-bg: rgba(92, 97, 128, 0.1);
+  --toast-action-bg: rgba(92, 97, 128, 0.2);
 }
 
+.app-toast-s-info .app-toast-s__action,
+.app-toast-s-info .app-toast-s__action:hover {
+  color: var(--font-1);
+}
+
+/* scale을 쓰면 sonner가 등장 중 측정한 높이(--initial-height)가 축소된 값으로 저장돼
+   hover 시 toast 높이가 튀므로, 이동과 투명도만 사용합니다. */
 @keyframes sonner-toast-in {
   from {
     opacity: 0;
-    transform: translateY(-8px) scale(0.98);
+    transform: translateY(-12px);
   }
 
   to {
     opacity: 1;
-    transform: translateY(0) scale(1);
+    transform: translateY(0);
+  }
+}
+
+@keyframes sonner-toast-out {
+  from {
+    opacity: 1;
+    filter: blur(0);
+  }
+
+  to {
+    opacity: 0;
+    filter: blur(2px);
   }
 }
 

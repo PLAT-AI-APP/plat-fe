@@ -16,6 +16,7 @@ export { default as Info } from "./Info";
 export { default as Prohibition } from "./Prohibition";
 export { default as ShareOutline } from "./ShareOutline";
 export { default as Star } from "./Star";
+export { default as StatusSuccessLine } from "./StatusSuccessLine";
 
 // 3. 미디어 및 입력
 export { default as Camera } from "./Camera";

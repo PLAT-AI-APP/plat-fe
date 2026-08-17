@@ -11,9 +11,8 @@ const SonnerProvider = () => {
     <Toaster
       position="top-center"
       closeButton
-      duration={2000}
-      expand
-      gap={12}
+      duration={5000}
+      gap={16}
       offset={40}
       visibleToasts={3}
       theme="dark"
