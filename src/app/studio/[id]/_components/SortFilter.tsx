@@ -29,7 +29,7 @@ const SortFilter = ({ currentSort }: SortFilterProps) => {
         ref={triggerRef}
         type="button"
         onClick={() => setIsSortOpen(!isSortOpen)}
-        className="title-5 flex cursor-pointer items-center gap-1.5 px-1.5 py-1 text-font-2"
+        className="title-5 flex cursor-pointer items-center gap-1.5 rounded-lg px-1.5 py-1 text-font-2 transition-colors duration-200 hover:bg-btn-hover hover:text-font-1"
         aria-haspopup="listbox"
         aria-expanded={isSortOpen}
       >

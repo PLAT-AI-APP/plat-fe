@@ -176,7 +176,7 @@ export default function ProfileContent({ id }: { id: string }) {
                 ref={triggerRef}
                 type="button"
                 onClick={toggle}
-                className="title-5 flex items-center gap-1.5 rounded-lg px-1.5 py-1 text-font-2"
+                className="title-5 flex items-center gap-1.5 rounded-lg px-1.5 py-1 text-font-2 transition-colors duration-200 hover:bg-btn-hover hover:text-font-1"
                 aria-haspopup="listbox"
                 aria-expanded={isOpen}
               >
