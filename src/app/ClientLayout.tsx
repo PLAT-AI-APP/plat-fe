@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import Header from "@/components/header";
 import Sidebar from "@/components/Sidebar";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useScrollTimeout } from "@/hooks/useScrollTiemout";
 import { cn } from "@/lib/utils";
 import { useMyInfoQuery } from "@/api/user/getMyInfo";
@@ -50,11 +50,6 @@ export default function ClientLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
-
-  // 쿼리스트링을 포함한 전체 경로(fullPath) 생성
-  const queryString = searchParams.toString();
-  const fullPath = queryString ? `${pathname}?${queryString}` : pathname;
 
   useMyInfoQuery();
   useWalletBalanceQuery();
@@ -75,9 +70,11 @@ export default function ClientLayout({
   // 첫 진입과 새로고침 시 사이드바는 접힌 상태로 시작
   const [isFolded, setIsFolded] = useState(() => shouldFoldSidebar);
 
+  // 탭 전환처럼 같은 경로 안에서 쿼리스트링만 바뀌는 경우는 접힘 상태를 건드리지 않고,
+  // 실제 경로가 바뀔 때만 접힘 상태를 재계산합니다.
   useEffect(() => {
     setIsFolded(shouldFoldSidebar);
-  }, [fullPath, shouldFoldSidebar]);
+  }, [pathname, shouldFoldSidebar]);
 
   // 반응형 미디어 쿼리 제어 (기존 로직 유지)
   useEffect(() => {
