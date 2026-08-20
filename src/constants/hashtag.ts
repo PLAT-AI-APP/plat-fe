@@ -3,13 +3,15 @@ import type { HashtagCategory } from "@/api/hashtag/getHashtagList";
 // 태그 사이드바/추가 모달에서 카테고리를 폴더로 묶어 보여줄 때의 노출 순서
 export const HASHTAG_CATEGORY_ORDER: HashtagCategory[] = [
   "GENRE",
-  "SPECIES",
+  "BACKGROUND",
+  "RACE",
   "CHARACTER",
   "APPEARANCE",
   "PERSONALITY",
   "RELATIONSHIP",
   "NARRATIVE",
-  "JOB",
+  "OCCUPATION",
+  "MOOD",
   "SPECIAL",
 ];
 
@@ -19,12 +21,14 @@ export const HASHTAG_CATEGORY_FOLDER_TITLE_KEYS: Record<
   string
 > = {
   GENRE: "folderGenre",
-  SPECIES: "folderSpecies",
+  BACKGROUND: "folderBackground",
+  RACE: "folderRace",
   CHARACTER: "folderCharacter",
   APPEARANCE: "folderAppearance",
   PERSONALITY: "folderPersonality",
   RELATIONSHIP: "folderRelationship",
   NARRATIVE: "folderNarrative",
-  JOB: "folderJob",
+  OCCUPATION: "folderOccupation",
+  MOOD: "folderMood",
   SPECIAL: "folderSpecial",
 };

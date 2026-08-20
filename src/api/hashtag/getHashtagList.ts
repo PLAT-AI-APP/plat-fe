@@ -4,13 +4,15 @@ import { AppError } from "@/type/api";
 
 export type HashtagCategory =
   | "GENRE"
-  | "SPECIES"
+  | "BACKGROUND"
+  | "RACE"
   | "CHARACTER"
   | "APPEARANCE"
   | "PERSONALITY"
   | "RELATIONSHIP"
   | "NARRATIVE"
-  | "JOB"
+  | "OCCUPATION"
+  | "MOOD"
   | "SPECIAL";
 
 export interface Hashtag {
