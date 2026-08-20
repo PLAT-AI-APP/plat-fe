@@ -10,16 +10,16 @@ type MessageKey = Parameters<ReturnType<typeof useTranslations>>[0];
 const CONTENT_TYPES = ["character", "world"] as const;
 type ContentType = (typeof CONTENT_TYPES)[number];
 const CONTENT_TYPE_LABEL_KEYS: Record<ContentType, MessageKey> = {
-  character: "categoriesPage.contentTypeCharacter",
-  world: "categoriesPage.contentTypeWorld",
+  character: "rankingPage.contentTypeCharacter",
+  world: "rankingPage.contentTypeWorld",
 };
 
 const SORT_OPTIONS = ["chats", "recommended", "wish"] as const;
 type SortOption = (typeof SORT_OPTIONS)[number];
 const SORT_LABEL_KEYS: Record<SortOption, MessageKey> = {
-  chats: "categoriesPage.sortChats",
-  recommended: "categoriesPage.sortRecommended",
-  wish: "categoriesPage.sortWish",
+  chats: "rankingPage.sortChats",
+  recommended: "rankingPage.sortRecommended",
+  wish: "rankingPage.sortWish",
 };
 
 const NewCharacterHeader = () => {

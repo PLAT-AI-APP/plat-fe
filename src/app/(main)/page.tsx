@@ -1,6 +1,7 @@
 import Footer from "@/components/Footer";
 import { MainBannerCarousel } from "@/app/(main)/_components/MainBannerCarousel";
 import MenuTab from "./_components/MenuTab";
+import { cn } from "@/lib/utils";
 import { Metadata } from "next";
 import HomeTabContents from "./_components/home-tab-contents";
 import RankingTabContents from "./_components/ranking-tab-contents";
@@ -32,10 +33,15 @@ const Home = async ({ searchParams }: HomePageProps) => {
     categories: <CategoriesTabContents />,
   };
 
+  const isCategories = currentTab === "categories";
+
   return (
     <article
       id="home-container"
-      className="w-full min-h-[calc(100vh-60px)] flex"
+      className={cn(
+        "w-full min-h-[calc(100vh-60px)] flex",
+        isCategories && "bg-darker",
+      )}
     >
       {/* 메인 콘텐츠 영역 */}
       <section className="flex flex-col w-full min-h-[calc(100vh-60px)]">
@@ -97,6 +103,11 @@ const Home = async ({ searchParams }: HomePageProps) => {
           </div>
         </div>
       </section>
+
+      {/* 사이드바 영역: CategoriesTabContents가 선택 태그 상태를 소유하고 이 위치로 렌더링합니다. */}
+      {isCategories && (
+        <div id="categories-tag-sidebar-root" className="contents" />
+      )}
     </article>
   );
 };

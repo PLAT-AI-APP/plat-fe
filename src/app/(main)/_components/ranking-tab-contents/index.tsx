@@ -1,20 +1,27 @@
-import React from "react";
-import PeriodTab from "./PeriodTab";
-import CharacterShowcase from "../CharacterShowcase";
-import { DUMMY_CHARACTERS } from "@/app/studio/[id]/_components/dummyData";
+import CharacterCard from "../character-card";
+import RankingHeader from "./_components/RankingHeader";
+import { DUMMY_RANKED_CHARACTERS } from "./dummyData";
 
 const RankingTabContents = () => {
   return (
-    <section className="flex flex-col gap-4">
-      <PeriodTab />
+    <article className="flex w-full flex-col gap-5 pt-5">
+      <RankingHeader />
 
-      <CharacterShowcase
-        charArray={DUMMY_CHARACTERS}
-        cardSize="S"
-        rowGap={12}
-        columnGap={12}
-      />
-    </section>
+      <div className="flex w-full flex-wrap gap-x-4 gap-y-7">
+        {DUMMY_RANKED_CHARACTERS.map((character, index) => (
+          <CharacterCard
+            key={character.id}
+            size="S"
+            rank={index + 1}
+            title={character.title}
+            description={character.description}
+            creatorName={character.creatorName}
+            chatCount={character.chatCount}
+            images={character.image}
+          />
+        ))}
+      </div>
+    </article>
   );
 };
 

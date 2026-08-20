@@ -10,11 +10,11 @@ export interface RankedCharacter {
 export const DUMMY_RANKED_CHARACTERS: RankedCharacter[] = Array.from(
   { length: 24 },
   (_, index) => ({
-    id: `category-ranking-character-${index}`,
+    id: `ranking-character-${index}`,
     title: "흐물거리는 무말랭이",
     description: "매일 밤 골목 고양이들과 나누는 시시콜콜한 이야기",
     creatorName: "흐물거리는무말랭이",
     chatCount: 235,
-    image: `https://picsum.photos/seed/category-ranking-${index}/374/490`,
+    image: `https://picsum.photos/seed/ranking-${index}/374/490`,
   }),
 );
