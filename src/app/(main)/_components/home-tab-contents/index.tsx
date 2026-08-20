@@ -6,6 +6,7 @@ import React from "react";
 import CharacterShowcase from "../CharacterShowcase";
 import CharacterExperience from "./_components/character-experience";
 import CharacterCreateBanner from "../CharacterCreateBanner";
+import { useTodayPickQuery } from "@/api/home/getTodayPick";
 
 interface HomeTabContentsProps {
   charArray: {
@@ -21,12 +22,23 @@ interface HomeTabContentsProps {
 const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
   // 홈 탭 언어는 설정 변경 직후 바로 반영되어야 하므로 클라이언트 번역 컨텍스트를 사용합니다.
   const t = useTranslations("home");
+  const { data: todayPickList } = useTodayPickQuery();
+
+  const todayPickCharArray = (todayPickList ?? []).map((item) => ({
+    name: item.title,
+    chatCount: item.chatCount,
+    dec: item.description,
+    img: item.images,
+    creatorName: item.creator.nickname,
+    isNew: item.isNew,
+    isOfficial: item.isOfficial,
+  }));
 
   return (
     <article className="flex flex-col gap-18 mt-7">
       {/* 오늘의 PICK 섹션 */}
       <CharacterShowcase
-        charArray={charArray}
+        charArray={todayPickCharArray}
         title={t("todayPick")}
         allViewLink=""
         cardSize="S"
