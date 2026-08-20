@@ -346,14 +346,14 @@ const TagSidebar = ({
   onSelectedTagsChange,
 }: TagSidebarProps) => {
   const t = useTranslations("tagSidebar");
-  const { data: hashtagList } = useHashtagListQuery();
+  const { data: hashtagList, isLoading } = useHashtagListQuery();
   // 검색어는 사이드바 내부 UI 상태로 관리합니다.
   // 선택 태그는 CategoriesTabContents에서 내려받아 결과 영역과 같은 기준으로 공유합니다.
   const [query, setQuery] = useState("");
   const tagFolders = useMemo(() => {
     const apiTags = hashtagList?.tags ?? [];
 
-    if (apiTags.length === 0) return TAG_FOLDERS;
+    if (apiTags.length === 0) return [];
 
     const labelsByCategory = new Map<string, string[]>();
     apiTags.forEach((tag) => {
@@ -483,15 +483,21 @@ const TagSidebar = ({
           </div>
         </TagFolder>
 
-        {filteredFolders.map((folder) => (
-          <TagFolder
-            key={folder.title}
-            title={t.has(folder.title) ? t(folder.title) : folder.title}
-            tags={folder.tags}
-            selectedTags={selectedTags}
-            onTagToggle={toggleTag}
-          />
-        ))}
+        {!isLoading && tagFolders.length === 0 ? (
+          <p className="body-5 py-10 text-center text-font-disabled">
+            {t("emptyHashtags")}
+          </p>
+        ) : (
+          filteredFolders.map((folder) => (
+            <TagFolder
+              key={folder.title}
+              title={t.has(folder.title) ? t(folder.title) : folder.title}
+              tags={folder.tags}
+              selectedTags={selectedTags}
+              onTagToggle={toggleTag}
+            />
+          ))
+        )}
       </div>
     </aside>
   );

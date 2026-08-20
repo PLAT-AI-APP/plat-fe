@@ -70,6 +70,7 @@ const ko = {
     latest: "최신순",
   },
   tagSidebar: {
+    emptyHashtags: "등록된 해시태그가 없습니다",
     searchPlaceholder: "어떤 태그를 찾고 있나요?",
     selectedTags: "선택 태그",
     clearAll: "전체 해제",
@@ -250,6 +251,7 @@ const en = {
     latest: "Latest",
   },
   tagSidebar: {
+    emptyHashtags: "No hashtags registered yet",
     searchPlaceholder: "What tag are you looking for?",
     selectedTags: "Selected tags",
     clearAll: "Clear all",
@@ -430,6 +432,7 @@ const ja = {
     latest: "最新順",
   },
   tagSidebar: {
+    emptyHashtags: "登録されたハッシュタグがありません",
     searchPlaceholder: "どんなタグを探していますか？",
     selectedTags: "選択タグ",
     clearAll: "すべて解除",
@@ -610,6 +613,7 @@ const zh = {
     latest: "最新",
   },
   tagSidebar: {
+    emptyHashtags: "暂无已注册的标签",
     searchPlaceholder: "你在找什么标签？",
     selectedTags: "已选标签",
     clearAll: "全部清除",
@@ -790,6 +794,7 @@ const th = {
     latest: "ล่าสุด",
   },
   tagSidebar: {
+    emptyHashtags: "ยังไม่มีแฮชแท็กที่ลงทะเบียน",
     searchPlaceholder: "คุณกำลังมองหาแท็กแบบไหน?",
     selectedTags: "แท็กที่เลือก",
     clearAll: "ล้างทั้งหมด",
@@ -970,6 +975,7 @@ const vi = {
     latest: "Mới nhất",
   },
   tagSidebar: {
+    emptyHashtags: "Chưa có hashtag nào được đăng ký",
     searchPlaceholder: "Bạn đang tìm thẻ nào?",
     selectedTags: "Thẻ đã chọn",
     clearAll: "Bỏ chọn tất cả",
