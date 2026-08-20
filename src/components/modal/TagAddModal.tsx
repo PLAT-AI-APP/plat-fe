@@ -6,6 +6,10 @@ import { useFormContext, useWatch } from "react-hook-form";
 import { ModalLayout } from "../ModalLayout";
 import { useHashtagListQuery } from "@/api/hashtag/getHashtagList";
 import { TAG_FOLDERS } from "@/app/(main)/_components/categories-tab-contents/_components/tag-sidebar";
+import {
+  HASHTAG_CATEGORY_FOLDER_TITLE_KEYS,
+  HASHTAG_CATEGORY_ORDER,
+} from "@/constants/hashtag";
 import { ArrowDown, ArrowRight, Close, Megaphone, Search } from "@/icons";
 import Tag from "@/icons/Tag";
 import { cn } from "@/lib/utils";
@@ -13,7 +17,7 @@ import { CharacterCreateFormValues } from "@/schema/character.schema";
 import { useModalStore } from "@/store/useModalStore";
 import { TagAddModalProps } from "@/type/modal";
 
-type TagOption = { id: number; label: string };
+type TagOption = { id: string; label: string };
 
 interface TagFolderSection {
   title: string;
@@ -45,17 +49,24 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
     const apiTags = hashtagList?.tags ?? [];
 
     if (apiTags.length > 0) {
-      return [
-        {
-          title: tagSidebarT.has("allTags") ? tagSidebarT("allTags") : "태그",
-          tags: apiTags,
-        },
-      ];
+      const tagsByCategory = new Map<string, TagOption[]>();
+      apiTags.forEach((tag) => {
+        const tags = tagsByCategory.get(tag.category) ?? [];
+        tags.push({ id: tag.id, label: tag.label });
+        tagsByCategory.set(tag.category, tags);
+      });
+
+      return HASHTAG_CATEGORY_ORDER.filter((category) =>
+        tagsByCategory.has(category),
+      ).map((category) => ({
+        title: HASHTAG_CATEGORY_FOLDER_TITLE_KEYS[category],
+        tags: tagsByCategory.get(category) ?? [],
+      }));
     }
 
     const tagIdByLabel = new Map(
       Array.from(new Set(TAG_FOLDERS.flatMap((folder) => folder.tags))).map(
-        (label, index) => [label, index + TAG_ID_OFFSET] as const,
+        (label, index) => [label, String(index + TAG_ID_OFFSET)] as const,
       ),
     );
 
@@ -63,11 +74,11 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
     return TAG_FOLDERS.map((folder) => ({
       title: folder.title,
       tags: folder.tags.map((label) => ({
-        id: tagIdByLabel.get(label) ?? TAG_ID_OFFSET,
+        id: tagIdByLabel.get(label) ?? String(TAG_ID_OFFSET),
         label,
       })),
     }));
-  }, [hashtagList, tagSidebarT]);
+  }, [hashtagList]);
 
   const hasTags = tagFolderSections.some((folder) => folder.tags.length > 0);
   const matchedTags = useMemo(() => {

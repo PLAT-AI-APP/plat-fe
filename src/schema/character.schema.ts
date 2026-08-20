@@ -94,7 +94,7 @@ export const characterCreateSchema = z.object({
   tagIds: z
     .array(
       z.object({
-        id: z.number(),
+        id: z.string(),
         label: z.string(),
       }),
     )

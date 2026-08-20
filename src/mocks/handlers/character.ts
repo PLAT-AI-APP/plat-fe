@@ -218,7 +218,7 @@ export const characterHandlers = [
     const body = (await request.json()) as {
       name?: string;
       description?: string;
-      tagIds?: number[];
+      tagIds?: string[];
     };
 
     if (!body.name) {

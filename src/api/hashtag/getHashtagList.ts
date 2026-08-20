@@ -2,10 +2,28 @@ import { useQuery } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
 
+export type HashtagCategory =
+  | "GENRE"
+  | "SPECIES"
+  | "CHARACTER"
+  | "APPEARANCE"
+  | "PERSONALITY"
+  | "RELATIONSHIP"
+  | "NARRATIVE"
+  | "JOB"
+  | "SPECIAL";
+
+export interface Hashtag {
+  id: string;
+  category: HashtagCategory;
+  label: string;
+  isAdult: boolean;
+}
+
 export interface GetHashtagListResponse {
   lang: string;
   isAdult: boolean;
-  tags: { id: number; label: string }[];
+  tags: Hashtag[];
 }
 
 const getHashtagList = async () => {

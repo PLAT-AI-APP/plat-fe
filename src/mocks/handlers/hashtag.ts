@@ -1,25 +1,33 @@
 import { http, HttpResponse } from "msw";
+import type { HashtagCategory } from "@/api/hashtag/getHashtagList";
 import { endpoint } from "../utils";
 
-const TAGS = [
-  "일상",
-  "친구",
-  "학교생활",
-  "카페",
-  "여행",
-  "공부",
-  "취미",
-  "운동",
-  "영화",
-  "음악",
-  "게임",
-  "로맨스",
-  "판타지",
-  "코미디",
-  "미스터리",
-].map((label, index) => ({
-  id: index + 1,
+const TAG_SEED_ID = 48088734813523968;
+
+const TAG_SEEDS: { label: string; category: HashtagCategory }[] = [
+  { label: "일상", category: "GENRE" },
+  { label: "친구", category: "RELATIONSHIP" },
+  { label: "학교생활", category: "GENRE" },
+  { label: "카페", category: "GENRE" },
+  { label: "여행", category: "GENRE" },
+  { label: "공부", category: "GENRE" },
+  { label: "취미", category: "GENRE" },
+  { label: "운동", category: "GENRE" },
+  { label: "영화", category: "GENRE" },
+  { label: "음악", category: "GENRE" },
+  { label: "게임", category: "GENRE" },
+  { label: "로맨스", category: "GENRE" },
+  { label: "판타지", category: "GENRE" },
+  { label: "코미디", category: "GENRE" },
+  { label: "미스터리", category: "GENRE" },
+];
+
+const TAGS = TAG_SEEDS.map(({ label, category }, index) => ({
+  // 실제 응답의 id는 safe integer 범위를 넘는 문자열이라 목업에서도 문자열로 맞춥니다.
+  id: String(TAG_SEED_ID + index),
+  category,
   label,
+  isAdult: false,
 }));
 
 export const hashtagHandlers = [

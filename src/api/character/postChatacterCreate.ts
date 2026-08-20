@@ -20,7 +20,7 @@ interface postChatacterCreateProps {
   description: string;
   tendency: string;
   category: string[];
-  tagIds: number[];
+  tagIds: string[];
 }
 
 const postChatacterCreate = async (props: postChatacterCreateProps) => {

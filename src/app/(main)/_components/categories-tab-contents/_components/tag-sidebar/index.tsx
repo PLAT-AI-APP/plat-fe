@@ -1,6 +1,10 @@
 "use client";
 
 import { useHashtagListQuery } from "@/api/hashtag/getHashtagList";
+import {
+  HASHTAG_CATEGORY_FOLDER_TITLE_KEYS,
+  HASHTAG_CATEGORY_ORDER,
+} from "@/constants/hashtag";
 import { Search } from "@/icons";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
@@ -303,17 +307,24 @@ const TagSidebar = ({
   // 선택 태그는 CategoriesTabContents에서 내려받아 결과 영역과 같은 기준으로 공유합니다.
   const [query, setQuery] = useState("");
   const tagFolders = useMemo(() => {
-    const apiTags = hashtagList?.tags.map((tag) => tag.label) ?? [];
+    const apiTags = hashtagList?.tags ?? [];
 
     if (apiTags.length === 0) return TAG_FOLDERS;
 
-    return [
-      {
-        title: t.has("allTags") ? t("allTags") : "태그",
-        tags: apiTags,
-      },
-    ];
-  }, [hashtagList, t]);
+    const labelsByCategory = new Map<string, string[]>();
+    apiTags.forEach((tag) => {
+      const labels = labelsByCategory.get(tag.category) ?? [];
+      labels.push(tag.label);
+      labelsByCategory.set(tag.category, labels);
+    });
+
+    return HASHTAG_CATEGORY_ORDER.filter((category) =>
+      labelsByCategory.has(category),
+    ).map((category) => ({
+      title: HASHTAG_CATEGORY_FOLDER_TITLE_KEYS[category],
+      tags: labelsByCategory.get(category) ?? [],
+    }));
+  }, [hashtagList]);
 
   // 검색어가 있으면 각 폴더의 태그를 필터링하고, 결과가 없는 폴더는 숨깁니다.
   // 데이터 원본(TAG_FOLDERS)은 건드리지 않도록 map/filter 결과만 렌더링합니다.
