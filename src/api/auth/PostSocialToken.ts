@@ -4,6 +4,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 
 interface SocialTokenResponse {
   accessToken?: string;
+  isNew?: boolean;
 }
 
 export const postSocialToken = async (code: string) => {

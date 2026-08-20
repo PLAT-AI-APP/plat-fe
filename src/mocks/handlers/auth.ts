@@ -302,7 +302,10 @@ export const authHandlers = [
       return error(401, "MESSAGE", "소셜 로그인에 실패했습니다.");
     }
 
-    return ok({ accessToken: "mock-social-access-token" }, "로그인되었습니다.");
+    return ok(
+      { accessToken: "mock-social-access-token", isNew: code === "new" },
+      "로그인되었습니다.",
+    );
   }),
 
   http.post(endpoint("/auth/password/reset"), async ({ request }) => {

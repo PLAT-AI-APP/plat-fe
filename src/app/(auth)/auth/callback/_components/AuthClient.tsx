@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useSocialTokenMutation } from "@/api/auth/PostSocialToken";
+import { PENDING_WELCOME_CREDIT_DIALOG_KEY } from "@/constants/auth";
 
 interface AuthClientProps {
   code: string;
@@ -18,10 +19,17 @@ const AuthClient = ({ code }: AuthClientProps) => {
     isRequested.current = true;
 
     mutate(code, {
-      onSuccess: () => {
+      onSuccess: (data) => {
         const prevPath = localStorage.getItem("prevPath") || "/";
 
         localStorage.removeItem("prevPath");
+
+        if (data?.isNew) {
+          // 첫 로그인 시 홈에서 웰컴 다이얼로그를 띄울 수 있도록 대기 상태로 저장합니다.
+          sessionStorage.setItem(PENDING_WELCOME_CREDIT_DIALOG_KEY, "true");
+          router.replace("/");
+          return;
+        }
 
         router.replace(prevPath);
       },
