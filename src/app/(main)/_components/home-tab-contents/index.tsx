@@ -8,6 +8,7 @@ import CharacterExperience from "./_components/character-experience";
 import CharacterCreateBanner from "../CharacterCreateBanner";
 import { useTodayPickQuery } from "@/api/home/getTodayPick";
 import { useUserRecommendQuery } from "@/api/home/getUserRecommend";
+import { useAssetPreviewQuery } from "@/api/home/getAssetPreview";
 
 interface HomeTabContentsProps {
   charArray: {
@@ -25,6 +26,7 @@ const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
   const t = useTranslations("home");
   const { data: todayPickList } = useTodayPickQuery();
   const { data: userRecommendList } = useUserRecommendQuery();
+  const { data: assetPreviewList } = useAssetPreviewQuery();
 
   const todayPickCharArray = (todayPickList ?? []).map((item) => ({
     name: item.title,
@@ -42,6 +44,15 @@ const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
     dec: item.description,
     img: item.images,
     creatorName: item.creator.nickname,
+    isNew: item.isNew,
+    isOfficial: item.isOfficial,
+  }));
+
+  const assetPreviewCharArray = (assetPreviewList ?? []).map((item) => ({
+    name: item.title,
+    chatCount: item.chatCount,
+    dec: item.description,
+    img: item.images,
     isNew: item.isNew,
     isOfficial: item.isOfficial,
   }));
@@ -71,91 +82,9 @@ const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
         rowGap={28}
       />
 
-      {/* 인기 캐릭터 이미지 미리보기 섹션 */}
+      {/* 상황 에셋이 많은 캐릭터 미리보기 섹션 */}
       <CharacterShowcase
-        charArray={[
-          {
-            name: "옆자리 불량학생",
-            chatCount: 123,
-            dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
-            img: [
-              "https://picsum.photos/200/300?random=1",
-              "https://picsum.photos/200/300?random=2",
-              "https://picsum.photos/200/300?random=3",
-            ],
-          },
-          {
-            // (참고) id가 겹치면 리스트 렌더링 시 key 에러가 날 수 있어 임의로 변경했습니다.
-            name: "옆자리 불량학생",
-            chatCount: 123,
-            dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
-            img: [
-              "https://picsum.photos/200/300?random=4",
-              "https://picsum.photos/200/300?random=5",
-              "https://picsum.photos/200/300?random=6",
-            ],
-          },
-          {
-            name: "옆자리 불량학생",
-            chatCount: 123,
-            dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
-            img: [
-              "https://picsum.photos/200/300?random=7",
-              "https://picsum.photos/200/300?random=8",
-              "https://picsum.photos/200/300?random=9",
-            ],
-          },
-          {
-            name: "옆자리 불량학생",
-            chatCount: 123,
-            dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
-            img: [
-              "https://picsum.photos/200/300?random=10",
-              "https://picsum.photos/200/300?random=11",
-              "https://picsum.photos/200/300?random=12",
-            ],
-          },
-          {
-            name: "옆자리 불량학생",
-            chatCount: 123,
-            dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
-            img: [
-              "https://picsum.photos/200/300?random=13",
-              "https://picsum.photos/200/300?random=14",
-              "https://picsum.photos/200/300?random=15",
-            ],
-          },
-          {
-            name: "옆자리 불량학생",
-            chatCount: 123,
-            dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
-            img: [
-              "https://picsum.photos/200/300?random=16",
-              "https://picsum.photos/200/300?random=17",
-              "https://picsum.photos/200/300?random=18",
-            ],
-          },
-          {
-            name: "옆자리 불량학생",
-            chatCount: 123,
-            dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
-            img: [
-              "https://picsum.photos/200/300?random=19",
-              "https://picsum.photos/200/300?random=20",
-              "https://picsum.photos/200/300?random=21",
-            ],
-          },
-          {
-            name: "옆자리 불량학생",
-            chatCount: 123,
-            dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
-            img: [
-              "https://picsum.photos/200/300?random=22",
-              "https://picsum.photos/200/300?random=23",
-              "https://picsum.photos/200/300?random=24",
-            ],
-          },
-        ]}
+        charArray={assetPreviewCharArray}
         title={t("popularCharacterPreview")}
         cardSize="L"
         limit={3}

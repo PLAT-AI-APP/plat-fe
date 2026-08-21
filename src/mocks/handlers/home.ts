@@ -100,6 +100,25 @@ const OFFICIAL_PREVIEW_ITEMS = Array.from({ length: 24 }, (_, index) => {
   };
 });
 
+const ASSET_PREVIEW_ITEMS = Array.from({ length: 24 }, (_, index) => {
+  const seed = NEW_WORK_SEEDS[index % NEW_WORK_SEEDS.length];
+
+  return {
+    universeId: `asset-preview-${index}`,
+    images: [
+      `https://picsum.photos/seed/asset-preview-${index}-1/374/490`,
+      `https://picsum.photos/seed/asset-preview-${index}-2/374/490`,
+      `https://picsum.photos/seed/asset-preview-${index}-3/374/490`,
+    ],
+    title: seed.title,
+    description: seed.description,
+    isNew: index % 5 === 0,
+    isOfficial: index % 7 === 0,
+    // TODO: 백엔드 응답에 chatCount 추가되면 이 목업 값은 실제 스펙에 맞춰 정리
+    chatCount: seed.chatCount,
+  };
+});
+
 export const homeHandlers = [
   http.get(endpoint("/home/new-work"), ({ request }) => {
     const url = new URL(request.url);
@@ -126,5 +145,14 @@ export const homeHandlers = [
     const start = page * size;
 
     return HttpResponse.json(OFFICIAL_PREVIEW_ITEMS.slice(start, start + size));
+  }),
+
+  http.get(endpoint("/home/asset-preview"), ({ request }) => {
+    const url = new URL(request.url);
+    const page = Number(url.searchParams.get("page") ?? 0);
+    const size = Number(url.searchParams.get("size") ?? 10);
+    const start = page * size;
+
+    return HttpResponse.json(ASSET_PREVIEW_ITEMS.slice(start, start + size));
   }),
 ];
