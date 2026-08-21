@@ -7,6 +7,7 @@ import CharacterShowcase from "../CharacterShowcase";
 import CharacterExperience from "./_components/character-experience";
 import CharacterCreateBanner from "../CharacterCreateBanner";
 import { useTodayPickQuery } from "@/api/home/getTodayPick";
+import { useUserRecommendQuery } from "@/api/home/getUserRecommend";
 
 interface HomeTabContentsProps {
   charArray: {
@@ -23,8 +24,19 @@ const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
   // 홈 탭 언어는 설정 변경 직후 바로 반영되어야 하므로 클라이언트 번역 컨텍스트를 사용합니다.
   const t = useTranslations("home");
   const { data: todayPickList } = useTodayPickQuery();
+  const { data: userRecommendList } = useUserRecommendQuery();
 
   const todayPickCharArray = (todayPickList ?? []).map((item) => ({
+    name: item.title,
+    chatCount: item.chatCount,
+    dec: item.description,
+    img: item.images,
+    creatorName: item.creator.nickname,
+    isNew: item.isNew,
+    isOfficial: item.isOfficial,
+  }));
+
+  const userRecommendCharArray = (userRecommendList ?? []).map((item) => ({
     name: item.title,
     chatCount: item.chatCount,
     dec: item.description,
@@ -163,7 +175,7 @@ const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
 
       {/* (유저이름)님을 위한 추천 섹션 */}
       <CharacterShowcase
-        charArray={charArray}
+        charArray={userRecommendCharArray}
         title={t("recommendationForYou")}
         allViewLink="asf"
         cardSize="S"

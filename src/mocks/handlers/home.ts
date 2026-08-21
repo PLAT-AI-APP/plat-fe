@@ -24,7 +24,8 @@ const NEW_WORK_SEEDS = [
   },
   {
     title: "냉혹한 춤꾼",
-    description: "음악이 멈추면 모든 게 끝나는 거야. 마지막 춤을 출 준비는 됐어?",
+    description:
+      "음악이 멈추면 모든 게 끝나는 거야. 마지막 춤을 출 준비는 됐어?",
     nickname: "춤추는그림자",
     chatCount: 5421,
   },
@@ -60,6 +61,45 @@ const NEW_WORK_ITEMS = Array.from({ length: 24 }, (_, index) => {
   };
 });
 
+const USER_RECOMMEND_ITEMS = Array.from({ length: 24 }, (_, index) => {
+  const seed = NEW_WORK_SEEDS[index % NEW_WORK_SEEDS.length];
+
+  return {
+    universeId: `user-recommend-${index}`,
+    images: [`https://picsum.photos/seed/user-recommend-${index}/374/490`],
+    title: seed.title,
+    description: seed.description,
+    creator: {
+      creatorId: `creator-${index}`,
+      nickname: seed.nickname,
+    },
+    chatCount: seed.chatCount,
+    isNew: index % 5 === 0,
+    isOfficial: index % 7 === 0,
+  };
+});
+
+const OFFICIAL_PREVIEW_ITEMS = Array.from({ length: 24 }, (_, index) => {
+  const seed = NEW_WORK_SEEDS[index % NEW_WORK_SEEDS.length];
+
+  return {
+    universeId: `official-preview-${index}`,
+    images: [`https://picsum.photos/seed/official-preview-${index}/374/490`],
+    title: seed.title,
+    description: seed.description,
+    tags: ["일상", "판타지"],
+    chatCount: seed.chatCount,
+    remainingFreeChatCount: 5,
+    scenarios: [
+      {
+        episodeNo: 1,
+        title: "첫 만남",
+        content: "방과 후 과학실에서 정체를 알 수 없는 캐릭터와 처음 마주치는 장면",
+      },
+    ],
+  };
+});
+
 export const homeHandlers = [
   http.get(endpoint("/home/new-work"), ({ request }) => {
     const url = new URL(request.url);
@@ -68,5 +108,23 @@ export const homeHandlers = [
     const start = page * size;
 
     return HttpResponse.json(NEW_WORK_ITEMS.slice(start, start + size));
+  }),
+
+  http.get(endpoint("/home/user-recommend"), ({ request }) => {
+    const url = new URL(request.url);
+    const page = Number(url.searchParams.get("page") ?? 0);
+    const size = Number(url.searchParams.get("size") ?? 10);
+    const start = page * size;
+
+    return HttpResponse.json(USER_RECOMMEND_ITEMS.slice(start, start + size));
+  }),
+
+  http.get(endpoint("/home/official-preview"), ({ request }) => {
+    const url = new URL(request.url);
+    const page = Number(url.searchParams.get("page") ?? 0);
+    const size = Number(url.searchParams.get("size") ?? 10);
+    const start = page * size;
+
+    return HttpResponse.json(OFFICIAL_PREVIEW_ITEMS.slice(start, start + size));
   }),
 ];

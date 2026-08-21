@@ -1,12 +1,13 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { useOfficialPreviewQuery } from "@/api/home/getOfficialPreview";
 import CharacterCard from "../character-card";
 import OfficialSortDropdown from "./_components/OfficialSortDropdown";
-import { DUMMY_OFFICIAL_CHARACTERS } from "./dummyData";
 
 const OfficialTabContents = () => {
   const t = useTranslations("officialPage");
+  const { data: officialPreviewList } = useOfficialPreviewQuery();
 
   return (
     <article className="flex w-full flex-col gap-5 pt-5">
@@ -16,15 +17,15 @@ const OfficialTabContents = () => {
       </div>
 
       <div className="flex w-full flex-wrap gap-x-4 gap-y-7">
-        {DUMMY_OFFICIAL_CHARACTERS.map((character) => (
+        {(officialPreviewList ?? []).map((character) => (
           <CharacterCard
-            key={character.id}
+            key={character.universeId}
             size="S"
             title={character.title}
             description={character.description}
-            creatorName={character.creatorName}
+            creatorName="PLAT"
             chatCount={character.chatCount}
-            images={character.image}
+            images={character.images}
             isOfficial
           />
         ))}
