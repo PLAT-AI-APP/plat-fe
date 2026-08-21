@@ -1,4 +1,6 @@
 import { ChatFill } from "@/icons";
+import { formatStatCount } from "@/lib/utils";
+import { useLocaleStore } from "@/store/useLocaleStore";
 import PreviewImage from "./PreviewImage";
 
 type PreviewCardSize = "S" | "M";
@@ -20,6 +22,7 @@ const PreviewCard = ({
   creatorName,
   chatCount,
 }: PreviewCardProps) => {
+  const locale = useLocaleStore((state) => state.locale);
   const isSmall = size === "S";
 
   return (
@@ -58,7 +61,7 @@ const PreviewCard = ({
         </p>
         <div className="body-6 flex items-center gap-1 text-font-2">
           <ChatFill className="size-3.5 text-font-2" />
-          {chatCount}
+          {formatStatCount(chatCount, locale)}
         </div>
       </div>
     </article>

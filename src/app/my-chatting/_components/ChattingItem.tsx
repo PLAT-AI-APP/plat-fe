@@ -7,6 +7,8 @@ import MyChattingMenuPopover from "@/components/popover/MyChattingMenuPopover";
 import useToggle from "@/hooks/useToggle";
 import { Dots, Message, Pin, User } from "@/icons";
 import dayjs from "@/lib/dayjs";
+import { formatStatCount } from "@/lib/utils";
+import { useLocaleStore } from "@/store/useLocaleStore";
 
 interface ChattingItemProps {
   chatCount: number;
@@ -32,6 +34,7 @@ const ChattingItem = ({
   const router = useRouter();
   const { close, isOpen, toggle } = useToggle();
   const triggerRef = useRef<HTMLSpanElement>(null);
+  const locale = useLocaleStore((state) => state.locale);
 
   const chattingItemOnClick = () => {
     router.push("/chatting-room");
@@ -100,7 +103,7 @@ const ChattingItem = ({
               <span className="body-5 truncate">{creator}</span>
               <span className="body-5 text-font-disabled">·</span>
               <Message className="size-4 shrink-0" />
-              <span className="body-5">{chatCount}</span>
+              <span className="body-5">{formatStatCount(chatCount, locale)}</span>
             </div>
 
             <time className="body-6 shrink-0 text-nowrap text-font-disabled">

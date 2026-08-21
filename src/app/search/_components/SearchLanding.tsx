@@ -6,7 +6,8 @@ import { useTranslations } from "next-intl";
 import CharacterCard from "@/app/(main)/_components/character-card";
 import { useRecentSearch } from "@/hooks/useRecentSearch";
 import dayjs from "@/lib/dayjs";
-import { cn } from "@/lib/utils";
+import { cn, formatStatCount } from "@/lib/utils";
+import { useLocaleStore } from "@/store/useLocaleStore";
 import { DUMMY_LIVE_SEARCH_KEYWORDS, DUMMY_SEARCH_CHARACTERS } from "./dummyData";
 import type { LiveSearchKeyword } from "./dummyData";
 import SearchQueryBar from "./SearchQueryBar";
@@ -39,6 +40,7 @@ interface LiveSearchRankItemProps {
 }
 
 const LiveSearchRankItem = ({ item, onSelect }: LiveSearchRankItemProps) => {
+  const locale = useLocaleStore((state) => state.locale);
   const isTopThree = item.rank <= 3;
 
   return (
@@ -64,7 +66,9 @@ const LiveSearchRankItem = ({ item, onSelect }: LiveSearchRankItemProps) => {
       </div>
 
       <div className="flex items-center gap-1">
-        <span className="body-5 text-font-2">{item.count}</span>
+        <span className="body-5 text-font-2">
+          {formatStatCount(item.count, locale)}
+        </span>
         <TrendTriangle
           direction={item.trend}
           className={item.trend === "up" ? "text-emerald-500" : "text-font-error"}

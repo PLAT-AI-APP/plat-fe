@@ -1,39 +1,40 @@
 // src/lib/utils.ts
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import type { AppLocale } from "@/i18n/config";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
 /**
- * 숫자 포맷터
+ * 숫자 포맷터 (채팅수 등 카운트성 숫자용)
  * 규칙:
  * - 999 이하: 그대로 표시
- * - 1,000 ~ 9,999: '천' 단위 (소수점 한자리, 내림)
- * - 10,000 ~ 99,999,999: '만' 단위 (정수, 내림)
- * - 100,000,000 이상: '억' 단위 (정수, 내림)
+ * - 한국(ko): 1,000~9,999 '천'(소수점 한자리) → 10,000~99,999,999 '만' → 100,000,000~ '억' (모두 내림)
+ * - 그 외 로케일: 1,000~9,999 'K'(소수점 한자리) → 10,000~999,999 'K' → 1,000,000~999,999,999 'M' → 1,000,000,000~ 'B' (모두 내림)
  */
-export const formatStatCount = (count: number): string => {
-  if (count >= 100_000_000) {
-    // 억 단위 (1억 ~ 9999억)
+export const formatStatCount = (
+  count: number,
+  locale: AppLocale = "ko",
+): string => {
+  if (count < 1_000) return count.toString();
+
+  const truncateToFixed = (value: number, digits: number) => {
+    const factor = 10 ** digits;
+    return (Math.floor(value * factor) / factor).toFixed(digits);
+  };
+
+  if (locale === "ko") {
+    if (count < 10_000) return `${truncateToFixed(count / 1_000, 1)}천`;
+    if (count < 100_000_000) return `${Math.floor(count / 10_000)}만`;
     return `${Math.floor(count / 100_000_000)}억`;
   }
 
-  if (count >= 10_000) {
-    // 만 단위 (1만 ~ 9999만)
-    return `${Math.floor(count / 10_000)}만`;
-  }
-
-  if (count >= 1_000) {
-    // 천 단위 (1.0천 ~ 9.9천)
-    // 소수점 둘째자리에서 내림하여 첫째자리까지 표시
-    const truncated = Math.floor((count / 1000) * 10) / 10;
-    return `${truncated.toFixed(1)}천`;
-  }
-
-  // 999 이하
-  return count.toString();
+  if (count < 10_000) return `${truncateToFixed(count / 1_000, 1)}K`;
+  if (count < 1_000_000) return `${Math.floor(count / 1_000)}K`;
+  if (count < 1_000_000_000) return `${Math.floor(count / 1_000_000)}M`;
+  return `${Math.floor(count / 1_000_000_000)}B`;
 };
 
 /**
