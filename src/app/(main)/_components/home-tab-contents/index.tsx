@@ -9,6 +9,7 @@ import CharacterCreateBanner from "../CharacterCreateBanner";
 import { useTodayPickQuery } from "@/api/home/getTodayPick";
 import { useUserRecommendQuery } from "@/api/home/getUserRecommend";
 import { useAssetPreviewQuery } from "@/api/home/getAssetPreview";
+import { usePopularTagQuery } from "@/api/home/getPopularTag";
 
 interface HomeTabContentsProps {
   charArray: {
@@ -27,6 +28,7 @@ const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
   const { data: todayPickList } = useTodayPickQuery();
   const { data: userRecommendList } = useUserRecommendQuery();
   const { data: assetPreviewList } = useAssetPreviewQuery();
+  const { data: popularTagList } = usePopularTagQuery();
 
   const todayPickCharArray = (todayPickList ?? []).map((item) => ({
     name: item.title,
@@ -57,6 +59,16 @@ const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
     isOfficial: item.isOfficial,
   }));
 
+  const popularTagCharArray = (popularTagList ?? []).map((item) => ({
+    name: item.title,
+    chatCount: item.chatCount,
+    dec: item.description,
+    img: item.images,
+    creatorName: item.creator.nickname,
+    isNew: item.isNew,
+    isOfficial: item.isOfficial,
+  }));
+
   return (
     <article className="flex flex-col gap-18 mt-7">
       {/* 오늘의 PICK 섹션 */}
@@ -74,7 +86,7 @@ const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
 
       {/* 인기 태그 캐릭터 모음 섹션 */}
       <CharacterShowcase
-        charArray={charArray}
+        charArray={popularTagCharArray}
         title={t("popularTagCollection")}
         cardSize="S"
         limit={12}

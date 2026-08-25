@@ -119,7 +119,52 @@ const ASSET_PREVIEW_ITEMS = Array.from({ length: 24 }, (_, index) => {
   };
 });
 
+const POPULAR_TAG_ITEMS = Array.from({ length: 24 }, (_, index) => {
+  const seed = NEW_WORK_SEEDS[index % NEW_WORK_SEEDS.length];
+
+  return {
+    universeId: `popular-tag-${index}`,
+    images: [`https://picsum.photos/seed/popular-tag-${index}/374/490`],
+    title: seed.title,
+    description: seed.description,
+    creator: {
+      creatorId: `creator-${index}`,
+      nickname: seed.nickname,
+    },
+    chatCount: seed.chatCount,
+    isNew: index % 5 === 0,
+    isOfficial: index % 7 === 0,
+  };
+});
+
+const TODAY_PICK_ITEMS = Array.from({ length: 24 }, (_, index) => {
+  const seed = NEW_WORK_SEEDS[index % NEW_WORK_SEEDS.length];
+
+  return {
+    universeId: `today-pick-${index}`,
+    images: [`https://picsum.photos/seed/today-pick-${index}/374/490`],
+    title: seed.title,
+    description: seed.description,
+    creator: {
+      creatorId: `creator-${index}`,
+      nickname: seed.nickname,
+    },
+    chatCount: seed.chatCount,
+    isNew: index % 5 === 0,
+    isOfficial: index % 7 === 0,
+  };
+});
+
 export const homeHandlers = [
+  http.get(endpoint("/home/today-pick"), ({ request }) => {
+    const url = new URL(request.url);
+    const page = Number(url.searchParams.get("page") ?? 0);
+    const size = Number(url.searchParams.get("size") ?? 10);
+    const start = page * size;
+
+    return HttpResponse.json(TODAY_PICK_ITEMS.slice(start, start + size));
+  }),
+
   http.get(endpoint("/home/new-work"), ({ request }) => {
     const url = new URL(request.url);
     const page = Number(url.searchParams.get("page") ?? 0);
@@ -154,5 +199,14 @@ export const homeHandlers = [
     const start = page * size;
 
     return HttpResponse.json(ASSET_PREVIEW_ITEMS.slice(start, start + size));
+  }),
+
+  http.get(endpoint("/home/popular-tag"), ({ request }) => {
+    const url = new URL(request.url);
+    const page = Number(url.searchParams.get("page") ?? 0);
+    const size = Number(url.searchParams.get("size") ?? 10);
+    const start = page * size;
+
+    return HttpResponse.json(POPULAR_TAG_ITEMS.slice(start, start + size));
   }),
 ];
