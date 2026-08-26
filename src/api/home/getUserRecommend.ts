@@ -22,6 +22,26 @@ export interface UserRecommendItem {
   isOfficial: boolean;
 }
 
+/** 선호 태그 근거가 있을 때만 SliceWith로 감싸져 내려오고, 없으면 204(빈 문자열)로 내려옵니다. */
+interface UserRecommendSliceResponse {
+  content?: UserRecommendItem[];
+}
+
+type UserRecommendApiResponse =
+  | UserRecommendItem[]
+  | UserRecommendSliceResponse
+  | "";
+
+/** SliceWith 래핑/204 빈 응답을 모두 배열로 정규화 */
+const getNormalizedUserRecommend = (
+  data: UserRecommendApiResponse,
+): UserRecommendItem[] => {
+  if (Array.isArray(data)) return data;
+  if (data && Array.isArray(data.content)) return data.content;
+
+  return [];
+};
+
 interface GetUserRecommendParams {
   page?: number;
   size?: number;
@@ -32,7 +52,7 @@ const getUserRecommend = async ({
   page = 0,
   size = 10,
 }: GetUserRecommendParams & { lang: string }) => {
-  const response = await authAxios.get<UserRecommendItem[]>(
+  const response = await authAxios.get<UserRecommendApiResponse>(
     "/home/user-recommend",
     {
       params: {
@@ -43,7 +63,7 @@ const getUserRecommend = async ({
     },
   );
 
-  return response.data;
+  return getNormalizedUserRecommend(response.data);
 };
 
 /** 홈 화면 사용자 맞춤 추천 목록 조회 */

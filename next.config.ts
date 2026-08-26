@@ -13,6 +13,13 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        // plat-dev-files, plat-prod-files 등 리전 내 모든 버킷을 커버
+        hostname: "*.s3.ap-northeast-2.amazonaws.com",
+        port: "",
+        pathname: "/**",
+      },
     ],
   },
 };

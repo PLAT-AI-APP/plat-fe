@@ -45,6 +45,7 @@ const NEW_WORK_SEEDS = [
   },
 ];
 
+// 실서버 NewWorkCard는 chatCount를 내려주지 않아 목업도 동일하게 맞춥니다.
 const NEW_WORK_ITEMS = Array.from({ length: 24 }, (_, index) => {
   const seed = NEW_WORK_SEEDS[index % NEW_WORK_SEEDS.length];
 
@@ -57,7 +58,6 @@ const NEW_WORK_ITEMS = Array.from({ length: 24 }, (_, index) => {
       creatorId: `creator-${index}`,
       nickname: seed.nickname,
     },
-    chatCount: seed.chatCount,
   };
 });
 
@@ -174,13 +174,20 @@ export const homeHandlers = [
     return HttpResponse.json(NEW_WORK_ITEMS.slice(start, start + size));
   }),
 
+  // 실서버는 배열이 아니라 SliceWith({condition, page, content})로 감싸서 내려주고,
+  // 선호 태그 근거가 없으면 204 No Content를 내려줍니다. 목업도 같은 계약을 따르게 맞춥니다.
   http.get(endpoint("/home/user-recommend"), ({ request }) => {
     const url = new URL(request.url);
     const page = Number(url.searchParams.get("page") ?? 0);
     const size = Number(url.searchParams.get("size") ?? 10);
     const start = page * size;
+    const content = USER_RECOMMEND_ITEMS.slice(start, start + size);
 
-    return HttpResponse.json(USER_RECOMMEND_ITEMS.slice(start, start + size));
+    if (content.length === 0) {
+      return new HttpResponse(null, { status: 204 });
+    }
+
+    return HttpResponse.json({ condition: null, page, content });
   }),
 
   http.get(endpoint("/home/official-preview"), ({ request }) => {

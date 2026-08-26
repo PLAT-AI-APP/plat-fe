@@ -45,7 +45,7 @@ const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
     chatCount: item.chatCount,
     dec: item.description,
     img: item.images,
-    creatorName: item.creator.nickname,
+    creatorName: item.creator?.nickname,
     isNew: item.isNew,
     isOfficial: item.isOfficial,
   }));

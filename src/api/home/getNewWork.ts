@@ -17,7 +17,8 @@ export interface NewWorkItem {
   title: string;
   description: string;
   creator: NewWorkCreator;
-  chatCount: number;
+  // 백엔드 NewWorkCard에는 아직 chatCount가 없어 옵셔널로 선언 (CharacterCard가 값 없으면 뱃지 자체를 숨김)
+  chatCount?: number;
 }
 
 interface GetNewWorkParams {
