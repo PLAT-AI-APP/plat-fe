@@ -4,23 +4,18 @@ const useToggle = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   const open = (e?: React.BaseSyntheticEvent) => {
-    console.log("열기");
-
     e?.stopPropagation();
     e?.preventDefault();
     setIsOpen(true);
   };
 
   const close = (e?: React.BaseSyntheticEvent) => {
-    console.log("닫기");
-
     e?.stopPropagation();
     e?.preventDefault();
     setIsOpen(false);
   };
 
   const toggle = (e?: React.BaseSyntheticEvent) => {
-    console.log("토글");
     e?.stopPropagation();
     e?.preventDefault();
     setIsOpen((prev) => !prev);
