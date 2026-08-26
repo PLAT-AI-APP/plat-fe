@@ -43,7 +43,7 @@ const PersonaItem = ({
 
   const handleDeleteConfirm = () => {
     deletePersona(persona.personaId, {
-      onSuccess: closeDialog,
+      onSettled: closeDialog,
     });
   };
 
