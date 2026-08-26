@@ -83,7 +83,7 @@ const CreateTabs = ({
   };
 
   return (
-    <section className="flex h-full w-[491px] min-w-0 shrink-0 flex-col gap-9 overflow-hidden">
+    <section className="flex h-full max-h-[calc(100vh-145px)] w-[491px] min-w-0 shrink-0 flex-col gap-9 overflow-hidden">
       {/* Tabs are unframed in the Figma design; the border belongs only to the tab row. */}
       <nav
         ref={tabNavRef as React.RefObject<HTMLElement>}
@@ -120,7 +120,8 @@ const CreateTabs = ({
         />
       </nav>
 
-      {renderActiveTab()}
+      {/* 탭 내용이 뷰포트를 넘으면 nav는 고정한 채 내부만 스크롤 */}
+      <div className="min-h-0 flex-1 overflow-y-auto">{renderActiveTab()}</div>
     </section>
   );
 };

@@ -167,7 +167,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
   };
 
   return (
-    <section className="flex h-[919px] w-[693px] shrink-0 flex-col gap-[66px] rounded-3xl bg-darker p-4">
+    <section className="flex h-[919px] max-h-[calc(100vh-145px)] w-[693px] shrink-0 flex-col gap-[66px] rounded-3xl bg-darker p-4">
       <header className="flex h-12 shrink-0 items-center justify-between rounded-2xl bg-darkest px-4 py-3">
         <strong className="title-3 truncate text-font-1">
           {scenarioName ||
