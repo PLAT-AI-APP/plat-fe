@@ -1,8 +1,13 @@
 "use client";
 
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  MutationCache,
+  QueryCache,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 import { useState } from "react";
-import { isAuthExpiredError } from "@/api";
+import { isAuthExpiredError, notifyApiError } from "@/api";
 
 export default function ReactQueryProvider({
   children,
@@ -13,6 +18,11 @@ export default function ReactQueryProvider({
   const [queryClient] = useState(
     () =>
       new QueryClient({
+        // 에러 토스트는 인터셉터가 아니라 여기서 띄웁니다.
+        // QueryCache/MutationCache의 onError는 재시도가 전부 끝나 실패가 확정된 뒤 한 번만 호출되므로,
+        // 재시도 도중 매 시도마다 같은 에러 토스트가 중복으로 뜨는 것을 막아줍니다.
+        queryCache: new QueryCache({ onError: notifyApiError }),
+        mutationCache: new MutationCache({ onError: notifyApiError }),
         defaultOptions: {
           queries: {
             // 클라이언트에서 하이드레이션 직후 데이터를 다시 가져오는 것을 방지

@@ -19,13 +19,3 @@ export const DAYJS_LOCALE_BY_APP_LOCALE: Record<AppLocale, string> = {
   th: "th",
   vi: "vi",
 };
-
-/** 서버 API가 요구하는 lang 파라미터 값 (KO/EN/JA/ZH/TH/VI) */
-export const API_LANG_BY_APP_LOCALE: Record<AppLocale, string> = {
-  ko: "KO",
-  en: "EN",
-  ja: "JA",
-  zh: "ZH",
-  th: "TH",
-  vi: "VI",
-};
