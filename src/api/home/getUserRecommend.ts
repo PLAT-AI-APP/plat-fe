@@ -5,6 +5,7 @@ import { authAxios } from "..";
 import { AppError } from "@/type/api";
 import { API_LANG_BY_APP_LOCALE } from "@/i18n/config";
 import { useLocaleStore } from "@/store/useLocaleStore";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export interface UserRecommendCreator {
   creatorId: string;
@@ -66,14 +67,17 @@ const getUserRecommend = async ({
   return getNormalizedUserRecommend(response.data);
 };
 
-/** 홈 화면 사용자 맞춤 추천 목록 조회 */
+/** 홈 화면 사용자 맞춤 추천 목록 조회. 로그인 필수 API라 비로그인 상태에선 401 재시도 낭비 없이 아예 호출하지 않습니다. */
 export const useUserRecommendQuery = (params: GetUserRecommendParams = {}) => {
   const locale = useLocaleStore((state) => state.locale);
   const lang = API_LANG_BY_APP_LOCALE[locale];
+  const isAuthReady = useAuthStore((state) => state.isAuthReady);
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
   return useQuery<UserRecommendItem[], AppError>({
     queryKey: ["get-user-recommend", lang, params.page, params.size],
     queryFn: () => getUserRecommend({ lang, ...params }),
     staleTime: 1000 * 60 * 5,
+    enabled: isAuthReady && isLoggedIn,
   });
 };

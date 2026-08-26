@@ -2,6 +2,7 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
+import { isAuthExpiredError } from "@/api";
 
 export default function ReactQueryProvider({
   children,
@@ -18,6 +19,10 @@ export default function ReactQueryProvider({
             staleTime: 1000 * 60 * 5,
             // 창 포커스 시 재요청 비활성화 (개발 중 콘솔 중복 방지)
             refetchOnWindowFocus: false,
+            // 401/403은 axios 인터셉터가 이미 refresh-token 재시도를 한 번 마친 결과이므로,
+            // 여기서 또 재시도하면 실패가 확정된 요청을 refresh까지 포함해 3번 더 반복하게 됩니다.
+            retry: (failureCount, error) =>
+              !isAuthExpiredError(error) && failureCount < 3,
           },
         },
       }),
