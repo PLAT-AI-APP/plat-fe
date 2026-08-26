@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import dayjs from "@/lib/dayjs";
 import { cn, formatWithCommas } from "@/lib/utils";
+import { showAppToast } from "@/lib/toast";
 import { ArrowDown } from "@/icons";
 import Copy from "@/icons/Copy";
 import { UsageHistoryItemType } from "@/type/note";
@@ -33,7 +34,7 @@ const UsageHistoryItem = ({ item }: { item: UsageHistoryItemType }) => {
   const handleCopy = (event: React.MouseEvent) => {
     event.stopPropagation();
     navigator.clipboard.writeText(item.referenceId);
-    alert("거래번호가 복사되었습니다.");
+    showAppToast("success", "거래번호가 복사되었습니다.", { size: "s" });
   };
 
   return (

@@ -10,6 +10,7 @@ import { dataUrlToFile } from "@/lib/file";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
 import RepresentativeImageCropModal from "./RepresentativeImageCropModal";
 import { cn } from "@/lib/utils";
+import { showAppToast } from "@/lib/toast";
 
 const RepresentativeImage = () => {
   const t = useTranslations("characterCreate.representativeImage");
@@ -27,14 +28,14 @@ const RepresentativeImage = () => {
 
     const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
     if (!allowedTypes.includes(file.type)) {
-      alert(t("invalidType"));
+      showAppToast("warning", t("invalidType"), { size: "s" });
       e.target.value = "";
       return;
     }
 
     const maxSize = 5 * 1024 * 1024;
     if (file.size > maxSize) {
-      alert(t("invalidSize"));
+      showAppToast("warning", t("invalidSize"), { size: "s" });
       e.target.value = "";
       return;
     }
@@ -77,8 +78,8 @@ const RepresentativeImage = () => {
       });
       setCropTarget(null);
     } catch (error) {
+      // 실패 토스트는 axios 인터셉터 → MutationCache의 전역 에러 처리에서 이미 띄우므로 여기서 중복으로 띄우지 않습니다.
       console.error("Representative image upload failed:", error);
-      alert(t("uploadFailed"));
     }
   };
 

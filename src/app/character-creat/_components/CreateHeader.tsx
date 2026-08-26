@@ -9,6 +9,7 @@ import ArrowLineLeft from "@/icons/ArrowLineLeft";
 import { Redo } from "@/icons";
 import { useChatacterCreateMutation } from "@/api/character/postChatacterCreate";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
+import { showAppToast } from "@/lib/toast";
 
 interface CreateHeaderProps {
   onSave: () => void;
@@ -65,12 +66,12 @@ const CreateHeader = ({ onSave, onDraftClick }: CreateHeaderProps) => {
       { props: payload },
       {
         onSuccess: () => {
-          alert(t("createSuccess"));
+          showAppToast("success", t("createSuccess"), { size: "s" });
           router.push("/");
         },
         onError: (error) => {
+          // 실패 토스트는 axios 인터셉터 → MutationCache의 전역 에러 처리에서 이미 띄우므로 여기서 중복으로 띄우지 않습니다.
           console.error("Character create failed:", error);
-          alert(t("createFailed"));
         },
       },
     );

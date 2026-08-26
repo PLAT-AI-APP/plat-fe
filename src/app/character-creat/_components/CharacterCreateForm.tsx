@@ -7,6 +7,7 @@ import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import { useNavigationGuard } from "next-navigation-guard";
 import { useRouter } from "next/navigation";
+import { showAppToast } from "@/lib/toast";
 import CharacterCardPreviewPanel from "./CharacterCardPreviewPanel";
 import CharacterPreview from "./CharacterPreview";
 import CreateHeader from "./CreateHeader";
@@ -153,7 +154,7 @@ const CharacterCreateForm = () => {
     const currentData = getValues();
     try {
       reset(currentData);
-      alert(t("draftSaved"));
+      showAppToast("success", t("draftSaved"), { size: "s" });
     } catch (error) {
       console.error("Draft save failed:", error);
     }
@@ -172,7 +173,7 @@ const CharacterCreateForm = () => {
     try {
       closeModal();
     } catch {
-      alert(t("draftLoadFailed"));
+      showAppToast("error", t("draftLoadFailed"), { size: "s" });
     }
   };
 

@@ -34,7 +34,7 @@ const AuthClient = ({ code }: AuthClientProps) => {
         router.replace(prevPath);
       },
       onError: () => {
-        alert("인증에 실패했습니다. 다시 시도해주세요.");
+        // 실패 토스트는 axios 인터셉터 → MutationCache의 전역 에러 처리에서 이미 띄우므로 여기서 중복으로 띄우지 않습니다.
         const prevPath = localStorage.getItem("prevPath") || "/";
         localStorage.removeItem("prevPath");
         router.replace(prevPath);

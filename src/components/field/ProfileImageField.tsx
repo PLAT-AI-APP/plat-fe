@@ -4,6 +4,7 @@ import React, { ChangeEvent } from "react";
 import Image from "next/image";
 import { useFormContext, useWatch } from "react-hook-form";
 import { CameraFill } from "@/icons";
+import { showAppToast } from "@/lib/toast";
 import { ProfileEditFormType } from "@/schema/profile.schema";
 
 // 제네릭 관련 타입 충돌을 방지하기 위해 이 컴포넌트가 제어할 대상 타입을 명시합니다.
@@ -25,10 +26,14 @@ const ProfileImageField = ({ name = "profileImg" }: ProfileImageFieldProps) => {
         file.type,
       )
     ) {
-      return alert("jpg, png, webp 이미지 파일만 가능합니다.");
+      return showAppToast("warning", "jpg, png, webp 이미지 파일만 가능합니다.", {
+        size: "s",
+      });
     }
     if (file.size > 5 * 1024 * 1024) {
-      return alert("파일 용량은 최대 5MB까지 가능합니다.");
+      return showAppToast("warning", "파일 용량은 최대 5MB까지 가능합니다.", {
+        size: "s",
+      });
     }
 
     // 파일 객체 저장 (ProfileEditFormType에 선언된 키값에 맞게 매핑)

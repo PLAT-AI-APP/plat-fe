@@ -10,6 +10,7 @@ import { dataUrlToFile } from "@/lib/file";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
 import RepresentativeImageCropModal from "../../profile/RepresentativeImageCropModal";
 import { cn } from "@/lib/utils";
+import { showAppToast } from "@/lib/toast";
 
 // 상세정보 프로필 이미지는 백엔드 업로드 정책과 동일하게 웹 이미지 포맷만 허용합니다.
 const ALLOWED_PROFILE_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
@@ -32,13 +33,13 @@ const CharacterProfileImage = () => {
     if (!file) return;
 
     if (!ALLOWED_PROFILE_IMAGE_TYPES.includes(file.type)) {
-      alert(representativeT("invalidType"));
+      showAppToast("warning", representativeT("invalidType"), { size: "s" });
       e.target.value = "";
       return;
     }
 
     if (file.size > MAX_PROFILE_IMAGE_SIZE) {
-      alert(representativeT("invalidSize"));
+      showAppToast("warning", representativeT("invalidSize"), { size: "s" });
       e.target.value = "";
       return;
     }
@@ -81,8 +82,8 @@ const CharacterProfileImage = () => {
       });
       setCropTarget(null);
     } catch (error) {
+      // 실패 토스트는 axios 인터셉터 → MutationCache의 전역 에러 처리에서 이미 띄우므로 여기서 중복으로 띄우지 않습니다.
       console.error("Character profile image upload failed:", error);
-      alert(representativeT("uploadFailed"));
     }
   };
 

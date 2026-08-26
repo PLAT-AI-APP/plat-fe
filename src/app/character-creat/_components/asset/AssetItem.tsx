@@ -9,6 +9,7 @@ import SmartInput from "@/components/smart-input";
 import { useFileUploadMutation } from "@/api/file/postFileUpload";
 import { ArrowDown, Dots, ImageIcon, LockLine, Trash, UnlockLine } from "@/icons";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
+import { showAppToast } from "@/lib/toast";
 
 interface AssetItemProps {
   id: string;
@@ -62,14 +63,14 @@ const AssetItem = ({ id, index, remove }: AssetItemProps) => {
 
     const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
     if (!allowedTypes.includes(file.type)) {
-      alert(t("invalidType"));
+      showAppToast("warning", t("invalidType"), { size: "s" });
       e.target.value = "";
       return;
     }
 
     const maxSize = 5 * 1024 * 1024;
     if (file.size > maxSize) {
-      alert(t("invalidSize"));
+      showAppToast("warning", t("invalidSize"), { size: "s" });
       e.target.value = "";
       return;
     }
@@ -92,8 +93,8 @@ const AssetItem = ({ id, index, remove }: AssetItemProps) => {
       };
       reader.readAsDataURL(file);
     } catch (error) {
+      // 실패 토스트는 axios 인터셉터 → MutationCache의 전역 에러 처리에서 이미 띄우므로 여기서 중복으로 띄우지 않습니다.
       console.error("Asset image upload failed:", error);
-      alert(t("uploadFailed"));
     }
 
     e.target.value = "";

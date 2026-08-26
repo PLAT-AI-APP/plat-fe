@@ -6,6 +6,7 @@ import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
 import SmartInput from "@/components/smart-input";
 import { Close, Plus } from "@/icons";
 import { cn } from "@/lib/utils";
+import { showAppToast } from "@/lib/toast";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
 
 interface ScenarioProps {
@@ -38,7 +39,7 @@ const Scenario = ({
 
   const addScenario = () => {
     if (fields.length >= 5) {
-      alert(t("addLimitAlert"));
+      showAppToast("warning", t("addLimitAlert"), { size: "s" });
       return;
     }
 
@@ -55,7 +56,7 @@ const Scenario = ({
     e.stopPropagation();
 
     if (fields.length <= 1) {
-      alert(t("minRequiredAlert"));
+      showAppToast("warning", t("minRequiredAlert"), { size: "s" });
       return;
     }
 

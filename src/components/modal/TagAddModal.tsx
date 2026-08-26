@@ -13,6 +13,7 @@ import {
 import { ArrowDown, ArrowRight, Close, Megaphone, Search } from "@/icons";
 import Tag from "@/icons/Tag";
 import { cn } from "@/lib/utils";
+import { showAppToast } from "@/lib/toast";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
 import { useModalStore } from "@/store/useModalStore";
 import { TagAddModalProps } from "@/type/modal";
@@ -110,7 +111,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
     }
 
     if (localSelectedNames.length >= 5) {
-      alert(t("maxAlert"));
+      showAppToast("warning", t("maxAlert"), { size: "s" });
       return;
     }
 
