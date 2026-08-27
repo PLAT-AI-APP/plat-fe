@@ -29,16 +29,14 @@ const PreviewItemActions = ({
         </button>
       )}
 
-      {item.type !== "chat" && (
-        <button
-          type="button"
-          onClick={onDelete}
-          className={previewActionButtonClass}
-          aria-label={labels.deleteContent}
-        >
-          <Trash className="size-3.5 text-font-2" />
-        </button>
-      )}
+      <button
+        type="button"
+        onClick={onDelete}
+        className={previewActionButtonClass}
+        aria-label={labels.deleteContent}
+      >
+        <Trash className="size-3.5 text-font-2" />
+      </button>
     </>
   );
 };
