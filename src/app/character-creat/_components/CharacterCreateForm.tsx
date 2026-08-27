@@ -154,7 +154,7 @@ const CharacterCreateForm = () => {
     const currentData = getValues();
     try {
       reset(currentData);
-      showAppToast("success", t("draftSaved"), { size: "s" });
+      showAppToast("success", t("draftSaved"));
     } catch (error) {
       console.error("Draft save failed:", error);
     }
@@ -173,7 +173,7 @@ const CharacterCreateForm = () => {
     try {
       closeModal();
     } catch {
-      showAppToast("error", t("draftLoadFailed"), { size: "s" });
+      showAppToast("error", t("draftLoadFailed"));
     }
   };
 

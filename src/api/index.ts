@@ -125,7 +125,7 @@ const showGlobalApiErrorToast = (message?: string) => {
     shownAt: now,
   };
 
-  showAppToast("error", normalizedMessage, { size: "s" });
+  showAppToast("error", normalizedMessage);
 };
 
 const isAppError = (error: unknown): error is AppError =>

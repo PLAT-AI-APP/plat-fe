@@ -2,9 +2,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "..";
 import { AppError } from "@/type/api";
 import { useAuthStore } from "@/store/useAuthStore";
-import type { AppToastSize, AppToastType } from "@/lib/toast";
+import type { AppToastType } from "@/lib/toast";
 
-export type LoginToastSize = AppToastSize;
 export type LoginToastType = AppToastType;
 
 interface PostEmailLoginProps {
@@ -18,7 +17,6 @@ interface EmailLoginResponse {
   token?: string;
   toastDescription?: string;
   toastMessage?: string;
-  toastSize?: LoginToastSize;
   toastType?: LoginToastType;
 }
 
@@ -71,7 +69,6 @@ const PostEmailLogin = async (props: PostEmailLoginProps) => {
     // MSW toast 테스트 계정에서만 내려주는 검수용 필드
     toastDescription: responseData?.toastDescription,
     toastMessage: responseData?.toastMessage,
-    toastSize: responseData?.toastSize,
     toastType: responseData?.toastType,
     token,
   };
@@ -87,7 +84,6 @@ export const useEmailLoginMutation = () => {
       isFirstLogin: boolean;
       toastDescription?: string;
       toastMessage?: string;
-      toastSize?: LoginToastSize;
       toastType?: LoginToastType;
       token: string;
     },

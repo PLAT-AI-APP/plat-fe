@@ -34,7 +34,7 @@ const UsageHistoryItem = ({ item }: { item: UsageHistoryItemType }) => {
   const handleCopy = (event: React.MouseEvent) => {
     event.stopPropagation();
     navigator.clipboard.writeText(item.referenceId);
-    showAppToast("success", "거래번호가 복사되었습니다.", { size: "s" });
+    showAppToast("success", "거래번호가 복사되었습니다.");
   };
 
   return (

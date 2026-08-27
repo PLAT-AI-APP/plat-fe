@@ -66,7 +66,7 @@ const CreateHeader = ({ onSave, onDraftClick }: CreateHeaderProps) => {
       { props: payload },
       {
         onSuccess: () => {
-          showAppToast("success", t("createSuccess"), { size: "s" });
+          showAppToast("success", t("createSuccess"));
           router.push("/");
         },
         onError: (error) => {

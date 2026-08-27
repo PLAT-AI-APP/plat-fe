@@ -39,7 +39,7 @@ const Scenario = ({
 
   const addScenario = () => {
     if (fields.length >= 5) {
-      showAppToast("warning", t("addLimitAlert"), { size: "s" });
+      showAppToast("warning", t("addLimitAlert"));
       return;
     }
 
@@ -56,7 +56,7 @@ const Scenario = ({
     e.stopPropagation();
 
     if (fields.length <= 1) {
-      showAppToast("warning", t("minRequiredAlert"), { size: "s" });
+      showAppToast("warning", t("minRequiredAlert"));
       return;
     }
 

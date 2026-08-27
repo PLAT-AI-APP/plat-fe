@@ -33,13 +33,13 @@ const CharacterProfileImage = () => {
     if (!file) return;
 
     if (!ALLOWED_PROFILE_IMAGE_TYPES.includes(file.type)) {
-      showAppToast("warning", representativeT("invalidType"), { size: "s" });
+      showAppToast("warning", representativeT("invalidType"));
       e.target.value = "";
       return;
     }
 
     if (file.size > MAX_PROFILE_IMAGE_SIZE) {
-      showAppToast("warning", representativeT("invalidSize"), { size: "s" });
+      showAppToast("warning", representativeT("invalidSize"));
       e.target.value = "";
       return;
     }

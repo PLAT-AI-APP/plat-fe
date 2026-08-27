@@ -28,14 +28,14 @@ const RepresentativeImage = () => {
 
     const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
     if (!allowedTypes.includes(file.type)) {
-      showAppToast("warning", t("invalidType"), { size: "s" });
+      showAppToast("warning", t("invalidType"));
       e.target.value = "";
       return;
     }
 
     const maxSize = 5 * 1024 * 1024;
     if (file.size > maxSize) {
-      showAppToast("warning", t("invalidSize"), { size: "s" });
+      showAppToast("warning", t("invalidSize"));
       e.target.value = "";
       return;
     }

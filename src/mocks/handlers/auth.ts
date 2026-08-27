@@ -1,6 +1,6 @@
 import { http, HttpResponse } from "msw";
 import { endpoint } from "../utils";
-import type { LoginToastSize, LoginToastType } from "@/api/auth/emailLogin";
+import type { LoginToastType } from "@/api/auth/emailLogin";
 
 const existingNicknames = ["admin", "test", "plat"];
 const verifiedEmails = new Set<string>();
@@ -10,77 +10,28 @@ const loginToastTestCases: Record<
   {
     description?: string;
     message: string;
-    toastSize?: LoginToastSize;
     toastType: LoginToastType;
   }
 > = {
   "toast-success@example.com": {
-    description: "Medium success toast description test.",
+    description: "Small success toast description test.",
     toastType: "success",
     message: "성공 toast 디자인 테스트입니다.",
   },
   "toast-info@example.com": {
-    description: "Medium info toast description test.",
+    description: "Small info toast description test.",
     toastType: "info",
     message: "정보 toast 디자인 테스트입니다.",
   },
   "toast-warning@example.com": {
-    description: "Medium warning toast description test.",
+    description: "Small warning toast description test.",
     toastType: "warning",
     message: "경고 toast 디자인 테스트입니다.",
   },
   "toast-error@example.com": {
-    description: "Medium error toast description test.",
+    description: "Small error toast description test.",
     toastType: "error",
     message: "Error toast design test.",
-  },
-  "toast-success-m@example.com": {
-    description: "Medium success toast description test.",
-    toastSize: "m",
-    toastType: "success",
-    message: "Medium success toast test.",
-  },
-  "toast-info-m@example.com": {
-    description: "Medium info toast description test.",
-    toastSize: "m",
-    toastType: "info",
-    message: "Medium info toast test.",
-  },
-  "toast-warning-m@example.com": {
-    description: "Medium warning toast description test.",
-    toastSize: "m",
-    toastType: "warning",
-    message: "Medium warning toast test.",
-  },
-  "toast-error-m@example.com": {
-    description: "Medium error toast description test.",
-    toastSize: "m",
-    toastType: "error",
-    message: "Medium error toast test.",
-  },
-  "toast-success-s@example.com": {
-    description: "Small success toast description test.",
-    toastSize: "s",
-    toastType: "success",
-    message: "Small success toast test.",
-  },
-  "toast-info-s@example.com": {
-    description: "Small info toast description test.",
-    toastSize: "s",
-    toastType: "info",
-    message: "Small info toast test.",
-  },
-  "toast-warning-s@example.com": {
-    description: "Small warning toast description test.",
-    toastSize: "s",
-    toastType: "warning",
-    message: "Small warning toast test.",
-  },
-  "toast-error-s@example.com": {
-    description: "Small error toast description test.",
-    toastSize: "s",
-    toastType: "error",
-    message: "Small error toast test.",
   },
 };
 
@@ -266,7 +217,6 @@ export const authHandlers = [
         ...(toastTestCase && {
           toastDescription: toastTestCase.description,
           toastMessage: toastTestCase.message,
-          toastSize: toastTestCase.toastSize,
           toastType: toastTestCase.toastType,
         }),
       },

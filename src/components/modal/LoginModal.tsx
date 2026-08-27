@@ -6,11 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import React, { useEffect } from "react";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
-import {
-  LoginToastSize,
-  LoginToastType,
-  useEmailLoginMutation,
-} from "@/api/auth/emailLogin";
+import { LoginToastType, useEmailLoginMutation } from "@/api/auth/emailLogin";
 import ActiveButton from "@/components/ActiveButton";
 import SocialLoginButton from "@/components/auth/SocialLoginButton";
 import PasswordField from "@/components/field/PasswordField";
@@ -26,14 +22,13 @@ import { PENDING_WELCOME_CREDIT_DIALOG_KEY } from "@/constants/auth";
 
 const showLoginToast = (
   toastType: LoginToastType | undefined,
-  toastSize: LoginToastSize | undefined,
   message: string,
   description?: string,
 ) => {
   // MSW 로그인 toast 테스트 계정처럼 서버가 타입을 내려준 경우에만 디자인 확인용 toast를 띄웁니다.
   if (!toastType || !message) return;
 
-  showAppToast(toastType, message, { description, size: toastSize });
+  showAppToast(toastType, message, { description });
 };
 
 const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
@@ -120,7 +115,6 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
           clearErrors(["email", "pw"]);
           showLoginToast(
             data.toastType,
-            data.toastSize,
             data.toastMessage ?? "",
             data.toastDescription,
           );

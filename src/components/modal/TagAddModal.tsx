@@ -111,7 +111,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
     }
 
     if (localSelectedNames.length >= 5) {
-      showAppToast("warning", t("maxAlert"), { size: "s" });
+      showAppToast("warning", t("maxAlert"));
       return;
     }
 

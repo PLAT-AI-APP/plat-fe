@@ -26,14 +26,13 @@ const ProfileImageField = ({ name = "profileImg" }: ProfileImageFieldProps) => {
         file.type,
       )
     ) {
-      return showAppToast("warning", "jpg, png, webp 이미지 파일만 가능합니다.", {
-        size: "s",
-      });
+      return showAppToast(
+        "warning",
+        "jpg, png, webp 이미지 파일만 가능합니다.",
+      );
     }
     if (file.size > 5 * 1024 * 1024) {
-      return showAppToast("warning", "파일 용량은 최대 5MB까지 가능합니다.", {
-        size: "s",
-      });
+      return showAppToast("warning", "파일 용량은 최대 5MB까지 가능합니다.");
     }
 
     // 파일 객체 저장 (ProfileEditFormType에 선언된 키값에 맞게 매핑)

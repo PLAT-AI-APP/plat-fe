@@ -5,7 +5,7 @@ import "@/app/globals.css";
 import IntlProvider from "@/providers/IntlProvider";
 import ReactQueryProvider from "@/providers/ReactQueryProvider";
 import ThemeProvider from "@/providers/ThemeProvider";
-import SonnerProvider from "@/providers/SonnerProvider";
+import ToastManager from "@/components/toast/ToastManager";
 import ClientLayout from "./ClientLayout";
 import "pretendard/dist/web/static/pretendard.css";
 import { NavigationGuardProvider } from "next-navigation-guard";
@@ -107,7 +107,7 @@ export default function RootLayout({
                 <NavigationGuardProvider>
                   <Suspense fallback={null}>
                     <ClientLayout>{children}</ClientLayout>
-                    <SonnerProvider />
+                    <ToastManager />
                   </Suspense>
                 </NavigationGuardProvider>
               </ThemeProvider>
