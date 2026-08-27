@@ -103,9 +103,10 @@ button {
 }
 
 /* Sonner */
-/* toast 노출 시간과 사라지는 시간 (src/lib/toast.tsx의 APP_TOAST_DURATION과 값을 맞춰야 합니다.) */
+/* --app-toast-duration, --app-toast-overflow-fade-duration는 SonnerProvider가
+   src/lib/toast.tsx의 상수를 그대로 인라인 style로 주입합니다. 여기서 값을 새로 정의하지 않는 이유는
+   JS 타이머와 CSS 애니메이션 길이가 서로 다른 곳에서 따로 어긋나 애니메이션이 끊기는 걸 막기 위함입니다. */
 [data-sonner-toaster] {
-  --app-toast-duration: 5000ms;
   --app-toast-fade-out-duration: 900ms;
   --app-toast-ease: cubic-bezier(0.32, 0.72, 0, 1);
 }
@@ -137,11 +138,13 @@ button {
   backdrop-filter: blur(3.25px);
   transform-origin: top center;
   /* 위치 이동은 빠르게 붙는 이징이 자연스럽지만, 투명도는 같은 이징을 쓰면
-     초반에 확 사라져 깜빡이는 느낌이라 고르게 변하는 이징을 씁니다. */
+     초반에 확 사라져 깜빡이는 느낌이라 고르게 변하는 이징을 씁니다.
+     이 길이는 toast.tsx의 초과분 제거 setTimeout(APP_TOAST_OVERFLOW_FADE_OUT_DURATION)과
+     반드시 같아야 하므로 SonnerProvider가 주입한 --app-toast-overflow-fade-duration을 그대로 씁니다. */
   transition:
-    opacity 480ms ease-in-out,
-    transform 480ms var(--app-toast-ease),
-    filter 480ms ease-in-out;
+    opacity var(--app-toast-overflow-fade-duration) ease-in-out,
+    transform var(--app-toast-overflow-fade-duration) var(--app-toast-ease),
+    filter var(--app-toast-overflow-fade-duration) ease-in-out;
 }
 
 [data-sonner-toast].sonner-toast.sonner-size-s {
