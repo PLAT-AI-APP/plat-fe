@@ -1,6 +1,6 @@
 import { http, HttpResponse } from "msw";
 import type { HashtagCategory } from "@/api/hashtag/getHashtagList";
-import { endpoint } from "../utils";
+import { endpoint, resolveAcceptLanguage } from "../utils";
 
 // Number로 두면 Number.MAX_SAFE_INTEGER(2^53-1)를 넘는 값이라 +index 연산 시 정밀도가
 // 깨져 서로 다른 인덱스가 같은 id로 뭉개집니다(예: +0~+4가 전부 동일한 값으로 반올림됨).
@@ -279,8 +279,10 @@ const TAGS = TAG_SEEDS.map(({ label, category }, index) => ({
 
 export const hashtagHandlers = [
   http.get(endpoint("/hashtag/list"), ({ request }) => {
-    const url = new URL(request.url);
-    const lang = url.searchParams.get("lang") || "KO";
+    // 언어는 쿼리파라미터가 아니라 Accept-Language 헤더로만 판별합니다.
+    const lang = resolveAcceptLanguage(
+      request.headers.get("accept-language"),
+    ).toUpperCase();
 
     return HttpResponse.json({
       lang,
