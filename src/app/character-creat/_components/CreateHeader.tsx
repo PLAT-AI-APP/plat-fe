@@ -1,13 +1,12 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import ActiveButton from "@/components/ActiveButton";
 import ArrowLineLeft from "@/icons/ArrowLineLeft";
 import { Redo } from "@/icons";
-import { useChatacterCreateMutation } from "@/api/character/postChatacterCreate";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
 import { showAppToast } from "@/lib/toast";
 
@@ -19,11 +18,11 @@ interface CreateHeaderProps {
 const CreateHeader = ({ onSave, onDraftClick }: CreateHeaderProps) => {
   const t = useTranslations("characterCreate");
   const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const {
     formState: { isValid },
     getValues,
   } = useFormContext<CharacterCreateFormValues>();
-  const { mutate, isPending } = useChatacterCreateMutation();
 
   const handleSafeBack = (fallbackPath = "/") => {
     if (window.history.state.__next_navigation_guard_stack_index > 0) {
@@ -35,6 +34,8 @@ const CreateHeader = ({ onSave, onDraftClick }: CreateHeaderProps) => {
   };
 
   const handleRegisterClick = () => {
+    if (isSubmitting) return;
+
     void isValid;
 
     const currentFormData = getValues();
@@ -48,12 +49,11 @@ const CreateHeader = ({ onSave, onDraftClick }: CreateHeaderProps) => {
         currentFormData.asset?.map((asset) => ({
           name: asset.assetName,
           situation: asset.assetSituation,
-          imageId: asset.assetImageId,
+          assetImageFileId: asset.assetImageFileId,
           visibility: asset.assetVisibility,
         })) || [],
       visibility: currentFormData.isPublic ? "PUBLIC" : "PRIVATE",
       allowComments: currentFormData.allowComments,
-      // 프로필 탭의 프롤로그 소개가 있으면 우선 보내고, 없을 때는 상세 설명을 사용합니다.
       description:
         currentFormData.profileSituationDescription ||
         currentFormData.characterDescription,
@@ -62,19 +62,11 @@ const CreateHeader = ({ onSave, onDraftClick }: CreateHeaderProps) => {
       tagIds: currentFormData.tagIds.map((tag) => tag.id),
     };
 
-    mutate(
-      { props: payload },
-      {
-        onSuccess: () => {
-          showAppToast("success", t("createSuccess"));
-          router.push("/");
-        },
-        onError: (error) => {
-          // 실패 토스트는 axios 인터셉터 → MutationCache의 전역 에러 처리에서 이미 띄우므로 여기서 중복으로 띄우지 않습니다.
-          console.error("Character create failed:", error);
-        },
-      },
-    );
+    setIsSubmitting(true);
+    console.info("Character create API is disabled. Local payload:", payload);
+    showAppToast("success", t("createSuccess"));
+    router.push("/");
+    setIsSubmitting(false);
   };
 
   return (
@@ -105,7 +97,7 @@ const CreateHeader = ({ onSave, onDraftClick }: CreateHeaderProps) => {
 
         <ActiveButton
           isActive
-          text={isPending ? t("submitting") : t("submit")}
+          text={isSubmitting ? t("submitting") : t("submit")}
           className="h-9 rounded-xl px-4 py-2"
           onClick={handleRegisterClick}
         />

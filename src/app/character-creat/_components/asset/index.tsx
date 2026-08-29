@@ -6,7 +6,7 @@ import { Droppable } from "@hello-pangea/dnd";
 import { UseFieldArrayReturn } from "react-hook-form";
 import AssetGuidePanel from "./AssetGuidePanel";
 import AssetItem from "./AssetItem";
-import { useFileUploadMutation } from "@/api/file/postFileUpload";
+import { useUniverseAssetImageUploadMutation } from "@/api/universe/postUniverseAssetImage";
 import { Plus } from "@/icons";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
 import { showAppToast } from "@/lib/toast";
@@ -19,7 +19,7 @@ const Asset = ({ assetFieldArray }: AssetProps) => {
   const t = useTranslations("characterCreate.asset");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { fields, append, remove } = assetFieldArray;
-  const { mutateAsync: uploadFile } = useFileUploadMutation();
+  const { mutateAsync: uploadAssetImage } = useUniverseAssetImageUploadMutation();
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -40,9 +40,8 @@ const Asset = ({ assetFieldArray }: AssetProps) => {
     }
 
     try {
-      const uploadedImage = await uploadFile({
-        fileType: "CHARACTER_ASSET",
-        file,
+      const uploadedImage = await uploadAssetImage({
+        assetImageFile: file,
       });
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -50,7 +49,7 @@ const Asset = ({ assetFieldArray }: AssetProps) => {
           assetFile: null,
           assetName: file.name.split(".").slice(0, -1).join("."),
           assetImage: reader.result as string,
-          assetImageId: uploadedImage.originalFileId,
+          assetImageFileId: uploadedImage.fileId,
           assetSituation: "",
           assetVisibility: "PUBLIC",
         });

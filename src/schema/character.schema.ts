@@ -41,7 +41,7 @@ export const characterCreateSchema = z.object({
       z.object({
         assetFile: z.any().nullable(),
         assetImage: z.string(),
-        assetImageId: fileUploadIdSchema.nullable(),
+        assetImageFileId: fileUploadIdSchema.nullable(),
         assetName: z
           .string()
           .min(1, FIELD_ERROR_MESSAGES.assetNameRequired)

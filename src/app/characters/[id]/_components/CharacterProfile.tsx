@@ -2,13 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
-import { useCharacterScenarioListQuery } from "@/api/character/getCharacterScenarioList";
 import ActiveButton from "@/components/ActiveButton";
 import { formatStatCount } from "@/lib/utils";
 import { useModalStore } from "@/store/useModalStore";
 import { CharacterScenario } from "@/type/character";
+import { getMockCharacterScenarios } from "../_data/mockCharacterData";
 
 interface CharacterProfileProps {
   imageSrc: string;
@@ -26,18 +26,17 @@ const CharacterProfile = ({
   characterId,
 }: CharacterProfileProps) => {
   const t = useTranslations();
-  const { data: scenarios } = useCharacterScenarioListQuery(characterId);
+  const scenarios = useMemo(
+    () => getMockCharacterScenarios(characterId),
+    [characterId],
+  );
   const [currentScenario, setCurrentScenario] = useState<
     CharacterScenario | undefined
-  >(scenarios?.[0]);
-
-  if (!currentScenario && scenarios && scenarios.length > 0) {
-    setCurrentScenario(scenarios[0]);
-  }
+  >(scenarios[0]);
 
   const { openModal } = useModalStore();
 
-  if (!scenarios || scenarios.length === 0) {
+  if (scenarios.length === 0) {
     return <div>{t("characterDetail.noScenario")}</div>;
   }
 
