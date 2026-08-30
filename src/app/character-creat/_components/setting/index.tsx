@@ -7,23 +7,27 @@ import TagAddModal from "@/components/modal/TagAddModal";
 import { ArrowRight } from "@/icons";
 import { cn } from "@/lib/utils";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
+import type {
+  UniverseCreateCategory,
+  UniverseCreateTendency,
+} from "@/api/universe/postUniverseCreate";
 
-const TENDENCY_LIST = ["전체", "남성향", "여성향"] as const;
+const TENDENCY_LIST: UniverseCreateTendency[] = ["ALL", "MALE", "FEMALE"];
 
-const CATEGORIES = [
-  "시뮬레이션",
-  "로맨스",
-  "판타지/SF",
-  "드라마",
-  "무협/사극",
+const CATEGORIES: UniverseCreateCategory[] = [
+  "SIMULATION",
+  "ROMANCE",
+  "FANTASY",
+  "DRAMA",
+  "MARTIAL_ARTS_HISTORICAL",
   "GL",
   "BL",
-  "공포/추리",
-  "액션",
-  "코믹/일상",
-  "스포츠/학원",
-  "기타",
-] as const;
+  "HORROR_MYSTERY",
+  "ACTION",
+  "COMIC_DAILY",
+  "SPORTS_SCHOOL",
+  "ETC",
+];
 
 const Setting = () => {
   const t = useTranslations("characterCreate.settings");
@@ -36,24 +40,24 @@ const Setting = () => {
   const allowComments = useWatch({ control, name: "allowComments" });
   const tendency = useWatch({ control, name: "tendency" });
   const categoryWatch = useWatch({ control, name: "category" });
-  const tendencyLabelByValue: Record<string, string> = {
-    전체: selectorT("all"),
-    남성향: selectorT("male"),
-    여성향: selectorT("female"),
+  const tendencyLabelByValue: Record<UniverseCreateTendency, string> = {
+    ALL: selectorT("all"),
+    MALE: selectorT("male"),
+    FEMALE: selectorT("female"),
   };
-  const categoryLabelByValue: Record<string, string> = {
-    시뮬레이션: categoryT("simulation"),
-    로맨스: categoryT("romance"),
-    "판타지/SF": categoryT("fantasySf"),
-    드라마: categoryT("drama"),
-    "무협/사극": categoryT("martialArtsHistorical"),
+  const categoryLabelByValue: Record<UniverseCreateCategory, string> = {
+    SIMULATION: categoryT("simulation"),
+    ROMANCE: categoryT("romance"),
+    FANTASY: categoryT("fantasySf"),
+    DRAMA: categoryT("drama"),
+    MARTIAL_ARTS_HISTORICAL: categoryT("martialArtsHistorical"),
     GL: categoryT("gl"),
     BL: categoryT("bl"),
-    "공포/추리": categoryT("horrorMystery"),
-    액션: categoryT("action"),
-    "코믹/일상": categoryT("comicDaily"),
-    "스포츠/학원": categoryT("sportsSchool"),
-    기타: categoryT("etc"),
+    HORROR_MYSTERY: categoryT("horrorMystery"),
+    ACTION: categoryT("action"),
+    COMIC_DAILY: categoryT("comicDaily"),
+    SPORTS_SCHOOL: categoryT("sportsSchool"),
+    ETC: categoryT("etc"),
   };
 
   const handleIsPublic = (isPublic: boolean) => {
@@ -67,19 +71,16 @@ const Setting = () => {
     });
   };
 
-  const handleTendency = (nextTendency: string) => {
+  const handleTendency = (nextTendency: UniverseCreateTendency) => {
     setValue("tendency", nextTendency, {
       shouldDirty: true,
       shouldValidate: true,
     });
   };
 
-  const handleCategory = (category: string) => {
-    // 카테고리는 복수 선택이므로 기존 배열에서 선택값을 토글해 관리합니다.
-    const currentCategories = categoryWatch ?? [];
-    const nextCategory = currentCategories.includes(category)
-      ? currentCategories.filter((selectedCategory) => selectedCategory !== category)
-      : [...currentCategories, category];
+  const handleCategory = (category: UniverseCreateCategory) => {
+    const selectedCategories = categoryWatch ?? [];
+    const nextCategory = selectedCategories.includes(category) ? [] : [category];
 
     setValue("category", nextCategory, {
       shouldDirty: true,
@@ -153,7 +154,6 @@ const Setting = () => {
           <p className="body-5 text-font-2">{t("tendencyHelp")}</p>
         </div>
 
-        {/* 성향은 팝오버가 아니라 피그마처럼 즉시 선택 가능한 segmented control로 보여줍니다. */}
         <div className="grid grid-cols-3 gap-2">
           {TENDENCY_LIST.map((item) => {
             const isActive = tendency === item;
@@ -186,7 +186,6 @@ const Setting = () => {
           <p className="body-5 text-font-2">{t("categoryHelp")}</p>
         </div>
 
-        {/* 카테고리는 전체 후보를 노출해 선택 비용을 줄입니다. */}
         <div className="flex flex-wrap gap-x-1.5 gap-y-2">
           {CATEGORIES.map((category) => {
             const selectedCategories = categoryWatch ?? [];
@@ -199,7 +198,7 @@ const Setting = () => {
                 type="button"
                 onClick={() => handleCategory(category)}
                 className={cn(
-                  "bg-dark body-4 flex h-8 items-center rounded-[100px] px-3 border border-main transition-none",
+                  "body-4 flex h-8 items-center rounded-[100px] border border-main bg-dark px-3 transition-none",
                   isActive && "bg-brand/10 text-brand-dark",
                   selectedCategories.length === 0 && "text-font-1",
                   isInactive && "text-font-disabled",

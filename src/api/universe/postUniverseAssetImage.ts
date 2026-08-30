@@ -1,10 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
 import { authAxios } from "..";
-import { FileUploadId } from "@/api/file/postFileUpload";
 import { AppError } from "@/type/api";
 
 export interface UniverseAssetImageUploadResponse {
-  fileId: FileUploadId;
+  fileId: string;
   imageType: "ASSET";
 }
 

@@ -1,28 +1,113 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { useTranslations } from "next-intl";
 import { useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import ActiveButton from "@/components/ActiveButton";
 import ArrowLineLeft from "@/icons/ArrowLineLeft";
 import { Redo } from "@/icons";
-import { CharacterCreateFormValues } from "@/schema/character.schema";
+import { dataUrlToFile } from "@/lib/file";
 import { showAppToast } from "@/lib/toast";
+import { useLocaleStore } from "@/store/useLocaleStore";
+import { CharacterCreateFormValues } from "@/schema/character.schema";
+import {
+  UniverseCreateCategory,
+  UniverseCreateLanguage,
+  UniverseCreateTendency,
+  useUniverseCreateMutation,
+} from "@/api/universe/postUniverseCreate";
 
 interface CreateHeaderProps {
   onSave: () => void;
   onDraftClick: () => void;
 }
 
+const UNIVERSE_TENDENCIES: UniverseCreateTendency[] = [
+  "ALL",
+  "MALE",
+  "FEMALE",
+];
+
+const UNIVERSE_CATEGORIES: UniverseCreateCategory[] = [
+  "SIMULATION",
+  "ROMANCE",
+  "FANTASY",
+  "DRAMA",
+  "MARTIAL_ARTS_HISTORICAL",
+  "GL",
+  "BL",
+  "HORROR_MYSTERY",
+  "ACTION",
+  "COMIC_DAILY",
+  "SPORTS_SCHOOL",
+  "ETC",
+];
+
+const LANGUAGE_BY_LOCALE: Record<string, UniverseCreateLanguage> = {
+  ko: "KO",
+  en: "EN",
+  ja: "JA",
+  zh: "ZH",
+  th: "TH",
+  vi: "VI",
+};
+
+const getDataUrlMimeType = (dataUrl: string) =>
+  dataUrl.match(/^data:(.*?);/)?.[1] || "image/webp";
+
+const createImageFileFromDataUrl = (
+  dataUrl: string,
+  fileNamePrefix: string,
+) => {
+  const mimeType = getDataUrlMimeType(dataUrl);
+  const extension = mimeType.split("/")[1] || "webp";
+
+  return dataUrlToFile(dataUrl, `${fileNamePrefix}.${extension}`, mimeType);
+};
+
+const serializeScenarioContent = (
+  scenario: CharacterCreateFormValues["scenarios"][number],
+) =>
+  [
+    scenario.description,
+    scenario.difficulty,
+    ...(scenario.contents ?? []).map((content) => content.value),
+  ]
+    .map((value) => value?.trim())
+    .filter(Boolean)
+    .join("\n\n");
+
+const toUniverseTendency = (tendency: string): UniverseCreateTendency => {
+  if (UNIVERSE_TENDENCIES.includes(tendency as UniverseCreateTendency)) {
+    return tendency as UniverseCreateTendency;
+  }
+
+  return "ALL";
+};
+
+const toUniverseCategory = (categories: string[]): UniverseCreateCategory => {
+  const category = categories[0];
+
+  if (UNIVERSE_CATEGORIES.includes(category as UniverseCreateCategory)) {
+    return category as UniverseCreateCategory;
+  }
+
+  return "ETC";
+};
+
+const isApiErrorLike = (error: unknown) =>
+  typeof error === "object" &&
+  error !== null &&
+  "code" in error &&
+  "message" in error;
+
 const CreateHeader = ({ onSave, onDraftClick }: CreateHeaderProps) => {
   const t = useTranslations("characterCreate");
   const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const {
-    formState: { isValid },
-    getValues,
-  } = useFormContext<CharacterCreateFormValues>();
+  const locale = useLocaleStore((state) => state.locale);
+  const { getValues, trigger } = useFormContext<CharacterCreateFormValues>();
+  const { mutateAsync: createUniverse, isPending } = useUniverseCreateMutation();
 
   const handleSafeBack = (fallbackPath = "/") => {
     if (window.history.state.__next_navigation_guard_stack_index > 0) {
@@ -33,40 +118,66 @@ const CreateHeader = ({ onSave, onDraftClick }: CreateHeaderProps) => {
     router.push(fallbackPath);
   };
 
-  const handleRegisterClick = () => {
-    if (isSubmitting) return;
+  const handleRegisterClick = async () => {
+    if (isPending) return;
 
-    void isValid;
+    const isFormValid = await trigger();
+    if (!isFormValid) return;
 
     const currentFormData = getValues();
-    const payload = {
-      representativeImageId: currentFormData.representativeImageId,
-      profileImageId: currentFormData.characterProfileImageId,
-      name: currentFormData.name,
-      introduce: currentFormData.characterIntroduce,
-      detailSetting: currentFormData.characterDetailSetting,
-      assets:
-        currentFormData.asset?.map((asset) => ({
-          name: asset.assetName,
-          situation: asset.assetSituation,
-          assetImageFileId: asset.assetImageFileId,
-          visibility: asset.assetVisibility,
-        })) || [],
-      visibility: currentFormData.isPublic ? "PUBLIC" : "PRIVATE",
-      allowComments: currentFormData.allowComments,
-      description:
-        currentFormData.profileSituationDescription ||
-        currentFormData.characterDescription,
-      tendency: currentFormData.tendency,
-      category: currentFormData.category,
-      tagIds: currentFormData.tagIds.map((tag) => tag.id),
-    };
 
-    setIsSubmitting(true);
-    console.info("Character create API is disabled. Local payload:", payload);
-    showAppToast("success", t("createSuccess"));
-    router.push("/");
-    setIsSubmitting(false);
+    try {
+      const [profileImage, characterProfileImage] = await Promise.all([
+        createImageFileFromDataUrl(
+          currentFormData.representativeImage,
+          "universe-profile-image",
+        ),
+        createImageFileFromDataUrl(
+          currentFormData.characterProfileImage,
+          "character-profile-image",
+        ),
+      ]);
+
+      const created = await createUniverse({
+        request: {
+          commentEnabled: currentFormData.allowComments,
+          scenarios: currentFormData.scenarios.map((scenario, index) => ({
+            name: scenario.name || `Scenario ${index + 1}`,
+            content: serializeScenarioContent(scenario),
+          })),
+          assets:
+            currentFormData.asset
+              ?.filter((asset) => asset.assetImageFileId)
+              .map((asset) => ({
+                assetImageFileId: String(asset.assetImageFileId),
+                assetName: asset.assetName,
+                assetSituation: asset.assetSituation,
+              })) || [],
+          tendency: toUniverseTendency(currentFormData.tendency),
+          name: currentFormData.name,
+          visibility: currentFormData.isPublic ? "PUBLIC" : "PRIVATE",
+          title: currentFormData.title,
+          language: LANGUAGE_BY_LOCALE[locale] ?? "KO",
+          description:
+            currentFormData.characterDescription ||
+            currentFormData.profileSituationDescription,
+          tagIds: currentFormData.tagIds.map((tag) => tag.id),
+          category: toUniverseCategory(currentFormData.category),
+          detailSetting: currentFormData.characterDetailSetting,
+          introduce: currentFormData.characterIntroduce,
+        },
+        profileImage,
+        characterProfileImage,
+      });
+
+      showAppToast("success", t("createSuccess"));
+      router.push(`/characters/${created.characterId}`);
+    } catch (error) {
+      if (!isApiErrorLike(error)) {
+        showAppToast("error", t("createFailed"));
+      }
+      console.error("Universe create failed:", error);
+    }
   };
 
   return (
@@ -97,7 +208,7 @@ const CreateHeader = ({ onSave, onDraftClick }: CreateHeaderProps) => {
 
         <ActiveButton
           isActive
-          text={isSubmitting ? t("submitting") : t("submit")}
+          text={isPending ? t("submitting") : t("submit")}
           className="h-9 rounded-xl px-4 py-2"
           onClick={handleRegisterClick}
         />
