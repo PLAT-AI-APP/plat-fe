@@ -38,7 +38,7 @@ const SidebarSummary = ({
 
   const invalidateFollowQueries = () => {
     queryClient.invalidateQueries({
-      queryKey: ["get-character-detail", character.characterId],
+      queryKey: ["get-universe-detail", character.characterId],
     });
     queryClient.invalidateQueries({
       queryKey: ["get-follow-count", character.creator.id],

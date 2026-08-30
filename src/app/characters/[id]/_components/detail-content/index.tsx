@@ -1,8 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { useModalStore } from "@/store/useModalStore";
-import { getMockCharacterDetail } from "../../_data/mockCharacterData";
+import {
+  adaptUniverseDetailToCharacterDetail,
+  useUniverseDetailQuery,
+} from "@/api/universe/getUniverseDetail";
 import CommentsPanel from "./_components/CommentsPanel";
 import DetailTabs, { CharacterDetailTab } from "./_components/DetailTabs";
 import ScenarioPanel from "./_components/ScenarioPanel";
@@ -16,10 +20,17 @@ interface CharacterDetailContentProps {
 const CharacterDetailContent = ({
   characterId,
 }: CharacterDetailContentProps) => {
+  const {
+    data: universe,
+    isError,
+    isLoading,
+  } = useUniverseDetailQuery(characterId);
   const character = useMemo(
-    () => getMockCharacterDetail(characterId),
-    [characterId],
+    () =>
+      universe ? adaptUniverseDetailToCharacterDetail(universe) : undefined,
+    [universe],
   );
+  const t = useTranslations("characterDetail");
   const openModal = useModalStore((state) => state.openModal);
   const [currentTab, setCurrentTab] = useState<CharacterDetailTab>("settings");
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
@@ -38,7 +49,7 @@ const CharacterDetailContent = ({
     }),
     [],
   );
-  const currentScenario = character.scenarios[0];
+  const currentScenario = character?.scenarios[0];
   const getScrollContainer = useCallback(
     () => document.getElementById("page-content"),
     [],
@@ -121,6 +132,22 @@ const CharacterDetailContent = ({
       }
     };
   }, []);
+
+  if (isLoading) {
+    return (
+      <article className="flex w-full justify-center px-5 pb-25 pt-5">
+        <div className="h-[720px] w-full max-w-[1200px] animate-pulse rounded-2xl bg-card" />
+      </article>
+    );
+  }
+
+  if (isError || !character) {
+    return (
+      <article className="flex w-full justify-center px-5 pb-25 pt-5">
+        <p className="body-2 text-font-2">{t("loadFailed")}</p>
+      </article>
+    );
+  }
 
   const openChatStartModal = () => {
     openModal("CHATTING_START", {

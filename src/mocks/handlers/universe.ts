@@ -1,6 +1,7 @@
 import { http, HttpResponse } from "msw";
-import { endpoint } from "../utils";
+import { endpoint, pathValue } from "../utils";
 import type { UniverseCreateRequest } from "@/api/universe/postUniverseCreate";
+import type { UniverseDetailResponse } from "@/api/universe/getUniverseDetail";
 
 const ALLOWED_ASSET_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_ASSET_IMAGE_SIZE = 5 * 1024 * 1024;
@@ -38,7 +39,65 @@ const validateImagePart = (
   return null;
 };
 
+const createMockUniverseDetail = (
+  universeId: string,
+): UniverseDetailResponse => ({
+  universeId,
+  visibility: "PUBLIC",
+  commentEnabled: true,
+  tendency: "MALE_ORIENTED",
+  category: "ROMANCE",
+  chatCount: 12,
+  likeCount: 3,
+  title: "당신을 기다려온 소꿉친구",
+  introduce: "밝고 명랑하지만 수줍음이 많은 당신의 오랜 친구입니다.",
+  detailSetting: "매주 목요일마다 카페에서 당신을 기다립니다.",
+  description: "소꿉친구 연우와 대화하는 로맨스 세계관입니다.",
+  profileImageUrl: "https://picsum.photos/seed/universe-profile/640/640",
+  characterName: "연우",
+  characterProfileUrl: "https://picsum.photos/seed/character-profile/320/320",
+  hashtags: [
+    {
+      hashtagId: "11",
+      label: "소꿉친구",
+    },
+  ],
+  assets: [
+    {
+      assetImageFileId: "456789012345678901",
+      assetName: "행복",
+      assetSituation: "행복한 감정을 느낄 때 표시합니다.",
+      originalUrl: "https://picsum.photos/seed/universe-asset-happy/640/384",
+    },
+  ],
+  scenarios: [
+    {
+      episodeNo: 1,
+      name: "기본 시나리오",
+      content: "문이 열리자 연우는 놀란 표정으로 고개를 들었다.",
+    },
+  ],
+});
+
 export const universeHandlers = [
+  http.get(/\/universe\/([^/]+)(?:\?.*)?$/, ({ request }) => {
+    const universeId = pathValue(request.url, /\/universe\/([^/]+)$/);
+
+    if (universeId === "999") {
+      return HttpResponse.json(
+        {
+          code: "UNIVERSE_NOT_FOUND",
+          message: "Universe does not exist.",
+        },
+        { status: 404 },
+      );
+    }
+
+    return HttpResponse.json(
+      createMockUniverseDetail(universeId || "48088734813523970"),
+    );
+  }),
+
   http.post(endpoint("/universe/assets/images"), async ({ request }) => {
     const formData = await request.formData();
     const assetImage = formData.get("assetImage");

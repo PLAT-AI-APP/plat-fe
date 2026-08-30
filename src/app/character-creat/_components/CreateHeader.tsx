@@ -171,7 +171,7 @@ const CreateHeader = ({ onSave, onDraftClick }: CreateHeaderProps) => {
       });
 
       showAppToast("success", t("createSuccess"));
-      router.push(`/characters/${created.characterId}`);
+      router.push(`/characters/${created.universeId}`);
     } catch (error) {
       if (!isApiErrorLike(error)) {
         showAppToast("error", t("createFailed"));
