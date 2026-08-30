@@ -5,6 +5,10 @@ import type { UniverseDetailResponse } from "@/api/universe/getUniverseDetail";
 
 const ALLOWED_ASSET_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_ASSET_IMAGE_SIZE = 5 * 1024 * 1024;
+const deletedUniverseIds = new Set<string>();
+
+const isUniverseMissing = (universeId?: string) =>
+  !universeId || universeId === "999" || deletedUniverseIds.has(universeId);
 
 const createMockUniverseAssetImageUploadResponse = () => {
   return {
@@ -83,7 +87,7 @@ export const universeHandlers = [
   http.get(/\/universe\/([^/]+)(?:\?.*)?$/, ({ request }) => {
     const universeId = pathValue(request.url, /\/universe\/([^/]+)$/);
 
-    if (universeId === "999") {
+    if (isUniverseMissing(universeId)) {
       return HttpResponse.json(
         {
           code: "UNIVERSE_NOT_FOUND",
@@ -96,6 +100,24 @@ export const universeHandlers = [
     return HttpResponse.json(
       createMockUniverseDetail(universeId || "48088734813523970"),
     );
+  }),
+
+  http.delete(/\/universe\/([^/]+)(?:\?.*)?$/, ({ request }) => {
+    const universeId = pathValue(request.url, /\/universe\/([^/]+)$/);
+
+    if (!universeId || universeId === "999") {
+      return HttpResponse.json(
+        {
+          code: "UNIVERSE_NOT_FOUND",
+          message: "Universe does not exist.",
+        },
+        { status: 404 },
+      );
+    }
+
+    deletedUniverseIds.add(universeId);
+
+    return new HttpResponse(null, { status: 204 });
   }),
 
   http.post(endpoint("/universe/assets/images"), async ({ request }) => {

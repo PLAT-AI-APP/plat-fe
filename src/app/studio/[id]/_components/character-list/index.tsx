@@ -17,6 +17,7 @@ interface CharacterListProps {
 
 const CharacterList = ({ char }: CharacterListProps) => {
   const [isLoading, setIsLoading] = useState(true);
+  const [characters, setCharacters] = useState(char);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -25,11 +26,24 @@ const CharacterList = ({ char }: CharacterListProps) => {
 
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    setCharacters(char);
+  }, [char]);
+
+  const handleCharacterDeleted = (index: number) => {
+    setCharacters((prevCharacters) =>
+      prevCharacters.filter((_, characterIndex) => characterIndex !== index),
+    );
+  };
+
   return (
     <ul className="flex flex-col gap-3">
       {isLoading
-        ? char.map((v, index) => <SkeletonCharacterList key={v.id + index} />)
-        : char.map(
+        ? characters.map((v, index) => (
+            <SkeletonCharacterList key={v.id + index} />
+          ))
+        : characters.map(
             ({ chatCount, id, isPublic, dec, img, name, tag }, index) => (
               <li key={index}>
                 <CharacterItem
@@ -40,6 +54,7 @@ const CharacterList = ({ char }: CharacterListProps) => {
                   tagList={tag || []}
                   thumbnail={img}
                   title={name}
+                  onDeleted={() => handleCharacterDeleted(index)}
                 />
               </li>
             ),

@@ -4,10 +4,12 @@ import React, { useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { useUniverseDeleteMutation } from "@/api/universe/deleteUniverse";
 import CharacterMenuPopover from "@/components/popover/CharacterMenuPopover";
 import useToggle from "@/hooks/useToggle";
 import { ChatFill, Dots } from "@/icons";
 import { formatStatCount } from "@/lib/utils";
+import { showAppToast } from "@/lib/toast";
 
 interface CharacterItemProps {
   chatCount: number;
@@ -17,6 +19,7 @@ interface CharacterItemProps {
   thumbnail: string;
   title: string;
   description: string;
+  onDeleted?: () => void;
 }
 
 const CharacterItem = ({
@@ -27,11 +30,14 @@ const CharacterItem = ({
   thumbnail,
   title,
   description,
+  onDeleted,
 }: CharacterItemProps) => {
   const selectorT = useTranslations("selector");
   const profileT = useTranslations("profile");
   const studioT = useTranslations("studio");
   const router = useRouter();
+  const { mutate: deleteUniverse, isPending: isDeleting } =
+    useUniverseDeleteMutation();
   const triggerRef = useRef(null);
   const { isOpen, toggle } = useToggle();
 
@@ -39,6 +45,27 @@ const CharacterItem = ({
     if (!isOpen) {
       router.push(`/characters/${id}`);
     }
+  };
+
+  const handleDeleteConfirm = () => {
+    if (isDeleting) return;
+
+    deleteUniverse(id, {
+      onSuccess: () => {
+        showAppToast("success", "캐릭터가 삭제되었습니다.");
+        onDeleted?.();
+      },
+      onError: () => {
+        showAppToast(
+          "error",
+          "캐릭터 삭제에 실패했습니다. 다시 시도해주세요.",
+        );
+      },
+    });
+  };
+
+  const handleDeleteClick = () => {
+    handleDeleteConfirm();
   };
 
   return (
@@ -65,7 +92,10 @@ const CharacterItem = ({
               <button
                 ref={triggerRef}
                 type="button"
-                onClick={toggle}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  toggle();
+                }}
                 aria-label={profileT("moreMenu")}
               >
                 <Dots className="h-3.5 w-3.5 text-font-2" />
@@ -76,7 +106,7 @@ const CharacterItem = ({
                   <CharacterMenuPopover
                     onClose={toggle}
                     triggerRef={triggerRef}
-                    onDelete={() => null}
+                    onDelete={handleDeleteClick}
                     onEdit={() => null}
                   />
                 </div>
