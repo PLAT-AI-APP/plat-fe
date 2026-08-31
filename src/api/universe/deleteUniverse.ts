@@ -20,12 +20,6 @@ export const useUniverseDeleteMutation = () => {
       queryClient.removeQueries({
         queryKey: ["get-universe-detail", universeId],
       });
-      queryClient.invalidateQueries({ queryKey: ["get-today-pick"] });
-      queryClient.invalidateQueries({ queryKey: ["get-new-work"] });
-      queryClient.invalidateQueries({ queryKey: ["get-official-preview"] });
-      queryClient.invalidateQueries({ queryKey: ["get-asset-preview"] });
-      queryClient.invalidateQueries({ queryKey: ["get-popular-tag"] });
-      queryClient.invalidateQueries({ queryKey: ["get-user-recommend"] });
     },
   });
 };

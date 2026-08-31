@@ -68,6 +68,10 @@ const CharacterItem = ({
     handleDeleteConfirm();
   };
 
+  const handleEditClick = () => {
+    router.push(`/character-creat?universeId=${id}`);
+  };
+
   return (
     <article
       onClick={handleCardClick}
@@ -107,7 +111,7 @@ const CharacterItem = ({
                     onClose={toggle}
                     triggerRef={triggerRef}
                     onDelete={handleDeleteClick}
-                    onEdit={() => null}
+                    onEdit={handleEditClick}
                   />
                 </div>
               )}

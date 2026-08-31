@@ -122,7 +122,8 @@ export const adaptUniverseDetailToCharacterDetail = (
     createdAt: "",
     updatedAt: "",
     creator: {
-      id: universe.universeId,
+      // TODO: 세계관 상세 조회 응답에 creatorId가 추가되면 이 값에 연결합니다.
+      id: null,
       nickname: universe.characterName,
       profileImage: universe.characterProfileUrl,
       followingCount: 0,
@@ -133,10 +134,11 @@ export const adaptUniverseDetailToCharacterDetail = (
   };
 };
 
-export const useUniverseDetailQuery = (universeId: string) => {
+export const useUniverseDetailQuery = (universeId?: string) => {
   return useQuery<UniverseDetailResponse, AppError>({
     queryKey: ["get-universe-detail", universeId],
-    queryFn: () => getUniverseDetail(universeId),
+    queryFn: () => getUniverseDetail(universeId ?? ""),
     staleTime: 1000 * 60 * 5,
+    enabled: Boolean(universeId),
   });
 };

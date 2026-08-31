@@ -47,7 +47,7 @@ export interface CharacterDetail {
   createdAt: string;
   updatedAt: string;
   creator: {
-    id: string;
+    id: string | null;
     nickname: string;
     profileImage: string;
     followingCount: number;

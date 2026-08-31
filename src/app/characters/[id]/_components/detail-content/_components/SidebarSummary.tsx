@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useUnFollowMutation } from "@/api/follow/deleteFollow";
 import { useFollowMutation } from "@/api/follow/postFollow";
@@ -24,9 +25,13 @@ const SidebarSummary = ({
   onStartChat,
 }: SidebarSummaryProps) => {
   const t = useTranslations("characterDetail");
+  const router = useRouter();
   const queryClient = useQueryClient();
   const userId = useUserStore((state) => state.user?.id);
-  const isCreator = userId === character.creator.id;
+  const creatorId = character.creator.id;
+  const canUseCreatorActions = Boolean(creatorId);
+  // TODO: 상세 조회 응답에 creatorId 또는 editable 필드가 추가되면 수정 버튼 노출 조건을 연결합니다.
+  const isCreator = Boolean(userId && creatorId && userId === creatorId);
   const [optimisticIsFollowingCreator, setOptimisticIsFollowingCreator] =
     useState<boolean | null>(null);
   const { mutate: follow, isPending: isFollowMutating } = useFollowMutation();
@@ -40,20 +45,22 @@ const SidebarSummary = ({
     queryClient.invalidateQueries({
       queryKey: ["get-universe-detail", character.characterId],
     });
-    queryClient.invalidateQueries({
-      queryKey: ["get-follow-count", character.creator.id],
-    });
+    if (creatorId) {
+      queryClient.invalidateQueries({
+        queryKey: ["get-follow-count", creatorId],
+      });
+    }
     queryClient.invalidateQueries({ queryKey: ["get-following-list"] });
     queryClient.invalidateQueries({ queryKey: ["get-follower-list"] });
   };
 
   const handleCreatorFollowToggle = () => {
-    if (isFollowPending) return;
+    if (isFollowPending || !creatorId) return;
 
     if (isFollowingCreator) {
       setOptimisticIsFollowingCreator(false);
       unFollow(
-        { userId: character.creator.id },
+        { userId: creatorId },
         {
           onSuccess: invalidateFollowQueries,
           onError: () => setOptimisticIsFollowingCreator(true),
@@ -64,7 +71,7 @@ const SidebarSummary = ({
 
     setOptimisticIsFollowingCreator(true);
     follow(
-      { userId: character.creator.id },
+      { userId: creatorId },
       {
         onSuccess: invalidateFollowQueries,
         onError: () => setOptimisticIsFollowingCreator(false),
@@ -78,6 +85,9 @@ const SidebarSummary = ({
         {isCreator && (
           <button
             type="button"
+            onClick={() =>
+              router.push(`/character-creat?universeId=${character.characterId}`)
+            }
             className="body-4 flex w-fit items-center gap-1 rounded-xl border border-btn-selected bg-darker px-3 py-2 text-font-2 transition-colors hover:bg-card"
           >
             <Gear className="size-5 shrink-0" aria-hidden="true" />
@@ -175,7 +185,7 @@ const SidebarSummary = ({
                 </p>
               </div>
             </div>
-            {!isCreator && (
+            {!isCreator && canUseCreatorActions && (
               <button
                 type="button"
                 onClick={handleCreatorFollowToggle}

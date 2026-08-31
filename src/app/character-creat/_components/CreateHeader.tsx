@@ -14,11 +14,14 @@ import { CharacterCreateFormValues } from "@/schema/character.schema";
 import {
   UniverseCreateCategory,
   UniverseCreateLanguage,
+  UniverseCreateRequest,
   UniverseCreateTendency,
   useUniverseCreateMutation,
 } from "@/api/universe/postUniverseCreate";
+import { useUniverseUpdateMutation } from "@/api/universe/patchUniverseUpdate";
 
 interface CreateHeaderProps {
+  universeId?: string;
   onSave: () => void;
   onDraftClick: () => void;
 }
@@ -56,6 +59,8 @@ const LANGUAGE_BY_LOCALE: Record<string, UniverseCreateLanguage> = {
 const getDataUrlMimeType = (dataUrl: string) =>
   dataUrl.match(/^data:(.*?);/)?.[1] || "image/webp";
 
+const isDataUrl = (value: string) => value.startsWith("data:");
+
 const createImageFileFromDataUrl = (
   dataUrl: string,
   fileNamePrefix: string,
@@ -64,6 +69,15 @@ const createImageFileFromDataUrl = (
   const extension = mimeType.split("/")[1] || "webp";
 
   return dataUrlToFile(dataUrl, `${fileNamePrefix}.${extension}`, mimeType);
+};
+
+const createOptionalImageFileFromDataUrl = (
+  imageUrl: string,
+  fileNamePrefix: string,
+) => {
+  if (!isDataUrl(imageUrl)) return undefined;
+
+  return createImageFileFromDataUrl(imageUrl, fileNamePrefix);
 };
 
 const serializeScenarioContent = (
@@ -102,12 +116,21 @@ const isApiErrorLike = (error: unknown) =>
   "code" in error &&
   "message" in error;
 
-const CreateHeader = ({ onSave, onDraftClick }: CreateHeaderProps) => {
+const CreateHeader = ({
+  universeId,
+  onSave,
+  onDraftClick,
+}: CreateHeaderProps) => {
   const t = useTranslations("characterCreate");
   const router = useRouter();
   const locale = useLocaleStore((state) => state.locale);
   const { getValues, trigger } = useFormContext<CharacterCreateFormValues>();
-  const { mutateAsync: createUniverse, isPending } = useUniverseCreateMutation();
+  const { mutateAsync: createUniverse, isPending: isCreatePending } =
+    useUniverseCreateMutation();
+  const { mutateAsync: updateUniverse, isPending: isUpdatePending } =
+    useUniverseUpdateMutation();
+  const isEditMode = Boolean(universeId);
+  const isPending = isCreatePending || isUpdatePending;
 
   const handleSafeBack = (fallbackPath = "/") => {
     if (window.history.state.__next_navigation_guard_stack_index > 0) {
@@ -127,6 +150,58 @@ const CreateHeader = ({ onSave, onDraftClick }: CreateHeaderProps) => {
     const currentFormData = getValues();
 
     try {
+      const request: UniverseCreateRequest = {
+        commentEnabled: currentFormData.allowComments,
+        scenarios: currentFormData.scenarios.map((scenario, index) => ({
+          name: scenario.name || `Scenario ${index + 1}`,
+          content: serializeScenarioContent(scenario),
+        })),
+        assets:
+          currentFormData.asset
+            ?.filter((asset) => asset.assetImageFileId)
+            .map((asset) => ({
+              assetImageFileId: String(asset.assetImageFileId),
+              assetName: asset.assetName,
+              assetSituation: asset.assetSituation,
+            })) || [],
+        tendency: toUniverseTendency(currentFormData.tendency),
+        name: currentFormData.name,
+        visibility: currentFormData.isPublic ? "PUBLIC" : "PRIVATE",
+        title: currentFormData.title,
+        language: LANGUAGE_BY_LOCALE[locale] ?? "KO",
+        description:
+          currentFormData.characterDescription ||
+          currentFormData.profileSituationDescription,
+        tagIds: currentFormData.tagIds.map((tag) => tag.id),
+        category: toUniverseCategory(currentFormData.category),
+        detailSetting: currentFormData.characterDetailSetting,
+        introduce: currentFormData.characterIntroduce,
+      };
+
+      if (isEditMode && universeId) {
+        const [profileImage, characterProfileImage] = await Promise.all([
+          createOptionalImageFileFromDataUrl(
+            currentFormData.representativeImage,
+            "universe-profile-image",
+          ),
+          createOptionalImageFileFromDataUrl(
+            currentFormData.characterProfileImage,
+            "character-profile-image",
+          ),
+        ]);
+
+        await updateUniverse({
+          universeId,
+          request,
+          ...(profileImage ? { profileImage } : {}),
+          ...(characterProfileImage ? { characterProfileImage } : {}),
+        });
+
+        showAppToast("success", "캐릭터가 성공적으로 수정되었습니다!");
+        router.push(`/characters/${universeId}`);
+        return;
+      }
+
       const [profileImage, characterProfileImage] = await Promise.all([
         createImageFileFromDataUrl(
           currentFormData.representativeImage,
@@ -139,33 +214,7 @@ const CreateHeader = ({ onSave, onDraftClick }: CreateHeaderProps) => {
       ]);
 
       const created = await createUniverse({
-        request: {
-          commentEnabled: currentFormData.allowComments,
-          scenarios: currentFormData.scenarios.map((scenario, index) => ({
-            name: scenario.name || `Scenario ${index + 1}`,
-            content: serializeScenarioContent(scenario),
-          })),
-          assets:
-            currentFormData.asset
-              ?.filter((asset) => asset.assetImageFileId)
-              .map((asset) => ({
-                assetImageFileId: String(asset.assetImageFileId),
-                assetName: asset.assetName,
-                assetSituation: asset.assetSituation,
-              })) || [],
-          tendency: toUniverseTendency(currentFormData.tendency),
-          name: currentFormData.name,
-          visibility: currentFormData.isPublic ? "PUBLIC" : "PRIVATE",
-          title: currentFormData.title,
-          language: LANGUAGE_BY_LOCALE[locale] ?? "KO",
-          description:
-            currentFormData.characterDescription ||
-            currentFormData.profileSituationDescription,
-          tagIds: currentFormData.tagIds.map((tag) => tag.id),
-          category: toUniverseCategory(currentFormData.category),
-          detailSetting: currentFormData.characterDetailSetting,
-          introduce: currentFormData.characterIntroduce,
-        },
+        request,
         profileImage,
         characterProfileImage,
       });

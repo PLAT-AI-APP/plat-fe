@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
@@ -19,6 +19,10 @@ import {
 } from "@/schema/character.schema";
 import { useScenarioPreviewHistoryStore } from "@/store/useScenarioPreviewHistoryStore";
 import { LOGOUT_REDIRECT_IN_PROGRESS_KEY } from "@/constants/auth";
+import {
+  UniverseDetailResponse,
+  useUniverseDetailQuery,
+} from "@/api/universe/getUniverseDetail";
 
 const createCharacterCreateDefaultValues = (
   defaultScenarioName: string,
@@ -49,17 +53,80 @@ const createCharacterCreateDefaultValues = (
   tagIds: [],
 });
 
-const CharacterCreateForm = () => {
+const toFormTendency = (tendency: UniverseDetailResponse["tendency"]) => {
+  if (tendency === "MALE_ORIENTED") return "MALE";
+  if (tendency === "FEMALE_ORIENTED") return "FEMALE";
+
+  return tendency;
+};
+
+const createCharacterEditDefaultValues = (
+  universe: UniverseDetailResponse,
+  defaultScenarioName: string,
+): CharacterCreateFormValues => ({
+  representativeImage: universe.profileImageUrl,
+  representativeImageId: null,
+  characterProfileImage: universe.characterProfileUrl,
+  characterProfileImageId: null,
+  title: universe.title,
+  name: universe.characterName,
+  characterIntroduce: universe.introduce,
+  profileSituationDescription: "",
+  characterDetailSetting: universe.detailSetting,
+  asset: universe.assets.map((asset) => ({
+    assetFile: null,
+    assetImage: asset.originalUrl,
+    assetImageFileId: asset.assetImageFileId,
+    assetName: asset.assetName,
+    assetSituation: asset.assetSituation,
+    assetVisibility: "PUBLIC",
+  })),
+  scenarios:
+    universe.scenarios.length > 0
+      ? universe.scenarios.map((scenario) => ({
+          name: scenario.name,
+          description: scenario.content,
+          difficulty: "",
+          contents: [],
+        }))
+      : [
+          {
+            name: defaultScenarioName,
+            description: "",
+            difficulty: "",
+            contents: [],
+          },
+        ],
+  isPublic: universe.visibility === "PUBLIC",
+  allowComments: universe.commentEnabled,
+  characterDescription: universe.description,
+  tendency: toFormTendency(universe.tendency),
+  category: [universe.category],
+  tagIds: universe.hashtags.map((hashtag) => ({
+    id: hashtag.hashtagId,
+    label: hashtag.label,
+  })),
+});
+
+interface CharacterCreateFormProps {
+  universeId?: string;
+}
+
+const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
   const router = useRouter();
   const t = useTranslations("characterCreate");
   const scenarioT = useTranslations("characterCreate.scenario");
+  const defaultScenarioName = scenarioT("fallbackName", { index: 1 });
+  const isEditMode = Boolean(universeId);
+  const {
+    data: universeDetail,
+    isError: isUniverseDetailError,
+  } = useUniverseDetailQuery(universeId);
   const methods = useForm<CharacterCreateFormValues>({
     mode: "onChange",
     resolver: zodResolver(characterCreateSchema),
     // 첫 시나리오 탭은 기본으로 노출되므로 input 값도 같은 이름으로 시작합니다.
-    defaultValues: createCharacterCreateDefaultValues(
-      scenarioT("fallbackName", { index: 1 }),
-    ),
+    defaultValues: createCharacterCreateDefaultValues(defaultScenarioName),
   });
   const assetFieldArray = useFieldArray({
     control: methods.control,
@@ -86,6 +153,21 @@ const CharacterCreateForm = () => {
     getValues,
     setValue,
   } = methods;
+
+  useEffect(() => {
+    if (!universeDetail) return;
+
+    reset(createCharacterEditDefaultValues(universeDetail, defaultScenarioName));
+  }, [defaultScenarioName, reset, universeDetail]);
+
+  useEffect(() => {
+    if (!isEditMode || !isUniverseDetailError) return;
+
+    showAppToast(
+      "error",
+      "캐릭터 수정 정보를 불러오지 못했습니다. 다시 시도해주세요.",
+    );
+  }, [isEditMode, isUniverseDetailError]);
 
   const updateScenarioContentsFromDrag = (
     nextContents: CharacterCreateFormValues["scenarios"][number]["contents"],
@@ -212,7 +294,11 @@ const CharacterCreateForm = () => {
       />
 
       <div className="flex h-full min-h-0 flex-col gap-4">
-        <CreateHeader onSave={handleSave} onDraftClick={handleDraftClick} />
+        <CreateHeader
+          universeId={universeId}
+          onSave={handleSave}
+          onDraftClick={handleDraftClick}
+        />
 
         {/* Figma frame keeps the editor and preview as fixed columns inside a 1200px body. */}
         <DragDropContext onDragEnd={handleDragEnd}>

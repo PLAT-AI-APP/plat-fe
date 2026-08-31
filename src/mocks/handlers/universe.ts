@@ -2,12 +2,16 @@ import { http, HttpResponse } from "msw";
 import { endpoint, pathValue } from "../utils";
 import type { UniverseCreateRequest } from "@/api/universe/postUniverseCreate";
 import type { UniverseDetailResponse } from "@/api/universe/getUniverseDetail";
+import type { UniverseUpdateRequest } from "@/api/universe/patchUniverseUpdate";
 
 const ALLOWED_ASSET_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_ASSET_IMAGE_SIZE = 5 * 1024 * 1024;
 const deletedUniverseIds = new Set<string>();
+const mockUniverseDetails = new Map<string, UniverseDetailResponse>();
 
-const isUniverseMissing = (universeId?: string) =>
+const isUniverseMissing = (
+  universeId?: string,
+): universeId is undefined =>
   !universeId || universeId === "999" || deletedUniverseIds.has(universeId);
 
 const createMockUniverseAssetImageUploadResponse = () => {
@@ -22,6 +26,13 @@ const parseUniverseCreateRequest = async (requestPart: FormDataEntryValue) => {
     requestPart instanceof File ? await requestPart.text() : requestPart;
 
   return JSON.parse(requestText) as UniverseCreateRequest;
+};
+
+const parseUniverseUpdateRequest = async (requestPart: FormDataEntryValue) => {
+  const requestText =
+    requestPart instanceof File ? await requestPart.text() : requestPart;
+
+  return JSON.parse(requestText) as UniverseUpdateRequest;
 };
 
 const validateImagePart = (
@@ -41,6 +52,16 @@ const validateImagePart = (
   }
 
   return null;
+};
+
+const validateOptionalImagePart = (
+  file: FormDataEntryValue | null,
+  fieldName: string,
+) => {
+  if (!file) return null;
+  if (file instanceof File && file.size === 0) return null;
+
+  return validateImagePart(file, fieldName);
 };
 
 const createMockUniverseDetail = (
@@ -83,6 +104,75 @@ const createMockUniverseDetail = (
   ],
 });
 
+const getMockUniverseDetail = (universeId: string) =>
+  mockUniverseDetails.get(universeId) ?? createMockUniverseDetail(universeId);
+
+const toDetailTendency = (tendency: UniverseUpdateRequest["tendency"]) => {
+  if (tendency === "MALE") return "MALE_ORIENTED";
+  if (tendency === "FEMALE") return "FEMALE_ORIENTED";
+
+  return tendency;
+};
+
+const createMockImageUrl = (fieldName: string, universeId: string) =>
+  `https://picsum.photos/seed/${fieldName}-${universeId}-${Date.now()}/640/640`;
+
+const createUpdatedUniverseDetail = (
+  universeId: string,
+  current: UniverseDetailResponse,
+  body: UniverseUpdateRequest,
+  profileImage: FormDataEntryValue | null,
+  characterProfileImage: FormDataEntryValue | null,
+): UniverseDetailResponse => ({
+  ...current,
+  visibility: body.visibility ?? current.visibility,
+  commentEnabled: body.commentEnabled ?? current.commentEnabled,
+  tendency: toDetailTendency(body.tendency) ?? current.tendency,
+  category: body.category ?? current.category,
+  title: body.title ?? current.title,
+  introduce: body.introduce ?? current.introduce,
+  detailSetting: body.detailSetting ?? current.detailSetting,
+  description: body.description ?? current.description,
+  characterName: body.name ?? current.characterName,
+  profileImageUrl:
+    profileImage instanceof File && profileImage.size > 0
+      ? createMockImageUrl("universe-profile", universeId)
+      : current.profileImageUrl,
+  characterProfileUrl:
+    characterProfileImage instanceof File && characterProfileImage.size > 0
+      ? createMockImageUrl("character-profile", universeId)
+      : current.characterProfileUrl,
+  hashtags:
+    body.tagIds == null
+      ? current.hashtags
+      : body.tagIds.map((tagId) => ({
+          hashtagId: tagId,
+          label: tagId === "11" ? "소꿉친구" : `태그 ${tagId}`,
+        })),
+  assets:
+    body.assets == null
+      ? current.assets
+      : body.assets.map((asset) => ({
+          assetImageFileId: asset.assetImageFileId,
+          assetName: asset.assetName,
+          assetSituation: asset.assetSituation,
+          originalUrl:
+            current.assets.find(
+              (currentAsset) =>
+                currentAsset.assetImageFileId === asset.assetImageFileId,
+            )?.originalUrl ??
+            `https://picsum.photos/seed/universe-asset-${asset.assetImageFileId}/640/384`,
+        })),
+  scenarios:
+    body.scenarios == null
+      ? current.scenarios
+      : body.scenarios.map((scenario, index) => ({
+          episodeNo: index + 1,
+          name: scenario.name,
+          content: scenario.content,
+        })),
+});
+
 export const universeHandlers = [
   http.get(/\/universe\/([^/]+)(?:\?.*)?$/, ({ request }) => {
     const universeId = pathValue(request.url, /\/universe\/([^/]+)$/);
@@ -97,9 +187,7 @@ export const universeHandlers = [
       );
     }
 
-    return HttpResponse.json(
-      createMockUniverseDetail(universeId || "48088734813523970"),
-    );
+    return HttpResponse.json(getMockUniverseDetail(universeId));
   }),
 
   http.delete(/\/universe\/([^/]+)(?:\?.*)?$/, ({ request }) => {
@@ -116,6 +204,106 @@ export const universeHandlers = [
     }
 
     deletedUniverseIds.add(universeId);
+
+    return new HttpResponse(null, { status: 204 });
+  }),
+
+  http.patch(/\/universe\/([^/]+)(?:\?.*)?$/, async ({ request }) => {
+    const universeId = pathValue(request.url, /\/universe\/([^/]+)$/);
+
+    if (isUniverseMissing(universeId)) {
+      return HttpResponse.json(
+        {
+          code: "UNIVERSE_NOT_FOUND",
+          message: "Universe does not exist.",
+        },
+        { status: 404 },
+      );
+    }
+
+    const formData = await request.formData();
+    const requestPart = formData.get("request");
+    const profileImage = formData.get("profileImage");
+    const characterProfileImage = formData.get("characterProfileImage");
+
+    if (!requestPart) {
+      return HttpResponse.json(
+        {
+          code: "UNIVERSE_REQUEST_REQUIRED",
+          message: "Universe update request is required.",
+          fields: {
+            request: "Universe update request is required.",
+          },
+        },
+        { status: 400 },
+      );
+    }
+
+    let body: UniverseUpdateRequest;
+    try {
+      body = await parseUniverseUpdateRequest(requestPart);
+    } catch {
+      return HttpResponse.json(
+        {
+          code: "UNIVERSE_REQUEST_INVALID",
+          message: "Universe update request must be valid JSON.",
+          fields: {
+            request: "Universe update request must be valid JSON.",
+          },
+        },
+        { status: 400 },
+      );
+    }
+
+    if (!body.language) {
+      return HttpResponse.json(
+        {
+          code: "UNIVERSE_LANGUAGE_REQUIRED",
+          message: "language is required.",
+          fields: {
+            language: "language is required.",
+          },
+        },
+        { status: 400 },
+      );
+    }
+
+    const profileImageError = validateOptionalImagePart(
+      profileImage,
+      "profileImage",
+    );
+    const characterProfileImageError = validateOptionalImagePart(
+      characterProfileImage,
+      "characterProfileImage",
+    );
+
+    if (profileImageError || characterProfileImageError) {
+      return HttpResponse.json(
+        {
+          code: "UNIVERSE_IMAGE_INVALID",
+          message: profileImageError || characterProfileImageError,
+          fields: {
+            ...(profileImageError ? { profileImage: profileImageError } : {}),
+            ...(characterProfileImageError
+              ? { characterProfileImage: characterProfileImageError }
+              : {}),
+          },
+        },
+        { status: 400 },
+      );
+    }
+
+    const current = getMockUniverseDetail(universeId);
+    mockUniverseDetails.set(
+      universeId,
+      createUpdatedUniverseDetail(
+        universeId,
+        current,
+        body,
+        profileImage,
+        characterProfileImage,
+      ),
+    );
 
     return new HttpResponse(null, { status: 204 });
   }),
