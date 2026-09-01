@@ -318,17 +318,23 @@ button {
   z-index: 200;
 }
 
+/* 너비는 고정, 높이는 105px 를 최소값으로 두되 설명이 길어 줄바꿈되면
+   그만큼 늘어난다. sonner 가 내용을 측정해 --initial-height 로 height 를
+   다시 지정하는 속성 선택자 3개짜리 규칙을 갖고 있지만, height 와
+   min-height 는 서로 다른 속성이라 캐스케이드끼리 경합하지 않는다 —
+   최종 높이는 항상 두 값 중 큰 쪽(사양대로 min-height 가 바닥값)이 된다. */
 [data-sonner-toast].sonner-toast {
-  width: min(420px, calc(100vw - 32px));
-  min-height: auto;
+  width: min(445px, calc(100vw - 32px));
+  min-height: 105px;
   display: flex;
   align-items: flex-start;
-  gap: 10px;
-  padding: 14px 16px;
+  gap: 8px;
+  padding: 16px;
   font-family: inherit;
   border: 1px solid var(--border);
   border-radius: 12px;
-  background: var(--bg-card);
+  background: var(--bg-dark);
+  backdrop-filter: blur(3.25px);
   color: var(--font-1);
   box-shadow: var(--elevation-popover);
 }

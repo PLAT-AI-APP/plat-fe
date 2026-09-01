@@ -26,20 +26,24 @@ const SonnerProvider = () => {
       mobileOffset={16}
       visibleToasts={3}
       icons={{
-        success: <StatusSuccessLine className="text-success" size={20} />,
-        error: <StatusError className="text-danger" size={20} />,
-        warning: <StatusWarning className="text-warning" size={20} />,
-        info: <Info className="text-info" size={20} />,
-        close: <Close className="text-font-disabled" size={18} />,
+        success: <StatusSuccessLine className="text-success" size={28} />,
+        error: <StatusError className="text-danger" size={28} />,
+        warning: <StatusWarning className="text-warning" size={28} />,
+        info: <Info className="text-info" size={28} />,
+        close: <Close className="text-font-disabled" size={20} />,
       }}
       toastOptions={{
         unstyled: true,
         classNames: {
           toast: "sonner-toast",
-          title: "title-5 text-font-1",
-          description: "body-5 mt-0.5 text-font-2",
+          // 내용 칸이 남는 폭만큼만 줄어들어야(min-w-0) title 의 truncate 가 먹는다.
+          content: "min-w-0 flex-1",
+          // 제목은 아이콘과 한 줄에 나란히 놓이는 디자인이라 1줄로 자른다.
+          title: "body-4 text-font-0 truncate",
+          // 설명은 길면 줄바꿈되고, 그만큼 카드 높이(min-height)도 함께 늘어난다.
+          description: "body-4 mt-1 text-font-disabled",
           closeButton:
-            "absolute right-3 top-3 cursor-pointer rounded-md transition hover:opacity-70",
+            "absolute right-4 top-4 cursor-pointer rounded-md transition hover:opacity-70",
         },
       }}
     />
