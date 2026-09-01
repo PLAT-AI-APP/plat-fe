@@ -52,7 +52,7 @@ const Home = async ({ searchParams }: HomePageProps) => {
 
         <MainBannerCarousel />
 
-        <div className="w-full max-w-300 mx-auto @container flex-1 flex flex-col">
+        <div className="w-full max-w-300 mx-auto @container flex-1 flex flex-col content-x">
           <MenuTab currentTab={currentTab} />
           {/* <OverflowTagList
             maxLines={1}

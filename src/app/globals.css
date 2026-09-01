@@ -80,6 +80,11 @@
      헤더 크기를 바꿀 때 반드시 여기 하나만 고치면 되도록 모아 둔다. */
   --header-height: 56px;
 
+  /* 사이드바를 제외한 모든 콘텐츠 컨테이너가 공유하는 x축 여백.
+     창이 좁아져도 콘텐츠가 화면 끝에 붙지 않도록 하는 최소 여유 공간이다.
+     홈 배너 · 채팅방처럼 풀블리드가 필요한 화면만 예외적으로 제외한다. */
+  --content-margin-x: 36px;
+
   /*
    * 겹침 순서(z-index).
    * 유틸리티로 직접 쓰지는 않지만, 새 오버레이를 만들 때 어느 값을 골라야
@@ -532,6 +537,10 @@ button {
   50% {
     opacity: 0.55;
   }
+}
+
+@utility content-x {
+  padding-inline: var(--content-margin-x);
 }
 
 @utility skeleton {

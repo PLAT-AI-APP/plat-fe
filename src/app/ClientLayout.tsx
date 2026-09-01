@@ -350,6 +350,8 @@ export default function ClientLayout({
             "min-h-0 w-full mx-auto",
             isHeaderHidden ? "overflow-hidden" : "overflow-y-auto",
             isScrolling && "is-scrolling",
+            // 홈 배너와 채팅방은 화면 끝까지 붙는 풀블리드 레이아웃이라 공통 여백에서 제외합니다.
+            !isHomePath && !isChattingRoomPath && "content-x",
           )}
         >
           <AnimatePresence>

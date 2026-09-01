@@ -91,7 +91,7 @@ const TokenChargeContents = () => {
   const { data: products, isPending, isError } = useProductsQuery();
 
   return (
-    <section className="mx-auto w-full max-w-160 px-9 pt-5">
+    <section className="mx-auto w-full max-w-160 pt-5">
       <PageTitle messageKey="tokenCharge.title" />
 
       <div className="mb-9 flex items-center justify-between gap-4 rounded-3xl border border-main bg-darker px-5 py-4">

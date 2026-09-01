@@ -104,7 +104,7 @@ const SearchLanding = () => {
   };
 
   return (
-    <section className="mx-auto flex w-full max-w-[1272px] flex-col gap-10 px-9 pt-5 pb-20">
+    <section className="mx-auto flex w-full max-w-[1272px] flex-col gap-10 pt-5 pb-20">
       <PageTitle messageKey="pageTitles.search" />
 
       <SearchQueryBar

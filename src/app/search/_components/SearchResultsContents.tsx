@@ -94,7 +94,7 @@ const SearchResultsContents = ({
   return (
     // 카드 6개(186.67px) + 간격 5개(16px) ≈ 1200px가 한 줄에 들어가도록
     // 좌우 패딩(px-9=72px)을 더한 폭으로 컨테이너를 잡습니다.
-    <section className="mx-auto flex w-full max-w-[1272px] flex-col gap-6 px-9 pt-5">
+    <section className="mx-auto flex w-full max-w-[1272px] flex-col gap-6 pt-5">
       <PageTitle messageKey="pageTitles.search" />
 
       <SearchQueryBar

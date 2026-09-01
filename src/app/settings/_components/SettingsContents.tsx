@@ -38,7 +38,7 @@ const SettingsContents = () => {
   };
 
   return (
-    <section className="flex min-h-full w-full justify-center bg-dark px-6">
+    <section className="flex min-h-full w-full justify-center bg-dark">
       <div className="flex w-[592px] max-w-full flex-col gap-6 pt-6">
         <header className="flex w-full items-center py-4">
           <h1 className="heading-2 text-font-1">{t("settings.title")}</h1>
