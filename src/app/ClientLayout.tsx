@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import Header from "@/components/header";
 import Sidebar from "@/components/Sidebar";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useScrollTimeout } from "@/hooks/useScrollTiemout";
 import { cn } from "@/lib/utils";
 import { useMyInfoQuery } from "@/api/user/getMyInfo";
@@ -50,6 +50,7 @@ export default function ClientLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   useMyInfoQuery();
   useWalletBalanceQuery();
@@ -62,16 +63,22 @@ export default function ClientLayout({
   const isHeaderHidden = HIDE_HEADER_PATHS.some((path) =>
     pathname?.startsWith(path),
   );
+  const currentMainTab = searchParams.get("tab") ?? "all";
   const isHomePath = pathname === "/";
+  const isCategoryHomePath = isHomePath && currentMainTab === "categories";
+  const isChattingRoomPath = pathname?.startsWith("/chatting-room");
+  const shouldUseFocusSidebar = isCategoryHomePath || isChattingRoomPath;
 
-  // 사이드바 접힘 조건 계산
-  const shouldFoldSidebar = useMemo(() => !isHomePath, [isHomePath]);
+  // 복잡도가 높은 화면만 접힘 + 블러 사이드바를 사용합니다.
+  const shouldFoldSidebar = useMemo(
+    () => shouldUseFocusSidebar,
+    [shouldUseFocusSidebar],
+  );
 
-  // 첫 진입과 새로고침 시 사이드바는 접힌 상태로 시작
+  // 기본 화면은 펼친 상태, 포커스 화면은 접힌 상태로 시작합니다.
   const [isFolded, setIsFolded] = useState(() => shouldFoldSidebar);
 
-  // 탭 전환처럼 같은 경로 안에서 쿼리스트링만 바뀌는 경우는 접힘 상태를 건드리지 않고,
-  // 실제 경로가 바뀔 때만 접힘 상태를 재계산합니다.
+  // 경로 또는 홈 탭이 바뀌면 화면 정책에 맞춰 접힘 상태를 재계산합니다.
   useEffect(() => {
     setIsFolded(shouldFoldSidebar);
   }, [pathname, shouldFoldSidebar]);
@@ -349,7 +356,7 @@ export default function ClientLayout({
         >
           <AnimatePresence>
             {/* 사이드바 펼침 시 사이드바를 제외한 화면만 흐리게 처리 */}
-            {!isSidebarHidden && !isFolded && !isHomePath && (
+            {!isSidebarHidden && !isFolded && shouldUseFocusSidebar && (
               <motion.div
                 role="button"
                 tabIndex={0}
