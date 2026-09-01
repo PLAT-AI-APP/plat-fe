@@ -52,10 +52,7 @@ const CommentExpandableBody = ({ content }: CommentExpandableBodyProps) => {
         transition={{ duration: 0.24, ease: "easeInOut" }}
         className="relative w-full overflow-hidden"
       >
-        <p
-          ref={contentRef}
-          className="body-4 whitespace-pre-wrap text-font-1"
-        >
+        <p ref={contentRef} className="body-4 whitespace-pre-wrap text-font-1">
           {content}
         </p>
 

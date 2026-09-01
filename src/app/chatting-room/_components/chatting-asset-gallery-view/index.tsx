@@ -41,7 +41,7 @@ const ChattingAssetGalleryView = ({
         </span>
       </header>
 
-      <div className="grid min-h-0 flex-1 auto-rows-max grid-cols-[repeat(2,minmax(0,1fr))] content-start gap-[9px] overflow-y-auto">
+      <div className="grid min-h-0 flex-1 auto-rows-max grid-cols-[repeat(2,minmax(0,1fr))] content-start gap-2 overflow-y-auto">
         {assetItems.map((asset) => (
           <AssetGalleryItem key={asset.id} asset={asset} />
         ))}

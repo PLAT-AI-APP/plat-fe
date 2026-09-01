@@ -31,8 +31,7 @@ const INITIAL_MESSAGES: ChatMessageType[] = [
 const ChattingRoomSection = () => {
   const t = useTranslations();
   const { isScrolling, onScroll } = useScrollTimeout();
-  const [messages, setMessages] =
-    useState<ChatMessageType[]>(INITIAL_MESSAGES);
+  const [messages, setMessages] = useState<ChatMessageType[]>(INITIAL_MESSAGES);
   const [isSuggestedReplyOn, setIsSuggestedReplyOn] = useState(true);
   const [currentAi, setCurrentAi] = useState<AIModelType>({
     id: "Claude Opus 4.6",

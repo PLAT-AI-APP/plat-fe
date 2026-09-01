@@ -26,6 +26,7 @@ import { FollowModalProps } from "@/type/modal";
 import { FOLLOW_TAB_IDS, FollowTab } from "./constants";
 import FollowEmptyState from "./FollowEmptyState";
 import FollowUserItem from "./FollowUserItem";
+import { SPRING_SNAPPY } from "@/constants/motion";
 
 const FollowModal = ({
   onClose,
@@ -166,7 +167,7 @@ const FollowModal = ({
               ref={(el) => setTabRef(tabId, el)}
               onClick={() => setActiveTabs(tabId)}
               className={cn(
-                "body-2 translate-y-0.5 cursor-pointer px-5 py-2.5 text-font-disabled transition-none",
+                "body-2 translate-y-0.5 cursor-pointer px-5 py-2.5 text-font-disabled",
                 activeTabs === tabId && "title-3 text-font-1",
               )}
             >
@@ -178,7 +179,7 @@ const FollowModal = ({
             className="absolute bottom-0 h-0.5 bg-brand"
             initial={false}
             animate={{ x: underlineRect.left, width: underlineRect.width }}
-            transition={{ type: "spring", stiffness: 500, damping: 40 }}
+            transition={SPRING_SNAPPY}
           />
         </nav>
 
@@ -193,18 +194,18 @@ const FollowModal = ({
       </header>
 
       {activeQuery.isLoading ? (
-        <ul className="flex h-95 flex-col gap-1 transition-none">
+        <ul className="flex h-95 flex-col gap-1">
           {Array.from({ length: 5 }).map((_, index) => (
             <li
               key={index}
-              className="flex w-full items-center gap-3 rounded-2xl bg-bg-dark p-3"
+              className="flex w-full items-center gap-3 rounded-2xl p-3"
             >
-              <div className="size-[45px] shrink-0 animate-pulse rounded-full bg-card" />
+              <div className="skeleton size-[45px] shrink-0 rounded-full" />
               <div className="flex min-w-0 flex-1 flex-col gap-2">
-                <div className="h-4 w-28 animate-pulse rounded bg-card" />
-                <div className="h-3 w-40 animate-pulse rounded bg-card" />
+                <div className="skeleton h-4 w-28 rounded-full" />
+                <div className="skeleton h-3 w-40 rounded-full" />
               </div>
-              <div className="h-7 w-24 shrink-0 animate-pulse rounded-full bg-card" />
+              <div className="skeleton h-7 w-24 shrink-0 rounded-full" />
             </li>
           ))}
         </ul>
@@ -220,14 +221,12 @@ const FollowModal = ({
       ) : (
         <ul
           ref={ulRef}
-          className="custom-scrollbar flex h-95 flex-col gap-1 overflow-y-auto transition-none"
+          className="custom-scrollbar flex h-95 flex-col gap-1 overflow-y-auto"
         >
           {listData.map((user) => {
             const isToggled = followChangeIds.includes(user.userId);
             const baseIsFollowing = activeTabs === "following";
-            const isFollowing = isToggled
-              ? !baseIsFollowing
-              : baseIsFollowing;
+            const isFollowing = isToggled ? !baseIsFollowing : baseIsFollowing;
 
             return (
               <FollowUserItem

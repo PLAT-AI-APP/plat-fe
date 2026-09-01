@@ -54,7 +54,7 @@ const ExpandableText = ({
         ref={contentRef}
         style={!isExpanded ? { maxHeight } : undefined}
         className={cn(
-          "relative overflow-hidden whitespace-pre-wrap body-4 leading-relaxed text-font-2",
+          "body-4 relative overflow-hidden whitespace-pre-wrap text-font-2",
           shouldShowMoreButton &&
             !isExpanded &&
             "after:absolute after:inset-x-0 after:bottom-0 after:h-12 after:bg-linear-to-t after:from-dark after:to-transparent",
@@ -132,7 +132,7 @@ const SettingsPanel = ({
                 <button
                   type="button"
                   onClick={onStartChat}
-                  className="title-3 rounded-xl border border-brand-dark bg-darkest/40 px-4 py-2 text-brand backdrop-blur-md"
+                  className="title-5 rounded-xl border border-brand-dark bg-darkest/40 px-4 py-2 text-brand backdrop-blur-md hover:bg-brand-opacity"
                 >
                   {t("chatStart")}
                 </button>

@@ -91,8 +91,7 @@ const ko = {
     signupComplete: {
       greeting: "안녕하세요 {nickname}님,",
       title: "회원가입을 축하드려요",
-      descriptionLine1:
-        "회원님의 정보 보호와 안전한 서비스 이용을 위해,",
+      descriptionLine1: "회원님의 정보 보호와 안전한 서비스 이용을 위해,",
       descriptionLine2: "방금 만든 계정으로 로그인해 주세요.",
       confirm: "로그인하기",
     },
@@ -135,8 +134,7 @@ const ko = {
     },
     withdrawalConfirm: {
       title: "정말 떠나시나요?",
-      descriptionLine1:
-        "탈퇴가 완료되면 회원 정보는 다시 확인할 수 없게 돼요.",
+      descriptionLine1: "탈퇴가 완료되면 회원 정보는 다시 확인할 수 없게 돼요.",
       descriptionLine2: "정말 탈퇴를 진행할까요?",
       cancel: "돌아가기",
       confirm: "탈퇴하기",
@@ -197,18 +195,17 @@ const ko = {
       characterTitleRequired: "제목을 입력해 주세요",
       characterTitleMaxLength: "제목은 최대 20자까지 입력할 수 있어요",
       characterNameRequired: "캐릭터 이름을 입력해 주세요",
-      characterNameMaxLength:
-        "캐릭터 이름은 최대 20자까지 입력할 수 있어요",
+      characterNameMaxLength: "캐릭터 이름은 최대 20자까지 입력할 수 있어요",
       characterIntroduceRequired: "캐릭터 소개를 입력해 주세요",
-      characterIntroduceMaxLength: "한 줄 소개는 최대 20자까지 입력할 수 있어요",
+      characterIntroduceMaxLength:
+        "한 줄 소개는 최대 20자까지 입력할 수 있어요",
       characterDetailSettingRequired: "캐릭터 상세 설정을 입력해 주세요",
       characterDetailSettingMaxLength:
         "상세 설정은 최대 2000자까지 입력할 수 있어요",
       assetNameRequired: "에셋 이름을 입력해 주세요",
       assetNameMaxLength: "에셋 이름은 최대 15자까지 입력할 수 있어요",
       assetSituationRequired: "에셋 상황을 입력해 주세요",
-      assetSituationMaxLength:
-        "상황 설명은 최대 50자까지 입력할 수 있어요",
+      assetSituationMaxLength: "상황 설명은 최대 50자까지 입력할 수 있어요",
       assetMaxCount: "에셋은 최대 50개까지 등록할 수 있어요",
       scenarioNameRequired: "시나리오 이름을 입력해 주세요",
       scenarioDescriptionMaxLength:
@@ -222,7 +219,8 @@ const ko = {
       characterDescriptionMaxLength:
         "캐릭터 설명은 최대 1000자까지 입력할 수 있어요",
       profileSituationRequired: "상황 설명을 입력해 주세요",
-      profileSituationMaxLength: "프롤로그 소개는 최대 2000자까지 입력할 수 있어요",
+      profileSituationMaxLength:
+        "프롤로그 소개는 최대 2000자까지 입력할 수 있어요",
       tendencyRequired: "성향을 선택해 주세요",
       categoryRequired: "카테고리를 선택해 주세요",
       tagMaxCount: "태그는 최대 5개까지 등록할 수 있어요",
@@ -307,7 +305,8 @@ const en: Messages = {
     },
     chatLeave: {
       title: "Leave this chat room?",
-      description: "The conversation you had with this character cannot be restored.",
+      description:
+        "The conversation you had with this character cannot be restored.",
       cancel: "Cancel",
       confirm: "Leave",
     },
@@ -323,8 +322,7 @@ const en: Messages = {
     signupComplete: {
       greeting: "Hello {nickname},",
       title: "Your signup is complete",
-      descriptionLine1:
-        "For your privacy and safe access to the service,",
+      descriptionLine1: "For your privacy and safe access to the service,",
       descriptionLine2: "please log in with the account you just created.",
       confirm: "Log in",
     },
@@ -429,15 +427,14 @@ const en: Messages = {
       personaNameMaxLength: "Names can be up to 20 characters long",
       personaInfoMaxLength: "Info can be up to 200 characters long",
       representativeImageRequired: "Please upload a representative image.",
-      characterProfileImageRequired:
-        "Please upload a character profile image.",
+      characterProfileImageRequired: "Please upload a character profile image.",
       characterTitleRequired: "Please enter a title.",
       characterTitleMaxLength: "Titles can be up to 20 characters long",
       characterNameRequired: "Please enter the character name.",
-      characterNameMaxLength:
-        "Character names can be up to 20 characters long",
+      characterNameMaxLength: "Character names can be up to 20 characters long",
       characterIntroduceRequired: "Please enter a character introduction.",
-      characterIntroduceMaxLength: "One-line intro can be up to 20 characters long",
+      characterIntroduceMaxLength:
+        "One-line intro can be up to 20 characters long",
       characterDetailSettingRequired:
         "Please enter the character detail settings.",
       characterDetailSettingMaxLength:
@@ -460,7 +457,8 @@ const en: Messages = {
       characterDescriptionMaxLength:
         "Character descriptions can be up to 1000 characters long",
       profileSituationRequired: "Please enter a situation description.",
-      profileSituationMaxLength: "Prologue intro can be up to 2000 characters long.",
+      profileSituationMaxLength:
+        "Prologue intro can be up to 2000 characters long.",
       tendencyRequired: "Please select a preference.",
       categoryRequired: "Please select a category.",
       tagMaxCount: "You can register up to 5 tags.",
@@ -556,8 +554,7 @@ const ja: Messages = {
     signupComplete: {
       greeting: "{nickname}さん、こんにちは。",
       title: "会員登録おめでとうございます",
-      descriptionLine1:
-        "安全なサービス利用と情報保護のため、",
+      descriptionLine1: "安全なサービス利用と情報保護のため、",
       descriptionLine2: "作成したアカウントでログインしてください。",
       confirm: "ログインする",
     },
@@ -665,22 +662,18 @@ const ja: Messages = {
       characterTitleRequired: "タイトルを入力してください",
       characterTitleMaxLength: "タイトルは最大20文字まで入力できます",
       characterNameRequired: "キャラクター名を入力してください",
-      characterNameMaxLength:
-        "キャラクター名は最大20文字まで入力できます",
+      characterNameMaxLength: "キャラクター名は最大20文字まで入力できます",
       characterIntroduceRequired: "キャラクター紹介を入力してください",
       characterIntroduceMaxLength: "一言紹介は最大20文字まで入力できます",
-      characterDetailSettingRequired:
-        "キャラクター詳細設定を入力してください",
-      characterDetailSettingMaxLength:
-        "詳細設定は最大2000文字まで入力できます",
+      characterDetailSettingRequired: "キャラクター詳細設定を入力してください",
+      characterDetailSettingMaxLength: "詳細設定は最大2000文字まで入力できます",
       assetNameRequired: "アセット名を入力してください",
       assetNameMaxLength: "アセット名は最大15文字まで入力できます",
       assetSituationRequired: "アセット状況を入力してください",
       assetSituationMaxLength: "状況説明は最大50文字まで入力できます",
       assetMaxCount: "アセットは最大50個まで登録できます",
       scenarioNameRequired: "シナリオ名を入力してください",
-      scenarioDescriptionMaxLength:
-        "シナリオ説明は最大100文字まで入力できます",
+      scenarioDescriptionMaxLength: "シナリオ説明は最大100文字まで入力できます",
       scenarioDifficultyMaxLength:
         "シナリオ難易度は最大500文字まで入力できます",
       scenarioContentRequired: "内容を入力してください",
@@ -763,8 +756,7 @@ const zh: Messages = {
   dialog: {
     chatRestart: {
       title: "要重新开始对话吗？",
-      description:
-        "将为这个角色创建新的聊天室，\n并移动到新的聊天室。",
+      description: "将为这个角色创建新的聊天室，\n并移动到新的聊天室。",
       cancel: "取消",
       confirm: "重新开始",
     },
@@ -1004,7 +996,8 @@ const th: Messages = {
     signupComplete: {
       greeting: "สวัสดี {nickname}",
       title: "ยินดีด้วยกับการสมัครสมาชิก",
-      descriptionLine1: "เพื่อความปลอดภัยของข้อมูลและการใช้งานบริการอย่างปลอดภัย",
+      descriptionLine1:
+        "เพื่อความปลอดภัยของข้อมูลและการใช้งานบริการอย่างปลอดภัย",
       descriptionLine2: "กรุณาเข้าสู่ระบบด้วยบัญชีที่เพิ่งสร้าง",
       confirm: "เข้าสู่ระบบ",
     },
@@ -1047,7 +1040,8 @@ const th: Messages = {
     },
     withdrawalConfirm: {
       title: "คุณแน่ใจหรือว่าจะจากไป?",
-      descriptionLine1: "เมื่อการลบบัญชีเสร็จสิ้น คุณจะไม่สามารถดูข้อมูลสมาชิกได้อีก",
+      descriptionLine1:
+        "เมื่อการลบบัญชีเสร็จสิ้น คุณจะไม่สามารถดูข้อมูลสมาชิกได้อีก",
       descriptionLine2: "ต้องการดำเนินการลบบัญชีต่อหรือไม่?",
       cancel: "กลับไป",
       confirm: "ลบบัญชี",
@@ -1057,8 +1051,7 @@ const th: Messages = {
   field: {
     helper: {
       nickname: "ไม่สามารถใช้อักขระพิเศษได้",
-      nicknameWithDuplication:
-        "ใช้ชื่อซ้ำหรือใช้อักขระพิเศษไม่ได้",
+      nicknameWithDuplication: "ใช้ชื่อซ้ำหรือใช้อักขระพิเศษไม่ได้",
       emailDomain: "ใช้อีเมลที่ลงท้ายด้วย .com",
       password: "กรอกอย่างน้อย 8 ตัวอักษรและต้องมีอักขระพิเศษ",
       passwordCheck: "กรอกรหัสผ่านเดียวกับด้านบน",
@@ -1081,8 +1074,7 @@ const th: Messages = {
       passwordRequired: "กรุณากรอกรหัสผ่าน",
       passwordCheckRequired: "กรุณากรอกการยืนยันรหัสผ่าน",
       passwordInvalid: "กรอกอย่างน้อย 8 ตัวอักษรและต้องมีอักขระพิเศษ",
-      passwordSpecialCharRequired:
-        "กรุณาใช้อักขระพิเศษจาก !, @, #, $",
+      passwordSpecialCharRequired: "กรุณาใช้อักขระพิเศษจาก !, @, #, $",
       passwordMinLength: "ต้องมีอย่างน้อย 8 ตัวอักษร",
       passwordMismatch: "กรุณาตรวจสอบรหัสผ่านอีกครั้ง",
       nicknameRequired: "กรุณากรอกชื่อเล่น",
@@ -1110,10 +1102,10 @@ const th: Messages = {
       characterTitleRequired: "กรุณากรอกชื่อเรื่อง",
       characterTitleMaxLength: "ชื่อเรื่องสามารถกรอกได้สูงสุด 20 ตัวอักษร",
       characterNameRequired: "กรุณากรอกชื่อตัวละคร",
-      characterNameMaxLength:
-        "ชื่อตัวละครสามารถกรอกได้สูงสุด 20 ตัวอักษร",
+      characterNameMaxLength: "ชื่อตัวละครสามารถกรอกได้สูงสุด 20 ตัวอักษร",
       characterIntroduceRequired: "กรุณากรอกคำแนะนำตัวละคร",
-      characterIntroduceMaxLength: "แนะนำสั้น ๆ สามารถกรอกได้สูงสุด 20 ตัวอักษร",
+      characterIntroduceMaxLength:
+        "แนะนำสั้น ๆ สามารถกรอกได้สูงสุด 20 ตัวอักษร",
       characterDetailSettingRequired: "กรุณากรอกรายละเอียดตัวละคร",
       characterDetailSettingMaxLength:
         "รายละเอียดสามารถกรอกได้สูงสุด 2000 ตัวอักษร",
@@ -1129,8 +1121,7 @@ const th: Messages = {
       scenarioDifficultyMaxLength:
         "ความยากของสถานการณ์สามารถกรอกได้สูงสุด 500 ตัวอักษร",
       scenarioContentRequired: "กรุณากรอกเนื้อหา",
-      scenarioContentMaxLength:
-        "เนื้อหาสามารถกรอกได้สูงสุด 1500 ตัวอักษร",
+      scenarioContentMaxLength: "เนื้อหาสามารถกรอกได้สูงสุด 1500 ตัวอักษร",
       scenarioMaxCount: "สามารถสร้างสถานการณ์ได้สูงสุด 5 รายการ",
       characterDescriptionRequired: "กรุณากรอกคำอธิบายตัวละคร",
       characterDescriptionMaxLength:
@@ -1232,8 +1223,7 @@ const vi: Messages = {
     signupComplete: {
       greeting: "Xin chào {nickname},",
       title: "Chúc mừng bạn đã đăng ký",
-      descriptionLine1:
-        "Để bảo vệ thông tin và sử dụng dịch vụ an toàn,",
+      descriptionLine1: "Để bảo vệ thông tin và sử dụng dịch vụ an toàn,",
       descriptionLine2: "vui lòng đăng nhập bằng tài khoản bạn vừa tạo.",
       confirm: "Đăng nhập",
     },
@@ -1241,7 +1231,8 @@ const vi: Messages = {
       title: "Tín dụng chào mừng đã đến",
       descriptionBefore: "Để hỗ trợ hành trình đầu tiên của bạn, ",
       descriptionHighlight: "chúng tôi đã tặng bạn credit note chào mừng",
-      descriptionAfter: "Bạn đã sẵn sàng tận hưởng những cuộc trò chuyện sống động chưa?",
+      descriptionAfter:
+        "Bạn đã sẵn sàng tận hưởng những cuộc trò chuyện sống động chưa?",
       confirm: "Xác nhận",
     },
     personaDelete: {
@@ -1342,7 +1333,8 @@ const vi: Messages = {
       characterNameRequired: "Vui lòng nhập tên nhân vật",
       characterNameMaxLength: "Tên nhân vật có thể dài tối đa 20 ký tự",
       characterIntroduceRequired: "Vui lòng nhập phần giới thiệu nhân vật",
-      characterIntroduceMaxLength: "Phần giới thiệu một dòng có thể dài tối đa 20 ký tự",
+      characterIntroduceMaxLength:
+        "Phần giới thiệu một dòng có thể dài tối đa 20 ký tự",
       characterDetailSettingRequired:
         "Vui lòng nhập thiết lập chi tiết nhân vật",
       characterDetailSettingMaxLength:
@@ -1350,11 +1342,11 @@ const vi: Messages = {
       assetNameRequired: "Vui lòng nhập tên tài sản",
       assetNameMaxLength: "Tên tài sản có thể dài tối đa 15 ký tự",
       assetSituationRequired: "Vui lòng nhập tình huống tài sản",
-      assetSituationMaxLength:
-        "Mô tả tình huống có thể dài tối đa 50 ký tự",
+      assetSituationMaxLength: "Mô tả tình huống có thể dài tối đa 50 ký tự",
       assetMaxCount: "Bạn có thể đăng tối đa 50 tài sản",
       scenarioNameRequired: "Vui lòng nhập tên kịch bản",
-      scenarioDescriptionMaxLength: "Mô tả kịch bản có thể dài tối đa 100 ký tự",
+      scenarioDescriptionMaxLength:
+        "Mô tả kịch bản có thể dài tối đa 100 ký tự",
       scenarioDifficultyMaxLength:
         "Độ khó kịch bản có thể dài tối đa 500 ký tự",
       scenarioContentRequired: "Vui lòng nhập nội dung",
@@ -1364,7 +1356,8 @@ const vi: Messages = {
       characterDescriptionMaxLength:
         "Mô tả nhân vật có thể dài tối đa 1000 ký tự",
       profileSituationRequired: "Vui lòng nhập mô tả tình huống.",
-      profileSituationMaxLength: "Phần giới thiệu mở đầu có thể dài tối đa 2000 ký tự.",
+      profileSituationMaxLength:
+        "Phần giới thiệu mở đầu có thể dài tối đa 2000 ký tự.",
       tendencyRequired: "Vui lòng chọn xu hướng",
       categoryRequired: "Vui lòng chọn danh mục",
       tagMaxCount: "Bạn có thể đăng tối đa 5 thẻ",

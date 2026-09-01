@@ -9,15 +9,13 @@ interface NotificationContentsProps {
   currentFilter: "NOTICE" | "UPDATE" | "EVENT" | null | undefined;
 }
 
-const NotificationContents = ({
-  currentFilter,
-}: NotificationContentsProps) => {
+const NotificationContents = ({ currentFilter }: NotificationContentsProps) => {
   const t = useTranslations();
 
   return (
     <section className="mx-auto flex w-full max-w-155 flex-col gap-9">
       <header>
-        <h2 className="heading-2">{t("notification.title")}</h2>
+        <h1 className="heading-2">{t("notification.title")}</h1>
       </header>
 
       <div id="notice-content-area" className="flex flex-col gap-4">

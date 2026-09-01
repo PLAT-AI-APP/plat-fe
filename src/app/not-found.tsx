@@ -7,16 +7,16 @@ const NotFoundPage = () => {
       id="not-found-container"
       className="flex flex-col items-center justify-center flex-1"
     >
-      <h2 id="not-found-code" className="text-6xl font-bold text-brand">
+      <h2 id="not-found-code" className="display-1 text-brand">
         404
       </h2>
-      <p id="not-found-message" className="text-font-2 mt-4 text-lg">
+      <p id="not-found-message" className="body-1 mt-4 text-font-2">
         요청하신 페이지를 찾을 수 없습니다.
       </p>
       <Link
         id="back-to-home-link"
         href="/"
-        className="mt-8 px-6 py-3 bg-brand text-white rounded-lg hover:brightness-110 transition-all font-semibold"
+        className="title-5 mt-8 rounded-lg bg-brand px-6 py-3 text-on-brand transition hover:brightness-110"
       >
         홈으로 돌아가기
       </Link>

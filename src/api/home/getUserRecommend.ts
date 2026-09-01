@@ -28,9 +28,7 @@ interface UserRecommendSliceResponse {
 }
 
 type UserRecommendApiResponse =
-  | UserRecommendItem[]
-  | UserRecommendSliceResponse
-  | "";
+  UserRecommendItem[] | UserRecommendSliceResponse | "";
 
 /** SliceWith 래핑/204 빈 응답을 모두 배열로 정규화 */
 const getNormalizedUserRecommend = (

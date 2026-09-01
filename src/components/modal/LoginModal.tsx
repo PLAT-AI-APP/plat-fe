@@ -171,12 +171,12 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
         className="left-1/2 top-1/2 h-fit w-112.5 -translate-x-1/2 -translate-y-1/2 p-6 pt-9"
       >
         <header id="login-card-header" className="pb-9">
-          <h1
+          <h2
             id="login-welcome-title"
             className="heading-3 whitespace-pre-line text-font-1"
           >
             {t("auth.login.title")}
-          </h1>
+          </h2>
         </header>
 
         <section id="login-methods-area" className="flex flex-col gap-10">
@@ -228,7 +228,9 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
               id="btn-login-submit"
               text={t("auth.login.submit")}
               type="submit"
-              isActive={email.length > 0 && pw.length > 0 && !isEmailLoginPending}
+              isActive={
+                email.length > 0 && pw.length > 0 && !isEmailLoginPending
+              }
               className="mt-2 h-12 rounded-lg"
             />
           </form>

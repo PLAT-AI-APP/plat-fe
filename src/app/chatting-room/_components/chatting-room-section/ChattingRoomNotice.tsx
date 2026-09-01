@@ -8,7 +8,7 @@ const ChattingRoomNotice = () => {
   const t = useTranslations();
 
   return (
-    <div className="body-6 flex items-center justify-center gap-1 pb-[23px] pt-4 text-font-disabled">
+    <div className="body-6 flex items-center justify-center gap-1 pb-5 pt-4 text-font-disabled">
       <Info className="size-3.5" />
       <span>{t("chatRoom.generatedNotice")}</span>
     </div>

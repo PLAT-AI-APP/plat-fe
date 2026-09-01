@@ -29,7 +29,7 @@ const Header = ({ id }: HeaderProps) => {
       className="flex w-full items-center justify-between gap-4"
     >
       <section id="profile-info-summary" className="flex flex-col gap-4">
-        <div className="flex gap-5.25">
+        <div className="flex gap-5">
           <aside className="shrink-0">
             <Image
               src={profileImage || "/public/p1.png"}
@@ -53,7 +53,7 @@ const Header = ({ id }: HeaderProps) => {
       <Link
         href={`/profile/${id}`}
         onClick={toggleProfileEditModal}
-        className="inline h-fit w-fit rounded-lg p-1 hover:bg-btn-hover"
+        className="inline h-fit w-fit rounded-lg p-1 transition-colors hover:bg-btn-hover"
       >
         <ArrowRight className="h-4 w-4 text-font-2" />
       </Link>

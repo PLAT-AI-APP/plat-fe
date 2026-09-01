@@ -56,9 +56,7 @@ const UsageHistoryItem = ({ item }: { item: UsageHistoryItemType }) => {
         <div className="flex shrink-0 items-center justify-center gap-1.5">
           <div className="flex flex-col items-end justify-center gap-0.5">
             <p className="body-4 flex items-center gap-1 whitespace-nowrap">
-              <span
-                className={cn("title-5", isPlusNote && "text-brand-dark")}
-              >
+              <span className={cn("title-5", isPlusNote && "text-brand-dark")}>
                 {amountText}
               </span>
               <span className="text-font-2">노트</span>
@@ -105,7 +103,8 @@ const UsageHistoryItem = ({ item }: { item: UsageHistoryItemType }) => {
                 </button>
               </p>
               <p>
-                거래일시: {dayjs(item.createdAt).format("YYYY. MM. DD HH:mm:ss")}
+                거래일시:{" "}
+                {dayjs(item.createdAt).format("YYYY. MM. DD HH:mm:ss")}
               </p>
             </div>
           </motion.div>

@@ -1,4 +1,5 @@
 "use client";
+import { AnimatePresence } from "framer-motion";
 import React, { useRef } from "react";
 import ScenarioSelectPopover from "@/components/popover/ScenarioSelectPopover";
 import { ArrowDown, ArrowUp } from "@/icons";
@@ -33,15 +34,17 @@ export const ScenarioSelect = ({
       ) : (
         <ArrowDown className="w-5 h-5 text-font-2" />
       )}
-      {isOpen && (
-        <ScenarioSelectPopover
-          currentScenario={currentScenario}
-          handleCurrentScenario={setCurrentScenario}
-          onClose={close}
-          scenarioList={scenarioList}
-          triggerRef={triggerRef}
-        />
-      )}
+      <AnimatePresence>
+        {isOpen && (
+          <ScenarioSelectPopover
+            currentScenario={currentScenario}
+            handleCurrentScenario={setCurrentScenario}
+            onClose={close}
+            scenarioList={scenarioList}
+            triggerRef={triggerRef}
+          />
+        )}
+      </AnimatePresence>
     </button>
   );
 };

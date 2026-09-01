@@ -12,14 +12,19 @@ import { CharacterCreateFormValues } from "@/schema/character.schema";
 import { showAppToast } from "@/lib/toast";
 
 interface AssetProps {
-  assetFieldArray: UseFieldArrayReturn<CharacterCreateFormValues, "asset", "id">;
+  assetFieldArray: UseFieldArrayReturn<
+    CharacterCreateFormValues,
+    "asset",
+    "id"
+  >;
 }
 
 const Asset = ({ assetFieldArray }: AssetProps) => {
   const t = useTranslations("characterCreate.asset");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { fields, append, remove } = assetFieldArray;
-  const { mutateAsync: uploadAssetImage } = useUniverseAssetImageUploadMutation();
+  const { mutateAsync: uploadAssetImage } =
+    useUniverseAssetImageUploadMutation();
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

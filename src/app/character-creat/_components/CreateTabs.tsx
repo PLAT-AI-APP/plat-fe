@@ -12,6 +12,7 @@ import Profile from "./profile";
 import Scenario from "./scenario";
 import Setting from "./setting";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
+import { SPRING_SNAPPY } from "@/constants/motion";
 
 export const TAB_IDS = [
   "profile",
@@ -43,7 +44,11 @@ interface CreateTabsProps {
   setCurrentTabId: (id: TabId) => void;
   activeScenarioIndex: number;
   setActiveScenarioIndex: (index: number) => void;
-  assetFieldArray: UseFieldArrayReturn<CharacterCreateFormValues, "asset", "id">;
+  assetFieldArray: UseFieldArrayReturn<
+    CharacterCreateFormValues,
+    "asset",
+    "id"
+  >;
 }
 
 const CreateTabs = ({
@@ -98,11 +103,10 @@ const CreateTabs = ({
               key={tabId}
               ref={(el) => setTabRef(tabId, el)}
               onClick={() => setCurrentTabId(tabId)}
-              style={{ transition: "none", animation: "none" }}
               className={cn(
-                "flex h-10 cursor-pointer items-center justify-center whitespace-nowrap p-2.5 text-center text-[16px] font-normal leading-[1.5] text-font-2 outline-none transition-none duration-0",
+                "body-4 flex h-10 cursor-pointer items-center justify-center whitespace-nowrap p-2.5 text-center text-font-2 outline-none transition-colors",
                 TAB_WIDTH_CLASS_BY_ID[tabId],
-                isActive && "font-semibold text-font-1",
+                isActive ? "text-font-1" : "hover:text-font-1",
               )}
             >
               {/* Required markers are visual tab affordances, not part of the locale key. */}
@@ -116,7 +120,7 @@ const CreateTabs = ({
           className="absolute bottom-0 h-0.5 bg-brand"
           initial={false}
           animate={{ x: underlineRect.left, width: underlineRect.width }}
-          transition={{ type: "spring", stiffness: 500, damping: 40 }}
+          transition={SPRING_SNAPPY}
         />
       </nav>
 

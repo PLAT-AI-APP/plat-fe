@@ -135,7 +135,7 @@ const CharacterDetailContent = ({
 
   if (isLoading) {
     return (
-      <article className="flex w-full justify-center px-5 pb-25 pt-5">
+      <article className="flex w-full justify-center px-5 pb-16 pt-5">
         <div className="h-[720px] w-full max-w-[1200px] animate-pulse rounded-2xl bg-card" />
       </article>
     );
@@ -143,7 +143,7 @@ const CharacterDetailContent = ({
 
   if (isError || !character) {
     return (
-      <article className="flex w-full justify-center px-5 pb-25 pt-5">
+      <article className="flex w-full justify-center px-5 pb-16 pt-5">
         <p className="body-2 text-font-2">{t("loadFailed")}</p>
       </article>
     );
@@ -176,7 +176,7 @@ const CharacterDetailContent = ({
   };
 
   return (
-    <article className="flex w-full justify-center px-5 pb-25 pt-5">
+    <article className="flex w-full justify-center px-5 pb-16 pt-5">
       <div className="grid w-full max-w-[1200px] grid-cols-[389px_minmax(0,782px)] gap-[27px]">
         <SidebarSummary
           character={character}

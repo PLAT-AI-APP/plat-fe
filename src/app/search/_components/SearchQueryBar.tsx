@@ -32,7 +32,7 @@ const SearchQueryBar = ({
       >
         <div className="flex flex-1 items-center gap-3">
           <Search className="size-7 shrink-0 text-font-disabled" />
-          <span className="text-lg text-font-disabled">|</span>
+          <span className="body-1 text-font-disabled">|</span>
           <input
             value={queryDraft}
             onChange={(event) => onQueryDraftChange(event.target.value)}
@@ -74,7 +74,7 @@ const SearchQueryBar = ({
                       event.stopPropagation();
                       onKeywordRemove(keyword);
                     }}
-                    className="flex size-[18px] items-center justify-center"
+                    className="flex size-[18px] items-center justify-center text-font-2 hover:text-font-1"
                   >
                     <CloseLine className="size-[18px] text-font-2" />
                   </button>

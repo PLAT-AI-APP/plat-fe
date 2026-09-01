@@ -15,7 +15,8 @@ const ko = {
       chatSettings: "채팅 환경 설정",
       memory: "지나온 대화",
       pastConversations: "지나온 대화",
-      memoryDescription: "대화를 자동 요약해 캐릭터가 더 오래 기억할 수 있어요.",
+      memoryDescription:
+        "대화를 자동 요약해 캐릭터가 더 오래 기억할 수 있어요.",
       memoryTurn: "턴 {turn}",
       editMemory: "장기기억 수정",
       deleteMemory: "장기기억 삭제",
@@ -51,7 +52,8 @@ const en: typeof ko = {
       chatSettings: "Chat settings",
       memory: "Past conversations",
       pastConversations: "Past conversations",
-      memoryDescription: "Conversations are summarized automatically so the character can remember longer.",
+      memoryDescription:
+        "Conversations are summarized automatically so the character can remember longer.",
       memoryTurn: "Turn {turn}",
       editMemory: "Edit memory",
       deleteMemory: "Delete memory",
@@ -87,7 +89,8 @@ const ja: typeof ko = {
       chatSettings: "チャット環境設定",
       memory: "過去の会話",
       pastConversations: "過去の会話",
-      memoryDescription: "会話を自動で要約し、キャラクターがより長く記憶できます。",
+      memoryDescription:
+        "会話を自動で要約し、キャラクターがより長く記憶できます。",
       memoryTurn: "ターン {turn}",
       editMemory: "長期記憶を編集",
       deleteMemory: "長期記憶を削除",
@@ -157,7 +160,8 @@ const th: typeof ko = {
       chatSettings: "ตั้งค่าสภาพแวดล้อมแชต",
       memory: "บทสนทนาที่ผ่านมา",
       pastConversations: "บทสนทนาที่ผ่านมา",
-      memoryDescription: "ระบบจะสรุปบทสนทนาอัตโนมัติเพื่อให้ตัวละครจดจำได้นานขึ้น",
+      memoryDescription:
+        "ระบบจะสรุปบทสนทนาอัตโนมัติเพื่อให้ตัวละครจดจำได้นานขึ้น",
       memoryTurn: "เทิร์น {turn}",
       editMemory: "แก้ไขความจำระยะยาว",
       deleteMemory: "ลบความจำระยะยาว",
@@ -193,7 +197,8 @@ const vi: typeof ko = {
       chatSettings: "Cài đặt môi trường chat",
       memory: "Cuộc trò chuyện đã qua",
       pastConversations: "Cuộc trò chuyện đã qua",
-      memoryDescription: "Cuộc trò chuyện được tự động tóm tắt để nhân vật có thể ghi nhớ lâu hơn.",
+      memoryDescription:
+        "Cuộc trò chuyện được tự động tóm tắt để nhân vật có thể ghi nhớ lâu hơn.",
       memoryTurn: "Lượt {turn}",
       editMemory: "Sửa trí nhớ dài hạn",
       deleteMemory: "Xóa trí nhớ dài hạn",

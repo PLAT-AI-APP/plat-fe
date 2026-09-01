@@ -46,7 +46,10 @@ export const formatStatCount = (
 const ZERO_DECIMAL_CURRENCIES = ["KRW", "JPY", "VND"];
 
 /** 결제 API의 최소 단위 금액(amountMinor)을 화면에 표시할 금액으로 변환합니다. */
-export const toMajorAmount = (amountMinor: number, currency: string): number => {
+export const toMajorAmount = (
+  amountMinor: number,
+  currency: string,
+): number => {
   if (ZERO_DECIMAL_CURRENCIES.includes(currency.toUpperCase())) {
     return amountMinor;
   }

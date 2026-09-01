@@ -53,7 +53,10 @@ const StudioStats = () => {
           </span>
         </div>
 
-        <Link href="" className="rounded-lg p-1 hover:bg-btn-hover">
+        <Link
+          href=""
+          className="rounded-lg p-1 transition-colors hover:bg-btn-hover"
+        >
           <ArrowRight className="h-3 w-3 text-font-2" />
         </Link>
       </div>

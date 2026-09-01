@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence } from "framer-motion";
 import React, { useRef, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import MyChattingSortPopover, {
@@ -35,13 +36,12 @@ const MyChattingContents = () => {
   const locale = useLocale() as AppLocale;
   const sortTriggerRef = useRef<HTMLButtonElement>(null);
   const { close, isOpen, toggle } = useToggle();
-  const [sortOption, setSortOption] =
-    useState<MyChattingSortOption>("latest");
+  const [sortOption, setSortOption] = useState<MyChattingSortOption>("latest");
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   return (
-    <section className="mx-auto flex w-full max-w-[860px] flex-col gap-8 pt-7.5">
+    <section className="mx-auto flex w-full max-w-[860px] flex-col gap-8 pt-6">
       <header className="flex items-end justify-between">
         <h1 className="heading-2 text-font-1">{t("myChatting.title")}</h1>
 
@@ -66,7 +66,7 @@ const MyChattingContents = () => {
             onClick={() => setSearchQuery("")}
             aria-label={CLEAR_SEARCH_LABEL[locale]}
             className={cn(
-              "flex size-4 shrink-0 items-center justify-center text-font-2 transition-opacity",
+              "flex size-4 shrink-0 items-center justify-center text-font-2 transition hover:text-font-1",
               searchQuery ? "opacity-100" : "pointer-events-none opacity-0",
             )}
           >
@@ -89,14 +89,16 @@ const MyChattingContents = () => {
             <ArrowDown className="size-4" aria-hidden="true" />
           </button>
 
-          {isOpen && (
-            <MyChattingSortPopover
-              value={sortOption}
-              onChange={setSortOption}
-              onClose={close}
-              triggerRef={sortTriggerRef}
-            />
-          )}
+          <AnimatePresence>
+            {isOpen && (
+              <MyChattingSortPopover
+                value={sortOption}
+                onChange={setSortOption}
+                onClose={close}
+                triggerRef={sortTriggerRef}
+              />
+            )}
+          </AnimatePresence>
         </div>
 
         <ChattingList sortOption={sortOption} searchQuery={searchQuery} />

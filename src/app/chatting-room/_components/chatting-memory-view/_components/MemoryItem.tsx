@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence } from "framer-motion";
 import { useRef } from "react";
 import { useTranslations } from "next-intl";
 import PastConversationPopover from "@/components/popover/PastConversationPopover";
@@ -58,7 +59,7 @@ const MemoryItem = ({
               ref={menuButtonRef}
               type="button"
               onClick={toggle}
-              className="flex size-[18px] items-center justify-center text-font-1 transition-colors hover:text-font-2"
+              className="flex size-[18px] items-center justify-center text-font-2 transition-colors hover:text-font-1"
               aria-label={t("editMemory")}
               aria-haspopup="menu"
               aria-expanded={isPopoverOpen}
@@ -66,14 +67,16 @@ const MemoryItem = ({
               <Dots className="size-[18px]" />
             </button>
 
-            {isPopoverOpen && (
-              <PastConversationPopover
-                triggerRef={menuButtonRef}
-                onClose={closePopover}
-                onEdit={onStartEdit}
-                onDelete={onDelete}
-              />
-            )}
+            <AnimatePresence>
+              {isPopoverOpen && (
+                <PastConversationPopover
+                  triggerRef={menuButtonRef}
+                  onClose={closePopover}
+                  onEdit={onStartEdit}
+                  onDelete={onDelete}
+                />
+              )}
+            </AnimatePresence>
           </div>
         )}
       </header>

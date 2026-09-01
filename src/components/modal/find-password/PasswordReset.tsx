@@ -46,8 +46,8 @@ const PasswordReset = () => {
       onSubmit={({ data }) => onSubmit(data)}
       className="w-screen max-w-112.5 rounded-3xl border border-main bg-darker px-6 py-9"
     >
-      <header className="flex flex-col gap-1.5 pb-9 font-medium">
-        <h1 className="heading-3">{t("title")}</h1>
+      <header className="flex flex-col gap-1.5 pb-9">
+        <h2 className="heading-3">{t("title")}</h2>
         <p className="body-4 text-font-2">{t("description")}</p>
       </header>
 
@@ -60,6 +60,7 @@ const PasswordReset = () => {
         isActive={isPasswordResetActive}
         text={t("submit")}
         className="mt-6"
+        type="submit"
         form="password-reset-form"
       />
     </Form>

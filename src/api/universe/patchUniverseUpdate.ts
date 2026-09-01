@@ -74,7 +74,11 @@ export const patchUniverseUpdate = async (
 export const useUniverseUpdateMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<void, AppError<PatchUniverseUpdateParams>, PatchUniverseUpdateParams>({
+  return useMutation<
+    void,
+    AppError<PatchUniverseUpdateParams>,
+    PatchUniverseUpdateParams
+  >({
     mutationKey: ["patch-universe-update"],
     mutationFn: patchUniverseUpdate,
     onSuccess: (_, { universeId }) => {

@@ -3,10 +3,7 @@
 import type { ChatRestartDialogProps } from "@/type/dialog";
 import Dialog from "./Dialog";
 
-const ChatRestartDialog = ({
-  onClose,
-  onConfirm,
-}: ChatRestartDialogProps) => {
+const ChatRestartDialog = ({ onClose, onConfirm }: ChatRestartDialogProps) => {
   const handleConfirm = () => {
     // 새 채팅방 생성 API 연결 전까지 확인 액션과 닫힘 흐름을 분리
     onConfirm?.();

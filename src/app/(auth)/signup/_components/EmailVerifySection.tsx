@@ -167,8 +167,8 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
             value={email}
             placeholder="auth.login.emailPlaceholder"
             inputClassName={cn(
-              "bg-black/20 px-4 py-3 text-font-1",
-              "focus:border-brand transition-all",
+              "bg-darkest px-4 py-3 text-font-1",
+              "focus:border-brand transition-colors",
               errors.email && "border-font-accents focus:border-font-accents",
               isEmailVerified && "bg-card text-font-2",
             )}
@@ -191,10 +191,11 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
             className={cn(
               "mt-[29px] flex max-h-11.75 w-fit items-center justify-center gap-2 rounded-xl px-4 py-3 text-nowrap",
               isEmailButtonActive
-                ? "bg-brand text-font-4"
+                ? "bg-brand text-on-brand"
                 : "bg-font-disabled text-font-1",
-              isEmailVerified && "bg-brand text-font-4",
-              isOtpSent && "border border-brand-dark bg-brand/10 text-brand-dark",
+              isEmailVerified && "bg-brand text-on-brand",
+              isOtpSent &&
+                "border border-brand-dark bg-brand/10 text-brand-dark",
             )}
             textClassName="body-4"
             onClick={handleEmailBtnClick}
@@ -203,9 +204,9 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
               <>
                 <span
                   aria-hidden="true"
-                  className="h-4 w-4 animate-spin rounded-full border-2 border-font-4/40 border-t-font-4"
+                  className="h-4 w-4 animate-spin rounded-full border-2 border-on-brand/40 border-t-on-brand"
                 />
-                <span className="body-4 font-normal">
+                <span className="body-4">
                   {t("auth.emailVerification.requesting")}
                 </span>
               </>
@@ -223,7 +224,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
             transition={{ duration: 0.4, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <div className="mt-5.25 flex flex-col gap-2">
+            <div className="mt-5 flex flex-col gap-2">
               <div className="flex items-start gap-2">
                 <SmartInput
                   {...register("code", {
@@ -244,13 +245,13 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
                     );
                   }}
                   inputClassName={cn(
-                    "h-11 rounded-lg bg-black/20 px-4 py-3 pr-16 text-sm text-font-1",
-                    "placeholder:text-font-2/50 focus:border-brand transition-all",
+                    "body-4 h-11 rounded-lg bg-darkest px-4 py-3 pr-16 text-font-1",
+                    "placeholder:text-font-2/50 focus:border-brand transition-colors",
                     errors.code &&
                       "border-font-accents focus:border-font-accents",
                   )}
                   rightElement={
-                    <span className="text-sm text-font-2">{formatTime()}</span>
+                    <span className="body-4 text-font-2">{formatTime()}</span>
                   }
                 />
                 <ActiveButton
@@ -258,7 +259,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
                   isActive={(code?.length ?? 0) >= 6 && timeLeft > 0}
                   text={t("auth.emailVerification.confirm")}
                   onClick={handleVerifyOtp}
-                  className="mt-[29px] max-h-11 w-fit px-4 py-3 text-sm text-nowrap"
+                  className="body-4 mt-[29px] max-h-11 w-fit text-nowrap px-4 py-3"
                 />
               </div>
             </div>
@@ -270,7 +271,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
         <span
           role={isDisplayMessageError ? "alert" : "status"}
           className={cn(
-            "pt-2 text-xs",
+            "body-6 pt-2",
             isDisplayMessageError ? "text-font-accents" : "text-font-2",
           )}
         >

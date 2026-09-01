@@ -5,6 +5,9 @@ import { useTranslations } from "next-intl";
 import { ArrowDown } from "@/icons";
 import { cn } from "@/lib/utils";
 
+/** 접힌 상태에서 보여줄 높이(px). 본문 네 줄 남짓. */
+const COLLAPSED_HEIGHT = 88;
+
 interface ExpandableDescriptionProps {
   content: string;
 }
@@ -14,7 +17,9 @@ export const ExpandableDescription = ({
 }: ExpandableDescriptionProps) => {
   const t = useTranslations();
   const [isExpanded, setIsExpanded] = useState(false);
-  const [shouldShowExpand, setShouldShowExpand] = useState(false);
+  // 펼침 높이를 실측해 둔다. max-height 를 88px ↔ auto 로 두면 auto 는 보간이
+  // 되지 않아 펼칠 때만 툭 튀고 접을 때만 애니메이션되는 비대칭이 생긴다.
+  const [contentHeight, setContentHeight] = useState(0);
   const textRef = useRef<HTMLParagraphElement>(null);
 
   useEffect(() => {
@@ -22,19 +27,20 @@ export const ExpandableDescription = ({
 
     const observer = new ResizeObserver((entries) => {
       const actualHeight = entries[0].target.scrollHeight;
-      requestAnimationFrame(() => {
-        setShouldShowExpand(actualHeight > 88);
-      });
+      requestAnimationFrame(() => setContentHeight(actualHeight));
     });
 
     observer.observe(textRef.current);
     return () => observer.disconnect();
   }, [content]);
 
+  const shouldShowExpand = contentHeight > COLLAPSED_HEIGHT;
+
   return (
     <section className="flex flex-col gap-3">
       <h3 className="title-3 text-font-1">
-        {t("characterDetail.infoTitle")} | <span className="title-5">이윤아</span>
+        {t("characterDetail.infoTitle")} |{" "}
+        <span className="title-5">이윤아</span>
       </h3>
       <div
         id="description-body"
@@ -47,10 +53,13 @@ export const ExpandableDescription = ({
       >
         <p
           ref={textRef}
-          className={cn(
-            "body-4 overflow-hidden whitespace-pre-wrap text-font-2 leading-relaxed transition-all duration-500",
-            shouldShowExpand && !isExpanded ? "max-h-22" : "",
-          )}
+          style={{
+            maxHeight:
+              shouldShowExpand && !isExpanded
+                ? COLLAPSED_HEIGHT
+                : contentHeight || undefined,
+          }}
+          className="body-4 overflow-hidden whitespace-pre-wrap text-font-2 transition-[max-height] duration-300"
         >
           {content}
         </p>
@@ -58,13 +67,19 @@ export const ExpandableDescription = ({
 
       {shouldShowExpand && (
         <button
+          type="button"
           onClick={() => setIsExpanded(!isExpanded)}
           aria-expanded={isExpanded}
-          className="body-6 z-10 flex items-center justify-center gap-1 p-1 pl-2 text-font-2 transition-colors hover:text-white"
+          className="body-6 z-10 flex items-center justify-center gap-1 p-1 pl-2 text-font-2 transition-colors hover:text-font-1"
         >
-          {isExpanded ? t("characterDetail.collapse") : t("characterDetail.expand")}
+          {isExpanded
+            ? t("characterDetail.collapse")
+            : t("characterDetail.expand")}
           <ArrowDown
-            className={cn("h-4 w-4 transition-transform", isExpanded && "rotate-180")}
+            className={cn(
+              "h-4 w-4 transition-transform",
+              isExpanded && "rotate-180",
+            )}
           />
         </button>
       )}

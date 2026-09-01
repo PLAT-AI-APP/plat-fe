@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence } from "framer-motion";
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { PopoverLayout } from "@/components/popover/layout";
@@ -31,38 +32,40 @@ const OfficialSortDropdown = () => {
         <ArrowDown className="size-6 text-font-2" />
       </button>
 
-      {isOpen && (
-        <PopoverLayout
-          onClose={() => setIsOpen(false)}
-          triggerRef={triggerRef}
-          className="left-0 right-auto min-w-30"
-        >
-          <ul className="flex flex-col gap-1" role="listbox">
-            {SORT_OPTIONS.map((option) => {
-              const isSelected = option === sortOption;
+      <AnimatePresence>
+        {isOpen && (
+          <PopoverLayout
+            onClose={() => setIsOpen(false)}
+            triggerRef={triggerRef}
+            className="left-0 right-auto min-w-30"
+          >
+            <ul className="flex flex-col gap-1" role="listbox">
+              {SORT_OPTIONS.map((option) => {
+                const isSelected = option === sortOption;
 
-              return (
-                <li
-                  key={option}
-                  role="option"
-                  aria-selected={isSelected}
-                  onClick={() => {
-                    setSortOption(option);
-                    setIsOpen(false);
-                  }}
-                  className={cn(
-                    "body-4 flex cursor-pointer items-center justify-between gap-2 whitespace-nowrap rounded-lg px-2.5 py-2 hover:bg-btn-hover",
-                    isSelected && "title-5 text-brand",
-                  )}
-                >
-                  {t("sortByChats")}
-                  {isSelected && <Check className="size-4 text-brand" />}
-                </li>
-              );
-            })}
-          </ul>
-        </PopoverLayout>
-      )}
+                return (
+                  <li
+                    key={option}
+                    role="option"
+                    aria-selected={isSelected}
+                    onClick={() => {
+                      setSortOption(option);
+                      setIsOpen(false);
+                    }}
+                    className={cn(
+                      "body-4 flex cursor-pointer items-center justify-between gap-2 whitespace-nowrap rounded-lg px-2.5 py-2 hover:bg-btn-hover",
+                      isSelected && "title-5 text-brand",
+                    )}
+                  >
+                    {t("sortByChats")}
+                    {isSelected && <Check className="size-4 text-brand" />}
+                  </li>
+                );
+              })}
+            </ul>
+          </PopoverLayout>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

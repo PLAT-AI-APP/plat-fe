@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -33,14 +34,18 @@ const StatItem = ({ label, value, onClick }: StatItemProps) => {
   );
 
   if (!onClick) {
-    return <div className="flex items-center gap-[7px]">{content}</div>;
+    return (
+      <div className="flex items-center gap-2 text-font-2 hover:text-font-1">
+        {content}
+      </div>
+    );
   }
 
   return (
     <button
       type="button"
       onClick={onClick}
-      className="flex items-center gap-[7px]"
+      className="flex items-center gap-2 text-font-2 hover:text-font-1"
     >
       {content}
     </button>
@@ -154,7 +159,7 @@ const Header = ({ userId }: HeaderProps) => {
               alt="프로필 이미지"
               width={68}
               height={68}
-              className="size-[68px] shrink-0 rounded-full bg-[#d9d9d9] object-cover"
+              className="size-[68px] shrink-0 rounded-full bg-card-hover object-cover"
             />
 
             <div className="flex min-w-0 items-center gap-1">
@@ -175,19 +180,21 @@ const Header = ({ userId }: HeaderProps) => {
                     <Dots className="size-6 rotate-90" aria-hidden="true" />
                   </button>
 
-                  {isActionPopoverOpen && (
-                    <ProfileActionPopover
-                      triggerRef={actionTriggerRef}
-                      onClose={() => setIsActionPopoverOpen(false)}
-                      onShare={handleShareProfile}
-                      onBlock={() =>
-                        openDialog("USER_BLOCK", {
-                          nickname,
-                          onConfirm: handleBlockConfirm,
-                        })
-                      }
-                    />
-                  )}
+                  <AnimatePresence>
+                    {isActionPopoverOpen && (
+                      <ProfileActionPopover
+                        triggerRef={actionTriggerRef}
+                        onClose={() => setIsActionPopoverOpen(false)}
+                        onShare={handleShareProfile}
+                        onBlock={() =>
+                          openDialog("USER_BLOCK", {
+                            nickname,
+                            onConfirm: handleBlockConfirm,
+                          })
+                        }
+                      />
+                    )}
+                  </AnimatePresence>
                 </div>
               )}
             </div>
@@ -197,7 +204,7 @@ const Header = ({ userId }: HeaderProps) => {
             <button
               type="button"
               onClick={handleProfileEdit}
-              className="title-3 w-fit text-nowrap flex h-12 items-center justify-center rounded-2xl border border-card-hover bg-dark px-4 py-3 text-font-1"
+              className="title-5 flex h-11 w-fit items-center justify-center text-nowrap rounded-2xl border border-card-hover bg-dark px-4 text-font-1 hover:bg-btn-hover"
             >
               {t("profile.editProfile")}
             </button>
@@ -207,10 +214,8 @@ const Header = ({ userId }: HeaderProps) => {
               onClick={handleFollowToggle}
               disabled={isFollowPending}
               className={cn(
-                "title-3 flex h-11 items-center justify-center rounded-[20px] px-4 py-2.5",
-                isFollowing
-                  ? "bg-main text-font-1"
-                  : "bg-font-1 text-dark",
+                "title-3 flex h-11 items-center justify-center rounded-2xl px-4 py-2.5",
+                isFollowing ? "bg-main text-font-1" : "bg-font-1 text-dark",
                 isFollowPending && "cursor-wait opacity-70",
               )}
             >

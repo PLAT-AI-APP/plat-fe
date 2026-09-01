@@ -61,7 +61,7 @@ const ChatContentBlock = ({
         <div className="flex h-fit flex-1 gap-2 rounded-[0px_16px_16px_16px] bg-card p-2.5">
           <textarea
             ref={textareaRef}
-            className="w-full resize-none overflow-hidden rounded-[0px_16px_16px_16px] bg-card-hover p-2.5 text-sm font-medium outline-none"
+            className="body-4 w-full resize-none overflow-hidden rounded-[0px_16px_16px_16px] bg-card-hover p-2.5 outline-none"
             value={editedContent}
             onChange={(event) => setEditedContent(event.target.value)}
           />
@@ -153,7 +153,7 @@ const ChatContentBlock = ({
           <button
             type="button"
             onClick={onDelete}
-            className="flex size-7 items-center justify-center rounded-[9px] bg-card p-1.5 text-font-2 transition-colors hover:bg-btn-hover"
+            className="flex size-7 items-center justify-center rounded-lg bg-card p-1.5 text-font-2 transition-colors hover:bg-btn-hover"
             aria-label={t("chatUI.deleteResponse")}
           >
             <ChatTrash className="size-4" />

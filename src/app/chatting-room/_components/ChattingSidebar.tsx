@@ -25,6 +25,7 @@ import { useModalStore } from "@/store/useModalStore";
 import { useWalletStore } from "@/store/useWalletStore";
 import ChattingAssetGalleryView from "./chatting-asset-gallery-view";
 import ChattingMemoryView from "./chatting-memory-view";
+import { TRANSITION } from "@/constants/motion";
 
 interface ChattingSidebarProps {
   toggleIsSidebar: () => void;
@@ -67,11 +68,7 @@ const sidebarDepthMotion = {
   exit: { x: 48, opacity: 0 },
 };
 
-/** 빠르고 부드러운 사이드바 전환 */
-const sidebarTransition = {
-  duration: 0.22,
-  ease: "easeOut",
-} as const;
+const sidebarTransition = TRANSITION;
 
 const SidebarMenuItem = ({
   icon: Icon,
@@ -101,7 +98,7 @@ const SidebarMenuItem = ({
     <button
       type="button"
       onClick={onClick}
-      className="body-2 flex w-full items-center justify-between px-2 py-2 text-font-1 transition-colors hover:text-font-2"
+      className="body-4 flex w-full items-center justify-between rounded-lg px-2 py-2 text-font-1 transition-colors hover:bg-btn-hover"
     >
       {content}
     </button>
@@ -116,7 +113,7 @@ const SidebarToggle = ({ isOn, onClick }: SidebarToggleProps) => {
       type="button"
       onClick={onClick}
       className={cn(
-        "relative h-6 w-12 rounded-[22.588px] border transition-colors",
+        "relative h-6 w-12 rounded-full border transition-colors",
         isOn
           ? "border-brand/40 bg-brand-opacity-2"
           : "border-main/40 bg-darkest",
@@ -125,11 +122,11 @@ const SidebarToggle = ({ isOn, onClick }: SidebarToggleProps) => {
     >
       <span
         className={cn(
-          "absolute top-0.5 flex size-5 items-center justify-center rounded-full transition-all",
-          isOn ? "left-[26px] bg-brand" : "left-0.5 bg-font-disabled",
+          "absolute left-0.5 top-0.5 flex size-5 items-center justify-center rounded-full transition",
+          isOn ? "translate-x-6 bg-brand" : "translate-x-0 bg-font-disabled",
         )}
       >
-        <ToggleIcon className="size-4 text-white" />
+        <ToggleIcon className="size-4 text-on-brand" />
       </span>
     </button>
   );
@@ -209,8 +206,8 @@ const ChattingSidebar = ({
       {...sidebarOverlayMotion}
       transition={sidebarTransition}
       className={cn(
-        "fixed inset-0 z-20 flex justify-end font-medium",
-        isDepthViewOpen ? "bg-[#0D0E11]/70" : "bg-[#0D0E11]/50",
+        "fixed inset-0 z-20 flex justify-end",
+        isDepthViewOpen ? "bg-scrim/70" : "bg-scrim/50",
       )}
     >
       <motion.div
@@ -249,7 +246,7 @@ const ChattingSidebar = ({
                       className="flex items-center gap-1.5 rounded-lg bg-card px-3 py-2 transition-colors hover:bg-card-hover"
                     >
                       <Token className="size-[21px]" />
-                      <span className="body-4 whitespace-nowrap text-white">
+                      <span className="body-4 whitespace-nowrap text-font-1">
                         {formatWithCommas(availableBalance)}
                       </span>
                     </Link>

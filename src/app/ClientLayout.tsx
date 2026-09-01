@@ -24,6 +24,7 @@ import {
   SKIP_AUTH_ALERT_ONCE_KEY,
   isProtectedPath,
 } from "@/constants/auth";
+import { TRANSITION } from "@/constants/motion";
 
 // 사이드바 없이 전용 화면을 쓰는 경로
 const HIDE_SIDEBAR_PATHS: string[] = [];
@@ -39,10 +40,7 @@ const sidebarOverlayMotion = {
 };
 
 /** 사이드바 펼침 속도에 맞춘 오버레이 전환 */
-const sidebarOverlayTransition = {
-  duration: 0.2,
-  ease: "easeOut",
-} as const;
+const sidebarOverlayTransition = TRANSITION;
 
 export default function ClientLayout({
   children,
@@ -334,7 +332,7 @@ export default function ClientLayout({
         id="main-container"
         className={cn(
           "flex flex-row overflow-hidden",
-          isHeaderHidden ? "h-screen" : "h-[calc(100vh-60px)]",
+          isHeaderHidden ? "h-screen" : "h-[calc(100vh-var(--header-height))]",
         )}
       >
         {!isSidebarHidden && (
@@ -366,7 +364,7 @@ export default function ClientLayout({
                   left: 240,
                   top: isHeaderHidden ? 0 : 60,
                 }}
-                className="fixed bottom-0 right-0 z-20 bg-[#0D0E11]/50"
+                className="fixed bottom-0 right-0 z-20 bg-scrim/50"
                 aria-label="사이드바 접기"
                 onClick={handleFoldToggle}
                 onKeyDown={(event) => {

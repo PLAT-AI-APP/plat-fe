@@ -1,11 +1,4 @@
-export const SUPPORTED_LOCALES = [
-  "ko",
-  "en",
-  "ja",
-  "zh",
-  "th",
-  "vi",
-] as const;
+export const SUPPORTED_LOCALES = ["ko", "en", "ja", "zh", "th", "vi"] as const;
 
 export type AppLocale = (typeof SUPPORTED_LOCALES)[number];
 

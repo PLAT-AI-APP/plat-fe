@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import CharacterShowcase from "@/app/(main)/_components/CharacterShowcase";
 import CharacterSortPopover, {
@@ -12,6 +12,7 @@ import { useTabUnderline } from "@/hooks/useTabUnderline";
 import { Sort } from "@/icons";
 import { cn } from "@/lib/utils";
 import Header from "./Header";
+import { SPRING_SNAPPY } from "@/constants/motion";
 
 type ProfileTab = "character" | "wish";
 
@@ -118,7 +119,7 @@ export default function ProfileContent({ id }: { id: string }) {
   const displayArray = activeTab === "character" ? CharArray : WishArray;
 
   return (
-    <article className="@container mx-auto flex w-[1200px] max-w-full flex-col gap-11.5 pt-7.5 pb-11.25">
+    <article className="@container mx-auto flex w-[1200px] max-w-full flex-col gap-10 pt-6 pb-10">
       <Header userId={id} />
 
       <section
@@ -161,7 +162,7 @@ export default function ProfileContent({ id }: { id: string }) {
               className="absolute bottom-0 h-0.5 bg-brand"
               initial={false}
               animate={{ x: underlineRect.left, width: underlineRect.width }}
-              transition={{ type: "spring", stiffness: 500, damping: 40 }}
+              transition={SPRING_SNAPPY}
             />
           </nav>
 
@@ -184,14 +185,18 @@ export default function ProfileContent({ id }: { id: string }) {
                 {t(`profile.sort.${sort}`)}
               </button>
 
-              {isOpen && (
-                <CharacterSortPopover
-                  onChange={setSort}
-                  onClose={toggle}
-                  triggerRef={triggerRef as React.RefObject<HTMLButtonElement>}
-                  value={sort}
-                />
-              )}
+              <AnimatePresence>
+                {isOpen && (
+                  <CharacterSortPopover
+                    onChange={setSort}
+                    onClose={toggle}
+                    triggerRef={
+                      triggerRef as React.RefObject<HTMLButtonElement>
+                    }
+                    value={sort}
+                  />
+                )}
+              </AnimatePresence>
             </div>
           </header>
         </div>

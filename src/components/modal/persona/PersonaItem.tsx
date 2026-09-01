@@ -1,3 +1,4 @@
+import { AnimatePresence } from "framer-motion";
 import React, { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
@@ -56,7 +57,7 @@ const PersonaItem = ({
           isActive
             ? "border-brand-dark bg-brand-opacity"
             : "border-transparent bg-card hover:bg-brand-opacity",
-          isDimmed && "bg-font-4",
+          isDimmed && "bg-darkest",
         )}
       >
         <div className="flex items-center justify-between gap-2">
@@ -73,8 +74,8 @@ const PersonaItem = ({
               {isDefault && (
                 <span
                   className={cn(
-                    "caption-2 shrink-0 rounded-lg px-1.5 py-0.75 text-brand",
-                    isDimmed ? "bg-card" : "bg-font-4",
+                    "caption-2 shrink-0 rounded-lg px-1.5 py-1 text-brand",
+                    isDimmed ? "bg-card" : "bg-dark",
                   )}
                 >
                   {commonT("defaultBadge")}
@@ -103,19 +104,21 @@ const PersonaItem = ({
               <Dots className="size-6 -rotate-90" aria-hidden="true" />
             </button>
 
-            {isMenuOpen && (
-              <PersonaMenuPopover
-                triggerRef={menuTriggerRef}
-                onClose={() => setIsMenuOpen(false)}
-                onEdit={openEditModal}
-                onDelete={() =>
-                  openDialog("PERSONA_DELETE", {
-                    personaName: name,
-                    onConfirm: handleDeleteConfirm,
-                  })
-                }
-              />
-            )}
+            <AnimatePresence>
+              {isMenuOpen && (
+                <PersonaMenuPopover
+                  triggerRef={menuTriggerRef}
+                  onClose={() => setIsMenuOpen(false)}
+                  onEdit={openEditModal}
+                  onDelete={() =>
+                    openDialog("PERSONA_DELETE", {
+                      personaName: name,
+                      onConfirm: handleDeleteConfirm,
+                    })
+                  }
+                />
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </li>

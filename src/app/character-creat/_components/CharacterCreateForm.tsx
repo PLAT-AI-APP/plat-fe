@@ -118,10 +118,8 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
   const scenarioT = useTranslations("characterCreate.scenario");
   const defaultScenarioName = scenarioT("fallbackName", { index: 1 });
   const isEditMode = Boolean(universeId);
-  const {
-    data: universeDetail,
-    isError: isUniverseDetailError,
-  } = useUniverseDetailQuery(universeId);
+  const { data: universeDetail, isError: isUniverseDetailError } =
+    useUniverseDetailQuery(universeId);
   const methods = useForm<CharacterCreateFormValues>({
     mode: "onChange",
     resolver: zodResolver(characterCreateSchema),
@@ -157,7 +155,9 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
   useEffect(() => {
     if (!universeDetail) return;
 
-    reset(createCharacterEditDefaultValues(universeDetail, defaultScenarioName));
+    reset(
+      createCharacterEditDefaultValues(universeDetail, defaultScenarioName),
+    );
   }, [defaultScenarioName, reset, universeDetail]);
 
   useEffect(() => {

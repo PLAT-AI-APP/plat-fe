@@ -1,45 +1,29 @@
 import React from "react";
-// import { motion } from "framer-motion";
 
-interface SkeletonProps {
-  cardHeight?: number;
-}
-
-const SkeletonCharacterCard = ({ cardHeight }: SkeletonProps) => {
+/**
+ * 캐릭터 카드 로딩 자리표시자.
+ *
+ * 블록 높이는 실제 카드의 글자 높이에 맞춘다 —
+ * 제목(title-5, 14px × 1.5 ≈ 21px)과 설명(body-6, 12px × 1.5 = 18px).
+ * 자리표시자가 실제 콘텐츠보다 크면 로딩이 끝나는 순간 레이아웃이 튄다.
+ */
+const SkeletonCharacterCard = () => {
   return (
     <article
       id="character-skeleton-card"
-      // style={{ height: `${cardHeight}px` }}
-      className="relative overflow-hidden rounded-xl flex flex-col shrink-0"
+      className="relative flex shrink-0 flex-col overflow-hidden rounded-xl"
     >
-      {/* 이미지 영역 스켈레톤 (h-45 동일 적용) */}
-      <div className="relative w-full h-43.75 shrink-0 bg-card-hover rounded-xl" />
+      {/* 이미지 영역 */}
+      <div className="skeleton relative h-43.75 w-full shrink-0 rounded-xl" />
 
-      {/* 텍스트 영역 스켈레톤 (패딩 및 간격 일치) */}
-      <section className="px-1 pt-3 flex flex-col gap-3 flex-1">
-        {/* 이름 (폰트 크기에 맞춘 높이) */}
-        <div className="h-5 w-[70%] rounded-xl bg-card-hover" />
-
-        <div className="h-5 w-full rounded-xl bg-card-hover" />
-
-        <div className="h-5 bg-transparent"></div>
+      <section className="flex flex-1 flex-col gap-2 px-1 pt-3">
+        {/* 제목 */}
+        <div className="skeleton h-5 w-[70%] rounded-full" />
+        {/* 설명 */}
+        <div className="skeleton h-4.5 w-full rounded-full" />
+        {/* 메타 */}
+        <div className="skeleton h-4.5 w-1/3 rounded-full" />
       </section>
-
-      {/* Shimmer 애니메이션 레이어 */}
-      {/* <motion.div
-        className="absolute inset-0 z-10"
-        initial={{ translateX: "-100%" }}
-        animate={{ translateX: "100%" }}
-        transition={{
-          repeat: Infinity,
-          duration: 1.6,
-          ease: "linear",
-        }}
-        style={{
-          background:
-            "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.05) 50%, transparent 100%)",
-        }}
-      /> */}
     </article>
   );
 };

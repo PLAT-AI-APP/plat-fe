@@ -32,10 +32,7 @@ export const personaFormSchema = z.object({
     .trim()
     .min(1, FIELD_ERROR_MESSAGES.personaNameRequired)
     .max(20, FIELD_ERROR_MESSAGES.personaNameMaxLength),
-  info: z
-    .string()
-    .trim()
-    .max(200, FIELD_ERROR_MESSAGES.personaInfoMaxLength),
+  info: z.string().trim().max(200, FIELD_ERROR_MESSAGES.personaInfoMaxLength),
 });
 
 export type PersonaFormValues = z.input<typeof personaFormSchema>;

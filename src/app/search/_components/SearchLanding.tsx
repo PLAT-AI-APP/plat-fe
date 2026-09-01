@@ -8,9 +8,13 @@ import { useRecentSearch } from "@/hooks/useRecentSearch";
 import dayjs from "@/lib/dayjs";
 import { cn, formatStatCount } from "@/lib/utils";
 import { useLocaleStore } from "@/store/useLocaleStore";
-import { DUMMY_LIVE_SEARCH_KEYWORDS, DUMMY_SEARCH_CHARACTERS } from "./dummyData";
+import {
+  DUMMY_LIVE_SEARCH_KEYWORDS,
+  DUMMY_SEARCH_CHARACTERS,
+} from "./dummyData";
 import type { LiveSearchKeyword } from "./dummyData";
 import SearchQueryBar from "./SearchQueryBar";
+import PageTitle from "@/components/PageTitle";
 
 interface TrendTriangleProps {
   direction: "up" | "down";
@@ -47,7 +51,7 @@ const LiveSearchRankItem = ({ item, onSelect }: LiveSearchRankItemProps) => {
     <button
       type="button"
       onClick={() => onSelect(item.keyword)}
-      className="flex w-full items-center justify-between rounded-xl bg-darkest p-4"
+      className="flex w-full items-center justify-between rounded-xl bg-darkest p-4 hover:bg-btn-hover"
     >
       <div className="flex items-center gap-2">
         <span
@@ -71,7 +75,7 @@ const LiveSearchRankItem = ({ item, onSelect }: LiveSearchRankItemProps) => {
         </span>
         <TrendTriangle
           direction={item.trend}
-          className={item.trend === "up" ? "text-emerald-500" : "text-font-error"}
+          className={item.trend === "up" ? "text-success" : "text-font-error"}
         />
       </div>
     </button>
@@ -100,7 +104,9 @@ const SearchLanding = () => {
   };
 
   return (
-    <section className="mx-auto flex w-full max-w-[1272px] flex-col gap-14 px-9 pt-5 pb-20">
+    <section className="mx-auto flex w-full max-w-[1272px] flex-col gap-10 px-9 pt-5 pb-20">
+      <PageTitle messageKey="pageTitles.search" />
+
       <SearchQueryBar
         queryDraft={queryDraft}
         onQueryDraftChange={setQueryDraft}
@@ -111,23 +117,29 @@ const SearchLanding = () => {
         onClearAll={clearAll}
       />
 
-      <div className="flex flex-col gap-4.5">
+      <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between whitespace-nowrap">
-          <h2 className="title-1 text-white">{t("searchLanding.liveSearchTitle")}</h2>
+          <h2 className="title-1 text-font-0">
+            {t("searchLanding.liveSearchTitle")}
+          </h2>
           <span className="body-5 text-font-2">{updatedAt}</span>
         </div>
 
         <div className="grid grid-cols-3 grid-rows-2 gap-2">
           {DUMMY_LIVE_SEARCH_KEYWORDS.map((item) => (
-            <LiveSearchRankItem key={item.rank} item={item} onSelect={handleSearch} />
+            <LiveSearchRankItem
+              key={item.rank}
+              item={item}
+              onSelect={handleSearch}
+            />
           ))}
         </div>
       </div>
 
-      <div className="flex flex-col gap-5.75">
-        <div className="flex flex-col gap-4.5">
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between whitespace-nowrap">
-            <h2 className="title-1 text-white">
+            <h2 className="title-1 text-font-0">
               {t("searchLanding.popularCharactersTitle")}
             </h2>
             <span className="body-5 text-font-2">{updatedAt}</span>
@@ -153,7 +165,7 @@ const SearchLanding = () => {
         <button
           type="button"
           onClick={() => router.push("/?tab=ranking")}
-          className="flex items-center justify-center gap-1 rounded-xl border border-main bg-dark py-3"
+          className="flex items-center justify-center gap-1 rounded-xl border border-main bg-dark py-3 hover:bg-btn-hover"
         >
           <span className="body-4 text-font-2">
             {t("searchLanding.viewAllRanking")}

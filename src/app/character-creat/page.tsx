@@ -12,7 +12,9 @@ interface CharacterCreatPageProps {
   }>;
 }
 
-const CharacterCreatPage = async ({ searchParams }: CharacterCreatPageProps) => {
+const CharacterCreatPage = async ({
+  searchParams,
+}: CharacterCreatPageProps) => {
   const { universeId } = await searchParams;
 
   return (

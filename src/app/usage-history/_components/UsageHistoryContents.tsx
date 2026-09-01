@@ -4,6 +4,7 @@ import React from "react";
 import UsageHistoryItem from "./UsageHistoryItem";
 import SkeletonUsageHistoryItem from "./SkeletonUsageHistoryItem";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+import PageTitle from "@/components/PageTitle";
 
 const SKELETON_ITEM_COUNT = 6;
 
@@ -34,6 +35,8 @@ const UsageHistoryContents = () => {
 
   return (
     <section className="max-w-135 w-full mx-auto pt-5">
+      <PageTitle messageKey="pageTitles.usageHistory" />
+
       <ul id="usage-history-list" className="flex flex-col gap-2">
         {isLoading
           ? Array.from({ length: SKELETON_ITEM_COUNT }, (_, index) => (

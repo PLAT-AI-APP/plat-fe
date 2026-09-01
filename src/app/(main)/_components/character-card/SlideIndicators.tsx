@@ -40,13 +40,13 @@ const SlideIndicators = ({
             type="button"
             onClick={(event) => onImageSelect(event, index)}
             className={cn(
-              "cursor-pointer rounded-full transition-colors",
-              isLarge ? "size-2" : "h-2 w-2 transition-all",
+              "cursor-pointer rounded-full transition hover:brightness-125",
+              isLarge ? "size-2" : "h-2 w-2",
               isActive
                 ? cn("bg-brand", !isLarge && "scale-110")
                 : isLarge
                   ? "bg-font-1"
-                  : "bg-[#11141F]",
+                  : "bg-scrim",
             )}
             aria-label={`View image ${index + 1}`}
           />

@@ -33,7 +33,7 @@ const normalizeUserInfo = (user: Partial<UserInfo>): UserInfo => ({
 const getNormalizedMyInfo = (response: MyInfoApiResponse): UserInfo => {
   const data = response.data;
   const user =
-    data && "user" in data ? data.user : data ?? response.user ?? response;
+    data && "user" in data ? data.user : (data ?? response.user ?? response);
 
   if (user && ("id" in user || "nickname" in user || "email" in user)) {
     return normalizeUserInfo(user);

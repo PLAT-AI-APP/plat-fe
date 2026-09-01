@@ -7,6 +7,13 @@ import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Camera, Chat, Fold, Home, NoteLine } from "@/icons";
 import { cn } from "@/lib/utils";
+import {
+  DURATION,
+  EASE_IN_OUT,
+  EASE_OUT,
+  SPRING_SOFT,
+  TRANSITION,
+} from "@/constants/motion";
 
 export const RECENT_CHATS_MOCK = [
   {
@@ -82,10 +89,9 @@ const Sidebar = ({ isFolded = false, onFoldToggle }: SidebarProps) => {
   return (
     <motion.aside
       id="main-sidebar"
-      initial={{ width: sidebarWidth }}
+      initial={false}
       animate={{ width: sidebarWidth }}
-      style={{ width: sidebarWidth }}
-      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      transition={SPRING_SOFT}
       className="sticky top-0 flex h-full flex-col gap-2 overflow-hidden bg-dark pt-4 pr-2 pl-4"
     >
       <nav
@@ -129,10 +135,9 @@ const Sidebar = ({ isFolded = false, onFoldToggle }: SidebarProps) => {
                     id={`nav-button-${menu.link}`}
                     layout
                     initial={false}
-                    animate={{ width: "100%" }}
-                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                    transition={SPRING_SOFT}
                     className={cn(
-                      "relative flex h-11.5 cursor-pointer items-center overflow-hidden rounded-lg transition-colors",
+                      "relative flex h-10 cursor-pointer items-center overflow-hidden rounded-lg transition-colors",
                       isActive
                         ? "bg-brand/10"
                         : "bg-transparent hover:bg-btn-hover",
@@ -151,7 +156,7 @@ const Sidebar = ({ isFolded = false, onFoldToggle }: SidebarProps) => {
                       />
                     </motion.div>
 
-                    <AnimatePresence mode="wait" initial={isFolded}>
+                    <AnimatePresence mode="wait" initial={false}>
                       {!isFolded && (
                         <motion.span
                           id={`text-${menu.link}`}
@@ -159,10 +164,10 @@ const Sidebar = ({ isFolded = false, onFoldToggle }: SidebarProps) => {
                           initial={{ opacity: 0, x: -10 }}
                           animate={{ opacity: 1, x: 0 }}
                           exit={{ opacity: 0, x: -10 }}
-                          transition={{ duration: 0.2 }}
+                          transition={TRANSITION}
                           className={cn(
-                            "title-3 ml-1 whitespace-nowrap",
-                            isActive ? "font-medium text-brand" : "text-font-2",
+                            "body-4 ml-1 whitespace-nowrap transition-colors",
+                            isActive ? "text-brand" : "text-font-2",
                           )}
                         >
                           {menu.name}
@@ -188,9 +193,9 @@ const Sidebar = ({ isFolded = false, onFoldToggle }: SidebarProps) => {
                   x: 0,
                   height: "auto",
                   transition: {
-                    height: { duration: 0.3 },
-                    opacity: { duration: 0.2, delay: 0.1 },
-                    x: { duration: 0.2 },
+                    height: { duration: DURATION.slow, ease: EASE_OUT },
+                    opacity: { duration: DURATION.base, delay: DURATION.fast },
+                    x: { duration: DURATION.base, ease: EASE_OUT },
                   },
                 }}
                 exit={{
@@ -198,9 +203,9 @@ const Sidebar = ({ isFolded = false, onFoldToggle }: SidebarProps) => {
                   x: -20,
                   height: 0,
                   transition: {
-                    height: { duration: 0.25, ease: "easeInOut" },
-                    opacity: { duration: 0.15 },
-                    x: { duration: 0.2 },
+                    height: { duration: DURATION.base, ease: EASE_IN_OUT },
+                    opacity: { duration: DURATION.fast },
+                    x: { duration: DURATION.base, ease: EASE_OUT },
                   },
                 }}
                 className="body-4 mb-1 overflow-hidden whitespace-nowrap pl-2 text-font-2"
@@ -215,7 +220,7 @@ const Sidebar = ({ isFolded = false, onFoldToggle }: SidebarProps) => {
               <li key={chat.id}>
                 <motion.div
                   layout
-                  className="flex cursor-pointer items-center overflow-hidden rounded-lg p-1.5 hover:bg-card-hover"
+                  className="flex cursor-pointer items-center overflow-hidden rounded-lg p-1.5 transition-colors hover:bg-card-hover"
                 >
                   <motion.div layout="position" className="flex-none">
                     <Image
@@ -236,8 +241,11 @@ const Sidebar = ({ isFolded = false, onFoldToggle }: SidebarProps) => {
                           opacity: 1,
                           x: 0,
                           transition: {
-                            width: { duration: 0.3, ease: "easeOut" },
-                            opacity: { duration: 0.2, delay: 0.1 },
+                            width: { duration: DURATION.slow, ease: EASE_OUT },
+                            opacity: {
+                              duration: DURATION.base,
+                              delay: DURATION.fast,
+                            },
                           },
                         }}
                         exit={{
@@ -245,13 +253,16 @@ const Sidebar = ({ isFolded = false, onFoldToggle }: SidebarProps) => {
                           opacity: 0,
                           x: -10,
                           transition: {
-                            width: { duration: 0.25, ease: "easeIn" },
-                            opacity: { duration: 0.1 },
+                            width: {
+                              duration: DURATION.base,
+                              ease: EASE_IN_OUT,
+                            },
+                            opacity: { duration: DURATION.fast },
                           },
                         }}
                         className="ml-3 flex min-w-0 flex-1 flex-col overflow-hidden whitespace-nowrap"
                       >
-                        <p className="body-4 truncate font-medium text-font-1">
+                        <p className="body-4 truncate text-font-1">
                           {chat.name}
                         </p>
                         <p className="body-5 truncate text-font-2">

@@ -57,9 +57,7 @@ const SmartInput = forwardRef<
   const isInput = type === "input" || !type;
   const translateText = useTranslateText();
   const [isFocused, setIsFocused] = useState(false);
-  const [displayValue, setDisplayValue] = useState(() =>
-    String(value ?? ""),
-  );
+  const [displayValue, setDisplayValue] = useState(() => String(value ?? ""));
   // controlled 입력은 props.value를 기준으로, uncontrolled 입력은 내부 상태를 기준으로 글자 수를 계산합니다.
   const currentDisplayValue =
     value !== undefined ? String(value ?? "") : displayValue;
@@ -156,7 +154,7 @@ const SmartInput = forwardRef<
           {isTextarea && (
             <div
               className={cn(
-                "relative flex rounded-xl bg-darkest px-4 pb-7.25 pt-3",
+                "relative flex rounded-xl bg-darkest px-4 pb-7 pt-3 transition-colors",
                 isBorder && "border border-main",
                 isFocused && "border-brand-dark bg-brand-opacity-3",
                 hasError && "border-font-accents",
@@ -173,7 +171,7 @@ const SmartInput = forwardRef<
                   maxHeight: maxLine ? `${maxLine * LINE_HEIGHT}px` : undefined,
                 }}
                 className={cn(
-                  "w-full resize-none overflow-y-auto bg-transparent outline-none placeholder:text-font-disabled custom-scrollbar",
+                  "custom-scrollbar w-full resize-none overflow-y-auto bg-transparent outline-none placeholder:text-font-disabled disabled:cursor-not-allowed disabled:text-font-disabled",
                   placeholderClassName,
                   inputClassName,
                 )}
@@ -200,7 +198,7 @@ const SmartInput = forwardRef<
               style={{ paddingLeft: `${paddingLeft}px` }}
               type={inputType}
               className={cn(
-                "w-full rounded-xl border border-main bg-darkest px-4 py-3 outline-none placeholder:text-font-disabled",
+                "w-full rounded-xl border border-main bg-darkest px-4 py-3 outline-none transition-colors placeholder:text-font-disabled disabled:cursor-not-allowed disabled:text-font-disabled",
                 placeholderClassName,
                 rightElement && "pr-11",
                 inputClassName,

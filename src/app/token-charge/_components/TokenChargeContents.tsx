@@ -9,6 +9,7 @@ import { calcDiscountRate, formatWithCommas, toMajorAmount } from "@/lib/utils";
 import { useWalletStore } from "@/store/useWalletStore";
 import type { Product } from "@/type/product";
 import PolicyGuide from "./PolicyGuide";
+import PageTitle from "@/components/PageTitle";
 
 interface ProductListItemProps {
   product: Product;
@@ -18,13 +19,16 @@ const ProductListItem = ({ product }: ProductListItemProps) => {
   const t = useTranslations();
   const { credits, price } = product;
   const displayPrice = toMajorAmount(price.amountMinor, price.currency);
-  const discountRate = calcDiscountRate(price.amountMinor, price.listAmountMinor);
+  const discountRate = calcDiscountRate(
+    price.amountMinor,
+    price.listAmountMinor,
+  );
   const listPrice = price.listAmountMinor
     ? toMajorAmount(price.listAmountMinor, price.currency)
     : 0;
 
   return (
-    <li className="relative cursor-pointer rounded-2xl border border-main px-5 py-4 hover:bg-btn-hover">
+    <li className="relative cursor-pointer rounded-2xl border border-main px-5 py-4 transition-colors hover:bg-btn-hover">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Token className="h-8 w-8" />
@@ -88,6 +92,8 @@ const TokenChargeContents = () => {
 
   return (
     <section className="mx-auto w-full max-w-160 px-9 pt-5">
+      <PageTitle messageKey="tokenCharge.title" />
+
       <div className="mb-9 flex items-center justify-between gap-4 rounded-3xl border border-main bg-darker px-5 py-4">
         <div className="flex flex-col gap-2">
           <span className="body-4 text-font-2">{t("tokenCharge.myNote")}</span>
@@ -98,14 +104,14 @@ const TokenChargeContents = () => {
 
         <Link
           href="/usage-history"
-          className="body-4 shrink-0 rounded-2xl bg-main px-4 py-2 text-white transition-colors hover:bg-btn-hover"
+          className="body-4 shrink-0 rounded-2xl bg-main px-4 py-2 text-font-1 transition-colors hover:bg-btn-hover"
         >
           {t("tokenCharge.viewUsageHistory")}
         </Link>
       </div>
 
       <div className="flex flex-col gap-4">
-        <h3 className="title-2 text-white">{t("tokenCharge.purchase")}</h3>
+        <h2 className="title-2 text-font-0">{t("tokenCharge.purchase")}</h2>
 
         {isPending && <ProductListSkeleton />}
 

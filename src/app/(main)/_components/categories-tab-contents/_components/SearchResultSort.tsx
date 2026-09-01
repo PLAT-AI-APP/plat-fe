@@ -23,7 +23,7 @@ const SearchResultSort = () => {
             <React.Fragment key={option}>
               {index > 0 && (
                 <li aria-hidden="true">
-                  <span className="block h-3 w-px rounded-[100px] bg-main" />
+                  <span className="block h-3 w-px rounded-full bg-main" />
                 </li>
               )}
               <li>

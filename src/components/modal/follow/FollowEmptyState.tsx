@@ -105,7 +105,7 @@ const FollowEmptyState = ({
               <p key={line}>{line}</p>
             ))}
             <p>
-              <strong className="font-bold">{state.highlight}</strong>
+              <strong>{state.highlight}</strong>
               {state.suffix}
             </p>
           </div>
@@ -113,7 +113,7 @@ const FollowEmptyState = ({
           <button
             type="button"
             onClick={handleClick}
-            className="title-5 rounded-xl border border-brand-dark bg-brand-opacity px-8 py-3 text-brand-dark"
+            className="title-5 rounded-xl border border-brand-dark bg-brand-opacity px-8 py-3 text-brand-dark hover:bg-brand-opacity-2"
           >
             {state.buttonText}
           </button>
@@ -140,7 +140,7 @@ const FollowEmptyState = ({
         <button
           type="button"
           onClick={handleClick}
-          className="title-5 rounded-xl bg-font-1 px-8 py-2 text-dark"
+          className="title-5 rounded-xl bg-font-1 px-8 py-2 text-dark hover:opacity-90"
         >
           {state.buttonText}
         </button>

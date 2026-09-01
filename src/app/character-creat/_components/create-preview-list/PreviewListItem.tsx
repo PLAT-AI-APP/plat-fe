@@ -55,7 +55,7 @@ const PreviewListItem = ({
           item.type === "action" && "px-2 pt-0",
           isEditing && "bg-transparent p-0",
         )}
-        style={{ background: isDragging ? "#181C2E" : "" }}
+        style={{ background: isDragging ? "var(--bg-card-hover)" : "" }}
       >
         <div className="mb-1 flex justify-center">
           <PreviewDragHandle dragHandleProps={dragHandleProps} />

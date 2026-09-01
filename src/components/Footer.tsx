@@ -15,7 +15,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer id="main-footer" className="flex flex-col gap-4 p-5 pb-18">
+    <footer id="main-footer" className="flex flex-col gap-4 p-5 pb-12">
       <nav id="footer-navigation" aria-label={t("footer.menu")}>
         <ul id="footer-menu-list" className="m-0 flex list-none gap-3 p-0">
           {menuArray.map((menu) => (
@@ -42,8 +42,7 @@ const Footer = () => {
         <span id="footer-registration-number">
           {t("footer.registrationNumberLabel")}: 227-40-01411
         </span>
-        |
-        <span id="footer-office-address">{t("footer.address")}</span>
+        |<span id="footer-office-address">{t("footer.address")}</span>
       </address>
 
       <p id="footer-copyright" className="body-4 text-font-disabled">

@@ -6,6 +6,7 @@ interface PreviewImageProps {
 }
 
 const CHECKERBOARD_STYLE = {
+  // 투명 영역을 보여주는 체커보드. 이미지 판별용 패턴이라 테마와 무관하게 고정한다.
   backgroundColor: "#f4f4f4",
   backgroundImage:
     "linear-gradient(45deg, #e8e8e8 25%, transparent 25%), linear-gradient(-45deg, #e8e8e8 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e8e8e8 75%), linear-gradient(-45deg, transparent 75%, #e8e8e8 75%)",

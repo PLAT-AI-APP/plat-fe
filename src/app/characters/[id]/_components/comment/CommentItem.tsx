@@ -1,4 +1,5 @@
 "use client";
+import { AnimatePresence } from "framer-motion";
 import React, { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -56,7 +57,7 @@ const CommentItem = ({ comment }: Props) => {
 
         <section className="flex flex-col flex-1 h-fit">
           {/* {comment.isPinned && (
-            <p className="flex gap-1 pb-1.5 text-font-2 text-[12px]">
+            <p className="body-6 flex gap-1 pb-1.5 text-font-2">
               <PinFill className="w-3.5 h-3.5 fill-font-2" />
               크리에이터님이 고정함
             </p>
@@ -74,23 +75,25 @@ const CommentItem = ({ comment }: Props) => {
 
             <div className="relative cursor-pointer" ref={triggerRef}>
               <Dots onClick={toggle} className="w-6 h-6 p-1" />
-              {isOpen && (
-                <CommentMenuPopover
-                  onClose={toggle}
-                  triggerRef={triggerRef}
-                  isMine
-                  onDelete={() => null}
-                  onEdit={() => null}
-                  onReport={() => null}
-                />
-              )}
+              <AnimatePresence>
+                {isOpen && (
+                  <CommentMenuPopover
+                    onClose={toggle}
+                    triggerRef={triggerRef}
+                    isMine
+                    onDelete={() => null}
+                    onEdit={() => null}
+                    onReport={() => null}
+                  />
+                )}
+              </AnimatePresence>
             </div>
           </header>
 
           <div className="flex flex-col h-fit" id="comment-text-container">
             <p
               ref={textRef}
-              className={`transition-all body-4 ${
+              className={`transition-colors body-4 ${
                 !isExpanded ? "line-clamp-4" : ""
               } overflow-hidden whitespace-pre-wrap`}
             >
@@ -99,6 +102,7 @@ const CommentItem = ({ comment }: Props) => {
 
             {isOverflown && !isExpanded && (
               <button
+                type="button"
                 onClick={() => setIsExpanded(true)}
                 className="text-font-2 body-6 w-fit mt-1 hover:underline"
               >
@@ -149,7 +153,7 @@ const CommentItem = ({ comment }: Props) => {
             <button
               onClick={toggleIsReply}
               type="button"
-              className="w-fit pl-9 text-sm font-medium hover:underline text-white"
+              className="body-4 w-fit pl-9 text-font-1 hover:underline"
             >
               {isReply ? "답글 접기" : "답글 더보기"}
             </button>

@@ -26,28 +26,31 @@ const PublicSelectPopover = ({
       triggerRef={publicTriggerRef} // ModalLayout에 전달
       className="w-full"
     >
-      <div onClick={(e) => e.stopPropagation()} className="flex flex-col gap-1">
-        <div
-          onClick={() => handleIsPublic(true)}
-          className={cn(
-            "hover:bg-btn-hover body-4 flex justify-between px-2.5 py-2 rounded-lg cursor-pointer",
-            isPublic && "title-5",
-          )}
-        >
-          <span>{t("public")}</span>
-          {isPublic && <Check className="w-4.5 h-4.5 text-brand" />}
-        </div>
+      <div
+        role="listbox"
+        onClick={(e) => e.stopPropagation()}
+        className="flex flex-col gap-1"
+      >
+        {([true, false] as const).map((value) => {
+          const isActive = isPublic === value;
 
-        <div
-          onClick={() => handleIsPublic(false)}
-          className={cn(
-            "hover:bg-btn-hover body-4 flex justify-between px-2.5 py-2 rounded-lg cursor-pointer",
-            !isPublic && "title-5",
-          )}
-        >
-          <span>{t("private")}</span>
-          {!isPublic && <Check className="w-4.5 h-4.5 text-brand" />}
-        </div>
+          return (
+            <button
+              key={String(value)}
+              type="button"
+              role="option"
+              aria-selected={isActive}
+              onClick={() => handleIsPublic(value)}
+              className={cn(
+                "body-4 flex w-full cursor-pointer items-center justify-between rounded-lg px-2.5 py-2 text-left text-font-2 transition-colors hover:bg-btn-hover hover:text-font-1",
+                isActive && "text-font-1",
+              )}
+            >
+              <span>{t(value ? "public" : "private")}</span>
+              {isActive && <Check className="h-4.5 w-4.5 text-brand" />}
+            </button>
+          );
+        })}
       </div>
     </ModalLayout>
   );

@@ -9,6 +9,7 @@ import { CHARACTERS_DUMMY } from "@/mocks/dummyData";
 import CategoriesTabContents from "./_components/categories-tab-contents";
 import OfficialTabContents from "./_components/official-tab-contents";
 import NewTabContents from "./_components/new-tab-contents";
+import PageTitle from "@/components/PageTitle";
 // import OverflowTagList from "@/components/OverflowTagList";
 
 export const metadata: Metadata = {
@@ -39,14 +40,16 @@ const Home = async ({ searchParams }: HomePageProps) => {
     <article
       id="home-container"
       className={cn(
-        "w-full min-h-[calc(100vh-60px)] flex",
+        "w-full min-h-[calc(100vh-var(--header-height))] flex",
         isCategories && "bg-darker",
       )}
     >
       {/* 메인 콘텐츠 영역: min-w-0이 없으면 이 flex item이 콘텐츠의 min-content 폭 밑으로 줄어들지 못해,
           화면이 좁아졌을 때 오른쪽 태그 사이드바가 컨테이너 밖으로 밀려나 잘려 보입니다. */}
-      <section className="flex min-w-0 flex-col w-full min-h-[calc(100vh-60px)]">
+      <section className="flex min-w-0 flex-col w-full min-h-[calc(100vh-var(--header-height))]">
         {/* 메인 비주얼/슬라이드 영역: 탭과 무관하게 항상 노출되고, 아래 탭 콘텐츠만 바뀝니다. */}
+        <PageTitle messageKey="pageTitles.home" />
+
         <MainBannerCarousel />
 
         <div className="w-full max-w-300 mx-auto @container flex-1 flex flex-col">
@@ -94,7 +97,7 @@ const Home = async ({ searchParams }: HomePageProps) => {
           /> */}
           <div
             id="contents-wrapper"
-            className="flex flex-col grow w-full pb-18"
+            className="flex flex-col grow w-full pb-12"
           >
             {TabComponents[currentTab]}
           </div>

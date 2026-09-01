@@ -1,7 +1,5 @@
-import { Fold, User } from "@/icons";
-import Image from "next/image";
+import { Fold, LogoWordmark, User } from "@/icons";
 import React, { useRef } from "react";
-import logoImg from "../../../public/logo.svg";
 import { SearchBar } from "./SearchBar";
 import Profile from "./Profile";
 import Link from "next/link";
@@ -31,10 +29,10 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
   return (
     <header
       id="main-header"
-      className="h-15 flex items-center justify-between px-5 sticky top-0 bg-dark z-20"
+      className="h-(--header-height) flex items-center justify-between px-5 sticky top-0 bg-dark z-20"
     >
       {/* 왼쪽 영역: 사이드바 토글 및 로고 */}
-      <div id="header-left-section" className="flex gap-3.75 items-center">
+      <div id="header-left-section" className="flex gap-4 items-center">
         <button
           id="sidebar-toggle-button"
           type="button"
@@ -46,14 +44,9 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
         </button>
 
         <Link id="header-logo-link" href={"/"}>
-          <Image
+          <LogoWordmark
             id="header-logo-image"
-            src={logoImg}
-            width={122}
-            height={29}
-            priority
-            alt="plat logo"
-            className="min-w-30.5 h-7.25 shrink-0"
+            className="h-7.25 min-w-30.5 shrink-0 text-font-1"
           />
         </Link>
       </div>
@@ -63,15 +56,12 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
         id="header-right-section"
         className="flex h-10 flex-1 items-center justify-end gap-2"
       >
-        <div
-          id="header-utility-group"
-          className="flex items-center gap-2"
-        >
+        <div id="header-utility-group" className="flex items-center gap-2">
           {/* 포인트 표시 영역 */}
           {isLoggedIn && (
             <Link
               href={`/token-charge`}
-              className="flex cursor-pointer items-center gap-1 transition-all duration-200 ease-in-out hover:bg-btn-hover rounded-lg p-1.25 pr-2.5"
+              className="flex cursor-pointer items-center gap-1 transition-colors hover:bg-btn-hover rounded-lg p-1 pr-2.5"
             >
               <Token className="w-5 h-5" />
               <span id="user-point-value" className="body-2">
@@ -91,7 +81,7 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
             <button
               id="header-notification-button"
               type="button"
-              className="bg-transparent border-none p-0 cursor-pointer"
+              className="cursor-pointer border-none bg-transparent p-0 hover:opacity-80"
             >
               <BellOn
                 id="icon-notification-bell"

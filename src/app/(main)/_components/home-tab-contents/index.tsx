@@ -25,10 +25,16 @@ interface HomeTabContentsProps {
 const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
   // 홈 탭 언어는 설정 변경 직후 바로 반영되어야 하므로 클라이언트 번역 컨텍스트를 사용합니다.
   const t = useTranslations("home");
-  const { data: todayPickList } = useTodayPickQuery();
-  const { data: userRecommendList } = useUserRecommendQuery();
-  const { data: assetPreviewList } = useAssetPreviewQuery();
-  const { data: popularTagList } = usePopularTagQuery();
+  // 로딩 여부는 데이터를 가져오는 이곳만 정확히 알 수 있으므로
+  // CharacterShowcase 에 그대로 내려 준다.
+  const { data: todayPickList, isPending: isTodayPickPending } =
+    useTodayPickQuery();
+  const { data: userRecommendList, isPending: isUserRecommendPending } =
+    useUserRecommendQuery();
+  const { data: assetPreviewList, isPending: isAssetPreviewPending } =
+    useAssetPreviewQuery();
+  const { data: popularTagList, isPending: isPopularTagPending } =
+    usePopularTagQuery();
 
   const todayPickCharArray = (todayPickList ?? []).map((item) => ({
     name: item.title,
@@ -70,10 +76,11 @@ const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
   }));
 
   return (
-    <article className="flex flex-col gap-18 mt-7">
+    <article className="flex flex-col gap-12 mt-6">
       {/* 오늘의 PICK 섹션 */}
       <CharacterShowcase
         charArray={todayPickCharArray}
+        isLoading={isTodayPickPending}
         title={t("todayPick")}
         allViewLink=""
         cardSize="S"
@@ -87,6 +94,7 @@ const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
       {/* 인기 태그 캐릭터 모음 섹션 */}
       <CharacterShowcase
         charArray={popularTagCharArray}
+        isLoading={isPopularTagPending}
         title={t("popularTagCollection")}
         cardSize="S"
         limit={12}
@@ -97,6 +105,7 @@ const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
       {/* 상황 에셋이 많은 캐릭터 미리보기 섹션 */}
       <CharacterShowcase
         charArray={assetPreviewCharArray}
+        isLoading={isAssetPreviewPending}
         title={t("popularCharacterPreview")}
         cardSize="L"
         limit={3}
@@ -117,6 +126,7 @@ const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
       {/* (유저이름)님을 위한 추천 섹션 */}
       <CharacterShowcase
         charArray={userRecommendCharArray}
+        isLoading={isUserRecommendPending}
         title={t("recommendationForYou")}
         allViewLink="asf"
         cardSize="S"

@@ -12,18 +12,18 @@ const NotificationConfig: Record<
   { bg: string; color: string; label: string }
 > = {
   NOTICE: {
-    bg: "bg-[#0088FF26]",
-    color: "text-[#0088FF]",
+    bg: "bg-info-bg",
+    color: "text-info",
     label: "공지",
   },
   UPDATE: {
-    bg: "bg-[#34C75926]",
-    color: "text-[#34C759]",
+    bg: "bg-success-bg",
+    color: "text-success",
     label: "업데이트",
   },
   EVENT: {
-    bg: "bg-[#FFCC0026]",
-    color: "text-[#FFCC00]",
+    bg: "bg-warning-bg",
+    color: "text-warning",
     label: "이벤트",
   },
 };
@@ -66,7 +66,7 @@ const NoticeList = ({ currentFilter }: NoticeListProps) => {
           >
             <Link
               href={`/notification/${noticeId}`}
-              className="flex justify-between pt-3.75 px-2.5 pb-5"
+              className="flex justify-between pt-4 px-2.5 pb-5"
             >
               <div className="flex flex-col gap-1.5">
                 {/* 공지사항 분류 공지/업데이트/이벤트 */}

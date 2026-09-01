@@ -65,7 +65,7 @@ const Agreed = () => {
       >
         <div className="flex items-center justify-center h-6 w-6">
           {isAllAgree ? (
-            <CheckboxFill className="text-red-white" />
+            <CheckboxFill className="text-brand" />
           ) : (
             <CheckboxEmpty />
           )}

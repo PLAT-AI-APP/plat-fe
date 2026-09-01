@@ -7,9 +7,10 @@ import { formatStatCount } from "@/lib/utils";
 
 const markdownComponents: Partial<Components> = {
   // 제목: 마진을 최소화하고 폰트 크기를 단계별로 설정
-  h1: ({ ...props }) => <h1 className="text-2xl font-bold" {...props} />,
-  h2: ({ ...props }) => <h2 className="text-xl font-semibold " {...props} />,
-  h3: ({ ...props }) => <h3 className="text-lg font-semibold " {...props} />,
+  // 본문 마크다운은 h2 부터 시작한다. 페이지의 h1 은 캐릭터 이름(SidebarSummary)이다.
+  h1: ({ ...props }) => <h2 className="heading-3" {...props} />,
+  h2: ({ ...props }) => <h3 className="title-1" {...props} />,
+  h3: ({ ...props }) => <h4 className="title-2" {...props} />,
 
   // 문장: 가장 문제가 되었던 마진을 0으로 잡고, 문장 간 간격은 flex나 gap으로 조절 가능하게 설정
   p: ({ ...props }) => <p className="leading-relaxed" {...props} />,

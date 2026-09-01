@@ -28,7 +28,7 @@ const EditableUserChatPreview = ({
         onConfirm={onConfirm}
       />
 
-      <div className="flex min-w-0 max-w-[80%] items-center rounded-[16px_0px_16px_16px] bg-[#B25500] p-2.5">
+      <div className="flex min-w-0 max-w-[80%] items-center rounded-[16px_0px_16px_16px] bg-brand-opacity-2 p-2.5">
         <textarea
           ref={textareaRef}
           autoFocus

@@ -44,8 +44,10 @@ const CommentInputBox = () => {
           type="button"
           disabled={!isLoggedIn}
           className={cn(
-            "body-4 rounded-xl bg-main px-4 py-1.5",
-            isLoggedIn ? "text-font-1" : "text-font-disabled",
+            "body-4 rounded-xl bg-main px-4 py-1.5 transition-colors",
+            isLoggedIn
+              ? "text-font-1 hover:bg-btn-selected"
+              : "cursor-not-allowed text-font-disabled",
           )}
         >
           {t("submitComment")}

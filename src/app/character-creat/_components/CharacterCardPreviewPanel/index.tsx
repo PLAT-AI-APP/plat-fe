@@ -28,7 +28,7 @@ const CharacterCardPreviewPanel = () => {
         <p className="body-2 text-font-2">{t("detailPreview")}</p>
       </header>
 
-      <div className="flex flex-1 items-start justify-center gap-[46px] pt-[145px]">
+      <div className="flex flex-1 items-start justify-center gap-10 pt-[145px]">
         <div className="flex flex-col gap-3">
           <p className="title-5 text-font-disabled">{t("cardOne")}</p>
           <PreviewCard

@@ -19,9 +19,9 @@ const getFollowerList = async ({
   const response = await authAxios.get<PageResponse<GetFollowerListResponse>>(
     `/follow/followers`,
     {
-    params: {
-      page: pageParam,
-    },
+      params: {
+        page: pageParam,
+      },
     },
   );
 

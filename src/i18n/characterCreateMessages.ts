@@ -47,8 +47,7 @@ const ko = {
       nameLabel: "캐릭터 이름",
       namePlaceholder: "유저에게 소개할 캐릭터 이름을 작성해주세요",
       descriptionLabel: "캐릭터 설명",
-      descriptionPlaceholder:
-        "유저에게 소개될 캐릭터의 내용을 작성해주세요",
+      descriptionPlaceholder: "유저에게 소개될 캐릭터의 내용을 작성해주세요",
       settingLabel: "상세 설정",
       settingPlaceholder:
         "세계관의 성격이나 캐릭터의 외모, 성격, 말투 등을 상세하게 입력해 주세요.\n구체적일수록 유저님의 상상에 가깝게 구현할 수 있어요.",
@@ -150,8 +149,7 @@ const ko = {
       cardOne: "캐릭터 카드 1",
       cardTwo: "캐릭터 카드 2",
       titleFallback: "제목제목제목제목제목",
-      descriptionFallback:
-        "가나다라마바사아자차카타파나다라마바사아자차카타파",
+      descriptionFallback: "가나다라마바사아자차카타파나다라마바사아자차카타파",
       creatorFallback: "흐물거리는무말랭이",
       appliedElements: "미리보기 적용 요소",
       title: "제목",
@@ -187,15 +185,15 @@ const ko = {
     defaults: {
       title: "올림포스에서 내려온 나의 수호신",
       name: "아폴론",
-      introduce: "눈부신 외모와 다정한 목소리로 당신의 일상을 지켜주는 빛의 신.",
+      introduce:
+        "눈부신 외모와 다정한 목소리로 당신의 일상을 지켜주는 빛의 신.",
       detail:
         "신분: 올림포스의 빛과 음악의 신\n성격: 평소에는 여유롭고 능글맞지만, 당신에게만은 헌신적이고 은근한 소유욕을 드러냄.\n배경: 인간계에 호기심을 품고 내려왔다가 우연히 당신과 마주치며 일상에 스며들게 됨.",
       assetName: "행복",
       assetSituation: "캐릭터가 행복이라는 감정을 느낄 때",
       scenario1Name: "여신 아프로디테와의 만남",
       scenario2Name: "제우스와의 만남",
-      action1:
-        "눈앞에 눈부신 빛이 감돌며 아름다운 여신이 모습을 드러낸다.",
+      action1: "눈앞에 눈부신 빛이 감돌며 아름다운 여신이 모습을 드러낸다.",
       chat1: "기다리고 있었습니다, 에버그린의 새로운 모험가여.",
       chat2: "당신은 이곳에서 어떤 운명을 개척하고 싶으신가요?",
       action2: "여신이 부드럽게 미소 지으며 당신에게 선택지를 제시한다.",
@@ -299,7 +297,8 @@ const en: typeof ko = {
       guideCopyDescription:
         "Click the copy button on the right side of an asset, then paste it manually.",
       guideDragTitle: "Drop it directly into the scenario",
-      guideDragDescription: "You can also drag an asset directly into a scenario.",
+      guideDragDescription:
+        "You can also drag an asset directly into a scenario.",
       guideCodeTitle: "Add it directly as text",
       guideCodeDescription: "You can type the code manually to add it.",
       closeGuide: "Close asset guide",
@@ -405,8 +404,7 @@ const en: typeof ko = {
         "A radiant light swirls in front of you as a beautiful goddess reveals herself.",
       chat1: "I have been waiting for you, new adventurer of Evergreen.",
       chat2: "What kind of destiny would you like to shape here?",
-      action2:
-        "The goddess smiles softly and presents you with a choice.",
+      action2: "The goddess smiles softly and presents you with a choice.",
       description:
         "An AI persona for enjoying a fluttering daily romance with figures from mythology. Encounter special events through meetings with various gods.",
     },
@@ -446,13 +444,13 @@ const ja: typeof ko = {
     },
     representativeImage: {
       label: "代表画像",
-      guide:
-        "最大5MB、1:1.3比率のjpg、png、webpファイルのみ使用できます。",
+      guide: "最大5MB、1:1.3比率のjpg、png、webpファイルのみ使用できます。",
       previewAlt: "代表画像プレビュー",
       upload: "アップロード",
       invalidType: "jpg、png、webp 画像ファイルのみ可能です。",
       invalidSize: "ファイル容量は最大 5MB まで可能です。",
-      uploadFailed: "画像のアップロードに失敗しました。もう一度お試しください。",
+      uploadFailed:
+        "画像のアップロードに失敗しました。もう一度お試しください。",
     },
     details: {
       profileImageLabel: "キャラクタープロフィール",
@@ -506,13 +504,15 @@ const ja: typeof ko = {
       guideCopyDescription:
         "アセット右側のコピーボタンをクリック後、直接貼り付けて追加できます",
       guideDragTitle: "シナリオに直接入れてみましょう",
-      guideDragDescription: "アセットをドラッグしてシナリオに直接入れることもできます",
+      guideDragDescription:
+        "アセットをドラッグしてシナリオに直接入れることもできます",
       guideCodeTitle: "テキストで直接追加できます",
       guideCodeDescription: "コードを直接入力して追加できます",
       closeGuide: "アセット案内を閉じる",
       invalidType: "jpg、png、webp 画像ファイルのみ可能です。",
       invalidSize: "ファイル容量は最大 5MB まで可能です。",
-      uploadFailed: "アセット画像のアップロードに失敗しました。もう一度お試しください。",
+      uploadFailed:
+        "アセット画像のアップロードに失敗しました。もう一度お試しください。",
     },
     scenario: {
       title: "シナリオ制作",
@@ -592,27 +592,23 @@ const ja: typeof ko = {
       nameLabel: "ハッシュタグ名",
       namePlaceholder: "提案したいハッシュタグを入力してください",
       opinionLabel: "意見",
-      opinionPlaceholder:
-        "提案した理由や意見があれば自由に書いてください",
+      opinionPlaceholder: "提案した理由や意見があれば自由に書いてください",
       submit: "送信",
     },
     defaults: {
       title: "オリンポスから降りてきた私の守護神",
       name: "アポロン",
-      introduce:
-        "眩しい外見と優しい声であなたの日常を見守る光の神。",
+      introduce: "眩しい外見と優しい声であなたの日常を見守る光の神。",
       detail:
         "身分: オリンポスの光と音楽の神\n性格: 普段は余裕があって軽口も叩くが、あなたにだけは献身的でほのかな独占欲を見せる。\n背景: 人間界に好奇心を抱いて降りてきて、偶然あなたと出会い日常に溶け込むようになる。",
       assetName: "幸せ",
       assetSituation: "キャラクターが幸せを感じる時",
       scenario1Name: "女神アフロディーテとの出会い",
       scenario2Name: "ゼウスとの出会い",
-      action1:
-        "目の前にまばゆい光が漂い、美しい女神が姿を現す。",
+      action1: "目の前にまばゆい光が漂い、美しい女神が姿を現す。",
       chat1: "お待ちしておりました、エバーグリーンの新しい冒険者よ。",
       chat2: "この場所でどんな運命を切り開きたいですか？",
-      action2:
-        "女神がやわらかく微笑みながら、あなたに選択肢を差し出す。",
+      action2: "女神がやわらかく微笑みながら、あなたに選択肢を差し出す。",
       description:
         "神話の人物とのときめく日常ロマンスを楽しめる AI ペルソナです。さまざまな神々との出会いを通じて特別なイベントを体験してください。",
     },
@@ -645,15 +641,13 @@ const zh: typeof ko = {
       introduceLabel: "一句话介绍",
       introducePlaceholder: "请简单介绍这个角色",
       situationLabel: "序章介绍",
-      situationPlaceholder:
-        "请说明与这个角色在什么地方、如何展开故事",
+      situationPlaceholder: "请说明与这个角色在什么地方、如何展开故事",
       policyNotice:
         "暴力、仇恨、性描写等表达及图片可能会根据规定受到永久限制。",
     },
     representativeImage: {
       label: "代表图片",
-      guide:
-        "最大 5MB，仅支持 1:1.3 比例的 jpg、png、webp 文件。",
+      guide: "最大 5MB，仅支持 1:1.3 比例的 jpg、png、webp 文件。",
       previewAlt: "代表图片预览",
       upload: "上传",
       invalidType: "仅支持 jpg、png、webp 图片文件。",
@@ -675,11 +669,9 @@ const zh: typeof ko = {
       publicLabel: "用户公开",
       publicHelp: "其他用户也可以与该角色聊天",
       commentAllowLabel: "允许评论",
-      commentAllowHelp:
-        "自由交流吧！你可以随时允许或限制评论。",
+      commentAllowHelp: "自由交流吧！你可以随时允许或限制评论。",
       descriptionLabel: "角色说明",
-      descriptionHelp:
-        "请填写角色的性格、叙事、事件等更详细的内容。",
+      descriptionHelp: "请填写角色的性格、叙事、事件等更详细的内容。",
       tendencyLabel: "倾向",
       tendencyHelp: "会推荐给偏好相似的用户",
       categoryLabel: "分类",
@@ -729,7 +721,8 @@ const zh: typeof ko = {
       descriptionLabel: "场景说明",
       descriptionPlaceholder: "请说明这是怎样的场景",
       difficultyLabel: "场景难度",
-      difficultyPlaceholder: "请说明在这个场景中与角色的亲密度有多难，关系中有哪些障碍",
+      difficultyPlaceholder:
+        "请说明在这个场景中与角色的亲密度有多难，关系中有哪些障碍",
     },
     preview: {
       defaultCharacterName: "角色",
@@ -850,8 +843,7 @@ const th: typeof ko = {
     },
     representativeImage: {
       label: "รูปหลัก",
-      guide:
-        "สูงสุด 5MB รองรับเฉพาะไฟล์ jpg, png, webp อัตราส่วน 1:1.3",
+      guide: "สูงสุด 5MB รองรับเฉพาะไฟล์ jpg, png, webp อัตราส่วน 1:1.3",
       previewAlt: "พรีวิวรูปหลัก",
       upload: "อัปโหลด",
       invalidType: "อนุญาตเฉพาะไฟล์รูป jpg, png, webp เท่านั้น",
@@ -1012,12 +1004,10 @@ const th: typeof ko = {
       assetSituation: "เมื่อตัวละครรู้สึกถึงความสุข",
       scenario1Name: "การพบกับเทพีอโฟรไดท์",
       scenario2Name: "การพบกับซุส",
-      action1:
-        "แสงสว่างเจิดจ้าหมุนวนอยู่ตรงหน้า ก่อนที่เทพีผู้งดงามจะปรากฏตัว",
+      action1: "แสงสว่างเจิดจ้าหมุนวนอยู่ตรงหน้า ก่อนที่เทพีผู้งดงามจะปรากฏตัว",
       chat1: "ข้ารอท่านอยู่ นักผจญภัยคนใหม่แห่งเอเวอร์กรีน",
       chat2: "ท่านอยากเปิดเส้นทางชะตาแบบใดในที่แห่งนี้หรือ?",
-      action2:
-        "เทพียิ้มอย่างอ่อนโยนพร้อมยื่นตัวเลือกให้คุณ",
+      action2: "เทพียิ้มอย่างอ่อนโยนพร้อมยื่นตัวเลือกให้คุณ",
       description:
         "AI Persona สำหรับเพลิดเพลินกับโรแมนติกประจำวันอันชวนใจเต้นกับตัวละครจากเทพปกรณัม พบเหตุการณ์พิเศษผ่านการเผชิญหน้ากับเหล่าทวยเทพหลากหลายองค์",
     },
@@ -1057,8 +1047,7 @@ const vi: typeof ko = {
     },
     representativeImage: {
       label: "Ảnh đại diện",
-      guide:
-        "Tối đa 5MB. Chỉ hỗ trợ tệp jpg, png, webp với tỷ lệ 1:1.3.",
+      guide: "Tối đa 5MB. Chỉ hỗ trợ tệp jpg, png, webp với tỷ lệ 1:1.3.",
       previewAlt: "Xem trước ảnh đại diện",
       upload: "Tải lên",
       invalidType: "Chỉ cho phép tệp ảnh jpg, png, webp.",
@@ -1117,7 +1106,8 @@ const vi: typeof ko = {
       guideCopyDescription:
         "Nhấn nút sao chép bên phải tài sản, sau đó dán thủ công để thêm.",
       guideDragTitle: "Đưa trực tiếp vào kịch bản",
-      guideDragDescription: "Bạn cũng có thể kéo tài sản trực tiếp vào kịch bản.",
+      guideDragDescription:
+        "Bạn cũng có thể kéo tài sản trực tiếp vào kịch bản.",
       guideCodeTitle: "Có thể thêm trực tiếp bằng văn bản",
       guideCodeDescription: "Bạn có thể tự nhập mã để thêm.",
       closeGuide: "Đóng hướng dẫn tài sản",
@@ -1223,8 +1213,7 @@ const vi: typeof ko = {
         "Một luồng sáng rực rỡ xoáy lên trước mắt, và một nữ thần xinh đẹp xuất hiện.",
       chat1: "Ta đã chờ ngươi, nhà thám hiểm mới của Evergreen.",
       chat2: "Ngươi muốn khai mở vận mệnh nào tại nơi này?",
-      action2:
-        "Nữ thần mỉm cười dịu dàng và đưa ra cho bạn những lựa chọn.",
+      action2: "Nữ thần mỉm cười dịu dàng và đưa ra cho bạn những lựa chọn.",
       description:
         "Đây là AI Persona cho bạn tận hưởng chuyện tình lãng mạn đời thường đầy rung động với những nhân vật trong thần thoại. Hãy trải nghiệm những sự kiện đặc biệt qua cuộc gặp gỡ với nhiều vị thần khác nhau.",
     },

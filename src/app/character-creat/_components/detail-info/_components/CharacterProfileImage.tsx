@@ -19,7 +19,9 @@ const MAX_PROFILE_IMAGE_SIZE = 5 * 1024 * 1024;
 
 const CharacterProfileImage = () => {
   const t = useTranslations("characterCreate.details");
-  const representativeT = useTranslations("characterCreate.representativeImage");
+  const representativeT = useTranslations(
+    "characterCreate.representativeImage",
+  );
   const { setValue, control } = useFormContext<CharacterCreateFormValues>();
   const preview = useWatch({ control, name: "characterProfileImage" });
   const { mutateAsync: uploadFile } = useFileUploadMutation();
@@ -142,14 +144,10 @@ const CharacterProfileImage = () => {
           }}
           className={cn(
             "absolute right-0 top-0 flex size-9 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-xl bg-brand/10 text-brand backdrop-blur-[2px] transition-transform group-hover:scale-105",
-            preview && "bg-[#FF383C]/10 text-font-error",
+            preview && "bg-danger-bg text-font-error",
           )}
         >
-          {preview ? (
-            <Close className="size-4" />
-          ) : (
-            <Plus className="size-4" />
-          )}
+          {preview ? <Close className="size-4" /> : <Plus className="size-4" />}
         </span>
       </label>
 

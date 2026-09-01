@@ -9,9 +9,7 @@ const MAX_ASSET_IMAGE_SIZE = 5 * 1024 * 1024;
 const deletedUniverseIds = new Set<string>();
 const mockUniverseDetails = new Map<string, UniverseDetailResponse>();
 
-const isUniverseMissing = (
-  universeId?: string,
-): universeId is undefined =>
+const isUniverseMissing = (universeId?: string): universeId is undefined =>
   !universeId || universeId === "999" || deletedUniverseIds.has(universeId);
 
 const createMockUniverseAssetImageUploadResponse = () => {
@@ -351,9 +349,7 @@ export const universeHandlers = [
       );
     }
 
-    return HttpResponse.json(
-      createMockUniverseAssetImageUploadResponse(),
-    );
+    return HttpResponse.json(createMockUniverseAssetImageUploadResponse());
   }),
 
   http.post(endpoint("/universe"), async ({ request }) => {

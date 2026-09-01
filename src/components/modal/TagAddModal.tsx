@@ -33,10 +33,12 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
   const { data: hashtagList } = useHashtagListQuery();
   const { control, setValue } = useFormContext<CharacterCreateFormValues>();
   const currentTagsWatch = useWatch({ control, name: "tagIds" });
-  const [localSelectedNames, setLocalSelectedNames] = useState<TagOption[]>(() => {
-    const currentTags = currentTagsWatch || [];
-    return currentTags.map((tag) => ({ id: tag.id, label: tag.label }));
-  });
+  const [localSelectedNames, setLocalSelectedNames] = useState<TagOption[]>(
+    () => {
+      const currentTags = currentTagsWatch || [];
+      return currentTags.map((tag) => ({ id: tag.id, label: tag.label }));
+    },
+  );
   const [searchKeyword, setSearchKeyword] = useState("");
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [closedFolderTitles, setClosedFolderTitles] = useState<string[]>([]);
@@ -88,7 +90,9 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
     // 검색어와 일치하는 태그는 기존 목록에서 빼지 않고, 상단의 별도 영역에만 모아 보여줍니다.
     return tagFolderSections
       .flatMap((folder) => folder.tags)
-      .filter((tag) => tag.label.toLowerCase().includes(normalizedSearchKeyword));
+      .filter((tag) =>
+        tag.label.toLowerCase().includes(normalizedSearchKeyword),
+      );
   }, [isSearchMode, normalizedSearchKeyword, tagFolderSections]);
 
   const commitSelectedTags = (nextTags: TagOption[]) => {
@@ -101,7 +105,9 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
   };
 
   const handleTagToggle = (tag: TagOption) => {
-    const isAlreadySelected = localSelectedNames.some((name) => name.id === tag.id);
+    const isAlreadySelected = localSelectedNames.some(
+      (name) => name.id === tag.id,
+    );
 
     if (isAlreadySelected) {
       commitSelectedTags(
@@ -166,7 +172,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
             type="text"
             value={searchKeyword}
             className={cn(
-              "body-4 h-10 w-full rounded-xl px-4 pl-10 text-font-1 outline-none transition-none placeholder:text-font-disabled",
+              "body-4 h-10 w-full rounded-xl px-4 pl-10 text-font-1 outline-none placeholder:text-font-disabled",
               shouldShowSearchPrefix && "pl-14",
               searchKeyword
                 ? "border border-transparent bg-card"
@@ -206,11 +212,9 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
                         type="button"
                         onClick={() => handleTagToggle(tag)}
                         className={cn(
-                          "body-6 flex h-7 items-center rounded-md border border-font-2 bg-dark px-2.5 text-font-1 transition-none hover:bg-card-hover",
-                          isSelected &&
-                            "border-brand bg-brand/10 font-semibold text-brand",
+                          "body-6 flex h-7 items-center rounded-md border border-font-2 bg-dark px-2.5 text-font-1 hover:bg-card-hover",
+                          isSelected && "border-brand bg-brand/10 text-brand",
                         )}
-                        style={{ transition: "none", animation: "none" }}
                       >
                         #{tag.label}
                       </button>
@@ -232,7 +236,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
                 <button
                   type="button"
                   onClick={() => toggleFolderOpen(folder.title)}
-                  className="flex h-6 w-full items-center justify-between text-left"
+                  className="flex h-6 w-full items-center justify-between text-left hover:text-font-1"
                 >
                   <span className="body-4 flex min-w-0 items-center gap-1.5 text-font-2">
                     <span className="truncate">
@@ -248,7 +252,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
                   </span>
                   <ArrowDown
                     className={cn(
-                      "size-4 shrink-0 text-font-2 transition-none",
+                      "size-4 shrink-0 text-font-2",
                       !isOpen && "-rotate-180",
                     )}
                   />
@@ -267,11 +271,10 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
                             type="button"
                             onClick={() => handleTagToggle(tag)}
                             className={cn(
-                              "body-6 flex h-7 items-center rounded-md border border-transparent bg-card px-2.5 text-font-2 transition-none hover:bg-card-hover",
+                              "body-6 flex h-7 items-center rounded-md border border-transparent bg-card px-2.5 text-font-2 hover:bg-card-hover",
                               isSelected &&
-                                "border-brand bg-brand/10 font-semibold text-brand",
+                                "border-brand bg-brand/10 text-brand",
                             )}
-                            style={{ transition: "none", animation: "none" }}
                           >
                             #{tag.label}
                           </button>
@@ -285,7 +288,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
           })}
 
           {!hasTags && (
-            <p className="w-full py-10 text-center text-xs text-font-disabled">
+            <p className="body-6 w-full py-10 text-center text-font-disabled">
               {t("empty")}
             </p>
           )}
@@ -293,12 +296,13 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
 
         <section className="mt-3 flex flex-col gap-3">
           <div className="body-6 flex items-center justify-between text-font-2">
-            <span>{t("selectedCount", { count: localSelectedNames.length })}</span>
+            <span>
+              {t("selectedCount", { count: localSelectedNames.length })}
+            </span>
             <button
               type="button"
               onClick={handleClearAll}
-              className="underline transition-none"
-              style={{ transition: "none", animation: "none" }}
+              className="underline hover:text-font-1"
             >
               {t("clearAll")}
             </button>
@@ -311,8 +315,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
                   <button
                     type="button"
                     onClick={() => handleTagToggle(tag)}
-                    className="body-6 flex h-8 items-center gap-1 rounded-md bg-brand/10 px-2.5 font-semibold text-brand transition-none"
-                    style={{ transition: "none", animation: "none" }}
+                    className="caption-1 flex h-8 items-center gap-1 rounded-md bg-brand/10 px-2.5 text-brand hover:bg-brand/20"
                   >
                     #{tag.label}
                     <Close className="size-3" />
@@ -327,8 +330,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
           <button
             type="button"
             onClick={() => openModal("TAG_SUGGESTIONS", {})}
-            className="flex flex-1 items-center justify-between rounded-xl bg-card p-3 text-xs text-font-2 transition-none hover:bg-card-hover"
-            style={{ transition: "none", animation: "none" }}
+            className="flex flex-1 items-center justify-between rounded-xl bg-card p-3 body-6 text-font-2 hover:bg-card-hover"
           >
             <div className="flex items-center gap-2">
               <Megaphone className="h-4 w-4" />

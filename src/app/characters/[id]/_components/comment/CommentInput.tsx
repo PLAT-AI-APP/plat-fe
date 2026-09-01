@@ -61,11 +61,13 @@ export const CommentInput = ({
           type="submit"
           disabled={Boolean(!text)}
           className={cn(
-            "w-fit rounded-[100px] bg-btn-hover px-4 py-1.5 text-font-disabled transition-all hover:bg-card-hover",
+            "w-fit rounded-full bg-btn-hover px-4 py-1.5 text-font-disabled transition-colors hover:bg-card-hover",
             text && "bg-card-hover",
           )}
         >
-          {isReplyMode ? t("characterDetail.reply") : t("characterDetail.submit")}
+          {isReplyMode
+            ? t("characterDetail.reply")
+            : t("characterDetail.submit")}
         </button>
       </div>
     </form>
