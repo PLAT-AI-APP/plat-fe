@@ -224,8 +224,13 @@ body {
   letter-spacing: -0.025em;
   line-height: 1.4;
   font-family:
-    "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
-    "Segoe UI", Roboto, sans-serif;
+    "Pretendard",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Apple SD Gothic Neo",
+    "Segoe UI",
+    Roboto,
+    sans-serif;
   white-space: pre-wrap;
 }
 
@@ -244,7 +249,18 @@ textarea {
  * 두되, Tailwind 유틸리티는 @layer 안에 있고 이 규칙은 레이어 밖이라
  * outline-none 보다 뒤에 적용된다.
  */
-:where(a, button, input, textarea, select, summary, [tabindex], [role="button"], [role="switch"], [role="option"]):focus-visible {
+:where(
+  a,
+  button,
+  input,
+  textarea,
+  select,
+  summary,
+  [tabindex],
+  [role="button"],
+  [role="switch"],
+  [role="option"]
+):focus-visible {
   outline: 2px solid var(--brand);
   outline-offset: 2px;
 }
@@ -264,8 +280,9 @@ textarea {
  */
 button {
   cursor: pointer;
-  transition-property: color, background-color, border-color, outline-color,
-    opacity, box-shadow, transform, filter;
+  transition-property:
+    color, background-color, border-color, outline-color, opacity, box-shadow,
+    transform, filter;
   transition-duration: var(--motion-base);
   transition-timing-function: var(--motion-ease-out);
 }
@@ -577,6 +594,34 @@ button {
   background-color: var(--bg-card-selected) !important;
   border: 1px solid transparent; /* 테두리가 줄어들며 8px로 두꺼워짐 */
   cursor: pointer;
+}
+
+/*
+ * 로딩 자리표시자.
+ *
+ * 스켈레톤이 컴포넌트마다 제각각이었다 — 어떤 건 animate-pulse, 어떤 건
+ * 아예 정적인 회색 박스, SkeletonCard 는 shimmer 가 통째로 주석 처리돼
+ * 있었다. 색도 bg-card-hover 와 bg-gray-700/50 이 섞여 있었다.
+ * 표현을 이 유틸 하나로 모은다.
+ *
+ * 색은 토큰을 쓰므로 라이트 모드에서도 보인다(예전에는 라이트에서
+ * --bg-card-hover 가 정의돼 있지 않아 자리표시자가 투명했다).
+ * 동작 줄이기 설정에서는 globals 의 prefers-reduced-motion 블록이
+ * 애니메이션을 멈춘다.
+ */
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@utility skeleton {
+  background-color: var(--bg-card-hover);
+  animation: skeleton-pulse 1.4s var(--motion-ease-in-out) infinite;
 }
 
 @utility no-scrollbar {

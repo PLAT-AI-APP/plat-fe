@@ -5,7 +5,7 @@ import { useCarousel } from "@/hooks/useCarousel";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import CharacterCard from "./character-card";
 import { CharacterCardSkeleton } from "./CharacterCardSkeleton";
 
@@ -30,6 +30,12 @@ interface CharacterShowcaseProps {
   currentTag?: string;
   layout?: "grid" | "carousel";
   selectedTags?: string | string[];
+  /**
+   * 목록을 아직 불러오는 중인지. 데이터는 부모가 가져오므로 로딩 여부도
+   * 부모만 정확히 안다. 예전에는 이 컴포넌트가 setTimeout(2000) 으로
+   * 로딩을 흉내 내, 데이터가 이미 있어도 2초간 스켈레톤이 떠 있었다.
+   */
+  isLoading?: boolean;
 }
 
 const CharacterShowcase = ({
@@ -44,26 +50,19 @@ const CharacterShowcase = ({
   currentTag,
   layout = "grid",
   selectedTags,
+  isLoading = false,
 }: CharacterShowcaseProps) => {
   const t = useTranslations("characterShowcase");
-  const [isLoading, setIsLoading] = useState(true);
-  const { viewportRef, scrollPrev, scrollNext } = useCarousel({
-    options: {
-      align: "start",
-      containScroll: "trimSnaps",
-      dragFree: true,
-      slidesToScroll: "auto",
-    },
-  });
+  const { viewportRef, scrollPrev, scrollNext, canScrollPrev, canScrollNext } =
+    useCarousel({
+      options: {
+        align: "start",
+        containScroll: "trimSnaps",
+        dragFree: true,
+        slidesToScroll: "auto",
+      },
+    });
   const isCarousel = layout === "carousel";
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   const displayChars = limit ? charArray.slice(0, limit) : charArray;
   const skeletonCount =
@@ -128,16 +127,18 @@ const CharacterShowcase = ({
           <button
             type="button"
             onClick={scrollPrev}
+            disabled={!canScrollPrev}
             aria-label={t("previousItems")}
-            className="opacity-25 hover:opacity-100 absolute left-[-18px] top-[122.5px] z-10 flex size-9 -translate-y-1/2 items-center justify-center rounded-2xl bg-overlay-font/12 p-2 text-font-0 backdrop-blur-[1.54px] transition-colors hover:bg-overlay-font/20"
+            className="absolute left-[-18px] top-[122.5px] z-10 flex size-9 -translate-y-1/2 items-center justify-center rounded-2xl bg-overlay-font/12 p-2 text-font-0 opacity-25 backdrop-blur-[1.54px] transition hover:bg-overlay-font/20 hover:opacity-100 disabled:pointer-events-none disabled:opacity-0"
           >
             <ArrowLeft className="size-5" />
           </button>
           <button
             type="button"
             onClick={scrollNext}
+            disabled={!canScrollNext}
             aria-label={t("nextItems")}
-            className="opacity-25 hover:opacity-100 absolute right-[-18px] top-[122.5px] z-10 flex size-9 -translate-y-1/2 items-center justify-center rounded-2xl bg-overlay-font/12 p-2 text-font-0 backdrop-blur-[1.54px] transition-colors hover:bg-overlay-font/20"
+            className="absolute right-[-18px] top-[122.5px] z-10 flex size-9 -translate-y-1/2 items-center justify-center rounded-2xl bg-overlay-font/12 p-2 text-font-0 opacity-25 backdrop-blur-[1.54px] transition hover:bg-overlay-font/20 hover:opacity-100 disabled:pointer-events-none disabled:opacity-0"
           >
             <ArrowRight className="size-5" />
           </button>
