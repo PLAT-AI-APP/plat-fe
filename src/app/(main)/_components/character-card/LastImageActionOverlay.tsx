@@ -21,7 +21,7 @@ const LastImageActionOverlay = ({ isVisible }: LastImageActionOverlayProps) => {
 
       <div
         className={cn(
-          "pointer-events-none absolute left-1/2 top-27.25 z-10 flex -translate-x-1/2 flex-col items-center gap-3 transition-all duration-200 ease-out",
+          "pointer-events-none absolute left-1/2 top-27.25 z-10 flex -translate-x-1/2 flex-col items-center gap-3 transition-opacity",
           isVisible ? "translate-y-0 opacity-100" : "translate-y-5 opacity-0",
         )}
       >

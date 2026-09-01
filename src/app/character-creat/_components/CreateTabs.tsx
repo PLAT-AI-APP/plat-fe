@@ -12,6 +12,7 @@ import Profile from "./profile";
 import Scenario from "./scenario";
 import Setting from "./setting";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
+import { SPRING_SNAPPY } from "@/constants/motion";
 
 export const TAB_IDS = [
   "profile",
@@ -98,9 +99,8 @@ const CreateTabs = ({
               key={tabId}
               ref={(el) => setTabRef(tabId, el)}
               onClick={() => setCurrentTabId(tabId)}
-              style={{ transition: "none", animation: "none" }}
               className={cn(
-                "flex h-10 cursor-pointer items-center justify-center whitespace-nowrap p-2.5 text-center text-[16px] font-normal leading-[1.5] text-font-2 outline-none transition-none duration-0",
+                "flex h-10 cursor-pointer items-center justify-center whitespace-nowrap p-2.5 text-center text-[16px] font-normal leading-[1.5] text-font-2 outline-none",
                 TAB_WIDTH_CLASS_BY_ID[tabId],
                 isActive && "font-semibold text-font-1",
               )}
@@ -116,7 +116,7 @@ const CreateTabs = ({
           className="absolute bottom-0 h-0.5 bg-brand"
           initial={false}
           animate={{ x: underlineRect.left, width: underlineRect.width }}
-          transition={{ type: "spring", stiffness: 500, damping: 40 }}
+          transition={SPRING_SNAPPY}
         />
       </nav>
 

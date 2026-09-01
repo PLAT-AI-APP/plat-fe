@@ -22,10 +22,10 @@ const SettingToggle = ({ checked, label, onChange }: SettingToggleProps) => {
     >
       <span
         className={cn(
-          "absolute top-0.75 flex size-7 items-center justify-center rounded-[15px] transition-all",
+          "absolute left-0.75 top-0.75 flex size-7 items-center justify-center rounded-[15px] transition",
           checked
-            ? "left-8.75 bg-brand text-on-brand"
-            : "left-0.75 bg-font-disabled text-font-1",
+            ? "translate-x-8 bg-brand text-on-brand"
+            : "translate-x-0 bg-font-disabled text-font-1",
         )}
       >
         {checked ? <Sun className="size-5" /> : <Moon className="size-5" />}

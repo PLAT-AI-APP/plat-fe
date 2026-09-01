@@ -75,6 +75,13 @@
   --elevation-popover: 0 8px 24px 0 rgba(16, 24, 40, 0.12);
   --elevation-modal: 0 24px 48px -12px rgba(16, 24, 40, 0.18);
   --elevation-card-heavy: 0 10px 40px 0 rgba(16, 24, 40, 0.16);
+
+  /* 모션 — 테마와 무관하다. Tailwind 쪽 별칭은 @theme inline 참고. */
+  --motion-fast: 150ms;
+  --motion-base: 200ms;
+  --motion-slow: 300ms;
+  --motion-ease-out: cubic-bezier(0.32, 0.72, 0, 1);
+  --motion-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 input:-webkit-autofill,
@@ -130,8 +137,16 @@ input:-webkit-autofill:active {
 }
 
 @theme inline {
-  /* hover 전환 기본 시간 */
-  --default-transition-duration: 0.2s;
+  /* 모션 스케일 — 값과 근거는 src/constants/motion.ts 에 함께 정의돼 있다.
+     @theme inline 은 값을 유틸리티에 인라인할 뿐 CSS 변수로 내보내지 않으므로,
+     원시 CSS 에서도 쓰는 값은 :root 의 --motion-* 를 참조한다. */
+  --default-transition-duration: var(--motion-base);
+  --default-transition-timing-function: var(--motion-ease-out);
+  --ease-out: var(--motion-ease-out);
+  --ease-in-out: var(--motion-ease-in-out);
+  --duration-fast: var(--motion-fast);
+  --duration-base: var(--motion-base);
+  --duration-slow: var(--motion-slow);
 
   /* 그림자 스케일 — card < popover < modal 순으로만 깊어진다 */
   --shadow-card: var(--elevation-card);
@@ -207,10 +222,35 @@ textarea {
   resize: none;
 }
 
+/*
+ * 버튼 기본 전환.
+ * transition-property 를 적지 않으면 기본값이 `all` 이라, 버튼이 리렌더로
+ * 크기나 위치가 바뀔 때 그 변화까지 애니메이션되어 흐물거린다. 실제로
+ * 그 흔들림을 막으려고 코드 곳곳에 transition-none 이 뿌려져 있었다.
+ * 색/투명도/변형만 전환 대상으로 한정한다.
+ * animation-duration 은 버튼 자체 keyframe 길이를 임의로 덮어써서 뺐다.
+ */
 button {
   cursor: pointer;
-  transition-duration: 0.2s;
-  animation-duration: 0.2s;
+  transition-property: color, background-color, border-color, outline-color,
+    opacity, box-shadow, transform, filter;
+  transition-duration: var(--motion-base);
+  transition-timing-function: var(--motion-ease-out);
+}
+
+/*
+ * 모션 최소화 설정을 켠 사용자에게는 전환·애니메이션을 사실상 제거한다.
+ * (framer-motion 쪽은 layout.tsx 의 MotionConfig reducedMotion="user" 가 담당)
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* Toast */

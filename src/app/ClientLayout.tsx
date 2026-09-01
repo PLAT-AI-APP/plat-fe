@@ -24,6 +24,7 @@ import {
   SKIP_AUTH_ALERT_ONCE_KEY,
   isProtectedPath,
 } from "@/constants/auth";
+import { TRANSITION } from "@/constants/motion";
 
 // 사이드바 없이 전용 화면을 쓰는 경로
 const HIDE_SIDEBAR_PATHS: string[] = [];
@@ -39,10 +40,7 @@ const sidebarOverlayMotion = {
 };
 
 /** 사이드바 펼침 속도에 맞춘 오버레이 전환 */
-const sidebarOverlayTransition = {
-  duration: 0.2,
-  ease: "easeOut",
-} as const;
+const sidebarOverlayTransition = TRANSITION;
 
 export default function ClientLayout({
   children,

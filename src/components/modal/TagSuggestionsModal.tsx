@@ -61,8 +61,7 @@ const TagSuggestionsModal = ({ onClose }: TagSuggestionsModalProps) => {
             type="button"
             onClick={onClose}
             aria-label={t("close")}
-            className="flex size-5.5 items-center justify-center rounded-lg transition-none hover:bg-btn-hover"
-            style={{ transition: "none", animation: "none" }}
+            className="flex size-5.5 items-center justify-center rounded-lg hover:bg-btn-hover"
           >
             <Close className="h-3.5 w-3.5 cursor-pointer" />
           </button>
@@ -98,8 +97,7 @@ const TagSuggestionsModal = ({ onClose }: TagSuggestionsModalProps) => {
           type="submit"
           isActive={Boolean(opinionValue && nameValue)}
           text={t("submit")}
-          className="mt-auto h-[42px] rounded-xl transition-none"
-          style={{ transition: "none", animation: "none" }}
+          className="mt-auto h-[42px] rounded-xl"
         />
       </form>
     </ModalLayout>

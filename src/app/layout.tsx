@@ -4,6 +4,7 @@ import "@/app/globals.css";
 import IntlProvider from "@/providers/IntlProvider";
 import ReactQueryProvider from "@/providers/ReactQueryProvider";
 import ThemeProvider from "@/providers/ThemeProvider";
+import MotionProvider from "@/providers/MotionProvider";
 import ToastManager from "@/components/toast/ToastManager";
 import ClientLayout from "./ClientLayout";
 import "pretendard/dist/web/static/pretendard.css";
@@ -91,18 +92,20 @@ export default function RootLayout({
             테마 복원 스크립트를 심는데, 목업이 켜지면 MSWProvider가 준비 전까지
             자식을 렌더하지 않아 그 스크립트까지 초기 마크업에서 빠진다. */}
         <ThemeProvider>
-          <MSWProvider>
-            <ReactQueryProvider>
-              <IntlProvider>
-                <NavigationGuardProvider>
-                  <Suspense fallback={null}>
-                    <ClientLayout>{children}</ClientLayout>
-                    <ToastManager />
-                  </Suspense>
-                </NavigationGuardProvider>
-              </IntlProvider>
-            </ReactQueryProvider>
-          </MSWProvider>
+          <MotionProvider>
+            <MSWProvider>
+              <ReactQueryProvider>
+                <IntlProvider>
+                  <NavigationGuardProvider>
+                    <Suspense fallback={null}>
+                      <ClientLayout>{children}</ClientLayout>
+                      <ToastManager />
+                    </Suspense>
+                  </NavigationGuardProvider>
+                </IntlProvider>
+              </ReactQueryProvider>
+            </MSWProvider>
+          </MotionProvider>
         </ThemeProvider>
       </body>
     </html>

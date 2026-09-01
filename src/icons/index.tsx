@@ -67,6 +67,8 @@ export { default as Asterisk } from "./Asterisk";
 export { default as ViewGrid } from "./ViewGrid";
 export { default as ViewList } from "./ViewList";
 
+export { default as LogoWordmark } from "./LogoWordmark";
+
 // 7. 기타 UI 요소
 export { default as Eye } from "./Eye";
 export { default as EyeOff } from "./EyeOff";

@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { ViewGrid, ViewList } from "@/icons";
 import { useChangeQueryString } from "@/hooks/useChangeQueryString";
+import { SPRING_SNAPPY } from "@/constants/motion";
 
 interface ViewToggleProps {
   viewMode: "list" | "grid";
@@ -31,7 +32,7 @@ const ViewToggle = ({ viewMode }: ViewToggleProps) => {
         className="absolute h-6.5 w-6.5 rounded-full bg-card-selected"
         initial={false}
         animate={{ x: viewMode === "list" ? 0 : 29 }}
-        transition={{ type: "spring", stiffness: 500, damping: 30 }}
+        transition={SPRING_SNAPPY}
       />
 
       <span className="relative z-10 flex flex-1 items-center justify-center">

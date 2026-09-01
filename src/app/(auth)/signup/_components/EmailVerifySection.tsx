@@ -168,7 +168,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
             placeholder="auth.login.emailPlaceholder"
             inputClassName={cn(
               "bg-darkest px-4 py-3 text-font-1",
-              "focus:border-brand transition-all",
+              "focus:border-brand transition-colors",
               errors.email && "border-font-accents focus:border-font-accents",
               isEmailVerified && "bg-card text-font-2",
             )}
@@ -245,7 +245,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
                   }}
                   inputClassName={cn(
                     "h-11 rounded-lg bg-darkest px-4 py-3 pr-16 text-sm text-font-1",
-                    "placeholder:text-font-2/50 focus:border-brand transition-all",
+                    "placeholder:text-font-2/50 focus:border-brand transition-colors",
                     errors.code &&
                       "border-font-accents focus:border-font-accents",
                   )}

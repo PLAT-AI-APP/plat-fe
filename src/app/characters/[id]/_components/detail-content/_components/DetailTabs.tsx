@@ -50,7 +50,7 @@ const DetailTabs = ({
               onChange(tab.id, tab.targetId);
             }}
             className={cn(
-              "flex h-11 items-center justify-center border-b-2 border-transparent text-font-2 transition-none",
+              "flex h-11 items-center justify-center border-b-2 border-transparent text-font-2",
               isCommentsTab ? "w-[104px]" : "w-[88px]",
               isActive && "border-brand text-font-1",
             )}

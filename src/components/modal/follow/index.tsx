@@ -26,6 +26,7 @@ import { FollowModalProps } from "@/type/modal";
 import { FOLLOW_TAB_IDS, FollowTab } from "./constants";
 import FollowEmptyState from "./FollowEmptyState";
 import FollowUserItem from "./FollowUserItem";
+import { SPRING_SNAPPY } from "@/constants/motion";
 
 const FollowModal = ({
   onClose,
@@ -166,7 +167,7 @@ const FollowModal = ({
               ref={(el) => setTabRef(tabId, el)}
               onClick={() => setActiveTabs(tabId)}
               className={cn(
-                "body-2 translate-y-0.5 cursor-pointer px-5 py-2.5 text-font-disabled transition-none",
+                "body-2 translate-y-0.5 cursor-pointer px-5 py-2.5 text-font-disabled",
                 activeTabs === tabId && "title-3 text-font-1",
               )}
             >
@@ -178,7 +179,7 @@ const FollowModal = ({
             className="absolute bottom-0 h-0.5 bg-brand"
             initial={false}
             animate={{ x: underlineRect.left, width: underlineRect.width }}
-            transition={{ type: "spring", stiffness: 500, damping: 40 }}
+            transition={SPRING_SNAPPY}
           />
         </nav>
 
@@ -193,7 +194,7 @@ const FollowModal = ({
       </header>
 
       {activeQuery.isLoading ? (
-        <div className="body-4 flex h-95 items-center justify-center text-font-2 transition-none">
+        <div className="body-4 flex h-95 items-center justify-center text-font-2">
           {commonT("loading")}
         </div>
       ) : listData.length === 0 ? (
@@ -208,7 +209,7 @@ const FollowModal = ({
       ) : (
         <ul
           ref={ulRef}
-          className="custom-scrollbar flex h-95 flex-col gap-1 overflow-y-auto transition-none"
+          className="custom-scrollbar flex h-95 flex-col gap-1 overflow-y-auto"
         >
           {listData.map((user) => {
             const isToggled = followChangeIds.includes(user.userId);

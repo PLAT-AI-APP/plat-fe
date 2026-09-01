@@ -5,6 +5,7 @@ import { useRef, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { useClickAway } from "@/hooks/useClickAway";
 import { cn } from "@/lib/utils";
+import { TRANSITION_FAST, popVariants } from "@/constants/motion";
 
 interface ModalProps {
   children: React.ReactNode;
@@ -28,17 +29,9 @@ const modalOverlayMotion = {
 };
 
 /** 모달 본문 등장 애니메이션 */
-const modalContentMotion = {
-  initial: { opacity: 0, scale: 0.86, y: 8 },
-  animate: { opacity: 1, scale: 1, y: 0 },
-  exit: { opacity: 0, scale: 0.86, y: 8 },
-};
+const modalContentMotion = popVariants;
 
-/** 빠르고 부드러운 모달 전환 */
-const modalTransition = {
-  duration: 0.18,
-  ease: "easeOut",
-} as const;
+const modalTransition = TRANSITION_FAST;
 
 export const ModalLayout = ({
   children,

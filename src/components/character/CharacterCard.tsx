@@ -34,7 +34,7 @@ const CharacterCard = ({
     <Link
       href={`/characters/${id}`}
       className={cn(
-        "group hover:cursor-pointer overflow-hidden rounded-xl flex flex-col shrink-0 transition-all duration-200 ease-in-out",
+        "group hover:cursor-pointer overflow-hidden rounded-xl flex flex-col shrink-0 transition",
         "w-full min-w-43.75",
         className,
       )}
@@ -56,7 +56,7 @@ const CharacterCard = ({
       </div>
 
       {/* 텍스트 영역 */}
-      <div className="px-1 pt-2 flex flex-col justify-between gap-1 flex-1 transition-all duration-200 ease-in-out">
+      <div className="px-1 pt-2 flex flex-col justify-between gap-1 flex-1 transition">
         <div className="flex flex-col gap-1">
           <p className="text-font-1 title-3 truncate">{char.name}</p>
           <p className="text-font-2 body-4 line-clamp-2">{char.dec}</p>

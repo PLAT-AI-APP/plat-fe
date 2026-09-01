@@ -198,7 +198,7 @@ const CharacterCard = ({
         className={cn("relative overflow-hidden bg-scrim", config.imageArea)}
       >
         <Image
-          className="object-cover transition-all duration-200 group-hover:scale-110"
+          className="object-cover transition-transform group-hover:scale-110"
           src={imageList[currentImgIndex]}
           alt={t("imageAlt", { title, index: currentImgIndex + 1 })}
           fill

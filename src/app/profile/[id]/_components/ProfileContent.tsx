@@ -12,6 +12,7 @@ import { useTabUnderline } from "@/hooks/useTabUnderline";
 import { Sort } from "@/icons";
 import { cn } from "@/lib/utils";
 import Header from "./Header";
+import { SPRING_SNAPPY } from "@/constants/motion";
 
 type ProfileTab = "character" | "wish";
 
@@ -161,7 +162,7 @@ export default function ProfileContent({ id }: { id: string }) {
               className="absolute bottom-0 h-0.5 bg-brand"
               initial={false}
               animate={{ x: underlineRect.left, width: underlineRect.width }}
-              transition={{ type: "spring", stiffness: 500, damping: 40 }}
+              transition={SPRING_SNAPPY}
             />
           </nav>
 

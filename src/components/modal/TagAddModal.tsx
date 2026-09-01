@@ -166,7 +166,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
             type="text"
             value={searchKeyword}
             className={cn(
-              "body-4 h-10 w-full rounded-xl px-4 pl-10 text-font-1 outline-none transition-none placeholder:text-font-disabled",
+              "body-4 h-10 w-full rounded-xl px-4 pl-10 text-font-1 outline-none placeholder:text-font-disabled",
               shouldShowSearchPrefix && "pl-14",
               searchKeyword
                 ? "border border-transparent bg-card"
@@ -206,11 +206,10 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
                         type="button"
                         onClick={() => handleTagToggle(tag)}
                         className={cn(
-                          "body-6 flex h-7 items-center rounded-md border border-font-2 bg-dark px-2.5 text-font-1 transition-none hover:bg-card-hover",
+                          "body-6 flex h-7 items-center rounded-md border border-font-2 bg-dark px-2.5 text-font-1 hover:bg-card-hover",
                           isSelected &&
                             "border-brand bg-brand/10 font-semibold text-brand",
                         )}
-                        style={{ transition: "none", animation: "none" }}
                       >
                         #{tag.label}
                       </button>
@@ -248,7 +247,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
                   </span>
                   <ArrowDown
                     className={cn(
-                      "size-4 shrink-0 text-font-2 transition-none",
+                      "size-4 shrink-0 text-font-2",
                       !isOpen && "-rotate-180",
                     )}
                   />
@@ -267,11 +266,10 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
                             type="button"
                             onClick={() => handleTagToggle(tag)}
                             className={cn(
-                              "body-6 flex h-7 items-center rounded-md border border-transparent bg-card px-2.5 text-font-2 transition-none hover:bg-card-hover",
+                              "body-6 flex h-7 items-center rounded-md border border-transparent bg-card px-2.5 text-font-2 hover:bg-card-hover",
                               isSelected &&
                                 "border-brand bg-brand/10 font-semibold text-brand",
                             )}
-                            style={{ transition: "none", animation: "none" }}
                           >
                             #{tag.label}
                           </button>
@@ -297,8 +295,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
             <button
               type="button"
               onClick={handleClearAll}
-              className="underline transition-none"
-              style={{ transition: "none", animation: "none" }}
+              className="underline"
             >
               {t("clearAll")}
             </button>
@@ -311,8 +308,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
                   <button
                     type="button"
                     onClick={() => handleTagToggle(tag)}
-                    className="body-6 flex h-8 items-center gap-1 rounded-md bg-brand/10 px-2.5 font-semibold text-brand transition-none"
-                    style={{ transition: "none", animation: "none" }}
+                    className="body-6 flex h-8 items-center gap-1 rounded-md bg-brand/10 px-2.5 font-semibold text-brand"
                   >
                     #{tag.label}
                     <Close className="size-3" />
@@ -327,8 +323,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
           <button
             type="button"
             onClick={() => openModal("TAG_SUGGESTIONS", {})}
-            className="flex flex-1 items-center justify-between rounded-xl bg-card p-3 text-xs text-font-2 transition-none hover:bg-card-hover"
-            style={{ transition: "none", animation: "none" }}
+            className="flex flex-1 items-center justify-between rounded-xl bg-card p-3 text-xs text-font-2 hover:bg-card-hover"
           >
             <div className="flex items-center gap-2">
               <Megaphone className="h-4 w-4" />

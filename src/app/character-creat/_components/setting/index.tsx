@@ -108,13 +108,13 @@ const Setting = () => {
           aria-checked={isPublicWatch}
           onClick={() => handleIsPublic(!isPublicWatch)}
           className={cn(
-            "relative flex h-6 w-11 items-center rounded-[100px] bg-card p-0.5 transition-colors duration-300 ease-out",
+            "relative flex h-6 w-11 items-center rounded-[100px] bg-card p-0.5 transition-colors",
             isPublicWatch && "bg-brand",
           )}
         >
           <span
             className={cn(
-              "size-5 rounded-full bg-font-1 transition-transform duration-300 ease-out",
+              "size-5 rounded-full bg-font-1 transition-transform",
               isPublicWatch ? "translate-x-5" : "translate-x-0",
             )}
             aria-hidden="true"
@@ -134,13 +134,13 @@ const Setting = () => {
           aria-checked={allowComments}
           onClick={() => handleAllowComments(!allowComments)}
           className={cn(
-            "relative h-6 w-[45px] rounded-[70.588px] bg-card transition-colors duration-300 ease-out",
+            "relative h-6 w-[45px] rounded-[70.588px] bg-card transition-colors",
             allowComments && "bg-brand",
           )}
         >
           <span
             className={cn(
-              "absolute left-[3px] top-1/2 size-[18px] -translate-y-1/2 rounded-full bg-font-1 transition-transform duration-300 ease-out",
+              "absolute left-[3px] top-1/2 size-[18px] -translate-y-1/2 rounded-full bg-font-1 transition-transform",
               allowComments && "translate-x-[21px]",
             )}
             aria-hidden="true"
@@ -164,12 +164,11 @@ const Setting = () => {
                 type="button"
                 onClick={() => handleTendency(item)}
                 className={cn(
-                  "body-4 flex h-10 items-center justify-center rounded-xl transition-none",
+                  "body-4 flex h-10 items-center justify-center rounded-xl",
                   isActive
                     ? "bg-brand/10 text-brand-dark"
                     : "bg-darkest text-font-2",
                 )}
-                style={{ transition: "none", animation: "none" }}
               >
                 {tendencyLabelByValue[item]}
               </button>
@@ -198,12 +197,11 @@ const Setting = () => {
                 type="button"
                 onClick={() => handleCategory(category)}
                 className={cn(
-                  "body-4 flex h-8 items-center rounded-[100px] border border-main bg-dark px-3 transition-none",
+                  "body-4 flex h-8 items-center rounded-[100px] border border-main bg-dark px-3",
                   isActive && "bg-brand/10 text-brand-dark",
                   selectedCategories.length === 0 && "text-font-1",
                   isInactive && "text-font-disabled",
                 )}
-                style={{ transition: "none", animation: "none" }}
               >
                 {categoryLabelByValue[category]}
               </button>
@@ -222,8 +220,7 @@ const Setting = () => {
           <button
             type="button"
             onClick={toggleIsTagModal}
-            className="body-4 flex h-11 items-center justify-between rounded-xl border border-main bg-darkest px-4 text-font-2 transition-none"
-            style={{ transition: "none", animation: "none" }}
+            className="body-4 flex h-11 items-center justify-between rounded-xl border border-main bg-darkest px-4 text-font-2"
           >
             <span>
               {isTagFull ? t("tagFullPlaceholder") : t("tagPlaceholder")}

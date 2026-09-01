@@ -90,7 +90,7 @@ const CommentItem = ({ comment }: Props) => {
           <div className="flex flex-col h-fit" id="comment-text-container">
             <p
               ref={textRef}
-              className={`transition-all body-4 ${
+              className={`transition-colors body-4 ${
                 !isExpanded ? "line-clamp-4" : ""
               } overflow-hidden whitespace-pre-wrap`}
             >

@@ -1,7 +1,5 @@
-import { Fold, User } from "@/icons";
-import Image from "next/image";
+import { Fold, LogoWordmark, User } from "@/icons";
 import React, { useRef } from "react";
-import logoImg from "../../../public/logo.svg";
 import { SearchBar } from "./SearchBar";
 import Profile from "./Profile";
 import Link from "next/link";
@@ -46,14 +44,9 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
         </button>
 
         <Link id="header-logo-link" href={"/"}>
-          <Image
+          <LogoWordmark
             id="header-logo-image"
-            src={logoImg}
-            width={122}
-            height={29}
-            priority
-            alt="plat logo"
-            className="min-w-30.5 h-7.25 shrink-0"
+            className="h-7.25 min-w-30.5 shrink-0 text-font-1"
           />
         </Link>
       </div>
@@ -71,7 +64,7 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
           {isLoggedIn && (
             <Link
               href={`/token-charge`}
-              className="flex cursor-pointer items-center gap-1 transition-all duration-200 ease-in-out hover:bg-btn-hover rounded-lg p-1.25 pr-2.5"
+              className="flex cursor-pointer items-center gap-1 transition-colors hover:bg-btn-hover rounded-lg p-1.25 pr-2.5"
             >
               <Token className="w-5 h-5" />
               <span id="user-point-value" className="body-2">

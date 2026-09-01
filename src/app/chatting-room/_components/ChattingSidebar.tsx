@@ -25,6 +25,7 @@ import { useModalStore } from "@/store/useModalStore";
 import { useWalletStore } from "@/store/useWalletStore";
 import ChattingAssetGalleryView from "./chatting-asset-gallery-view";
 import ChattingMemoryView from "./chatting-memory-view";
+import { TRANSITION } from "@/constants/motion";
 
 interface ChattingSidebarProps {
   toggleIsSidebar: () => void;
@@ -67,11 +68,7 @@ const sidebarDepthMotion = {
   exit: { x: 48, opacity: 0 },
 };
 
-/** 빠르고 부드러운 사이드바 전환 */
-const sidebarTransition = {
-  duration: 0.22,
-  ease: "easeOut",
-} as const;
+const sidebarTransition = TRANSITION;
 
 const SidebarMenuItem = ({
   icon: Icon,
@@ -125,8 +122,8 @@ const SidebarToggle = ({ isOn, onClick }: SidebarToggleProps) => {
     >
       <span
         className={cn(
-          "absolute top-0.5 flex size-5 items-center justify-center rounded-full transition-all",
-          isOn ? "left-[26px] bg-brand" : "left-0.5 bg-font-disabled",
+          "absolute left-0.5 top-0.5 flex size-5 items-center justify-center rounded-full transition",
+          isOn ? "translate-x-6 bg-brand" : "translate-x-0 bg-font-disabled",
         )}
       >
         <ToggleIcon className="size-4 text-on-brand" />
