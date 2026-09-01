@@ -20,7 +20,7 @@ const MenuTab = ({ currentTab }: { currentTab: string }) => {
     <nav
       id="category-navigation"
       aria-label={t("mainTabs.navigation")}
-      className="mt-7 flex w-full gap-2"
+      className="mt-6 flex w-full gap-2"
     >
       {categoryArray.map(({ id, name, icon: Icon }) => {
         const isActive = currentTab === id;

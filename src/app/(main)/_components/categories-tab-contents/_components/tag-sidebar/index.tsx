@@ -399,7 +399,7 @@ const TagSidebar = ({
   };
 
   return (
-    <aside className="sticky top-[0px] h-[calc(100vh-60px)] w-[300px] shrink-0 overflow-y-auto bg-dark no-scrollbar">
+    <aside className="sticky top-[0px] h-[calc(100vh-var(--header-height))] w-[300px] shrink-0 overflow-y-auto bg-dark no-scrollbar">
       {/* 검색 영역: 입력값은 폴더 태그 목록을 클라이언트에서 즉시 필터링합니다. */}
       <div className="px-5 py-4">
         <label className="relative block">

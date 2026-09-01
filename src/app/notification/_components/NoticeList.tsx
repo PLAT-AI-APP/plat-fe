@@ -66,7 +66,7 @@ const NoticeList = ({ currentFilter }: NoticeListProps) => {
           >
             <Link
               href={`/notification/${noticeId}`}
-              className="flex justify-between pt-3.75 px-2.5 pb-5"
+              className="flex justify-between pt-4 px-2.5 pb-5"
             >
               <div className="flex flex-col gap-1.5">
                 {/* 공지사항 분류 공지/업데이트/이벤트 */}

@@ -118,7 +118,7 @@ const CharacterItem = ({
             </div>
           </header>
 
-          <p className="body-6 line-clamp-1 whitespace-pre-line pr-5.5 text-font-2">
+          <p className="body-6 line-clamp-1 whitespace-pre-line pr-5 text-font-2">
             {description}
           </p>
 

@@ -75,7 +75,7 @@ const AddLanguageModal = ({ onClose }: AddLanguageModalProps) => {
         isActive={selectedCodes.length > 0}
         text={t("confirm")}
         onClick={onClose}
-        className="float-end h-11.5 min-w-25 px-5"
+        className="float-end h-11 min-w-25 px-5"
       />
     </ModalLayout>
   );

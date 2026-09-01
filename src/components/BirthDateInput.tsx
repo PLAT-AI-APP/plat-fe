@@ -138,11 +138,11 @@ export const BirthDateInput = React.forwardRef<
         {isEditMode && showCalendar && (
           <>
             <div
-              className="fixed inset-0 z-9998 bg-scrim/50 backdrop-blur-[2px]"
+              className="fixed inset-0 z-110 bg-scrim/50 backdrop-blur-[2px]"
               onClick={() => setShowCalendar(false)}
             />
 
-            <div className="fixed left-1/2 top-1/2 z-9999 -translate-x-1/2 -translate-y-1/2">
+            <div className="fixed left-1/2 top-1/2 z-111 -translate-x-1/2 -translate-y-1/2">
               <Calendar
                 className={slideClassName}
                 onActiveStartDateChange={handleActiveStartDateChange}

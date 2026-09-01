@@ -9,10 +9,10 @@ const SkeletonCharacterExperience = () => {
           <div className="size-14 bg-card-hover rounded-full" />
           <div className="size- inline-flex flex-col justify-start items-start gap-11">
             <div className="self-stretch flex flex-col justify-start items-start gap-6">
-              <div className="w-96 h-8 bg-card-hover rounded-[30px]" />
-              <div className="w-155.75 h-8 bg-card-hover rounded-[30px]" />
+              <div className="w-96 h-8 bg-card-hover rounded-3xl" />
+              <div className="w-155.75 h-8 bg-card-hover rounded-3xl" />
             </div>
-            <div className="w-155.75 h-48 bg-card-hover rounded-[20px]" />
+            <div className="w-155.75 h-48 bg-card-hover rounded-2xl" />
           </div>
         </div>
       </div>

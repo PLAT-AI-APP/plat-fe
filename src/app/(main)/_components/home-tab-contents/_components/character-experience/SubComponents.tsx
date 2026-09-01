@@ -5,7 +5,7 @@ import React from "react";
 export const CharacterAvatar = () => (
   <div
     data-property-1="P6"
-    className="size-10 relative bg-linear-225 from-brand to-font-error rounded-[100px] overflow-hidden shrink-0"
+    className="size-10 relative bg-linear-225 from-brand to-font-error rounded-full overflow-hidden shrink-0"
   >
     <div className="w-8 h-9 left-[33.51px] top-[16.50px] absolute origin-top-left rotate-[142.81deg] bg-brand-dark rounded-full" />
     <div className="size-[1.53px] left-[18.29px] top-[21.02px] absolute bg-font-2 rounded-full" />
@@ -49,7 +49,7 @@ export const ActionFooter = ({ isActive = true }: { isActive: boolean }) => (
              rounded-br-2xl backdrop-blur-[1.5px]
              mask-[linear-gradient(to_bottom,transparent,black_20%)]"
     />
-    <div className="self-stretch flex flex-col justify-start items-center gap-1.25 z-30">
+    <div className="self-stretch flex flex-col justify-start items-center gap-1 z-30">
       <div className="self-stretch inline-flex justify-center items-center gap-1">
         <p className="body-5 text-center justify-start text-font-1">
           {isActive

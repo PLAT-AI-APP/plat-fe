@@ -10,9 +10,9 @@ const CharacterCreatePrompt = () => {
   return (
     <section
       aria-labelledby="character-create-prompt-title"
-      className="flex w-full flex-col items-center justify-center gap-7 pb-18"
+      className="flex w-full flex-col items-center justify-center gap-7 pb-12"
     >
-      <div className="flex w-full flex-col items-center gap-2.75 text-center">
+      <div className="flex w-full flex-col items-center gap-3 text-center">
         <p className="body-2 w-full text-font-2">
           {t("createPromptCaption")}
         </p>

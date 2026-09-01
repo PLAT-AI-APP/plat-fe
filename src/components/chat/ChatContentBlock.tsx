@@ -153,7 +153,7 @@ const ChatContentBlock = ({
           <button
             type="button"
             onClick={onDelete}
-            className="flex size-7 items-center justify-center rounded-[9px] bg-card p-1.5 text-font-2 transition-colors hover:bg-btn-hover"
+            className="flex size-7 items-center justify-center rounded-lg bg-card p-1.5 text-font-2 transition-colors hover:bg-btn-hover"
             aria-label={t("chatUI.deleteResponse")}
           >
             <ChatTrash className="size-4" />

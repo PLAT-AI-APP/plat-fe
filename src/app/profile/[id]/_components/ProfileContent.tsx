@@ -119,7 +119,7 @@ export default function ProfileContent({ id }: { id: string }) {
   const displayArray = activeTab === "character" ? CharArray : WishArray;
 
   return (
-    <article className="@container mx-auto flex w-[1200px] max-w-full flex-col gap-11.5 pt-7.5 pb-11.25">
+    <article className="@container mx-auto flex w-[1200px] max-w-full flex-col gap-10 pt-6 pb-10">
       <Header userId={id} />
 
       <section

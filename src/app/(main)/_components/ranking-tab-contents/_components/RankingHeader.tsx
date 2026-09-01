@@ -25,7 +25,7 @@ const PeriodPills = () => {
             <Link
               href={{ query: { tab: "ranking", period: id } }}
               className={cn(
-                "body-4 flex items-center justify-center whitespace-nowrap rounded-[20px] px-4 py-2 transition-colors",
+                "body-4 flex items-center justify-center whitespace-nowrap rounded-2xl px-4 py-2 transition-colors",
                 isActive
                   ? "bg-font-1 text-font-4"
                   : "text-font-1 bg-card-selected",

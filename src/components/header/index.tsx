@@ -29,10 +29,10 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
   return (
     <header
       id="main-header"
-      className="h-15 flex items-center justify-between px-5 sticky top-0 bg-dark z-20"
+      className="h-(--header-height) flex items-center justify-between px-5 sticky top-0 bg-dark z-20"
     >
       {/* 왼쪽 영역: 사이드바 토글 및 로고 */}
-      <div id="header-left-section" className="flex gap-3.75 items-center">
+      <div id="header-left-section" className="flex gap-4 items-center">
         <button
           id="sidebar-toggle-button"
           type="button"
@@ -64,7 +64,7 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
           {isLoggedIn && (
             <Link
               href={`/token-charge`}
-              className="flex cursor-pointer items-center gap-1 transition-colors hover:bg-btn-hover rounded-lg p-1.25 pr-2.5"
+              className="flex cursor-pointer items-center gap-1 transition-colors hover:bg-btn-hover rounded-lg p-1 pr-2.5"
             >
               <Token className="w-5 h-5" />
               <span id="user-point-value" className="body-2">

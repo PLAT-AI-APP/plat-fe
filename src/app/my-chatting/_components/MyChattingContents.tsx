@@ -41,7 +41,7 @@ const MyChattingContents = () => {
   const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   return (
-    <section className="mx-auto flex w-full max-w-[860px] flex-col gap-8 pt-7.5">
+    <section className="mx-auto flex w-full max-w-[860px] flex-col gap-8 pt-6">
       <header className="flex items-end justify-between">
         <h1 className="heading-2 text-font-1">{t("myChatting.title")}</h1>
 

@@ -128,7 +128,7 @@ const SidebarSummary = ({
         </div>
       </section>
 
-      <div className="flex gap-[7px] overflow-hidden">
+      <div className="flex gap-2 overflow-hidden">
         {character.images.slice(0, 5).map((image, index) => (
           <button
             key={image.id}

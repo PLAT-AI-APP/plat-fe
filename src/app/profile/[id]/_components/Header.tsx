@@ -33,14 +33,14 @@ const StatItem = ({ label, value, onClick }: StatItemProps) => {
   );
 
   if (!onClick) {
-    return <div className="flex items-center gap-[7px]">{content}</div>;
+    return <div className="flex items-center gap-2">{content}</div>;
   }
 
   return (
     <button
       type="button"
       onClick={onClick}
-      className="flex items-center gap-[7px]"
+      className="flex items-center gap-2"
     >
       {content}
     </button>
@@ -207,7 +207,7 @@ const Header = ({ userId }: HeaderProps) => {
               onClick={handleFollowToggle}
               disabled={isFollowPending}
               className={cn(
-                "title-3 flex h-11 items-center justify-center rounded-[20px] px-4 py-2.5",
+                "title-3 flex h-11 items-center justify-center rounded-2xl px-4 py-2.5",
                 isFollowing
                   ? "bg-main text-font-1"
                   : "bg-font-1 text-dark",

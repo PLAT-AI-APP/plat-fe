@@ -29,7 +29,7 @@ const Header = ({ id }: HeaderProps) => {
       className="flex w-full items-center justify-between gap-4"
     >
       <section id="profile-info-summary" className="flex flex-col gap-4">
-        <div className="flex gap-5.25">
+        <div className="flex gap-5">
           <aside className="shrink-0">
             <Image
               src={profileImage || "/public/p1.png"}

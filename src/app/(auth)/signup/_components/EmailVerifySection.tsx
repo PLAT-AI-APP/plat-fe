@@ -223,7 +223,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
             transition={{ duration: 0.4, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <div className="mt-5.25 flex flex-col gap-2">
+            <div className="mt-5 flex flex-col gap-2">
               <div className="flex items-start gap-2">
                 <SmartInput
                   {...register("code", {

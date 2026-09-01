@@ -104,7 +104,7 @@ const SignupForm = () => {
         <p className="body-4 text-font-2">{t("auth.signup.subtitle")}</p>
       </header>
 
-      <fieldset className="flex flex-col gap-5.25">
+      <fieldset className="flex flex-col gap-5">
         <NicknameField />
         <EmailVerifySection onVerifiedChange={setIsEmailVerified} />
         <PasswordField />

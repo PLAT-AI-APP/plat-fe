@@ -48,7 +48,7 @@ const FollowUserItem = ({
         onClick={() => onToggleFollow(user.userId, isFollowing)}
         disabled={isPending}
         className={cn(
-          "title-6 flex min-w-[96px] shrink-0 items-center justify-center whitespace-nowrap rounded-[100px] px-4 py-1 text-left",
+          "title-6 flex min-w-[96px] shrink-0 items-center justify-center whitespace-nowrap rounded-full px-4 py-1 text-left",
           isFollowing ? "bg-main" : "bg-font-1 text-dark",
           isPending && "cursor-wait opacity-70",
         )}

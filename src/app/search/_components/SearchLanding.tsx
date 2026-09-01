@@ -101,7 +101,7 @@ const SearchLanding = () => {
   };
 
   return (
-    <section className="mx-auto flex w-full max-w-[1272px] flex-col gap-14 px-9 pt-5 pb-20">
+    <section className="mx-auto flex w-full max-w-[1272px] flex-col gap-10 px-9 pt-5 pb-20">
       <PageTitle messageKey="pageTitles.search" />
 
       <SearchQueryBar
@@ -114,7 +114,7 @@ const SearchLanding = () => {
         onClearAll={clearAll}
       />
 
-      <div className="flex flex-col gap-4.5">
+      <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between whitespace-nowrap">
           <h2 className="title-1 text-font-0">{t("searchLanding.liveSearchTitle")}</h2>
           <span className="body-5 text-font-2">{updatedAt}</span>
@@ -127,8 +127,8 @@ const SearchLanding = () => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-5.75">
-        <div className="flex flex-col gap-4.5">
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between whitespace-nowrap">
             <h2 className="title-1 text-font-0">
               {t("searchLanding.popularCharactersTitle")}

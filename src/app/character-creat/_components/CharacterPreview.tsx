@@ -167,7 +167,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
   };
 
   return (
-    <section className="flex h-[919px] max-h-[calc(100vh-145px)] w-[693px] shrink-0 flex-col gap-[66px] rounded-3xl bg-darker p-4">
+    <section className="flex h-[919px] max-h-[calc(100vh-145px)] w-[693px] shrink-0 flex-col gap-12 rounded-3xl bg-darker p-4">
       <header className="flex h-12 shrink-0 items-center justify-between rounded-2xl bg-darkest px-4 py-3">
         <strong className="title-3 truncate text-font-1">
           {scenarioName ||
@@ -233,7 +233,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
               type="button"
               onClick={() => handleCurrentMode("action")}
               className={cn(
-                "body-4 flex h-8 items-center justify-center gap-1.5 rounded-[100px] border border-main bg-dark py-1.5 pl-2.5 pr-3 text-font-2",
+                "body-4 flex h-8 items-center justify-center gap-1.5 rounded-full border border-main bg-dark py-1.5 pl-2.5 pr-3 text-font-2",
                 currentMode === "action" && "border-brand text-brand",
               )}
             >
@@ -245,7 +245,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
               type="button"
               onClick={() => setCurrentMode("chat")}
               className={cn(
-                "body-4 flex h-8 items-center justify-center gap-1.5 rounded-[100px] border border-main bg-dark py-1.5 pl-2.5 pr-3 text-font-2",
+                "body-4 flex h-8 items-center justify-center gap-1.5 rounded-full border border-main bg-dark py-1.5 pl-2.5 pr-3 text-font-2",
                 currentMode === "chat" && "border-brand text-brand",
               )}
             >
@@ -267,7 +267,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
               type="button"
               onClick={() => setCurrentMode("userChat")}
               className={cn(
-                "body-4 flex h-8 items-center justify-center gap-1.5 rounded-[100px] border border-main bg-dark py-1.5 pl-2.5 pr-3 text-font-2",
+                "body-4 flex h-8 items-center justify-center gap-1.5 rounded-full border border-main bg-dark py-1.5 pl-2.5 pr-3 text-font-2",
                 currentMode === "userChat" && "border-brand text-brand",
               )}
             >

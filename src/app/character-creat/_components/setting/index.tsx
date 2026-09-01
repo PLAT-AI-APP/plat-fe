@@ -108,7 +108,7 @@ const Setting = () => {
           aria-checked={isPublicWatch}
           onClick={() => handleIsPublic(!isPublicWatch)}
           className={cn(
-            "relative flex h-6 w-11 items-center rounded-[100px] bg-card p-0.5 transition-colors",
+            "relative flex h-6 w-11 items-center rounded-full bg-card p-0.5 transition-colors",
             isPublicWatch && "bg-brand",
           )}
         >
@@ -134,7 +134,7 @@ const Setting = () => {
           aria-checked={allowComments}
           onClick={() => handleAllowComments(!allowComments)}
           className={cn(
-            "relative h-6 w-[45px] rounded-[70.588px] bg-card transition-colors",
+            "relative h-6 w-[45px] rounded-full bg-card transition-colors",
             allowComments && "bg-brand",
           )}
         >
@@ -197,7 +197,7 @@ const Setting = () => {
                 type="button"
                 onClick={() => handleCategory(category)}
                 className={cn(
-                  "body-4 flex h-8 items-center rounded-[100px] border border-main bg-dark px-3",
+                  "body-4 flex h-8 items-center rounded-full border border-main bg-dark px-3",
                   isActive && "bg-brand/10 text-brand-dark",
                   selectedCategories.length === 0 && "text-font-1",
                   isInactive && "text-font-disabled",

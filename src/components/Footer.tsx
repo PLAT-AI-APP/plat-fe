@@ -15,7 +15,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer id="main-footer" className="flex flex-col gap-4 p-5 pb-18">
+    <footer id="main-footer" className="flex flex-col gap-4 p-5 pb-12">
       <nav id="footer-navigation" aria-label={t("footer.menu")}>
         <ul id="footer-menu-list" className="m-0 flex list-none gap-3 p-0">
           {menuArray.map((menu) => (

@@ -32,7 +32,7 @@ const FilterTab = ({ currentFilter }: FilterTabProps) => {
             <li
               key={id}
               className={cn(
-                "cursor-pointer rounded-[100px] bg-card px-3 py-1.5 hover:bg-card-hover",
+                "cursor-pointer rounded-full bg-card px-3 py-1.5 hover:bg-card-hover",
                 isActive && "bg-card-selected",
               )}
             >

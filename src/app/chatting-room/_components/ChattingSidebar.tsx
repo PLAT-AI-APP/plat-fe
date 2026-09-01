@@ -113,7 +113,7 @@ const SidebarToggle = ({ isOn, onClick }: SidebarToggleProps) => {
       type="button"
       onClick={onClick}
       className={cn(
-        "relative h-6 w-12 rounded-[22.588px] border transition-colors",
+        "relative h-6 w-12 rounded-full border transition-colors",
         isOn
           ? "border-brand/40 bg-brand-opacity-2"
           : "border-main/40 bg-darkest",

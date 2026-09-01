@@ -156,7 +156,7 @@ const SmartInput = forwardRef<
           {isTextarea && (
             <div
               className={cn(
-                "relative flex rounded-xl bg-darkest px-4 pb-7.25 pt-3",
+                "relative flex rounded-xl bg-darkest px-4 pb-7 pt-3",
                 isBorder && "border border-main",
                 isFocused && "border-brand-dark bg-brand-opacity-3",
                 hasError && "border-font-accents",

@@ -325,7 +325,7 @@ export default function ClientLayout({
         id="main-container"
         className={cn(
           "flex flex-row overflow-hidden",
-          isHeaderHidden ? "h-screen" : "h-[calc(100vh-60px)]",
+          isHeaderHidden ? "h-screen" : "h-[calc(100vh-var(--header-height))]",
         )}
       >
         {!isSidebarHidden && (

@@ -200,14 +200,14 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
         <div className="body-4 flex flex-col gap-3 p-2">
           <div
             onClick={() => handleLoginBtn("KAKAO")}
-            className="flex cursor-pointer items-center justify-center relative body-4 text-center h-11.5 rounded-lg bg-[#FEE500] w-full py-2 text-scrim"
+            className="flex cursor-pointer items-center justify-center relative body-4 text-center h-11 rounded-lg bg-[#FEE500] w-full py-2 text-scrim"
           >
             <Kakao className="absolute w-5.5 h-5.5 top-1/2 left-7.5 -translate-y-1/2" />
             {t("loginWithKakao")}
           </div>
           <div
             onClick={() => handleLoginBtn("GOOGLE")}
-            className="flex cursor-pointer items-center justify-center relative body-4 text-center h-11.5 rounded-lg bg-font-1 w-full py-2 text-font-4"
+            className="flex cursor-pointer items-center justify-center relative body-4 text-center h-11 rounded-lg bg-font-1 w-full py-2 text-font-4"
           >
             <Google className="absolute w-5.5 h-5.5 top-1/2 left-7.5 -translate-y-1/2" />
             {t("loginWithGoogle")}
@@ -215,7 +215,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
           <div
             ref={loginModalBtnRef}
             onClick={() => handleLoginBtn("LOGIN")}
-            className="flex cursor-pointer items-center justify-center relative body-4 text-center h-11.5 rounded-lg bg-card w-full py-2 text-font-2"
+            className="flex cursor-pointer items-center justify-center relative body-4 text-center h-11 rounded-lg bg-card w-full py-2 text-font-2"
           >
             {t("loginWithOther")}
           </div>

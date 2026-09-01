@@ -82,7 +82,7 @@ const AssetGuidePanel = () => {
         </button>
       </header>
 
-      <div className="mt-6 flex flex-col gap-[18px]">
+      <div className="mt-6 flex flex-col gap-4">
         {GUIDE_ITEMS.map(({ type, titleKey, descriptionKey }) => (
           <section key={type} className="flex items-center gap-4">
             <div

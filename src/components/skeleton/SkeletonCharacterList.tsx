@@ -7,12 +7,12 @@ const SkeletonCharacterList = () => {
 
       <div className="flex flex-col justify-between">
         <div className="flex flex-col gap-2">
-          <div className="h-5 w-33.75 rounded-[100px] bg-card-hover"></div>
+          <div className="h-5 w-33.75 rounded-full bg-card-hover"></div>
 
-          <p className="h-5 w-62.5 rounded-[100px] bg-card-hover"></p>
+          <p className="h-5 w-62.5 rounded-full bg-card-hover"></p>
         </div>
 
-        <div className="h-5 w-20 rounded-[100px] bg-card-hover"></div>
+        <div className="h-5 w-20 rounded-full bg-card-hover"></div>
       </div>
     </article>
   );

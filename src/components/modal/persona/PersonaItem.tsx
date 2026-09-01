@@ -73,7 +73,7 @@ const PersonaItem = ({
               {isDefault && (
                 <span
                   className={cn(
-                    "caption-2 shrink-0 rounded-lg px-1.5 py-0.75 text-brand",
+                    "caption-2 shrink-0 rounded-lg px-1.5 py-1 text-brand",
                     isDimmed ? "bg-card" : "bg-dark",
                   )}
                 >

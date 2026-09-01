@@ -61,7 +61,7 @@ export const CommentInput = ({
           type="submit"
           disabled={Boolean(!text)}
           className={cn(
-            "w-fit rounded-[100px] bg-btn-hover px-4 py-1.5 text-font-disabled transition-colors hover:bg-card-hover",
+            "w-fit rounded-full bg-btn-hover px-4 py-1.5 text-font-disabled transition-colors hover:bg-card-hover",
             text && "bg-card-hover",
           )}
         >

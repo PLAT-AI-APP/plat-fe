@@ -76,6 +76,20 @@
   --elevation-modal: 0 24px 48px -12px rgba(16, 24, 40, 0.18);
   --elevation-card-heavy: 0 10px 40px 0 rgba(16, 24, 40, 0.16);
 
+  /* 상단 헤더 높이. 본문 영역이 calc(100vh - 이 값) 으로 높이를 잡으므로
+     헤더 크기를 바꿀 때 반드시 여기 하나만 고치면 되도록 모아 둔다. */
+  --header-height: 56px;
+
+  /*
+   * 겹침 순서(z-index).
+   * 유틸리티로 직접 쓰지는 않지만, 새 오버레이를 만들 때 어느 값을 골라야
+   * 하는지 한곳에서 알 수 있도록 층을 적어 둔다.
+   *   10~30  : 화면 안 요소(헤더 20, 사이드바 오버레이 30)
+   *   100/101: 모달 배경 / 모달 본문
+   *   110/111: 모달 위에 다시 뜨는 것(날짜 선택기 등)
+   *   200    : toast — 항상 최상단
+   */
+
   /* 모션 — 테마와 무관하다. Tailwind 쪽 별칭은 @theme inline 참고. */
   --motion-fast: 150ms;
   --motion-base: 200ms;
@@ -154,11 +168,8 @@ input:-webkit-autofill:active {
   --shadow-popover: var(--elevation-popover);
   --shadow-modal: var(--elevation-modal);
 
-  /* 모서리 스케일 — chip < field < card < modal */
-  --radius-chip: 8px;
-  --radius-field: 12px;
-  --radius-card: 16px;
-  --radius-modal: 20px;
+  /* 모서리는 Tailwind 기본 스케일을 그대로 쓴다.
+     rounded-lg(8) < rounded-xl(12) < rounded-2xl(16) < rounded-3xl(24) */
 
   --color-font-0: var(--font-0);
   --color-font-1: var(--font-1);
@@ -261,7 +272,7 @@ button {
   position: fixed;
   top: 40px;
   left: 50%;
-  z-index: 999999999;
+  z-index: 200;
 }
 
 .app-toast-s {

@@ -124,7 +124,7 @@ const AssetItem = ({ id, index, remove }: AssetItemProps) => {
             <div className="flex min-w-0 flex-1 gap-3">
               <label
                 htmlFor={`asset-image-${index}`}
-                className="relative flex size-[73px] shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-[10px] bg-card opacity-80"
+                className="relative flex size-[73px] shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-xl bg-card opacity-80"
               >
                 {assetImage ? (
                   <Image

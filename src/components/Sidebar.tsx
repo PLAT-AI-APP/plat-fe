@@ -137,7 +137,7 @@ const Sidebar = ({ isFolded = false, onFoldToggle }: SidebarProps) => {
                     initial={false}
                     transition={SPRING_SOFT}
                     className={cn(
-                      "relative flex h-11.5 cursor-pointer items-center overflow-hidden rounded-lg transition-colors",
+                      "relative flex h-10 cursor-pointer items-center overflow-hidden rounded-lg transition-colors",
                       isActive
                         ? "bg-brand/10"
                         : "bg-transparent hover:bg-btn-hover",

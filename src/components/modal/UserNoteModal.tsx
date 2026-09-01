@@ -39,7 +39,7 @@ const UserNoteModal = ({ onClose }: UserNoteModalProps) => {
     <ModalLayout
       onClose={onClose}
       hasBackground
-      className="top-1/2 left-1/2 h-fit w-[450px] max-w-[calc(100vw-32px)] -translate-x-1/2 -translate-y-1/2 rounded-[24px] p-5"
+      className="top-1/2 left-1/2 h-fit w-[450px] max-w-[calc(100vw-32px)] -translate-x-1/2 -translate-y-1/2 rounded-3xl p-5"
     >
       <form
         className="flex w-full flex-col items-end gap-9"
@@ -84,7 +84,7 @@ const UserNoteModal = ({ onClose }: UserNoteModalProps) => {
           type="submit"
           isActive={Boolean(noteValue?.trim())}
           text={commonT("save")}
-          className="h-11.5 w-25 rounded-xl"
+          className="h-11 w-25 rounded-xl"
         />
       </form>
     </ModalLayout>

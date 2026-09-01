@@ -27,7 +27,7 @@ const AiSuggestedChat = () => {
     <section className="flex gap-5">
       <Pen size={24} className="size-6 shrink-0 text-font-2" />
 
-      <ul className="flex w-full max-w-[500px] flex-col gap-[9px]">
+      <ul className="flex w-full max-w-[500px] flex-col gap-2">
         {MOCK_AI_RESPONSES.map((res, index) => (
           <li
             key={res.id}

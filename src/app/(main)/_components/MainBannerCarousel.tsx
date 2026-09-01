@@ -83,7 +83,7 @@ export function MainBannerCarousel() {
                     {banner.tags.map((tag, i) => (
                       <li
                         key={i}
-                        className="px-2 py-1 bg-scrim/50 rounded-[5px] backdrop-blur-[2px]"
+                        className="px-2 py-1 bg-scrim/50 rounded-md backdrop-blur-[2px]"
                       >
                         <span className="body-4 text-brand">
                           {tag}

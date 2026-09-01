@@ -91,7 +91,7 @@ const Scenario = ({
   };
 
   return (
-    <section className="flex flex-col gap-6.5">
+    <section className="flex flex-col gap-6">
       <header className="flex flex-col">
         <p className="title-3">{t("title")}</p>
         <p className="body-5 text-font-2">{t("guide")}</p>
@@ -114,7 +114,7 @@ const Scenario = ({
               key={id}
               onClick={() => !isDrag && selectScenario(i)}
               className={cn(
-                "body-4 flex h-8 shrink-0 items-center rounded-[100px] bg-card px-3 text-font-2",
+                "body-4 flex h-8 shrink-0 items-center rounded-full bg-card px-3 text-font-2",
                 activeScenarioIndex === i
                   ? "bg-brand/10 text-brand-dark"
                   : "hover:bg-card-hover",

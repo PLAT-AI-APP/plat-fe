@@ -69,7 +69,7 @@ const WithdrawalContents = () => {
 
   return (
     <section className="flex min-h-full w-full items-center justify-center bg-dark px-5 py-16">
-      <div className="flex w-full max-w-148 flex-col gap-18">
+      <div className="flex w-full max-w-148 flex-col gap-12">
         <h1 className="heading-2 text-font-1">
           {t("withdrawalPage.title")}
         </h1>
