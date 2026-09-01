@@ -22,7 +22,7 @@ const ChatCountBadge = ({
       className={cn(
         "inline-flex items-center justify-center gap-1",
         variant === "floating" &&
-          "absolute right-[13.7px] top-4.25 z-20 w-13.5 rounded-lg bg-card px-1 py-0.5",
+          "absolute right-[13.7px] top-4.25 z-20 min-w-13.5 rounded-lg bg-card px-1 py-0.5",
       )}
     >
       <div
