@@ -315,6 +315,13 @@ const onPlainResponseError = (
   });
 };
 
+// plainAxios는 재시도 로직은 타지 않지만, 에러 메시지 언어는 다른 인스턴스와 동일하게 맞춥니다.
+plainAxios.interceptors.request.use((config) => {
+  if (typeof window !== "undefined") {
+    config.headers["Accept-Language"] = useLocaleStore.getState().locale;
+  }
+  return config;
+});
 plainAxios.interceptors.response.use(onResponseSuccess, onPlainResponseError);
 
 axiosInstance.interceptors.request.use(onRequest);
