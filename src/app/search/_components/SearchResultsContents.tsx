@@ -13,6 +13,7 @@ import {
 } from "./dummyData";
 import SearchQueryBar from "./SearchQueryBar";
 import UserResultCard from "./UserResultCard";
+import PageTitle from "@/components/PageTitle";
 
 type SearchTab = "all" | "character" | "world" | "user";
 
@@ -94,6 +95,8 @@ const SearchResultsContents = ({
     // 카드 6개(186.67px) + 간격 5개(16px) ≈ 1200px가 한 줄에 들어가도록
     // 좌우 패딩(px-9=72px)을 더한 폭으로 컨테이너를 잡습니다.
     <section className="mx-auto flex w-full max-w-[1272px] flex-col gap-6.5 px-9 pt-5">
+      <PageTitle messageKey="pageTitles.search" />
+
       <SearchQueryBar
         queryDraft={queryDraft}
         onQueryDraftChange={setQueryDraft}
@@ -117,7 +120,7 @@ const SearchResultsContents = ({
           >
             <span
               className={cn(
-                "title-3",
+                "body-4 transition-colors",
                 activeTab === tab.key ? "text-font-1" : "text-font-2",
               )}
             >
@@ -132,7 +135,7 @@ const SearchResultsContents = ({
           onClick={() => router.push("/?tab=categories")}
           className="flex w-21 flex-col items-center justify-center border-b-2 border-transparent p-2.5"
         >
-          <span className="title-3 text-font-2">
+          <span className="body-4 text-font-2">
             {t("searchResults.tabCategory")}
           </span>
         </button>

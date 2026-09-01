@@ -54,7 +54,7 @@ const ChattingStartModal = ({
           description={t("chattingStart.personaDescription")}
           leftElement={<User className="h-5 w-5 text-font-2" />}
           rightElement={
-            <button className="body-6 rounded-sm bg-card px-3 py-1 text-font-2 hover:bg-card-hover">
+            <button type="button" className="body-6 rounded-sm bg-card px-3 py-1 text-font-2 hover:bg-card-hover">
               {t("chattingStart.change")}
             </button>
           }

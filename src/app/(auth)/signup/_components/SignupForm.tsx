@@ -99,7 +99,7 @@ const SignupForm = () => {
       onSubmit={handleSubmit(onSubmit)}
       className="flex w-screen max-w-112.5 flex-col gap-9 rounded-3xl border border-main bg-darker px-6 py-9"
     >
-      <header className="flex flex-col gap-1.5 font-medium">
+      <header className="flex flex-col gap-1.5">
         <h1 className="heading-3">{t("auth.signup.title")}</h1>
         <p className="body-4 text-font-2">{t("auth.signup.subtitle")}</p>
       </header>

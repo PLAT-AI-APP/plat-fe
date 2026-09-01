@@ -27,7 +27,7 @@ const CharacterMenuPopover = ({
 
   return (
     <PopoverLayout triggerRef={triggerRef} onClose={onClose}>
-      <menu className="flex flex-col gap-1 font-medium">
+      <menu className="flex flex-col gap-1">
         <button
           onClick={() => handleAction(onEdit)}
           type="button"

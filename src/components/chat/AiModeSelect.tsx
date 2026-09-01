@@ -184,7 +184,7 @@ const AiModelSelect = ({ currentAi, handleCurrentAi }: AiModelSelectProps) => {
           height={24}
           className="size-6 rounded-full object-contain"
         />
-        <span className="body-4 leading-[1.5]">{currentAi.name}</span>
+        <span className="body-4">{currentAi.name}</span>
       </button>
 
       {isAiModelSelect && (

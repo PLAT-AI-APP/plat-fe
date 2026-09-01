@@ -37,7 +37,7 @@ const CommentMenuPopover = ({
       <menu className="flex flex-col gap-1 min-w-32">
         {/* 본인이 아닐 때만 '신고' 노출 */}
         {!isMine && (
-          <button
+          <button type="button"
             onClick={() => handleAction(onReport)}
             className="whitespace-nowrap flex items-center gap-2 p-1.5 body-4 hover:bg-btn-hover rounded-lg transition-colors"
           >
@@ -49,16 +49,16 @@ const CommentMenuPopover = ({
         {/* 본인일 때만 '수정', '삭제' 노출 */}
         {isMine && (
           <>
-            <button
+            <button type="button"
               onClick={() => handleAction(onEdit)}
-              className="whitespace-nowrap flex items-center gap-2 p-1.5 body-4 font-medium hover:bg-btn-hover rounded-lg transition-colors"
+              className="whitespace-nowrap flex items-center gap-2 body-4 p-1.5 hover:bg-btn-hover rounded-lg transition-colors"
             >
               <Edit className="w-5 h-5 text-font-2" />
               {t("edit")}
             </button>
-            <button
+            <button type="button"
               onClick={() => handleAction(onDelete)}
-              className="whitespace-nowrap flex items-center gap-2 p-1.5 body-4 font-medium hover:bg-btn-hover rounded-lg transition-colors text-font-accents"
+              className="whitespace-nowrap flex items-center gap-2 body-4 p-1.5 hover:bg-btn-hover rounded-lg transition-colors text-font-accents"
             >
               <Trash className="w-5 h-5" />
               {t("delete")}

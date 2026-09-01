@@ -27,7 +27,7 @@ const OverflowTagList = ({ tags, maxLines = 1 }: OverflowTagListProps) => {
       "
     >
       <div className="flex-1 flex flex-col gap-2 min-w-0">
-        <div className="text-font-1 text-sm leading-5">장난꾸러기 소꿉친구</div>
+        <div className="body-4 text-font-1">장난꾸러기 소꿉친구</div>
 
         <div className="flex">
           <div
@@ -61,9 +61,9 @@ const OverflowTagList = ({ tags, maxLines = 1 }: OverflowTagListProps) => {
                     ${isVisible ? "" : "invisible pointer-events-none"}
                   `}
                 >
-                  <span className="text-xs text-font-2">#</span>
+                  <span className="body-6 text-font-2">#</span>
 
-                  <span className="text-xs text-font-2 whitespace-nowrap">
+                  <span className="body-6 whitespace-nowrap text-font-2">
                     {tag.label}
                   </span>
                 </div>
@@ -82,13 +82,13 @@ const OverflowTagList = ({ tags, maxLines = 1 }: OverflowTagListProps) => {
                 shrink-0
               "
             >
-              <span className="text-[10px] text-font-2">+{hiddenCount}</span>
+              <span className="body-6 text-font-2">+{hiddenCount}</span>
             </div>
           )}
         </div>
       </div>
 
-      <div className="text-font-disabled text-sm">✔</div>
+      <div className="body-4 text-font-disabled">✔</div>
     </div>
   );
 };

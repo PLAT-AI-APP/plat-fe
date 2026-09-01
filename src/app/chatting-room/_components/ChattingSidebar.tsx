@@ -206,7 +206,7 @@ const ChattingSidebar = ({
       {...sidebarOverlayMotion}
       transition={sidebarTransition}
       className={cn(
-        "fixed inset-0 z-20 flex justify-end font-medium",
+        "fixed inset-0 z-20 flex justify-end",
         isDepthViewOpen ? "bg-scrim/70" : "bg-scrim/50",
       )}
     >

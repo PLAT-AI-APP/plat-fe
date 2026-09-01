@@ -130,7 +130,7 @@ export const BirthDateInput = React.forwardRef<
           maxLength={10}
           placeholder="YYYY-MM-DD"
           className={cn(
-            "w-full rounded-xl border border-main bg-darkest px-4 py-3 pl-12 text-sm text-font-1 outline-none placeholder:text-font-disabled",
+            "body-4 w-full rounded-xl border border-main bg-darkest px-4 py-3 pl-12 text-font-1 outline-none placeholder:text-font-disabled",
             hasError && "border-font-accents",
           )}
         />

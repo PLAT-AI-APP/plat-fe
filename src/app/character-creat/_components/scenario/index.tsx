@@ -116,7 +116,7 @@ const Scenario = ({
               className={cn(
                 "body-4 flex h-8 shrink-0 items-center rounded-[100px] bg-card px-3 text-font-2",
                 activeScenarioIndex === i
-                  ? "bg-brand/10 font-semibold text-brand-dark"
+                  ? "bg-brand/10 text-brand-dark"
                   : "hover:bg-card-hover",
               )}
             >

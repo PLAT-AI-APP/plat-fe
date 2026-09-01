@@ -99,7 +99,7 @@ const WithdrawalContents = () => {
                 </ul>
               </div>
 
-              <p className="text-[10px] leading-[1.5] text-font-disabled">
+              <p className="caption-3 text-font-disabled">
                 {t("withdrawalPage.legalNotice")}
               </p>
             </div>

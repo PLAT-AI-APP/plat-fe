@@ -167,10 +167,12 @@ const CharacterCard = ({
           <div className="flex self-stretch flex-col items-start justify-start gap-1">
             <TitleLine
               title={title}
-              titleClassName="title-2"
+              titleClassName="title-3 text-overlay-font"
               icon={titleIcon}
             />
-            <p className="body-3 text-font-1 line-clamp-1">{description}</p>
+            <p className="body-5 line-clamp-1 text-overlay-font/70">
+              {description}
+            </p>
           </div>
 
           <SlideIndicators
@@ -206,7 +208,7 @@ const CharacterCard = ({
         />
 
         {typeof rank === "number" && (
-          <span className="pointer-events-none absolute bottom-3 left-3 text-[40px] leading-none font-extrabold text-font-0 [text-shadow:0px_4px_6.7px_rgba(0,0,0,0.4)]">
+          <span className="display-1 pointer-events-none absolute bottom-3 left-3 leading-none text-overlay-font [text-shadow:0px_4px_6.7px_rgba(0,0,0,0.4)]">
             {rank}
           </span>
         )}
@@ -234,7 +236,7 @@ const CharacterCard = ({
           icon={titleIcon}
         />
 
-        <p className={cn("self-stretch text-font-1 line-clamp-1", config.desc)}>
+        <p className={cn("line-clamp-1 self-stretch", config.desc)}>
           {description}
         </p>
 
@@ -247,7 +249,7 @@ const CharacterCard = ({
         )}
 
         <div className="inline-flex items-start justify-start gap-0.5">
-          <span className={cn("text-font-2 line-clamp-1", config.creatorName)}>
+          <span className={cn("line-clamp-1", config.creatorName)}>
             @ {creatorName}
           </span>
         </div>

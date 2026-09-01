@@ -105,7 +105,7 @@ const CharacterShowcase = ({
               href={{
                 query: { tab: allViewLink },
               }}
-              className="body-4 font-medium tracking-normal text-font-2 underline"
+              className="body-4 text-font-2 underline"
             >
               {t("allView")}
             </Link>

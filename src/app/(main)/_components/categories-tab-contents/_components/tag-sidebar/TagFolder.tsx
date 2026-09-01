@@ -23,7 +23,7 @@ export const TagPill = ({
 
   // 클릭 가능한 태그와 단순 표시용 태그가 같은 스타일을 쓰도록 공통 className을 먼저 조립합니다.
   const className = cn(
-    "inline-flex shrink-0 items-center justify-center rounded-md border font-medium transition-colors",
+    "inline-flex shrink-0 items-center justify-center rounded-md border transition-colors",
     "border-transparent bg-card text-font-2",
     "group-hover:text-brand-dark",
     isInteractive && "hover:text-font-1",

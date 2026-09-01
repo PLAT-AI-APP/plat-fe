@@ -9,6 +9,7 @@ import { calcDiscountRate, formatWithCommas, toMajorAmount } from "@/lib/utils";
 import { useWalletStore } from "@/store/useWalletStore";
 import type { Product } from "@/type/product";
 import PolicyGuide from "./PolicyGuide";
+import PageTitle from "@/components/PageTitle";
 
 interface ProductListItemProps {
   product: Product;
@@ -88,6 +89,8 @@ const TokenChargeContents = () => {
 
   return (
     <section className="mx-auto w-full max-w-160 px-9 pt-5">
+      <PageTitle messageKey="tokenCharge.title" />
+
       <div className="mb-9 flex items-center justify-between gap-4 rounded-3xl border border-main bg-darker px-5 py-4">
         <div className="flex flex-col gap-2">
           <span className="body-4 text-font-2">{t("tokenCharge.myNote")}</span>
@@ -105,7 +108,7 @@ const TokenChargeContents = () => {
       </div>
 
       <div className="flex flex-col gap-4">
-        <h3 className="title-2 text-font-0">{t("tokenCharge.purchase")}</h3>
+        <h2 className="title-2 text-font-0">{t("tokenCharge.purchase")}</h2>
 
         {isPending && <ProductListSkeleton />}
 

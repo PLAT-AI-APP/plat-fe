@@ -485,6 +485,12 @@ button {
   font-weight: 500;
   line-height: 1.5;
 }
+/* 스케일의 최하단. 태그 꼬리표·보조 안내처럼 12px 도 부담스러운 자리에만 쓴다. */
+@utility caption-3 {
+  font-size: 0.6875rem;
+  font-weight: 400;
+  line-height: 1.45;
+}
 
 /* 1. 전체 스크롤바 공통 설정 (기본 틀) */
 ::-webkit-scrollbar {

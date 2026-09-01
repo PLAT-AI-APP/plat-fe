@@ -24,7 +24,7 @@ const CharacterCreateBanner = () => {
         </header>
 
         {/* 버튼 */}
-        <button className="w-60 px-8 py-3 bg-brand-opacity rounded-xl outline-1 -outline-offset-1 outline-brand-dark inline-flex justify-center items-center gap-2.5 cursor-pointer hover:opacity-90 transition-opacity">
+        <button type="button" className="w-60 px-8 py-3 bg-brand-opacity rounded-xl outline-1 -outline-offset-1 outline-brand-dark inline-flex justify-center items-center gap-2.5 cursor-pointer hover:opacity-90 transition-opacity">
           <Link
             href={"/character-creat"}
             className="title-3 text-brand-dark"

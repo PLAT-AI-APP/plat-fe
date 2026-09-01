@@ -208,7 +208,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
                         className={cn(
                           "body-6 flex h-7 items-center rounded-md border border-font-2 bg-dark px-2.5 text-font-1 hover:bg-card-hover",
                           isSelected &&
-                            "border-brand bg-brand/10 font-semibold text-brand",
+                            "border-brand bg-brand/10 text-brand",
                         )}
                       >
                         #{tag.label}
@@ -268,7 +268,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
                             className={cn(
                               "body-6 flex h-7 items-center rounded-md border border-transparent bg-card px-2.5 text-font-2 hover:bg-card-hover",
                               isSelected &&
-                                "border-brand bg-brand/10 font-semibold text-brand",
+                                "border-brand bg-brand/10 text-brand",
                             )}
                           >
                             #{tag.label}
@@ -283,7 +283,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
           })}
 
           {!hasTags && (
-            <p className="w-full py-10 text-center text-xs text-font-disabled">
+            <p className="body-6 w-full py-10 text-center text-font-disabled">
               {t("empty")}
             </p>
           )}
@@ -308,7 +308,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
                   <button
                     type="button"
                     onClick={() => handleTagToggle(tag)}
-                    className="body-6 flex h-8 items-center gap-1 rounded-md bg-brand/10 px-2.5 font-semibold text-brand"
+                    className="caption-1 flex h-8 items-center gap-1 rounded-md bg-brand/10 px-2.5 text-brand"
                   >
                     #{tag.label}
                     <Close className="size-3" />
@@ -323,7 +323,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
           <button
             type="button"
             onClick={() => openModal("TAG_SUGGESTIONS", {})}
-            className="flex flex-1 items-center justify-between rounded-xl bg-card p-3 text-xs text-font-2 hover:bg-card-hover"
+            className="flex flex-1 items-center justify-between rounded-xl bg-card p-3 body-6 text-font-2 hover:bg-card-hover"
           >
             <div className="flex items-center gap-2">
               <Megaphone className="h-4 w-4" />

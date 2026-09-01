@@ -26,7 +26,7 @@ const NotificationDetailPage = ({ params }: PageProps) => {
     >
       <header className="flex flex-col gap-1">
         {/* 공지사항 제목 text */}
-        <h2 className="title-1">{title}</h2>
+        <h1 className="heading-3">{title}</h1>
 
         {/* 공지사항 업로드 시간 */}
         <time className="flex items-center gap-1.5 text-font-2">

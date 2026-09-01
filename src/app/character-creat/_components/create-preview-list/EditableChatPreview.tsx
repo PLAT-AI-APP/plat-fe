@@ -35,7 +35,7 @@ const EditableChatPreview = ({
         height={40}
         className="h-10 w-10 self-start rounded-full"
       />
-      <div className="min-w-0 flex-1 text-sm font-medium">
+      <div className="body-4 min-w-0 flex-1">
         <span className="body-4 block text-font-1">{characterName}</span>
         <div className="mt-1.5 flex items-center rounded-[0px_16px_16px_16px] bg-card p-2.5">
           <textarea

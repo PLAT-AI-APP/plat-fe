@@ -105,7 +105,7 @@ const FollowEmptyState = ({
               <p key={line}>{line}</p>
             ))}
             <p>
-              <strong className="font-bold">{state.highlight}</strong>
+              <strong>{state.highlight}</strong>
               {state.suffix}
             </p>
           </div>

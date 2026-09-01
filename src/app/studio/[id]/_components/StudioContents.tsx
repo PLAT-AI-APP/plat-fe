@@ -49,7 +49,7 @@ const StudioContents = ({ id, sort, viewMode }: StudioContentsProps) => {
             <div className="flex h-50 w-full items-center justify-center">
               <div className="flex flex-col gap-1 text-center">
                 <span className="text-font-2">{t("emptyTitle")}</span>
-                <span className="text-xs text-font-disabled">
+                <span className="body-6 text-font-disabled">
                   {t("emptyDescription")}
                 </span>
               </div>

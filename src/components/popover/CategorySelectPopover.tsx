@@ -51,8 +51,8 @@ const CategorySelectPopover = ({
               key={category}
               onClick={() => handlecategory(category)}
               className={cn(
-                "hover:bg-btn-hover body-4 flex justify-between px-2.5 py-2 rounded-lg cursor-pointer",
-                isActive && "title-5",
+                "body-4 flex cursor-pointer justify-between rounded-lg px-2.5 py-2 text-font-2 transition-colors hover:bg-btn-hover hover:text-font-1",
+                isActive && "text-font-1",
               )}
             >
               <span>{categoryLabelByValue[category]}</span>

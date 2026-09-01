@@ -197,7 +197,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
           <ArrowRight className="size-2.5 shrink-0 text-font-disabled" />
         </Link>
       ) : (
-        <div className="p-2 flex flex-col gap-3 text-sm font-medium">
+        <div className="body-4 flex flex-col gap-3 p-2">
           <div
             onClick={() => handleLoginBtn("KAKAO")}
             className="flex cursor-pointer items-center justify-center relative body-4 text-center h-11.5 rounded-lg bg-[#FEE500] w-full py-2 text-scrim"
@@ -310,7 +310,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
               href={tab.link}
               className={cn(
                 "body-4 flex items-center justify-between gap-2 rounded-lg px-2.5 py-2 text-font-1 transition-colors duration-200 ease-in-out hover:bg-btn-hover",
-                !isTokenCharge && "text-sm",
+                !isTokenCharge && "body-4",
               )}
             >
               <span className="flex min-w-0 items-center gap-2">

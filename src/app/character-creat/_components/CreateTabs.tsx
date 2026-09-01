@@ -100,9 +100,9 @@ const CreateTabs = ({
               ref={(el) => setTabRef(tabId, el)}
               onClick={() => setCurrentTabId(tabId)}
               className={cn(
-                "flex h-10 cursor-pointer items-center justify-center whitespace-nowrap p-2.5 text-center text-[16px] font-normal leading-[1.5] text-font-2 outline-none",
+                "body-4 flex h-10 cursor-pointer items-center justify-center whitespace-nowrap p-2.5 text-center text-font-2 outline-none transition-colors",
                 TAB_WIDTH_CLASS_BY_ID[tabId],
-                isActive && "font-semibold text-font-1",
+                isActive ? "text-font-1" : "hover:text-font-1",
               )}
             >
               {/* Required markers are visual tab affordances, not part of the locale key. */}

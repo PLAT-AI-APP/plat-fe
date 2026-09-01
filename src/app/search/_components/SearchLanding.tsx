@@ -11,6 +11,7 @@ import { useLocaleStore } from "@/store/useLocaleStore";
 import { DUMMY_LIVE_SEARCH_KEYWORDS, DUMMY_SEARCH_CHARACTERS } from "./dummyData";
 import type { LiveSearchKeyword } from "./dummyData";
 import SearchQueryBar from "./SearchQueryBar";
+import PageTitle from "@/components/PageTitle";
 
 interface TrendTriangleProps {
   direction: "up" | "down";
@@ -101,6 +102,8 @@ const SearchLanding = () => {
 
   return (
     <section className="mx-auto flex w-full max-w-[1272px] flex-col gap-14 px-9 pt-5 pb-20">
+      <PageTitle messageKey="pageTitles.search" />
+
       <SearchQueryBar
         queryDraft={queryDraft}
         onQueryDraftChange={setQueryDraft}

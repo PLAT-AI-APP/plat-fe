@@ -135,7 +135,7 @@ const CharacterItem = ({
         <aside className="flex items-center gap-1.5 text-font-2">
           <ul className="flex gap-0.5">
             {tagList.map((tag, index) => (
-              <li key={index} className="text-[11px] text-brand-dark">
+              <li key={index} className="caption-3 text-brand-dark">
                 #{tag}
               </li>
             ))}

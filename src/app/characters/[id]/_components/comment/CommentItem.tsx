@@ -56,7 +56,7 @@ const CommentItem = ({ comment }: Props) => {
 
         <section className="flex flex-col flex-1 h-fit">
           {/* {comment.isPinned && (
-            <p className="flex gap-1 pb-1.5 text-font-2 text-[12px]">
+            <p className="body-6 flex gap-1 pb-1.5 text-font-2">
               <PinFill className="w-3.5 h-3.5 fill-font-2" />
               크리에이터님이 고정함
             </p>
@@ -98,7 +98,7 @@ const CommentItem = ({ comment }: Props) => {
             </p>
 
             {isOverflown && !isExpanded && (
-              <button
+              <button type="button"
                 onClick={() => setIsExpanded(true)}
                 className="text-font-2 body-6 w-fit mt-1 hover:underline"
               >
@@ -149,7 +149,7 @@ const CommentItem = ({ comment }: Props) => {
             <button
               onClick={toggleIsReply}
               type="button"
-              className="w-fit pl-9 text-sm font-medium text-font-1 hover:underline"
+              className="body-4 w-fit pl-9 text-font-1 hover:underline"
             >
               {isReply ? "답글 접기" : "답글 더보기"}
             </button>

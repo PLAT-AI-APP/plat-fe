@@ -166,8 +166,8 @@ const Sidebar = ({ isFolded = false, onFoldToggle }: SidebarProps) => {
                           exit={{ opacity: 0, x: -10 }}
                           transition={TRANSITION}
                           className={cn(
-                            "title-3 ml-1 whitespace-nowrap",
-                            isActive ? "font-medium text-brand" : "text-font-2",
+                            "body-4 ml-1 whitespace-nowrap transition-colors",
+                            isActive ? "text-brand" : "text-font-2",
                           )}
                         >
                           {menu.name}
@@ -259,7 +259,7 @@ const Sidebar = ({ isFolded = false, onFoldToggle }: SidebarProps) => {
                         }}
                         className="ml-3 flex min-w-0 flex-1 flex-col overflow-hidden whitespace-nowrap"
                       >
-                        <p className="body-4 truncate font-medium text-font-1">
+                        <p className="body-4 truncate text-font-1">
                           {chat.name}
                         </p>
                         <p className="body-5 truncate text-font-2">

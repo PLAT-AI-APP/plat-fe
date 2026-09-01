@@ -14,7 +14,7 @@ const ActiveButton = ({
   className,
   text,
   isActive,
-  type = "submit",
+  type = "button",
   id,
   children,
   textClassName,

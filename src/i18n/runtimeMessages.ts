@@ -1,6 +1,16 @@
 import type { AppLocale } from "./config";
 
 const en = {
+  /*
+   * 화면에 보이지 않는 페이지 제목(h1).
+   * 해당 화면에 시각적 제목이 따로 없는 페이지에서, 문서 구조상 최상위
+   * 제목을 만들어 주기 위한 문구다.
+   */
+  pageTitles: {
+    home: "Explore characters",
+    search: "Search",
+    usageHistory: "Usage history",
+  },
   sidebar: {
     home: "Home",
     myChatting: "My chats",
@@ -20,8 +30,7 @@ const en = {
     companyName: "Orbitlab Co., Ltd.",
     representative: "CEO Kim Seungwoo",
     registrationNumberLabel: "Business registration number",
-    address:
-      "707-A19, 707, 7F, 22 Harmony-ro 178beon-gil, Yeonsu-gu, Incheon",
+    address: "707-A19, 707, 7F, 22 Harmony-ro 178beon-gil, Yeonsu-gu, Incheon",
     copyright: "© 2025 Wrtn. All rights reserved.",
   },
   searchBar: {
@@ -222,6 +231,12 @@ const en = {
 type RuntimeMessages = typeof en;
 
 const ko: RuntimeMessages = {
+  ...en,
+  pageTitles: {
+    home: "캐릭터 둘러보기",
+    search: "검색",
+    usageHistory: "사용 내역",
+  },
   sidebar: {
     home: "홈",
     myChatting: "내 채팅",
@@ -280,16 +295,11 @@ const ko: RuntimeMessages = {
     description:
       "헤어지게 되어 정말 아쉬워요. PLAT에서 탈퇴 전, 아래의 내용을 꼭 확인해 주세요",
     notices: {
-      dataDeleted:
-        "모든 데이터와 개인정보는 삭제되며 다시 찾을 수 없어요",
-      recordsRetained:
-        "주문과 거래 내역은 일정기간 동안 안전하게 보관돼요",
-      creditsRemoved:
-        "사용하지 않은 크레딧은 환불되지 않고 함께 지워져요",
-      rejoinRestricted:
-        "같은 이메일 주소로는 7일 동안 가입할 수 없어요",
-      creationsDeleted:
-        "직접 제작한 캐릭터와 세계관은 탈퇴 후 모두 지워져요",
+      dataDeleted: "모든 데이터와 개인정보는 삭제되며 다시 찾을 수 없어요",
+      recordsRetained: "주문과 거래 내역은 일정기간 동안 안전하게 보관돼요",
+      creditsRemoved: "사용하지 않은 크레딧은 환불되지 않고 함께 지워져요",
+      rejoinRestricted: "같은 이메일 주소로는 7일 동안 가입할 수 없어요",
+      creationsDeleted: "직접 제작한 캐릭터와 세계관은 탈퇴 후 모두 지워져요",
       chatsReadOnly:
         "단, 기존 채팅방은 유지되며 신규 메세지는 전송할 수 없어요",
     },
@@ -340,16 +350,14 @@ const ko: RuntimeMessages = {
     policies: {
       item1:
         "사용 이력이 있는 노트에 대해서는 환불이 불가능합니다. (단, 미사용 상품은 결제 후 7일 이내 환불 가능)",
-      item2:
-        "구매한 유료 노트의 유효기간은 획득 시점으로부터 1년입니다.",
+      item2: "구매한 유료 노트의 유효기간은 획득 시점으로부터 1년입니다.",
       item3:
         "AI의 답변 결과에 대한 주관적인 불만족이나 단순 변심으로 인한 환불은 불가능합니다.",
       item4: "환불 요청 및 문의는 플랫 고객센터를 통해서 가능합니다.",
       item5:
         "무료로 제공된 노트는 환불 대상에서 제외되며, 유효기간은 지급 방식에 따라 다를 수 있습니다.",
       item6: "노트는 유효기간이 임박한 순서대로 자동으로 사용됩니다.",
-      item7:
-        "그 외 도움이 필요하신 점이 있다면 플랫 고객센터로 문의해 주세요.",
+      item7: "그 외 도움이 필요하신 점이 있다면 플랫 고객센터로 문의해 주세요.",
     },
     badges: {
       popular: "인기",
@@ -400,8 +408,7 @@ const ko: RuntimeMessages = {
     gemini25Description: "최신 고성능 AI 모델로 장문의 대화에 적합",
     claudeOpus46Description:
       "최고 수준의 지능과 창의적인 대화를 제공하는 프리미엄 모델",
-    claudeSonnet46Description:
-      "자연스럽고 창의적인 대화를 제공하는 고급 모델",
+    claudeSonnet46Description: "자연스럽고 창의적인 대화를 제공하는 고급 모델",
     gemini3FlashDescription: "빠른 응답과 풍부한 지식을 갖춘 모델",
     gpt51Description: "풍부한 감정선과 섬세한 표현이 강점인 모델",
     freeDescription: "균형잡힌 속도와 이해도를 가진 안전한 대화 모델",
@@ -432,7 +439,11 @@ const ko: RuntimeMessages = {
 };
 
 const ja: RuntimeMessages = {
-  ...en,
+  pageTitles: {
+    home: "キャラクターを探す",
+    search: "検索",
+    usageHistory: "利用履歴",
+  },
   sidebar: {
     home: "ホーム",
     myChatting: "マイチャット",
@@ -452,8 +463,7 @@ const ja: RuntimeMessages = {
     companyName: "Orbitlab Co., Ltd.",
     representative: "代表 キム・スンウ",
     registrationNumberLabel: "事業者登録番号",
-    address:
-      "仁川広域市 延寿区 ハーモニーロ178番キル 22, 7階 707号 707-A19号",
+    address: "仁川広域市 延寿区 ハーモニーロ178番キル 22, 7階 707号 707-A19号",
     copyright: "© 2025 Wrtn. All rights reserved.",
   },
   searchBar: {
@@ -492,14 +502,10 @@ const ja: RuntimeMessages = {
     description:
       "お別れするのが本当に残念です。PLATを退会する前に、以下の内容を必ず確認してください。",
     notices: {
-      dataDeleted:
-        "すべてのデータと個人情報は削除され、復元できません。",
-      recordsRetained:
-        "注文と取引履歴は一定期間安全に保管されます。",
-      creditsRemoved:
-        "未使用のクレジットは返金されず、一緒に削除されます。",
-      rejoinRestricted:
-        "同じメールアドレスでは7日間再登録できません。",
+      dataDeleted: "すべてのデータと個人情報は削除され、復元できません。",
+      recordsRetained: "注文と取引履歴は一定期間安全に保管されます。",
+      creditsRemoved: "未使用のクレジットは返金されず、一緒に削除されます。",
+      rejoinRestricted: "同じメールアドレスでは7日間再登録できません。",
       creationsDeleted:
         "直接作成したキャラクターと世界観は退会後すべて削除されます。",
       chatsReadOnly:
@@ -552,16 +558,13 @@ const ja: RuntimeMessages = {
     policies: {
       item1:
         "使用履歴のあるノートは返金できません。（未使用商品は決済後7日以内であれば返金可能）",
-      item2:
-        "購入した有料ノートの有効期間は獲得時点から1年です。",
+      item2: "購入した有料ノートの有効期間は獲得時点から1年です。",
       item3:
         "AIの回答結果に対する主観的な不満や単純な気変わりによる返金はできません。",
-      item4:
-        "返金のご要望やお問い合わせはPLATカスタマーセンターから可能です。",
+      item4: "返金のご要望やお問い合わせはPLATカスタマーセンターから可能です。",
       item5:
         "無料で提供されたノートは返金対象外であり、有効期間は付与方法によって異なる場合があります。",
-      item6:
-        "ノートは有効期限が近い順に自動で使用されます。",
+      item6: "ノートは有効期限が近い順に自動で使用されます。",
       item7:
         "その他お困りのことがあれば、PLATカスタマーセンターまでお問い合わせください。",
     },
@@ -646,6 +649,11 @@ const ja: RuntimeMessages = {
 
 const zh: RuntimeMessages = {
   ...en,
+  pageTitles: {
+    home: "探索角色",
+    search: "搜索",
+    usageHistory: "使用记录",
+  },
   sidebar: {
     home: "首页",
     myChatting: "我的聊天",
@@ -701,21 +709,14 @@ const zh: RuntimeMessages = {
     title: "注销账号",
     defaultMember: "会员",
     heading: "真的很舍不得和 {nickname} 说再见",
-    description:
-      "真的很遗憾要分别了。在你离开 PLAT 前，请务必确认以下内容。",
+    description: "真的很遗憾要分别了。在你离开 PLAT 前，请务必确认以下内容。",
     notices: {
-      dataDeleted:
-        "所有数据和个人信息都会被删除，无法再次找回。",
-      recordsRetained:
-        "订单和交易记录会在一定期间内安全保存。",
-      creditsRemoved:
-        "未使用的积分不会退款，并会一同删除。",
-      rejoinRestricted:
-        "同一邮箱地址在 7 天内无法再次注册。",
-      creationsDeleted:
-        "你亲自创建的角色和世界观在注销后都会被删除。",
-      chatsReadOnly:
-        "已有聊天室会保留，但无法再发送新消息。",
+      dataDeleted: "所有数据和个人信息都会被删除，无法再次找回。",
+      recordsRetained: "订单和交易记录会在一定期间内安全保存。",
+      creditsRemoved: "未使用的积分不会退款，并会一同删除。",
+      rejoinRestricted: "同一邮箱地址在 7 天内无法再次注册。",
+      creationsDeleted: "你亲自创建的角色和世界观在注销后都会被删除。",
+      chatsReadOnly: "已有聊天室会保留，但无法再发送新消息。",
     },
     legalNotice:
       "支付、退款和积分交易记录因相关法规规定的保管义务（5年）而不会立即删除。",
@@ -762,16 +763,11 @@ const zh: RuntimeMessages = {
     priceUnit: "韩元",
     policiesTitle: "退款政策与笔记使用说明",
     policies: {
-      item1:
-        "已使用过的笔记无法退款。（未使用商品可在支付后7天内退款）",
-      item2:
-        "购买的付费笔记有效期为自获得之日起1年。",
-      item3:
-        "因对 AI 回答结果的主观不满或单纯变心而提出的退款无法受理。",
-      item4:
-        "退款申请及咨询可通过 PLAT 客服中心进行。",
-      item5:
-        "免费提供的笔记不在退款范围内，有效期可能因发放方式而异。",
+      item1: "已使用过的笔记无法退款。（未使用商品可在支付后7天内退款）",
+      item2: "购买的付费笔记有效期为自获得之日起1年。",
+      item3: "因对 AI 回答结果的主观不满或单纯变心而提出的退款无法受理。",
+      item4: "退款申请及咨询可通过 PLAT 客服中心进行。",
+      item5: "免费提供的笔记不在退款范围内，有效期可能因发放方式而异。",
       item6: "笔记会按照有效期临近的顺序自动使用。",
       item7: "如果还需要其他帮助，请联系 PLAT 客服中心。",
     },
@@ -799,8 +795,7 @@ const zh: RuntimeMessages = {
     change: "更改",
     personaValue: "允儿",
     scenarioLabel: "场景",
-    scenarioDescription:
-      "你想以什么主题开始对话？请从准备好的场景中选择一个。",
+    scenarioDescription: "你想以什么主题开始对话？请从准备好的场景中选择一个。",
     submit: "开始",
   },
   chatUI: {
@@ -855,6 +850,11 @@ const zh: RuntimeMessages = {
 
 const th: RuntimeMessages = {
   ...en,
+  pageTitles: {
+    home: "สำรวจตัวละคร",
+    search: "ค้นหา",
+    usageHistory: "ประวัติการใช้งาน",
+  },
   sidebar: {
     home: "หน้าแรก",
     myChatting: "แชตของฉัน",
@@ -920,12 +920,10 @@ const th: RuntimeMessages = {
         "ประวัติคำสั่งซื้อและธุรกรรมจะถูกเก็บรักษาอย่างปลอดภัยตามระยะเวลาที่กำหนด",
       creditsRemoved:
         "เครดิตที่ยังไม่ได้ใช้จะไม่สามารถขอคืนเงินและจะถูกลบไปพร้อมกัน",
-      rejoinRestricted:
-        "ไม่สามารถสมัครใหม่ด้วยอีเมลเดิมได้ภายใน 7 วัน",
+      rejoinRestricted: "ไม่สามารถสมัครใหม่ด้วยอีเมลเดิมได้ภายใน 7 วัน",
       creationsDeleted:
         "ตัวละครและโลกที่คุณสร้างเองจะถูกลบทั้งหมดหลังจากลบบัญชี",
-      chatsReadOnly:
-        "ห้องแชตเดิมจะยังคงอยู่ แต่จะไม่สามารถส่งข้อความใหม่ได้",
+      chatsReadOnly: "ห้องแชตเดิมจะยังคงอยู่ แต่จะไม่สามารถส่งข้อความใหม่ได้",
     },
     legalNotice:
       "บันทึกการชำระเงิน การคืนเงิน และธุรกรรมเครดิตจะไม่ถูกลบทันที เนื่องจากมีภาระหน้าที่ในการเก็บรักษาตามกฎหมายที่เกี่ยวข้อง (5 ปี)",
@@ -974,18 +972,14 @@ const th: RuntimeMessages = {
     policies: {
       item1:
         "ไม่สามารถขอคืนเงินสำหรับโน้ตที่มีประวัติการใช้งานแล้วได้ (สินค้าที่ไม่ได้ใช้สามารถขอคืนเงินได้ภายใน 7 วันหลังการชำระเงิน)",
-      item2:
-        "โน้ตแบบชำระเงินที่ซื้อมีอายุการใช้งาน 1 ปีนับจากวันที่ได้รับ",
+      item2: "โน้ตแบบชำระเงินที่ซื้อมีอายุการใช้งาน 1 ปีนับจากวันที่ได้รับ",
       item3:
         "ไม่สามารถขอคืนเงินเนื่องจากความไม่พอใจเชิงอัตวิสัยต่อผลลัพธ์ของ AI หรือการเปลี่ยนใจทั่วไปได้",
-      item4:
-        "สามารถขอคืนเงินและสอบถามได้ผ่านศูนย์ลูกค้าของ PLAT",
+      item4: "สามารถขอคืนเงินและสอบถามได้ผ่านศูนย์ลูกค้าของ PLAT",
       item5:
         "โน้ตที่แจกฟรีไม่อยู่ในรายการคืนเงิน และอายุการใช้งานอาจแตกต่างกันตามวิธีการแจก",
-      item6:
-        "โน้ตจะถูกใช้โดยอัตโนมัติตามลำดับที่ใกล้หมดอายุก่อน",
-      item7:
-        "หากต้องการความช่วยเหลือเพิ่มเติม โปรดติดต่อศูนย์ลูกค้าของ PLAT",
+      item6: "โน้ตจะถูกใช้โดยอัตโนมัติตามลำดับที่ใกล้หมดอายุก่อน",
+      item7: "หากต้องการความช่วยเหลือเพิ่มเติม โปรดติดต่อศูนย์ลูกค้าของ PLAT",
     },
     badges: {
       popular: "ยอดนิยม",
@@ -1038,12 +1032,9 @@ const th: RuntimeMessages = {
       "โมเดลพรีเมียมที่ให้ความฉลาดระดับสูงและบทสนทนาเชิงสร้างสรรค์",
     claudeSonnet46Description:
       "โมเดลขั้นสูงสำหรับบทสนทนาที่เป็นธรรมชาติและสร้างสรรค์",
-    gemini3FlashDescription:
-      "โมเดลที่ตอบสนองรวดเร็วและมีฐานความรู้กว้างขวาง",
-    gpt51Description:
-      "โมเดลที่เด่นด้านอารมณ์ละเอียดอ่อนและการสื่อสารที่ประณีต",
-    freeDescription:
-      "โมเดลสนทนาที่ปลอดภัย พร้อมความเร็วและความเข้าใจที่สมดุล",
+    gemini3FlashDescription: "โมเดลที่ตอบสนองรวดเร็วและมีฐานความรู้กว้างขวาง",
+    gpt51Description: "โมเดลที่เด่นด้านอารมณ์ละเอียดอ่อนและการสื่อสารที่ประณีต",
+    freeDescription: "โมเดลสนทนาที่ปลอดภัย พร้อมความเร็วและความเข้าใจที่สมดุล",
   },
   characterDetail: {
     editCharacter: "แก้ไข",
@@ -1072,6 +1063,11 @@ const th: RuntimeMessages = {
 
 const vi: RuntimeMessages = {
   ...en,
+  pageTitles: {
+    home: "Khám phá nhân vật",
+    search: "Tìm kiếm",
+    usageHistory: "Lịch sử sử dụng",
+  },
   sidebar: {
     home: "Trang chủ",
     myChatting: "Chat của tôi",
@@ -1199,8 +1195,7 @@ const vi: RuntimeMessages = {
         "Có thể yêu cầu hoàn tiền và gửi thắc mắc thông qua trung tâm khách hàng PLAT.",
       item5:
         "Note được cung cấp miễn phí không thuộc đối tượng hoàn tiền và thời hạn sử dụng có thể khác nhau tùy theo cách cấp phát.",
-      item6:
-        "Note sẽ được sử dụng tự động theo thứ tự sắp hết hạn trước.",
+      item6: "Note sẽ được sử dụng tự động theo thứ tự sắp hết hạn trước.",
       item7:
         "Nếu bạn cần thêm hỗ trợ, vui lòng liên hệ trung tâm khách hàng PLAT.",
     },

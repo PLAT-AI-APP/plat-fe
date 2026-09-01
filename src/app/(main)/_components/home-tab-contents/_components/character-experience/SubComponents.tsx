@@ -24,9 +24,9 @@ export const ChatBubble = ({
   <div className="w-full inline-flex justify-start items-start gap-2">
     <CharacterAvatar />
     <div className="inline-flex flex-col justify-start items-start gap-1.5 overflow-hidden">
-      <span className="justify-start text-font-1 text-sm">{name}</span>
+      <span className="body-4 justify-start text-font-1">{name}</span>
       <div className="px-3 py-2 bg-card rounded-tr-2xl rounded-bl-2xl rounded-br-2xl inline-flex justify-center items-center gap-2.5 overflow-hidden">
-        <p className="justify-start text-font-0 text-sm">{message}</p>
+        <p className="body-4 justify-start text-font-1">{message}</p>
       </div>
     </div>
   </div>
@@ -57,7 +57,7 @@ export const ActionFooter = ({ isActive = true }: { isActive: boolean }) => (
             : "이미 3번의 무료 대화를 진행했어요 "}
         </p>
       </div>
-      <button
+      <button type="button"
         className={cn(
           "self-stretch h-11.25 relative bg-brand/20 rounded-br-2xl",
           !isActive && "bg-main",
