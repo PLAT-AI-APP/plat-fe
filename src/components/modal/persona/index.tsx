@@ -35,7 +35,7 @@ const PersonaModal = ({ onClose }: PersonaModalProps) => {
     );
   }, []);
 
-  // 실제 '로딩 중' 판단: 요청을 아직 안 보냈거나(!shouldFetch), 쿼리가 로딩 중일 때
+  // 실제 데이터 대기 상태 판단: 요청을 아직 안 보냈거나(!shouldFetch), 쿼리가 진행 중일 때
   const isDataLoading = !shouldFetch || isLoading;
 
   return (

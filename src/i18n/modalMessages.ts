@@ -6,7 +6,7 @@ const ko = {
       close: "닫기",
       save: "저장",
       add: "추가",
-      loading: "로딩 중..",
+      loading: "불러오는 중..",
       loadingMore: "목록을 불러오는 중..",
       follow: "팔로우",
       following: "팔로잉",

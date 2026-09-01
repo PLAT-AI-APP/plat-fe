@@ -193,9 +193,21 @@ const FollowModal = ({
       </header>
 
       {activeQuery.isLoading ? (
-        <div className="body-4 flex h-95 items-center justify-center text-font-2 transition-none">
-          {commonT("loading")}
-        </div>
+        <ul className="flex h-95 flex-col gap-1 transition-none">
+          {Array.from({ length: 5 }).map((_, index) => (
+            <li
+              key={index}
+              className="flex w-full items-center gap-3 rounded-2xl bg-bg-dark p-3"
+            >
+              <div className="size-[45px] shrink-0 animate-pulse rounded-full bg-card" />
+              <div className="flex min-w-0 flex-1 flex-col gap-2">
+                <div className="h-4 w-28 animate-pulse rounded bg-card" />
+                <div className="h-3 w-40 animate-pulse rounded bg-card" />
+              </div>
+              <div className="h-7 w-24 shrink-0 animate-pulse rounded-full bg-card" />
+            </li>
+          ))}
+        </ul>
       ) : listData.length === 0 ? (
         <FollowEmptyState
           activeTab={activeTabs}
@@ -231,8 +243,11 @@ const FollowModal = ({
           <li className="py-0.5 text-center">
             <div ref={targetRef}>
               {activeQuery.isFetchingNextPage ? (
-                <span className="body-6 animate-pulse text-font-2">
-                  {commonT("loadingMore")}
+                <span
+                  className="mx-auto block size-4 animate-spin rounded-full border border-main border-t-brand"
+                  aria-label={commonT("loadingMore")}
+                >
+                  <span className="sr-only">{commonT("loadingMore")}</span>
                 </span>
               ) : activeQuery.hasNextPage ? (
                 <div className="h-4" />

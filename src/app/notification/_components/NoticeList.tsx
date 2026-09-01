@@ -36,7 +36,7 @@ const NoticeList = ({ currentFilter }: NoticeListProps) => {
     data: noticeListData,
     fetchNextPage,
     hasNextPage, // 다음 페이지 존재 여부
-    isFetchingNextPage, // 추가 데이터 로딩 중 상태
+    isFetchingNextPage, // 추가 데이터 요청 진행 상태
   } = useNoticeListInfiniteQuery({
     type: currentFilter,
   });

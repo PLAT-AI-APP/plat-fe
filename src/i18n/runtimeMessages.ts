@@ -427,7 +427,7 @@ const ko: RuntimeMessages = {
     viewMore: "자세히 보기",
   },
   loading: {
-    text: "로딩중...",
+    text: "불러오는 중...",
   },
 };
 
