@@ -109,7 +109,7 @@ const WithdrawalContents = () => {
             type="button"
             role="checkbox"
             aria-checked={isConfirmed}
-            className="body-4 flex items-end gap-1.5 text-white/60"
+            className="body-4 flex items-end gap-1.5 text-font-2"
             onClick={() => setIsConfirmed((prev) => !prev)}
           >
             {isConfirmed ? (

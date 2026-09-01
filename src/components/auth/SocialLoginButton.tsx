@@ -10,7 +10,7 @@ const SocialLoginButton = ({ icon, label, onClick }: SocialButtonProps) => (
   <button
     id="social-login-button"
     onClick={onClick}
-    className="relative w-full h-11.5 flex items-center justify-center rounded-lg border border-white/10 bg-black/20 shadow-[inset_0px_1px_100px_rgba(255,255,255,0.06)]"
+    className="relative w-full h-11.5 flex items-center justify-center rounded-lg border border-main bg-card"
   >
     <span
       id="social-icon-wrapper"

@@ -60,7 +60,7 @@ export const ExpandableDescription = ({
         <button
           onClick={() => setIsExpanded(!isExpanded)}
           aria-expanded={isExpanded}
-          className="body-6 z-10 flex items-center justify-center gap-1 p-1 pl-2 text-font-2 transition-colors hover:text-white"
+          className="body-6 z-10 flex items-center justify-center gap-1 p-1 pl-2 text-font-2 transition-colors hover:text-font-1"
         >
           {isExpanded ? t("characterDetail.collapse") : t("characterDetail.expand")}
           <ArrowDown

@@ -38,9 +38,9 @@ const ExperienceCarousel = ({
   }, [selectedIndex, emblaApi, scrollTo]);
 
   return (
-    <article className="relative max-w-full w-full min-h-95 max-h-95 overflow-visible rounded-2xl bg-neutral-900">
+    <article className="relative max-w-full w-full min-h-95 max-h-95 overflow-visible rounded-2xl bg-scrim">
       <div
-        className="h-full w-full overflow-hidden rounded-2xl bg-neutral-900"
+        className="h-full w-full overflow-hidden rounded-2xl bg-scrim"
         ref={viewportRef}
       >
         <div className="flex w-full h-full">
@@ -54,7 +54,7 @@ const ExperienceCarousel = ({
         type="button"
         onClick={scrollPrev}
         aria-label={t("previousItems")}
-        className="absolute left-0 top-1/2 z-30 flex size-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-[20px] bg-white/12 p-2 text-font-0 opacity-25 backdrop-blur-[1.54px] transition-colors hover:bg-white/20 hover:opacity-100"
+        className="absolute left-0 top-1/2 z-30 flex size-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-[20px] bg-overlay-font/12 p-2 text-font-0 opacity-25 backdrop-blur-[1.54px] transition-colors hover:bg-overlay-font/20 hover:opacity-100"
       >
         <ArrowLeft className="size-6" />
       </button>
@@ -62,7 +62,7 @@ const ExperienceCarousel = ({
         type="button"
         onClick={scrollNext}
         aria-label={t("nextItems")}
-        className="absolute right-0 top-1/2 z-30 flex size-10 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-[20px] bg-white/12 p-2 text-font-0 opacity-25 backdrop-blur-[1.54px] transition-colors hover:bg-white/20 hover:opacity-100"
+        className="absolute right-0 top-1/2 z-30 flex size-10 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-[20px] bg-overlay-font/12 p-2 text-font-0 opacity-25 backdrop-blur-[1.54px] transition-colors hover:bg-overlay-font/20 hover:opacity-100"
       >
         <ArrowRight className="size-6" />
       </button>

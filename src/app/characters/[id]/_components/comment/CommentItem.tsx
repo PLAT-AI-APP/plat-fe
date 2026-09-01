@@ -149,7 +149,7 @@ const CommentItem = ({ comment }: Props) => {
             <button
               onClick={toggleIsReply}
               type="button"
-              className="w-fit pl-9 text-sm font-medium hover:underline text-white"
+              className="w-fit pl-9 text-sm font-medium text-font-1 hover:underline"
             >
               {isReply ? "답글 접기" : "답글 더보기"}
             </button>

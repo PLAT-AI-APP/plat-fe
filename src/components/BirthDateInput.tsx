@@ -111,13 +111,13 @@ export const BirthDateInput = React.forwardRef<
       id="birthdate-input-container"
       className={cn("flex w-full flex-1 flex-col", className)}
     >
-      <header className="title-5 mb-2 flex items-center gap-1 text-white">
+      <header className="title-5 mb-2 flex items-center gap-1 text-font-1">
         <span>{translateText("auth.fields.birthLabel")}</span>
       </header>
 
       <div className="relative">
         <DateIcon
-          className="absolute left-4 top-1/2 z-10 h-5 w-5 -translate-y-1/2 cursor-pointer text-font-2 transition-colors hover:text-white"
+          className="absolute left-4 top-1/2 z-10 h-5 w-5 -translate-y-1/2 cursor-pointer text-font-2 transition-colors hover:text-font-1"
           onClick={() => setShowCalendar(!showCalendar)}
         />
 
@@ -130,7 +130,7 @@ export const BirthDateInput = React.forwardRef<
           maxLength={10}
           placeholder="YYYY-MM-DD"
           className={cn(
-            "w-full rounded-xl border border-main bg-darkest px-4 py-3 pl-12 text-sm text-white outline-none placeholder:text-font-disabled",
+            "w-full rounded-xl border border-main bg-darkest px-4 py-3 pl-12 text-sm text-font-1 outline-none placeholder:text-font-disabled",
             hasError && "border-font-accents",
           )}
         />
@@ -138,7 +138,7 @@ export const BirthDateInput = React.forwardRef<
         {isEditMode && showCalendar && (
           <>
             <div
-              className="fixed inset-0 z-9998 bg-black/50 backdrop-blur-[2px]"
+              className="fixed inset-0 z-9998 bg-scrim/50 backdrop-blur-[2px]"
               onClick={() => setShowCalendar(false)}
             />
 

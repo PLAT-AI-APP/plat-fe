@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useSyncExternalStore } from "react";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import { ArrowDown } from "@/icons";
@@ -10,11 +11,26 @@ import SettingRow from "./SettingRow";
 import SettingSection from "./SettingSection";
 import SettingToggle from "./SettingToggle";
 
+const subscribeToNothing = () => () => {};
+
+/**
+ * 하이드레이션이 끝났는지 여부.
+ * 서버 렌더 시점에는 저장된 테마를 알 수 없어 next-themes의 resolvedTheme이
+ * undefined다. 그대로 스위치에 넘기면 첫 프레임이 항상 다크로 그려졌다가 튄다.
+ */
+const useIsHydrated = () =>
+  useSyncExternalStore(
+    subscribeToNothing,
+    () => true,
+    () => false,
+  );
+
 const SettingsContents = () => {
   const t = useTranslations();
   const { resolvedTheme, setTheme } = useTheme();
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
-  const isLightMode = resolvedTheme === "light";
+
+  const isLightMode = useIsHydrated() && resolvedTheme === "light";
 
   const handleThemeChange = (checked: boolean) => {
     // 스위치 checked 값을 실제 next-themes 테마 값으로 변환합니다.

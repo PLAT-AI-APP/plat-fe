@@ -126,7 +126,7 @@ const CharacterCard = ({
   if (size === "L") {
     return (
       <article
-        className="relative inline-flex h-[378.72px] w-[388.67px] cursor-pointer flex-col items-center justify-end overflow-hidden rounded-2xl bg-zinc-800 active:cursor-grab"
+        className="relative inline-flex h-[378.72px] w-[388.67px] cursor-pointer flex-col items-center justify-end overflow-hidden rounded-2xl bg-scrim active:cursor-grab"
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUp}
       >
@@ -140,14 +140,14 @@ const CharacterCard = ({
 
         {/* Embla viewport: 소수점 너비 카드에서 다음 슬라이드가 1px 보이는 현상을 clip-path로 보정합니다. */}
         <div
-          className="absolute inset-0 overflow-hidden rounded-2xl bg-[#0D0E11] [clip-path:inset(0_1px_0_0_round_16px)]"
+          className="absolute inset-0 overflow-hidden rounded-2xl bg-scrim [clip-path:inset(0_1px_0_0_round_16px)]"
           ref={emblaRef}
         >
           <div className="flex h-full w-full">
             {imageList.map((image, index) => (
               <div
                 key={`${image}-${index}`}
-                className="relative h-full w-full min-w-0 flex-[0_0_100%] overflow-hidden bg-[#0D0E11]"
+                className="relative h-full w-full min-w-0 flex-[0_0_100%] overflow-hidden bg-scrim"
               >
                 <Image
                   className="object-cover"
@@ -195,7 +195,7 @@ const CharacterCard = ({
       )}
     >
       <div
-        className={cn("relative overflow-hidden bg-zinc-800", config.imageArea)}
+        className={cn("relative overflow-hidden bg-scrim", config.imageArea)}
       >
         <Image
           className="object-cover transition-all duration-200 group-hover:scale-110"

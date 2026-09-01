@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import { Suspense } from "react";
 import "@/app/globals.css";
 import IntlProvider from "@/providers/IntlProvider";
@@ -10,16 +9,6 @@ import ClientLayout from "./ClientLayout";
 import "pretendard/dist/web/static/pretendard.css";
 import { NavigationGuardProvider } from "next-navigation-guard";
 import MSWProvider from "@/providers/MSWProvider";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   // 1. 기본 메타데이터 및 타이틀 템플릿
@@ -97,23 +86,24 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <MSWProvider>
-          <ReactQueryProvider>
-            <IntlProvider>
-              <ThemeProvider>
+      <body className="antialiased">
+        {/* ThemeProvider가 가장 바깥이어야 한다. next-themes는 자기 트리 안에
+            테마 복원 스크립트를 심는데, 목업이 켜지면 MSWProvider가 준비 전까지
+            자식을 렌더하지 않아 그 스크립트까지 초기 마크업에서 빠진다. */}
+        <ThemeProvider>
+          <MSWProvider>
+            <ReactQueryProvider>
+              <IntlProvider>
                 <NavigationGuardProvider>
                   <Suspense fallback={null}>
                     <ClientLayout>{children}</ClientLayout>
                     <ToastManager />
                   </Suspense>
                 </NavigationGuardProvider>
-              </ThemeProvider>
-            </IntlProvider>
-          </ReactQueryProvider>
-        </MSWProvider>
+              </IntlProvider>
+            </ReactQueryProvider>
+          </MSWProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

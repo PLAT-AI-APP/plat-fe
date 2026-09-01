@@ -71,7 +71,7 @@ const Dialog = ({
             type="button"
             onClick={handleConfirm}
             className={cn(
-              "flex h-10.5 items-center justify-center rounded-xl bg-brand px-6 text-font-4 transition-opacity hover:opacity-90",
+              "flex h-10.5 items-center justify-center rounded-xl bg-brand px-6 text-on-brand transition-opacity hover:opacity-90",
               hasCancelButton ? "flex-1" : "w-full",
             )}
           >

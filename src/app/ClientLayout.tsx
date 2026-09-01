@@ -359,7 +359,7 @@ export default function ClientLayout({
                   left: 240,
                   top: isHeaderHidden ? 0 : 60,
                 }}
-                className="fixed bottom-0 right-0 z-20 bg-[#0D0E11]/50"
+                className="fixed bottom-0 right-0 z-20 bg-scrim/50"
                 aria-label="사이드바 접기"
                 onClick={handleFoldToggle}
                 onKeyDown={(event) => {

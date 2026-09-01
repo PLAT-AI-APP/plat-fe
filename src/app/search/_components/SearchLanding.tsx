@@ -71,7 +71,7 @@ const LiveSearchRankItem = ({ item, onSelect }: LiveSearchRankItemProps) => {
         </span>
         <TrendTriangle
           direction={item.trend}
-          className={item.trend === "up" ? "text-emerald-500" : "text-font-error"}
+          className={item.trend === "up" ? "text-success" : "text-font-error"}
         />
       </div>
     </button>
@@ -113,7 +113,7 @@ const SearchLanding = () => {
 
       <div className="flex flex-col gap-4.5">
         <div className="flex items-center justify-between whitespace-nowrap">
-          <h2 className="title-1 text-white">{t("searchLanding.liveSearchTitle")}</h2>
+          <h2 className="title-1 text-font-0">{t("searchLanding.liveSearchTitle")}</h2>
           <span className="body-5 text-font-2">{updatedAt}</span>
         </div>
 
@@ -127,7 +127,7 @@ const SearchLanding = () => {
       <div className="flex flex-col gap-5.75">
         <div className="flex flex-col gap-4.5">
           <div className="flex items-center justify-between whitespace-nowrap">
-            <h2 className="title-1 text-white">
+            <h2 className="title-1 text-font-0">
               {t("searchLanding.popularCharactersTitle")}
             </h2>
             <span className="body-5 text-font-2">{updatedAt}</span>

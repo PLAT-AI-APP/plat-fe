@@ -16,7 +16,7 @@ const NotFoundPage = () => {
       <Link
         id="back-to-home-link"
         href="/"
-        className="mt-8 px-6 py-3 bg-brand text-white rounded-lg hover:brightness-110 transition-all font-semibold"
+        className="mt-8 px-6 py-3 bg-brand text-on-brand rounded-lg hover:brightness-110 transition-all font-semibold"
       >
         홈으로 돌아가기
       </Link>

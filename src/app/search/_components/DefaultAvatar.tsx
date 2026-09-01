@@ -17,6 +17,7 @@ const DefaultAvatar = ({ className }: DefaultAvatarProps) => {
       }
       style={{
         backgroundImage:
+          // 프로필 기본 아바타의 장식 그라디언트. 테마와 무관한 고정색이다.
           "linear-gradient(-45deg, rgb(34, 197, 94) 0%, rgb(6, 182, 212) 100%)",
       }}
     >

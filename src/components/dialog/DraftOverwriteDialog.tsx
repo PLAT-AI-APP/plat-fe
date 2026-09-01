@@ -21,7 +21,7 @@ const DraftOverwriteDialog = ({
       onClose={handleCancel}
       cancelFn={handleCancel}
       label={
-        <p className="text-center text-lg font-medium text-white">
+        <p className="text-center text-lg font-medium text-font-1">
           {t("dialog.draftOverwrite.titleBefore")}
           <span className="text-brand">
             {t("dialog.draftOverwrite.titleHighlight")}

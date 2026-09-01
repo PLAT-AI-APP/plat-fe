@@ -154,7 +154,7 @@ const Header = ({ userId }: HeaderProps) => {
               alt="프로필 이미지"
               width={68}
               height={68}
-              className="size-[68px] shrink-0 rounded-full bg-[#d9d9d9] object-cover"
+              className="size-[68px] shrink-0 rounded-full bg-card-hover object-cover"
             />
 
             <div className="flex min-w-0 items-center gap-1">

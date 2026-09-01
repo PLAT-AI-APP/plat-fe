@@ -28,7 +28,7 @@ const ActiveButton = ({
       className={cn(
         "w-full h-11.5 title-3 rounded-lg transition-all",
         isActive
-          ? "bg-brand text-font-4 cursor-pointer"
+          ? "bg-brand text-on-brand cursor-pointer"
           : "bg-card text-font-1 cursor-not-allowed",
         className,
       )}

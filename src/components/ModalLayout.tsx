@@ -74,7 +74,7 @@ export const ModalLayout = ({
         <motion.div
           {...modalOverlayMotion}
           transition={modalTransition}
-          className="fixed inset-0 bg-font-4/50 z-100"
+          className="fixed inset-0 bg-scrim/50 z-100"
           style={{ zIndex: overlayZIndex }}
           onClick={(event) => {
             event.stopPropagation();

@@ -46,7 +46,7 @@ const SlideIndicators = ({
                 ? cn("bg-brand", !isLarge && "scale-110")
                 : isLarge
                   ? "bg-font-1"
-                  : "bg-[#11141F]",
+                  : "bg-scrim",
             )}
             aria-label={`View image ${index + 1}`}
           />

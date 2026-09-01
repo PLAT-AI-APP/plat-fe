@@ -138,7 +138,7 @@ const RepresentativeImage = () => {
               }}
               className={cn(
                 "absolute right-0 top-0 flex size-9 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-xl bg-brand/10 text-brand backdrop-blur-[2px] transition-transform group-hover:scale-105",
-                preview && "text-font-error bg-[#FF383C]/10",
+                preview && "text-font-error bg-danger-bg",
               )}
             >
               {preview ? (

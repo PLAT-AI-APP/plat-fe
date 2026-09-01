@@ -29,7 +29,7 @@ const ResultSection = ({ title, count, children }: ResultSectionProps) => {
     <section className="flex w-full flex-col gap-4.5">
       <header className="flex items-end justify-between whitespace-nowrap">
         <div className="flex items-end gap-1">
-          <h2 className="title-1 text-white">{title}</h2>
+          <h2 className="title-1 text-font-0">{title}</h2>
           <span className="body-4 text-font-2">
             {t("categoriesPage.resultCount", { count })}
           </span>

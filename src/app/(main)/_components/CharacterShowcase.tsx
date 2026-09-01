@@ -129,7 +129,7 @@ const CharacterShowcase = ({
             type="button"
             onClick={scrollPrev}
             aria-label={t("previousItems")}
-            className="opacity-25 hover:opacity-100 absolute left-[-18px] top-[122.5px] z-10 flex size-9 -translate-y-1/2 items-center justify-center rounded-[20px] bg-white/12 p-2 text-font-0 backdrop-blur-[1.54px] transition-colors hover:bg-white/20"
+            className="opacity-25 hover:opacity-100 absolute left-[-18px] top-[122.5px] z-10 flex size-9 -translate-y-1/2 items-center justify-center rounded-[20px] bg-overlay-font/12 p-2 text-font-0 backdrop-blur-[1.54px] transition-colors hover:bg-overlay-font/20"
           >
             <ArrowLeft className="size-5" />
           </button>
@@ -137,7 +137,7 @@ const CharacterShowcase = ({
             type="button"
             onClick={scrollNext}
             aria-label={t("nextItems")}
-            className="opacity-25 hover:opacity-100 absolute right-[-18px] top-[122.5px] z-10 flex size-9 -translate-y-1/2 items-center justify-center rounded-[20px] bg-white/12 p-2 text-font-0 backdrop-blur-[1.54px] transition-colors hover:bg-white/20"
+            className="opacity-25 hover:opacity-100 absolute right-[-18px] top-[122.5px] z-10 flex size-9 -translate-y-1/2 items-center justify-center rounded-[20px] bg-overlay-font/12 p-2 text-font-0 backdrop-blur-[1.54px] transition-colors hover:bg-overlay-font/20"
           >
             <ArrowRight className="size-5" />
           </button>

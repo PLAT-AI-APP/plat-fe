@@ -98,14 +98,14 @@ const TokenChargeContents = () => {
 
         <Link
           href="/usage-history"
-          className="body-4 shrink-0 rounded-2xl bg-main px-4 py-2 text-white transition-colors hover:bg-btn-hover"
+          className="body-4 shrink-0 rounded-2xl bg-main px-4 py-2 text-font-1 transition-colors hover:bg-btn-hover"
         >
           {t("tokenCharge.viewUsageHistory")}
         </Link>
       </div>
 
       <div className="flex flex-col gap-4">
-        <h3 className="title-2 text-white">{t("tokenCharge.purchase")}</h3>
+        <h3 className="title-2 text-font-0">{t("tokenCharge.purchase")}</h3>
 
         {isPending && <ProductListSkeleton />}
 

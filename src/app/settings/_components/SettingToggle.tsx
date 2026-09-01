@@ -24,7 +24,7 @@ const SettingToggle = ({ checked, label, onChange }: SettingToggleProps) => {
         className={cn(
           "absolute top-0.75 flex size-7 items-center justify-center rounded-[15px] transition-all",
           checked
-            ? "left-8.75 bg-brand text-font-4"
+            ? "left-8.75 bg-brand text-on-brand"
             : "left-0.75 bg-font-disabled text-font-1",
         )}
       >

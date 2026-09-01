@@ -28,7 +28,7 @@ const ViewToggle = ({ viewMode }: ViewToggleProps) => {
       aria-label={viewMode === "list" ? t("switchToGrid") : t("switchToList")}
     >
       <motion.div
-        className="absolute h-6.5 w-6.5 rounded-full bg-[#2a304d]"
+        className="absolute h-6.5 w-6.5 rounded-full bg-card-selected"
         initial={false}
         animate={{ x: viewMode === "list" ? 0 : 29 }}
         transition={{ type: "spring", stiffness: 500, damping: 30 }}

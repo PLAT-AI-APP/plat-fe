@@ -56,7 +56,7 @@ const PersonaItem = ({
           isActive
             ? "border-brand-dark bg-brand-opacity"
             : "border-transparent bg-card hover:bg-brand-opacity",
-          isDimmed && "bg-font-4",
+          isDimmed && "bg-darkest",
         )}
       >
         <div className="flex items-center justify-between gap-2">
@@ -74,7 +74,7 @@ const PersonaItem = ({
                 <span
                   className={cn(
                     "caption-2 shrink-0 rounded-lg px-1.5 py-0.75 text-brand",
-                    isDimmed ? "bg-card" : "bg-font-4",
+                    isDimmed ? "bg-card" : "bg-dark",
                   )}
                 >
                   {commonT("defaultBadge")}

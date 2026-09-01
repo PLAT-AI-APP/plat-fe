@@ -297,12 +297,12 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
             <button
               type="submit"
               className={cn(
-                "flex size-8.5 items-center justify-center rounded-full text-font-4 transition-colors",
+                "flex size-8.5 items-center justify-center rounded-full text-on-brand transition-colors",
                 msg.trim() ? "bg-brand" : "bg-font-disabled",
               )}
               aria-label={t("submitScenario")}
             >
-              <Upload className="size-6 text-font-1" />
+              <Upload className="size-6" />
             </button>
           </div>
         </div>

@@ -37,7 +37,7 @@ const MenuTab = ({ currentTab }: { currentTab: string }) => {
             }`}
           >
             {name}
-            {Icon && <Icon className="inline h-4.5 w-4.5 text-white" />}
+            {Icon && <Icon className="inline h-4.5 w-4.5" />}
 
             {isActive && (
               <div className="absolute bottom-0 left-0 w-full box-border border-b-2 border-brand" />

@@ -142,7 +142,7 @@ const CharacterProfileImage = () => {
           }}
           className={cn(
             "absolute right-0 top-0 flex size-9 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-xl bg-brand/10 text-brand backdrop-blur-[2px] transition-transform group-hover:scale-105",
-            preview && "bg-[#FF383C]/10 text-font-error",
+            preview && "bg-danger-bg text-font-error",
           )}
         >
           {preview ? (

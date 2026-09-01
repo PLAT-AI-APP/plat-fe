@@ -5,9 +5,9 @@ import React from "react";
 export const CharacterAvatar = () => (
   <div
     data-property-1="P6"
-    className="size-10 relative bg-linear-225 from-orange-500 to-red-500 rounded-[100px] overflow-hidden shrink-0"
+    className="size-10 relative bg-linear-225 from-brand to-font-error rounded-[100px] overflow-hidden shrink-0"
   >
-    <div className="w-8 h-9 left-[33.51px] top-[16.50px] absolute origin-top-left rotate-[142.81deg] bg-orange-300 rounded-full" />
+    <div className="w-8 h-9 left-[33.51px] top-[16.50px] absolute origin-top-left rotate-[142.81deg] bg-brand-dark rounded-full" />
     <div className="size-[1.53px] left-[18.29px] top-[21.02px] absolute bg-font-2 rounded-full" />
     <div className="size-[1.53px] left-[20.43px] top-[13.07px] absolute bg-font-2 rounded-full" />
     <div className="w-[3.16px] h-0.5 left-[15.70px] top-[16.49px] absolute origin-top-left rotate-[135.34deg] bg-font-2" />
@@ -45,7 +45,7 @@ export const ActionFooter = ({ isActive = true }: { isActive: boolean }) => (
   <footer className="w-full right-0 bottom-0 absolute inline-flex flex-col justify-start items-center gap-1">
     <div
       className="w-full h-25 left-0 bottom-0 absolute 
-             bg-linear-to-b from-neutral-900/0 via-neutral-900/50 to-neutral-900 
+             bg-linear-to-b from-scrim/0 via-scrim/50 to-scrim 
              rounded-br-2xl backdrop-blur-[1.5px]
              mask-[linear-gradient(to_bottom,transparent,black_20%)]"
     />

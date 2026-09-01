@@ -8,17 +8,17 @@ const CharacterCreateBanner = () => {
   const t = useTranslations("home");
 
   return (
-    <section className="w-full h-64 relative bg-darkest bg-linear-to-r from-slate-500/0 from-80% to-slate-500 rounded-2xl flex flex-col justify-start items-start gap-2.5 overflow-hidden">
+    <section className="w-full h-64 relative bg-darkest bg-linear-to-r from-card-selected/0 from-80% to-card-selected rounded-2xl flex flex-col justify-start items-start gap-2.5 overflow-hidden">
       {/* 왼쪽 텍스트 및 버튼 영역 */}
       <div
         id="banner-content"
         className="absolute left-13 top-0 h-full flex flex-col justify-center items-start gap-5"
       >
         <header className="flex flex-col justify-center items-start gap-1">
-          <p className="text-zinc-400 text-sm font-normal font-['Pretendard'] leading-5">
+          <p className="body-5 text-font-2">
             {t("createPromptCaption")}
           </p>
-          <h2 className="text-white text-xl font-bold font-['Pretendard'] leading-7">
+          <h2 className="title-1 text-font-0">
             {t("createPromptTitle")}
           </h2>
         </header>
@@ -27,7 +27,7 @@ const CharacterCreateBanner = () => {
         <button className="w-60 px-8 py-3 bg-brand-opacity rounded-xl outline-1 -outline-offset-1 outline-brand-dark inline-flex justify-center items-center gap-2.5 cursor-pointer hover:opacity-90 transition-opacity">
           <Link
             href={"/character-creat"}
-            className="text-brand-dark text-base font-semibold font-['Pretendard'] leading-6"
+            className="title-3 text-brand-dark"
           >
             {t("createCharacterCta")}
           </Link>

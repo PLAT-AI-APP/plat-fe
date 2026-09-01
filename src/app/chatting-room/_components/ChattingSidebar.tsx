@@ -129,7 +129,7 @@ const SidebarToggle = ({ isOn, onClick }: SidebarToggleProps) => {
           isOn ? "left-[26px] bg-brand" : "left-0.5 bg-font-disabled",
         )}
       >
-        <ToggleIcon className="size-4 text-white" />
+        <ToggleIcon className="size-4 text-on-brand" />
       </span>
     </button>
   );
@@ -210,7 +210,7 @@ const ChattingSidebar = ({
       transition={sidebarTransition}
       className={cn(
         "fixed inset-0 z-20 flex justify-end font-medium",
-        isDepthViewOpen ? "bg-[#0D0E11]/70" : "bg-[#0D0E11]/50",
+        isDepthViewOpen ? "bg-scrim/70" : "bg-scrim/50",
       )}
     >
       <motion.div
@@ -249,7 +249,7 @@ const ChattingSidebar = ({
                       className="flex items-center gap-1.5 rounded-lg bg-card px-3 py-2 transition-colors hover:bg-card-hover"
                     >
                       <Token className="size-[21px]" />
-                      <span className="body-4 whitespace-nowrap text-white">
+                      <span className="body-4 whitespace-nowrap text-font-1">
                         {formatWithCommas(availableBalance)}
                       </span>
                     </Link>

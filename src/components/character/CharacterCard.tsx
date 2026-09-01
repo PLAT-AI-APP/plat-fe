@@ -43,7 +43,7 @@ const CharacterCard = ({
       <div className="relative w-full aspect-square shrink-0 overflow-hidden rounded-xl">
         <Image src={char.img} alt={char.name} fill className="object-cover" />
         {/* <div className="absolute inset-0 bg-linear-to-t from-card to-transparent via-card/0.5" /> */}
-        <div className="bg-[rgba(0,0,0,0.6)] justify-center absolute right-2 gap-0.5 bottom-2 py-0.5 pl-1 pr-2 rounded-md flex text-font-2 items-center">
+        <div className="bg-scrim/60 justify-center absolute right-2 gap-0.5 bottom-2 py-0.5 pl-1 pr-2 rounded-md flex text-font-2 items-center">
           <ChatFill className="w-4 h-4 translate-y-px" />
           <span className="body-4">{char.chatCount}</span>
         </div>

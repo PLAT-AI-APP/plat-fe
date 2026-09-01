@@ -94,7 +94,7 @@ const ChatForm = ({ onSendMessage }: ChatFormProps) => {
           <button
             type="button"
             onClick={handleSituationInsert}
-            className="body-4 flex h-8 items-center justify-center gap-1.5 rounded-[100px] border border-main bg-[#171D28]/50 py-1.5 pl-2.5 pr-3 text-font-2 transition-colors hover:bg-btn-hover"
+            className="body-4 flex h-8 items-center justify-center gap-1.5 rounded-[100px] border border-main bg-card/50 py-1.5 pl-2.5 pr-3 text-font-2 transition-colors hover:bg-btn-hover"
           >
             <Asterisk className="size-4" />
             {t("chatUI.situation")}
@@ -106,7 +106,7 @@ const ChatForm = ({ onSendMessage }: ChatFormProps) => {
             type="submit"
             className="flex size-8.5 items-center justify-center rounded-full p-0"
           >
-            <MoveUp className="size-6 text-white" />
+            <MoveUp className="size-6" />
           </ActiveButton>
         </footer>
       </fieldset>

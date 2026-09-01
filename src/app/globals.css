@@ -2,18 +2,79 @@
 @import "react-easy-crop/react-easy-crop.css";
 @variant dark (&:where(.dark, .dark *));
 
+/* =========================================================================
+ * 색상 토큰
+ *
+ * 네이밍은 다크 테마를 기준으로 붙어 있다(--bg-dark, --button-dark-hover 등).
+ * 라이트에서는 이름이 아니라 **역할**로 읽어야 한다:
+ *   --bg-dark      = 기본 표면(페이지 · 모달 · 팝오버 · 사이드바)
+ *   --bg-darker    = 한 단계 들어간 면
+ *   --bg-darkest   = 가장 들어간 면(입력 필드 등)
+ *   --bg-card      = 카드 · 패널
+ *   --font-0 → --font-3-disabled = 강함 → 약함
+ *   --font-4       = --font-1의 반전(어두운 면 위 글자)
+ * 두 블록은 **같은 키 집합**을 정의해야 한다. 한쪽에만 있는 키는 반대 테마에서
+ * var()가 해석되지 않아 배경이 투명해지거나 보더가 currentColor로 떨어진다.
+ * ========================================================================= */
 :root {
+  /* 오렌지 브랜드는 두 테마 공통. 다만 --brand-dark 는 "현재 배경 위에서 읽히는
+     브랜드 텍스트/보더색"이라 라이트에서는 더 어둡게, 다크에서는 더 밝게 뒤집힌다.
+     (bg-brand-dark 사용처는 없고 text-/border- 로만 쓰인다) */
   --brand: #ff7a00;
-  --brand-dark: #ff9a3c;
+  --brand-dark: #c25600;
   --brand-opacity: rgba(255, 122, 0, 0.1); /* 10% 투명도 적용 */
   --brand-opacity-2: rgba(255, 122, 0, 0.2); /* 20% 투명도 적용 */
-  --brand-opacity-3: #ff7a0008; /* 3% 투명도 적용 */
+  --brand-opacity-3: rgba(255, 122, 0, 0.04);
+
+  --font-0: #0b0d17;
+  --font-1: #11141f;
+  --font-2: #4a4d5e;
+  --font-3-disabled: #9096a8;
+  --font-4: #ffffff;
   --font-error: #ff3842;
   --font-accents: #ed1c24;
 
-  --font-1: #11141f;
-  --font-2: #4a4d5e;
+  --border: #e3e5eb;
+
   --bg-dark: #ffffff;
+  --bg-darker: #f7f8fa;
+  --bg-darkest: #f1f3f6;
+  --bg-card: #f5f6f8;
+  --bg-card-hover: #eceef2;
+  --bg-card-selected: #e4e7ee;
+  --button-dark-hover: #f2f3f6;
+  --button-dark-selected: #e8eaf0;
+
+  /* 상태색 — 지금까지 #00c925 / #0088FF / #34C759 / #F2B34A 처럼
+     화면마다 다르게 하드코딩되던 값들을 여기로 모은다. */
+  --success: #12a150;
+  --success-bg: rgba(18, 161, 80, 0.1);
+  --warning: #c2620a;
+  --warning-bg: rgba(194, 98, 10, 0.1);
+  --danger: #e5484d;
+  --danger-bg: rgba(229, 72, 77, 0.1);
+  --info: #2563eb;
+  --info-bg: rgba(37, 99, 235, 0.1);
+
+  /* --- 테마 불변 토큰: .dark 에서 재정의하지 않는다 --- */
+
+  /* 브랜드 오렌지(#ff7a00)는 두 테마 모두 밝은 면이라, 그 위 글자는 항상 어둡다.
+     --font-4 는 라이트에서 흰색으로 뒤집히므로 이 자리에 쓰면 안 된다. */
+  --on-brand: #0d0e11;
+
+  /* 스크림 / 사진 위에 얹는 면. 뒤를 덮거나 이미지 위에 놓이는 자리라
+     두 테마 모두 어둡다. 불투명도는 Tailwind 수식자로 조절한다 —
+     bg-scrim/50(모달 배경) · bg-scrim/80(카드 오버레이) · bg-scrim(불투명). */
+  --scrim: #0d0e11;
+  /* 스크림 위 글자는 테마와 무관하게 항상 밝다(--font-1 은 라이트에서 검게 뒤집힌다). */
+  --overlay-font: #ffffff;
+
+  /* 그림자 — 라이트에서는 검정 50% 그림자가 지나치게 무거워 테마별로 나눈다.
+     @theme inline 은 정적이라 여기서 값을 잡고 거기서 별칭만 건다. */
+  --elevation-card: 0 1px 2px 0 rgba(16, 24, 40, 0.06);
+  --elevation-popover: 0 8px 24px 0 rgba(16, 24, 40, 0.12);
+  --elevation-modal: 0 24px 48px -12px rgba(16, 24, 40, 0.18);
+  --elevation-card-heavy: 0 10px 40px 0 rgba(16, 24, 40, 0.16);
 }
 
 input:-webkit-autofill,
@@ -21,13 +82,19 @@ input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
   /* 배경색을 그림자로 덮어씌워 보이지 않게 함 */
-  -webkit-box-shadow: 0 0 0px 1000px #161922 inset !important; /* 글자 색상 고정 */
-  -webkit-text-fill-color: #ffffff !important;
+  -webkit-box-shadow: 0 0 0px 1000px var(--bg-darkest) inset !important;
+  -webkit-text-fill-color: var(--font-1) !important;
   /* 배경색 전환 애니메이션을 아주 길게 설정하여 색 변화 방지 */
   transition: background-color 5000s ease-in-out 0s;
 }
 
 .dark {
+  --brand: #ff7a00;
+  --brand-dark: #ff9a3c;
+  --brand-opacity: rgba(255, 122, 0, 0.1);
+  --brand-opacity-2: rgba(255, 122, 0, 0.2);
+  --brand-opacity-3: rgba(255, 122, 0, 0.03);
+
   --font-0: #f5f5f5;
   --font-1: #ecedf5;
   --font-2: #989db8;
@@ -35,7 +102,9 @@ input:-webkit-autofill:active {
   --font-4: #0d0e11;
   --font-accents: #ed1c24;
   --font-error: #ff3842;
+
   --border: #2a2f4a;
+
   --bg-dark: #11141f;
   --bg-darker: #0e1018;
   --bg-darkest: #0a0c14;
@@ -44,13 +113,37 @@ input:-webkit-autofill:active {
   --bg-card-selected: #252b50;
   --button-dark-hover: #161a28;
   --button-dark-selected: #1c2138;
+
+  --success: #00c925;
+  --success-bg: rgba(0, 201, 37, 0.16);
+  --warning: #ff9a3c;
+  --warning-bg: rgba(255, 154, 60, 0.16);
+  --danger: #ff3842;
+  --danger-bg: rgba(255, 56, 66, 0.16);
+  --info: #60a5fa;
+  --info-bg: rgba(96, 165, 250, 0.16);
+
+  --elevation-card: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --elevation-popover: 0 8px 24px 0 rgba(0, 0, 0, 0.2);
+  --elevation-modal: 0 24px 48px -12px rgba(0, 0, 0, 0.55);
+  --elevation-card-heavy: 0 10px 40px 0 rgba(0, 0, 0, 0.5);
 }
 
 @theme inline {
   /* hover 전환 기본 시간 */
   --default-transition-duration: 0.2s;
-  --shadow-card-heavy: 0 10px 40px 0 rgba(0, 0, 0, 0.5);
-  --shadow-popover: 0 8px 24px 0 rgba(0, 0, 0, 0.2);
+
+  /* 그림자 스케일 — card < popover < modal 순으로만 깊어진다 */
+  --shadow-card: var(--elevation-card);
+  --shadow-card-heavy: var(--elevation-card-heavy);
+  --shadow-popover: var(--elevation-popover);
+  --shadow-modal: var(--elevation-modal);
+
+  /* 모서리 스케일 — chip < field < card < modal */
+  --radius-chip: 8px;
+  --radius-field: 12px;
+  --radius-card: 16px;
+  --radius-modal: 20px;
 
   --color-font-0: var(--font-0);
   --color-font-1: var(--font-1);
@@ -74,6 +167,22 @@ input:-webkit-autofill:active {
   --color-brand-opacity-2: var(--brand-opacity-2);
   --color-brand-opacity-3: var(--brand-opacity-3);
   --color-font-accents: var(--font-accents);
+
+  /* 상태색: text-success / bg-success-bg … */
+  --color-success: var(--success);
+  --color-success-bg: var(--success-bg);
+  --color-warning: var(--warning);
+  --color-warning-bg: var(--warning-bg);
+  --color-danger: var(--danger);
+  --color-danger-bg: var(--danger-bg);
+  --color-info: var(--info);
+  --color-info-bg: var(--info-bg);
+
+  /* 브랜드 배경 위 글자: text-on-brand */
+  --color-on-brand: var(--on-brand);
+  /* 스크림: bg-scrim (+ /50 /80 등) / text-overlay-font */
+  --color-scrim: var(--scrim);
+  --color-overlay-font: var(--overlay-font);
 }
 
 html,
@@ -88,7 +197,9 @@ body {
 
   letter-spacing: -0.025em;
   line-height: 1.4;
-  font-family: "Pretendard";
+  font-family:
+    "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
+    "Segoe UI", Roboto, sans-serif;
   white-space: pre-wrap;
 }
 
@@ -515,7 +626,7 @@ button {
   display: none !important;
 }
 .react-calendar__navigation button:hover {
-  color: white !important;
+  color: var(--font-1) !important;
 }
 
 /* 5. 월간 날짜 뷰 스타일 */
@@ -547,7 +658,7 @@ button {
   color: var(--font-1);
 }
 
-/* 요일 색상 */
+/* 요일 색상 — 일(빨강)/토(파랑)는 달력 관례라 테마와 무관하게 고정한다. */
 .react-calendar__month-view__weekdays__weekday:nth-child(1) abbr {
   color: #d33c3c !important;
 }

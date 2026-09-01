@@ -70,6 +70,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
     },
   ];
   const tendencyArray = [
+    // 성별 선택 칩의 식별색. 상태색이 아니라 항목을 구분하는 고유색이라 테마와 무관하게 고정한다.
     { name: selectorT("all"), color: "#AA8BD8" },
     { name: selectorT("male"), color: "#60A5FA" },
     { name: selectorT("female"), color: "#F472B6" },
@@ -171,7 +172,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
       className={cn(
         "transition-colors",
         isLoggedIn
-          ? "w-[240px] min-w-[240px] overflow-hidden px-2 py-3 shadow-[0_10px_40px_0_rgba(0,0,0,0.5)]"
+          ? "w-[240px] min-w-[240px] overflow-hidden px-2 py-3 shadow-card-heavy"
           : "w-75",
       )}
     >
@@ -199,14 +200,14 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
         <div className="p-2 flex flex-col gap-3 text-sm font-medium">
           <div
             onClick={() => handleLoginBtn("KAKAO")}
-            className="flex cursor-pointer items-center justify-center relative body-4 text-center h-11.5 rounded-lg bg-[#FEE500] w-full py-2 text-darkest"
+            className="flex cursor-pointer items-center justify-center relative body-4 text-center h-11.5 rounded-lg bg-[#FEE500] w-full py-2 text-scrim"
           >
             <Kakao className="absolute w-5.5 h-5.5 top-1/2 left-7.5 -translate-y-1/2" />
             {t("loginWithKakao")}
           </div>
           <div
             onClick={() => handleLoginBtn("GOOGLE")}
-            className="flex cursor-pointer items-center justify-center relative body-4 text-center h-11.5 rounded-lg bg-white w-full py-2 text-black"
+            className="flex cursor-pointer items-center justify-center relative body-4 text-center h-11.5 rounded-lg bg-font-1 w-full py-2 text-font-4"
           >
             <Google className="absolute w-5.5 h-5.5 top-1/2 left-7.5 -translate-y-1/2" />
             {t("loginWithGoogle")}

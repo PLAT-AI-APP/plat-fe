@@ -167,7 +167,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
             value={email}
             placeholder="auth.login.emailPlaceholder"
             inputClassName={cn(
-              "bg-black/20 px-4 py-3 text-font-1",
+              "bg-darkest px-4 py-3 text-font-1",
               "focus:border-brand transition-all",
               errors.email && "border-font-accents focus:border-font-accents",
               isEmailVerified && "bg-card text-font-2",
@@ -191,9 +191,9 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
             className={cn(
               "mt-[29px] flex max-h-11.75 w-fit items-center justify-center gap-2 rounded-xl px-4 py-3 text-nowrap",
               isEmailButtonActive
-                ? "bg-brand text-font-4"
+                ? "bg-brand text-on-brand"
                 : "bg-font-disabled text-font-1",
-              isEmailVerified && "bg-brand text-font-4",
+              isEmailVerified && "bg-brand text-on-brand",
               isOtpSent && "border border-brand-dark bg-brand/10 text-brand-dark",
             )}
             textClassName="body-4"
@@ -203,7 +203,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
               <>
                 <span
                   aria-hidden="true"
-                  className="h-4 w-4 animate-spin rounded-full border-2 border-font-4/40 border-t-font-4"
+                  className="h-4 w-4 animate-spin rounded-full border-2 border-on-brand/40 border-t-on-brand"
                 />
                 <span className="body-4 font-normal">
                   {t("auth.emailVerification.requesting")}
@@ -244,7 +244,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
                     );
                   }}
                   inputClassName={cn(
-                    "h-11 rounded-lg bg-black/20 px-4 py-3 pr-16 text-sm text-font-1",
+                    "h-11 rounded-lg bg-darkest px-4 py-3 pr-16 text-sm text-font-1",
                     "placeholder:text-font-2/50 focus:border-brand transition-all",
                     errors.code &&
                       "border-font-accents focus:border-font-accents",

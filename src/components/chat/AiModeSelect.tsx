@@ -17,13 +17,13 @@ interface AiModelListItemProps {
   onSelect: (model: AIModelType) => void;
 }
 
-/** 모델 아이콘 배경색 */
+/** 모델 아이콘 배경색. 제공사 고유 브랜드색이라 테마와 무관하게 고정한다. */
 const getModelIconClassName = (modelId: string) => {
   if (modelId.includes("Claude")) return "bg-[#d77655]";
   if (modelId.includes("GPT")) return "bg-[#84aca0]";
   if (modelId === "Free") return "bg-brand";
 
-  return "bg-white";
+  return "bg-font-1";
 };
 
 const AiModelListItem = ({ model, onSelect }: AiModelListItemProps) => {
@@ -175,7 +175,7 @@ const AiModelSelect = ({ currentAi, handleCurrentAi }: AiModelSelectProps) => {
         id="ai-model-selector-trigger"
         onClick={() => setIsAiModelSelect((prev) => !prev)}
         ref={triggerRef}
-        className="flex h-[34px] min-w-[108px] cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-main bg-[#171D28]/50 py-[5px] pl-2 pr-3 text-font-1 transition-colors hover:bg-btn-hover"
+        className="flex h-[34px] min-w-[108px] cursor-pointer items-center justify-center gap-1.5 whitespace-nowrap rounded-full border border-main bg-card/50 py-[5px] pl-2 pr-3 text-font-1 transition-colors hover:bg-btn-hover"
       >
         <Image
           src={currentAi.icon}

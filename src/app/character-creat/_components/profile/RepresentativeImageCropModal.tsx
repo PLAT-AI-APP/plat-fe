@@ -91,7 +91,7 @@ const RepresentativeImageCropModal = ({
         </header>
 
         <div className="flex flex-col gap-4">
-          <section className="relative aspect-square w-full overflow-hidden bg-black">
+          <section className="relative aspect-square w-full overflow-hidden bg-scrim">
             <Cropper
               image={imageSrc}
               crop={crop}
@@ -123,7 +123,7 @@ const RepresentativeImageCropModal = ({
           <button
             type="button"
             onClick={onClose}
-            className="title-5 h-11 flex-1 rounded-2xl bg-[#2C3153] px-5 text-font-1 transition-colors hover:bg-[#34395F]"
+            className="title-5 h-11 flex-1 rounded-2xl bg-card-selected px-5 text-font-1 transition-colors hover:bg-main"
           >
             {t("cancel")}
           </button>
@@ -135,7 +135,7 @@ const RepresentativeImageCropModal = ({
               "title-5 h-11 flex-1 rounded-2xl px-5 transition-colors",
               isApplying || !croppedAreaPixels
                 ? "cursor-not-allowed bg-card text-font-disabled"
-                : "bg-brand text-black hover:bg-[#FF9400]",
+                : "bg-brand text-on-brand hover:bg-brand-dark",
             )}
           >
             {t("apply")}
