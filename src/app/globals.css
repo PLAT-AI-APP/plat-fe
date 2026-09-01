@@ -87,7 +87,7 @@
    *   10~30  : 화면 안 요소(헤더 20, 사이드바 오버레이 30)
    *   100/101: 모달 배경 / 모달 본문
    *   110/111: 모달 위에 다시 뜨는 것(날짜 선택기 등)
-   *   200    : toast — 항상 최상단
+   *   200    : toast — 항상 최상단(sonner 기본값을 이 값으로 낮춘다)
    */
 
   /* 모션 — 테마와 무관하다. Tailwind 쪽 별칭은 @theme inline 참고. */
@@ -302,125 +302,40 @@ button {
   }
 }
 
-/* Toast */
-/* 각 toast가 문서 흐름이 아니라 자기 순위(rank)에 맞는 위치로 직접 이동하는
-   방식이라(ToastManager.tsx 참고), 이 컨테이너는 화면 상단 중앙의 기준점
-   역할만 하고 실제 정렬/간격은 담당하지 않습니다. */
-.app-toast-viewport {
-  position: fixed;
-  top: 40px;
-  left: 50%;
+/* =========================================================================
+ * Sonner — 상단 중앙 알림
+ *
+ * plat-admin-fe 의 toast 박스 디자인을 그대로 옮겼다. 표면은 카드와 같은
+ * 토큰을 쓰고, variant 별로 색이 바뀌는 것은 아이콘 하나뿐이다.
+ * ========================================================================= */
+/* 겹침 순서를 위에 적어 둔 층(toast 200)에 맞춘다. sonner 기본값은 999999999 다. */
+[data-sonner-toaster] {
   z-index: 200;
 }
 
-.app-toast-s {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: min(445px, calc(100vw - 32px));
-  min-height: 126px;
+[data-sonner-toast].sonner-toast {
+  width: min(420px, calc(100vw - 32px));
+  min-height: auto;
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 20px;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 16px;
+  font-family: inherit;
   border: 1px solid var(--border);
   border-radius: 12px;
-  background: var(--bg-dark, #11141f);
-  padding: 16px;
-  font-family: "Pretendard", sans-serif;
-  backdrop-filter: blur(3.25px);
-}
-
-.app-toast-s__content {
-  display: flex;
-  width: 100%;
-  align-items: flex-start;
-  gap: 8px;
-}
-
-.app-toast-s__icon {
-  display: flex;
-  width: 28px;
-  height: 28px;
-  flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  color: var(--toast-border, var(--font-error));
-}
-
-.app-toast-s__status-icon {
-  width: 28px;
-  height: 28px;
-}
-
-.app-toast-s__text {
-  display: flex;
-  min-width: 0;
-  flex: 1;
-  flex-direction: column;
-  gap: 4px;
-  padding-top: 3.5px;
-}
-
-.app-toast-s__title,
-.app-toast-s__description,
-.app-toast-s__action {
-  font-size: 0.875rem;
-  font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: 0;
-  white-space: nowrap;
-}
-
-.app-toast-s__title {
+  background: var(--bg-card);
   color: var(--font-1);
+  box-shadow: var(--elevation-popover);
 }
 
-.app-toast-s__description {
-  color: var(--font-3-disabled);
-}
-
-.app-toast-s__action {
-  display: flex;
-  width: 49px;
-  height: 38px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  background: var(--toast-action-bg, rgba(255, 56, 66, 0.2));
-  color: var(--toast-border, var(--font-error));
-  padding: 0 12px;
-  transition: none;
-}
-
-.app-toast-s__action:hover {
-  background: var(--toast-action-bg, rgba(255, 56, 66, 0.2));
-  color: var(--toast-border, var(--font-error));
-}
-
-.app-toast-s-success {
-  --toast-border: #00c925;
-  --toast-action-bg: rgba(0, 201, 37, 0.2);
-}
-
-.app-toast-s-error {
-  --toast-border: var(--font-error);
-  --toast-action-bg: rgba(255, 56, 66, 0.2);
-}
-
-.app-toast-s-warning {
-  --toast-border: var(--brand-dark);
-  --toast-action-bg: rgba(255, 154, 60, 0.2);
-}
-
-.app-toast-s-info {
-  --toast-border: var(--font-3-disabled);
-  --toast-action-bg: rgba(92, 97, 128, 0.2);
-}
-
-.app-toast-s-info .app-toast-s__action,
-.app-toast-s-info .app-toast-s__action:hover {
-  color: var(--font-1);
+/*
+ * unstyled: true 를 주면 sonner 가 data-styled="false" 를 붙이는데,
+ * 뒤쪽 toast 의 내용을 숨기는 sonner 기본 규칙이 data-styled="true" 에만
+ * 걸려 있다. 그래서 접힌 상태에서 뒤 toast 의 글자가 앞 toast 를 뚫고
+ * 비쳐 보인다(plat-admin-fe 에 지금도 남아 있는 증상). 직접 막아 준다.
+ */
+[data-sonner-toast][data-expanded="false"][data-front="false"] > * {
+  opacity: 0;
 }
 
 /* Display */
