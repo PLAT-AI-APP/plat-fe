@@ -56,10 +56,7 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
         id="header-right-section"
         className="flex h-10 flex-1 items-center justify-end gap-2"
       >
-        <div
-          id="header-utility-group"
-          className="flex items-center gap-2"
-        >
+        <div id="header-utility-group" className="flex items-center gap-2">
           {/* 포인트 표시 영역 */}
           {isLoggedIn && (
             <Link
@@ -84,7 +81,7 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
             <button
               id="header-notification-button"
               type="button"
-              className="bg-transparent border-none p-0 cursor-pointer"
+              className="cursor-pointer border-none bg-transparent p-0 hover:opacity-80"
             >
               <BellOn
                 id="icon-notification-bell"

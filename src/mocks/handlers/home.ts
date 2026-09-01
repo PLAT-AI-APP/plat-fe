@@ -94,7 +94,8 @@ const OFFICIAL_PREVIEW_ITEMS = Array.from({ length: 24 }, (_, index) => {
       {
         episodeNo: 1,
         title: "첫 만남",
-        content: "방과 후 과학실에서 정체를 알 수 없는 캐릭터와 처음 마주치는 장면",
+        content:
+          "방과 후 과학실에서 정체를 알 수 없는 캐릭터와 처음 마주치는 장면",
       },
     ],
   };

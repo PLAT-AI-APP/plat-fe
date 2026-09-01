@@ -1,6 +1,8 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { useRef } from "react";
+import { TRANSITION_FAST, popVariants } from "@/constants/motion";
 import { useClickAway } from "@/hooks/useClickAway";
 import { cn } from "@/lib/utils";
 
@@ -27,16 +29,30 @@ export const PopoverLayout = ({
   useClickAway(popoverRef, onClose, triggerRef);
 
   return (
-    <div
+    <motion.div
       ref={popoverRef}
+      role="menu"
+      /*
+       * 모달(ModalLayout)은 등장/퇴장 애니메이션이 있는데 팝오버만 없어서,
+       * 같은 앱 안에서 오버레이가 뜨는 방식이 둘로 갈려 있었다. 모달과 같은
+       * variants·속도를 쓴다. 퇴장까지 재생하려면 호출부에서
+       * AnimatePresence 로 감싸야 한다.
+       */
+      {...popVariants}
+      transition={TRANSITION_FAST}
       onClick={(e) => e.stopPropagation()}
       onMouseDown={(e) => e.stopPropagation()}
+      onKeyDown={(event) => {
+        if (event.key !== "Escape") return;
+        event.stopPropagation();
+        onClose();
+      }}
       className={cn(
-        "absolute right-0 top-[calc(100%+10px)] z-50 min-w-37.5 max-w-[calc(100vw-40px)] rounded-xl border border-main bg-dark px-2 py-3 shadow-popover",
+        "absolute right-0 top-[calc(100%+10px)] z-50 min-w-37.5 max-w-[calc(100vw-40px)] origin-top rounded-xl border border-main bg-dark px-2 py-3 shadow-popover",
         className,
       )}
     >
       {children}
-    </div>
+    </motion.div>
   );
 };

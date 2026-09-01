@@ -22,7 +22,8 @@ const ViewToggle = ({ viewMode }: ViewToggleProps) => {
   };
 
   return (
-    <button type="button"
+    <button
+      type="button"
       id="view-mode-toggle"
       onClick={toggleViewMode}
       className="relative flex h-8.5 w-16.5 cursor-pointer items-center overflow-hidden rounded-full border border-main bg-darkest p-1"

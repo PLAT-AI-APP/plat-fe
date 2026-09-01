@@ -85,7 +85,10 @@ const CharacterProfile = ({
             </span>
           </div>
         </div>
-        <button type="button" className="title-5 rounded-xl bg-font-1 px-2.5 py-1 text-dark">
+        <button
+          type="button"
+          className="title-5 rounded-xl bg-font-1 px-2.5 py-1 text-dark hover:opacity-90"
+        >
           {t("characterDetail.follow")}
         </button>
       </div>

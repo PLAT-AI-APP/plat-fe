@@ -44,7 +44,11 @@ interface CreateTabsProps {
   setCurrentTabId: (id: TabId) => void;
   activeScenarioIndex: number;
   setActiveScenarioIndex: (index: number) => void;
-  assetFieldArray: UseFieldArrayReturn<CharacterCreateFormValues, "asset", "id">;
+  assetFieldArray: UseFieldArrayReturn<
+    CharacterCreateFormValues,
+    "asset",
+    "id"
+  >;
 }
 
 const CreateTabs = ({

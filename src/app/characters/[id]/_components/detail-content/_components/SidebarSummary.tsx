@@ -86,7 +86,9 @@ const SidebarSummary = ({
           <button
             type="button"
             onClick={() =>
-              router.push(`/character-creat?universeId=${character.characterId}`)
+              router.push(
+                `/character-creat?universeId=${character.characterId}`,
+              )
             }
             className="body-4 flex w-fit items-center gap-1 rounded-xl border border-btn-selected bg-darker px-3 py-2 text-font-2 transition-colors hover:bg-card"
           >
@@ -134,7 +136,7 @@ const SidebarSummary = ({
             key={image.id}
             type="button"
             onClick={() => onSelectImage(index)}
-            className="relative size-[73px] shrink-0 overflow-hidden rounded-lg"
+            className="relative size-[73px] shrink-0 overflow-hidden rounded-lg transition-opacity hover:opacity-80"
             aria-label={t("previewImageLabel", {
               title: character.title,
               index: index + 1,

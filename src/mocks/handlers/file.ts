@@ -15,10 +15,7 @@ const getUploadedFileExtension = (file: File) => {
   return extension || "webp";
 };
 
-const createMockFileUploadResponse = (
-  fileType: FileUploadType,
-  file: File,
-) => {
+const createMockFileUploadResponse = (fileType: FileUploadType, file: File) => {
   const baseId = Date.now();
   const fileId = crypto.randomUUID();
   const extension = getUploadedFileExtension(file);

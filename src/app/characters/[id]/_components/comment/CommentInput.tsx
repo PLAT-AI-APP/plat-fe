@@ -65,7 +65,9 @@ export const CommentInput = ({
             text && "bg-card-hover",
           )}
         >
-          {isReplyMode ? t("characterDetail.reply") : t("characterDetail.submit")}
+          {isReplyMode
+            ? t("characterDetail.reply")
+            : t("characterDetail.submit")}
         </button>
       </div>
     </form>

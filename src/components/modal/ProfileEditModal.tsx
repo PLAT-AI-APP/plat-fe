@@ -83,7 +83,7 @@ const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
           <button
             type="button"
             onClick={() => openModal("FIND_PASSWORD")}
-            className="body-4 w-fit text-font-2 underline"
+            className="body-4 w-fit text-font-2 underline hover:text-font-1"
           >
             {t("changePassword")}
           </button>

@@ -29,13 +29,12 @@ const GenderField = () => {
               })
             }
             className={cn(
-              "body-4 flex-1 rounded-xl bg-card py-3 transition-colors",
-              gender === g && "title-5 bg-brand/10 text-brand",
+              "body-4 flex-1 rounded-xl bg-card py-3 text-font-2 transition-colors hover:bg-card-hover hover:text-font-1",
+              gender === g &&
+                "bg-brand/10 text-brand hover:bg-brand/20 hover:text-brand",
             )}
           >
-            {g === "MALE"
-              ? t("fieldsExtra.male")
-              : t("fieldsExtra.female")}
+            {g === "MALE" ? t("fieldsExtra.male") : t("fieldsExtra.female")}
           </button>
         ))}
       </div>

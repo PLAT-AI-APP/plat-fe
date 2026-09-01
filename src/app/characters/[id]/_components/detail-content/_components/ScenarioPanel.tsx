@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import ScenarioSelectPopover from "@/components/popover/ScenarioSelectPopover";
 import { ArrowDown, Message } from "@/icons";
@@ -92,15 +92,17 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
             />
           </button>
 
-          {isScenarioPopoverOpen && (
-            <ScenarioSelectPopover
-              currentScenario={selectedScenario}
-              handleCurrentScenario={handleScenarioChange}
-              onClose={() => setIsScenarioPopoverOpen(false)}
-              scenarioList={character.scenarios}
-              triggerRef={scenarioSelectTriggerRef}
-            />
-          )}
+          <AnimatePresence>
+            {isScenarioPopoverOpen && (
+              <ScenarioSelectPopover
+                currentScenario={selectedScenario}
+                handleCurrentScenario={handleScenarioChange}
+                onClose={() => setIsScenarioPopoverOpen(false)}
+                scenarioList={character.scenarios}
+                triggerRef={scenarioSelectTriggerRef}
+              />
+            )}
+          </AnimatePresence>
         </div>
 
         <motion.div

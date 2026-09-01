@@ -14,8 +14,7 @@ import { cn } from "@/lib/utils";
 import { ProfileEditFormType } from "@/schema/profile.schema";
 import { useFormContext } from "react-hook-form";
 
-interface BirthDateInputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
+interface BirthDateInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: boolean;
   handleBirthDate?: (date: string) => void;
   isEditMode?: boolean;

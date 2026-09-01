@@ -100,7 +100,7 @@ export const TagFolder = ({
       <button
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
-        className="flex h-[21px] w-full items-center justify-between text-left"
+        className="flex h-[21px] w-full items-center justify-between text-left text-font-2 hover:text-font-1"
       >
         <span className="body-4 flex items-center gap-1.5 text-font-2">
           {title}

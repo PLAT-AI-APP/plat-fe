@@ -95,5 +95,9 @@ export const HelperMessage = ({
 
   if (!message) return null;
 
-  return <span className="pt-2 body-6 block text-font-2">{translateText(message)}</span>;
+  return (
+    <span className="pt-2 body-6 block text-font-2">
+      {translateText(message)}
+    </span>
+  );
 };

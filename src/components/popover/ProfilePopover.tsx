@@ -112,8 +112,9 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
     return true;
   });
 
-  const [currentTendency, setCurrentTendency] =
-    useState<(typeof tendencyArray)[number]["name"]>(selectorT("all"));
+  const [currentTendency, setCurrentTendency] = useState<
+    (typeof tendencyArray)[number]["name"]
+  >(selectorT("all"));
 
   const handleCurrentTendency = (name: string) => {
     setCurrentTendency(name);
@@ -226,9 +227,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
         <div className="h-px w-full bg-main" />
       </div>
 
-      <h3 className="caption-1 pb-1.5 pl-2.5 text-font-2">
-        {t("activity")}
-      </h3>
+      <h3 className="caption-1 pb-1.5 pl-2.5 text-font-2">{t("activity")}</h3>
       <div className="flex flex-col gap-1.5">
         {filteredActivityArray.map((tab) => {
           const Icon = tab.icon;

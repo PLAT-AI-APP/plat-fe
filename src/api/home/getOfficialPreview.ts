@@ -45,7 +45,9 @@ const getOfficialPreview = async ({
 };
 
 /** 홈 화면 공식 캐릭터 미리보기 목록 조회 */
-export const useOfficialPreviewQuery = (params: GetOfficialPreviewParams = {}) => {
+export const useOfficialPreviewQuery = (
+  params: GetOfficialPreviewParams = {},
+) => {
   // 언어가 바뀌면 Accept-Language 헤더로 나가는 응답도 달라지므로 캐시 키에 반영합니다.
   const locale = useLocaleStore((state) => state.locale);
 

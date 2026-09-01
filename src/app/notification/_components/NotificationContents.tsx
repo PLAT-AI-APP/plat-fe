@@ -9,9 +9,7 @@ interface NotificationContentsProps {
   currentFilter: "NOTICE" | "UPDATE" | "EVENT" | null | undefined;
 }
 
-const NotificationContents = ({
-  currentFilter,
-}: NotificationContentsProps) => {
+const NotificationContents = ({ currentFilter }: NotificationContentsProps) => {
   const t = useTranslations();
 
   return (

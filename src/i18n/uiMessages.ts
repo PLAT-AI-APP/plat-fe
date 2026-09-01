@@ -14,9 +14,11 @@ const ko = {
     createCharacterCta: "캐릭터 생성하기",
     bannerAlt: "메인 배너 {index}",
     banner1Title: "첫 번째 이벤트 제목",
-    banner1Desc: "첫 번째 배너의 상세 내용입니다. 여기에 원하는 설명을 적으세요.",
+    banner1Desc:
+      "첫 번째 배너의 상세 내용입니다. 여기에 원하는 설명을 적으세요.",
     banner2Title: "두 번째 프로모션 제목",
-    banner2Desc: "두 번째 배너의 상세 내용입니다. 가볍고 빠른 캐러셀 라이브러리!",
+    banner2Desc:
+      "두 번째 배너의 상세 내용입니다. 가볍고 빠른 캐러셀 라이브러리!",
     banner3Title: "세 번째 기획전 제목",
     banner3Desc: "세 번째 배너의 상세 내용입니다. 놓치면 후회하는 마지막 기회.",
     eventTag: "#이벤트",
@@ -195,11 +197,14 @@ const en = {
     createCharacterCta: "Create character",
     bannerAlt: "Main banner {index}",
     banner1Title: "First event headline",
-    banner1Desc: "This is the detailed copy for the first banner. Add any description you want here.",
+    banner1Desc:
+      "This is the detailed copy for the first banner. Add any description you want here.",
     banner2Title: "Second promotion headline",
-    banner2Desc: "This is the detailed copy for the second banner. A light and fast carousel experience.",
+    banner2Desc:
+      "This is the detailed copy for the second banner. A light and fast carousel experience.",
     banner3Title: "Third feature headline",
-    banner3Desc: "This is the detailed copy for the third banner. A last chance you may regret missing.",
+    banner3Desc:
+      "This is the detailed copy for the third banner. A last chance you may regret missing.",
     eventTag: "#Event",
     benefitTag: "#Benefit",
     startTag: "#Start",
@@ -214,7 +219,8 @@ const en = {
     searchResults: "Search results",
     resultCount: "{count}",
     recommendedCharacters: "Characters recommended by PLAT",
-    recommendedDescription: "They may not match your tags exactly, but they could still fit your taste",
+    recommendedDescription:
+      "They may not match your tags exactly, but they could still fit your taste",
   },
   rankingPage: {
     title: "Live popular characters",
@@ -376,11 +382,14 @@ const ja = {
     createCharacterCta: "キャラクターを作成",
     bannerAlt: "メインバナー {index}",
     banner1Title: "1つ目のイベント見出し",
-    banner1Desc: "1つ目のバナーの詳細説明です。ここに好きな説明文を入れてください。",
+    banner1Desc:
+      "1つ目のバナーの詳細説明です。ここに好きな説明文を入れてください。",
     banner2Title: "2つ目のプロモーション見出し",
-    banner2Desc: "2つ目のバナーの詳細説明です。軽快で素早いカルーセル体験です。",
+    banner2Desc:
+      "2つ目のバナーの詳細説明です。軽快で素早いカルーセル体験です。",
     banner3Title: "3つ目の企画展見出し",
-    banner3Desc: "3つ目のバナーの詳細説明です。逃すと後悔する最後のチャンスです。",
+    banner3Desc:
+      "3つ目のバナーの詳細説明です。逃すと後悔する最後のチャンスです。",
     eventTag: "#イベント",
     benefitTag: "#特典",
     startTag: "#スタート",
@@ -395,7 +404,8 @@ const ja = {
     searchResults: "検索結果",
     resultCount: "{count}件",
     recommendedCharacters: "PLATのおすすめキャラクター",
-    recommendedDescription: "タグにぴったり合わなくても、好みに合うかもしれません",
+    recommendedDescription:
+      "タグにぴったり合わなくても、好みに合うかもしれません",
   },
   rankingPage: {
     title: "リアルタイム人気キャラクター",
@@ -738,9 +748,11 @@ const th = {
     createCharacterCta: "สร้างตัวละคร",
     bannerAlt: "แบนเนอร์หลัก {index}",
     banner1Title: "หัวข้ออีเวนต์แรก",
-    banner1Desc: "นี่คือรายละเอียดของแบนเนอร์แรก คุณสามารถใส่คำอธิบายที่ต้องการได้ที่นี่",
+    banner1Desc:
+      "นี่คือรายละเอียดของแบนเนอร์แรก คุณสามารถใส่คำอธิบายที่ต้องการได้ที่นี่",
     banner2Title: "หัวข้อโปรโมชันที่สอง",
-    banner2Desc: "นี่คือรายละเอียดของแบนเนอร์ที่สอง พร้อมประสบการณ์แครูเซลที่รวดเร็วและลื่นไหล",
+    banner2Desc:
+      "นี่คือรายละเอียดของแบนเนอร์ที่สอง พร้อมประสบการณ์แครูเซลที่รวดเร็วและลื่นไหล",
     banner3Title: "หัวข้อแคมเปญที่สาม",
     banner3Desc: "นี่คือรายละเอียดของแบนเนอร์ที่สาม โอกาสสุดท้ายที่ไม่ควรพลาด",
     eventTag: "#อีเวนต์",
@@ -757,7 +769,8 @@ const th = {
     searchResults: "ผลการค้นหา",
     resultCount: "{count} รายการ",
     recommendedCharacters: "ตัวละครที่ PLAT แนะนำ",
-    recommendedDescription: "แม้จะไม่ตรงกับแท็กที่เลือกเป๊ะ ก็อาจตรงกับรสนิยมของคุณได้",
+    recommendedDescription:
+      "แม้จะไม่ตรงกับแท็กที่เลือกเป๊ะ ก็อาจตรงกับรสนิยมของคุณได้",
   },
   rankingPage: {
     title: "ตัวละครยอดนิยมแบบเรียลไทม์",
@@ -919,11 +932,14 @@ const vi = {
     createCharacterCta: "Tạo nhân vật",
     bannerAlt: "Banner chính {index}",
     banner1Title: "Tiêu đề sự kiện đầu tiên",
-    banner1Desc: "Đây là phần mô tả chi tiết của banner đầu tiên, bạn có thể điền nội dung mong muốn ở đây.",
+    banner1Desc:
+      "Đây là phần mô tả chi tiết của banner đầu tiên, bạn có thể điền nội dung mong muốn ở đây.",
     banner2Title: "Tiêu đề khuyến mãi thứ hai",
-    banner2Desc: "Đây là phần mô tả chi tiết của banner thứ hai với trải nghiệm carousel nhanh và gọn.",
+    banner2Desc:
+      "Đây là phần mô tả chi tiết của banner thứ hai với trải nghiệm carousel nhanh và gọn.",
     banner3Title: "Tiêu đề chuyên đề thứ ba",
-    banner3Desc: "Đây là phần mô tả chi tiết của banner thứ ba, cơ hội cuối cùng không nên bỏ lỡ.",
+    banner3Desc:
+      "Đây là phần mô tả chi tiết của banner thứ ba, cơ hội cuối cùng không nên bỏ lỡ.",
     eventTag: "#SựKiện",
     benefitTag: "#ƯuĐãi",
     startTag: "#BắtĐầu",
@@ -938,7 +954,8 @@ const vi = {
     searchResults: "Kết quả tìm kiếm",
     resultCount: "{count} kết quả",
     recommendedCharacters: "Nhân vật PLAT đề xuất",
-    recommendedDescription: "Dù không khớp hoàn toàn với thẻ đã chọn, vẫn có thể hợp gu của bạn",
+    recommendedDescription:
+      "Dù không khớp hoàn toàn với thẻ đã chọn, vẫn có thể hợp gu của bạn",
   },
   rankingPage: {
     title: "Nhân vật phổ biến theo thời gian thực",

@@ -39,7 +39,13 @@ const CreateModals = ({
         onCancel: closeModal,
       });
     }
-  }, [activeModal, closeModal, handleConfirmExit, openDialog, rejectNavigation]);
+  }, [
+    activeModal,
+    closeModal,
+    handleConfirmExit,
+    openDialog,
+    rejectNavigation,
+  ]);
 
   return null;
 };

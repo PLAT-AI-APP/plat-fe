@@ -132,7 +132,7 @@ const SettingsPanel = ({
                 <button
                   type="button"
                   onClick={onStartChat}
-                  className="title-3 rounded-xl border border-brand-dark bg-darkest/40 px-4 py-2 text-brand backdrop-blur-md"
+                  className="title-5 rounded-xl border border-brand-dark bg-darkest/40 px-4 py-2 text-brand backdrop-blur-md hover:bg-brand-opacity"
                 >
                   {t("chatStart")}
                 </button>

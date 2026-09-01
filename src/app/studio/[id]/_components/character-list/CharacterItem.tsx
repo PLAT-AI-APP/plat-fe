@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence } from "framer-motion";
 import React, { useRef } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -56,10 +57,7 @@ const CharacterItem = ({
         onDeleted?.();
       },
       onError: () => {
-        showAppToast(
-          "error",
-          "캐릭터 삭제에 실패했습니다. 다시 시도해주세요.",
-        );
+        showAppToast("error", "캐릭터 삭제에 실패했습니다. 다시 시도해주세요.");
       },
     });
   };
@@ -75,7 +73,7 @@ const CharacterItem = ({
   return (
     <article
       onClick={handleCardClick}
-      className="flex cursor-pointer gap-2 rounded-2xl px-3 py-2.5 hover:bg-card"
+      className="flex cursor-pointer gap-2 rounded-2xl px-3 py-2.5 transition-colors hover:bg-card"
     >
       <Image
         src={thumbnail}
@@ -105,16 +103,18 @@ const CharacterItem = ({
                 <Dots className="h-3.5 w-3.5 text-font-2" />
               </button>
 
-              {isOpen && (
-                <div onClick={(e) => e.stopPropagation()}>
-                  <CharacterMenuPopover
-                    onClose={toggle}
-                    triggerRef={triggerRef}
-                    onDelete={handleDeleteClick}
-                    onEdit={handleEditClick}
-                  />
-                </div>
-              )}
+              <AnimatePresence>
+                {isOpen && (
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <CharacterMenuPopover
+                      onClose={toggle}
+                      triggerRef={triggerRef}
+                      onDelete={handleDeleteClick}
+                      onEdit={handleEditClick}
+                    />
+                  </div>
+                )}
+              </AnimatePresence>
             </div>
           </header>
 

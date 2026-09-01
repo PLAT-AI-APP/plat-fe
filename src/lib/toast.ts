@@ -38,13 +38,10 @@ const clearAutoDismiss = (id: string) => {
 const scheduleAutoDismiss = (id: string) => {
   autoDismissTimers.set(
     id,
-    setTimeout(
-      () => {
-        autoDismissTimers.delete(id);
-        useToastStore.getState().removeToast(id, "timeout");
-      },
-      APP_TOAST_DURATION - APP_TOAST_FADE_OUT_DURATION,
-    ),
+    setTimeout(() => {
+      autoDismissTimers.delete(id);
+      useToastStore.getState().removeToast(id, "timeout");
+    }, APP_TOAST_DURATION - APP_TOAST_FADE_OUT_DURATION),
   );
 };
 

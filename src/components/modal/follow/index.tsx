@@ -214,9 +214,7 @@ const FollowModal = ({
           {listData.map((user) => {
             const isToggled = followChangeIds.includes(user.userId);
             const baseIsFollowing = activeTabs === "following";
-            const isFollowing = isToggled
-              ? !baseIsFollowing
-              : baseIsFollowing;
+            const isFollowing = isToggled ? !baseIsFollowing : baseIsFollowing;
 
             return (
               <FollowUserItem

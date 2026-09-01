@@ -7,7 +7,14 @@ import { Draggable } from "@hello-pangea/dnd";
 import { useFormContext, useWatch } from "react-hook-form";
 import SmartInput from "@/components/smart-input";
 import { useUniverseAssetImageUploadMutation } from "@/api/universe/postUniverseAssetImage";
-import { ArrowDown, Dots, ImageIcon, LockLine, Trash, UnlockLine } from "@/icons";
+import {
+  ArrowDown,
+  Dots,
+  ImageIcon,
+  LockLine,
+  Trash,
+  UnlockLine,
+} from "@/icons";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
 import { showAppToast } from "@/lib/toast";
 
@@ -26,7 +33,8 @@ const AssetItem = ({ id, index, remove }: AssetItemProps) => {
     formState: { errors },
   } = useFormContext<CharacterCreateFormValues>();
   const [isActive, setIsActive] = useState(false);
-  const { mutateAsync: uploadAssetImage } = useUniverseAssetImageUploadMutation();
+  const { mutateAsync: uploadAssetImage } =
+    useUniverseAssetImageUploadMutation();
   const assetImage = useWatch({ control, name: `asset.${index}.assetImage` });
   const assetName = useWatch({ control, name: `asset.${index}.assetName` });
   const assetSituation = useWatch({
@@ -85,14 +93,10 @@ const AssetItem = ({ id, index, remove }: AssetItemProps) => {
           shouldDirty: true,
           shouldValidate: true,
         });
-        setValue(
-          `asset.${index}.assetImageFileId`,
-          uploadedImage.fileId,
-          {
-            shouldDirty: true,
-            shouldValidate: true,
-          },
-        );
+        setValue(`asset.${index}.assetImageFileId`, uploadedImage.fileId, {
+          shouldDirty: true,
+          shouldValidate: true,
+        });
       };
       reader.readAsDataURL(file);
     } catch (error) {

@@ -31,7 +31,10 @@ const mockProducts: Product[] = [
   {
     code: "NOTE_46000",
     productId: 4,
-    display: { name: "노트 46,000", description: "노트 46,000개 + 보너스 5,000" },
+    display: {
+      name: "노트 46,000",
+      description: "노트 46,000개 + 보너스 5,000",
+    },
     price: {
       currency: "KRW",
       amountMinor: 30900,

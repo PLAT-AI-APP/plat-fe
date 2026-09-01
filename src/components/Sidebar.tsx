@@ -220,7 +220,7 @@ const Sidebar = ({ isFolded = false, onFoldToggle }: SidebarProps) => {
               <li key={chat.id}>
                 <motion.div
                   layout
-                  className="flex cursor-pointer items-center overflow-hidden rounded-lg p-1.5 hover:bg-card-hover"
+                  className="flex cursor-pointer items-center overflow-hidden rounded-lg p-1.5 transition-colors hover:bg-card-hover"
                 >
                   <motion.div layout="position" className="flex-none">
                     <Image
@@ -253,7 +253,10 @@ const Sidebar = ({ isFolded = false, onFoldToggle }: SidebarProps) => {
                           opacity: 0,
                           x: -10,
                           transition: {
-                            width: { duration: DURATION.base, ease: EASE_IN_OUT },
+                            width: {
+                              duration: DURATION.base,
+                              ease: EASE_IN_OUT,
+                            },
                             opacity: { duration: DURATION.fast },
                           },
                         }}

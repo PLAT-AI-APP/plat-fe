@@ -98,7 +98,7 @@ const SidebarMenuItem = ({
     <button
       type="button"
       onClick={onClick}
-      className="body-2 flex w-full items-center justify-between px-2 py-2 text-font-1 transition-colors hover:text-font-2"
+      className="body-4 flex w-full items-center justify-between rounded-lg px-2 py-2 text-font-1 transition-colors hover:bg-btn-hover"
     >
       {content}
     </button>

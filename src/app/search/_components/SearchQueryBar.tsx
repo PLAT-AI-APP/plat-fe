@@ -74,7 +74,7 @@ const SearchQueryBar = ({
                       event.stopPropagation();
                       onKeywordRemove(keyword);
                     }}
-                    className="flex size-[18px] items-center justify-center"
+                    className="flex size-[18px] items-center justify-center text-font-2 hover:text-font-1"
                   >
                     <CloseLine className="size-[18px] text-font-2" />
                   </button>

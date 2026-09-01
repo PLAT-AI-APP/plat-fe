@@ -15,20 +15,16 @@ const CharacterCreateBanner = () => {
         className="absolute left-13 top-0 h-full flex flex-col justify-center items-start gap-5"
       >
         <header className="flex flex-col justify-center items-start gap-1">
-          <p className="body-5 text-font-2">
-            {t("createPromptCaption")}
-          </p>
-          <h2 className="title-1 text-font-0">
-            {t("createPromptTitle")}
-          </h2>
+          <p className="body-5 text-font-2">{t("createPromptCaption")}</p>
+          <h2 className="title-1 text-font-0">{t("createPromptTitle")}</h2>
         </header>
 
         {/* 버튼 */}
-        <button type="button" className="w-60 px-8 py-3 bg-brand-opacity rounded-xl outline-1 -outline-offset-1 outline-brand-dark inline-flex justify-center items-center gap-2.5 cursor-pointer hover:opacity-90 transition-opacity">
-          <Link
-            href={"/character-creat"}
-            className="title-3 text-brand-dark"
-          >
+        <button
+          type="button"
+          className="w-60 px-8 py-3 bg-brand-opacity rounded-xl outline-1 -outline-offset-1 outline-brand-dark inline-flex justify-center items-center gap-2.5 cursor-pointer hover:opacity-90 transition-opacity"
+        >
+          <Link href={"/character-creat"} className="title-3 text-brand-dark">
             {t("createCharacterCta")}
           </Link>
         </button>

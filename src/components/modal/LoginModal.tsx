@@ -228,7 +228,9 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
               id="btn-login-submit"
               text={t("auth.login.submit")}
               type="submit"
-              isActive={email.length > 0 && pw.length > 0 && !isEmailLoginPending}
+              isActive={
+                email.length > 0 && pw.length > 0 && !isEmailLoginPending
+              }
               className="mt-2 h-12 rounded-lg"
             />
           </form>

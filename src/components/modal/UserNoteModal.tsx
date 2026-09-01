@@ -9,10 +9,7 @@ import Note from "@/icons/Note";
 import { ModalLayout } from "../ModalLayout";
 import ActiveButton from "../ActiveButton";
 import { UserNoteModalProps } from "@/type/modal";
-import {
-  userNoteFormSchema,
-  UserNoteFormValues,
-} from "@/schema/modal.schema";
+import { userNoteFormSchema, UserNoteFormValues } from "@/schema/modal.schema";
 
 const UserNoteModal = ({ onClose }: UserNoteModalProps) => {
   const t = useTranslations("modalUi.userNote");

@@ -1,10 +1,6 @@
 import { IconProps } from ".";
 
-const CloseLine = ({
-  size = 24,
-  className = "",
-  ...props
-}: IconProps) => {
+const CloseLine = ({ size = 24, className = "", ...props }: IconProps) => {
   return (
     <svg
       width={size}

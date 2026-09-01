@@ -25,11 +25,7 @@ export const useFieldFeedback = <T extends FieldValues>() => {
   const [feedbacks, setFeedbacks] = useState<FieldFeedbackMap<T>>({});
 
   const setFeedback = useCallback(
-    (
-      name: Path<T>,
-      message: string,
-      type: FieldFeedbackType = "success",
-    ) => {
+    (name: Path<T>, message: string, type: FieldFeedbackType = "success") => {
       setFeedbacks((prev) => ({
         ...prev,
         [name]: { message, type },

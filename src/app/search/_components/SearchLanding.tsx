@@ -8,7 +8,10 @@ import { useRecentSearch } from "@/hooks/useRecentSearch";
 import dayjs from "@/lib/dayjs";
 import { cn, formatStatCount } from "@/lib/utils";
 import { useLocaleStore } from "@/store/useLocaleStore";
-import { DUMMY_LIVE_SEARCH_KEYWORDS, DUMMY_SEARCH_CHARACTERS } from "./dummyData";
+import {
+  DUMMY_LIVE_SEARCH_KEYWORDS,
+  DUMMY_SEARCH_CHARACTERS,
+} from "./dummyData";
 import type { LiveSearchKeyword } from "./dummyData";
 import SearchQueryBar from "./SearchQueryBar";
 import PageTitle from "@/components/PageTitle";
@@ -48,7 +51,7 @@ const LiveSearchRankItem = ({ item, onSelect }: LiveSearchRankItemProps) => {
     <button
       type="button"
       onClick={() => onSelect(item.keyword)}
-      className="flex w-full items-center justify-between rounded-xl bg-darkest p-4"
+      className="flex w-full items-center justify-between rounded-xl bg-darkest p-4 hover:bg-btn-hover"
     >
       <div className="flex items-center gap-2">
         <span
@@ -116,13 +119,19 @@ const SearchLanding = () => {
 
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between whitespace-nowrap">
-          <h2 className="title-1 text-font-0">{t("searchLanding.liveSearchTitle")}</h2>
+          <h2 className="title-1 text-font-0">
+            {t("searchLanding.liveSearchTitle")}
+          </h2>
           <span className="body-5 text-font-2">{updatedAt}</span>
         </div>
 
         <div className="grid grid-cols-3 grid-rows-2 gap-2">
           {DUMMY_LIVE_SEARCH_KEYWORDS.map((item) => (
-            <LiveSearchRankItem key={item.rank} item={item} onSelect={handleSearch} />
+            <LiveSearchRankItem
+              key={item.rank}
+              item={item}
+              onSelect={handleSearch}
+            />
           ))}
         </div>
       </div>
@@ -156,7 +165,7 @@ const SearchLanding = () => {
         <button
           type="button"
           onClick={() => router.push("/?tab=ranking")}
-          className="flex items-center justify-center gap-1 rounded-xl border border-main bg-dark py-3"
+          className="flex items-center justify-center gap-1 rounded-xl border border-main bg-dark py-3 hover:bg-btn-hover"
         >
           <span className="body-4 text-font-2">
             {t("searchLanding.viewAllRanking")}

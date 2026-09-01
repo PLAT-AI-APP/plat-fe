@@ -26,11 +26,7 @@ interface CreateHeaderProps {
   onDraftClick: () => void;
 }
 
-const UNIVERSE_TENDENCIES: UniverseCreateTendency[] = [
-  "ALL",
-  "MALE",
-  "FEMALE",
-];
+const UNIVERSE_TENDENCIES: UniverseCreateTendency[] = ["ALL", "MALE", "FEMALE"];
 
 const UNIVERSE_CATEGORIES: UniverseCreateCategory[] = [
   "SIMULATION",
@@ -241,13 +237,15 @@ const CreateHeader = ({
 
       <div className="body-4 flex gap-4 whitespace-nowrap">
         <div className="flex gap-2">
-          <button type="button"
+          <button
+            type="button"
             onClick={onSave}
             className="rounded-xl border border-main bg-card px-5 py-2 hover:bg-card-hover"
           >
             {t("temporarySave")}
           </button>
-          <button type="button"
+          <button
+            type="button"
             onClick={onDraftClick}
             className="flex aspect-square h-full items-center justify-center rounded-xl border border-main bg-card p-2 hover:bg-card-hover"
           >

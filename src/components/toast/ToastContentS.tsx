@@ -49,11 +49,7 @@ const ToastContentS = ({ toast, onConfirm }: ToastContentSProps) => {
         </div>
       </div>
 
-      <button
-        type="button"
-        className="app-toast-s__action"
-        onClick={onConfirm}
-      >
+      <button type="button" className="app-toast-s__action" onClick={onConfirm}>
         {TOAST_CONFIRM_LABEL_BY_LOCALE[locale]}
       </button>
     </>

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import CharacterShowcase from "@/app/(main)/_components/CharacterShowcase";
 import CharacterSortPopover, {
@@ -185,14 +185,18 @@ export default function ProfileContent({ id }: { id: string }) {
                 {t(`profile.sort.${sort}`)}
               </button>
 
-              {isOpen && (
-                <CharacterSortPopover
-                  onChange={setSort}
-                  onClose={toggle}
-                  triggerRef={triggerRef as React.RefObject<HTMLButtonElement>}
-                  value={sort}
-                />
-              )}
+              <AnimatePresence>
+                {isOpen && (
+                  <CharacterSortPopover
+                    onChange={setSort}
+                    onClose={toggle}
+                    triggerRef={
+                      triggerRef as React.RefObject<HTMLButtonElement>
+                    }
+                    value={sort}
+                  />
+                )}
+              </AnimatePresence>
             </div>
           </header>
         </div>

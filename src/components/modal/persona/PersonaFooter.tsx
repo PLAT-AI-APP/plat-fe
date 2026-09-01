@@ -26,7 +26,7 @@ const PersonaFooter = ({ isMaxPersona }: PersonaFooterProps) => {
             "hover:border-none hover:bg-brand/10 hover:text-brand-dark",
         )}
       >
-        <Plus className="size-4.5 group-hover:text-brand-dark" />
+        <Plus className="size-4.5 transition-colors group-hover:text-brand-dark" />
         {t("add")}
       </button>
     </footer>

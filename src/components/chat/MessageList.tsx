@@ -43,7 +43,9 @@ const MessageList = memo(
                   characterName={msg.characterName || ""}
                   profileImage={msg.profileImage || ""}
                   isEditMode={isEditable}
-                  onUpdate={(newContent) => onUpdateMessage?.(msg.id, newContent)}
+                  onUpdate={(newContent) =>
+                    onUpdateMessage?.(msg.id, newContent)
+                  }
                   onDelete={() => onDeleteMessage?.(msg.id)}
                   onRetry={() => onRetryMessage?.(msg.id)}
                 />

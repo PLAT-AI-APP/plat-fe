@@ -42,7 +42,9 @@ const CommentsPanel = ({ character }: CommentsPanelProps) => {
                   >
                     {comment.authorName}
                   </span>
-                  <span className="body-6 text-font-2">{comment.createdAt}</span>
+                  <span className="body-6 text-font-2">
+                    {comment.createdAt}
+                  </span>
                 </div>
                 <CommentMenuButton isMine />
               </header>

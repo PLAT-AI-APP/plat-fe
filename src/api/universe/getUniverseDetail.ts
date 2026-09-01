@@ -10,9 +10,7 @@ import type {
 
 export type UniverseDetailVisibility = "PUBLIC" | "PRIVATE";
 export type UniverseDetailTendency =
-  | "ALL"
-  | "MALE_ORIENTED"
-  | "FEMALE_ORIENTED";
+  "ALL" | "MALE_ORIENTED" | "FEMALE_ORIENTED";
 export type UniverseDetailCategory =
   | "SIMULATION"
   | "ROMANCE"

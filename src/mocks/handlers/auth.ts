@@ -48,10 +48,7 @@ const ok = <T>(data?: T, _message?: string) => {
 type LegacyMockErrorCode = "MESSAGE" | "ALERT" | "FIELD_ERROR";
 
 /** 예전 mock 코드명을 현재 백엔드 오류 코드 형식으로 변환합니다. */
-const normalizeMockErrorCode = (
-  code: LegacyMockErrorCode,
-  status: number,
-) => {
+const normalizeMockErrorCode = (code: LegacyMockErrorCode, status: number) => {
   if (code === "FIELD_ERROR") return "INVALID_INPUT";
   if (code === "ALERT") return "TOO_MANY_REQUESTS";
   if (status === 401) return "LOGIN_FAILED";

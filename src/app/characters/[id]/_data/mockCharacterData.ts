@@ -113,7 +113,9 @@ export const getMockCharacterScenarios = (characterId: string) => {
   return mockCharacterScenarios;
 };
 
-export const getMockCharacterDetail = (characterId: string): CharacterDetail => ({
+export const getMockCharacterDetail = (
+  characterId: string,
+): CharacterDetail => ({
   ...mockCharacterDetail,
   characterId,
 });

@@ -42,8 +42,7 @@ const Footer = () => {
         <span id="footer-registration-number">
           {t("footer.registrationNumberLabel")}: 227-40-01411
         </span>
-        |
-        <span id="footer-office-address">{t("footer.address")}</span>
+        |<span id="footer-office-address">{t("footer.address")}</span>
       </address>
 
       <p id="footer-copyright" className="body-4 text-font-disabled">

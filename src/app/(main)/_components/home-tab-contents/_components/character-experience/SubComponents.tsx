@@ -57,10 +57,11 @@ export const ActionFooter = ({ isActive = true }: { isActive: boolean }) => (
             : "이미 3번의 무료 대화를 진행했어요 "}
         </p>
       </div>
-      <button type="button"
+      <button
+        type="button"
         className={cn(
-          "self-stretch h-11.25 relative bg-brand/20 rounded-br-2xl",
-          !isActive && "bg-main",
+          "relative h-11 self-stretch rounded-br-2xl bg-brand/20 transition-colors hover:bg-brand/30",
+          !isActive && "bg-main hover:bg-btn-selected",
         )}
       >
         <span

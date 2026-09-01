@@ -80,7 +80,9 @@ const Setting = () => {
 
   const handleCategory = (category: UniverseCreateCategory) => {
     const selectedCategories = categoryWatch ?? [];
-    const nextCategory = selectedCategories.includes(category) ? [] : [category];
+    const nextCategory = selectedCategories.includes(category)
+      ? []
+      : [category];
 
     setValue("category", nextCategory, {
       shouldDirty: true,
@@ -220,7 +222,7 @@ const Setting = () => {
           <button
             type="button"
             onClick={toggleIsTagModal}
-            className="body-4 flex h-11 items-center justify-between rounded-xl border border-main bg-darkest px-4 text-font-2"
+            className="body-4 flex h-11 items-center justify-between rounded-xl border border-main bg-darkest px-4 text-font-2 hover:bg-btn-hover hover:text-font-1"
           >
             <span>
               {isTagFull ? t("tagFullPlaceholder") : t("tagPlaceholder")}

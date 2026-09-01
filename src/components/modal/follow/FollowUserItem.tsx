@@ -25,7 +25,7 @@ const FollowUserItem = ({
   const commonT = useTranslations("modalUi.common");
 
   return (
-    <li className="flex w-full items-center gap-3 rounded-2xl bg-dark p-3 hover:bg-btn-hover">
+    <li className="flex w-full items-center gap-3 rounded-2xl bg-dark p-3 transition-colors hover:bg-btn-hover">
       <div className="flex min-w-0 flex-1 items-center gap-3">
         <Image
           src={user.profileImage || "/p1.png"}

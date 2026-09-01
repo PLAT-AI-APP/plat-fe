@@ -194,7 +194,8 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
                 ? "bg-brand text-on-brand"
                 : "bg-font-disabled text-font-1",
               isEmailVerified && "bg-brand text-on-brand",
-              isOtpSent && "border border-brand-dark bg-brand/10 text-brand-dark",
+              isOtpSent &&
+                "border border-brand-dark bg-brand/10 text-brand-dark",
             )}
             textClassName="body-4"
             onClick={handleEmailBtnClick}

@@ -24,7 +24,11 @@ const GUIDE_ITEMS = [
   },
 ] as const;
 
-const AssetGuideVisual = ({ type }: { type: (typeof GUIDE_ITEMS)[number]["type"] }) => {
+const AssetGuideVisual = ({
+  type,
+}: {
+  type: (typeof GUIDE_ITEMS)[number]["type"];
+}) => {
   if (type === "buttons") {
     return (
       <div className="flex size-full items-center justify-center gap-2">
@@ -69,7 +73,9 @@ const AssetGuidePanel = () => {
       <header className="flex items-start justify-between gap-4">
         <div className="min-w-0">
           <h3 className="title-3 text-font-1">{t("guidePanelTitle")}</h3>
-          <p className="body-6 mt-1 text-font-2">{t("guidePanelDescription")}</p>
+          <p className="body-6 mt-1 text-font-2">
+            {t("guidePanelDescription")}
+          </p>
         </div>
 
         <button

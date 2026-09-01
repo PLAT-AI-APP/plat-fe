@@ -281,14 +281,14 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
               <button
                 type="button"
                 onClick={() => insertComposerText("{{user}}")}
-                className="body-4 flex h-8 items-center px-2 py-1.5 text-font-2"
+                className="body-4 flex h-8 items-center rounded-lg px-2 py-1.5 text-font-2 hover:bg-btn-hover hover:text-font-1"
               >
                 {"{{user}}"}
               </button>
               <button
                 type="button"
                 onClick={() => insertComposerText("{{img:}}")}
-                className="body-4 flex h-8 items-center px-2 py-1.5 text-font-2"
+                className="body-4 flex h-8 items-center rounded-lg px-2 py-1.5 text-font-2 hover:bg-btn-hover hover:text-font-1"
               >
                 {"{{img:}}"}
               </button>

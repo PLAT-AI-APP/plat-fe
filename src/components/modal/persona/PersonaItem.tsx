@@ -1,3 +1,4 @@
+import { AnimatePresence } from "framer-motion";
 import React, { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
@@ -103,19 +104,21 @@ const PersonaItem = ({
               <Dots className="size-6 -rotate-90" aria-hidden="true" />
             </button>
 
-            {isMenuOpen && (
-              <PersonaMenuPopover
-                triggerRef={menuTriggerRef}
-                onClose={() => setIsMenuOpen(false)}
-                onEdit={openEditModal}
-                onDelete={() =>
-                  openDialog("PERSONA_DELETE", {
-                    personaName: name,
-                    onConfirm: handleDeleteConfirm,
-                  })
-                }
-              />
-            )}
+            <AnimatePresence>
+              {isMenuOpen && (
+                <PersonaMenuPopover
+                  triggerRef={menuTriggerRef}
+                  onClose={() => setIsMenuOpen(false)}
+                  onEdit={openEditModal}
+                  onDelete={() =>
+                    openDialog("PERSONA_DELETE", {
+                      personaName: name,
+                      onConfirm: handleDeleteConfirm,
+                    })
+                  }
+                />
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </li>

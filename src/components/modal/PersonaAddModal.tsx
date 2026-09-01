@@ -58,13 +58,7 @@ const PersonaAddModal = ({
         info: personaDetail.description,
       });
     }
-  }, [
-    initialDescription,
-    initialName,
-    isEditMode,
-    personaDetail,
-    reset,
-  ]);
+  }, [initialDescription, initialName, isEditMode, personaDetail, reset]);
 
   const { mutate: addPersona } = useAddPersonaMutation();
   const { mutate: editPersona } = useEditPersonaMutation();

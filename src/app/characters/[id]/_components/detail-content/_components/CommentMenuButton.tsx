@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence } from "framer-motion";
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import CommentMenuPopover from "@/components/popover/CommentMenuPopover";
@@ -23,22 +24,24 @@ const CommentMenuButton = ({ isMine }: CommentMenuButtonProps) => {
         ref={triggerRef}
         type="button"
         onClick={() => setIsOpen((prev) => !prev)}
-        className="flex size-6 items-center justify-center text-font-2"
+        className="flex size-6 items-center justify-center rounded-lg text-font-2 hover:bg-btn-hover hover:text-font-1"
         aria-label={t("commentMenu")}
       >
         <Dots className="size-5" />
       </button>
 
-      {isOpen && (
-        <CommentMenuPopover
-          isMine={isMine}
-          onClose={closePopover}
-          triggerRef={triggerRef}
-          onDelete={() => null}
-          onEdit={() => null}
-          onReport={() => null}
-        />
-      )}
+      <AnimatePresence>
+        {isOpen && (
+          <CommentMenuPopover
+            isMine={isMine}
+            onClose={closePopover}
+            triggerRef={triggerRef}
+            onDelete={() => null}
+            onEdit={() => null}
+            onReport={() => null}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };

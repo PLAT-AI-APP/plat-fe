@@ -320,7 +320,10 @@ plainAxios.interceptors.response.use(onResponseSuccess, onPlainResponseError);
 axiosInstance.interceptors.request.use(onRequest);
 // axiosInstance는 Authorization을 싣지 않으므로 401도 세션 만료가 아닌 일반 에러입니다.
 // plainAxios와 동일하게 재발급/재시도 없이 에러 포맷팅 + 토스트만 수행합니다.
-axiosInstance.interceptors.response.use(onResponseSuccess, onPlainResponseError);
+axiosInstance.interceptors.response.use(
+  onResponseSuccess,
+  onPlainResponseError,
+);
 
 // 인증이 필요한 API용 인터셉터
 authAxios.interceptors.request.use((c) => onRequest(c, true));

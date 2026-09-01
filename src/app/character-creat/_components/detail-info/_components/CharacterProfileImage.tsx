@@ -19,7 +19,9 @@ const MAX_PROFILE_IMAGE_SIZE = 5 * 1024 * 1024;
 
 const CharacterProfileImage = () => {
   const t = useTranslations("characterCreate.details");
-  const representativeT = useTranslations("characterCreate.representativeImage");
+  const representativeT = useTranslations(
+    "characterCreate.representativeImage",
+  );
   const { setValue, control } = useFormContext<CharacterCreateFormValues>();
   const preview = useWatch({ control, name: "characterProfileImage" });
   const { mutateAsync: uploadFile } = useFileUploadMutation();
@@ -145,11 +147,7 @@ const CharacterProfileImage = () => {
             preview && "bg-danger-bg text-font-error",
           )}
         >
-          {preview ? (
-            <Close className="size-4" />
-          ) : (
-            <Plus className="size-4" />
-          )}
+          {preview ? <Close className="size-4" /> : <Plus className="size-4" />}
         </span>
       </label>
 

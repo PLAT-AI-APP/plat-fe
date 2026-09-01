@@ -54,9 +54,7 @@ const CharacterCard = ({
     () => orderTagsBySelection(tagList, selectedTagSet),
     [selectedTagSet, tagList],
   );
-  const titleIcon = (
-    <TitleStatusIcon isOfficial={isOfficial} isNew={isNew} />
-  );
+  const titleIcon = <TitleStatusIcon isOfficial={isOfficial} isNew={isNew} />;
 
   const lastImageIndex = imageList.length - 1;
   const hasIndicator = imageList.length > 1;

@@ -33,10 +33,12 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
   const { data: hashtagList } = useHashtagListQuery();
   const { control, setValue } = useFormContext<CharacterCreateFormValues>();
   const currentTagsWatch = useWatch({ control, name: "tagIds" });
-  const [localSelectedNames, setLocalSelectedNames] = useState<TagOption[]>(() => {
-    const currentTags = currentTagsWatch || [];
-    return currentTags.map((tag) => ({ id: tag.id, label: tag.label }));
-  });
+  const [localSelectedNames, setLocalSelectedNames] = useState<TagOption[]>(
+    () => {
+      const currentTags = currentTagsWatch || [];
+      return currentTags.map((tag) => ({ id: tag.id, label: tag.label }));
+    },
+  );
   const [searchKeyword, setSearchKeyword] = useState("");
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [closedFolderTitles, setClosedFolderTitles] = useState<string[]>([]);
@@ -88,7 +90,9 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
     // 검색어와 일치하는 태그는 기존 목록에서 빼지 않고, 상단의 별도 영역에만 모아 보여줍니다.
     return tagFolderSections
       .flatMap((folder) => folder.tags)
-      .filter((tag) => tag.label.toLowerCase().includes(normalizedSearchKeyword));
+      .filter((tag) =>
+        tag.label.toLowerCase().includes(normalizedSearchKeyword),
+      );
   }, [isSearchMode, normalizedSearchKeyword, tagFolderSections]);
 
   const commitSelectedTags = (nextTags: TagOption[]) => {
@@ -101,7 +105,9 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
   };
 
   const handleTagToggle = (tag: TagOption) => {
-    const isAlreadySelected = localSelectedNames.some((name) => name.id === tag.id);
+    const isAlreadySelected = localSelectedNames.some(
+      (name) => name.id === tag.id,
+    );
 
     if (isAlreadySelected) {
       commitSelectedTags(
@@ -207,8 +213,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
                         onClick={() => handleTagToggle(tag)}
                         className={cn(
                           "body-6 flex h-7 items-center rounded-md border border-font-2 bg-dark px-2.5 text-font-1 hover:bg-card-hover",
-                          isSelected &&
-                            "border-brand bg-brand/10 text-brand",
+                          isSelected && "border-brand bg-brand/10 text-brand",
                         )}
                       >
                         #{tag.label}
@@ -231,7 +236,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
                 <button
                   type="button"
                   onClick={() => toggleFolderOpen(folder.title)}
-                  className="flex h-6 w-full items-center justify-between text-left"
+                  className="flex h-6 w-full items-center justify-between text-left hover:text-font-1"
                 >
                   <span className="body-4 flex min-w-0 items-center gap-1.5 text-font-2">
                     <span className="truncate">
@@ -291,11 +296,13 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
 
         <section className="mt-3 flex flex-col gap-3">
           <div className="body-6 flex items-center justify-between text-font-2">
-            <span>{t("selectedCount", { count: localSelectedNames.length })}</span>
+            <span>
+              {t("selectedCount", { count: localSelectedNames.length })}
+            </span>
             <button
               type="button"
               onClick={handleClearAll}
-              className="underline"
+              className="underline hover:text-font-1"
             >
               {t("clearAll")}
             </button>
@@ -308,7 +315,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
                   <button
                     type="button"
                     onClick={() => handleTagToggle(tag)}
-                    className="caption-1 flex h-8 items-center gap-1 rounded-md bg-brand/10 px-2.5 text-brand"
+                    className="caption-1 flex h-8 items-center gap-1 rounded-md bg-brand/10 px-2.5 text-brand hover:bg-brand/20"
                   >
                     #{tag.label}
                     <Close className="size-3" />

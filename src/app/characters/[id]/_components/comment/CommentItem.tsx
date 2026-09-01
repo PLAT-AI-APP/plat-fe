@@ -1,4 +1,5 @@
 "use client";
+import { AnimatePresence } from "framer-motion";
 import React, { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -74,16 +75,18 @@ const CommentItem = ({ comment }: Props) => {
 
             <div className="relative cursor-pointer" ref={triggerRef}>
               <Dots onClick={toggle} className="w-6 h-6 p-1" />
-              {isOpen && (
-                <CommentMenuPopover
-                  onClose={toggle}
-                  triggerRef={triggerRef}
-                  isMine
-                  onDelete={() => null}
-                  onEdit={() => null}
-                  onReport={() => null}
-                />
-              )}
+              <AnimatePresence>
+                {isOpen && (
+                  <CommentMenuPopover
+                    onClose={toggle}
+                    triggerRef={triggerRef}
+                    isMine
+                    onDelete={() => null}
+                    onEdit={() => null}
+                    onReport={() => null}
+                  />
+                )}
+              </AnimatePresence>
             </div>
           </header>
 
@@ -98,7 +101,8 @@ const CommentItem = ({ comment }: Props) => {
             </p>
 
             {isOverflown && !isExpanded && (
-              <button type="button"
+              <button
+                type="button"
                 onClick={() => setIsExpanded(true)}
                 className="text-font-2 body-6 w-fit mt-1 hover:underline"
               >

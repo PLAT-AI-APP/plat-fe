@@ -113,7 +113,11 @@ const SignupForm = () => {
 
       <Agreed />
 
-      <ActiveButton text={t("auth.signup.submit")} type="submit" isActive={isFormValid} />
+      <ActiveButton
+        text={t("auth.signup.submit")}
+        type="submit"
+        isActive={isFormValid}
+      />
     </form>
   );
 };

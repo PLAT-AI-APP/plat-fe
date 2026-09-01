@@ -19,8 +19,7 @@ const ko = {
     personaAdd: {
       titleAdd: "페르소나 추가",
       titleEdit: "페르소나 수정",
-      description:
-        "페르소나로 설정한 역할에 맞춰 캐릭터와 대화할 수 있어요",
+      description: "페르소나로 설정한 역할에 맞춰 캐릭터와 대화할 수 있어요",
       nameLabel: "이름",
       namePlaceholder: "이름을 입력해 주세요",
       infoLabel: "정보",
@@ -35,10 +34,8 @@ const ko = {
     },
     userNote: {
       title: "유저노트",
-      description:
-        "이 채팅방에서 반드시 기억해 줬으면 하는 내용을 적어주세요.",
-      placeholder:
-        "잊으면 안되는 중요한 내용, 추가하고 싶은 설정 등",
+      description: "이 채팅방에서 반드시 기억해 줬으면 하는 내용을 적어주세요.",
+      placeholder: "잊으면 안되는 중요한 내용, 추가하고 싶은 설정 등",
       submit: "저장",
     },
     passwordReset: {
@@ -64,8 +61,7 @@ const ko = {
     },
     personaList: {
       title: "페르소나",
-      description:
-        "페르소나로 설정한 역할에 맞춰 캐릭터와 대화할 수 있어요",
+      description: "페르소나로 설정한 역할에 맞춰 캐릭터와 대화할 수 있어요",
       helper: "페르소나는 최대 5개까지 만들 수 있어요",
       add: "페르소나 추가",
       emptyTitle: "아직 페르소나가 없어요",
@@ -119,8 +115,7 @@ const en: typeof ko = {
       nameLabel: "Name",
       namePlaceholder: "Please enter a name",
       infoLabel: "Info",
-      infoPlaceholder:
-        "Feel free to enter age, personality, and more.\n...",
+      infoPlaceholder: "Feel free to enter age, personality, and more.\n...",
       submitAdd: "Add",
       submitEdit: "Save",
     },
@@ -145,7 +140,8 @@ const en: typeof ko = {
     },
     imageCrop: {
       title: "Edit image",
-      description: "Adjust the square area that will be shown as the cover image.",
+      description:
+        "Adjust the square area that will be shown as the cover image.",
       dragGuide: "You can drag the image to adjust its position only.",
       zoom: "Zoom",
       cancel: "Cancel",
@@ -226,10 +222,8 @@ const ja: typeof ko = {
     },
     userNote: {
       title: "ユーザーノート",
-      description:
-        "会話内容が自動で要約され、キャラクターが長く記憶できます。",
-      placeholder:
-        "忘れてはいけない大事な内容、追加したい設定など\n...",
+      description: "会話内容が自動で要約され、キャラクターが長く記憶できます。",
+      placeholder: "忘れてはいけない大事な内容、追加したい設定など\n...",
       submit: "保存",
     },
     passwordReset: {
@@ -240,8 +234,7 @@ const ja: typeof ko = {
     },
     imageCrop: {
       title: "画像を編集",
-      description:
-        "代表画像に見える領域を正方形に合わせてください。",
+      description: "代表画像に見える領域を正方形に合わせてください。",
       dragGuide: "画像はドラッグして位置だけ調整できます。",
       zoom: "拡大",
       cancel: "キャンセル",
@@ -412,10 +405,8 @@ const th: typeof ko = {
     },
     userNote: {
       title: "โน้ตผู้ใช้",
-      description:
-        "บทสนทนาจะถูกสรุปอัตโนมัติ เพื่อให้ตัวละครจดจำได้ยาวนานขึ้น",
-      placeholder:
-        "เรื่องสำคัญที่ห้ามลืม หรือการตั้งค่าที่อยากเพิ่ม\n...",
+      description: "บทสนทนาจะถูกสรุปอัตโนมัติ เพื่อให้ตัวละครจดจำได้ยาวนานขึ้น",
+      placeholder: "เรื่องสำคัญที่ห้ามลืม หรือการตั้งค่าที่อยากเพิ่ม\n...",
       submit: "บันทึก",
     },
     passwordReset: {
@@ -426,7 +417,8 @@ const th: typeof ko = {
     },
     imageCrop: {
       title: "แก้ไขรูปภาพ",
-      description: "จัดพื้นที่ที่จะใช้เป็นรูปภาพหลักให้อยู่ในกรอบสี่เหลี่ยมจัตุรัส",
+      description:
+        "จัดพื้นที่ที่จะใช้เป็นรูปภาพหลักให้อยู่ในกรอบสี่เหลี่ยมจัตุรัส",
       dragGuide: "คุณสามารถลากรูปภาพเพื่อปรับตำแหน่งได้เท่านั้น",
       zoom: "ซูม",
       cancel: "ยกเลิก",
@@ -521,7 +513,8 @@ const vi: typeof ko = {
     },
     imageCrop: {
       title: "Chỉnh sửa ảnh",
-      description: "Hãy căn vùng sẽ hiển thị trên ảnh đại diện theo khung vuông.",
+      description:
+        "Hãy căn vùng sẽ hiển thị trên ảnh đại diện theo khung vuông.",
       dragGuide: "Bạn chỉ có thể kéo ảnh để điều chỉnh vị trí.",
       zoom: "Thu phóng",
       cancel: "Hủy",

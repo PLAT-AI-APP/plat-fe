@@ -13,9 +13,7 @@ const CharacterCreatePrompt = () => {
       className="flex w-full flex-col items-center justify-center gap-7 pb-12"
     >
       <div className="flex w-full flex-col items-center gap-3 text-center">
-        <p className="body-2 w-full text-font-2">
-          {t("createPromptCaption")}
-        </p>
+        <p className="body-2 w-full text-font-2">{t("createPromptCaption")}</p>
         <h2
           id="character-create-prompt-title"
           className="heading-3 w-full text-font-1"
@@ -26,7 +24,7 @@ const CharacterCreatePrompt = () => {
 
       <Link
         href="/character-creat"
-        className="title-3 flex w-77 items-center justify-center rounded-2xl bg-brand-opacity px-4 py-4 text-brand-dark hover:opacity-90"
+        className="title-3 flex w-77 items-center justify-center rounded-2xl bg-brand-opacity px-4 py-4 text-brand-dark transition-opacity hover:opacity-90"
       >
         {t("createCharacter")}
       </Link>

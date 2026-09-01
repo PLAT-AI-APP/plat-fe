@@ -5,10 +5,7 @@ import { AppError } from "@/type/api";
 export type FileUploadId = string | number;
 
 export type FileUploadType =
-  | "USER_PROFILE"
-  | "CHARACTER_PROFILE"
-  | "CHARACTER_ASSET"
-  | "UNIVERSE_PROFILE";
+  "USER_PROFILE" | "CHARACTER_PROFILE" | "CHARACTER_ASSET" | "UNIVERSE_PROFILE";
 
 export interface FileUploadResponse {
   originalFileId: FileUploadId;

@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useRef } from "react";
@@ -85,15 +86,17 @@ const ChattingItem = ({
                 <Dots className="size-5" />
               </button>
 
-              {isOpen && (
-                <MyChattingMenuPopover
-                  triggerRef={triggerRef}
-                  onClose={close}
-                  onDelete={() => null}
-                  onEdit={() => null}
-                  onPin={() => null}
-                />
-              )}
+              <AnimatePresence>
+                {isOpen && (
+                  <MyChattingMenuPopover
+                    triggerRef={triggerRef}
+                    onClose={close}
+                    onDelete={() => null}
+                    onEdit={() => null}
+                    onPin={() => null}
+                  />
+                )}
+              </AnimatePresence>
             </span>
           </div>
 
@@ -103,7 +106,9 @@ const ChattingItem = ({
               <span className="body-5 truncate">{creator}</span>
               <span className="body-5 text-font-disabled">·</span>
               <Message className="size-4 shrink-0" />
-              <span className="body-5">{formatStatCount(chatCount, locale)}</span>
+              <span className="body-5">
+                {formatStatCount(chatCount, locale)}
+              </span>
             </div>
 
             <time className="body-6 shrink-0 text-nowrap text-font-disabled">

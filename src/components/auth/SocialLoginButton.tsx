@@ -7,10 +7,11 @@ interface SocialButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement
 }
 
 const SocialLoginButton = ({ icon, label, onClick }: SocialButtonProps) => (
-  <button type="button"
+  <button
+    type="button"
     id="social-login-button"
     onClick={onClick}
-    className="relative h-11 w-full flex items-center justify-center rounded-lg border border-main bg-card"
+    className="relative flex h-11 w-full items-center justify-center rounded-lg border border-main bg-card hover:bg-card-hover"
   >
     <span
       id="social-icon-wrapper"

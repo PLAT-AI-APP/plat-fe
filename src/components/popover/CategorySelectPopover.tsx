@@ -41,23 +41,27 @@ const CategorySelectPopover = ({
       className="w-full right-0 bottom-full top-auto -translate-y-2.5"
     >
       <div
+        role="listbox"
         onClick={(e) => e.stopPropagation()}
-        className="flex flex-col gap-1 "
+        className="flex flex-col gap-1"
       >
         {CATEGORIES.map((category) => {
           const isActive = currentCategory === category;
           return (
-            <div
+            <button
               key={category}
+              type="button"
+              role="option"
+              aria-selected={isActive}
               onClick={() => handlecategory(category)}
               className={cn(
-                "body-4 flex cursor-pointer justify-between rounded-lg px-2.5 py-2 text-font-2 transition-colors hover:bg-btn-hover hover:text-font-1",
+                "body-4 flex w-full cursor-pointer items-center justify-between rounded-lg px-2.5 py-2 text-left text-font-2 transition-colors hover:bg-btn-hover hover:text-font-1",
                 isActive && "text-font-1",
               )}
             >
               <span>{categoryLabelByValue[category]}</span>
               {isActive && <Check className="w-4.5 h-4.5 text-brand" />}
-            </div>
+            </button>
           );
         })}
       </div>

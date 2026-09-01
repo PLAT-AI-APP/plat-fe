@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence } from "framer-motion";
 import React, { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import CharacterSortPopover, {
@@ -37,14 +38,16 @@ const SortFilter = ({ currentSort }: SortFilterProps) => {
         {t(`profile.sort.${currentSort}`)}
       </button>
 
-      {isSortOpen && (
-        <CharacterSortPopover
-          onChange={handleSortChange}
-          onClose={() => setIsSortOpen(false)}
-          triggerRef={triggerRef as React.RefObject<HTMLButtonElement>}
-          value={currentSort}
-        />
-      )}
+      <AnimatePresence>
+        {isSortOpen && (
+          <CharacterSortPopover
+            onChange={handleSortChange}
+            onClose={() => setIsSortOpen(false)}
+            triggerRef={triggerRef as React.RefObject<HTMLButtonElement>}
+            value={currentSort}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };

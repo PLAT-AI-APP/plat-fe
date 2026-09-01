@@ -28,7 +28,12 @@ const ToastManager = () => {
     <div className="app-toast-viewport">
       <AnimatePresence>
         {orderedToasts.map((toast, rank) => (
-          <ToastItem key={toast.id} toast={toast} rank={rank} y={yByRank[rank]} />
+          <ToastItem
+            key={toast.id}
+            toast={toast}
+            rank={rank}
+            y={yByRank[rank]}
+          />
         ))}
       </AnimatePresence>
     </div>

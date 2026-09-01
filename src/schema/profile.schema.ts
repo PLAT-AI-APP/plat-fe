@@ -51,11 +51,7 @@ export const profileEditFormSchema = z.object({
     .min(1, FIELD_ERROR_MESSAGES.nicknameRequired)
     .max(20, FIELD_ERROR_MESSAGES.nicknameMaxLength)
     .regex(NICKNAME_REGEX, FIELD_ERROR_MESSAGES.nicknameInvalid),
-  bio: z
-    .string()
-    .trim()
-    .max(100, FIELD_ERROR_MESSAGES.bioMaxLength)
-    .optional(),
+  bio: z.string().trim().max(100, FIELD_ERROR_MESSAGES.bioMaxLength).optional(),
   birth: z.string().superRefine((value, ctx) => {
     if (value.length === 10 && !isExistingDate(value)) {
       ctx.addIssue({

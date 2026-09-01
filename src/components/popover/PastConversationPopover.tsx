@@ -49,17 +49,19 @@ const PastConversationPopover = ({
       className="right-0 top-[calc(100%+8px)] w-[102px] min-w-0 rounded-xl border-main bg-dark px-2 py-3 shadow-card-heavy"
     >
       <menu className="flex flex-col gap-1">
-        {pastConversationActions.map(({ icon, label, onClick, textClassName }) => (
-          <button
-            key={label}
-            type="button"
-            onClick={onClick}
-            className="body-4 flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left transition-colors hover:bg-btn-hover"
-          >
-            {icon}
-            <span className={textClassName}>{label}</span>
-          </button>
-        ))}
+        {pastConversationActions.map(
+          ({ icon, label, onClick, textClassName }) => (
+            <button
+              key={label}
+              type="button"
+              onClick={onClick}
+              className="body-4 flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left transition-colors hover:bg-btn-hover"
+            >
+              {icon}
+              <span className={textClassName}>{label}</span>
+            </button>
+          ),
+        )}
       </menu>
     </PopoverLayout>
   );

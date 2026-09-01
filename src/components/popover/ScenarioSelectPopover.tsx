@@ -26,20 +26,24 @@ const ScenarioSelectPopover = ({
           const isActive = currentScenario?.scenarioId === scenario.scenarioId;
 
           return (
-            <li
-              key={scenario.scenarioId}
-              onClick={(e) => {
-                e.stopPropagation();
-                handleCurrentScenario(scenario);
-                onClose();
-              }}
-              className={cn(
-                "body-4 flex cursor-pointer items-center justify-between rounded-lg px-2.5 py-2 text-font-2 transition-colors hover:bg-btn-hover hover:text-font-1",
-                isActive && "bg-btn-hover/50 text-font-1",
-              )}
-            >
-              {scenario.name}
-              {isActive && <Check className="w-4 h-4 text-brand" />}
+            <li key={scenario.scenarioId}>
+              <button
+                type="button"
+                role="option"
+                aria-selected={isActive}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleCurrentScenario(scenario);
+                  onClose();
+                }}
+                className={cn(
+                  "body-4 flex w-full cursor-pointer items-center justify-between rounded-lg px-2.5 py-2 text-left text-font-2 transition-colors hover:bg-btn-hover hover:text-font-1",
+                  isActive && "bg-btn-hover/50 text-font-1",
+                )}
+              >
+                {scenario.name}
+                {isActive && <Check className="h-4 w-4 text-brand" />}
+              </button>
             </li>
           );
         })}

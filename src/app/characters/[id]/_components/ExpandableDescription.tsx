@@ -39,7 +39,8 @@ export const ExpandableDescription = ({
   return (
     <section className="flex flex-col gap-3">
       <h3 className="title-3 text-font-1">
-        {t("characterDetail.infoTitle")} | <span className="title-5">이윤아</span>
+        {t("characterDetail.infoTitle")} |{" "}
+        <span className="title-5">이윤아</span>
       </h3>
       <div
         id="description-body"
@@ -65,14 +66,20 @@ export const ExpandableDescription = ({
       </div>
 
       {shouldShowExpand && (
-        <button type="button"
+        <button
+          type="button"
           onClick={() => setIsExpanded(!isExpanded)}
           aria-expanded={isExpanded}
           className="body-6 z-10 flex items-center justify-center gap-1 p-1 pl-2 text-font-2 transition-colors hover:text-font-1"
         >
-          {isExpanded ? t("characterDetail.collapse") : t("characterDetail.expand")}
+          {isExpanded
+            ? t("characterDetail.collapse")
+            : t("characterDetail.expand")}
           <ArrowDown
-            className={cn("h-4 w-4 transition-transform", isExpanded && "rotate-180")}
+            className={cn(
+              "h-4 w-4 transition-transform",
+              isExpanded && "rotate-180",
+            )}
           />
         </button>
       )}

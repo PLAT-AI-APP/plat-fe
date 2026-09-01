@@ -19,13 +19,16 @@ const ProductListItem = ({ product }: ProductListItemProps) => {
   const t = useTranslations();
   const { credits, price } = product;
   const displayPrice = toMajorAmount(price.amountMinor, price.currency);
-  const discountRate = calcDiscountRate(price.amountMinor, price.listAmountMinor);
+  const discountRate = calcDiscountRate(
+    price.amountMinor,
+    price.listAmountMinor,
+  );
   const listPrice = price.listAmountMinor
     ? toMajorAmount(price.listAmountMinor, price.currency)
     : 0;
 
   return (
-    <li className="relative cursor-pointer rounded-2xl border border-main px-5 py-4 hover:bg-btn-hover">
+    <li className="relative cursor-pointer rounded-2xl border border-main px-5 py-4 transition-colors hover:bg-btn-hover">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Token className="h-8 w-8" />
