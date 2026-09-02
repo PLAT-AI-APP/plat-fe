@@ -36,6 +36,7 @@ const ko = {
     resultCount: "{count}건",
     recommendedCharacters: "PLAT에서 추천하는 캐릭터",
     recommendedDescription: "태그에 맞지는 않지만, 취향에 잘 맞을지도 몰라요",
+    tagFilter: "태그 필터",
   },
   rankingPage: {
     title: "실시간 랭킹 캐릭터",
@@ -77,6 +78,8 @@ const ko = {
     selectedTags: "선택 태그",
     clearAll: "전체 해제",
     maxAlert: "태그는 최대 5개까지만 선택할 수 있습니다.",
+    title: "태그 필터",
+    close: "필터 닫기",
     personalizedTags: "취향 맞춤 태그",
     recommendation1Title: "밝은 햇살캐 클래스 메이트",
     recommendation2Title: "장난꾸러기 소꿉친구",
@@ -222,6 +225,7 @@ const en = {
     recommendedCharacters: "Characters recommended by PLAT",
     recommendedDescription:
       "They may not match your tags exactly, but they could still fit your taste",
+    tagFilter: "Tag filter",
   },
   rankingPage: {
     title: "Live popular characters",
@@ -263,6 +267,8 @@ const en = {
     selectedTags: "Selected tags",
     clearAll: "Clear all",
     maxAlert: "You can select up to 5 tags only.",
+    title: "Tag filter",
+    close: "Close filter",
     personalizedTags: "Personalized tags",
     recommendation1Title: "Bright sunshine classmate",
     recommendation2Title: "Mischievous childhood friend",
@@ -408,6 +414,7 @@ const ja = {
     recommendedCharacters: "PLATのおすすめキャラクター",
     recommendedDescription:
       "タグにぴったり合わなくても、好みに合うかもしれません",
+    tagFilter: "タグフィルター",
   },
   rankingPage: {
     title: "リアルタイム人気キャラクター",
@@ -449,6 +456,8 @@ const ja = {
     selectedTags: "選択タグ",
     clearAll: "すべて解除",
     maxAlert: "タグは最大 5 個まで選択できます。",
+    title: "タグフィルター",
+    close: "フィルターを閉じる",
     personalizedTags: "好み別タグ",
     recommendation1Title: "明るい陽だまり系クラスメイト",
     recommendation2Title: "いたずら好きな幼なじみ",
@@ -590,6 +599,7 @@ const zh = {
     resultCount: "{count}条",
     recommendedCharacters: "PLAT 推荐角色",
     recommendedDescription: "虽然不一定完全符合标签，但也许会很合你的口味",
+    tagFilter: "标签筛选",
   },
   rankingPage: {
     title: "实时热门角色",
@@ -631,6 +641,8 @@ const zh = {
     selectedTags: "已选标签",
     clearAll: "全部清除",
     maxAlert: "最多只能选择 5 个标签。",
+    title: "标签筛选",
+    close: "关闭筛选",
     personalizedTags: "偏好定制标签",
     recommendation1Title: "阳光感十足的同班同学",
     recommendation2Title: "爱捉弄人的青梅竹马",
@@ -775,6 +787,7 @@ const th = {
     recommendedCharacters: "ตัวละครที่ PLAT แนะนำ",
     recommendedDescription:
       "แม้จะไม่ตรงกับแท็กที่เลือกเป๊ะ ก็อาจตรงกับรสนิยมของคุณได้",
+    tagFilter: "ตัวกรองแท็ก",
   },
   rankingPage: {
     title: "ตัวละครยอดนิยมแบบเรียลไทม์",
@@ -815,6 +828,8 @@ const th = {
     searchPlaceholder: "คุณกำลังมองหาแท็กแบบไหน?",
     selectedTags: "แท็กที่เลือก",
     maxAlert: "เลือกแท็กได้สูงสุด 5 รายการเท่านั้น",
+    title: "ตัวกรองแท็ก",
+    close: "ปิดตัวกรอง",
     clearAll: "ล้างทั้งหมด",
     personalizedTags: "แท็กตามความชอบ",
     recommendation1Title: "เพื่อนร่วมชั้นบรรยากาศสดใส",
@@ -961,6 +976,7 @@ const vi = {
     recommendedCharacters: "Nhân vật PLAT đề xuất",
     recommendedDescription:
       "Dù không khớp hoàn toàn với thẻ đã chọn, vẫn có thể hợp gu của bạn",
+    tagFilter: "Bộ lọc thẻ",
   },
   rankingPage: {
     title: "Nhân vật phổ biến theo thời gian thực",
@@ -1002,6 +1018,8 @@ const vi = {
     selectedTags: "Thẻ đã chọn",
     clearAll: "Bỏ chọn tất cả",
     maxAlert: "Bạn chỉ có thể chọn tối đa 5 thẻ.",
+    title: "Bộ lọc thẻ",
+    close: "Đóng bộ lọc",
     personalizedTags: "Thẻ theo sở thích",
     recommendation1Title: "Bạn cùng lớp mang năng lượng tươi sáng",
     recommendation2Title: "Bạn thanh mai trúc mã tinh nghịch",
