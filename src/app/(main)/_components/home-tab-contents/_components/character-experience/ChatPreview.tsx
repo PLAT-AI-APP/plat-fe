@@ -1,9 +1,21 @@
+import { cn } from "@/lib/utils";
 import React from "react";
 import { ChatBubble, NarrativeBlock, ActionFooter } from "./SubComponents";
 
-const ChatPreview = () => {
+interface ChatPreviewProps {
+  isStacked?: boolean;
+}
+
+const ChatPreview = ({ isStacked = false }: ChatPreviewProps) => {
   return (
-    <section className="relative pr-4 flex-1 h-full min-w-0 bg-darker rounded-tr-2xl rounded-br-2xl flex flex-col overflow-hidden">
+    <section
+      className={cn(
+        "relative pr-4 flex-1 min-w-0 bg-darker flex flex-col overflow-hidden",
+        isStacked
+          ? "w-full min-h-0 rounded-b-2xl"
+          : "h-full rounded-tr-2xl rounded-br-2xl",
+      )}
+    >
       <div
         id="preview-chat-container"
         className="w-full h-full p-9 inline-flex flex-col justify-start items-start gap-6"

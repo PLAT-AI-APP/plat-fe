@@ -1,14 +1,26 @@
 import { ChatFill } from "@/icons";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 import React from "react";
 
 interface CharacterProfileCardProps {
   index: number;
+  isStacked?: boolean;
 }
 
-const CharacterProfileCard = ({ index }: CharacterProfileCardProps) => {
+const CharacterProfileCard = ({
+  index,
+  isStacked = false,
+}: CharacterProfileCardProps) => {
   return (
-    <section className="relative min-w-86.75 w-95 h-full overflow-hidden rounded-l-2xl bg-scrim inline-flex flex-col justify-end items-start">
+    <section
+      className={cn(
+        "relative overflow-hidden bg-scrim inline-flex flex-col justify-end items-start",
+        isStacked
+          ? "w-full h-56 shrink-0 rounded-t-2xl"
+          : "min-w-86.75 w-95 h-full rounded-l-2xl",
+      )}
+    >
       <Image
         src={`https://picsum.photos/seed/character-experience-${index}/200/300`}
         alt=""
