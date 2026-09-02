@@ -7,7 +7,7 @@ import { useTranslations } from "next-intl";
 import React from "react";
 import CharacterCard from "./character-card";
 import { getCardGridTemplateColumns } from "./character-card/constants";
-import { CharacterCardSkeleton } from "./CharacterCardSkeleton";
+import { CharacterCardSkeleton } from "./character-card/CharacterCardSkeleton";
 
 interface CharacterShowcaseProps {
   title?: string;

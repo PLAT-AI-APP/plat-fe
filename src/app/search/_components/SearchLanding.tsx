@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import CharacterCard from "@/app/(main)/_components/character-card";
+import CharacterCard from "@/components/character/character-card";
+import { getCardGridTemplateColumns } from "@/components/character/character-card/constants";
 import { useRecentSearch } from "@/hooks/useRecentSearch";
 import dayjs from "@/lib/dayjs";
 import { cn, formatStatCount } from "@/lib/utils";
@@ -147,7 +148,12 @@ const SearchLanding = () => {
             <span className="body-5 text-font-2">{updatedAt}</span>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div
+            className="grid w-full gap-x-4 gap-y-7"
+            style={{
+              gridTemplateColumns: getCardGridTemplateColumns("S"),
+            }}
+          >
             {DUMMY_SEARCH_CHARACTERS.slice(0, 6).map((character) => (
               <CharacterCard
                 key={character.id}
@@ -159,6 +165,7 @@ const SearchLanding = () => {
                 images={character.image}
                 isNew={character.isNew}
                 isOfficial={character.isOfficial}
+                fluid
               />
             ))}
           </div>

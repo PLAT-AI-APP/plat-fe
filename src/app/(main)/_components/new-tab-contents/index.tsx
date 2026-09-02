@@ -1,8 +1,8 @@
 "use client";
 
 import { useNewWorkQuery } from "@/api/home/getNewWork";
-import CharacterCard from "../character-card";
-import { getCardGridTemplateColumns } from "../character-card/constants";
+import CharacterCard from "@/components/character/character-card";
+import { getCardGridTemplateColumns } from "@/components/character/character-card/constants";
 import NewCharacterHeader from "./_components/NewCharacterHeader";
 
 const NewTabContents = () => {

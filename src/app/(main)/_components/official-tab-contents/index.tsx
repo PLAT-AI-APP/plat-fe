@@ -2,8 +2,8 @@
 
 import { useTranslations } from "next-intl";
 import { useOfficialPreviewQuery } from "@/api/home/getOfficialPreview";
-import CharacterCard from "../character-card";
-import { getCardGridTemplateColumns } from "../character-card/constants";
+import CharacterCard from "@/components/character/character-card";
+import { getCardGridTemplateColumns } from "@/components/character/character-card/constants";
 import OfficialSortDropdown from "./_components/OfficialSortDropdown";
 
 const OfficialTabContents = () => {

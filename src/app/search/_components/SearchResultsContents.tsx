@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import CharacterCard from "@/app/(main)/_components/character-card";
-import { getCardGridTemplateColumns } from "@/app/(main)/_components/character-card/constants";
+import CharacterCard from "@/components/character/character-card";
+import { getCardGridTemplateColumns } from "@/components/character/character-card/constants";
 import { useRecentSearch } from "@/hooks/useRecentSearch";
 import { cn } from "@/lib/utils";
 import {

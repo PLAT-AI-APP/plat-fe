@@ -1,5 +1,5 @@
-import CharacterCard from "../character-card";
-import { getCardGridTemplateColumns } from "../character-card/constants";
+import CharacterCard from "@/components/character/character-card";
+import { getCardGridTemplateColumns } from "@/components/character/character-card/constants";
 import RankingHeader from "./_components/RankingHeader";
 import { DUMMY_RANKED_CHARACTERS } from "./dummyData";
 

@@ -3,7 +3,7 @@
 import React, { useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslations } from "next-intl";
-import CharacterShowcase from "@/app/(main)/_components/CharacterShowcase";
+import CharacterShowcase from "@/components/character/CharacterShowcase";
 import CharacterSortPopover, {
   CharacterSortOption,
 } from "@/components/popover/CharacterSortPopover";

@@ -69,19 +69,19 @@ export const FLUID_SIZE_OVERRIDE: Record<
   { wrapper: string; imageArea: string }
 > = {
   S: {
-    wrapper: "w-full gap-2",
+    wrapper: "w-full max-w-[240px] gap-2",
     imageArea: "w-full aspect-[187/245] rounded-[16px]",
   },
   M: {
-    wrapper: "w-full",
+    wrapper: "w-full max-w-[290px]",
     imageArea: "w-full aspect-square rounded-tl-2xl rounded-tr-2xl",
   },
   L: {
-    wrapper: "w-full aspect-[389/379] rounded-2xl overflow-hidden",
+    wrapper: "w-full max-w-[500px] aspect-[389/379] rounded-2xl overflow-hidden",
     imageArea: "w-full h-full rounded-2xl",
   },
   XL: {
-    wrapper: "w-full",
+    wrapper: "w-full max-w-[500px]",
     imageArea: "w-full aspect-square rounded-t-2xl",
   },
 };
@@ -103,10 +103,13 @@ export const CARD_MIN_WIDTH: Record<CardSize, number> = {
  * minmax(min, 1fr)만으로는 그 카드가 컨테이너 폭 전체로 늘어나 지나치게 커진다.
  * 카드가 커져도 되는 상한을 별도로 둬서 그 이상은 늘어나지 않게 한다.
  *
- * fr은 min()/max()처럼 다른 단위와 섞어 쓸 수 없어(minmax(min, min(1fr, max))는
- * 브라우저가 무시하고 무제한으로 늘어난다) 대신 max를 고정 px로 준다. 트랙 개수가
- * 채워지고도 폭이 남으면 grid가 각 트랙을 이 max까지 자동으로 늘려 채우므로
- * 1fr 없이도 "남는 폭을 카드들이 고르게 나눠 갖는" 동작은 그대로 유지된다.
+ * 이 값을 grid-template-columns의 minmax 상한으로 직접 쓰면 안 된다. auto-fill의
+ * 열 개수는 상한이 고정 px(정해진 값)일 때 그 상한 기준으로 계산돼, 실제로는
+ * min 기준으로 더 들어갈 수 있는 폭에서도 열이 덜 채워지고 오른쪽에 빈 공간이
+ * 남는다(예: 616px 컨테이너, min 186.67/max 240 → 3열이 들어갈 수 있는데도 2열만
+ * 채워짐). 그래서 grid 트랙 자체는 minmax(min, 1fr)로 두어 열 개수는 min 기준으로
+ * 최대한 채우고, 이 상한은 FLUID_SIZE_OVERRIDE.wrapper의 max-width로 카드 자신에게만
+ * 적용해 트랙보다 카드가 더 크게 늘어나는 것만 막는다.
  */
 export const CARD_MAX_WIDTH: Record<CardSize, number> = {
   S: 240,
@@ -117,8 +120,10 @@ export const CARD_MAX_WIDTH: Record<CardSize, number> = {
 
 /**
  * 카드 그리드 컨테이너에 그대로 꽂아 쓰는 gridTemplateColumns 값.
+ * 상한을 1fr(가변)로 둬야 auto-fill 열 개수 계산이 min 기준으로 이루어진다.
+ * 실제 카드 폭 상한은 CARD_MAX_WIDTH를 쓰는 FLUID_SIZE_OVERRIDE.wrapper가 담당한다.
  */
 export const getCardGridTemplateColumns = (size: CardSize) =>
-  `repeat(auto-fill, minmax(${CARD_MIN_WIDTH[size]}px, ${CARD_MAX_WIDTH[size]}px))`;
+  `repeat(auto-fill, minmax(${CARD_MIN_WIDTH[size]}px, 1fr))`;
 
 export const LAST_SWIPE_THRESHOLD = 40;
