@@ -50,6 +50,8 @@ const ko = {
   officialPage: {
     title: "PLAT의 공식캐릭터",
     sortByChats: "대화량 순",
+    sortRecommended: "맞춤 추천순",
+    sortWish: "찜",
   },
   newPage: {
     title: "이달의 신규 캐릭터",
@@ -239,6 +241,8 @@ const en = {
   officialPage: {
     title: "PLAT's official characters",
     sortByChats: "Most chatted",
+    sortRecommended: "Recommended for you",
+    sortWish: "Wishlist",
   },
   newPage: {
     title: "New characters this month",
@@ -428,6 +432,8 @@ const ja = {
   officialPage: {
     title: "PLATの公式キャラクター",
     sortByChats: "会話量順",
+    sortRecommended: "おすすめ順",
+    sortWish: "お気に入り",
   },
   newPage: {
     title: "今月の新作キャラクター",
@@ -613,6 +619,8 @@ const zh = {
   officialPage: {
     title: "PLAT官方角色",
     sortByChats: "按对话量排序",
+    sortRecommended: "个性化推荐顺",
+    sortWish: "收藏",
   },
   newPage: {
     title: "本月新角色",
@@ -801,6 +809,8 @@ const th = {
   officialPage: {
     title: "ตัวละครทางการของ PLAT",
     sortByChats: "เรียงตามจำนวนแชต",
+    sortRecommended: "ตามคำแนะนำเฉพาะคุณ",
+    sortWish: "รายการโปรด",
   },
   newPage: {
     title: "ตัวละครใหม่ประจำเดือนนี้",
@@ -990,6 +1000,8 @@ const vi = {
   officialPage: {
     title: "Nhân vật chính thức của PLAT",
     sortByChats: "Theo lượt chat",
+    sortRecommended: "Đề xuất riêng cho bạn",
+    sortWish: "Yêu thích",
   },
   newPage: {
     title: "Nhân vật mới trong tháng",

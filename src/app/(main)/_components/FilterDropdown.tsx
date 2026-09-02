@@ -34,12 +34,12 @@ const FilterDropdown = <T extends string>({
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         onClick={() => setIsOpen((prev) => !prev)}
-        className="flex min-w-30 items-center justify-center gap-1 whitespace-nowrap rounded-xl py-2.5 pl-5 pr-4 hover:bg-btn-hover"
+        className="flex items-center gap-1 whitespace-nowrap rounded-xl border border-main p-2.5 hover:bg-btn-hover"
       >
-        <span className="title-3 whitespace-nowrap text-font-2">
+        <span className="body-4 whitespace-nowrap text-font-2">
           {t(labelKeys[value] as MessageKey)}
         </span>
-        <ArrowDown className="size-6 text-font-2" />
+        <ArrowDown className="size-4 text-font-2" />
       </button>
 
       <AnimatePresence>
@@ -47,7 +47,7 @@ const FilterDropdown = <T extends string>({
           <PopoverLayout
             onClose={() => setIsOpen(false)}
             triggerRef={triggerRef}
-            className="left-0 right-auto min-w-30"
+            className="min-w-30"
           >
             <ul className="flex flex-col gap-1" role="listbox">
               {options.map((option) => {

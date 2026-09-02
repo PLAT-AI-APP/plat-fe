@@ -2,8 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useOfficialPreviewQuery } from "@/api/home/getOfficialPreview";
-import CharacterCard from "@/components/character/character-card";
-import { getCardGridTemplateColumns } from "@/components/character/character-card/constants";
+import CharacterShowcase from "@/components/character/CharacterShowcase";
 import OfficialSortDropdown from "./_components/OfficialSortDropdown";
 
 const OfficialTabContents = () => {
@@ -17,26 +16,20 @@ const OfficialTabContents = () => {
         <OfficialSortDropdown />
       </div>
 
-      <div
-        className="grid w-full gap-x-4 gap-y-7"
-        style={{
-          gridTemplateColumns: getCardGridTemplateColumns("S"),
-        }}
-      >
-        {(officialPreviewList ?? []).map((character) => (
-          <CharacterCard
-            key={character.universeId}
-            size="S"
-            title={character.title}
-            description={character.description}
-            creatorName="PLAT"
-            chatCount={character.chatCount}
-            images={character.images}
-            isOfficial
-            fluid
-          />
-        ))}
-      </div>
+      <CharacterShowcase
+        charArray={(officialPreviewList ?? []).map((character) => ({
+          name: character.title,
+          dec: character.description,
+          creatorName: "PLAT",
+          chatCount: character.chatCount,
+          img: character.images,
+          isOfficial: true,
+        }))}
+        cardSize="S"
+        columnGap={16}
+        rowGap={28}
+        gridFillMode="auto-fill"
+      />
     </article>
   );
 };

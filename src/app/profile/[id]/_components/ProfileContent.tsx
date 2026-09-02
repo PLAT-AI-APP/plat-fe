@@ -210,6 +210,7 @@ export default function ProfileContent({ id }: { id: string }) {
             cardSize="S"
             rowGap={28}
             columnGap={16}
+            gridFillMode="auto-fill"
           />
         </section>
       </section>

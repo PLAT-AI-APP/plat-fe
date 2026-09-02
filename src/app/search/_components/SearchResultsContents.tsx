@@ -3,8 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import CharacterCard from "@/components/character/character-card";
-import { getCardGridTemplateColumns } from "@/components/character/character-card/constants";
+import CharacterShowcase from "@/components/character/CharacterShowcase";
 import { useRecentSearch } from "@/hooks/useRecentSearch";
 import { cn } from "@/lib/utils";
 import {
@@ -123,7 +122,9 @@ const SearchResultsContents = ({
             <span
               className={cn(
                 "body-4 transition-colors",
-                activeTab === tab.key ? "text-font-1" : "text-font-2",
+                activeTab === tab.key
+                  ? "text-font-1"
+                  : "text-font-2 hover:text-font-1",
               )}
             >
               {tab.label}
@@ -137,7 +138,7 @@ const SearchResultsContents = ({
           onClick={() => router.push("/?tab=categories")}
           className="flex w-21 flex-col items-center justify-center border-b-2 border-transparent p-2.5"
         >
-          <span className="body-4 text-font-2">
+          <span className="body-4 text-font-2 transition-colors hover:text-font-1">
             {t("searchResults.tabCategory")}
           </span>
         </button>
@@ -149,27 +150,21 @@ const SearchResultsContents = ({
             title={t("searchResults.tabCharacter")}
             count={DUMMY_SEARCH_CHARACTERS.length}
           >
-            <div
-              className="grid gap-x-4 gap-y-7"
-              style={{
-                gridTemplateColumns: getCardGridTemplateColumns("S"),
-              }}
-            >
-              {DUMMY_SEARCH_CHARACTERS.map((character) => (
-                <CharacterCard
-                  key={character.id}
-                  size="S"
-                  title={character.title}
-                  description={character.description}
-                  creatorName={character.creatorName}
-                  chatCount={character.chatCount}
-                  images={character.image}
-                  isNew={character.isNew}
-                  isOfficial={character.isOfficial}
-                  fluid
-                />
-              ))}
-            </div>
+            <CharacterShowcase
+              charArray={DUMMY_SEARCH_CHARACTERS.map((character) => ({
+                name: character.title,
+                dec: character.description,
+                creatorName: character.creatorName,
+                chatCount: character.chatCount,
+                img: character.image,
+                isNew: character.isNew,
+                isOfficial: character.isOfficial,
+              }))}
+              cardSize="S"
+              columnGap={16}
+              rowGap={28}
+              gridFillMode="auto-fill"
+            />
           </ResultSection>
         )}
 
@@ -178,27 +173,21 @@ const SearchResultsContents = ({
             title={t("searchResults.tabWorld")}
             count={DUMMY_SEARCH_WORLDS.length}
           >
-            <div
-              className="grid gap-x-4 gap-y-7"
-              style={{
-                gridTemplateColumns: getCardGridTemplateColumns("S"),
-              }}
-            >
-              {DUMMY_SEARCH_WORLDS.map((world) => (
-                <CharacterCard
-                  key={world.id}
-                  size="S"
-                  title={world.title}
-                  description={world.description}
-                  creatorName={world.creatorName}
-                  chatCount={world.chatCount}
-                  images={world.image}
-                  isNew={world.isNew}
-                  isOfficial={world.isOfficial}
-                  fluid
-                />
-              ))}
-            </div>
+            <CharacterShowcase
+              charArray={DUMMY_SEARCH_WORLDS.map((world) => ({
+                name: world.title,
+                dec: world.description,
+                creatorName: world.creatorName,
+                chatCount: world.chatCount,
+                img: world.image,
+                isNew: world.isNew,
+                isOfficial: world.isOfficial,
+              }))}
+              cardSize="S"
+              columnGap={16}
+              rowGap={28}
+              gridFillMode="auto-fill"
+            />
           </ResultSection>
         )}
 

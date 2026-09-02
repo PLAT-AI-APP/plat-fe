@@ -51,6 +51,15 @@ export const DUMMY_LIVE_SEARCH_KEYWORDS: LiveSearchKeyword[] = [
   { rank: 4, keyword: "오늘일만보걸었다", count: 123, trend: "up" },
   { rank: 5, keyword: "오늘일만보걸었다", count: 123, trend: "down" },
   { rank: 6, keyword: "오늘일만보걸었다", count: 123, trend: "up" },
+  { rank: 7, keyword: "오늘일만보걸었다", count: 123, trend: "down" },
+  {
+    rank: 8,
+    keyword: "오늘일만보걸었다 오늘일만보걸었다오늘일만보걸었다",
+    count: 123,
+    trend: "up",
+  },
+  { rank: 9, keyword: "오늘일만보걸었다", count: 123, trend: "down" },
+  { rank: 10, keyword: "오늘일만보걸었다", count: 123, trend: "up" },
 ];
 
 export const DUMMY_SEARCH_USERS: SearchUserResult[] = Array.from(

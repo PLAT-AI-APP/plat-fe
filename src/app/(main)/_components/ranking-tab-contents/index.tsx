@@ -1,5 +1,4 @@
-import CharacterCard from "@/components/character/character-card";
-import { getCardGridTemplateColumns } from "@/components/character/character-card/constants";
+import CharacterShowcase from "@/components/character/CharacterShowcase";
 import RankingHeader from "./_components/RankingHeader";
 import { DUMMY_RANKED_CHARACTERS } from "./dummyData";
 
@@ -8,26 +7,20 @@ const RankingTabContents = () => {
     <article className="flex w-full flex-col gap-5 pt-5">
       <RankingHeader />
 
-      <div
-        className="grid w-full gap-x-4 gap-y-7"
-        style={{
-          gridTemplateColumns: getCardGridTemplateColumns("S"),
-        }}
-      >
-        {DUMMY_RANKED_CHARACTERS.map((character, index) => (
-          <CharacterCard
-            key={character.id}
-            size="S"
-            rank={index + 1}
-            title={character.title}
-            description={character.description}
-            creatorName={character.creatorName}
-            chatCount={character.chatCount}
-            images={character.image}
-            fluid
-          />
-        ))}
-      </div>
+      <CharacterShowcase
+        charArray={DUMMY_RANKED_CHARACTERS.map((character, index) => ({
+          name: character.title,
+          dec: character.description,
+          creatorName: character.creatorName,
+          chatCount: character.chatCount,
+          img: character.image,
+          rank: index + 1,
+        }))}
+        cardSize="S"
+        columnGap={16}
+        rowGap={28}
+        gridFillMode="auto-fill"
+      />
     </article>
   );
 };

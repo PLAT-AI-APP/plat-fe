@@ -20,6 +20,7 @@ interface CharacterShowcaseProps {
     creatorName?: string;
     isNew?: boolean;
     isOfficial?: boolean;
+    rank?: number;
   }[];
   cardSize?: "S" | "M" | "L" | "XL";
   limit?: number;
@@ -29,6 +30,13 @@ interface CharacterShowcaseProps {
   rowGap?: number;
   currentTag?: string;
   layout?: "grid" | "carousel";
+  /**
+   * grid 레이아웃의 열 채움 방식. limit으로 항상 한 줄이 꽉 차는 미리보기는
+   * "auto-fit"(기본값)으로 빈 트랙을 접어 카드가 남는 폭을 나눠 갖게 하고,
+   * 아이템 수가 들쭉날쭉한 목록은 "auto-fill"로 빈 트랙을 남겨 카드가
+   * 늘어나지 않고 왼쪽 정렬되게 한다.
+   */
+  gridFillMode?: "auto-fit" | "auto-fill";
   selectedTags?: string | string[];
   /**
    * 목록을 아직 불러오는 중인지. 데이터는 부모가 가져오므로 로딩 여부도
@@ -51,6 +59,7 @@ const CharacterShowcase = ({
   layout = "grid",
   selectedTags,
   isLoading = false,
+  gridFillMode = "auto-fit",
 }: CharacterShowcaseProps) => {
   const t = useTranslations("characterShowcase");
   const { viewportRef, scrollPrev, scrollNext, canScrollPrev, canScrollNext } =
@@ -93,6 +102,7 @@ const CharacterShowcase = ({
           currentTag={currentTag}
           isNew={char.isNew}
           isOfficial={char.isOfficial}
+          rank={char.rank}
           selectedTags={selectedTags}
           fluid={isFluid}
         />
@@ -162,7 +172,10 @@ const CharacterShowcase = ({
           style={{
             columnGap,
             rowGap,
-            gridTemplateColumns: getCardGridTemplateColumns(cardSize),
+            gridTemplateColumns: getCardGridTemplateColumns(
+              cardSize,
+              gridFillMode,
+            ),
           }}
         >
           {cardItems}
