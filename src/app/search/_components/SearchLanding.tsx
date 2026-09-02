@@ -51,7 +51,7 @@ const LiveSearchRankItem = ({ item, onSelect }: LiveSearchRankItemProps) => {
     <button
       type="button"
       onClick={() => onSelect(item.keyword)}
-      className="group flex w-full items-center justify-between rounded-xl bg-darkest p-4 transition hover:bg-btn-hover"
+      className="group flex w-full items-center justify-between rounded-xl bg-darkest p-4 transition-all duration-200 hover:scale-[1.02] hover:bg-btn-hover active:scale-[0.98]"
     >
       <div className="relative flex min-w-0 flex-1 items-center gap-2">
         <p
@@ -76,7 +76,7 @@ const LiveSearchRankItem = ({ item, onSelect }: LiveSearchRankItemProps) => {
         </span>
         <span
           className={cn(
-            "body-2 pointer-events-none absolute left-6 z-10 w-max max-w-[calc(100%+2rem)] rounded-lg bg-btn-hover px-2 py-1 whitespace-normal opacity-0 transition-opacity duration-200 group-hover:opacity-100",
+            "body-2 pointer-events-none absolute left-6 z-10 w-max max-w-[calc(100%+2rem)] rounded-lg bg-btn-hover px-2 py-1 text-left whitespace-normal opacity-0 transition-opacity duration-200 group-hover:opacity-100",
             isTopThree ? "text-font-1" : "text-font-2",
           )}
         >
@@ -84,7 +84,9 @@ const LiveSearchRankItem = ({ item, onSelect }: LiveSearchRankItemProps) => {
         </span>
       </div>
 
-      <div className="flex shrink-0 items-center gap-1">
+      {/* 순위 변동(카운트+화살표)은 hover 시 뜨는 전체 문장 오버레이(z-10)가 폭 계산상
+          이 영역까지 덮을 수 있어, z-20으로 항상 그 위에 보이게 고정한다. */}
+      <div className="relative z-20 flex shrink-0 items-center gap-1">
         <span className="body-5 text-font-2">
           {formatStatCount(item.count, locale)}
         </span>
