@@ -125,10 +125,16 @@ export const CARD_MIN_WIDTH: Record<CardSize, number> = {
  * 들쭉날쭉해 마지막 줄(또는 한 줄짜리 목록 전체)이 자주 덜 찰 수 있는 목록은
  * auto-fill로 빈 트랙을 남겨 카드가 늘어나지 않고 왼쪽 정렬 + 다른 탭과 같은
  * 크기를 유지하게 한다.
+ *
+ * min 값은 CSS 변수 --card-min-width로 감싸 CARD_MIN_WIDTH[size]를 기본값으로 쓴다.
+ * 특정 화면 하나만 "한 줄 → 여러 줄로 바뀌는 폭 기준"을 다르게 주고 싶을 때, 공용
+ * 상수를 건드리지 않고 CharacterShowcase의 className으로 이 변수만 오버라이드하면 된다
+ * (예: className="[--card-min-width:194.335px]").
  */
 export const getCardGridTemplateColumns = (
   size: CardSize,
   fillMode: "auto-fit" | "auto-fill" = "auto-fit",
-) => `repeat(${fillMode}, minmax(${CARD_MIN_WIDTH[size]}px, 1fr))`;
+) =>
+  `repeat(${fillMode}, minmax(var(--card-min-width, ${CARD_MIN_WIDTH[size]}px), 1fr))`;
 
 export const LAST_SWIPE_THRESHOLD = 40;

@@ -2,6 +2,7 @@
 
 import { ArrowLeft, ArrowRight } from "@/icons";
 import { useCarousel } from "@/hooks/useCarousel";
+import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import React from "react";
@@ -37,6 +38,13 @@ interface CharacterShowcaseProps {
    * 늘어나지 않고 왼쪽 정렬되게 한다.
    */
   gridFillMode?: "auto-fit" | "auto-fill";
+  /**
+   * grid 레이아웃 컨테이너에 그대로 전달되는 className. 이 화면만 카드가 한 줄에서
+   * 여러 줄로 바뀌는 폭 기준을 다르게 주고 싶을 때, 공용 CARD_MIN_WIDTH를 건드리지
+   * 않고 CSS 변수 --card-min-width만 오버라이드하는 용도로 쓴다
+   * (예: className="[--card-min-width:194.335px]"). carousel 레이아웃에는 적용되지 않는다.
+   */
+  className?: string;
   selectedTags?: string | string[];
   /**
    * 목록을 아직 불러오는 중인지. 데이터는 부모가 가져오므로 로딩 여부도
@@ -60,6 +68,7 @@ const CharacterShowcase = ({
   selectedTags,
   isLoading = false,
   gridFillMode = "auto-fit",
+  className,
 }: CharacterShowcaseProps) => {
   const t = useTranslations("characterShowcase");
   const { viewportRef, scrollPrev, scrollNext, canScrollPrev, canScrollNext } =
@@ -168,7 +177,7 @@ const CharacterShowcase = ({
         // 다시 계산하고, 남는 폭을 카드들이 고르게 나눠 가져 태블릿 폭에서도
         // 자연스럽게 줄어든다.
         <div
-          className="grid gap-4"
+          className={cn("grid gap-4", className)}
           style={{
             columnGap,
             rowGap,
