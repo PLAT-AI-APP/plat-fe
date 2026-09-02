@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { useOfficialPreviewQuery } from "@/api/home/getOfficialPreview";
 import CharacterCard from "../character-card";
+import { getCardGridTemplateColumns } from "../character-card/constants";
 import OfficialSortDropdown from "./_components/OfficialSortDropdown";
 
 const OfficialTabContents = () => {
@@ -16,7 +17,12 @@ const OfficialTabContents = () => {
         <OfficialSortDropdown />
       </div>
 
-      <div className="flex w-full flex-wrap gap-x-4 gap-y-7">
+      <div
+        className="grid w-full gap-x-4 gap-y-7"
+        style={{
+          gridTemplateColumns: getCardGridTemplateColumns("S"),
+        }}
+      >
         {(officialPreviewList ?? []).map((character) => (
           <CharacterCard
             key={character.universeId}
@@ -27,6 +33,7 @@ const OfficialTabContents = () => {
             chatCount={character.chatCount}
             images={character.images}
             isOfficial
+            fluid
           />
         ))}
       </div>

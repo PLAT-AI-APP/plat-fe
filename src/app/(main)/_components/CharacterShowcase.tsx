@@ -2,11 +2,11 @@
 
 import { ArrowLeft, ArrowRight } from "@/icons";
 import { useCarousel } from "@/hooks/useCarousel";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import React from "react";
 import CharacterCard from "./character-card";
+import { getCardGridTemplateColumns } from "./character-card/constants";
 import { CharacterCardSkeleton } from "./CharacterCardSkeleton";
 
 interface CharacterShowcaseProps {
@@ -68,9 +68,17 @@ const CharacterShowcase = ({
   const skeletonCount =
     limit || (displayChars.length > 0 ? displayChars.length : 4);
 
+  // 캐러셀은 카드 자체의 고정폭에 기대는 가로 스크롤이라 fluid를 켜지 않고,
+  // grid 레이아웃에서만 카드가 열 폭을 그대로 채우도록 합니다.
+  const isFluid = !isCarousel;
+
   const cardItems = isLoading
     ? Array.from({ length: skeletonCount }).map((_, index) => (
-        <CharacterCardSkeleton key={`skeleton-${index}`} size={cardSize} />
+        <CharacterCardSkeleton
+          key={`skeleton-${index}`}
+          size={cardSize}
+          fluid={isFluid}
+        />
       ))
     : displayChars.map((char, index) => (
         <CharacterCard
@@ -86,6 +94,7 @@ const CharacterShowcase = ({
           isNew={char.isNew}
           isOfficial={char.isOfficial}
           selectedTags={selectedTags}
+          fluid={isFluid}
         />
       ));
 
@@ -144,14 +153,16 @@ const CharacterShowcase = ({
           </button>
         </div>
       ) : (
+        // flex-wrap은 폭이 줄어들 때 카드가 그냥 다음 줄로 밀리며 마지막 줄 오른쪽에
+        // 빈 여백을 남긴다. grid auto-fill + minmax는 컨테이너 폭에 맞춰 열 개수를
+        // 다시 계산하고, 남는 폭을 카드들이 고르게 나눠 가져 태블릿 폭에서도
+        // 자연스럽게 줄어든다.
         <div
-          className={cn(
-            "flex flex-wrap gap-4",
-            cardSize === "XL" && "justify-between",
-          )}
+          className="grid gap-4"
           style={{
             columnGap,
             rowGap,
+            gridTemplateColumns: getCardGridTemplateColumns(cardSize),
           }}
         >
           {cardItems}

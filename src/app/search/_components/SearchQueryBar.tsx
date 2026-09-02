@@ -28,7 +28,7 @@ const SearchQueryBar = ({
     <div className="flex flex-col gap-2.5">
       <form
         onSubmit={onSubmit}
-        className="flex items-center justify-between rounded-2xl border border-main bg-darkest px-4 py-3"
+        className="flex items-center justify-between rounded-2xl border border-main bg-darkest px-4 py-3 transition-colors focus-within:field-focus"
       >
         <div className="flex flex-1 items-center gap-3">
           <Search className="size-7 shrink-0 text-font-disabled" />
@@ -38,7 +38,7 @@ const SearchQueryBar = ({
             onChange={(event) => onQueryDraftChange(event.target.value)}
             placeholder={t("searchBar.placeholder")}
             aria-label={t("searchBar.placeholder")}
-            className="body-2 w-full bg-transparent text-font-1 outline-none placeholder:text-font-disabled"
+            className="focus-ring-none body-2 w-full bg-transparent text-font-1 outline-none placeholder:text-font-disabled"
           />
         </div>
 

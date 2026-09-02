@@ -103,8 +103,10 @@ const SearchLanding = () => {
     handleSearch(queryDraft);
   };
 
+  // x축 여백(content-x)은 ClientLayout의 #page-content가 이미 지고 있어서,
+  // 여기서는 순수 콘텐츠 폭만 다른 화면과 동일하게 1200px로 잡습니다.
   return (
-    <section className="mx-auto flex w-full max-w-[1272px] flex-col gap-10 pt-5 pb-20">
+    <section className="mx-auto flex w-full max-w-300 flex-col gap-10 pt-5 pb-20">
       <PageTitle messageKey="pageTitles.search" />
 
       <SearchQueryBar

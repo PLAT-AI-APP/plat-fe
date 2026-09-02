@@ -6,10 +6,13 @@ import {
   HASHTAG_CATEGORY_ORDER,
 } from "@/constants/hashtag";
 import { Search } from "@/icons";
+import { showAppToast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { TagFolder, TagPill } from "./TagFolder";
+
+const MAX_SELECTED_TAGS = 5;
 
 // 상단의 "취향 맞춤 태그" 카드 데이터입니다.
 // 카드 클릭 시 tags 배열에 들어있는 태그들이 한 번에 선택됩니다.
@@ -386,7 +389,14 @@ const TagSidebar = ({
 
   // 태그를 누를 때 선택/해제를 토글합니다.
   // 선택된 태그는 하단 "선택 태그" 영역에도 같은 상태로 표시됩니다.
+  // 최대 개수(MAX_SELECTED_TAGS)에 도달한 상태에서 새 태그를 추가하려 하면 토스트로 안내합니다.
   const toggleTag = (tag: string) => {
+    const isSelected = selectedTags.includes(tag);
+    if (!isSelected && selectedTags.length >= MAX_SELECTED_TAGS) {
+      showAppToast("warning", t("maxAlert"));
+      return;
+    }
+
     onSelectedTagsChange((prev) =>
       prev.includes(tag)
         ? prev.filter((selectedTag) => selectedTag !== tag)
@@ -395,13 +405,22 @@ const TagSidebar = ({
   };
 
   // 추천 카드는 여러 태그를 한 번에 추가합니다.
-  // Set을 사용해서 이미 선택된 태그가 중복으로 쌓이지 않게 합니다.
+  // Set을 사용해서 이미 선택된 태그가 중복으로 쌓이지 않게 하고,
+  // 추가로 최대 개수를 넘기면 태그 모달과 동일하게 전체 추가를 막고 안내합니다.
   const selectRecommendation = (tags: string[]) => {
-    onSelectedTagsChange((prev) => Array.from(new Set([...prev, ...tags])));
+    const newTags = tags.filter((tag) => !selectedTags.includes(tag));
+    if (newTags.length === 0) return;
+
+    if (selectedTags.length + newTags.length > MAX_SELECTED_TAGS) {
+      showAppToast("warning", t("maxAlert"));
+      return;
+    }
+
+    onSelectedTagsChange((prev) => Array.from(new Set([...prev, ...newTags])));
   };
 
   return (
-    <aside className="sticky top-[0px] h-[calc(100vh-var(--header-height))] w-[300px] shrink-0 overflow-y-auto bg-dark no-scrollbar">
+    <aside className="sticky top-0 h-[calc(100vh-var(--header-height))] w-[300px] shrink-0 overflow-y-auto bg-dark no-scrollbar">
       {/* 검색 영역: 입력값은 폴더 태그 목록을 클라이언트에서 즉시 필터링합니다. */}
       <div className="px-5 py-4">
         <label className="relative block">
@@ -410,7 +429,7 @@ const TagSidebar = ({
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder={t("searchPlaceholder")}
-            className="h-[43px] w-full rounded-xl border border-main bg-darkest pl-[38px] pr-3 body-5 text-font-1 outline-none transition-colors placeholder:text-font-2 focus:border-font-disabled"
+            className="focus-ring-none h-[43px] w-full rounded-xl border border-main bg-darkest pl-[38px] pr-3 body-5 text-font-1 outline-none transition-colors placeholder:text-font-2 focus:border-font-disabled"
           />
         </label>
       </div>

@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Camera, Chat, Fold, Home, NoteLine } from "@/icons";
 import { cn } from "@/lib/utils";
+import { SIDEBAR_WIDTH } from "@/constants/layout";
 import {
   DURATION,
   EASE_IN_OUT,
@@ -84,7 +85,9 @@ const Sidebar = ({ isFolded = false, onFoldToggle }: SidebarProps) => {
     { name: t("sidebar.noteCharge"), link: "/token-charge", icon: NoteLine },
   ];
 
-  const sidebarWidth = isFolded ? "70px" : "240px";
+  const sidebarWidth = isFolded
+    ? `${SIDEBAR_WIDTH.folded}px`
+    : `${SIDEBAR_WIDTH.expanded}px`;
 
   return (
     <motion.aside

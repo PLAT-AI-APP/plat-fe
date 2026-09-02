@@ -167,7 +167,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
   };
 
   return (
-    <section className="flex h-[919px] max-h-[calc(100vh-145px)] w-[693px] shrink-0 flex-col gap-12 rounded-3xl bg-darker p-4">
+    <section className="flex h-full max-h-[calc(100vh-145px)] w-full max-w-[693px] shrink-0 flex-col gap-12 rounded-3xl bg-darker p-4 lg:h-[919px]">
       <header className="flex h-12 shrink-0 items-center justify-between rounded-2xl bg-darkest px-4 py-3">
         <strong className="title-3 truncate text-font-1">
           {scenarioName ||
@@ -216,7 +216,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
 
       <form
         onSubmit={handleSubmit}
-        className="flex w-full shrink-0 flex-col gap-4 rounded-3xl border border-dark bg-darkest px-4 pb-3 pt-4"
+        className="flex w-full shrink-0 flex-col gap-4 rounded-3xl bg-darkest px-4 pb-3 pt-4"
       >
         <textarea
           rows={1}

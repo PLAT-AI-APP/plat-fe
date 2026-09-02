@@ -145,6 +145,8 @@ const ko = {
     },
     cardPreview: {
       cardPreview: "카드 미리보기",
+      openPreview: "미리보기 보기",
+      closePreview: "미리보기 닫기",
       detailPreview: "상세 미리보기",
       cardOne: "캐릭터 카드 1",
       cardTwo: "캐릭터 카드 2",
@@ -352,6 +354,8 @@ const en: typeof ko = {
     },
     cardPreview: {
       cardPreview: "Card preview",
+      openPreview: "Show preview",
+      closePreview: "Close preview",
       detailPreview: "Detail preview",
       cardOne: "Character card 1",
       cardTwo: "Character card 2",
@@ -559,6 +563,8 @@ const ja: typeof ko = {
     },
     cardPreview: {
       cardPreview: "カードプレビュー",
+      openPreview: "プレビューを見る",
+      closePreview: "プレビューを閉じる",
       detailPreview: "詳細プレビュー",
       cardOne: "キャラクターカード 1",
       cardTwo: "キャラクターカード 2",
@@ -754,6 +760,8 @@ const zh: typeof ko = {
     },
     cardPreview: {
       cardPreview: "卡片预览",
+      openPreview: "查看预览",
+      closePreview: "关闭预览",
       detailPreview: "详情预览",
       cardOne: "角色卡片 1",
       cardTwo: "角色卡片 2",
@@ -956,6 +964,8 @@ const th: typeof ko = {
     },
     cardPreview: {
       cardPreview: "ตัวอย่างการ์ด",
+      openPreview: "ดูตัวอย่าง",
+      closePreview: "ปิดตัวอย่าง",
       detailPreview: "ตัวอย่างรายละเอียด",
       cardOne: "การ์ดตัวละคร 1",
       cardTwo: "การ์ดตัวละคร 2",
@@ -1161,6 +1171,8 @@ const vi: typeof ko = {
     },
     cardPreview: {
       cardPreview: "Xem trước thẻ",
+      openPreview: "Xem bản xem trước",
+      closePreview: "Đóng bản xem trước",
       detailPreview: "Xem trước chi tiết",
       cardOne: "Thẻ nhân vật 1",
       cardTwo: "Thẻ nhân vật 2",

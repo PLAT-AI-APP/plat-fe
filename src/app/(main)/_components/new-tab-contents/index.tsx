@@ -2,6 +2,7 @@
 
 import { useNewWorkQuery } from "@/api/home/getNewWork";
 import CharacterCard from "../character-card";
+import { getCardGridTemplateColumns } from "../character-card/constants";
 import NewCharacterHeader from "./_components/NewCharacterHeader";
 
 const NewTabContents = () => {
@@ -11,7 +12,12 @@ const NewTabContents = () => {
     <article className="flex w-full flex-col gap-5 pt-5">
       <NewCharacterHeader />
 
-      <div className="flex w-full flex-wrap gap-x-4 gap-y-7">
+      <div
+        className="grid w-full gap-x-4 gap-y-7"
+        style={{
+          gridTemplateColumns: getCardGridTemplateColumns("S"),
+        }}
+      >
         {(newWorkList ?? []).map((character) => (
           <CharacterCard
             key={character.universeId}
@@ -22,6 +28,7 @@ const NewTabContents = () => {
             chatCount={character.chatCount}
             images={character.images}
             isNew
+            fluid
           />
         ))}
       </div>

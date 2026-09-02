@@ -76,7 +76,7 @@ const ChatForm = ({ onSendMessage }: ChatFormProps) => {
     <form className="shrink-0" onSubmit={handleSubmit}>
       <fieldset
         id="chat-input-container"
-        className="flex items-end gap-3 rounded-3xl border border-dark bg-darker px-4 py-3"
+        className="flex items-end gap-3 rounded-3xl border border-dark bg-darker px-4 py-3 transition-colors focus-within:field-focus"
       >
         <legend className="sr-only">{t("chatUI.messageForm")}</legend>
 
@@ -87,7 +87,7 @@ const ChatForm = ({ onSendMessage }: ChatFormProps) => {
           onKeyDown={handleTextareaKeyDown}
           placeholder={t("chatUI.messagePlaceholder")}
           rows={1}
-          className="body-4 custom-scrollbar min-h-[21px] flex-1 resize-none bg-transparent py-1.5 text-font-1 outline-none placeholder:text-font-disabled"
+          className="focus-ring-none body-4 custom-scrollbar min-h-[21px] flex-1 resize-none bg-transparent py-1.5 text-font-1 outline-none placeholder:text-font-disabled"
         />
 
         <footer className="flex shrink-0 items-center gap-3">

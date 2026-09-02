@@ -6,6 +6,7 @@ import Header from "@/components/header";
 import Sidebar from "@/components/Sidebar";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useScrollTimeout } from "@/hooks/useScrollTiemout";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
 import { useMyInfoQuery } from "@/api/user/getMyInfo";
 import { useWalletBalanceQuery } from "@/api/wallet/getWalletBalance";
@@ -25,6 +26,7 @@ import {
   isProtectedPath,
 } from "@/constants/auth";
 import { TRANSITION } from "@/constants/motion";
+import { SIDEBAR_WIDTH, TABLET_MAX_WIDTH_QUERY } from "@/constants/layout";
 
 // 사이드바 없이 전용 화면을 쓰는 경로
 const HIDE_SIDEBAR_PATHS: string[] = [];
@@ -65,9 +67,12 @@ export default function ClientLayout({
   const isHomePath = pathname === "/";
   const isCategoryHomePath = isHomePath && currentMainTab === "categories";
   const isChattingRoomPath = pathname?.startsWith("/chatting-room");
-  const shouldUseFocusSidebar = isCategoryHomePath || isChattingRoomPath;
+  // 태블릿 폭에서는 콘텐츠 영역을 확보하기 위해 모든 화면에서 접힘 + 블러 사이드바를 씁니다.
+  const isTablet = useMediaQuery(TABLET_MAX_WIDTH_QUERY);
+  const shouldUseFocusSidebar =
+    isCategoryHomePath || isChattingRoomPath || isTablet;
 
-  // 복잡도가 높은 화면만 접힘 + 블러 사이드바를 사용합니다.
+  // 복잡도가 높은 화면 또는 태블릿 폭에서만 접힘 + 블러 사이드바를 사용합니다.
   const shouldFoldSidebar = useMemo(
     () => shouldUseFocusSidebar,
     [shouldUseFocusSidebar],
@@ -76,21 +81,10 @@ export default function ClientLayout({
   // 기본 화면은 펼친 상태, 포커스 화면은 접힌 상태로 시작합니다.
   const [isFolded, setIsFolded] = useState(() => shouldFoldSidebar);
 
-  // 경로 또는 홈 탭이 바뀌면 화면 정책에 맞춰 접힘 상태를 재계산합니다.
+  // 경로, 홈 탭, 뷰포트 폭이 바뀌면 화면 정책에 맞춰 접힘 상태를 재계산합니다.
   useEffect(() => {
     setIsFolded(shouldFoldSidebar);
   }, [pathname, shouldFoldSidebar]);
-
-  // 반응형 미디어 쿼리 제어 (기존 로직 유지)
-  useEffect(() => {
-    const mql = window.matchMedia("(max-width: 1023px)");
-    const handleSceneChange = (e: MediaQueryListEvent) => {
-      setIsFolded(e.matches);
-    };
-
-    mql.addEventListener("change", handleSceneChange);
-    return () => mql.removeEventListener("change", handleSceneChange);
-  }, [pathname]);
 
   // 한 번의 비교로 경로와 쿼리스트링 변경 모두 감지
   const handleFoldToggle = () => setIsFolded((prev) => !prev);
@@ -363,7 +357,8 @@ export default function ClientLayout({
                 {...sidebarOverlayMotion}
                 transition={sidebarOverlayTransition}
                 style={{
-                  left: 240,
+                  // 오버레이는 사이드바가 펼쳐진 상태에서만 뜨므로 펼침 폭 기준으로 시작 위치를 잡습니다.
+                  left: SIDEBAR_WIDTH.expanded,
                   top: isHeaderHidden ? 0 : 60,
                 }}
                 className="fixed bottom-0 right-0 z-20 bg-scrim/50"

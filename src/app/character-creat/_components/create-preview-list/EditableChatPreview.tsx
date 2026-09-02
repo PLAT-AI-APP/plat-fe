@@ -42,7 +42,7 @@ const EditableChatPreview = ({
             ref={textareaRef}
             autoFocus
             rows={1}
-            className="body-4 min-h-11 w-full resize-none overflow-hidden rounded-xl border border-main bg-darker px-4 py-3 text-font-1 outline-none"
+            className="focus-ring-none body-4 min-h-11 w-full resize-none overflow-hidden rounded-xl border border-main bg-darker px-4 py-3 text-font-1 outline-none transition-colors focus:field-focus"
             value={value}
             onChange={(e) => onChange(e.target.value)}
           />

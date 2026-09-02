@@ -1,7 +1,8 @@
-import { SIZE_CONFIG } from "./character-card/constants";
+import { FLUID_SIZE_OVERRIDE, SIZE_CONFIG } from "./character-card/constants";
 
 interface CharacterCardSkeletonProps {
   size?: "S" | "M" | "L" | "XL";
+  fluid?: boolean;
 }
 
 const SKELETON_GAP = {
@@ -13,10 +14,13 @@ const SKELETON_GAP = {
 
 export const CharacterCardSkeleton = ({
   size = "M",
+  fluid = false,
 }: CharacterCardSkeletonProps) => {
   if (size === "L") {
     return (
-      <article className="relative size-96 inline-flex flex-col justify-end items-center overflow-hidden rounded-2xl skeleton">
+      <article
+        className={`relative inline-flex flex-col justify-end items-center overflow-hidden rounded-2xl skeleton ${fluid ? FLUID_SIZE_OVERRIDE.L.wrapper : "size-96"}`}
+      >
         <div className="relative z-10 self-stretch h-36 px-4 pt-6 pb-5 bg-[linear-gradient(180deg,rgba(0,0,0,0)_0%,rgba(0,0,0,0.4)_20%,rgba(0,0,0,0.8)_100%)] rounded-b-2xl flex flex-col justify-end items-start gap-2">
           <div className="h-5 w-1/2 rounded-full skeleton" />
           <div className="h-4 w-11/12 rounded-full skeleton" />
@@ -32,13 +36,16 @@ export const CharacterCardSkeleton = ({
   }
 
   const config = SIZE_CONFIG[size];
+  const fluidOverride = FLUID_SIZE_OVERRIDE[size];
   const infoAreaWithoutGap = config.infoArea.replace(/gap-\S+/g, "").trim();
 
   return (
     <article
-      className={`inline-flex flex-col justify-start items-start ${config.wrapper}`}
+      className={`inline-flex flex-col justify-start items-start ${fluid ? fluidOverride.wrapper : config.wrapper}`}
     >
-      <div className={`skeleton ${config.imageArea}`} />
+      <div
+        className={`skeleton ${fluid ? fluidOverride.imageArea : config.imageArea}`}
+      />
 
       <div
         className={`self-stretch flex flex-col justify-start items-start w-full ${infoAreaWithoutGap} ${SKELETON_GAP[size]}`}

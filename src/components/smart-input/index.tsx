@@ -156,7 +156,7 @@ const SmartInput = forwardRef<
               className={cn(
                 "relative flex rounded-xl bg-darkest px-4 pb-7 pt-3 transition-colors",
                 isBorder && "border border-main",
-                isFocused && "border-brand-dark bg-brand-opacity-3",
+                isFocused && "field-focus",
                 hasError && "border-font-accents",
                 isFocused && hasError && "border-brand-dark",
                 isLengthExceeded && "border-font-error",
@@ -171,7 +171,8 @@ const SmartInput = forwardRef<
                   maxHeight: maxLine ? `${maxLine * LINE_HEIGHT}px` : undefined,
                 }}
                 className={cn(
-                  "custom-scrollbar w-full resize-none overflow-y-auto bg-transparent outline-none placeholder:text-font-disabled disabled:cursor-not-allowed disabled:text-font-disabled",
+                  // 포커스 표시는 감싸는 div의 border(위)가 담당하므로, textarea 자체의 포커스 링은 겹치지 않게 끕니다.
+                  "focus-ring-none custom-scrollbar w-full resize-none overflow-y-auto bg-transparent outline-none placeholder:text-font-disabled disabled:cursor-not-allowed disabled:text-font-disabled",
                   placeholderClassName,
                   inputClassName,
                 )}
@@ -198,11 +199,12 @@ const SmartInput = forwardRef<
               style={{ paddingLeft: `${paddingLeft}px` }}
               type={inputType}
               className={cn(
-                "w-full rounded-xl border border-main bg-darkest px-4 py-3 outline-none transition-colors placeholder:text-font-disabled disabled:cursor-not-allowed disabled:text-font-disabled",
+                // 포커스 시 이 border 색이 바로 포커스 표시라, 브라우저 기본 포커스 링은 겹치지 않게 끕니다.
+                "focus-ring-none w-full rounded-xl border border-main bg-darkest px-4 py-3 outline-none transition-colors placeholder:text-font-disabled disabled:cursor-not-allowed disabled:text-font-disabled",
                 placeholderClassName,
                 rightElement && "pr-11",
                 inputClassName,
-                isFocused && "border-brand-dark bg-brand-opacity-3",
+                isFocused && "field-focus",
                 hasError && "border-font-accents",
                 isFocused && hasError && "border-brand-dark",
                 isLengthExceeded && "border-font-error",

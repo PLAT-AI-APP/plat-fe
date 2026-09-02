@@ -80,7 +80,7 @@ const SidebarSummary = ({
   };
 
   return (
-    <aside className="sticky top-0 flex w-[389px] shrink-0 flex-col gap-5 self-start">
+    <aside className="flex w-full shrink-0 flex-col gap-5 self-start lg:sticky lg:top-0 lg:w-[389px]">
       <section className="flex flex-col gap-4">
         {isCreator && (
           <button

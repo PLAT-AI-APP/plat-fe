@@ -8,6 +8,8 @@ import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import { useNavigationGuard } from "next-navigation-guard";
 import { useRouter } from "next/navigation";
 import { showAppToast } from "@/lib/toast";
+import { ModalLayout } from "@/components/ModalLayout";
+import { Eye } from "@/icons";
 import CharacterCardPreviewPanel from "./CharacterCardPreviewPanel";
 import CharacterPreview from "./CharacterPreview";
 import CreateHeader from "./CreateHeader";
@@ -140,6 +142,8 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
     "OVERWRITE" | "RESUME" | "UNSAVED" | null
   >(null);
   const [pendingPath, setPendingPath] = useState<string | null>(null);
+  // lg 미만(태블릿)에서는 폼과 미리보기를 나란히 둘 폭이 없어 미리보기를 모달 토글로 뺍니다.
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   // 프로필/상세정보/설정 탭은 시나리오 편집 대신 카드에 반영되는 값을 미리 보여줍니다.
   const shouldShowCardPreview =
     currentTabId === "profile" ||
@@ -300,7 +304,8 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
           onDraftClick={handleDraftClick}
         />
 
-        {/* Figma frame keeps the editor and preview as fixed columns inside a 1200px body. */}
+        {/* Figma frame keeps the editor and preview as fixed columns inside a 1200px body.
+            lg 미만에서는 폭이 부족해 미리보기를 숨기고 토글 모달로 확인합니다. */}
         <DragDropContext onDragEnd={handleDragEnd}>
           <div className="flex min-h-0 min-w-0 flex-1 items-start justify-center gap-4">
             <CreateTabs
@@ -310,13 +315,38 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
               setActiveScenarioIndex={setActiveScenarioIndex}
               assetFieldArray={assetFieldArray}
             />
+            <div className="hidden lg:block">
+              {shouldShowCardPreview ? (
+                <CharacterCardPreviewPanel />
+              ) : (
+                <CharacterPreview activeScenarioIndex={activeScenarioIndex} />
+              )}
+            </div>
+          </div>
+        </DragDropContext>
+
+        <button
+          type="button"
+          onClick={() => setIsPreviewOpen(true)}
+          className="fixed bottom-6 right-6 z-10 flex items-center gap-2 rounded-full bg-brand px-5 py-3 text-on-brand shadow-card-heavy transition-opacity hover:opacity-90 lg:hidden"
+        >
+          <Eye className="size-5" aria-hidden="true" />
+          {t("cardPreview.openPreview")}
+        </button>
+
+        {isPreviewOpen && (
+          <ModalLayout
+            hasBackground
+            onClose={() => setIsPreviewOpen(false)}
+            className="flex h-[80vh] w-full max-w-[693px] flex-col"
+          >
             {shouldShowCardPreview ? (
               <CharacterCardPreviewPanel />
             ) : (
               <CharacterPreview activeScenarioIndex={activeScenarioIndex} />
             )}
-          </div>
-        </DragDropContext>
+          </ModalLayout>
+        )}
       </div>
     </FormProvider>
   );

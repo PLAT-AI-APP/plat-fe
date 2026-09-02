@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import CharacterCard from "@/app/(main)/_components/character-card";
+import { getCardGridTemplateColumns } from "@/app/(main)/_components/character-card/constants";
 import { useRecentSearch } from "@/hooks/useRecentSearch";
 import { cn } from "@/lib/utils";
 import {
@@ -92,9 +93,10 @@ const SearchResultsContents = ({
   };
 
   return (
-    // 카드 6개(186.67px) + 간격 5개(16px) ≈ 1200px가 한 줄에 들어가도록
-    // 좌우 패딩(px-9=72px)을 더한 폭으로 컨테이너를 잡습니다.
-    <section className="mx-auto flex w-full max-w-[1272px] flex-col gap-6 pt-5">
+    // x축 여백(content-x, 36px×2)은 ClientLayout의 #page-content가 이미 지고 있어서,
+    // 여기서는 순수 콘텐츠 폭만 다른 화면과 동일하게 1200px로 잡습니다.
+    // (여백을 여기서 또 더하면 실제 콘텐츠가 1200px보다 넓어집니다.)
+    <section className="mx-auto flex w-full max-w-300 flex-col gap-6 pt-5">
       <PageTitle messageKey="pageTitles.search" />
 
       <SearchQueryBar
@@ -147,7 +149,12 @@ const SearchResultsContents = ({
             title={t("searchResults.tabCharacter")}
             count={DUMMY_SEARCH_CHARACTERS.length}
           >
-            <div className="flex flex-wrap gap-x-4 gap-y-7">
+            <div
+              className="grid gap-x-4 gap-y-7"
+              style={{
+                gridTemplateColumns: getCardGridTemplateColumns("S"),
+              }}
+            >
               {DUMMY_SEARCH_CHARACTERS.map((character) => (
                 <CharacterCard
                   key={character.id}
@@ -159,6 +166,7 @@ const SearchResultsContents = ({
                   images={character.image}
                   isNew={character.isNew}
                   isOfficial={character.isOfficial}
+                  fluid
                 />
               ))}
             </div>
@@ -170,7 +178,12 @@ const SearchResultsContents = ({
             title={t("searchResults.tabWorld")}
             count={DUMMY_SEARCH_WORLDS.length}
           >
-            <div className="flex flex-wrap gap-x-4 gap-y-7">
+            <div
+              className="grid gap-x-4 gap-y-7"
+              style={{
+                gridTemplateColumns: getCardGridTemplateColumns("S"),
+              }}
+            >
               {DUMMY_SEARCH_WORLDS.map((world) => (
                 <CharacterCard
                   key={world.id}
@@ -182,6 +195,7 @@ const SearchResultsContents = ({
                   images={world.image}
                   isNew={world.isNew}
                   isOfficial={world.isOfficial}
+                  fluid
                 />
               ))}
             </div>
