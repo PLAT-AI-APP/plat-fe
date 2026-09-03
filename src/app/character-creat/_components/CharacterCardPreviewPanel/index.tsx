@@ -3,7 +3,6 @@
 import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
-import PreviewAppliedElements from "./_components/PreviewAppliedElements";
 import PreviewCard from "./_components/PreviewCard";
 
 const CharacterCardPreviewPanel = () => {
@@ -19,7 +18,7 @@ const CharacterCardPreviewPanel = () => {
   const previewCreatorName = t("creatorFallback");
 
   return (
-    <section className="flex h-full max-h-[calc(100vh-145px)] w-full max-w-[693px] shrink-0 flex-col justify-between overflow-y-auto rounded-3xl bg-darker p-4 lg:h-[919px]">
+    <section className="flex h-full max-h-[calc(100vh-145px)] w-full max-w-[693px] shrink-0 flex-col overflow-y-auto rounded-3xl bg-darker p-4 lg:h-[919px]">
       <header className="flex h-12 items-center rounded-2xl bg-darkest px-4">
         <h2 className="title-3 text-font-1">{t("cardPreview")}</h2>
         <span className="body-2 px-3 text-font-2" aria-hidden="true">
@@ -53,8 +52,6 @@ const CharacterCardPreviewPanel = () => {
           />
         </div>
       </div>
-
-      <PreviewAppliedElements />
     </section>
   );
 };
