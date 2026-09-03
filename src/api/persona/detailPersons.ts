@@ -20,6 +20,10 @@ const isPersona = (value?: Persona | { persona?: Persona }): value is Persona =>
 const getNormalizedDetailPersona = (
   payload: DetailPersonaApiResponse,
 ): Persona => {
+  if (isPersona(payload)) {
+    return payload;
+  }
+
   const data = payload.data;
   const persona = data && "persona" in data ? data.persona : data;
 
