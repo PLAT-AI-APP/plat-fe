@@ -65,6 +65,7 @@ const EditableChatPreview = ({
             value={value}
             onChange={(e) => onChange(e.target.value)}
             onKeyDown={handleKeyDown}
+            onFocus={(e) => e.target.select()}
           />
         </div>
       </div>

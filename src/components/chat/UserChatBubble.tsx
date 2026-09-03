@@ -73,11 +73,13 @@ const UserChatBubble = ({
         <div className="flex flex-1 justify-end">
           <div className="flex w-full max-w-[520px] items-center rounded-[16px_16px_0px_16px] bg-brand-opacity-2 p-2.5">
             <textarea
+              autoFocus
               className="body-4 w-full resize-none rounded-[16px_16px_0px_16px] border border-transparent bg-card-hover p-2.5 text-font-1 outline-none transition-colors focus:field-focus!"
               rows={2}
               value={editedText}
               onChange={(event) => setEditedText(event.target.value)}
               onKeyDown={handleKeyDown}
+              onFocus={(event) => event.target.select()}
             />
           </div>
         </div>

@@ -104,9 +104,11 @@ const MemoryItem = ({
         <>
           <div className="flex w-full rounded-lg border border-main bg-darkest px-2 py-3 transition-colors focus-within:field-focus!">
             <textarea
+              autoFocus
               value={draft}
               onChange={(event) => onChangeDraft(event.target.value)}
               onKeyDown={handleDraftKeyDown}
+              onFocus={(event) => event.target.select()}
               className="focus-ring-none body-4 min-h-[153px] w-full resize-none bg-transparent text-font-0 outline-none"
             />
           </div>
