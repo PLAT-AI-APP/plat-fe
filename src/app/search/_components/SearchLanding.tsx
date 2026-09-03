@@ -8,11 +8,20 @@ import { useRecentSearch } from "@/hooks/useRecentSearch";
 import dayjs from "@/lib/dayjs";
 import { cn, formatStatCount } from "@/lib/utils";
 import { useLocaleStore } from "@/store/useLocaleStore";
+import { QueryStateBoundary } from "@/components/state";
 import {
-  DUMMY_LIVE_SEARCH_KEYWORDS,
-  DUMMY_SEARCH_CHARACTERS,
-} from "./dummyData";
-import type { LiveSearchKeyword } from "./dummyData";
+  usePopularSearchTermsQuery,
+  type PopularSearchTerm,
+} from "@/api/search/getPopularSearchTerms";
+import {
+  SEARCH_MIN_KEYWORD_LENGTH,
+  isSearchableKeyword,
+} from "@/api/search/getSearch";
+import { showAppToast } from "@/lib/toast";
+
+/** 실시간 검색어 칸 수. 3열 x 2행 격자에 맞춘다. */
+const LIVE_SEARCH_SIZE = 6;
+import { DUMMY_SEARCH_CHARACTERS } from "./dummyData";
 import SearchQueryBar from "./SearchQueryBar";
 import PageTitle from "@/components/PageTitle";
 
@@ -39,7 +48,7 @@ const TrendTriangle = ({ direction, className }: TrendTriangleProps) => (
 );
 
 interface LiveSearchRankItemProps {
-  item: LiveSearchKeyword;
+  item: PopularSearchTerm;
   onSelect: (keyword: string) => void;
 }
 
@@ -73,10 +82,15 @@ const LiveSearchRankItem = ({ item, onSelect }: LiveSearchRankItemProps) => {
         <span className="body-5 text-font-2">
           {formatStatCount(item.count, locale)}
         </span>
-        <TrendTriangle
-          direction={item.trend}
-          className={item.trend === "up" ? "text-success" : "text-font-error"}
-        />
+        {/* 새로 올라왔거나 순위가 그대로면 가리킬 방향이 없어 삼각형을 그리지 않습니다. */}
+        {(item.trend === "UP" || item.trend === "DOWN") && (
+          <TrendTriangle
+            direction={item.trend === "UP" ? "up" : "down"}
+            className={
+              item.trend === "UP" ? "text-success" : "text-font-error"
+            }
+          />
+        )}
       </div>
     </button>
   );
@@ -87,12 +101,28 @@ const SearchLanding = () => {
   const router = useRouter();
   const { addKeyword, keywords, removeKeyword, clearAll } = useRecentSearch();
   const [queryDraft, setQueryDraft] = useState("");
+  const {
+    data: popularTerms,
+    isPending: isTermsPending,
+    isError: isTermsError,
+    error: termsError,
+    refetch: refetchTerms,
+  } = usePopularSearchTermsQuery(LIVE_SEARCH_SIZE);
 
   const updatedAt = `${dayjs().format("YY.MM.DD HH")}시 ${t("ranking.liveSuffix")}`;
 
+  // 실시간 검색어·최근 검색어 클릭과 직접 입력이 모두 이 문을 지납니다.
   const handleSearch = (keyword: string) => {
     const trimmedKeyword = keyword.trim();
     if (!trimmedKeyword) return;
+
+    if (!isSearchableKeyword(trimmedKeyword)) {
+      showAppToast(
+        "error",
+        t("searchResults.minLength", { count: SEARCH_MIN_KEYWORD_LENGTH }),
+      );
+      return;
+    }
 
     addKeyword(trimmedKeyword);
     router.push(`/search?q=${encodeURIComponent(trimmedKeyword)}`);
@@ -125,15 +155,34 @@ const SearchLanding = () => {
           <span className="body-5 text-font-2">{updatedAt}</span>
         </div>
 
-        <div className="grid grid-cols-3 grid-rows-2 gap-2">
-          {DUMMY_LIVE_SEARCH_KEYWORDS.map((item) => (
-            <LiveSearchRankItem
-              key={item.rank}
-              item={item}
-              onSelect={handleSearch}
-            />
-          ))}
-        </div>
+        <QueryStateBoundary
+          isPending={isTermsPending}
+          isError={isTermsError}
+          error={termsError}
+          isEmpty={popularTerms?.length === 0}
+          onRetry={() => refetchTerms()}
+          pendingFallback={
+            <div className="grid grid-cols-3 grid-rows-2 gap-2">
+              {Array.from({ length: LIVE_SEARCH_SIZE }).map((_, index) => (
+                <div
+                  key={`term-skeleton-${index}`}
+                  className="h-[58px] w-full animate-pulse rounded-xl bg-darkest"
+                />
+              ))}
+            </div>
+          }
+          emptyMessage={t("searchResults.empty")}
+        >
+          <div className="grid grid-cols-3 grid-rows-2 gap-2">
+            {(popularTerms ?? []).map((item) => (
+              <LiveSearchRankItem
+                key={item.rank}
+                item={item}
+                onSelect={handleSearch}
+              />
+            ))}
+          </div>
+        </QueryStateBoundary>
       </div>
 
       <div className="flex flex-col gap-6">

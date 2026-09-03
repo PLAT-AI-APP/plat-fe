@@ -4,22 +4,55 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import CharacterCard from "@/app/(main)/_components/character-card";
-import { useRecentSearch } from "@/hooks/useRecentSearch";
-import { cn } from "@/lib/utils";
+import { CharacterCardSkeleton } from "@/app/(main)/_components/CharacterCardSkeleton";
+import { QueryStateBoundary } from "@/components/state";
 import {
-  DUMMY_SEARCH_CHARACTERS,
-  DUMMY_SEARCH_USERS,
-  DUMMY_SEARCH_WORLDS,
-} from "./dummyData";
+  SEARCH_MIN_KEYWORD_LENGTH,
+  isSearchableKeyword,
+  useSearchQuery,
+} from "@/api/search/getSearch";
+import type { SearchCardItem } from "@/api/search/getSearch";
+import { showAppToast } from "@/lib/toast";
+import { useRecentSearch } from "@/hooks/useRecentSearch";
+import { cn, formatStatCount } from "@/lib/utils";
+import { useLocaleStore } from "@/store/useLocaleStore";
 import SearchQueryBar from "./SearchQueryBar";
 import UserResultCard from "./UserResultCard";
 import PageTitle from "@/components/PageTitle";
+
+interface CardGridProps {
+  items: SearchCardItem[];
+  isLoading: boolean;
+}
+
+/** 캐릭터·세계관 결과가 같은 격자를 쓰므로 한곳에 둡니다. */
+const CardGrid = ({ items, isLoading }: CardGridProps) => (
+  <div className="flex flex-wrap gap-x-4 gap-y-7">
+    {isLoading
+      ? Array.from({ length: 6 }).map((_, index) => (
+          <CharacterCardSkeleton key={`card-skeleton-${index}`} size="S" />
+        ))
+      : items.map((item) => (
+          <CharacterCard
+            key={item.universeId}
+            size="S"
+            title={item.title}
+            description={item.description}
+            creatorName={item.creator.nickname}
+            chatCount={item.chatCount}
+            images={item.images}
+            isNew={item.isNew}
+            isOfficial={item.isOfficial}
+          />
+        ))}
+  </div>
+);
 
 type SearchTab = "all" | "character" | "world" | "user";
 
 interface ResultSectionProps {
   title: string;
-  count: number;
+  count?: number;
   children: React.ReactNode;
 }
 
@@ -31,9 +64,12 @@ const ResultSection = ({ title, count, children }: ResultSectionProps) => {
       <header className="flex items-end justify-between whitespace-nowrap">
         <div className="flex items-end gap-1">
           <h2 className="title-1 text-font-0">{title}</h2>
-          <span className="body-4 text-font-2">
-            {t("categoriesPage.resultCount", { count })}
-          </span>
+          {/* 개수는 서버가 센 총계입니다. 아직 못 받았으면 0건이라 단정하지 않고 비워 둡니다. */}
+          {count !== undefined && (
+            <span className="body-4 text-font-2">
+              {t("categoriesPage.resultCount", { count })}
+            </span>
+          )}
         </div>
 
         <button
@@ -58,9 +94,29 @@ const SearchResultsContents = ({
 }: SearchResultsContentsProps) => {
   const t = useTranslations();
   const router = useRouter();
+  const locale = useLocaleStore((state) => state.locale);
   const { addKeyword, keywords, removeKeyword, clearAll } = useRecentSearch();
   const [activeTab, setActiveTab] = useState<SearchTab>("all");
   const [queryDraft, setQueryDraft] = useState(initialQuery);
+
+  // 검색어가 바뀔 때만 다시 부릅니다. 탭 전환은 받아 둔 결과를 거르기만 하므로
+  // 같은 검색이 여러 번 집계되지 않습니다.
+  const { data, isPending, isError, error, refetch } = useSearchQuery({
+    q: initialQuery,
+  });
+
+  // 주소창에 직접 짧은 검색어를 넣고 들어올 수 있습니다. 그때는 요청이 나가지 않으므로
+  // 로딩 스켈레톤에 갇히지 않도록 여기서 따로 안내합니다.
+  const isTooShort = !isSearchableKeyword(initialQuery);
+
+  const characters = data?.characters;
+  const universes = data?.universes;
+  const users = data?.users;
+  const isEmpty =
+    !!data &&
+    characters!.page.totalElements === 0 &&
+    universes!.page.totalElements === 0 &&
+    users!.page.totalElements === 0;
 
   // 다른 검색어로 다시 진입했을 때(뒤로가기 등) 입력창도 함께 갱신합니다.
   useEffect(() => {
@@ -84,6 +140,14 @@ const SearchResultsContents = ({
 
     if (!trimmedQuery) {
       router.push("/search");
+      return;
+    }
+
+    if (!isSearchableKeyword(trimmedQuery)) {
+      showAppToast(
+        "error",
+        t("searchResults.minLength", { count: SEARCH_MIN_KEYWORD_LENGTH }),
+      );
       return;
     }
 
@@ -142,64 +206,64 @@ const SearchResultsContents = ({
       </div>
 
       <div className="flex w-full flex-col gap-12 pb-20">
-        {showCharacters && (
-          <ResultSection
-            title={t("searchResults.tabCharacter")}
-            count={DUMMY_SEARCH_CHARACTERS.length}
-          >
-            <div className="flex flex-wrap gap-x-4 gap-y-7">
-              {DUMMY_SEARCH_CHARACTERS.map((character) => (
-                <CharacterCard
-                  key={character.id}
-                  size="S"
-                  title={character.title}
-                  description={character.description}
-                  creatorName={character.creatorName}
-                  chatCount={character.chatCount}
-                  images={character.image}
-                  isNew={character.isNew}
-                  isOfficial={character.isOfficial}
-                />
-              ))}
-            </div>
-          </ResultSection>
-        )}
+        <QueryStateBoundary
+          isPending={false}
+          isEmpty={isTooShort || isEmpty}
+          emptyMessage={
+            isTooShort
+              ? t("searchResults.minLength", {
+                  count: SEARCH_MIN_KEYWORD_LENGTH,
+                })
+              : t("searchResults.empty")
+          }
+          isError={isError}
+          error={error}
+          onRetry={() => refetch()}
+        >
+          {showCharacters && (
+            <ResultSection
+              title={t("searchResults.tabCharacter")}
+              count={characters?.page.totalElements}
+            >
+              <CardGrid
+                items={characters?.content ?? []}
+                isLoading={isPending}
+              />
+            </ResultSection>
+          )}
 
-        {showWorlds && (
-          <ResultSection
-            title={t("searchResults.tabWorld")}
-            count={DUMMY_SEARCH_WORLDS.length}
-          >
-            <div className="flex flex-wrap gap-x-4 gap-y-7">
-              {DUMMY_SEARCH_WORLDS.map((world) => (
-                <CharacterCard
-                  key={world.id}
-                  size="S"
-                  title={world.title}
-                  description={world.description}
-                  creatorName={world.creatorName}
-                  chatCount={world.chatCount}
-                  images={world.image}
-                  isNew={world.isNew}
-                  isOfficial={world.isOfficial}
-                />
-              ))}
-            </div>
-          </ResultSection>
-        )}
+          {showWorlds && (
+            <ResultSection
+              title={t("searchResults.tabWorld")}
+              count={universes?.page.totalElements}
+            >
+              <CardGrid items={universes?.content ?? []} isLoading={isPending} />
+            </ResultSection>
+          )}
 
-        {showUsers && (
-          <ResultSection
-            title={t("searchResults.tabUser")}
-            count={DUMMY_SEARCH_USERS.length}
-          >
-            <div className="flex flex-wrap gap-4">
-              {DUMMY_SEARCH_USERS.map((user) => (
-                <UserResultCard key={user.userId} user={user} />
-              ))}
-            </div>
-          </ResultSection>
-        )}
+          {showUsers && (
+            <ResultSection
+              title={t("searchResults.tabUser")}
+              count={users?.page.totalElements}
+            >
+              <div className="flex flex-wrap gap-4">
+                {(users?.content ?? []).map((user) => (
+                  <UserResultCard
+                    key={user.userId}
+                    user={{
+                      userId: user.userId,
+                      nickname: user.nickname,
+                      profileImageUrl: user.profileImageUrl,
+                      followerCount: user.followerCount,
+                      chatVolumeLabel: formatStatCount(user.chatCount, locale),
+                      isFollowing: user.following,
+                    }}
+                  />
+                ))}
+              </div>
+            </ResultSection>
+          )}
+        </QueryStateBoundary>
       </div>
     </section>
   );
