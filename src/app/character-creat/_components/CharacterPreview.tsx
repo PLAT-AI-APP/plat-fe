@@ -139,7 +139,6 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
       getValues(`scenarios.${activeScenarioIndex}.contents`) || [];
     applyScenarioContents([...currentContents, newContent]);
     setMsg("");
-    setCurrentMode("chat");
     scrollPreviewToBottom();
   };
 
