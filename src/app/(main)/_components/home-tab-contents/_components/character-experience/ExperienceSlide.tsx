@@ -1,9 +1,10 @@
 import React from "react";
 import CharacterProfileCard from "./CharacterProfileCard";
 import ChatPreview from "./ChatPreview";
+import { OfficialPreviewItem } from "@/api/home/getOfficialPreview";
 
 interface ExperienceSlideProps {
-  index: number;
+  item: OfficialPreviewItem;
 }
 
 /**
@@ -12,12 +13,12 @@ interface ExperienceSlideProps {
  * 페이드와 blur(20px) 를 한 번 더 걸어 두 개의 페이드가 겹쳐 있었고,
  * 부모에 AnimatePresence 가 없어 exit 는 애초에 재생되지 않았다.
  */
-const ExperienceSlide = ({ index }: ExperienceSlideProps) => {
+const ExperienceSlide = ({ item }: ExperienceSlideProps) => {
   return (
     <div className="relative h-full min-w-0 flex-[0_0_100%] overflow-hidden">
       <div className="flex h-full w-full overflow-hidden">
-        <CharacterProfileCard index={index} />
-        <ChatPreview />
+        <CharacterProfileCard item={item} />
+        <ChatPreview item={item} />
       </div>
     </div>
   );

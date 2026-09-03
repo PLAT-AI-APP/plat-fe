@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 import { Metadata } from "next";
 import HomeTabContents from "./_components/home-tab-contents";
 import RankingTabContents from "./_components/ranking-tab-contents";
-import { CHARACTERS_DUMMY } from "@/mocks/dummyData";
 import CategoriesTabContents from "./_components/categories-tab-contents";
 import OfficialTabContents from "./_components/official-tab-contents";
 import NewTabContents from "./_components/new-tab-contents";
@@ -27,7 +26,7 @@ const Home = async ({ searchParams }: HomePageProps) => {
     "all";
 
   const TabComponents: { [key: string]: React.ReactNode } = {
-    all: <HomeTabContents charArray={CHARACTERS_DUMMY} />,
+    all: <HomeTabContents />,
     ranking: <RankingTabContents />,
     new: <NewTabContents />,
     official: <OfficialTabContents />,

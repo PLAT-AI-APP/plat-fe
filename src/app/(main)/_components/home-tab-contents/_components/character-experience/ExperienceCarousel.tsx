@@ -6,13 +6,16 @@ import Fade from "embla-carousel-fade";
 import { useTranslations } from "next-intl";
 import React, { useCallback, useEffect, useMemo } from "react";
 import ExperienceSlide from "./ExperienceSlide";
+import { OfficialPreviewItem } from "@/api/home/getOfficialPreview";
 
 interface ExperienceCarouselProps {
+  items: OfficialPreviewItem[];
   selectedIndex: number;
   handleSelectedIndex: (index: number) => void;
 }
 
 const ExperienceCarousel = ({
+  items,
   selectedIndex,
   handleSelectedIndex,
 }: ExperienceCarouselProps) => {
@@ -44,8 +47,8 @@ const ExperienceCarousel = ({
         ref={viewportRef}
       >
         <div className="flex w-full h-full">
-          {Array.from({ length: 5 }).map((_, index) => (
-            <ExperienceSlide key={index} index={index} />
+          {items.map((item) => (
+            <ExperienceSlide key={item.universeId} item={item} />
           ))}
         </div>
       </div>
