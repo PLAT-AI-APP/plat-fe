@@ -6,8 +6,7 @@ const types: UsageHistoryItemType["type"][] = [
   "USE",
   "CHARGE",
   "REFUND",
-  "EVENT",
-  "ADMIN_GRANT",
+  "ADMIN_DEDUCT",
   "EXPIRE",
 ];
 
@@ -15,7 +14,8 @@ const usageItems: UsageHistoryItemType[] = Array.from(
   { length: 60 },
   (_, index) => {
     const type = types[index % types.length];
-    const isMinus = type === "USE" || type === "EXPIRE";
+    // 실서버 CreditLedgerRepositoryImpl 기준: CHARGE만 양수, 나머지는 전부 음수
+    const isMinus = type !== "CHARGE";
 
     return {
       ledgerId: String(10000 - index),
