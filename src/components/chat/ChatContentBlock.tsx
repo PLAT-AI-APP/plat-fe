@@ -61,7 +61,7 @@ const ChatContentBlock = ({
         <div className="flex h-fit flex-1 gap-2 rounded-[0px_16px_16px_16px] bg-card p-2.5">
           <textarea
             ref={textareaRef}
-            className="body-4 w-full resize-none overflow-hidden rounded-[0px_16px_16px_16px] bg-card-hover p-2.5 outline-none"
+            className="body-4 w-full resize-none overflow-hidden rounded-[0px_16px_16px_16px] border border-transparent bg-card-hover p-2.5 outline-none transition-colors focus:field-focus!"
             value={editedContent}
             onChange={(event) => setEditedContent(event.target.value)}
           />

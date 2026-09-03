@@ -83,7 +83,7 @@ const MemoryItem = ({
 
       {isEditing ? (
         <>
-          <div className="flex w-full rounded-lg border border-main bg-darkest px-2 py-3 transition-colors focus-within:field-focus">
+          <div className="flex w-full rounded-lg border border-main bg-darkest px-2 py-3 transition-colors focus-within:field-focus!">
             <textarea
               value={draft}
               onChange={(event) => onChangeDraft(event.target.value)}

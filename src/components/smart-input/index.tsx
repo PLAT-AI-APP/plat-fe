@@ -129,6 +129,22 @@ const SmartInput = forwardRef<
     onBlur?.(e);
   };
 
+  // border-*는 전부 같은 특이도(0,1,0)의 일반 유틸리티라, 여러 개를 동시에 넣으면
+  // JS의 조건(우선순위)이 아니라 Tailwind가 생성한 스타일시트 안의 등장 순서로 승패가
+  // 갈린다(예: border-main이 항상 마지막에 생성돼 border-font-accents/border-brand-dark/
+  // border-font-error보다 나중에 나오면, 에러/포커스 상태 색이 있어도 늘 border-main한테
+  // 밀려 안 보인다). 그래서 상태별로 정확히 하나의 색 클래스만 고르도록 우선순위를 JS에서
+  // 직접 계산한다.
+  const borderColorClassName = isLengthExceeded
+    ? "border-font-error"
+    : isFocused && hasError
+      ? "border-brand-dark"
+      : hasError
+        ? "border-font-accents"
+        : isFocused
+          ? "field-focus!"
+          : "border-main";
+
   return (
     <div className={cn("flex w-full flex-1 flex-col gap-2", className)}>
       <LabelSection
@@ -155,11 +171,8 @@ const SmartInput = forwardRef<
             <div
               className={cn(
                 "relative flex rounded-xl bg-darkest px-4 pb-7 pt-3 transition-colors",
-                isBorder && "border border-main",
-                isFocused && "field-focus",
-                hasError && "border-font-accents",
-                isFocused && hasError && "border-brand-dark",
-                isLengthExceeded && "border-font-error",
+                isBorder && "border",
+                isBorder && borderColorClassName,
                 inputBoxClassName,
               )}
             >
@@ -200,14 +213,11 @@ const SmartInput = forwardRef<
               type={inputType}
               className={cn(
                 // 포커스 시 이 border 색이 바로 포커스 표시라, 브라우저 기본 포커스 링은 겹치지 않게 끕니다.
-                "focus-ring-none w-full rounded-xl border border-main bg-darkest px-4 py-3 outline-none transition-colors placeholder:text-font-disabled disabled:cursor-not-allowed disabled:text-font-disabled",
+                "focus-ring-none w-full rounded-xl border bg-darkest px-4 py-3 outline-none transition-colors placeholder:text-font-disabled disabled:cursor-not-allowed disabled:text-font-disabled",
+                borderColorClassName,
                 placeholderClassName,
                 rightElement && "pr-11",
                 inputClassName,
-                isFocused && "field-focus",
-                hasError && "border-font-accents",
-                isFocused && hasError && "border-brand-dark",
-                isLengthExceeded && "border-font-error",
               )}
               placeholder={translateText(placeholder)}
               maxLength={maxLength}
@@ -224,8 +234,8 @@ const SmartInput = forwardRef<
               onClick={toggleIsOpen}
               style={{ paddingLeft: `${paddingLeft}px` }}
               className={cn(
-                "relative flex cursor-pointer items-center justify-between rounded-xl border border-main bg-darkest px-4 py-3 body-4",
-                hasError && "border-font-accents",
+                "relative flex cursor-pointer items-center justify-between rounded-xl border bg-darkest px-4 py-3 body-4",
+                hasError ? "border-font-accents" : "border-main",
                 inputBoxClassName,
               )}
             >

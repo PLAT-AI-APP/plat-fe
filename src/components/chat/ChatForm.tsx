@@ -76,7 +76,7 @@ const ChatForm = ({ onSendMessage }: ChatFormProps) => {
     <form className="shrink-0" onSubmit={handleSubmit}>
       <fieldset
         id="chat-input-container"
-        className="flex items-end gap-3 rounded-3xl border border-dark bg-darker px-4 py-3 transition-colors focus-within:field-focus"
+        className="flex items-end gap-3 rounded-3xl border border-dark bg-darker px-4 py-3 transition-colors focus-within:field-focus!"
       >
         <legend className="sr-only">{t("chatUI.messageForm")}</legend>
 

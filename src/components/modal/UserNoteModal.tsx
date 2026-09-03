@@ -61,7 +61,7 @@ const UserNoteModal = ({ onClose }: UserNoteModalProps) => {
             <p className="body-4 text-font-2">{t("description")}</p>
           </header>
 
-          <div className="flex w-full flex-col items-end rounded-2xl border border-main bg-card px-4 py-3 transition-colors focus-within:field-focus">
+          <div className="flex w-full flex-col items-end rounded-2xl border border-main bg-card px-4 py-3 transition-colors focus-within:field-focus!">
             <textarea
               {...register("userNote")}
               value={noteValue}

@@ -28,7 +28,7 @@ const SearchQueryBar = ({
     <div className="flex flex-col gap-2.5">
       <form
         onSubmit={onSubmit}
-        className="flex items-center justify-between rounded-2xl border border-main bg-darkest px-4 py-3 transition-colors focus-within:field-focus"
+        className="flex items-center justify-between rounded-2xl border border-main bg-darkest px-4 py-3 transition-colors focus-within:field-focus!"
       >
         <div className="flex flex-1 items-center gap-3">
           <Search className="size-7 shrink-0 text-font-disabled" />

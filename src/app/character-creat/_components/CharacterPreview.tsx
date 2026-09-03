@@ -224,7 +224,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
           value={msg}
           onChange={(e) => setMsg(e.target.value)}
           placeholder={t("scenarioPlaceholder")}
-          className="body-4 min-h-[42px] w-full resize-none bg-transparent outline-none placeholder:text-font-disabled"
+          className="focus-ring-none body-4 min-h-[42px] w-full resize-none rounded-xl border border-transparent bg-transparent px-2 outline-none transition-colors placeholder:text-font-disabled focus:field-focus!"
         />
 
         <div className="flex items-center justify-between gap-3">
