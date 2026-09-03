@@ -1,13 +1,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { authAxios } from "..";
-import { AppError, PageResponse } from "@/type/api";
-
-export interface GetFollowerListResponse {
-  userId: string;
-  profileImage: string | null;
-  nickname: string;
-  description: string;
-}
+import { AppError } from "@/type/api";
+import { FollowPageResponse, normalizeFollowPage } from "./followPage";
 
 interface GetFollowerListProps {
   pageParam: number;
@@ -16,7 +10,7 @@ const getFollowerList = async ({
   pageParam = 0,
   //   size = 20,
 }: GetFollowerListProps) => {
-  const response = await authAxios.get<PageResponse<GetFollowerListResponse>>(
+  const response = await authAxios.get<FollowPageResponse>(
     `/follow/followers`,
     {
       params: {
@@ -25,12 +19,15 @@ const getFollowerList = async ({
     },
   );
 
-  return response.data;
+  return normalizeFollowPage(response.data);
 };
 
 /** 사용자의 팔로워 목록 조회 */
 export const useFollowerListQuery = (enabled: boolean) => {
-  return useInfiniteQuery<PageResponse<GetFollowerListResponse>, AppError>({
+  return useInfiniteQuery<
+    ReturnType<typeof normalizeFollowPage>,
+    AppError
+  >({
     queryKey: ["get-follower-list"],
     initialPageParam: 0,
 
@@ -38,9 +35,8 @@ export const useFollowerListQuery = (enabled: boolean) => {
     queryFn: ({ pageParam }) =>
       getFollowerList({ pageParam: pageParam as number }),
 
-    getNextPageParam: (lastPage) => {
-      return lastPage.last ? null : lastPage.number + 1;
-    },
+    getNextPageParam: (lastPage) =>
+      lastPage.page.hasNext ? lastPage.page.number + 1 : null,
     staleTime: 1000 * 60 * 5,
     enabled: enabled,
   });

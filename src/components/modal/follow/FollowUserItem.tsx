@@ -8,7 +8,6 @@ interface FollowUserItemProps {
     userId: string;
     profileImage: string | null;
     nickname: string;
-    description: string;
   };
   isFollowing: boolean;
   isPending?: boolean;
@@ -37,9 +36,6 @@ const FollowUserItem = ({
 
         <div className="flex min-w-0 flex-1 flex-col justify-center gap-0.5 whitespace-nowrap">
           <span className="title-5 truncate text-font-1">{user.nickname}</span>
-          <span className="body-6 truncate text-font-disabled">
-            {user.description}
-          </span>
         </div>
       </div>
 
