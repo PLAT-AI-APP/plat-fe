@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
@@ -144,6 +144,12 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
     "OVERWRITE" | "RESUME" | "UNSAVED" | null
   >(null);
   const [pendingPath, setPendingPath] = useState<string | null>(null);
+  // 등록/수정 성공 후의 router.push는 폼이 dirty해도 이탈 경고 없이 바로 이동해야 하므로,
+  // 성공 시점에 이 플래그를 켜서 아래 useNavigationGuard의 enabled에서 건너뜁니다.
+  const isSubmitSuccessRef = useRef(false);
+  const markSubmitSuccess = () => {
+    isSubmitSuccessRef.current = true;
+  };
   // lg 미만(태블릿)에서는 폼과 미리보기를 나란히 둘 폭이 없어 미리보기를 모달 토글로 뺍니다.
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   // CSS(hidden lg:block)로만 숨기면 태블릿에서도 사이드 패널이 계속 마운트되어 있어,
@@ -174,10 +180,7 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
   useEffect(() => {
     if (!isEditMode || !isUniverseDetailError) return;
 
-    showAppToast(
-      "error",
-      "캐릭터 수정 정보를 불러오지 못했습니다. 다시 시도해주세요.",
-    );
+    showAppToast("error", t("loadFailed"));
   }, [isEditMode, isUniverseDetailError]);
 
   const updateScenarioContentsFromDrag = (
@@ -299,6 +302,9 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
       // 두 핸들러가 같이 popstate를 다루면 순서를 예측할 수 없는 충돌이 난다.
       if (info.type === "popstate") return false;
 
+      // 등록/수정 성공 직후의 이동은 사용자가 의도한 이탈이라 경고 없이 통과시킵니다.
+      if (isSubmitSuccessRef.current) return false;
+
       const isLogoutRedirecting =
         typeof window !== "undefined" &&
         sessionStorage.getItem(LOGOUT_REDIRECT_IN_PROGRESS_KEY) === "true";
@@ -336,6 +342,9 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
           universeId={universeId}
           onSave={handleSave}
           onDraftClick={handleDraftClick}
+          setCurrentTabId={setCurrentTabId}
+          setActiveScenarioIndex={setActiveScenarioIndex}
+          markSubmitSuccess={markSubmitSuccess}
         />
 
         {/* lg 미만에서는 폭이 부족해 미리보기를 숨기고 토글 모달로 확인합니다. */}

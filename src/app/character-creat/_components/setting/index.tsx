@@ -152,7 +152,9 @@ const Setting = () => {
 
       <section className="flex flex-col gap-4">
         <div className="flex flex-col gap-1">
-          <h3 className="title-3 text-font-1">{t("tendencyLabel")}</h3>
+          <h3 className="title-3 text-font-1">
+            {t("tendencyLabel")} <span className="text-font-accents">*</span>
+          </h3>
           <p className="body-5 text-font-2">{t("tendencyHelp")}</p>
         </div>
 

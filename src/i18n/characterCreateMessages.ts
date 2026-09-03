@@ -11,6 +11,9 @@ const ko = {
     draftLoadFailed: "초안을 불러오지 못했습니다.",
     createSuccess: "캐릭터가 성공적으로 등록되었습니다!",
     createFailed: "캐릭터 등록에 실패했습니다. 다시 시도해주세요.",
+    updateSuccess: "캐릭터가 성공적으로 수정되었습니다!",
+    updateFailed: "캐릭터 수정에 실패했습니다. 다시 시도해주세요.",
+    loadFailed: "캐릭터 수정 정보를 불러오지 못했습니다. 다시 시도해주세요.",
     tabs: {
       profile: "프로필",
       details: "상세정보",
@@ -207,6 +210,9 @@ const en: typeof ko = {
     draftLoadFailed: "Could not load the draft.",
     createSuccess: "Character has been created successfully!",
     createFailed: "Failed to create the character. Please try again.",
+    updateSuccess: "Character has been updated successfully!",
+    updateFailed: "Failed to update the character. Please try again.",
+    loadFailed: "Failed to load the character's edit info. Please try again.",
     tabs: {
       profile: "Profile",
       details: "Details",
@@ -408,6 +414,9 @@ const ja: typeof ko = {
     draftLoadFailed: "下書きを読み込めませんでした。",
     createSuccess: "キャラクターが正常に登録されました！",
     createFailed: "キャラクター登録に失敗しました。もう一度お試しください。",
+    updateSuccess: "キャラクターが正常に修正されました！",
+    updateFailed: "キャラクターの修正に失敗しました。もう一度お試しください。",
+    loadFailed: "キャラクターの修正情報を読み込めませんでした。もう一度お試しください。",
     tabs: {
       profile: "プロフィール",
       details: "詳細情報",
@@ -605,6 +614,9 @@ const zh: typeof ko = {
     draftLoadFailed: "无法加载草稿。",
     createSuccess: "角色已成功创建！",
     createFailed: "角色创建失败，请重试。",
+    updateSuccess: "角色已成功修改！",
+    updateFailed: "角色修改失败，请重试。",
+    loadFailed: "无法加载角色修改信息，请重试。",
     tabs: {
       profile: "资料",
       details: "详细信息",
@@ -793,6 +805,9 @@ const th: typeof ko = {
     draftLoadFailed: "ไม่สามารถโหลดร่างได้",
     createSuccess: "สร้างตัวละครสำเร็จแล้ว!",
     createFailed: "สร้างตัวละครไม่สำเร็จ กรุณาลองอีกครั้ง",
+    updateSuccess: "แก้ไขตัวละครสำเร็จแล้ว!",
+    updateFailed: "แก้ไขตัวละครไม่สำเร็จ กรุณาลองอีกครั้ง",
+    loadFailed: "ไม่สามารถโหลดข้อมูลการแก้ไขตัวละครได้ กรุณาลองอีกครั้ง",
     tabs: {
       profile: "โปรไฟล์",
       details: "รายละเอียด",
@@ -990,6 +1005,9 @@ const vi: typeof ko = {
     draftLoadFailed: "Không thể tải bản nháp.",
     createSuccess: "Đã tạo nhân vật thành công!",
     createFailed: "Không thể tạo nhân vật. Vui lòng thử lại.",
+    updateSuccess: "Đã cập nhật nhân vật thành công!",
+    updateFailed: "Không thể cập nhật nhân vật. Vui lòng thử lại.",
+    loadFailed: "Không thể tải thông tin chỉnh sửa nhân vật. Vui lòng thử lại.",
     tabs: {
       profile: "Hồ sơ",
       details: "Chi tiết",
