@@ -291,14 +291,13 @@ export const hashtagHandlers = [
     });
   }),
 
-  http.post(endpoint("/feedback/report"), async ({ request }) => {
+  http.post(endpoint("/feedback/suggest"), async ({ request }) => {
     const body = (await request.json()) as {
       content?: string;
-      targetId?: string;
       title?: string;
       type?: "HASHTAG";
     };
-    const name = body.title ?? body.targetId ?? "";
+    const name = body.title ?? "";
 
     if (!name) {
       return HttpResponse.json(
