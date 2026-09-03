@@ -10,6 +10,8 @@ import NicknameField from "@/components/field/NicknameField";
 import PasswordCheckField from "@/components/field/PasswordCheckField";
 import PasswordField from "@/components/field/PasswordField";
 import { useFormServerError } from "@/hooks/useFormServerError";
+import { useTranslateText } from "@/hooks/useTranslateText";
+import { showFirstFieldErrorToast } from "@/lib/formError";
 import { AuthFormValues } from "@/schema/auth.schema";
 import Agreed from "./Agreed";
 import EmailVerifySection from "./EmailVerifySection";
@@ -18,6 +20,7 @@ const PENDING_SIGNUP_COMPLETE_DIALOG_KEY = "pending-signup-complete-dialog";
 
 const SignupForm = () => {
   const t = useTranslations();
+  const translateText = useTranslateText();
   const router = useRouter();
   const [isEmailVerified, setIsEmailVerified] = useState(false);
 
@@ -26,6 +29,7 @@ const SignupForm = () => {
     formState: { errors },
     handleSubmit,
     reset,
+    setFocus,
   } = useFormContext<AuthFormValues>();
 
   const {
@@ -96,7 +100,9 @@ const SignupForm = () => {
   return (
     <form
       id="signup-form"
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(onSubmit, (formErrors) =>
+        showFirstFieldErrorToast(formErrors, setFocus, translateText),
+      )}
       className="flex w-screen max-w-112.5 flex-col gap-9 rounded-3xl border border-main bg-darker px-6 py-9"
     >
       <header className="flex flex-col gap-1.5">

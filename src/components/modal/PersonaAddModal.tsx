@@ -12,6 +12,8 @@ import { useEditPersonaMutation } from "@/api/persona/editPersona";
 import { useDetailPersonaQuery } from "@/api/persona/detailPersons";
 import { PersonaAddModalProps } from "@/type/modal";
 import { personaFormSchema, PersonaFormValues } from "@/schema/modal.schema";
+import { showFirstFieldErrorToast } from "@/lib/formError";
+import { useTranslateText } from "@/hooks/useTranslateText";
 
 const PersonaAddModal = ({
   onClose,
@@ -22,11 +24,13 @@ const PersonaAddModal = ({
 }: PersonaAddModalProps) => {
   const t = useTranslations("modalUi.personaAdd");
   const commonT = useTranslations("modalUi.common");
+  const translateText = useTranslateText();
   const {
     register,
     handleSubmit,
     control,
     reset,
+    setFocus,
     formState: { errors, isValid },
   } = useForm<PersonaFormValues>({
     mode: "onChange",
@@ -102,7 +106,11 @@ const PersonaAddModal = ({
         </p>
       </header>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form
+        onSubmit={handleSubmit(onSubmit, (formErrors) =>
+          showFirstFieldErrorToast(formErrors, setFocus, translateText),
+        )}
+      >
         <div className="flex flex-col gap-6">
           <SmartInput
             label={t("nameLabel")}

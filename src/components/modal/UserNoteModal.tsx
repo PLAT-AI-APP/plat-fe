@@ -10,14 +10,18 @@ import { ModalLayout } from "../ModalLayout";
 import ActiveButton from "../ActiveButton";
 import { UserNoteModalProps } from "@/type/modal";
 import { userNoteFormSchema, UserNoteFormValues } from "@/schema/modal.schema";
+import { showFirstFieldErrorToast } from "@/lib/formError";
+import { useTranslateText } from "@/hooks/useTranslateText";
 
 const UserNoteModal = ({ onClose }: UserNoteModalProps) => {
   const t = useTranslations("modalUi.userNote");
   const commonT = useTranslations("modalUi.common");
+  const translateText = useTranslateText();
   const {
     register,
     handleSubmit,
     control,
+    setFocus,
     formState: { errors },
   } = useForm<UserNoteFormValues>({
     resolver: zodResolver(userNoteFormSchema),
@@ -40,7 +44,9 @@ const UserNoteModal = ({ onClose }: UserNoteModalProps) => {
     >
       <form
         className="flex w-full flex-col items-end gap-9"
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(onSubmit, (formErrors) =>
+          showFirstFieldErrorToast(formErrors, setFocus, translateText),
+        )}
       >
         <section className="flex w-full flex-col gap-6">
           <header className="flex flex-col gap-2">
