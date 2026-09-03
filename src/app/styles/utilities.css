@@ -39,3 +39,20 @@
   border-color: var(--brand-dark);
   background-color: var(--brand-opacity-3);
 }
+
+/*
+ * 캐러셀 이전/다음 화살표 버튼. CharacterShowcase, ExperienceCarousel 등에서
+ * 크기(size-9/10)·위치(absolute 좌표)·z-index만 다르고 나머지 8개 클래스가
+ * 그대로 복붙되고 있어 하나로 묶는다.
+ */
+@utility carousel-nav-btn {
+  @apply flex items-center justify-center rounded-2xl bg-overlay-font/12 p-2 text-font-0 opacity-25 backdrop-blur-[1.54px] transition hover:bg-overlay-font/20 hover:opacity-100 disabled:pointer-events-none disabled:opacity-0;
+}
+
+/*
+ * 팔로우 버튼 등 비동기 요청 진행 중 상태. isPending/isFollowPending 조건부로
+ * cursor-wait opacity-70 조합이 여러 화면에 그대로 반복되고 있어 하나로 묶는다.
+ */
+@utility pending-state {
+  @apply cursor-wait opacity-70;
+}

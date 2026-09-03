@@ -73,7 +73,7 @@ const ExperienceCarousel = ({
         type="button"
         onClick={scrollPrev}
         aria-label={t("previousItems")}
-        className="absolute left-0 top-1/2 z-30 flex size-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-2xl bg-overlay-font/12 p-2 text-font-0 opacity-25 backdrop-blur-[1.54px] transition hover:bg-overlay-font/20 hover:opacity-100"
+        className="carousel-nav-btn absolute left-0 top-1/2 z-30 size-10 -translate-x-1/2 -translate-y-1/2"
       >
         <ArrowLeft className="size-6" />
       </button>
@@ -81,7 +81,7 @@ const ExperienceCarousel = ({
         type="button"
         onClick={scrollNext}
         aria-label={t("nextItems")}
-        className="absolute right-0 top-1/2 z-30 flex size-10 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-2xl bg-overlay-font/12 p-2 text-font-0 opacity-25 backdrop-blur-[1.54px] transition hover:bg-overlay-font/20 hover:opacity-100"
+        className="carousel-nav-btn absolute right-0 top-1/2 z-30 size-10 translate-x-1/2 -translate-y-1/2"
       >
         <ArrowRight className="size-6" />
       </button>

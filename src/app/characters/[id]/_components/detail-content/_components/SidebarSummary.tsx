@@ -197,7 +197,7 @@ const SidebarSummary = ({
                   isFollowingCreator
                     ? "bg-main text-font-1"
                     : "bg-font-1 text-dark",
-                  isFollowPending && "cursor-wait opacity-70",
+                  isFollowPending && "pending-state",
                 )}
               >
                 {isFollowingCreator ? t("following") : t("follow")}
