@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import dayjs from "@/lib/dayjs";
 import { cn, formatWithCommas } from "@/lib/utils";
 import { showAppToast } from "@/lib/toast";
@@ -25,6 +26,7 @@ const getLedgerDetailText = (item: UsageHistoryItemType) =>
 
 /** 개별 사용내역 아이템 */
 const UsageHistoryItem = ({ item }: { item: UsageHistoryItemType }) => {
+  const t = useTranslations("usageHistory");
   const [isOpen, setIsOpen] = useState(false);
 
   const isPlusNote = item.amount > 0;
@@ -34,7 +36,7 @@ const UsageHistoryItem = ({ item }: { item: UsageHistoryItemType }) => {
   const handleCopy = (event: React.MouseEvent) => {
     event.stopPropagation();
     navigator.clipboard.writeText(item.referenceId);
-    showAppToast("success", "거래번호가 복사되었습니다.");
+    showAppToast("success", t("copySuccess"));
   };
 
   return (

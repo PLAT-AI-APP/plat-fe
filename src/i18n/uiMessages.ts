@@ -187,6 +187,9 @@ const ko = {
     sportsSchool: "스포츠/학원",
     etc: "기타",
   },
+  usageHistory: {
+    copySuccess: "거래번호가 복사되었습니다.",
+  },
 };
 
 const en = {
@@ -377,6 +380,9 @@ const en = {
     comicDaily: "Comedy/Daily life",
     sportsSchool: "Sports/School",
     etc: "Other",
+  },
+  usageHistory: {
+    copySuccess: "Transaction number copied.",
   },
 };
 
@@ -569,6 +575,9 @@ const ja = {
     sportsSchool: "スポーツ/学園",
     etc: "その他",
   },
+  usageHistory: {
+    copySuccess: "取引番号がコピーされました。",
+  },
 };
 
 const zh = {
@@ -755,6 +764,9 @@ const zh = {
     comicDaily: "搞笑/日常",
     sportsSchool: "运动/校园",
     etc: "其他",
+  },
+  usageHistory: {
+    copySuccess: "交易编号已复制。",
   },
 };
 
@@ -946,6 +958,9 @@ const th = {
     sportsSchool: "กีฬา/โรงเรียน",
     etc: "อื่นๆ",
   },
+  usageHistory: {
+    copySuccess: "คัดลอกหมายเลขธุรกรรมแล้ว",
+  },
 };
 
 const vi = {
@@ -1136,6 +1151,9 @@ const vi = {
     comicDaily: "Hài/Đời thường",
     sportsSchool: "Thể thao/Học đường",
     etc: "Khác",
+  },
+  usageHistory: {
+    copySuccess: "Đã sao chép mã giao dịch.",
   },
 };
 
