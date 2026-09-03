@@ -82,15 +82,6 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
     });
   };
 
-  const handleCurrentMode = (mode: ScenarioType) => {
-    if (mode === currentMode) {
-      setCurrentMode("chat");
-      return;
-    }
-
-    setCurrentMode(mode);
-  };
-
   const handleUpdateContent = (id: string, newValue: string) => {
     const updatedContents = contents.map((item) =>
       item.id === id ? { ...item, value: newValue } : item,
@@ -198,7 +189,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
             type="button"
             onClick={handleUndoScenario}
             disabled={!canUndoScenario}
-            className="flex size-6.5 items-center justify-center rounded-lg text-font-2 transition-colors hover:bg-card-selected"
+            className="flex size-6.5 items-center justify-center rounded-lg text-font-2 transition-colors hover:bg-card-selected disabled:pointer-events-none disabled:text-font-disabled"
             aria-label={t("undoScenario")}
           >
             <ArrowLeft className="size-3.5" />
@@ -207,7 +198,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
             type="button"
             onClick={handleRedoScenario}
             disabled={!canRedoScenario}
-            className="flex size-6.5 items-center justify-center rounded-lg text-font-2 transition-colors hover:bg-card-selected"
+            className="flex size-6.5 items-center justify-center rounded-lg text-font-2 transition-colors hover:bg-card-selected disabled:pointer-events-none disabled:text-font-disabled"
             aria-label={t("redoScenario")}
           >
             <ArrowRight className="size-3.5" />
@@ -235,6 +226,14 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
 
       <form
         onSubmit={handleSubmit}
+        onClick={(e) => {
+          // textarea/버튼이 아닌 form 여백(툴바 사이 빈 공간 포함)을 클릭해도
+          // 바로 입력할 수 있도록 포커스를 옮깁니다.
+          const target = e.target as HTMLElement;
+          if (target.closest("button, textarea")) return;
+
+          textareaRef.current?.focus();
+        }}
         className="flex w-full shrink-0 flex-col gap-4 rounded-3xl border border-transparent bg-darkest px-4 pb-3 pt-4 transition-colors focus-within:field-focus!"
       >
         <textarea
@@ -251,7 +250,10 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
           <div className="flex min-w-0 shrink-0 gap-2">
             <button
               type="button"
-              onClick={() => handleCurrentMode("action")}
+              onClick={() => {
+                setCurrentMode("action");
+                textareaRef.current?.focus();
+              }}
               className={cn(
                 "body-4 flex h-8 items-center justify-center gap-1.5 rounded-full border border-main bg-dark py-1.5 pl-2.5 pr-3 text-font-2",
                 currentMode === "action" && "border-brand text-brand",
@@ -263,7 +265,10 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
 
             <button
               type="button"
-              onClick={() => setCurrentMode("chat")}
+              onClick={() => {
+                setCurrentMode("chat");
+                textareaRef.current?.focus();
+              }}
               className={cn(
                 "body-4 flex h-8 items-center justify-center gap-1.5 rounded-full border border-main bg-dark py-1.5 pl-2.5 pr-3 text-font-2",
                 currentMode === "chat" && "border-brand text-brand",
@@ -285,7 +290,10 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
 
             <button
               type="button"
-              onClick={() => setCurrentMode("userChat")}
+              onClick={() => {
+                setCurrentMode("userChat");
+                textareaRef.current?.focus();
+              }}
               className={cn(
                 "body-4 flex h-8 items-center justify-center gap-1.5 rounded-full border border-main bg-dark py-1.5 pl-2.5 pr-3 text-font-2",
                 currentMode === "userChat" && "border-brand text-brand",
