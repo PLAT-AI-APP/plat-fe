@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useRef, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { useClickAway } from "@/hooks/useClickAway";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 import { cn } from "@/lib/utils";
 import { TRANSITION_FAST, popVariants } from "@/constants/motion";
 
@@ -61,6 +62,14 @@ export const ModalLayout = ({
 
   useClickAway(modalRef, handleClose, triggerRef);
 
+  // 배경을 깐 모달만 화면 전체를 가린다. 그때는 Tab 이 뒤 콘텐츠로 새면 안 되고,
+  // Esc 로 닫을 수 있어야 하며, 닫힌 뒤에는 열었던 자리로 포커스가 돌아가야 한다.
+  useFocusTrap({
+    containerRef: modalRef,
+    enabled: isClient && hasBackground,
+    onEscape: onClose,
+  });
+
   const modalContent = (
     <>
       {hasBackground && (
@@ -88,7 +97,7 @@ export const ModalLayout = ({
         onClick={(event) => event.stopPropagation()}
         onMouseDown={(event) => event.stopPropagation()}
         className={cn(
-          "z-101 rounded-xl border border-main bg-dark",
+          "z-101 rounded-xl bg-dark",
           hasBackground ? "shadow-card-heavy" : "shadow-popover",
           !hasBackground && "px-2 py-3",
           modalPositionClass,

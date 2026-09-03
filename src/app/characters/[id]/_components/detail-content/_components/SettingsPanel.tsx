@@ -107,8 +107,11 @@ const SettingsPanel = ({
           >
             <Image
               src={currentImageUrl}
-              alt={character.title}
+              alt=""
+              aria-hidden
               fill
+              // 배경 블러라 선명할 필요가 없다. 작은 이미지로 충분하다.
+              sizes="320px"
               className="scale-125 object-cover opacity-35 blur-2xl"
             />
             <Image

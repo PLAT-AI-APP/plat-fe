@@ -51,7 +51,7 @@ const ChattingItem = ({
         src={thumbnail}
         width={84}
         height={84}
-        alt=""
+        alt={title}
         className="size-[84px] shrink-0 rounded-2xl bg-card-hover object-cover"
       />
 

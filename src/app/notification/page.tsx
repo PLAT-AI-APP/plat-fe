@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import React from "react";
+import type { NoticeCategory } from "@/type/notice";
 import NotificationContents from "./_components/NotificationContents";
 
 export const metadata: Metadata = {
@@ -12,8 +13,7 @@ interface NotificationPageProps {
 
 const NotificationPage = async ({ searchParams }: NotificationPageProps) => {
   const sParams = await searchParams;
-  const currentFilter = sParams.filter as
-    "NOTICE" | "UPDATE" | "EVENT" | null | undefined;
+  const currentFilter = sParams.filter as NoticeCategory | null | undefined;
 
   return <NotificationContents currentFilter={currentFilter} />;
 };

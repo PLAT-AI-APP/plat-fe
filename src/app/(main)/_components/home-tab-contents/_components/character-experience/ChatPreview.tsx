@@ -1,44 +1,36 @@
 import React from "react";
+import type { OfficialPreviewItem } from "@/api/home/getOfficialPreview";
 import { ChatBubble, NarrativeBlock, ActionFooter } from "./SubComponents";
-import { OfficialPreviewItem } from "@/api/home/getOfficialPreview";
 
 interface ChatPreviewProps {
   item: OfficialPreviewItem;
 }
 
 /**
- * 캐릭터 실제 대사는 API에 없어(시나리오 개요 텍스트만 제공) 채팅 버블은
- * 여전히 예시용 정적 텍스트를 쓰고, 캐릭터 이름만 실제 캐릭터명으로 연결한다.
- * 첫 시나리오의 개요가 있으면 그 내용을 내레이션으로 보여준다.
+ * 우측 대화 미리보기.
+ *
+ * 폭은 부모 그리드의 열이 정한다(왼쪽 카드와 같은 비율로 함께 변한다).
+ * 내용이 열 높이를 넘으면 잘리는 대신 이 영역 안에서만 스크롤된다.
  */
 const ChatPreview = ({ item }: ChatPreviewProps) => {
-  const narrative = item.scenarios[0]?.content;
+  const scenarios = item.scenarios ?? [];
 
   return (
-    <section className="relative pr-4 flex-1 h-full min-w-0 bg-darker rounded-tr-2xl rounded-br-2xl flex flex-col overflow-hidden">
+    <section className="relative flex h-95 w-full min-w-0 flex-col overflow-hidden rounded-b-2xl bg-darker md:h-full md:rounded-bl-none md:rounded-tr-2xl">
       <div
         id="preview-chat-container"
-        className="w-full h-full p-9 inline-flex flex-col justify-start items-start gap-6"
+        className="inline-flex h-full w-full flex-col items-start justify-start gap-6 overflow-y-auto p-9 pr-4"
       >
-        <ChatBubble
-          name={item.title}
-          message="말말말말말말말말말말말말말말말말말말말말말말말말"
-        />
-
-        {narrative && <NarrativeBlock content={narrative} />}
-
-        <ChatBubble
-          name={item.title}
-          message="말말말말말말말말말말말말말말말말말말말말말말말말"
-        />
-        <ChatBubble
-          name={item.title}
-          message="말말말말말말말말말말말말말말말말말말말말말말말말"
-        />
-        <ChatBubble
-          name={item.title}
-          message="말말말말말말말말말말말말말말말말말말말말말말말말"
-        />
+        {scenarios.length > 0 ? (
+          scenarios.map((scenario) => (
+            <React.Fragment key={scenario.episodeNo}>
+              <ChatBubble name={item.title} message={scenario.title} />
+              <NarrativeBlock content={scenario.content} />
+            </React.Fragment>
+          ))
+        ) : (
+          <NarrativeBlock content={item.description} />
+        )}
       </div>
 
       <ActionFooter isActive={item.remainingFreeChatCount > 0} />

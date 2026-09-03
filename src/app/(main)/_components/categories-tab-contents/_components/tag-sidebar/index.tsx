@@ -1,6 +1,7 @@
 "use client";
 
 import { useHashtagListQuery } from "@/api/hashtag/getHashtagList";
+import { ErrorState } from "@/components/state";
 import {
   HASHTAG_CATEGORY_FOLDER_TITLE_KEYS,
   HASHTAG_CATEGORY_ORDER,
@@ -346,7 +347,13 @@ const TagSidebar = ({
   onSelectedTagsChange,
 }: TagSidebarProps) => {
   const t = useTranslations("tagSidebar");
-  const { data: hashtagList, isLoading } = useHashtagListQuery();
+  const {
+    data: hashtagList,
+    error,
+    isError,
+    isLoading,
+    refetch,
+  } = useHashtagListQuery();
   // 검색어는 사이드바 내부 UI 상태로 관리합니다.
   // 선택 태그는 CategoriesTabContents에서 내려받아 결과 영역과 같은 기준으로 공유합니다.
   const [query, setQuery] = useState("");
@@ -485,7 +492,10 @@ const TagSidebar = ({
           </div>
         </TagFolder>
 
-        {!isLoading && tagFolders.length === 0 ? (
+        {isError ? (
+          // 해시태그를 못 불러온 것을 "태그가 없다"로 보여주면 사용자가 필터가 사라진 줄 안다.
+          <ErrorState error={error} onRetry={refetch} className="my-4" />
+        ) : !isLoading && tagFolders.length === 0 ? (
           <p className="body-5 py-10 text-center text-font-disabled">
             {t("emptyHashtags")}
           </p>

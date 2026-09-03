@@ -18,7 +18,9 @@ const NotificationDetailPage = ({ params }: PageProps) => {
 
   if (!noticeDetailContents) return null;
 
-  const { title, content, updatedAt } = noticeDetailContents;
+  const { title, content, createdAt, updatedAt } = noticeDetailContents;
+  // 수정된 적 없는 공지는 updatedAt이 비어 오므로 작성 시각을 보여줍니다.
+  const displayedAt = updatedAt ?? createdAt;
   return (
     <article
       id="notice-detail-container"
@@ -32,7 +34,7 @@ const NotificationDetailPage = ({ params }: PageProps) => {
         <time className="flex items-center gap-1.5 text-font-2">
           <Clock className="w-4 h-4" />
           <span className="body-4">
-            {dayjs(updatedAt).format("YYYY-MM-DD HH:mm:ss")}
+            {dayjs(displayedAt).format("YYYY-MM-DD HH:mm:ss")}
           </span>
         </time>
       </header>

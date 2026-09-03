@@ -60,8 +60,10 @@ const PersonaAddModal = ({
     }
   }, [initialDescription, initialName, isEditMode, personaDetail, reset]);
 
-  const { mutate: addPersona } = useAddPersonaMutation();
-  const { mutate: editPersona } = useEditPersonaMutation();
+  const { mutate: addPersona, isPending: isAdding } = useAddPersonaMutation();
+  const { mutate: editPersona, isPending: isEditing } =
+    useEditPersonaMutation();
+  const isSubmitting = isAdding || isEditing;
   const name = useWatch({ control, name: "name" }) ?? "";
   const info = useWatch({ control, name: "info" }) ?? "";
 
@@ -133,7 +135,7 @@ const PersonaAddModal = ({
         <footer className="pt-9">
           <button
             type="submit"
-            disabled={!isValid}
+            disabled={!isValid || isSubmitting}
             className={`mt-3 w-full rounded-xl py-3 title-3 transition-colors ${
               isValid
                 ? "bg-brand/10 text-brand-dark"

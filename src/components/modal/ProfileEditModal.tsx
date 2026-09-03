@@ -31,7 +31,8 @@ const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
     watch,
     formState: { isValid },
   } = useFormContext<ProfileEditFormType>();
-  const { mutate: updateMyInfo } = useUpdateMyInfoMutation();
+  const { mutate: updateMyInfo, isPending: isUpdating } =
+    useUpdateMyInfoMutation();
   const { setFieldErrors } = useFormServerError<ProfileEditFormType>();
   const openModal = useModalStore((state) => state.openModal);
   const birth = watch("birth");
@@ -93,6 +94,7 @@ const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
           text={t("submit")}
           type="submit"
           isActive={isValid}
+          disabled={!isValid || isUpdating}
           className="mt-10 mb-5 rounded-xl"
         />
       </section>

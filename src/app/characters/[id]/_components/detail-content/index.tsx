@@ -7,6 +7,7 @@ import {
   adaptUniverseDetailToCharacterDetail,
   useUniverseDetailQuery,
 } from "@/api/universe/getUniverseDetail";
+import { ErrorState } from "@/components/state";
 import CommentsPanel from "./_components/CommentsPanel";
 import DetailTabs, { CharacterDetailTab } from "./_components/DetailTabs";
 import ScenarioPanel from "./_components/ScenarioPanel";
@@ -22,8 +23,10 @@ const CharacterDetailContent = ({
 }: CharacterDetailContentProps) => {
   const {
     data: universe,
+    error,
     isError,
     isLoading,
+    refetch,
   } = useUniverseDetailQuery(characterId);
   const character = useMemo(
     () =>
@@ -141,7 +144,19 @@ const CharacterDetailContent = ({
     );
   }
 
-  if (isError || !character) {
+  // 404(삭제된 캐릭터)와 5xx(서버 오류)를 같은 문구로 뭉개면 사용자가 무엇을 해야 할지 모른다.
+  // ErrorState 는 서버가 준 사유를 그대로 보여주고, 재시도해 볼 값이 있을 때만 버튼을 낸다.
+  if (isError) {
+    return (
+      <article className="flex w-full justify-center pb-16 pt-5">
+        <div className="w-full max-w-[1200px]">
+          <ErrorState error={error} onRetry={refetch} />
+        </div>
+      </article>
+    );
+  }
+
+  if (!character) {
     return (
       <article className="flex w-full justify-center pb-16 pt-5">
         <p className="body-2 text-font-2">{t("loadFailed")}</p>
@@ -220,7 +235,7 @@ const CharacterDetailContent = ({
               id="character-detail-comments"
               className="scroll-mt-18"
             >
-              <CommentsPanel character={character} />
+              <CommentsPanel universeId={characterId} />
             </section>
           </div>
         </main>

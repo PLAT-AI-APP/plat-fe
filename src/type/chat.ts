@@ -49,3 +49,50 @@ export interface ChatAssetGalleryResponse {
   totalCount: number;
   visibleCount: number;
 }
+
+/** 채팅 모델 카탈로그 한 줄 */
+export interface ChatModelOption {
+  /** enum 이름 (예: CLAUDE_SONNET_4_6) */
+  name: string;
+  /** 제공사 모델 식별자 (예: claude-sonnet-4-6). 채팅 요청에 이 값이 아니라 name을 보냅니다. */
+  value: string;
+  provider: "ANTHROPIC" | "GOOGLE" | "OPENAI";
+}
+
+/** 프롬프트 배수 선택지 */
+export interface PromptMultiplierOption {
+  /** enum 이름 (예: X1_5) */
+  name: string;
+  /** 배수 값 (예: 1.5) */
+  value: number;
+}
+
+/** GET /chat/models 응답 */
+export interface ChatCatalog {
+  models: ChatModelOption[];
+  multipliers: PromptMultiplierOption[];
+}
+
+/** POST /chat 요청 */
+export interface ChatStartRequest {
+  /** 클라이언트가 만드는 턴 식별자. 같은 값으로 재요청하면 중복 생성되지 않습니다. */
+  chatTurnId: string;
+  context: {
+    roomId: string;
+    characterId: string;
+    personaId: string;
+  };
+  generation: {
+    /** 최대 4000자 */
+    message: string;
+    /** ChatModelOption.name 값 */
+    model: string;
+    /** 배수 값(숫자). 허용 집합 밖이면 서버가 1.0으로 되돌립니다. */
+    multiplier: number;
+  };
+}
+
+/** POST /chat 응답. 이 turnId로 SSE를 구독합니다. */
+export interface ChatStartResponse {
+  turnId: string;
+}

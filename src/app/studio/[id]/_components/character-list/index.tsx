@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import CharacterItem from "./CharacterItem";
-import SkeletonCharacterList from "@/components/skeleton/SkeletonCharacterList";
 
 interface CharacterListProps {
   char: {
@@ -16,16 +15,9 @@ interface CharacterListProps {
 }
 
 const CharacterList = ({ char }: CharacterListProps) => {
-  const [isLoading, setIsLoading] = useState(true);
+  // 예전에는 setTimeout(3000) 으로 로딩을 흉내 내, 목록이 이미 있는데도 3초간
+  // 스켈레톤이 떠 있었다. 실제 로딩 여부는 데이터를 가져오는 상위가 알아야 한다.
   const [characters, setCharacters] = useState(char);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   useEffect(() => {
     setCharacters(char);
@@ -39,26 +31,22 @@ const CharacterList = ({ char }: CharacterListProps) => {
 
   return (
     <ul className="flex flex-col gap-3">
-      {isLoading
-        ? characters.map((v, index) => (
-            <SkeletonCharacterList key={v.id + index} />
-          ))
-        : characters.map(
-            ({ chatCount, id, isPublic, dec, img, name, tag }, index) => (
-              <li key={index}>
-                <CharacterItem
-                  description={dec}
-                  chatCount={chatCount}
-                  id={id}
-                  isPublic={isPublic}
-                  tagList={tag || []}
-                  thumbnail={img}
-                  title={name}
-                  onDeleted={() => handleCharacterDeleted(index)}
-                />
-              </li>
-            ),
-          )}
+      {characters.map(
+        ({ chatCount, id, isPublic, dec, img, name, tag }, index) => (
+          <li key={index}>
+            <CharacterItem
+              description={dec}
+              chatCount={chatCount}
+              id={id}
+              isPublic={isPublic}
+              tagList={tag || []}
+              thumbnail={img}
+              title={name}
+              onDeleted={() => handleCharacterDeleted(index)}
+            />
+          </li>
+        ),
+      )}
     </ul>
   );
 };

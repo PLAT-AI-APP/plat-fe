@@ -108,6 +108,7 @@ const SidebarSummary = ({
             src={character.mainImage}
             alt={t("profileAlt", { name: character.title })}
             fill
+            sizes="(max-width: 1023px) 100vw, 320px"
             className="object-contain"
             priority
           />
@@ -149,6 +150,7 @@ const SidebarSummary = ({
                 index: index + 1,
               })}
               fill
+              sizes="64px"
               className="object-cover"
             />
           </button>

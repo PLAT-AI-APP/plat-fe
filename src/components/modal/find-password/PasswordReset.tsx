@@ -10,7 +10,8 @@ import { useModalStore } from "@/store/useModalStore";
 
 const PasswordReset = () => {
   const t = useTranslations("modalUi.passwordReset");
-  const { mutate: passwrodReset } = usePasswordResetMutation();
+  const { mutate: passwrodReset, isPending: isResetting } =
+    usePasswordResetMutation();
   const {
     control,
     formState: { errors },
@@ -58,6 +59,7 @@ const PasswordReset = () => {
 
       <ActiveButton
         isActive={isPasswordResetActive}
+        disabled={!isPasswordResetActive || isResetting}
         text={t("submit")}
         className="mt-6"
         type="submit"

@@ -1,9 +1,12 @@
 import { Fold, LogoWordmark, User } from "@/icons";
 import React, { useRef } from "react";
+import type { RefObject } from "react";
 import { SearchBar } from "./SearchBar";
 import Profile from "./Profile";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useLayoutStore } from "@/store/useLayoutStore";
 import { useUserStore } from "@/store/useUserStore";
 import { useWalletStore } from "@/store/useWalletStore";
 import ProfilePopover from "../popover/ProfilePopover";
@@ -13,9 +16,13 @@ import { formatWithCommas } from "@/lib/utils";
 
 interface HeaderProps {
   handleFoldToggle: () => void;
+  /** 좁은 화면 드로어를 Esc 로 닫았을 때 포커스를 돌려줄 대상입니다. */
+  foldToggleRef?: RefObject<HTMLButtonElement | null>;
 }
-const Header = ({ handleFoldToggle }: HeaderProps) => {
+const Header = ({ handleFoldToggle, foldToggleRef }: HeaderProps) => {
+  const t = useTranslations();
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const isSidebarExpanded = useLayoutStore((state) => state.isSidebarExpanded);
 
   const profileModal = useToggle();
 
@@ -35,8 +42,11 @@ const Header = ({ handleFoldToggle }: HeaderProps) => {
       <div id="header-left-section" className="flex gap-4 items-center">
         <button
           id="sidebar-toggle-button"
+          ref={foldToggleRef}
           type="button"
-          aria-label="사이드바 접기/펴기"
+          aria-label={t("sidebar.toggle")}
+          aria-expanded={isSidebarExpanded}
+          aria-controls="main-sidebar"
           onClick={handleFoldToggle}
           className="flex w-8 h-8 justify-center items-center hover:bg-btn-hover rounded-lg border-none bg-transparent cursor-pointer"
         >

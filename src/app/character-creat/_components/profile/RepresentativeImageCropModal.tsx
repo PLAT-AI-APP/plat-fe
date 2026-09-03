@@ -112,7 +112,8 @@ const RepresentativeImageCropModal = ({
                   backgroundColor: "#000000",
                 },
                 cropAreaStyle: {
-                  border: "2px solid #000000",
+                  // 크롭 영역 경계는 스크림 위에 얹히므로 얇은 반투명 흰 선이면 충분하다.
+                  border: "1px solid rgba(255, 255, 255, 0.72)",
                 },
               }}
             />

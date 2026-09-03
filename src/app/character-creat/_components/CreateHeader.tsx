@@ -118,6 +118,7 @@ const CreateHeader = ({
   onDraftClick,
 }: CreateHeaderProps) => {
   const t = useTranslations("characterCreate");
+  const tRoot = useTranslations();
   const router = useRouter();
   const locale = useLocaleStore((state) => state.locale);
   const { getValues, trigger } = useFormContext<CharacterCreateFormValues>();
@@ -193,7 +194,7 @@ const CreateHeader = ({
           ...(characterProfileImage ? { characterProfileImage } : {}),
         });
 
-        showAppToast("success", "캐릭터가 성공적으로 수정되었습니다!");
+        showAppToast("success", tRoot("toast.characterUpdated"));
         router.push(`/characters/${universeId}`);
         return;
       }

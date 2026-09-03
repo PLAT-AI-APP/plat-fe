@@ -30,8 +30,8 @@ const MenuTab = ({ currentTab }: { currentTab: string }) => {
             key={name}
             id={`category-link-${id}`}
             href={{ pathname: "/", query: { tab: id } }}
-            className={`body-4 relative flex items-center justify-center gap-1 px-2.5 py-2 transition-colors ${
-              isActive ? "text-font-1" : "text-font-2 hover:text-font-1"
+            className={`title-3 relative flex items-center justify-center gap-1 px-3 py-2.5 transition-colors ${
+              isActive ? "text-font-0" : "text-font-2 hover:text-font-1"
             }`}
           >
             {name}

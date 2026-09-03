@@ -11,6 +11,24 @@ const en = {
     search: "Search",
     usageHistory: "Usage history",
   },
+  errorPage: {
+    title: "Something went wrong",
+    description: "Please try again in a moment. If it keeps happening, refresh the page.",
+    retry: "Try again",
+  },
+  toast: {
+    imageTypeInvalid: "Only JPG, PNG, or WEBP images are allowed.",
+    imageSizeExceeded: "Files can be up to 5MB.",
+    characterDeleted: "The character was deleted.",
+    characterDeleteFailed: "Could not delete the character. Please try again.",
+    characterUpdated: "The character was updated.",
+    transactionIdCopied: "Transaction ID copied.",
+  },
+  state: {
+    retry: "Try again",
+    loadFailed: "Could not load this section.",
+    empty: "Nothing to show yet.",
+  },
   sidebar: {
     home: "Home",
     myChatting: "My chats",
@@ -18,6 +36,7 @@ const en = {
     noteCharge: "Charge notes",
     navigation: "Sidebar menu",
     toggle: "Fold or expand sidebar",
+    close: "Close sidebar",
     recentChats: "Recent chats",
   },
   footer: {
@@ -110,9 +129,11 @@ const en = {
     title: "Notice",
     filters: {
       all: "All",
-      notice: "Notice",
+      service: "Notice",
       update: "Update",
       event: "Event",
+      maintenance: "Maintenance",
+      policy: "Policy",
     },
   },
   tokenCharge: {
@@ -237,6 +258,24 @@ const ko: RuntimeMessages = {
     search: "검색",
     usageHistory: "사용 내역",
   },
+  errorPage: {
+    title: "일시적인 오류가 발생했습니다",
+    description: "잠시 후 다시 시도해 주세요. 문제가 계속되면 새로고침 해주세요.",
+    retry: "다시 시도",
+  },
+  toast: {
+    imageTypeInvalid: "jpg, png, webp 이미지 파일만 가능합니다.",
+    imageSizeExceeded: "파일 용량은 최대 5MB까지 가능합니다.",
+    characterDeleted: "캐릭터가 삭제되었습니다.",
+    characterDeleteFailed: "캐릭터 삭제에 실패했습니다. 다시 시도해주세요.",
+    characterUpdated: "캐릭터가 성공적으로 수정되었습니다!",
+    transactionIdCopied: "거래번호가 복사되었습니다.",
+  },
+  state: {
+    retry: "다시 시도",
+    loadFailed: "이 영역을 불러오지 못했어요.",
+    empty: "아직 표시할 내용이 없어요.",
+  },
   sidebar: {
     home: "홈",
     myChatting: "내 채팅",
@@ -244,6 +283,7 @@ const ko: RuntimeMessages = {
     noteCharge: "노트 충전",
     navigation: "사이드바 메뉴",
     toggle: "사이드바 접기/펼치기",
+    close: "사이드바 닫기",
     recentChats: "최근 대화",
   },
   footer: {
@@ -331,9 +371,11 @@ const ko: RuntimeMessages = {
     title: "공지사항",
     filters: {
       all: "전체",
-      notice: "공지",
+      service: "공지",
       update: "업데이트",
       event: "이벤트",
+      maintenance: "점검",
+      policy: "정책",
     },
   },
   tokenCharge: {
@@ -444,6 +486,24 @@ const ja: RuntimeMessages = {
     search: "検索",
     usageHistory: "利用履歴",
   },
+  errorPage: {
+    title: "問題が発生しました",
+    description: "しばらくしてからもう一度お試しください。続く場合は再読み込みしてください。",
+    retry: "再試行",
+  },
+  toast: {
+    imageTypeInvalid: "jpg・png・webp 画像ファイルのみ利用できます。",
+    imageSizeExceeded: "ファイル容量は最大5MBまでです。",
+    characterDeleted: "キャラクターを削除しました。",
+    characterDeleteFailed: "キャラクターの削除に失敗しました。もう一度お試しください。",
+    characterUpdated: "キャラクターを更新しました。",
+    transactionIdCopied: "取引番号をコピーしました。",
+  },
+  state: {
+    retry: "再試行",
+    loadFailed: "この領域を読み込めませんでした。",
+    empty: "まだ表示する内容がありません。",
+  },
   sidebar: {
     home: "ホーム",
     myChatting: "マイチャット",
@@ -451,6 +511,7 @@ const ja: RuntimeMessages = {
     noteCharge: "ノートチャージ",
     navigation: "サイドバーメニュー",
     toggle: "サイドバーを折りたたむ/展開",
+    close: "サイドバーを閉じる",
     recentChats: "最近の会話",
   },
   footer: {
@@ -539,9 +600,11 @@ const ja: RuntimeMessages = {
     title: "お知らせ",
     filters: {
       all: "全体",
-      notice: "お知らせ",
+      service: "お知らせ",
       update: "アップデート",
       event: "イベント",
+      maintenance: "メンテナンス",
+      policy: "ポリシー",
     },
   },
   tokenCharge: {
@@ -654,6 +717,24 @@ const zh: RuntimeMessages = {
     search: "搜索",
     usageHistory: "使用记录",
   },
+  errorPage: {
+    title: "发生了临时错误",
+    description: "请稍后重试。如果问题持续，请刷新页面。",
+    retry: "重试",
+  },
+  toast: {
+    imageTypeInvalid: "仅支持 jpg、png、webp 图片文件。",
+    imageSizeExceeded: "文件大小最多 5MB。",
+    characterDeleted: "角色已删除。",
+    characterDeleteFailed: "删除角色失败，请重试。",
+    characterUpdated: "角色已成功修改。",
+    transactionIdCopied: "已复制交易编号。",
+  },
+  state: {
+    retry: "重试",
+    loadFailed: "无法加载该区域。",
+    empty: "暂时没有可显示的内容。",
+  },
   sidebar: {
     home: "首页",
     myChatting: "我的聊天",
@@ -661,6 +742,7 @@ const zh: RuntimeMessages = {
     noteCharge: "充值笔记",
     navigation: "侧边栏菜单",
     toggle: "折叠或展开侧边栏",
+    close: "关闭侧边栏",
     recentChats: "最近对话",
   },
   footer: {
@@ -746,9 +828,11 @@ const zh: RuntimeMessages = {
     title: "公告事项",
     filters: {
       all: "全部",
-      notice: "公告",
+      service: "公告",
       update: "更新",
       event: "活动",
+      maintenance: "维护",
+      policy: "政策",
     },
   },
   tokenCharge: {
@@ -855,6 +939,24 @@ const th: RuntimeMessages = {
     search: "ค้นหา",
     usageHistory: "ประวัติการใช้งาน",
   },
+  errorPage: {
+    title: "เกิดข้อผิดพลาดชั่วคราว",
+    description: "โปรดลองอีกครั้งในภายหลัง หากยังเกิดขึ้นให้รีเฟรชหน้า",
+    retry: "ลองอีกครั้ง",
+  },
+  toast: {
+    imageTypeInvalid: "รองรับเฉพาะไฟล์ภาพ jpg, png, webp เท่านั้น",
+    imageSizeExceeded: "ขนาดไฟล์สูงสุด 5MB",
+    characterDeleted: "ลบตัวละครแล้ว",
+    characterDeleteFailed: "ลบตัวละครไม่สำเร็จ โปรดลองอีกครั้ง",
+    characterUpdated: "แก้ไขตัวละครเรียบร้อยแล้ว",
+    transactionIdCopied: "คัดลอกหมายเลขธุรกรรมแล้ว",
+  },
+  state: {
+    retry: "ลองอีกครั้ง",
+    loadFailed: "โหลดส่วนนี้ไม่สำเร็จ",
+    empty: "ยังไม่มีเนื้อหาที่จะแสดง",
+  },
   sidebar: {
     home: "หน้าแรก",
     myChatting: "แชตของฉัน",
@@ -862,6 +964,7 @@ const th: RuntimeMessages = {
     noteCharge: "เติมโน้ต",
     navigation: "เมนูแถบด้านข้าง",
     toggle: "พับหรือขยายแถบด้านข้าง",
+    close: "ปิดแถบด้านข้าง",
     recentChats: "บทสนทนาล่าสุด",
   },
   footer: {
@@ -953,9 +1056,11 @@ const th: RuntimeMessages = {
     title: "ประกาศ",
     filters: {
       all: "ทั้งหมด",
-      notice: "ประกาศ",
+      service: "ประกาศ",
       update: "อัปเดต",
       event: "อีเวนต์",
+      maintenance: "ปิดปรับปรุง",
+      policy: "นโยบาย",
     },
   },
   tokenCharge: {
@@ -1068,6 +1173,24 @@ const vi: RuntimeMessages = {
     search: "Tìm kiếm",
     usageHistory: "Lịch sử sử dụng",
   },
+  errorPage: {
+    title: "Đã xảy ra lỗi tạm thời",
+    description: "Vui lòng thử lại sau. Nếu vẫn tiếp diễn, hãy tải lại trang.",
+    retry: "Thử lại",
+  },
+  toast: {
+    imageTypeInvalid: "Chỉ hỗ trợ tệp ảnh jpg, png, webp.",
+    imageSizeExceeded: "Dung lượng tệp tối đa 5MB.",
+    characterDeleted: "Đã xóa nhân vật.",
+    characterDeleteFailed: "Không xóa được nhân vật. Vui lòng thử lại.",
+    characterUpdated: "Đã cập nhật nhân vật.",
+    transactionIdCopied: "Đã sao chép mã giao dịch.",
+  },
+  state: {
+    retry: "Thử lại",
+    loadFailed: "Không tải được phần này.",
+    empty: "Chưa có nội dung để hiển thị.",
+  },
   sidebar: {
     home: "Trang chủ",
     myChatting: "Chat của tôi",
@@ -1075,6 +1198,7 @@ const vi: RuntimeMessages = {
     noteCharge: "Nap note",
     navigation: "Menu thanh bên",
     toggle: "Thu gọn hoặc mở rộng thanh bên",
+    close: "Đóng thanh bên",
     recentChats: "Cuộc trò chuyện gần đây",
   },
   footer: {
@@ -1168,9 +1292,11 @@ const vi: RuntimeMessages = {
     title: "Thông báo",
     filters: {
       all: "Tất cả",
-      notice: "Thông báo",
+      service: "Thông báo",
       update: "Cập nhật",
       event: "Sự kiện",
+      maintenance: "Bảo trì",
+      policy: "Chính sách",
     },
   },
   tokenCharge: {

@@ -2,6 +2,12 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
 import { showAppToast } from "@/lib/toast";
+import {
+  NETWORK_ERROR_CODE,
+  TIMEOUT_ERROR_CODE,
+  UNKNOWN_ERROR_CODE,
+  formatErrorDetail,
+} from "@/lib/apiError";
 import axios, {
   InternalAxiosRequestConfig,
   AxiosInstance,
@@ -19,18 +25,32 @@ declare module "axios" {
   }
 }
 
-/** 최종 에러 객체 타입 */
+/**
+ * 최종 에러 객체 타입.
+ *
+ * 화면과 로그가 "어디에서 무엇이 실패했는지"를 말할 수 있어야 하므로,
+ * 서버가 준 code/message 뿐 아니라 요청 자체의 정보도 함께 싣는다.
+ */
 export interface AppError {
   code: string;
   fields: Record<string, string>;
   message: string;
   /** 인터셉터가 AxiosError를 가공한 뒤에도 상태 코드로 인증 만료를 판별하기 위해 보존합니다. */
   status?: number;
+  /** 실패한 요청 경로(baseURL 제외). 예: /home/today-pick */
+  requestUrl?: string;
+  /** 실패한 요청 메서드. 예: GET */
+  requestMethod?: string;
   /** 세션 만료처럼 이미 Dialog 등 다른 UI로 안내한 에러라 전역 토스트를 건너뛰어야 함을 표시합니다. */
   suppressToast?: boolean;
 }
 
-const DEFAULT_API_ERROR_MESSAGE = "알 수 없는 에러가 발생했습니다.";
+
+const DEFAULT_API_ERROR_MESSAGE = "요청을 처리하지 못했습니다.";
+const NETWORK_ERROR_MESSAGE = "네트워크 연결을 확인해 주세요.";
+const TIMEOUT_ERROR_MESSAGE = "서버 응답이 너무 늦어 요청을 중단했습니다.";
+/** 응답 없는 실패를 하염없이 기다리지 않도록 상한을 둡니다. */
+const REQUEST_TIMEOUT_MS = 20_000;
 const API_ERROR_TOAST_COOLDOWN_MS = 1_000;
 
 let lastApiErrorToast:
@@ -43,6 +63,7 @@ let lastApiErrorToast:
 const BASE_CONFIG = {
   baseURL: process.env.NEXT_PUBLIC_BASE_URI,
   headers: { "Content-Type": "application/json" },
+  timeout: REQUEST_TIMEOUT_MS,
 };
 
 const isAuthExpiredStatus = (status?: number) =>
@@ -106,7 +127,7 @@ useAuthStore.subscribe((state, prevState) => {
   }
 });
 
-const showGlobalApiErrorToast = (message?: string) => {
+const showGlobalApiErrorToast = (message?: string, detail?: string) => {
   if (typeof window === "undefined") return;
 
   const normalizedMessage = message?.trim();
@@ -125,7 +146,7 @@ const showGlobalApiErrorToast = (message?: string) => {
     shownAt: now,
   };
 
-  showAppToast("error", normalizedMessage);
+  showAppToast("error", normalizedMessage, { description: detail });
 };
 
 const isAppError = (error: unknown): error is AppError =>
@@ -144,7 +165,11 @@ const isAppError = (error: unknown): error is AppError =>
 export const notifyApiError = (error: unknown) => {
   if (!isAppError(error) || error.suppressToast) return;
 
-  showGlobalApiErrorToast(error.message);
+  // 개발 모드에서는 어느 요청이 왜 깨졌는지 한 줄로 함께 남긴다.
+  const detail = formatErrorDetail(error);
+  if (detail) console.error(`[API] ${detail}`, error);
+
+  showGlobalApiErrorToast(error.message, detail);
 };
 
 /** 기존 공통 응답 봉투만 골라내는 가드입니다. */
@@ -173,19 +198,43 @@ const onResponseSuccess = (response: AxiosResponse): AxiosResponse => {
   return response;
 };
 
-/** AxiosError를 AppError로 변환합니다. 본문이 없으면(네트워크 에러 등) undefined를 반환합니다. */
-const buildAppError = (
-  err: AxiosError<ApiErrorResponse>,
-): AppError | undefined => {
-  if (!err.response?.data) return undefined;
+/** 실패한 요청 자체의 정보. 어느 화면의 어떤 호출이 깨졌는지 추적하는 근거가 됩니다. */
+const describeRequest = (err: AxiosError) => ({
+  requestUrl: err.config?.url,
+  requestMethod: err.config?.method?.toUpperCase(),
+});
 
-  const { code, fields, message } = err.response.data;
+/**
+ * AxiosError를 항상 AppError로 변환합니다.
+ *
+ * 예전에는 응답 본문이 없으면 undefined를 반환했는데, 그러면 네트워크 단절·CORS·타임아웃처럼
+ * "서버에 닿지도 못한" 실패가 AppError가 아니게 되어 전역 토스트 가드(isAppError)에 걸러졌다.
+ * 사용자 입장에서는 아무 일도 일어나지 않은 것처럼 보였다 — 가장 자주 겪는 실패가 가장 조용했다.
+ * 이제 응답 유무와 무관하게 항상 AppError를 만든다.
+ */
+const buildAppError = (err: AxiosError<ApiErrorResponse>): AppError => {
+  const request = describeRequest(err);
+
+  if (!err.response) {
+    const isTimeout =
+      err.code === "ECONNABORTED" || err.code === "ETIMEDOUT";
+
+    return {
+      code: isTimeout ? TIMEOUT_ERROR_CODE : NETWORK_ERROR_CODE,
+      fields: {},
+      message: isTimeout ? TIMEOUT_ERROR_MESSAGE : NETWORK_ERROR_MESSAGE,
+      ...request,
+    };
+  }
+
+  const { code, fields, message } = err.response.data ?? {};
 
   return {
-    code: code || "UNKNOWN_ERROR",
+    code: code || UNKNOWN_ERROR_CODE,
     fields: fields || {},
     message: message || DEFAULT_API_ERROR_MESSAGE,
     status: err.response.status,
+    ...request,
   };
 };
 
@@ -288,7 +337,6 @@ const onResponseError = async (
 
   // [B] 에러 포맷팅
   const formattedError = buildAppError(err);
-  if (!formattedError) return Promise.reject(err);
 
   // 세션 만료 안내는 Dialog로 보여주므로 토스트까지 겹치지 않게 합니다.
   // 로그인 실패(/auth/login) 401은 사유를 알려야 하므로 그대로 노출합니다.
@@ -305,8 +353,6 @@ const onPlainResponseError = (
   err: AxiosError<ApiErrorResponse>,
 ): Promise<never> => {
   const formattedError = buildAppError(err);
-  if (!formattedError) return Promise.reject(err);
-
   const requestUrl = err.config?.url || "";
 
   return Promise.reject({

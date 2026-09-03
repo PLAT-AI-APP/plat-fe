@@ -216,7 +216,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
 
       <form
         onSubmit={handleSubmit}
-        className="flex w-full shrink-0 flex-col gap-4 rounded-3xl border border-dark bg-darkest px-4 pb-3 pt-4"
+        className="flex w-full shrink-0 flex-col gap-4 rounded-3xl border border-transparent bg-darkest px-4 pb-3 pt-4 transition-colors focus-within:field-focus"
       >
         <textarea
           rows={1}
@@ -224,7 +224,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
           value={msg}
           onChange={(e) => setMsg(e.target.value)}
           placeholder={t("scenarioPlaceholder")}
-          className="body-4 min-h-[42px] w-full resize-none bg-transparent outline-none placeholder:text-font-disabled"
+          className="focus-ring-none body-4 min-h-[42px] w-full resize-none bg-transparent outline-none placeholder:text-font-disabled"
         />
 
         <div className="flex items-center justify-between gap-3">

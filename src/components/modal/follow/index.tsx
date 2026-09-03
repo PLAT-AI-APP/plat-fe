@@ -20,6 +20,7 @@ import { ModalLayout } from "@/components/ModalLayout";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { useTabUnderline } from "@/hooks/useTabUnderline";
 import { Close } from "@/icons";
+import { ErrorState } from "@/components/state";
 import { cn } from "@/lib/utils";
 import { useModalStore } from "@/store/useModalStore";
 import { FollowModalProps } from "@/type/modal";
@@ -209,6 +210,14 @@ const FollowModal = ({
             </li>
           ))}
         </ul>
+      ) : activeQuery.isError ? (
+        // 불러오지 못한 것과 진짜로 아무도 없는 것은 다르다.
+        // 예전에는 실패해도 "팔로워가 없습니다"가 떠서 사용자가 잘못된 결론을 내렸다.
+        <ErrorState
+          error={activeQuery.error}
+          onRetry={activeQuery.refetch}
+          className="h-95"
+        />
       ) : listData.length === 0 ? (
         <FollowEmptyState
           activeTab={activeTabs}

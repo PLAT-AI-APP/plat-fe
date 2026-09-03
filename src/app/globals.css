@@ -34,7 +34,8 @@
   --font-error: #ff3842;
   --font-accents: #ed1c24;
 
-  --border: #e3e5eb;
+  /* 테두리는 개수를 줄이는 대신 남은 것은 보이게 한다. 배경 대비 약 1.55:1. */
+  --border: #ced2dd;
 
   --bg-dark: #ffffff;
   --bg-darker: #f7f8fa;
@@ -85,6 +86,15 @@
      홈 배너 · 채팅방처럼 풀블리드가 필요한 화면만 예외적으로 제외한다. */
   --content-margin-x: 36px;
 
+  /* 레이아웃 폭 계약.
+     --sidebar-width 는 현재 사이드바 상태에 따라 ClientLayout 이 덮어쓰는 런타임 값이고,
+     아래 두 상수가 그 후보다. 콘텐츠 그리드는 --content-max-width 안에서만 계산된다. */
+  --sidebar-width-folded: 70px;
+  --sidebar-width-expanded: 240px;
+  --sidebar-width: var(--sidebar-width-folded);
+  --content-max-width: 1200px;
+  --card-gap: 16px;
+
   /*
    * 겹침 순서(z-index).
    * 유틸리티로 직접 쓰지는 않지만, 새 오버레이를 만들 때 어느 값을 골라야
@@ -129,7 +139,7 @@ input:-webkit-autofill:active {
   --font-accents: #ed1c24;
   --font-error: #ff3842;
 
-  --border: #2a2f4a;
+  --border: #3a4166;
 
   --bg-dark: #11141f;
   --bg-darker: #0e1018;

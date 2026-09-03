@@ -48,7 +48,8 @@ export const PopoverLayout = ({
         onClose();
       }}
       className={cn(
-        "absolute right-0 top-[calc(100%+10px)] z-50 min-w-37.5 max-w-[calc(100vw-40px)] origin-top rounded-xl border border-main bg-dark px-2 py-3 shadow-popover",
+        // 그림자만으로 경계를 만든다. 테두리를 함께 쓰면 가장자리 신호가 두 겹으로 겹친다.
+        "absolute right-0 top-[calc(100%+10px)] z-50 min-w-37.5 max-w-[calc(100vw-40px)] origin-top rounded-xl bg-dark px-2 py-3 shadow-popover",
         className,
       )}
     >

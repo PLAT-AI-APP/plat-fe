@@ -51,7 +51,8 @@ const SignupForm = () => {
       isEmailVerified
     ) && Object.keys(errors).length === 0;
 
-  const { mutate: authRegister } = useAuthRegisterMutation();
+  const { mutate: authRegister, isPending: isRegistering } =
+    useAuthRegisterMutation();
   const { setFieldErrors } = useFormServerError<AuthFormValues>();
 
   const onSubmit = (data: AuthFormValues) => {
@@ -113,10 +114,12 @@ const SignupForm = () => {
 
       <Agreed />
 
+      {/* 응답이 오기 전 연타하면 회원가입 요청이 중복으로 나간다. 전송 중에는 잠근다. */}
       <ActiveButton
         text={t("auth.signup.submit")}
         type="submit"
         isActive={isFormValid}
+        disabled={!isFormValid || isRegistering}
       />
     </form>
   );

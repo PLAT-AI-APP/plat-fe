@@ -12,6 +12,7 @@ import { walletHandlers } from "./handlers/wallet";
 import { productHandlers } from "./handlers/product";
 import { homeHandlers } from "./handlers/home";
 import { universeHandlers } from "./handlers/universe";
+import { commentHandlers } from "./handlers/comment";
 
 /**
  * 모든 핸들러를 하나의 배열로 통합합니다.
@@ -32,4 +33,5 @@ export const handlers = [
   ...productHandlers,
   ...homeHandlers,
   ...universeHandlers,
+  ...commentHandlers,
 ];

@@ -1,6 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
+import type { RefObject } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -70,10 +71,21 @@ export const RECENT_CHATS_MOCK = [
 
 interface SidebarProps {
   isFolded: boolean;
+  /**
+   * inline: 그리드 열 하나를 차지해 콘텐츠를 옆으로 민다(데스크탑 기본).
+   * overlay: 좁은 화면에서 콘텐츠 위에 얹히는 드로어. 콘텐츠를 밀지 않는다.
+   */
+  variant?: "inline" | "overlay";
   onFoldToggle?: () => void;
+  foldToggleRef?: RefObject<HTMLButtonElement | null>;
 }
 
-const Sidebar = ({ isFolded = false, onFoldToggle }: SidebarProps) => {
+const Sidebar = ({
+  isFolded = false,
+  variant = "inline",
+  onFoldToggle,
+  foldToggleRef,
+}: SidebarProps) => {
   const pathname = usePathname();
   const t = useTranslations();
 
@@ -84,15 +96,18 @@ const Sidebar = ({ isFolded = false, onFoldToggle }: SidebarProps) => {
     { name: t("sidebar.noteCharge"), link: "/token-charge", icon: NoteLine },
   ];
 
-  const sidebarWidth = isFolded ? "70px" : "240px";
+  const isOverlay = variant === "overlay";
 
   return (
-    <motion.aside
+    <aside
       id="main-sidebar"
-      initial={false}
-      animate={{ width: sidebarWidth }}
-      transition={SPRING_SOFT}
-      className="sticky top-0 flex h-full flex-col gap-2 overflow-hidden bg-dark pt-4 pr-2 pl-4"
+      className={cn(
+        "flex flex-col gap-2 overflow-hidden bg-dark pt-4 pr-2 pl-4",
+        isOverlay
+          ? // 드로어는 헤더 아래에서 시작해 콘텐츠 위에 얹힌다. 스크림보다 한 층 위.
+            "fixed bottom-0 left-0 top-(--header-height) z-40 w-(--sidebar-width-expanded) shadow-modal"
+          : "sticky top-0 h-full w-full",
+      )}
     >
       <nav
         id="sidebar-navigation"
@@ -102,7 +117,8 @@ const Sidebar = ({ isFolded = false, onFoldToggle }: SidebarProps) => {
         {onFoldToggle && (
           <div className="mb-4 flex px-[7px]">
             <button
-              id="sidebar-toggle-button"
+              id="sidebar-inline-toggle-button"
+              ref={foldToggleRef}
               type="button"
               aria-label={t("sidebar.toggle")}
               onClick={onFoldToggle}
@@ -277,7 +293,7 @@ const Sidebar = ({ isFolded = false, onFoldToggle }: SidebarProps) => {
           </ul>
         </div>
       </nav>
-    </motion.aside>
+    </aside>
   );
 };
 

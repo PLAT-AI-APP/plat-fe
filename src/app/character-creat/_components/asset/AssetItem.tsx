@@ -135,6 +135,7 @@ const AssetItem = ({ id, index, remove }: AssetItemProps) => {
                     src={typeof assetImage === "string" ? assetImage : ""}
                     alt={t("imageAlt")}
                     fill
+                    sizes="96px"
                     className="object-cover"
                   />
                 ) : (
