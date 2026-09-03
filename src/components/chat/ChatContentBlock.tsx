@@ -52,6 +52,24 @@ const ChatContentBlock = ({
     setIsEditing(false);
   };
 
+  // 엔터는 확정, esc는 취소, 쉬프트+엔터는 줄바꿈으로 동작합니다.
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      handleCancel();
+      return;
+    }
+
+    if (
+      event.key === "Enter" &&
+      !event.shiftKey &&
+      !event.nativeEvent.isComposing
+    ) {
+      event.preventDefault();
+      handleUpdate();
+    }
+  };
+
   /** 대화 원문을 말풍선, 이미지, 서술문 블록으로 분리 */
   const blocks = useMemo(() => parsePlat(rawData), [rawData]);
 
@@ -64,6 +82,7 @@ const ChatContentBlock = ({
             className="body-4 w-full resize-none overflow-hidden rounded-[0px_16px_16px_16px] border border-transparent bg-card-hover p-2.5 outline-none transition-colors focus:field-focus!"
             value={editedContent}
             onChange={(event) => setEditedContent(event.target.value)}
+            onKeyDown={handleKeyDown}
           />
         </div>
 

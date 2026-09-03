@@ -1,3 +1,4 @@
+import type { KeyboardEvent } from "react";
 import { useAutoResizeTextarea } from "@/hooks/useAutoResizeTextarea";
 import PreviewEditControls from "./PreviewEditControls";
 import { PreviewEditLabels } from "./types";
@@ -19,6 +20,24 @@ const EditableUserChatPreview = ({
 }: EditableUserChatPreviewProps) => {
   const { textareaRef } = useAutoResizeTextarea({ value });
 
+  // 엔터는 확정, esc는 취소, 쉬프트+엔터는 줄바꿈으로 동작합니다.
+  const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      onCancel();
+      return;
+    }
+
+    if (
+      event.key === "Enter" &&
+      !event.shiftKey &&
+      !event.nativeEvent.isComposing
+    ) {
+      event.preventDefault();
+      onConfirm();
+    }
+  };
+
   return (
     <div className="flex items-end justify-end gap-3">
       <PreviewEditControls
@@ -36,6 +55,7 @@ const EditableUserChatPreview = ({
           className="focus-ring-none body-4 min-h-11 w-full resize-none overflow-hidden rounded-xl border border-main bg-darker px-4 py-3 text-font-1 outline-none transition-colors focus:field-focus!"
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          onKeyDown={handleKeyDown}
         />
       </div>
     </div>

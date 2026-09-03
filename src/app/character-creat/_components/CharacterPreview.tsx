@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
 import CreatePreviewList from "./create-preview-list";
+import { useAutoResizeTextarea } from "@/hooks/useAutoResizeTextarea";
 import { useScrollTimeout } from "@/hooks/useScrollTiemout";
 import { ArrowLeft, ArrowRight, Asterisk, User } from "@/icons";
 import { cn } from "@/lib/utils";
@@ -59,7 +60,10 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
   const canRedoScenario = (scenarioHistory?.future.length ?? 0) > 0;
   const [currentMode, setCurrentMode] = useState<ScenarioType>("chat");
   const [msg, setMsg] = useState("");
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const { textareaRef, resizeTextarea } = useAutoResizeTextarea({
+    maxRows: 5,
+    value: msg,
+  });
   const { isScrolling, onScroll } = useScrollTimeout();
   const previewProfileImage =
     representativeImage || PREVIEW_PROFILE_FALLBACK_IMAGE;
@@ -125,8 +129,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const submitScenarioMessage = () => {
     if (!msg.trim()) return;
 
     const newContent = {
@@ -140,6 +143,22 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
     applyScenarioContents([...currentContents, newContent]);
     setMsg("");
     scrollPreviewToBottom();
+    requestAnimationFrame(resizeTextarea);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    submitScenarioMessage();
+  };
+
+  const handleTextareaKeyDown = (
+    e: React.KeyboardEvent<HTMLTextAreaElement>,
+  ) => {
+    // Shift+Enter는 줄바꿈으로 두고, Enter만으로 바로 전송합니다.
+    if (e.key !== "Enter" || e.shiftKey || e.nativeEvent.isComposing) return;
+
+    e.preventDefault();
+    submitScenarioMessage();
   };
 
   const insertComposerText = (text: string) => {
@@ -162,6 +181,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
       textarea.focus();
       const nextCursorPosition = start + text.length;
       textarea.setSelectionRange(nextCursorPosition, nextCursorPosition);
+      resizeTextarea();
     }, 0);
   };
 
@@ -215,15 +235,16 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
 
       <form
         onSubmit={handleSubmit}
-        className="flex w-full shrink-0 flex-col gap-4 rounded-3xl bg-darkest px-4 pb-3 pt-4"
+        className="flex w-full shrink-0 flex-col gap-4 rounded-3xl border border-transparent bg-darkest px-4 pb-3 pt-4 transition-colors focus-within:field-focus!"
       >
         <textarea
           rows={1}
           ref={textareaRef}
           value={msg}
           onChange={(e) => setMsg(e.target.value)}
+          onKeyDown={handleTextareaKeyDown}
           placeholder={t("scenarioPlaceholder")}
-          className="focus-ring-none body-4 min-h-[42px] w-full resize-none bg-transparent px-2 outline-none placeholder:text-font-disabled"
+          className="focus-ring-none body-4 custom-scrollbar min-h-[42px] w-full resize-none bg-transparent px-2 outline-none placeholder:text-font-disabled"
         />
 
         <div className="flex items-center justify-between gap-3">
@@ -254,7 +275,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
                   alt={characterChipText}
                   width={16}
                   height={16}
-                  className="size-4 rounded-full object-cover"
+                  className="avatar-img size-4"
                 />
               ) : (
                 <span className="size-4 rounded-full bg-font-2" aria-hidden />

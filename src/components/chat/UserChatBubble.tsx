@@ -32,6 +32,24 @@ const UserChatBubble = ({
     setIsEditing(false);
   };
 
+  // 엔터는 확정, esc는 취소, 쉬프트+엔터는 줄바꿈으로 동작합니다.
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      handleCancel();
+      return;
+    }
+
+    if (
+      event.key === "Enter" &&
+      !event.shiftKey &&
+      !event.nativeEvent.isComposing
+    ) {
+      event.preventDefault();
+      handleUpdate();
+    }
+  };
+
   if (isEditing) {
     return (
       <div className="flex items-end justify-end gap-2">
@@ -59,6 +77,7 @@ const UserChatBubble = ({
               rows={2}
               value={editedText}
               onChange={(event) => setEditedText(event.target.value)}
+              onKeyDown={handleKeyDown}
             />
           </div>
         </div>
