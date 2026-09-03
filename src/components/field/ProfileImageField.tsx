@@ -66,7 +66,7 @@ const ProfileImageField = ({ name = "profileImg" }: ProfileImageFieldProps) => {
           alt="프로필 이미지"
           width={80}
           height={80}
-          className="w-20 h-20 rounded-full object-cover"
+          className="avatar-img w-20 h-20"
         />
         <span className="absolute bottom-0 right-0 bg-main flex items-center justify-center w-7.5 h-7.5 rounded-full">
           <CameraFill className="w-4.5 h-4.5" />

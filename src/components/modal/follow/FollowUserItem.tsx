@@ -32,7 +32,7 @@ const FollowUserItem = ({
           alt={t("profileImageAlt", { nickname: user.nickname })}
           width={45}
           height={45}
-          className="size-[45px] shrink-0 rounded-full object-cover"
+          className="avatar-img size-[45px] shrink-0"
         />
 
         <div className="flex min-w-0 flex-1 flex-col justify-center gap-0.5 whitespace-nowrap">

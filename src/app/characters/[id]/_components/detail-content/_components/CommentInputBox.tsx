@@ -25,7 +25,7 @@ const CommentInputBox = () => {
         alt={t("myProfileAlt")}
         width={40}
         height={40}
-        className="size-10 rounded-full object-cover"
+        className="avatar-img size-10"
       />
 
       <div className="flex min-h-[70px] flex-1 flex-col items-end justify-end gap-1 rounded-2xl border border-main bg-btn-hover px-3 py-2 transition-colors focus-within:field-focus!">

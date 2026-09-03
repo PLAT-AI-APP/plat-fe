@@ -231,7 +231,7 @@ const Sidebar = ({ isFolded = false, onFoldToggle }: SidebarProps) => {
                       width={36}
                       height={36}
                       alt={chat.name}
-                      className="h-9 w-9 rounded-full object-cover"
+                      className="avatar-img h-9 w-9"
                     />
                   </motion.div>
 

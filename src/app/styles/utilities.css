@@ -56,3 +56,22 @@
 @utility pending-state {
   @apply cursor-wait opacity-70;
 }
+
+/*
+ * 프로필/아바타 이미지. rounded-full object-cover 조합이 헤더·사이드바·댓글·채팅 등
+ * 10곳 넘게 반복되고 있어 하나로 묶는다. size-*는 자리마다 달라 그대로 둔다.
+ */
+@utility avatar-img {
+  border-radius: calc(infinity * 1px);
+  object-fit: cover;
+}
+
+/*
+ * 팝오버/드롭다운 메뉴 아이템. flex items-center + rounded-lg px-2.5 py-2 +
+ * hover:bg-btn-hover 조합이 popover/드롭다운 10여 개 파일에 그대로 반복되고 있어
+ * 하나로 묶는다. 정렬(justify-between)·gap·너비·커서·텍스트 색 등 나머지는
+ * 여전히 호출부에서 정한다.
+ */
+@utility menu-item {
+  @apply flex items-center rounded-lg px-2.5 py-2 transition-colors hover:bg-btn-hover;
+}

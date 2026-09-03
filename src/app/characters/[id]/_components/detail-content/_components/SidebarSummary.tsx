@@ -174,7 +174,7 @@ const SidebarSummary = ({
                 })}
                 width={48}
                 height={48}
-                className="size-12 rounded-full object-cover"
+                className="avatar-img size-12"
               />
               <div className="flex min-w-0 flex-col gap-1">
                 <p className="title-4 truncate text-font-1">

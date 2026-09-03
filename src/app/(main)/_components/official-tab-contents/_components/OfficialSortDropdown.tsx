@@ -61,7 +61,7 @@ const OfficialSortDropdown = () => {
                       setIsOpen(false);
                     }}
                     className={cn(
-                      "body-4 flex cursor-pointer items-center justify-between gap-2 whitespace-nowrap rounded-lg px-2.5 py-2 hover:bg-btn-hover",
+                      "menu-item body-4 cursor-pointer justify-between gap-2 whitespace-nowrap",
                       isSelected && "title-5 text-brand",
                     )}
                   >

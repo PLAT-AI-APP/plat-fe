@@ -69,7 +69,7 @@ const MyChattingMenuPopover = ({
                 type="button"
                 onClick={() => handleAction(onClick)}
                 className={cn(
-                  "flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left transition-colors duration-200 hover:bg-btn-hover",
+                  "menu-item w-full gap-2 text-left",
                   textClassName,
                 )}
               >
