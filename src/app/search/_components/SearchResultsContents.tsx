@@ -108,15 +108,15 @@ const SearchResultsContents = ({
         onClearAll={clearAll}
       />
 
-      <div className="flex items-center gap-1 border-b border-main">
+      <div className="flex items-center gap-1">
         {tabs.map((tab) => (
           <button
             key={tab.key}
             type="button"
             onClick={() => setActiveTab(tab.key)}
             className={cn(
-              "flex w-21 flex-col items-center justify-center border-b-2 border-transparent p-2.5",
-              activeTab === tab.key && "border-brand",
+              "flex w-21 flex-col items-center justify-center border-b-2 p-2.5",
+              activeTab === tab.key ? "border-brand" : "border-main",
             )}
           >
             <span
@@ -136,7 +136,7 @@ const SearchResultsContents = ({
         <button
           type="button"
           onClick={() => router.push("/?tab=categories")}
-          className="flex w-21 flex-col items-center justify-center border-b-2 border-transparent p-2.5"
+          className="flex w-21 flex-col items-center justify-center border-b-2 border-main p-2.5"
         >
           <span className="body-4 text-font-2 transition-colors hover:text-font-1">
             {t("searchResults.tabCategory")}
