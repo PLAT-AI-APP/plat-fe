@@ -57,9 +57,14 @@ export const noticeHandlers = [
     const url = new URL(request.url);
     const page = parseInt(url.searchParams.get("page") || "0", 10);
     const size = parseInt(url.searchParams.get("size") || "20", 10);
+    // 서버처럼 분류를 여기서 거릅니다. 값이 없으면 전체입니다.
+    const category = url.searchParams.get("category") as NoticeCategory | null;
+    const filtered = category
+      ? mockNotices.filter((notice) => notice.category === category)
+      : mockNotices;
 
     // 상단 고정(isPinned) 우선, 그 다음 최신순
-    const sorted = [...mockNotices].sort((a, b) => {
+    const sorted = [...filtered].sort((a, b) => {
       if (a.isPinned !== b.isPinned) return a.isPinned ? -1 : 1;
       return Number(b.noticeId) - Number(a.noticeId);
     });

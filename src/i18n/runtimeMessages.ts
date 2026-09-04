@@ -138,6 +138,8 @@ const en = {
       maintenance: "Maintenance",
       policy: "Policy",
     },
+    empty: "No notices have been posted yet.",
+    emptyFiltered: "No notices in this category.",
   },
   tokenCharge: {
     title: "Token charge",
@@ -383,6 +385,8 @@ const ko: RuntimeMessages = {
       maintenance: "점검",
       policy: "정책",
     },
+    empty: "등록된 공지사항이 없습니다.",
+    emptyFiltered: "이 분류에 해당하는 공지사항이 없습니다.",
   },
   tokenCharge: {
     title: "토큰 충전",
@@ -615,6 +619,8 @@ const ja: RuntimeMessages = {
       maintenance: "メンテナンス",
       policy: "ポリシー",
     },
+    empty: "登録されたお知らせはありません。",
+    emptyFiltered: "この分類のお知らせはありません。",
   },
   tokenCharge: {
     title: "トークンチャージ",
@@ -846,6 +852,8 @@ const zh: RuntimeMessages = {
       maintenance: "维护",
       policy: "政策",
     },
+    empty: "暂无公告。",
+    emptyFiltered: "该分类下暂无公告。",
   },
   tokenCharge: {
     title: "代币充值",
@@ -1077,6 +1085,8 @@ const th: RuntimeMessages = {
       maintenance: "ปิดปรับปรุง",
       policy: "นโยบาย",
     },
+    empty: "ยังไม่มีประกาศ",
+    emptyFiltered: "ไม่มีประกาศในหมวดนี้",
   },
   tokenCharge: {
     title: "เติมโทเค็น",
@@ -1316,6 +1326,8 @@ const vi: RuntimeMessages = {
       maintenance: "Bảo trì",
       policy: "Chính sách",
     },
+    empty: "Chưa có thông báo nào.",
+    emptyFiltered: "Không có thông báo trong mục này.",
   },
   tokenCharge: {
     title: "Nạp token",

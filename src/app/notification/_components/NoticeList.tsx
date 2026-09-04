@@ -8,6 +8,7 @@ import dayjs from "@/lib/dayjs";
 import PinFill from "@/icons/PinFill";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import type { NoticeCategory } from "@/type/notice";
+import { EmptyState, ErrorState } from "@/components/state";
 
 const NOTICE_CATEGORY_STYLE: Record<
   NoticeCategory,
@@ -40,6 +41,23 @@ const NOTICE_CATEGORY_STYLE: Record<
   },
 };
 
+/** 목록이 들어설 자리를 잡아 둡니다. 높이를 실제 줄에 맞춰 로딩이 끝날 때 화면이 튀지 않게 합니다. */
+const NoticeListSkeleton = () => (
+  <ul aria-hidden="true">
+    {Array.from({ length: 6 }).map((_, index) => (
+      <li key={index} className="border-b border-main">
+        <div className="flex justify-between px-2.5 pt-4 pb-5">
+          <div className="flex flex-col gap-1.5">
+            <div className="skeleton h-6 w-14 rounded-md" />
+            <div className="skeleton h-6 w-64 max-w-full rounded-full" />
+          </div>
+          <div className="skeleton h-4 w-20 rounded-full" />
+        </div>
+      </li>
+    ))}
+  </ul>
+);
+
 interface NoticeListProps {
   currentFilter: NoticeCategory | null | undefined;
 }
@@ -51,12 +69,14 @@ const NoticeList = ({ currentFilter }: NoticeListProps) => {
     fetchNextPage,
     hasNextPage, // 다음 페이지 존재 여부
     isFetchingNextPage, // 추가 데이터 요청 진행 상태
-  } = useNoticeListInfiniteQuery();
+    isPending,
+    isError,
+    error,
+    refetch,
+  } = useNoticeListInfiniteQuery({ category: currentFilter });
 
-  // 서버가 분류 필터를 받지 않으므로 받아온 목록에서 걸러냅니다.
-  const noticeList = (
-    noticeListData?.pages.flatMap((page) => page.content) ?? []
-  ).filter((notice) => !currentFilter || notice.category === currentFilter);
+  // 분류는 서버가 걸러 주므로 받아온 것을 그대로 씁니다.
+  const noticeList = noticeListData?.pages.flatMap((page) => page.content) ?? [];
 
   const { targetRef } = useIntersectionObserver({
     onIntersect: () => {
@@ -65,6 +85,21 @@ const NoticeList = ({ currentFilter }: NoticeListProps) => {
       }
     },
   });
+
+  if (isPending) return <NoticeListSkeleton />;
+
+  // 실패를 "아직 공지가 없어요"로 뭉개면 서버가 죽은 걸 정상으로 읽게 됩니다.
+  if (isError) return <ErrorState error={error} onRetry={refetch} />;
+
+  if (noticeList.length === 0) {
+    return (
+      <EmptyState
+        message={t(
+          currentFilter ? "notification.emptyFiltered" : "notification.empty",
+        )}
+      />
+    );
+  }
 
   return (
     <ul>
@@ -122,7 +157,13 @@ const NoticeList = ({ currentFilter }: NoticeListProps) => {
         );
       })}
 
-      <div ref={targetRef} className="h-0.5"></div>
+      {hasNextPage && <div ref={targetRef} className="h-0.5" />}
+      {isFetchingNextPage && (
+        <li aria-hidden="true" className="flex flex-col gap-3 px-2.5 py-4">
+          <div className="skeleton h-5 w-16 rounded-md" />
+          <div className="skeleton h-5 w-2/3 rounded-full" />
+        </li>
+      )}
     </ul>
   );
 };
