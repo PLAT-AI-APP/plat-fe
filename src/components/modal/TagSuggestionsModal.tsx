@@ -8,7 +8,7 @@ import ActiveButton from "../ActiveButton";
 import SmartInput from "@/components/smart-input";
 import { ModalLayout } from "../ModalLayout";
 import { Close, Megaphone } from "@/icons";
-import { useFeedbackReportMutation } from "@/api/feedback/postFeedbackReport";
+import { useFeedbackSuggestMutation } from "@/api/feedback/postFeedbackSuggest";
 import {
   tagSuggestionFormSchema,
   TagSuggestionFormValues,
@@ -35,14 +35,14 @@ const TagSuggestionsModal = ({ onClose }: TagSuggestionsModalProps) => {
   });
   const nameValue = useWatch({ control, name: "name" });
   const opinionValue = useWatch({ control, name: "opinion" });
-  const { mutate: reportFeedback } = useFeedbackReportMutation();
+  const { mutate: suggestFeedback } = useFeedbackSuggestMutation();
 
   const onSubmit = (data: TagSuggestionFormValues) => {
     const { name, opinion } = data;
-    // 해시태그 제안은 범용 피드백 API의 HASHTAG 타입으로 전송
-    reportFeedback({
+    // 해시태그 제안은 기존 대상이 없는 신규 건의라 report가 아니라 suggest API를 사용합니다.
+    // (report의 targetId는 신고 대상 ID용이라 빈 값이면 백엔드가 항상 거부합니다.)
+    suggestFeedback({
       type: "HASHTAG",
-      targetId: "",
       title: name,
       content: opinion,
     });

@@ -1,5 +1,5 @@
 export type WalletLedgerType =
-  "CHARGE" | "USE" | "REFUND" | "EVENT" | "ADMIN_GRANT" | "EXPIRE";
+  "CHARGE" | "USE" | "REFUND" | "EXPIRE" | "ADMIN_DEDUCT";
 
 /** 지갑 장부 목록의 페이지 정보 */
 export interface WalletLedgerPageInfo {

@@ -10,19 +10,9 @@ import { useTodayPickQuery } from "@/api/home/getTodayPick";
 import { useUserRecommendQuery } from "@/api/home/getUserRecommend";
 import { useAssetPreviewQuery } from "@/api/home/getAssetPreview";
 import { usePopularTagQuery } from "@/api/home/getPopularTag";
+import { useNewWorkQuery } from "@/api/home/getNewWork";
 
-interface HomeTabContentsProps {
-  charArray: {
-    name: string;
-    chatCount: number;
-    dec: string;
-    tag?: string[];
-    img: string[] | string;
-    isNew?: boolean;
-    isOfficial?: boolean;
-  }[];
-}
-const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
+const HomeTabContents = () => {
   // 홈 탭 언어는 설정 변경 직후 바로 반영되어야 하므로 클라이언트 번역 컨텍스트를 사용합니다.
   const t = useTranslations("home");
   // 로딩 여부는 데이터를 가져오는 이곳만 정확히 알 수 있으므로
@@ -35,6 +25,8 @@ const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
     useAssetPreviewQuery();
   const { data: popularTagList, isPending: isPopularTagPending } =
     usePopularTagQuery();
+  const { data: newWorkList, isPending: isNewWorkPending } =
+    useNewWorkQuery();
 
   const todayPickCharArray = (todayPickList ?? []).map((item) => ({
     name: item.title,
@@ -73,6 +65,14 @@ const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
     creatorName: item.creator.nickname,
     isNew: item.isNew,
     isOfficial: item.isOfficial,
+  }));
+
+  const newWorkCharArray = (newWorkList ?? []).map((item) => ({
+    name: item.title,
+    chatCount: item.chatCount,
+    dec: item.description,
+    img: item.images,
+    creatorName: item.creator.nickname,
   }));
 
   return (
@@ -116,7 +116,8 @@ const HomeTabContents = ({ charArray }: HomeTabContentsProps) => {
 
       {/* 최근 소문나기 시작한 신작 섹션 */}
       <CharacterShowcase
-        charArray={charArray}
+        charArray={newWorkCharArray}
+        isLoading={isNewWorkPending}
         title={t("recentNewCharacters")}
         allViewLink="new"
         cardSize="M"

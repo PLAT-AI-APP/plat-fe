@@ -27,7 +27,6 @@ const mockProducts: Product[] = [
     price: { currency: "KRW", amountMinor: 19900, taxIncluded: true },
     credits: { base: 20000, bonus: 2500, total: 22500 },
   },
-  // 할인 상품: 정가(listAmountMinor)가 있어 취소선 정가와 할인율이 함께 노출됩니다.
   {
     code: "NOTE_46000",
     productId: 4,
@@ -35,12 +34,7 @@ const mockProducts: Product[] = [
       name: "노트 46,000",
       description: "노트 46,000개 + 보너스 5,000",
     },
-    price: {
-      currency: "KRW",
-      amountMinor: 30900,
-      taxIncluded: true,
-      listAmountMinor: 45900,
-    },
+    price: { currency: "KRW", amountMinor: 30900, taxIncluded: true },
     credits: { base: 46000, bonus: 5000, total: 51000 },
   },
   {
@@ -50,18 +44,27 @@ const mockProducts: Product[] = [
       name: "노트 90,000",
       description: "노트 90,000개 + 보너스 11,000",
     },
-    price: {
-      currency: "KRW",
-      amountMinor: 79900,
-      taxIncluded: true,
-      listAmountMinor: 89900,
-    },
+    price: { currency: "KRW", amountMinor: 79900, taxIncluded: true },
     credits: { base: 90000, bonus: 11000, total: 101000 },
   },
 ];
 
 export const productHandlers = [
-  http.get(endpoint("/products"), () => {
+  // 실서버는 platform 쿼리 파라미터가 필수라 없으면 400을 반환합니다. 목업도 동일하게 맞춥니다.
+  http.get(endpoint("/products"), ({ request }) => {
+    const url = new URL(request.url);
+    const platform = url.searchParams.get("platform");
+
+    if (!platform) {
+      return HttpResponse.json(
+        {
+          code: "MISSING_PARAMETER",
+          message: "platform 파라미터가 필요합니다.",
+        },
+        { status: 400 },
+      );
+    }
+
     return HttpResponse.json(mockProducts);
   }),
 ];

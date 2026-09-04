@@ -7,18 +7,23 @@ import { AppError } from "@/type/api";
 import { UserInfo, useUserStore } from "@/store/useUserStore";
 import { useAuthStore } from "@/store/useAuthStore";
 
+interface RawUserInfo extends Partial<Omit<UserInfo, "profileImage">> {
+  profileImage?: string;
+  profileImageUrl?: string;
+}
+
 interface MyInfoApiResponse {
   result?: "OK";
-  data?: Partial<UserInfo> | { user?: Partial<UserInfo> };
-  user?: Partial<UserInfo>;
+  data?: RawUserInfo | { user?: RawUserInfo };
+  user?: RawUserInfo;
 }
 
 /** 사용자 정보 기본값 보정 */
-const normalizeUserInfo = (user: Partial<UserInfo>): UserInfo => ({
+const normalizeUserInfo = (user: RawUserInfo): UserInfo => ({
   id: user.id ?? "",
   nickname: user.nickname ?? "",
   bio: user.bio ?? "",
-  profileImage: user.profileImage ?? "",
+  profileImage: user.profileImageUrl ?? user.profileImage ?? "",
   birth: user.birth ?? "",
   gender: user.gender ?? "",
   phone: {

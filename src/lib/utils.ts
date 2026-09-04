@@ -57,16 +57,6 @@ export const toMajorAmount = (
   return amountMinor / 100;
 };
 
-/** 정가 대비 할인율(%)을 계산합니다. 할인이 없으면 0을 반환합니다. */
-export const calcDiscountRate = (
-  amountMinor: number,
-  listAmountMinor?: number,
-): number => {
-  if (!listAmountMinor || listAmountMinor <= amountMinor) return 0;
-
-  return Math.round((1 - amountMinor / listAmountMinor) * 100);
-};
-
 export const formatWithCommas = (value: number | string): string => {
   const num = typeof value === "string" ? Number(value) : value;
 

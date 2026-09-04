@@ -3,9 +3,8 @@ import { endpoint, pathValue } from "../utils";
 
 interface MockFollowUser {
   userId: string;
-  profileImage: string | null;
+  profileImageUrl: string | null;
   nickname: string;
-  description: string;
 }
 
 const createMockUsers = (
@@ -15,14 +14,14 @@ const createMockUsers = (
 ): MockFollowUser[] =>
   Array.from({ length: count }, (_, index) => ({
     userId: String(startId + index),
-    profileImage: "/p1.png",
+    profileImageUrl: "/p1.png",
     nickname: `${prefix}_${index + 1}`,
-    description: `${prefix}_${index + 1}가 만든 캐릭터를 둘러보세요`,
   }));
 
 const MOCK_FOLLOWINGS = createMockUsers("팔로잉", 1000, 24);
 const MOCK_FOLLOWERS = createMockUsers("팔로워", 2000, 24);
 
+/** 백엔드 PageWith<FollowResponse> 구조와 동일하게 응답 */
 const createPageResponse = (
   list: MockFollowUser[],
   page: number,
@@ -35,12 +34,14 @@ const createPageResponse = (
 
   return {
     content: list.slice(start, end),
-    totalElements,
-    totalPages,
-    number: page,
-    size,
-    first: page === 0,
-    last: totalPages === 0 || page >= totalPages - 1,
+    page: {
+      number: page,
+      size,
+      numberOfElements: Math.max(0, Math.min(end, totalElements) - start),
+      hasNext: totalPages > 0 && page < totalPages - 1,
+      totalElements,
+      totalPages,
+    },
   };
 };
 

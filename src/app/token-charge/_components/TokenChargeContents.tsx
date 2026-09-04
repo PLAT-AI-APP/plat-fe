@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useProductsQuery } from "@/api/product/getProducts";
 import Token from "@/icons/Token";
-import { calcDiscountRate, formatWithCommas, toMajorAmount } from "@/lib/utils";
+import { formatWithCommas, toMajorAmount } from "@/lib/utils";
 import { useWalletStore } from "@/store/useWalletStore";
 import type { Product } from "@/type/product";
 import PolicyGuide from "./PolicyGuide";
@@ -19,13 +19,6 @@ const ProductListItem = ({ product }: ProductListItemProps) => {
   const t = useTranslations();
   const { credits, price } = product;
   const displayPrice = toMajorAmount(price.amountMinor, price.currency);
-  const discountRate = calcDiscountRate(
-    price.amountMinor,
-    price.listAmountMinor,
-  );
-  const listPrice = price.listAmountMinor
-    ? toMajorAmount(price.listAmountMinor, price.currency)
-    : 0;
 
   return (
     <li className="relative cursor-pointer rounded-2xl border border-main px-5 py-4 transition-colors hover:bg-btn-hover">
@@ -47,24 +40,11 @@ const ProductListItem = ({ product }: ProductListItemProps) => {
           </div>
         </div>
 
-        <div className="flex flex-col items-end">
-          {discountRate > 0 && (
-            <span className="body-5 text-font-disabled line-through">
-              {formatWithCommas(listPrice)}
-              {t("tokenCharge.priceUnit")}
-            </span>
-          )}
-
-          <div className="flex items-center gap-1.5">
-            {discountRate > 0 && (
-              <span className="title-5 text-brand">{discountRate}%</span>
-            )}
-
-            <span className="title-3">
-              {formatWithCommas(displayPrice)}
-              {t("tokenCharge.priceUnit")}
-            </span>
-          </div>
+        <div className="flex items-center gap-1.5">
+          <span className="title-3">
+            {formatWithCommas(displayPrice)}
+            {t("tokenCharge.priceUnit")}
+          </span>
         </div>
       </div>
     </li>

@@ -6,8 +6,14 @@ import { AppError } from "@/type/api";
 import type { Product } from "@/type/product";
 import { useAuthStore } from "@/store/useAuthStore";
 
+/** plat-fe는 웹 클라이언트만 서빙하므로 플랫폼은 항상 WEB으로 고정합니다. */
+const CLIENT_PLATFORM = "WEB";
+
 const getProducts = async () => {
-  const response = await authAxios.get<Product[]>("/products");
+  const response = await authAxios.get<Product[]>("/products", {
+    params: { platform: CLIENT_PLATFORM },
+    headers: { "X-Client-Platform": CLIENT_PLATFORM },
+  });
 
   return response.data;
 };
