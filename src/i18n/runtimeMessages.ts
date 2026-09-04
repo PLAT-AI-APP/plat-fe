@@ -140,6 +140,8 @@ const en = {
     },
     empty: "No notices have been posted yet.",
     emptyFiltered: "No notices in this category.",
+    backToList: "Back to list",
+    viewCount: "{count} views",
   },
   tokenCharge: {
     title: "Token charge",
@@ -387,6 +389,8 @@ const ko: RuntimeMessages = {
     },
     empty: "등록된 공지사항이 없습니다.",
     emptyFiltered: "이 분류에 해당하는 공지사항이 없습니다.",
+    backToList: "목록으로",
+    viewCount: "조회 {count}",
   },
   tokenCharge: {
     title: "토큰 충전",
@@ -621,6 +625,8 @@ const ja: RuntimeMessages = {
     },
     empty: "登録されたお知らせはありません。",
     emptyFiltered: "この分類のお知らせはありません。",
+    backToList: "一覧へ",
+    viewCount: "閲覧 {count}",
   },
   tokenCharge: {
     title: "トークンチャージ",
@@ -854,6 +860,8 @@ const zh: RuntimeMessages = {
     },
     empty: "暂无公告。",
     emptyFiltered: "该分类下暂无公告。",
+    backToList: "返回列表",
+    viewCount: "浏览 {count}",
   },
   tokenCharge: {
     title: "代币充值",
@@ -1087,6 +1095,8 @@ const th: RuntimeMessages = {
     },
     empty: "ยังไม่มีประกาศ",
     emptyFiltered: "ไม่มีประกาศในหมวดนี้",
+    backToList: "กลับไปที่รายการ",
+    viewCount: "เข้าชม {count}",
   },
   tokenCharge: {
     title: "เติมโทเค็น",
@@ -1328,6 +1338,8 @@ const vi: RuntimeMessages = {
     },
     empty: "Chưa có thông báo nào.",
     emptyFiltered: "Không có thông báo trong mục này.",
+    backToList: "Về danh sách",
+    viewCount: "{count} lượt xem",
   },
   tokenCharge: {
     title: "Nạp token",

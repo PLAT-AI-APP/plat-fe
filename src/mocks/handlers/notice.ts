@@ -41,7 +41,7 @@ const generateMockData = () => {
 
     details[noticeId] = {
       ...item,
-      content: `안녕하세요, PLAT 팀입니다.\n\n이것은 ${i}번 게시물의 상세 내용입니다.\n\n서비스 이용에 참고 부탁드립니다.`,
+      content: `안녕하세요, **PLAT 팀**입니다.\n\n## 안내\n\n이것은 ${i}번 게시물의 상세 내용입니다.\n\n- 첫 번째 안내 항목\n- 두 번째 안내 항목\n\n> 서비스 이용에 참고 부탁드립니다.\n\n자세한 내용은 [고객센터](https://plat.so)를 확인해 주세요.`,
       viewCount: i * 3,
       updatedAt: i % 2 === 0 ? date : null,
     };
