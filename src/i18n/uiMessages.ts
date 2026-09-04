@@ -36,6 +36,7 @@ const ko = {
     resultCount: "{count}건",
     recommendedCharacters: "PLAT에서 추천하는 캐릭터",
     recommendedDescription: "태그에 맞지는 않지만, 취향에 잘 맞을지도 몰라요",
+    tagFilter: "태그 필터",
   },
   rankingPage: {
     title: "실시간 랭킹 캐릭터",
@@ -49,6 +50,8 @@ const ko = {
   officialPage: {
     title: "PLAT의 공식캐릭터",
     sortByChats: "대화량 순",
+    sortRecommended: "맞춤 추천순",
+    sortWish: "찜",
   },
   newPage: {
     title: "이달의 신규 캐릭터",
@@ -76,6 +79,9 @@ const ko = {
     searchPlaceholder: "어떤 태그를 찾고 있나요?",
     selectedTags: "선택 태그",
     clearAll: "전체 해제",
+    maxAlert: "태그는 최대 5개까지만 선택할 수 있습니다.",
+    title: "태그 필터",
+    close: "필터 닫기",
     personalizedTags: "취향 맞춤 태그",
     recommendation1Title: "밝은 햇살캐 클래스 메이트",
     recommendation2Title: "장난꾸러기 소꿉친구",
@@ -181,6 +187,9 @@ const ko = {
     sportsSchool: "스포츠/학원",
     etc: "기타",
   },
+  usageHistory: {
+    copySuccess: "거래번호가 복사되었습니다.",
+  },
 };
 
 const en = {
@@ -221,6 +230,7 @@ const en = {
     recommendedCharacters: "Characters recommended by PLAT",
     recommendedDescription:
       "They may not match your tags exactly, but they could still fit your taste",
+    tagFilter: "Tag filter",
   },
   rankingPage: {
     title: "Live popular characters",
@@ -234,6 +244,8 @@ const en = {
   officialPage: {
     title: "PLAT's official characters",
     sortByChats: "Most chatted",
+    sortRecommended: "Recommended for you",
+    sortWish: "Wishlist",
   },
   newPage: {
     title: "New characters this month",
@@ -261,6 +273,9 @@ const en = {
     searchPlaceholder: "What tag are you looking for?",
     selectedTags: "Selected tags",
     clearAll: "Clear all",
+    maxAlert: "You can select up to 5 tags only.",
+    title: "Tag filter",
+    close: "Close filter",
     personalizedTags: "Personalized tags",
     recommendation1Title: "Bright sunshine classmate",
     recommendation2Title: "Mischievous childhood friend",
@@ -366,6 +381,9 @@ const en = {
     sportsSchool: "Sports/School",
     etc: "Other",
   },
+  usageHistory: {
+    copySuccess: "Transaction number copied.",
+  },
 };
 
 const ja = {
@@ -406,6 +424,7 @@ const ja = {
     recommendedCharacters: "PLATのおすすめキャラクター",
     recommendedDescription:
       "タグにぴったり合わなくても、好みに合うかもしれません",
+    tagFilter: "タグフィルター",
   },
   rankingPage: {
     title: "リアルタイム人気キャラクター",
@@ -419,6 +438,8 @@ const ja = {
   officialPage: {
     title: "PLATの公式キャラクター",
     sortByChats: "会話量順",
+    sortRecommended: "おすすめ順",
+    sortWish: "お気に入り",
   },
   newPage: {
     title: "今月の新作キャラクター",
@@ -446,6 +467,9 @@ const ja = {
     searchPlaceholder: "どんなタグを探していますか？",
     selectedTags: "選択タグ",
     clearAll: "すべて解除",
+    maxAlert: "タグは最大 5 個まで選択できます。",
+    title: "タグフィルター",
+    close: "フィルターを閉じる",
     personalizedTags: "好み別タグ",
     recommendation1Title: "明るい陽だまり系クラスメイト",
     recommendation2Title: "いたずら好きな幼なじみ",
@@ -551,6 +575,9 @@ const ja = {
     sportsSchool: "スポーツ/学園",
     etc: "その他",
   },
+  usageHistory: {
+    copySuccess: "取引番号がコピーされました。",
+  },
 };
 
 const zh = {
@@ -587,6 +614,7 @@ const zh = {
     resultCount: "{count}条",
     recommendedCharacters: "PLAT 推荐角色",
     recommendedDescription: "虽然不一定完全符合标签，但也许会很合你的口味",
+    tagFilter: "标签筛选",
   },
   rankingPage: {
     title: "实时热门角色",
@@ -600,6 +628,8 @@ const zh = {
   officialPage: {
     title: "PLAT官方角色",
     sortByChats: "按对话量排序",
+    sortRecommended: "个性化推荐顺",
+    sortWish: "收藏",
   },
   newPage: {
     title: "本月新角色",
@@ -627,6 +657,9 @@ const zh = {
     searchPlaceholder: "你在找什么标签？",
     selectedTags: "已选标签",
     clearAll: "全部清除",
+    maxAlert: "最多只能选择 5 个标签。",
+    title: "标签筛选",
+    close: "关闭筛选",
     personalizedTags: "偏好定制标签",
     recommendation1Title: "阳光感十足的同班同学",
     recommendation2Title: "爱捉弄人的青梅竹马",
@@ -732,6 +765,9 @@ const zh = {
     sportsSchool: "运动/校园",
     etc: "其他",
   },
+  usageHistory: {
+    copySuccess: "交易编号已复制。",
+  },
 };
 
 const th = {
@@ -771,6 +807,7 @@ const th = {
     recommendedCharacters: "ตัวละครที่ PLAT แนะนำ",
     recommendedDescription:
       "แม้จะไม่ตรงกับแท็กที่เลือกเป๊ะ ก็อาจตรงกับรสนิยมของคุณได้",
+    tagFilter: "ตัวกรองแท็ก",
   },
   rankingPage: {
     title: "ตัวละครยอดนิยมแบบเรียลไทม์",
@@ -784,6 +821,8 @@ const th = {
   officialPage: {
     title: "ตัวละครทางการของ PLAT",
     sortByChats: "เรียงตามจำนวนแชต",
+    sortRecommended: "ตามคำแนะนำเฉพาะคุณ",
+    sortWish: "รายการโปรด",
   },
   newPage: {
     title: "ตัวละครใหม่ประจำเดือนนี้",
@@ -810,6 +849,9 @@ const th = {
     emptyHashtags: "ยังไม่มีแฮชแท็กที่ลงทะเบียน",
     searchPlaceholder: "คุณกำลังมองหาแท็กแบบไหน?",
     selectedTags: "แท็กที่เลือก",
+    maxAlert: "เลือกแท็กได้สูงสุด 5 รายการเท่านั้น",
+    title: "ตัวกรองแท็ก",
+    close: "ปิดตัวกรอง",
     clearAll: "ล้างทั้งหมด",
     personalizedTags: "แท็กตามความชอบ",
     recommendation1Title: "เพื่อนร่วมชั้นบรรยากาศสดใส",
@@ -916,6 +958,9 @@ const th = {
     sportsSchool: "กีฬา/โรงเรียน",
     etc: "อื่นๆ",
   },
+  usageHistory: {
+    copySuccess: "คัดลอกหมายเลขธุรกรรมแล้ว",
+  },
 };
 
 const vi = {
@@ -956,6 +1001,7 @@ const vi = {
     recommendedCharacters: "Nhân vật PLAT đề xuất",
     recommendedDescription:
       "Dù không khớp hoàn toàn với thẻ đã chọn, vẫn có thể hợp gu của bạn",
+    tagFilter: "Bộ lọc thẻ",
   },
   rankingPage: {
     title: "Nhân vật phổ biến theo thời gian thực",
@@ -969,6 +1015,8 @@ const vi = {
   officialPage: {
     title: "Nhân vật chính thức của PLAT",
     sortByChats: "Theo lượt chat",
+    sortRecommended: "Đề xuất riêng cho bạn",
+    sortWish: "Yêu thích",
   },
   newPage: {
     title: "Nhân vật mới trong tháng",
@@ -996,6 +1044,9 @@ const vi = {
     searchPlaceholder: "Bạn đang tìm thẻ nào?",
     selectedTags: "Thẻ đã chọn",
     clearAll: "Bỏ chọn tất cả",
+    maxAlert: "Bạn chỉ có thể chọn tối đa 5 thẻ.",
+    title: "Bộ lọc thẻ",
+    close: "Đóng bộ lọc",
     personalizedTags: "Thẻ theo sở thích",
     recommendation1Title: "Bạn cùng lớp mang năng lượng tươi sáng",
     recommendation2Title: "Bạn thanh mai trúc mã tinh nghịch",
@@ -1100,6 +1151,9 @@ const vi = {
     comicDaily: "Hài/Đời thường",
     sportsSchool: "Thể thao/Học đường",
     etc: "Khác",
+  },
+  usageHistory: {
+    copySuccess: "Đã sao chép mã giao dịch.",
   },
 };
 

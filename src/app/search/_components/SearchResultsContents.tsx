@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import CharacterCard from "@/app/(main)/_components/character-card";
+import CharacterShowcase from "@/components/character/CharacterShowcase";
 import { useRecentSearch } from "@/hooks/useRecentSearch";
 import { cn } from "@/lib/utils";
 import {
@@ -92,9 +92,10 @@ const SearchResultsContents = ({
   };
 
   return (
-    // 카드 6개(186.67px) + 간격 5개(16px) ≈ 1200px가 한 줄에 들어가도록
-    // 좌우 패딩(px-9=72px)을 더한 폭으로 컨테이너를 잡습니다.
-    <section className="mx-auto flex w-full max-w-[1272px] flex-col gap-6 pt-5">
+    // x축 여백(content-x, 36px×2)은 ClientLayout의 #page-content가 이미 지고 있어서,
+    // 여기서는 순수 콘텐츠 폭만 다른 화면과 동일하게 1200px로 잡습니다.
+    // (여백을 여기서 또 더하면 실제 콘텐츠가 1200px보다 넓어집니다.)
+    <section className="mx-auto flex w-full max-w-300 flex-col gap-6 pt-5">
       <PageTitle messageKey="pageTitles.search" />
 
       <SearchQueryBar
@@ -107,21 +108,23 @@ const SearchResultsContents = ({
         onClearAll={clearAll}
       />
 
-      <div className="flex items-center gap-1 border-b border-main">
+      <div className="flex items-center gap-1">
         {tabs.map((tab) => (
           <button
             key={tab.key}
             type="button"
             onClick={() => setActiveTab(tab.key)}
             className={cn(
-              "flex w-21 flex-col items-center justify-center border-b-2 border-transparent p-2.5",
-              activeTab === tab.key && "border-brand",
+              "flex w-21 flex-col items-center justify-center border-b-2 p-2.5",
+              activeTab === tab.key ? "border-brand" : "border-main",
             )}
           >
             <span
               className={cn(
                 "body-4 transition-colors",
-                activeTab === tab.key ? "text-font-1" : "text-font-2",
+                activeTab === tab.key
+                  ? "text-font-1"
+                  : "text-font-2 hover:text-font-1",
               )}
             >
               {tab.label}
@@ -133,9 +136,9 @@ const SearchResultsContents = ({
         <button
           type="button"
           onClick={() => router.push("/?tab=categories")}
-          className="flex w-21 flex-col items-center justify-center border-b-2 border-transparent p-2.5"
+          className="flex w-21 flex-col items-center justify-center border-b-2 border-main p-2.5"
         >
-          <span className="body-4 text-font-2">
+          <span className="body-4 text-font-2 transition-colors hover:text-font-1">
             {t("searchResults.tabCategory")}
           </span>
         </button>
@@ -147,21 +150,21 @@ const SearchResultsContents = ({
             title={t("searchResults.tabCharacter")}
             count={DUMMY_SEARCH_CHARACTERS.length}
           >
-            <div className="flex flex-wrap gap-x-4 gap-y-7">
-              {DUMMY_SEARCH_CHARACTERS.map((character) => (
-                <CharacterCard
-                  key={character.id}
-                  size="S"
-                  title={character.title}
-                  description={character.description}
-                  creatorName={character.creatorName}
-                  chatCount={character.chatCount}
-                  images={character.image}
-                  isNew={character.isNew}
-                  isOfficial={character.isOfficial}
-                />
-              ))}
-            </div>
+            <CharacterShowcase
+              charArray={DUMMY_SEARCH_CHARACTERS.map((character) => ({
+                name: character.title,
+                dec: character.description,
+                creatorName: character.creatorName,
+                chatCount: character.chatCount,
+                img: character.image,
+                isNew: character.isNew,
+                isOfficial: character.isOfficial,
+              }))}
+              cardSize="S"
+              columnGap={16}
+              rowGap={28}
+              gridFillMode="auto-fill"
+            />
           </ResultSection>
         )}
 
@@ -170,21 +173,21 @@ const SearchResultsContents = ({
             title={t("searchResults.tabWorld")}
             count={DUMMY_SEARCH_WORLDS.length}
           >
-            <div className="flex flex-wrap gap-x-4 gap-y-7">
-              {DUMMY_SEARCH_WORLDS.map((world) => (
-                <CharacterCard
-                  key={world.id}
-                  size="S"
-                  title={world.title}
-                  description={world.description}
-                  creatorName={world.creatorName}
-                  chatCount={world.chatCount}
-                  images={world.image}
-                  isNew={world.isNew}
-                  isOfficial={world.isOfficial}
-                />
-              ))}
-            </div>
+            <CharacterShowcase
+              charArray={DUMMY_SEARCH_WORLDS.map((world) => ({
+                name: world.title,
+                dec: world.description,
+                creatorName: world.creatorName,
+                chatCount: world.chatCount,
+                img: world.image,
+                isNew: world.isNew,
+                isOfficial: world.isOfficial,
+              }))}
+              cardSize="S"
+              columnGap={16}
+              rowGap={28}
+              gridFillMode="auto-fill"
+            />
           </ResultSection>
         )}
 

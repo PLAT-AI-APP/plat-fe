@@ -1,11 +1,18 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useRef, useSyncExternalStore } from "react";
+import { useEffect, useRef, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { useClickAway } from "@/hooks/useClickAway";
 import { cn } from "@/lib/utils";
 import { TRANSITION_FAST, popVariants } from "@/constants/motion";
+
+/*
+ * 여러 ModalLayout이 스택으로 동시에 떠 있을 때(ModalManager) esc 한 번에
+ * 전부 닫히지 않도록, 현재 마운트된 인스턴스 중 stackIndex가 가장 큰(맨 위)
+ * 것만 esc에 반응하도록 공유 레지스트리로 추적합니다.
+ */
+const mountedStackIndexes: number[] = [];
 
 interface ModalProps {
   children: React.ReactNode;
@@ -60,6 +67,25 @@ export const ModalLayout = ({
     : "absolute right-0 top-full translate-y-2.5";
 
   useClickAway(modalRef, handleClose, triggerRef);
+
+  // esc를 누르면 현재 스택에서 가장 위에 있는 모달만 닫습니다.
+  useEffect(() => {
+    mountedStackIndexes.push(stackIndex);
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      if (stackIndex !== Math.max(...mountedStackIndexes)) return;
+
+      event.stopPropagation();
+      onClose();
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      mountedStackIndexes.splice(mountedStackIndexes.indexOf(stackIndex), 1);
+    };
+  }, [onClose, stackIndex]);
 
   const modalContent = (
     <>

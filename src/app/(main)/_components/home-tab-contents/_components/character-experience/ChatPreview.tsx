@@ -15,7 +15,10 @@ const ChatPreview = ({ item }: ChatPreviewProps) => {
   const narrative = item.scenarios[0]?.content;
 
   return (
-    <section className="relative pr-4 flex-1 h-full min-w-0 bg-darker rounded-tr-2xl rounded-br-2xl flex flex-col overflow-hidden">
+    // md 미만: 전체 폭 + 반응형 수정 전과 동일한 높이(h-95, 380px)로 아래쪽에 쌓인다.
+    // md 이상: 원래처럼 남는 폭을 채우며 오른쪽에 붙는다.
+    <section className="relative pr-4 min-w-0 w-full h-95 shrink-0 rounded-bl-2xl rounded-br-2xl bg-darker flex flex-col overflow-hidden md:flex-1 md:h-full md:rounded-bl-none md:rounded-tr-2xl">
+
       <div
         id="preview-chat-container"
         className="w-full h-full p-9 inline-flex flex-col justify-start items-start gap-6"

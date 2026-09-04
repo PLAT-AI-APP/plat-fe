@@ -14,13 +14,17 @@ import {
   TagSuggestionFormValues,
 } from "@/schema/modal.schema";
 import { TagSuggestionsModalProps } from "@/type/modal";
+import { showFirstFieldErrorToast } from "@/lib/formError";
+import { useTranslateText } from "@/hooks/useTranslateText";
 
 const TagSuggestionsModal = ({ onClose }: TagSuggestionsModalProps) => {
   const t = useTranslations("characterCreate.tagSuggestion");
+  const translateText = useTranslateText();
   const {
     register,
     control,
     handleSubmit,
+    setFocus,
     formState: { errors },
   } = useForm<TagSuggestionFormValues>({
     resolver: zodResolver(tagSuggestionFormSchema),
@@ -51,7 +55,12 @@ const TagSuggestionsModal = ({ onClose }: TagSuggestionsModalProps) => {
       hasBackground
       className="h-[695px] w-[450px] max-w-[calc(100vw-40px)] rounded-3xl border-0 bg-dark p-5"
     >
-      <form onSubmit={handleSubmit(onSubmit)} className="flex h-full flex-col">
+      <form
+        onSubmit={handleSubmit(onSubmit, (formErrors) =>
+          showFirstFieldErrorToast(formErrors, setFocus, translateText),
+        )}
+        className="flex h-full flex-col"
+      >
         <header className="flex items-center justify-between pb-7">
           <div className="flex items-center gap-3">
             <Megaphone className="size-6 text-font-1" aria-hidden="true" />

@@ -24,13 +24,6 @@ export const TAB_IDS = [
 
 export type TabId = (typeof TAB_IDS)[number];
 
-const REQUIRED_TAB_IDS = new Set<TabId>([
-  "profile",
-  "details",
-  "scenario",
-  "settings",
-]);
-
 const TAB_WIDTH_CLASS_BY_ID: Record<TabId, string> = {
   profile: "w-[83px]",
   details: "w-[84px]",
@@ -88,11 +81,11 @@ const CreateTabs = ({
   };
 
   return (
-    <section className="flex h-full max-h-[calc(100vh-145px)] w-[491px] min-w-0 shrink-0 flex-col gap-9 overflow-hidden">
+    <section className="flex h-full max-h-[calc(100vh-145px)] w-full max-w-[491px] min-w-0 shrink-0 flex-col gap-9 overflow-hidden lg:w-[491px]">
       {/* Tabs are unframed in the Figma design; the border belongs only to the tab row. */}
       <nav
         ref={tabNavRef as React.RefObject<HTMLElement>}
-        className="relative flex h-10 shrink-0 gap-1 border-b-2 border-card-selected"
+        className="relative flex h-10 shrink-0 gap-1"
       >
         {TAB_IDS.map((tabId) => {
           const isActive = currentTabId === tabId;
@@ -109,12 +102,14 @@ const CreateTabs = ({
                 isActive ? "text-font-1" : "hover:text-font-1",
               )}
             >
-              {/* Required markers are visual tab affordances, not part of the locale key. */}
               {t(tabId)}
-              {REQUIRED_TAB_IDS.has(tabId) && "*"}
             </button>
           );
         })}
+
+        {/* 활성 표시(motion.span)와 같은 bottom-0/h-0.5 박스를 써서, 서로 다른 두께의
+            border가 겹쳐 어긋나 보이지 않게 기준선도 같은 방식으로 그립니다. */}
+        <div className="absolute inset-x-0 bottom-0 h-0.5 bg-card-selected" />
 
         <motion.span
           className="absolute bottom-0 h-0.5 bg-brand"

@@ -28,7 +28,7 @@ const CommentsPanel = ({ character }: CommentsPanelProps) => {
               alt={t("profileAlt", { name: comment.authorName })}
               width={36}
               height={36}
-              className="size-9 rounded-full object-cover"
+              className="avatar-img size-9"
             />
             <article className="flex min-w-0 flex-1 flex-col gap-3">
               <header className="flex items-center justify-between">

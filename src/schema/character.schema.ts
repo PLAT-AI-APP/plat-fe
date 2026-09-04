@@ -98,6 +98,7 @@ export const characterCreateSchema = z.object({
         label: z.string(),
       }),
     )
+    .min(1, FIELD_ERROR_MESSAGES.tagRequired)
     .max(5, FIELD_ERROR_MESSAGES.tagMaxCount),
 });
 

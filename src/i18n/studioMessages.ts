@@ -20,6 +20,8 @@ const ko = {
     characterImageAlt: "{title} 대표 이미지",
     switchToGrid: "그리드 보기로 전환",
     switchToList: "리스트 보기로 전환",
+    deleteSuccess: "캐릭터가 삭제되었습니다.",
+    deleteFailed: "캐릭터 삭제에 실패했습니다. 다시 시도해주세요.",
   },
 };
 
@@ -43,6 +45,8 @@ const en: typeof ko = {
     characterImageAlt: "{title} cover image",
     switchToGrid: "Switch to grid view",
     switchToList: "Switch to list view",
+    deleteSuccess: "Character deleted.",
+    deleteFailed: "Failed to delete the character. Please try again.",
   },
 };
 
@@ -66,6 +70,8 @@ const ja: typeof ko = {
     characterImageAlt: "{title} の代表画像",
     switchToGrid: "グリッド表示に切り替え",
     switchToList: "リスト表示に切り替え",
+    deleteSuccess: "キャラクターが削除されました。",
+    deleteFailed: "キャラクターの削除に失敗しました。もう一度お試しください。",
   },
 };
 
@@ -89,6 +95,8 @@ const zh: typeof ko = {
     characterImageAlt: "{title} 代表图片",
     switchToGrid: "切换到网格视图",
     switchToList: "切换到列表视图",
+    deleteSuccess: "角色已删除。",
+    deleteFailed: "角色删除失败，请重试。",
   },
 };
 
@@ -112,6 +120,8 @@ const th: typeof ko = {
     characterImageAlt: "ภาพหลักของ {title}",
     switchToGrid: "สลับเป็นมุมมองกริด",
     switchToList: "สลับเป็นมุมมองรายการ",
+    deleteSuccess: "ลบตัวละครแล้ว",
+    deleteFailed: "ลบตัวละครไม่สำเร็จ กรุณาลองอีกครั้ง",
   },
 };
 
@@ -135,6 +145,8 @@ const vi: typeof ko = {
     characterImageAlt: "Ảnh đại diện của {title}",
     switchToGrid: "Chuyển sang chế độ lưới",
     switchToList: "Chuyển sang chế độ danh sách",
+    deleteSuccess: "Đã xóa nhân vật.",
+    deleteFailed: "Không thể xóa nhân vật. Vui lòng thử lại.",
   },
 };
 

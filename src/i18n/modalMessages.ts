@@ -31,6 +31,8 @@ const ko = {
       title: "프로필 수정",
       changePassword: "비밀번호 변경",
       submit: "저장",
+      invalidType: "jpg, png, webp 이미지 파일만 가능합니다.",
+      invalidSize: "파일 용량은 최대 5MB까지 가능합니다.",
     },
     userNote: {
       title: "유저노트",
@@ -123,6 +125,8 @@ const en: typeof ko = {
       title: "Edit profile",
       changePassword: "Change password",
       submit: "Save",
+      invalidType: "Only jpg, png, and webp image files are supported.",
+      invalidSize: "File size must be 5MB or less.",
     },
     userNote: {
       title: "User note",
@@ -219,6 +223,8 @@ const ja: typeof ko = {
       title: "プロフィール修正",
       changePassword: "パスワード変更",
       submit: "保存",
+      invalidType: "jpg、png、webp画像ファイルのみ使用できます。",
+      invalidSize: "ファイル容量は最大5MBまで可能です。",
     },
     userNote: {
       title: "ユーザーノート",
@@ -311,6 +317,8 @@ const zh: typeof ko = {
       title: "编辑个人资料",
       changePassword: "修改密码",
       submit: "保存",
+      invalidType: "仅支持 jpg、png、webp 格式的图片文件。",
+      invalidSize: "文件大小最多为 5MB。",
     },
     userNote: {
       title: "用户笔记",
@@ -402,6 +410,8 @@ const th: typeof ko = {
       title: "แก้ไขโปรไฟล์",
       changePassword: "เปลี่ยนรหัสผ่าน",
       submit: "บันทึก",
+      invalidType: "รองรับเฉพาะไฟล์รูปภาพ jpg, png, webp เท่านั้น",
+      invalidSize: "ขนาดไฟล์ต้องไม่เกิน 5MB",
     },
     userNote: {
       title: "โน้ตผู้ใช้",
@@ -496,6 +506,8 @@ const vi: typeof ko = {
       title: "Chỉnh sửa hồ sơ",
       changePassword: "Đổi mật khẩu",
       submit: "Lưu",
+      invalidType: "Chỉ hỗ trợ file ảnh jpg, png, webp.",
+      invalidSize: "Dung lượng file tối đa 5MB.",
     },
     userNote: {
       title: "Ghi chú người dùng",

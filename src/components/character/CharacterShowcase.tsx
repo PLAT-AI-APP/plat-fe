@@ -7,7 +7,8 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import React from "react";
 import CharacterCard from "./character-card";
-import { CharacterCardSkeleton } from "./CharacterCardSkeleton";
+import { getCardGridTemplateColumns } from "./character-card/constants";
+import { CharacterCardSkeleton } from "./character-card/CharacterCardSkeleton";
 
 interface CharacterShowcaseProps {
   title?: string;
@@ -20,6 +21,7 @@ interface CharacterShowcaseProps {
     creatorName?: string;
     isNew?: boolean;
     isOfficial?: boolean;
+    rank?: number;
   }[];
   cardSize?: "S" | "M" | "L" | "XL";
   limit?: number;
@@ -29,6 +31,20 @@ interface CharacterShowcaseProps {
   rowGap?: number;
   currentTag?: string;
   layout?: "grid" | "carousel";
+  /**
+   * grid 레이아웃의 열 채움 방식. limit으로 항상 한 줄이 꽉 차는 미리보기는
+   * "auto-fit"(기본값)으로 빈 트랙을 접어 카드가 남는 폭을 나눠 갖게 하고,
+   * 아이템 수가 들쭉날쭉한 목록은 "auto-fill"로 빈 트랙을 남겨 카드가
+   * 늘어나지 않고 왼쪽 정렬되게 한다.
+   */
+  gridFillMode?: "auto-fit" | "auto-fill";
+  /**
+   * grid 레이아웃 컨테이너에 그대로 전달되는 className. 이 화면만 카드가 한 줄에서
+   * 여러 줄로 바뀌는 폭 기준을 다르게 주고 싶을 때, 공용 CARD_MIN_WIDTH를 건드리지
+   * 않고 CSS 변수 --card-min-width만 오버라이드하는 용도로 쓴다
+   * (예: className="[--card-min-width:194.335px]"). carousel 레이아웃에는 적용되지 않는다.
+   */
+  className?: string;
   selectedTags?: string | string[];
   /**
    * 목록을 아직 불러오는 중인지. 데이터는 부모가 가져오므로 로딩 여부도
@@ -51,6 +67,8 @@ const CharacterShowcase = ({
   layout = "grid",
   selectedTags,
   isLoading = false,
+  gridFillMode = "auto-fit",
+  className,
 }: CharacterShowcaseProps) => {
   const t = useTranslations("characterShowcase");
   const { viewportRef, scrollPrev, scrollNext, canScrollPrev, canScrollNext } =
@@ -68,9 +86,17 @@ const CharacterShowcase = ({
   const skeletonCount =
     limit || (displayChars.length > 0 ? displayChars.length : 4);
 
+  // 캐러셀은 카드 자체의 고정폭에 기대는 가로 스크롤이라 fluid를 켜지 않고,
+  // grid 레이아웃에서만 카드가 열 폭을 그대로 채우도록 합니다.
+  const isFluid = !isCarousel;
+
   const cardItems = isLoading
     ? Array.from({ length: skeletonCount }).map((_, index) => (
-        <CharacterCardSkeleton key={`skeleton-${index}`} size={cardSize} />
+        <CharacterCardSkeleton
+          key={`skeleton-${index}`}
+          size={cardSize}
+          fluid={isFluid}
+        />
       ))
     : displayChars.map((char, index) => (
         <CharacterCard
@@ -85,7 +111,9 @@ const CharacterShowcase = ({
           currentTag={currentTag}
           isNew={char.isNew}
           isOfficial={char.isOfficial}
+          rank={char.rank}
           selectedTags={selectedTags}
+          fluid={isFluid}
         />
       ));
 
@@ -129,7 +157,7 @@ const CharacterShowcase = ({
             onClick={scrollPrev}
             disabled={!canScrollPrev}
             aria-label={t("previousItems")}
-            className="absolute left-[-18px] top-[122.5px] z-10 flex size-9 -translate-y-1/2 items-center justify-center rounded-2xl bg-overlay-font/12 p-2 text-font-0 opacity-25 backdrop-blur-[1.54px] transition hover:bg-overlay-font/20 hover:opacity-100 disabled:pointer-events-none disabled:opacity-0"
+            className="carousel-nav-btn absolute left-[-18px] top-[122.5px] z-10 size-9 -translate-y-1/2"
           >
             <ArrowLeft className="size-5" />
           </button>
@@ -138,20 +166,25 @@ const CharacterShowcase = ({
             onClick={scrollNext}
             disabled={!canScrollNext}
             aria-label={t("nextItems")}
-            className="absolute right-[-18px] top-[122.5px] z-10 flex size-9 -translate-y-1/2 items-center justify-center rounded-2xl bg-overlay-font/12 p-2 text-font-0 opacity-25 backdrop-blur-[1.54px] transition hover:bg-overlay-font/20 hover:opacity-100 disabled:pointer-events-none disabled:opacity-0"
+            className="carousel-nav-btn absolute right-[-18px] top-[122.5px] z-10 size-9 -translate-y-1/2"
           >
             <ArrowRight className="size-5" />
           </button>
         </div>
       ) : (
+        // flex-wrap은 폭이 줄어들 때 카드가 그냥 다음 줄로 밀리며 마지막 줄 오른쪽에
+        // 빈 여백을 남긴다. grid auto-fill + minmax는 컨테이너 폭에 맞춰 열 개수를
+        // 다시 계산하고, 남는 폭을 카드들이 고르게 나눠 가져 태블릿 폭에서도
+        // 자연스럽게 줄어든다.
         <div
-          className={cn(
-            "flex flex-wrap gap-4",
-            cardSize === "XL" && "justify-between",
-          )}
+          className={cn("grid gap-4", className)}
           style={{
             columnGap,
             rowGap,
+            gridTemplateColumns: getCardGridTemplateColumns(
+              cardSize,
+              gridFillMode,
+            ),
           }}
         >
           {cardItems}

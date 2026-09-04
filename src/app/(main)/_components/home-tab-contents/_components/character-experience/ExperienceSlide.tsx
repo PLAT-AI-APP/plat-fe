@@ -16,7 +16,8 @@ interface ExperienceSlideProps {
 const ExperienceSlide = ({ item }: ExperienceSlideProps) => {
   return (
     <div className="relative h-full min-w-0 flex-[0_0_100%] overflow-hidden">
-      <div className="flex h-full w-full overflow-hidden">
+      {/* md 미만: 프로필 카드 위, 채팅 미리보기 아래(flex-col). md 이상: 좌우 배치. */}
+      <div className="flex h-full w-full flex-col overflow-hidden md:flex-row">
         <CharacterProfileCard item={item} />
         <ChatPreview item={item} />
       </div>

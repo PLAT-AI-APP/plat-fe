@@ -189,7 +189,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
               alt={t("profileImageAlt")}
               width={28}
               height={28}
-              className="size-7 rounded-full object-cover"
+              className="avatar-img size-7"
             />
             <span className="title-5 min-w-0 truncate text-font-1">
               {nickname}
@@ -239,7 +239,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
                 <button
                   type="button"
                   onClick={tab.onClick}
-                  className="body-4 flex w-full items-center justify-between gap-2 rounded-lg px-2.5 py-2 text-left text-font-1 transition-colors duration-200 ease-in-out hover:bg-btn-hover"
+                  className="menu-item body-4 w-full justify-between gap-2 text-left text-font-1 ease-in-out"
                 >
                   <span className="flex min-w-0 items-center gap-2">
                     <Icon
@@ -308,7 +308,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
               key={tab.name}
               href={tab.link}
               className={cn(
-                "body-4 flex items-center justify-between gap-2 rounded-lg px-2.5 py-2 text-font-1 transition-colors duration-200 ease-in-out hover:bg-btn-hover",
+                "menu-item body-4 justify-between gap-2 text-font-1 ease-in-out",
                 !isTokenCharge && "body-4",
               )}
             >
@@ -348,7 +348,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
             <Link
               key={tab.name}
               href={tab.link}
-              className="body-4 flex items-center gap-2 rounded-lg px-2.5 py-2 text-font-1 transition-colors hover:bg-btn-hover"
+              className="menu-item body-4 gap-2 text-font-1"
             >
               <Icon
                 size={18}
@@ -368,7 +368,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
           </div>
           <div
             onClick={() => logout()}
-            className="body-4 flex cursor-pointer items-center gap-2 rounded-lg px-2.5 py-2 text-font-1 transition-colors duration-200 ease-in-out hover:bg-btn-hover"
+            className="menu-item body-4 cursor-pointer gap-2 text-font-1 ease-in-out"
           >
             <Logout size={18} className="size-[18px] shrink-0 text-font-2" />
             {t("logout")}

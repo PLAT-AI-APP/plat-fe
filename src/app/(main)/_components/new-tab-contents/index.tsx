@@ -1,7 +1,7 @@
 "use client";
 
 import { useNewWorkQuery } from "@/api/home/getNewWork";
-import CharacterCard from "../character-card";
+import CharacterShowcase from "@/components/character/CharacterShowcase";
 import NewCharacterHeader from "./_components/NewCharacterHeader";
 
 const NewTabContents = () => {
@@ -11,20 +11,20 @@ const NewTabContents = () => {
     <article className="flex w-full flex-col gap-5 pt-5">
       <NewCharacterHeader />
 
-      <div className="flex w-full flex-wrap gap-x-4 gap-y-7">
-        {(newWorkList ?? []).map((character) => (
-          <CharacterCard
-            key={character.universeId}
-            size="S"
-            title={character.title}
-            description={character.description}
-            creatorName={character.creator.nickname}
-            chatCount={character.chatCount}
-            images={character.images}
-            isNew
-          />
-        ))}
-      </div>
+      <CharacterShowcase
+        charArray={(newWorkList ?? []).map((character) => ({
+          name: character.title,
+          dec: character.description,
+          creatorName: character.creator.nickname,
+          chatCount: character.chatCount,
+          img: character.images,
+          isNew: true,
+        }))}
+        cardSize="S"
+        columnGap={16}
+        rowGap={28}
+        gridFillMode="auto-fill"
+      />
     </article>
   );
 };

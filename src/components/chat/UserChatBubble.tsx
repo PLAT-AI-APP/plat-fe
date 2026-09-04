@@ -32,6 +32,24 @@ const UserChatBubble = ({
     setIsEditing(false);
   };
 
+  // 엔터는 확정, esc는 취소, 쉬프트+엔터는 줄바꿈으로 동작합니다.
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      handleCancel();
+      return;
+    }
+
+    if (
+      event.key === "Enter" &&
+      !event.shiftKey &&
+      !event.nativeEvent.isComposing
+    ) {
+      event.preventDefault();
+      handleUpdate();
+    }
+  };
+
   if (isEditing) {
     return (
       <div className="flex items-end justify-end gap-2">
@@ -55,10 +73,13 @@ const UserChatBubble = ({
         <div className="flex flex-1 justify-end">
           <div className="flex w-full max-w-[520px] items-center rounded-[16px_16px_0px_16px] bg-brand-opacity-2 p-2.5">
             <textarea
-              className="body-4 w-full resize-none rounded-[16px_16px_0px_16px] bg-card-hover p-2.5 text-font-1 outline-none"
+              autoFocus
+              className="body-4 w-full resize-none rounded-[16px_16px_0px_16px] border border-transparent bg-card-hover p-2.5 text-font-1 outline-none transition-colors focus:field-focus!"
               rows={2}
               value={editedText}
               onChange={(event) => setEditedText(event.target.value)}
+              onKeyDown={handleKeyDown}
+              onFocus={(event) => event.target.select()}
             />
           </div>
         </div>

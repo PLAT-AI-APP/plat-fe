@@ -6,7 +6,11 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ChatCountBadge from "./ChatCountBadge";
-import { LAST_SWIPE_THRESHOLD, SIZE_CONFIG } from "./constants";
+import {
+  FLUID_SIZE_OVERRIDE,
+  LAST_SWIPE_THRESHOLD,
+  SIZE_CONFIG,
+} from "./constants";
 import LastImageActionOverlay from "./LastImageActionOverlay";
 import SlideIndicators from "./SlideIndicators";
 import TagList from "./TagList";
@@ -34,9 +38,11 @@ const CharacterCard = ({
   isOfficial = false,
   selectedTags,
   rank,
+  fluid = false,
 }: CharacterCardProps) => {
   const t = useTranslations("characterCard");
   const config = SIZE_CONFIG[size];
+  const fluidOverride = FLUID_SIZE_OVERRIDE[size];
   const imageList = useMemo(() => normalizeImages(images), [images]);
 
   // 상위에서 단일 태그/태그 배열 어느 형태로 내려와도 카드 내부에서는 배열로만 다룹니다.
@@ -124,7 +130,10 @@ const CharacterCard = ({
   if (size === "L") {
     return (
       <article
-        className="relative inline-flex h-[378.72px] w-[388.67px] cursor-pointer flex-col items-center justify-end overflow-hidden rounded-2xl bg-scrim active:cursor-grab"
+        className={cn(
+          "relative inline-flex cursor-pointer flex-col items-center justify-end bg-scrim active:cursor-grab",
+          fluid ? fluidOverride.wrapper : config.wrapper,
+        )}
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUp}
       >
@@ -152,7 +161,7 @@ const CharacterCard = ({
                   src={image}
                   alt={t("imageAlt", { title, index: index + 1 })}
                   fill
-                  sizes="384px"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 45vw, 390px"
                 />
               </div>
             ))}
@@ -191,11 +200,14 @@ const CharacterCard = ({
     <article
       className={cn(
         "group inline-flex cursor-pointer flex-col items-start justify-start",
-        config.wrapper,
+        fluid ? fluidOverride.wrapper : config.wrapper,
       )}
     >
       <div
-        className={cn("relative overflow-hidden bg-scrim", config.imageArea)}
+        className={cn(
+          "relative overflow-hidden bg-scrim",
+          fluid ? fluidOverride.imageArea : config.imageArea,
+        )}
       >
         <Image
           className="object-cover transition-transform group-hover:scale-110"

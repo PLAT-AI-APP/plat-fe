@@ -9,7 +9,14 @@ interface CharacterProfileCardProps {
 
 const CharacterProfileCard = ({ item }: CharacterProfileCardProps) => {
   return (
-    <section className="relative min-w-86.75 w-95 h-full overflow-hidden rounded-l-2xl bg-scrim inline-flex flex-col justify-end items-start">
+    // md 미만: 전체 폭 + 정사각형 비율(반응형 수정 전 w-95×h-full 정사각형과 동일 비율)로
+    // 위쪽에 쌓인다. 고정 높이(h-56) 대신 aspect-square를 쓰는 이유: 폭이 화면마다
+    // 다른데 높이만 고정이면 화면이 넓을수록 크롭 비율이 가로로 길어져 이상하게 잘려 보인다.
+    // max-h-95(380px)는 반응형 수정 전 원래 높이(w-95/h-full 정사각형의 절대값)를 넘지
+    // 않도록 잡은 상한이다 — 폭이 380px보다 넓은 화면에서도 이미지가 끝없이 커지지 않는다.
+    // md 이상: 원래처럼 고정폭+고정높이(aspect 해제)로 왼쪽에 붙는다.
+    <section className="relative w-full aspect-square max-h-95 shrink-0 rounded-tl-2xl rounded-tr-2xl overflow-hidden bg-scrim inline-flex flex-col justify-end items-start md:aspect-auto md:max-h-none md:min-w-86.75 md:w-95 md:h-full md:shrink md:rounded-tr-none md:rounded-bl-2xl">
+
       <Image
         src={item.images[0]}
         alt={item.title}

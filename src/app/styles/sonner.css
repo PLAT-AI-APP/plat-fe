@@ -1,0 +1,41 @@
+/* =========================================================================
+ * Sonner — 상단 중앙 알림
+ *
+ * plat-admin-fe 의 toast 박스 디자인을 그대로 옮겼다. 표면은 카드와 같은
+ * 토큰을 쓰고, variant 별로 색이 바뀌는 것은 아이콘 하나뿐이다.
+ * ========================================================================= */
+/* 겹침 순서를 위에 적어 둔 층(toast 200)에 맞춘다. sonner 기본값은 999999999 다. */
+[data-sonner-toaster] {
+  z-index: 200;
+}
+
+/* 너비는 고정, 높이는 105px 를 최소값으로 두되 설명이 길어 줄바꿈되면
+   그만큼 늘어난다. sonner 가 내용을 측정해 --initial-height 로 height 를
+   다시 지정하는 속성 선택자 3개짜리 규칙을 갖고 있지만, height 와
+   min-height 는 서로 다른 속성이라 캐스케이드끼리 경합하지 않는다 —
+   최종 높이는 항상 두 값 중 큰 쪽(사양대로 min-height 가 바닥값)이 된다. */
+[data-sonner-toast].sonner-toast {
+  width: min(445px, calc(100vw - 32px));
+  min-height: 105px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 16px;
+  font-family: inherit;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-dark);
+  backdrop-filter: blur(3.25px);
+  color: var(--font-1);
+  box-shadow: var(--elevation-popover);
+}
+
+/*
+ * unstyled: true 를 주면 sonner 가 data-styled="false" 를 붙이는데,
+ * 뒤쪽 toast 의 내용을 숨기는 sonner 기본 규칙이 data-styled="true" 에만
+ * 걸려 있다. 그래서 접힌 상태에서 뒤 toast 의 글자가 앞 toast 를 뚫고
+ * 비쳐 보인다(plat-admin-fe 에 지금도 남아 있는 증상). 직접 막아 준다.
+ */
+[data-sonner-toast][data-expanded="false"][data-front="false"] > * {
+  opacity: 0;
+}

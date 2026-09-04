@@ -20,7 +20,7 @@ const ExperienceHeader = ({
 
   return (
     <header className="flex justify-between">
-      <h2 className="title-2">
+      <h2 className="title-2 flex items-center">
         <span className="flex items-center gap-2">
           {t("officialShowcase")} <Logo className="w-4.5 h-4.5" />
         </span>

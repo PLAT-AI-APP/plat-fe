@@ -14,6 +14,8 @@ import { ModalLayout } from "@/components/ModalLayout";
 import SmartInput from "@/components/smart-input";
 import { ChatFill, Google } from "@/icons";
 import useRouteEffect from "@/hooks/useRouteEffect";
+import { useTranslateText } from "@/hooks/useTranslateText";
+import { showFirstFieldErrorToast } from "@/lib/formError";
 import { showAppToast } from "@/lib/toast";
 import { loginFormSchema, LoginFormValues } from "@/schema/auth.schema";
 import { useModalStore } from "@/store/useModalStore";
@@ -33,6 +35,7 @@ const showLoginToast = (
 
 const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
   const t = useTranslations();
+  const translateText = useTranslateText();
   const pathname = usePathname();
   const router = useRouter();
   const openModal = useModalStore((state) => state.openModal);
@@ -134,7 +137,9 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
     );
   };
 
-  const submitLoginForm = handleSubmit(onSubmit);
+  const submitLoginForm = handleSubmit(onSubmit, (formErrors) =>
+    showFirstFieldErrorToast(formErrors, setFocus, translateText),
+  );
 
   const handleFormKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {
     if (event.key !== "Enter" || event.nativeEvent.isComposing) return;

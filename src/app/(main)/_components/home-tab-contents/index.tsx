@@ -3,7 +3,7 @@
 import New from "@/icons/New";
 import { useTranslations } from "next-intl";
 import React from "react";
-import CharacterShowcase from "../CharacterShowcase";
+import CharacterShowcase from "@/components/character/CharacterShowcase";
 import CharacterExperience from "./_components/character-experience";
 import CharacterCreateBanner from "../CharacterCreateBanner";
 import { useTodayPickQuery } from "@/api/home/getTodayPick";
@@ -102,13 +102,16 @@ const HomeTabContents = () => {
         rowGap={28}
       />
 
-      {/* 상황 에셋이 많은 캐릭터 미리보기 섹션 */}
+      {/* 상황 에셋이 많은 캐릭터 미리보기 섹션. 카드가 한 줄→여러 줄로 바뀌는 폭
+          기준(CARD_MIN_WIDTH.L)을 이 섹션만 1/3 줄여(2/3만 남김), 더 좁은 폭에서도
+          3장이 한 줄에 유지되도록 합니다. */}
       <CharacterShowcase
         charArray={assetPreviewCharArray}
         isLoading={isAssetPreviewPending}
         title={t("popularCharacterPreview")}
         cardSize="L"
         limit={3}
+        className="[--card-min-width:259.113px]"
       />
 
       {/* 최근 소문나기 시작한 신작 섹션 */}

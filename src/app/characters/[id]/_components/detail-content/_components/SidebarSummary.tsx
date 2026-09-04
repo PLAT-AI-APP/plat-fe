@@ -80,7 +80,7 @@ const SidebarSummary = ({
   };
 
   return (
-    <aside className="sticky top-0 flex w-[389px] shrink-0 flex-col gap-5 self-start">
+    <aside className="flex w-full shrink-0 flex-col gap-5 self-start lg:sticky lg:top-0 lg:w-[389px]">
       <section className="flex flex-col gap-4">
         {isCreator && (
           <button
@@ -174,7 +174,7 @@ const SidebarSummary = ({
                 })}
                 width={48}
                 height={48}
-                className="size-12 rounded-full object-cover"
+                className="avatar-img size-12"
               />
               <div className="flex min-w-0 flex-col gap-1">
                 <p className="title-4 truncate text-font-1">
@@ -197,7 +197,7 @@ const SidebarSummary = ({
                   isFollowingCreator
                     ? "bg-main text-font-1"
                     : "bg-font-1 text-dark",
-                  isFollowPending && "cursor-wait opacity-70",
+                  isFollowPending && "pending-state",
                 )}
               >
                 {isFollowingCreator ? t("following") : t("follow")}

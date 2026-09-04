@@ -10,14 +10,18 @@ import { ModalLayout } from "../ModalLayout";
 import ActiveButton from "../ActiveButton";
 import { UserNoteModalProps } from "@/type/modal";
 import { userNoteFormSchema, UserNoteFormValues } from "@/schema/modal.schema";
+import { showFirstFieldErrorToast } from "@/lib/formError";
+import { useTranslateText } from "@/hooks/useTranslateText";
 
 const UserNoteModal = ({ onClose }: UserNoteModalProps) => {
   const t = useTranslations("modalUi.userNote");
   const commonT = useTranslations("modalUi.common");
+  const translateText = useTranslateText();
   const {
     register,
     handleSubmit,
     control,
+    setFocus,
     formState: { errors },
   } = useForm<UserNoteFormValues>({
     resolver: zodResolver(userNoteFormSchema),
@@ -40,7 +44,9 @@ const UserNoteModal = ({ onClose }: UserNoteModalProps) => {
     >
       <form
         className="flex w-full flex-col items-end gap-9"
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={handleSubmit(onSubmit, (formErrors) =>
+          showFirstFieldErrorToast(formErrors, setFocus, translateText),
+        )}
       >
         <section className="flex w-full flex-col gap-6">
           <header className="flex flex-col gap-2">
@@ -61,14 +67,14 @@ const UserNoteModal = ({ onClose }: UserNoteModalProps) => {
             <p className="body-4 text-font-2">{t("description")}</p>
           </header>
 
-          <div className="flex w-full flex-col items-end rounded-2xl bg-card px-4 py-3">
+          <div className="flex w-full flex-col items-end rounded-2xl border border-main bg-card px-4 py-3 transition-colors focus-within:field-focus!">
             <textarea
               {...register("userNote")}
               value={noteValue}
               maxLength={500}
               rows={6}
               placeholder={t("placeholder")}
-              className="body-4 custom-scrollbar min-h-31.5 max-h-52.5 w-full resize-none overflow-y-auto bg-transparent text-font-1 outline-none placeholder:text-font-disabled"
+              className="focus-ring-none body-4 custom-scrollbar min-h-31.5 max-h-52.5 w-full resize-none overflow-y-auto bg-transparent text-font-1 outline-none placeholder:text-font-disabled"
               aria-invalid={Boolean(errors.userNote)}
             />
             <p className="body-6 w-full text-right text-font-2">

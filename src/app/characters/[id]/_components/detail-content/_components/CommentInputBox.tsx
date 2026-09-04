@@ -25,16 +25,16 @@ const CommentInputBox = () => {
         alt={t("myProfileAlt")}
         width={40}
         height={40}
-        className="size-10 rounded-full object-cover"
+        className="avatar-img size-10"
       />
 
-      <div className="flex min-h-[70px] flex-1 flex-col items-end justify-end gap-1 rounded-2xl bg-btn-hover px-3 py-2">
+      <div className="flex min-h-[70px] flex-1 flex-col items-end justify-end gap-1 rounded-2xl border border-main bg-btn-hover px-3 py-2 transition-colors focus-within:field-focus!">
         <textarea
           value={comment}
           onChange={(event) => setComment(event.target.value)}
           disabled={!isLoggedIn}
           className={cn(
-            "body-4 min-h-9 w-full resize-none bg-transparent text-font-1 outline-none placeholder:text-font-disabled disabled:cursor-default",
+            "focus-ring-none body-4 min-h-9 w-full resize-none bg-transparent text-font-1 outline-none placeholder:text-font-disabled disabled:cursor-default",
             !isLoggedIn && "placeholder:text-font-1",
           )}
           placeholder={placeholder}
