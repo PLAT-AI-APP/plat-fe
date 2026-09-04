@@ -19,7 +19,7 @@ const HomeTabContents = () => {
   // CharacterShowcase 에 그대로 내려 준다.
   const { data: todayPickList, isPending: isTodayPickPending } =
     useTodayPickQuery();
-  const { data: userRecommendList, isPending: isUserRecommendPending } =
+  const { data: userRecommendList, isLoading: isUserRecommendPending } =
     useUserRecommendQuery();
   const { data: assetPreviewList, isPending: isAssetPreviewPending } =
     useAssetPreviewQuery();
