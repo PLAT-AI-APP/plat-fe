@@ -7,9 +7,16 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useUnFollowMutation } from "@/api/follow/deleteFollow";
 import { useFollowMutation } from "@/api/follow/postFollow";
+import {
+  useDeleteUniverseLikeMutation,
+  usePostUniverseLikeMutation,
+} from "@/api/universe/postUniverseLike";
 import ActiveButton from "@/components/ActiveButton";
-import { ChatFill, Gear } from "@/icons";
+import { ChatFill, Gear, Heart, HeartFill } from "@/icons";
 import { cn, formatStatCount } from "@/lib/utils";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useDialogStore } from "@/store/useDialogStore";
+import { useModalStore } from "@/store/useModalStore";
 import { useUserStore } from "@/store/useUserStore";
 import { CharacterDetail } from "@/type/character";
 
@@ -34,6 +41,34 @@ const SidebarSummary = ({
   const isCreator = Boolean(userId && creatorId && userId === creatorId);
   const [optimisticIsFollowingCreator, setOptimisticIsFollowingCreator] =
     useState<boolean | null>(null);
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const openDialog = useDialogStore((state) => state.openDialog);
+  const openModal = useModalStore((state) => state.openModal);
+  const { mutate: likeUniverse, isPending: isLikeMutating } =
+    usePostUniverseLikeMutation();
+  const { mutate: unlikeUniverse, isPending: isUnlikeMutating } =
+    useDeleteUniverseLikeMutation();
+  const isLikePending = isLikeMutating || isUnlikeMutating;
+
+  /* 찜은 로그인이 있어야 합니다. 조용히 무시하면 눌러도 아무 일이 없어 보이므로 로그인으로 안내합니다. */
+  const handleToggleLike = () => {
+    if (isLikePending) return;
+
+    if (!isLoggedIn) {
+      openDialog("LOGIN_REQUIRED", {
+        label: "dialog.loginRequired.title",
+        description: "dialog.loginRequired.description",
+        confirmText: "dialog.loginRequired.confirm",
+        onConfirm: () => openModal("LOGIN", { triggerRef: undefined }),
+      });
+      return;
+    }
+
+    const variables = { universeId: character.characterId };
+    if (character.liked) unlikeUniverse(variables);
+    else likeUniverse(variables);
+  };
+
   const { mutate: follow, isPending: isFollowMutating } = useFollowMutation();
   const { mutate: unFollow, isPending: isUnFollowMutating } =
     useUnFollowMutation();
@@ -123,10 +158,16 @@ const SidebarSummary = ({
                 <span key={tag}>#{tag}</span>
               ))}
             </div>
-            <span className="body-4 flex items-center gap-1 text-font-2">
-              <ChatFill className="size-4" />
-              {formatStatCount(character.chatCount)}
-            </span>
+            <div className="body-4 flex items-center gap-3 text-font-2">
+              <span className="flex items-center gap-1">
+                <ChatFill className="size-4" aria-hidden="true" />
+                {formatStatCount(character.chatCount)}
+              </span>
+              <span className="flex items-center gap-1">
+                <HeartFill className="size-4" aria-hidden="true" />
+                {formatStatCount(character.likeCount)}
+              </span>
+            </div>
           </div>
         </div>
       </section>
@@ -157,13 +198,30 @@ const SidebarSummary = ({
         ))}
       </div>
 
-      <ActiveButton
-        text={t("chatStart")}
-        isActive
-        type="button"
-        onClick={onStartChat}
-        className="h-[52px] rounded-2xl bg-brand/20 text-brand-dark hover:bg-brand/25"
-      />
+      <div className="flex items-stretch gap-2">
+        <ActiveButton
+          text={t("chatStart")}
+          isActive
+          type="button"
+          onClick={onStartChat}
+          className="h-[52px] flex-1 rounded-2xl bg-brand/20 text-brand-dark hover:bg-brand/25"
+        />
+        <button
+          type="button"
+          onClick={handleToggleLike}
+          disabled={isLikePending}
+          aria-pressed={character.liked}
+          aria-label={character.liked ? t("unlike") : t("like")}
+          title={character.liked ? t("unlike") : t("like")}
+          className="flex size-[52px] shrink-0 items-center justify-center rounded-2xl bg-card text-font-2 transition-colors hover:bg-card-hover disabled:opacity-60"
+        >
+          {character.liked ? (
+            <HeartFill className="size-5 text-brand" aria-hidden="true" />
+          ) : (
+            <Heart className="size-5" aria-hidden="true" />
+          )}
+        </button>
+      </div>
 
       <section className="rounded-2xl bg-btn-hover px-5 py-4">
         <div className="flex flex-col gap-3">

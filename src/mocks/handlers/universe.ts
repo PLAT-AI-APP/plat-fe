@@ -72,6 +72,7 @@ const createMockUniverseDetail = (
   category: "ROMANCE",
   chatCount: 12,
   likeCount: 3,
+  liked: false,
   title: "당신을 기다려온 소꿉친구",
   introduce: "밝고 명랑하지만 수줍음이 많은 당신의 오랜 친구입니다.",
   detailSetting: "매주 목요일마다 카페에서 당신을 기다립니다.",
@@ -104,6 +105,26 @@ const createMockUniverseDetail = (
 
 const getMockUniverseDetail = (universeId: string) =>
   mockUniverseDetails.get(universeId) ?? createMockUniverseDetail(universeId);
+
+const universeNotFound = () =>
+  HttpResponse.json(
+    { code: "UNIVERSE_NOT_FOUND", message: "Universe does not exist." },
+    { status: 404 },
+  );
+
+/** 서버와 같이 멱등입니다. 이미 그 상태면 카운트를 건드리지 않습니다. */
+const setUniverseLiked = (universeId: string, liked: boolean) => {
+  const current = getMockUniverseDetail(universeId);
+
+  mockUniverseDetails.set(universeId, {
+    ...current,
+    liked,
+    likeCount:
+      current.liked === liked
+        ? current.likeCount
+        : Math.max(current.likeCount + (liked ? 1 : -1), 0),
+  });
+};
 
 const toDetailTendency = (tendency: UniverseUpdateRequest["tendency"]) => {
   if (tendency === "MALE") return "MALE_ORIENTED";
@@ -172,6 +193,29 @@ const createUpdatedUniverseDetail = (
 });
 
 export const universeHandlers = [
+  http.post(/\/universe\/([^/]+)\/like$/, ({ request }) => {
+    const universeId = pathValue(request.url, /\/universe\/([^/]+)\/like$/);
+
+    if (isUniverseMissing(universeId)) {
+      return universeNotFound();
+    }
+
+    setUniverseLiked(universeId, true);
+    return new HttpResponse(null, { status: 204 });
+  }),
+
+  http.delete(/\/universe\/([^/]+)\/like$/, ({ request }) => {
+    const universeId = pathValue(request.url, /\/universe\/([^/]+)\/like$/);
+
+    // 취소는 노출 여부를 보지 않는 서버 동작을 그대로 흉내 냅니다.
+    if (!universeId) {
+      return universeNotFound();
+    }
+
+    setUniverseLiked(universeId, false);
+    return new HttpResponse(null, { status: 204 });
+  }),
+
   http.get(/\/universe\/([^/]+)(?:\?.*)?$/, ({ request }) => {
     const universeId = pathValue(request.url, /\/universe\/([^/]+)$/);
 
