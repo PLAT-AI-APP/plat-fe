@@ -96,10 +96,10 @@ const FilterDropdown = <T extends string>({
         }}
         className="flex items-center gap-1 whitespace-nowrap rounded-xl border border-main p-2.5 hover:bg-btn-hover"
       >
-        <span className="title-3 whitespace-nowrap text-font-2">
+        <span className="body-4 whitespace-nowrap text-font-2">
           {t(labelKeys[value] as MessageKey)}
         </span>
-        <ArrowDown className="size-6 text-font-2" />
+        <ArrowDown className="size-4 text-font-2" />
       </button>
 
       <AnimatePresence>
@@ -130,7 +130,7 @@ const FilterDropdown = <T extends string>({
                     onClick={() => select(option)}
                     onFocus={() => setActiveIndex(index)}
                     className={cn(
-                      "body-4 flex cursor-pointer items-center justify-between gap-2 whitespace-nowrap rounded-lg px-2.5 py-2 hover:bg-btn-hover",
+                      "menu-item body-4 cursor-pointer justify-between gap-2 whitespace-nowrap",
                       isSelected && "title-5 text-brand",
                     )}
                   >

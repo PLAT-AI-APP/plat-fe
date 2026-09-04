@@ -35,7 +35,7 @@ const DetailTabs = ({
   const t = useTranslations("characterDetail");
 
   return (
-    <nav className="flex w-full gap-1 border-b border-main bg-dark">
+    <nav className="flex w-full gap-1 bg-dark">
       {tabs.map((tab) => {
         const isActive = currentTab === tab.id;
 
@@ -50,9 +50,11 @@ const DetailTabs = ({
               onChange(tab.id, tab.targetId);
             }}
             className={cn(
-              "body-4 flex h-11 items-center gap-1 justify-center border-b-2 border-transparent text-font-2 transition-colors",
+              "body-4 flex h-11 items-center gap-1 justify-center border-b-2 text-font-2 transition-colors",
               isCommentsTab ? "w-[104px]" : "w-[88px]",
-              isActive ? "border-brand text-font-1" : "hover:text-font-1",
+              isActive
+                ? "border-brand text-font-1"
+                : "border-main hover:text-font-1",
             )}
           >
             <span>{t(tab.labelKey)}</span>

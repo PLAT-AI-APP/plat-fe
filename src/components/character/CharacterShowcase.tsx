@@ -13,7 +13,7 @@ import {
   type CardColumnCount,
 } from "./character-card/constants";
 import { QueryStateBoundary } from "@/components/state";
-import { CharacterCardSkeleton } from "./CharacterCardSkeleton";
+import { CharacterCardSkeleton } from "./character-card/CharacterCardSkeleton";
 
 interface CharacterShowcaseProps {
   title?: string;
@@ -198,7 +198,7 @@ const CharacterShowcase = ({
             onClick={scrollPrev}
             disabled={!canScrollPrev}
             aria-label={t("previousItems")}
-            className="absolute left-[-18px] top-[122.5px] z-10 flex size-9 -translate-y-1/2 items-center justify-center rounded-2xl bg-overlay-font/12 p-2 text-font-0 opacity-25 backdrop-blur-[1.54px] transition hover:bg-overlay-font/20 hover:opacity-100 disabled:pointer-events-none disabled:opacity-0"
+            className="carousel-nav-btn absolute left-[-18px] top-[122.5px] z-10 size-9 -translate-y-1/2"
           >
             <ArrowLeft className="size-5" />
           </button>
@@ -207,7 +207,7 @@ const CharacterShowcase = ({
             onClick={scrollNext}
             disabled={!canScrollNext}
             aria-label={t("nextItems")}
-            className="absolute right-[-18px] top-[122.5px] z-10 flex size-9 -translate-y-1/2 items-center justify-center rounded-2xl bg-overlay-font/12 p-2 text-font-0 opacity-25 backdrop-blur-[1.54px] transition hover:bg-overlay-font/20 hover:opacity-100 disabled:pointer-events-none disabled:opacity-0"
+            className="carousel-nav-btn absolute right-[-18px] top-[122.5px] z-10 size-9 -translate-y-1/2"
           >
             <ArrowRight className="size-5" />
           </button>

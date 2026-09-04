@@ -92,6 +92,8 @@ const PreviewListItem = ({
               <EditableScenarioPreview
                 value={editedValue}
                 onChange={onEditValueChange}
+                onCancel={onCancelEdit}
+                onConfirm={onConfirmEdit}
               />
             )}
           </div>

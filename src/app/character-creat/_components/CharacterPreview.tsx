@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
 import CreatePreviewList from "./create-preview-list";
+import { useAutoResizeTextarea } from "@/hooks/useAutoResizeTextarea";
 import { useScrollTimeout } from "@/hooks/useScrollTiemout";
 import { ArrowLeft, ArrowRight, Asterisk, User } from "@/icons";
 import { cn } from "@/lib/utils";
@@ -59,7 +60,10 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
   const canRedoScenario = (scenarioHistory?.future.length ?? 0) > 0;
   const [currentMode, setCurrentMode] = useState<ScenarioType>("chat");
   const [msg, setMsg] = useState("");
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const { textareaRef, resizeTextarea } = useAutoResizeTextarea({
+    maxRows: 5,
+    value: msg,
+  });
   const { isScrolling, onScroll } = useScrollTimeout();
   const previewProfileImage =
     representativeImage || PREVIEW_PROFILE_FALLBACK_IMAGE;
@@ -76,15 +80,6 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
     setValue(`scenarios.${activeScenarioIndex}.contents`, nextContents, {
       shouldValidate: true,
     });
-  };
-
-  const handleCurrentMode = (mode: ScenarioType) => {
-    if (mode === currentMode) {
-      setCurrentMode("chat");
-      return;
-    }
-
-    setCurrentMode(mode);
   };
 
   const handleUpdateContent = (id: string, newValue: string) => {
@@ -125,8 +120,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const submitScenarioMessage = () => {
     if (!msg.trim()) return;
 
     const newContent = {
@@ -139,8 +133,23 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
       getValues(`scenarios.${activeScenarioIndex}.contents`) || [];
     applyScenarioContents([...currentContents, newContent]);
     setMsg("");
-    setCurrentMode("chat");
     scrollPreviewToBottom();
+    requestAnimationFrame(resizeTextarea);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    submitScenarioMessage();
+  };
+
+  const handleTextareaKeyDown = (
+    e: React.KeyboardEvent<HTMLTextAreaElement>,
+  ) => {
+    // Shift+Enter는 줄바꿈으로 두고, Enter만으로 바로 전송합니다.
+    if (e.key !== "Enter" || e.shiftKey || e.nativeEvent.isComposing) return;
+
+    e.preventDefault();
+    submitScenarioMessage();
   };
 
   const insertComposerText = (text: string) => {
@@ -163,11 +172,12 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
       textarea.focus();
       const nextCursorPosition = start + text.length;
       textarea.setSelectionRange(nextCursorPosition, nextCursorPosition);
+      resizeTextarea();
     }, 0);
   };
 
   return (
-    <section className="flex h-[919px] max-h-[calc(100vh-145px)] w-[693px] shrink-0 flex-col gap-12 rounded-3xl bg-darker p-4">
+    <section className="flex h-full max-h-[calc(100vh-145px)] w-full max-w-[693px] shrink-0 flex-col gap-12 rounded-3xl bg-darker p-4 lg:h-[919px]">
       <header className="flex h-12 shrink-0 items-center justify-between rounded-2xl bg-darkest px-4 py-3">
         <strong className="title-3 truncate text-font-1">
           {scenarioName ||
@@ -179,7 +189,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
             type="button"
             onClick={handleUndoScenario}
             disabled={!canUndoScenario}
-            className="flex size-6.5 items-center justify-center rounded-lg text-font-2 transition-colors hover:bg-card-selected"
+            className="flex size-6.5 items-center justify-center rounded-lg text-font-2 transition-colors hover:bg-card-selected disabled:pointer-events-none disabled:text-font-disabled"
             aria-label={t("undoScenario")}
           >
             <ArrowLeft className="size-3.5" />
@@ -188,7 +198,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
             type="button"
             onClick={handleRedoScenario}
             disabled={!canRedoScenario}
-            className="flex size-6.5 items-center justify-center rounded-lg text-font-2 transition-colors hover:bg-card-selected"
+            className="flex size-6.5 items-center justify-center rounded-lg text-font-2 transition-colors hover:bg-card-selected disabled:pointer-events-none disabled:text-font-disabled"
             aria-label={t("redoScenario")}
           >
             <ArrowRight className="size-3.5" />
@@ -216,22 +226,34 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
 
       <form
         onSubmit={handleSubmit}
-        className="flex w-full shrink-0 flex-col gap-4 rounded-3xl border border-transparent bg-darkest px-4 pb-3 pt-4 transition-colors focus-within:field-focus"
+        onClick={(e) => {
+          // textarea/버튼이 아닌 form 여백(툴바 사이 빈 공간 포함)을 클릭해도
+          // 바로 입력할 수 있도록 포커스를 옮깁니다.
+          const target = e.target as HTMLElement;
+          if (target.closest("button, textarea")) return;
+
+          textareaRef.current?.focus();
+        }}
+        className="flex w-full shrink-0 flex-col gap-4 rounded-3xl border border-transparent bg-darkest px-4 pb-3 pt-4 transition-colors focus-within:field-focus!"
       >
         <textarea
           rows={1}
           ref={textareaRef}
           value={msg}
           onChange={(e) => setMsg(e.target.value)}
+          onKeyDown={handleTextareaKeyDown}
           placeholder={t("scenarioPlaceholder")}
-          className="focus-ring-none body-4 min-h-[42px] w-full resize-none bg-transparent outline-none placeholder:text-font-disabled"
+          className="focus-ring-none body-4 custom-scrollbar min-h-[42px] w-full resize-none bg-transparent px-2 outline-none placeholder:text-font-disabled"
         />
 
         <div className="flex items-center justify-between gap-3">
           <div className="flex min-w-0 shrink-0 gap-2">
             <button
               type="button"
-              onClick={() => handleCurrentMode("action")}
+              onClick={() => {
+                setCurrentMode("action");
+                textareaRef.current?.focus();
+              }}
               className={cn(
                 "body-4 flex h-8 items-center justify-center gap-1.5 rounded-full border border-main bg-dark py-1.5 pl-2.5 pr-3 text-font-2",
                 currentMode === "action" && "border-brand text-brand",
@@ -243,7 +265,10 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
 
             <button
               type="button"
-              onClick={() => setCurrentMode("chat")}
+              onClick={() => {
+                setCurrentMode("chat");
+                textareaRef.current?.focus();
+              }}
               className={cn(
                 "body-4 flex h-8 items-center justify-center gap-1.5 rounded-full border border-main bg-dark py-1.5 pl-2.5 pr-3 text-font-2",
                 currentMode === "chat" && "border-brand text-brand",
@@ -255,7 +280,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
                   alt={characterChipText}
                   width={16}
                   height={16}
-                  className="size-4 rounded-full object-cover"
+                  className="avatar-img size-4"
                 />
               ) : (
                 <span className="size-4 rounded-full bg-font-2" aria-hidden />
@@ -265,7 +290,10 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
 
             <button
               type="button"
-              onClick={() => setCurrentMode("userChat")}
+              onClick={() => {
+                setCurrentMode("userChat");
+                textareaRef.current?.focus();
+              }}
               className={cn(
                 "body-4 flex h-8 items-center justify-center gap-1.5 rounded-full border border-main bg-dark py-1.5 pl-2.5 pr-3 text-font-2",
                 currentMode === "userChat" && "border-brand text-brand",

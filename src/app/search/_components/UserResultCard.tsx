@@ -109,7 +109,7 @@ const UserResultCard = ({ user }: UserResultCardProps) => {
           className={cn(
             "title-6 flex w-[69px] shrink-0 cursor-pointer items-center justify-center rounded-full px-3 py-1 transition-colors",
             isFollowing ? "bg-main text-font-1" : "bg-font-1 text-dark",
-            isFollowPending && "cursor-wait opacity-70",
+            isFollowPending && "pending-state",
           )}
         >
           {isFollowing

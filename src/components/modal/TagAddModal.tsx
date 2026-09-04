@@ -172,7 +172,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
             type="text"
             value={searchKeyword}
             className={cn(
-              "body-4 h-10 w-full rounded-xl px-4 pl-10 text-font-1 outline-none placeholder:text-font-disabled",
+              "focus-ring-none body-4 h-10 w-full rounded-xl px-4 pl-10 text-font-1 outline-none transition-colors placeholder:text-font-disabled focus:field-focus!",
               shouldShowSearchPrefix && "pl-14",
               searchKeyword
                 ? "border border-transparent bg-card"

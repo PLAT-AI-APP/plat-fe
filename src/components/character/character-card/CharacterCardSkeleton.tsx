@@ -1,4 +1,4 @@
-import { FLUID_SIZE_OVERRIDE, SIZE_CONFIG } from "./character-card/constants";
+import { FLUID_SIZE_OVERRIDE, SIZE_CONFIG } from "./constants";
 
 interface CharacterCardSkeletonProps {
   size?: "S" | "M" | "L" | "XL";

@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useTranslations } from "next-intl";
-import { useFormContext } from "react-hook-form";
+import { FieldErrors, FieldPath, useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import ActiveButton from "@/components/ActiveButton";
 import ArrowLineLeft from "@/icons/ArrowLineLeft";
@@ -19,11 +19,29 @@ import {
   useUniverseCreateMutation,
 } from "@/api/universe/postUniverseCreate";
 import { useUniverseUpdateMutation } from "@/api/universe/patchUniverseUpdate";
+import { useTranslateText } from "@/hooks/useTranslateText";
+import { TabId } from "./CreateTabs";
 
 interface CreateHeaderProps {
   universeId?: string;
   onSave: () => void;
   onDraftClick: () => void;
+  setCurrentTabId: (id: TabId) => void;
+  setActiveScenarioIndex: (index: number) => void;
+  markSubmitSuccess: () => void;
+}
+
+/**
+ * 등록 실패 시 이동할 탭/시나리오와, 가능하면 바로 포커스할 필드를 담습니다.
+ * fieldPath는 RHF에 register()된 input(setFocus)용, focusElementId는 이미지
+ * 업로드처럼 register() 없이 값만 들어가는 요소를 id로 직접 focus()할 때 씁니다.
+ */
+interface ValidationJumpTarget {
+  tabId: TabId;
+  scenarioIndex?: number;
+  fieldPath?: FieldPath<CharacterCreateFormValues>;
+  focusElementId?: string;
+  message: string;
 }
 
 const UNIVERSE_TENDENCIES: UniverseCreateTendency[] = ["ALL", "MALE", "FEMALE"];
@@ -112,16 +130,147 @@ const isApiErrorLike = (error: unknown) =>
   "code" in error &&
   "message" in error;
 
+/**
+ * 탭 순서(profile → details → assets → scenario → settings)와 각 탭 안의
+ * 입력 순서를 기준으로 가장 먼저 걸리는 에러를 찾습니다.
+ * 대표/프로필 이미지, 성향/카테고리, 시나리오 대화 콘텐츠는 실제 등록된
+ * input이 아니라(버튼 선택이거나, 시나리오 프리뷰에서 편집모드로 들어가야
+ * 나타나는 textarea) 포커스는 불가능해 탭 이동 + 토스트로만 안내합니다.
+ */
+const findFirstValidationTarget = (
+  errors: FieldErrors<CharacterCreateFormValues>,
+  values: CharacterCreateFormValues,
+): ValidationJumpTarget | null => {
+  if (errors.representativeImage) {
+    return {
+      tabId: "profile",
+      focusElementId: "representative-image-field",
+      message: errors.representativeImage.message ?? "",
+    };
+  }
+  if (errors.title) {
+    return {
+      tabId: "profile",
+      fieldPath: "title",
+      message: errors.title.message ?? "",
+    };
+  }
+  if (errors.characterIntroduce) {
+    return {
+      tabId: "profile",
+      fieldPath: "characterIntroduce",
+      message: errors.characterIntroduce.message ?? "",
+    };
+  }
+  if (errors.profileSituationDescription) {
+    return {
+      tabId: "profile",
+      fieldPath: "profileSituationDescription",
+      message: errors.profileSituationDescription.message ?? "",
+    };
+  }
+
+  if (errors.characterProfileImage) {
+    return {
+      tabId: "details",
+      focusElementId: "character-profile-image-field",
+      message: errors.characterProfileImage.message ?? "",
+    };
+  }
+  if (errors.name) {
+    return {
+      tabId: "details",
+      fieldPath: "name",
+      message: errors.name.message ?? "",
+    };
+  }
+  if (errors.characterDescription) {
+    return {
+      tabId: "details",
+      fieldPath: "characterDescription",
+      message: errors.characterDescription.message ?? "",
+    };
+  }
+  if (errors.characterDetailSetting) {
+    return {
+      tabId: "details",
+      fieldPath: "characterDetailSetting",
+      message: errors.characterDetailSetting.message ?? "",
+    };
+  }
+
+  for (let i = 0; i < (values.asset?.length ?? 0); i += 1) {
+    const assetError = errors.asset?.[i];
+    if (assetError?.assetName) {
+      return {
+        tabId: "assets",
+        fieldPath: `asset.${i}.assetName`,
+        message: assetError.assetName.message ?? "",
+      };
+    }
+    if (assetError?.assetSituation) {
+      return {
+        tabId: "assets",
+        fieldPath: `asset.${i}.assetSituation`,
+        message: assetError.assetSituation.message ?? "",
+      };
+    }
+  }
+
+  for (let i = 0; i < values.scenarios.length; i += 1) {
+    const scenarioError = errors.scenarios?.[i];
+    if (scenarioError?.name) {
+      return {
+        tabId: "scenario",
+        scenarioIndex: i,
+        fieldPath: `scenarios.${i}.name`,
+        message: scenarioError.name.message ?? "",
+      };
+    }
+
+    const contents = values.scenarios[i].contents ?? [];
+    for (let j = 0; j < contents.length; j += 1) {
+      if (scenarioError?.contents?.[j]?.value) {
+        return {
+          tabId: "scenario",
+          scenarioIndex: i,
+          message: scenarioError.contents[j]?.value?.message ?? "",
+        };
+      }
+    }
+  }
+
+  if (errors.tendency) {
+    return { tabId: "settings", message: errors.tendency.message ?? "" };
+  }
+  if (errors.category) {
+    return { tabId: "settings", message: errors.category.message ?? "" };
+  }
+  if (errors.tagIds) {
+    return { tabId: "settings", message: errors.tagIds.message ?? "" };
+  }
+
+  return null;
+};
+
 const CreateHeader = ({
   universeId,
   onSave,
   onDraftClick,
+  setCurrentTabId,
+  setActiveScenarioIndex,
+  markSubmitSuccess,
 }: CreateHeaderProps) => {
   const t = useTranslations("characterCreate");
-  const tRoot = useTranslations();
+  const translateText = useTranslateText();
   const router = useRouter();
   const locale = useLocaleStore((state) => state.locale);
-  const { getValues, trigger } = useFormContext<CharacterCreateFormValues>();
+  const {
+    getValues,
+    trigger,
+    setFocus,
+    formState: { errors },
+  } = useFormContext<CharacterCreateFormValues>();
   const { mutateAsync: createUniverse, isPending: isCreatePending } =
     useUniverseCreateMutation();
   const { mutateAsync: updateUniverse, isPending: isUpdatePending } =
@@ -142,7 +291,27 @@ const CreateHeader = ({
     if (isPending) return;
 
     const isFormValid = await trigger();
-    if (!isFormValid) return;
+    if (!isFormValid) {
+      const target = findFirstValidationTarget(errors, getValues());
+      if (!target) return;
+
+      setCurrentTabId(target.tabId);
+      if (target.scenarioIndex !== undefined) {
+        setActiveScenarioIndex(target.scenarioIndex);
+      }
+      if (target.message) {
+        showAppToast("warning", translateText(target.message) ?? target.message);
+      }
+      if (target.fieldPath) {
+        // 탭 전환으로 해당 input이 마운트된 다음 포커스해야 합니다.
+        requestAnimationFrame(() => setFocus(target.fieldPath!));
+      } else if (target.focusElementId) {
+        requestAnimationFrame(() => {
+          document.getElementById(target.focusElementId!)?.focus();
+        });
+      }
+      return;
+    }
 
     const currentFormData = getValues();
 
@@ -194,7 +363,8 @@ const CreateHeader = ({
           ...(characterProfileImage ? { characterProfileImage } : {}),
         });
 
-        showAppToast("success", tRoot("toast.characterUpdated"));
+        showAppToast("success", t("updateSuccess"));
+        markSubmitSuccess();
         router.push(`/characters/${universeId}`);
         return;
       }
@@ -217,10 +387,11 @@ const CreateHeader = ({
       });
 
       showAppToast("success", t("createSuccess"));
+      markSubmitSuccess();
       router.push(`/characters/${created.universeId}`);
     } catch (error) {
       if (!isApiErrorLike(error)) {
-        showAppToast("error", t("createFailed"));
+        showAppToast("error", t(isEditMode ? "updateFailed" : "createFailed"));
       }
       console.error("Universe create failed:", error);
     }

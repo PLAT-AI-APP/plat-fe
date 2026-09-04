@@ -90,8 +90,10 @@ const RepresentativeImage = () => {
         />
 
         <label
+          id="representative-image-field"
           htmlFor="representative-image"
-          className="group relative flex justify-end w-[120px] h-full cursor-pointer flex-col gap-0"
+          tabIndex={-1}
+          className="group relative flex justify-end w-[120px] h-full cursor-pointer flex-col gap-0 rounded-xl"
         >
           <div className="relative flex aspect-square w-[120px] h-[157px] items-center justify-center rounded-xl bg-card">
             {preview ? (

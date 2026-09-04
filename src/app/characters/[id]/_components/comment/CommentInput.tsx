@@ -37,7 +37,7 @@ export const CommentInput = ({
         />
         <textarea
           className={cn(
-            "body-4 h-19 flex-1 resize-none rounded-2xl bg-card px-3 py-2",
+            "body-4 h-19 flex-1 resize-none rounded-2xl border border-transparent bg-card px-3 py-2 transition-colors focus:field-focus!",
             isReplyMode && "max-h-14",
           )}
           onChange={(e) => setText(e.target.value)}

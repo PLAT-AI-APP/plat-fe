@@ -3,7 +3,7 @@
 import New from "@/icons/New";
 import { useTranslations } from "next-intl";
 import React from "react";
-import CharacterShowcase from "../CharacterShowcase";
+import CharacterShowcase from "@/components/character/CharacterShowcase";
 import CharacterExperience from "./_components/character-experience";
 import CharacterCreateBanner from "../CharacterCreateBanner";
 import { useTodayPickQuery } from "@/api/home/getTodayPick";

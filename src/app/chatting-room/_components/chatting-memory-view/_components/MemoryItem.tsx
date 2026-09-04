@@ -2,6 +2,7 @@
 
 import { AnimatePresence } from "framer-motion";
 import { useRef } from "react";
+import type { KeyboardEvent } from "react";
 import { useTranslations } from "next-intl";
 import PastConversationPopover from "@/components/popover/PastConversationPopover";
 import useToggle from "@/hooks/useToggle";
@@ -33,6 +34,24 @@ const MemoryItem = ({
   const t = useTranslations("chatRoom.sidebar");
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const { isOpen: isPopoverOpen, toggle, close: closePopover } = useToggle();
+
+  // 엔터는 확정, esc는 취소, 쉬프트+엔터는 줄바꿈으로 동작합니다.
+  const handleDraftKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      onCancelEdit();
+      return;
+    }
+
+    if (
+      event.key === "Enter" &&
+      !event.shiftKey &&
+      !event.nativeEvent.isComposing
+    ) {
+      event.preventDefault();
+      onSave();
+    }
+  };
 
   return (
     <article
@@ -83,11 +102,14 @@ const MemoryItem = ({
 
       {isEditing ? (
         <>
-          <div className="flex w-full rounded-lg border border-main bg-darkest px-2 py-3">
+          <div className="flex w-full rounded-lg border border-main bg-darkest px-2 py-3 transition-colors focus-within:field-focus!">
             <textarea
+              autoFocus
               value={draft}
               onChange={(event) => onChangeDraft(event.target.value)}
-              className="body-4 min-h-[153px] w-full resize-none bg-transparent text-font-0 outline-none"
+              onKeyDown={handleDraftKeyDown}
+              onFocus={(event) => event.target.select()}
+              className="focus-ring-none body-4 min-h-[153px] w-full resize-none bg-transparent text-font-0 outline-none"
             />
           </div>
 

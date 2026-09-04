@@ -7,8 +7,16 @@ import { PopoverLayout } from "@/components/popover/layout";
 import { ArrowDown, Check } from "@/icons";
 import { cn } from "@/lib/utils";
 
-const SORT_OPTIONS = ["chats"] as const;
+const SORT_OPTIONS = ["chats", "recommended", "wish"] as const;
 type SortOption = (typeof SORT_OPTIONS)[number];
+const SORT_LABEL_KEYS: Record<
+  SortOption,
+  "sortByChats" | "sortRecommended" | "sortWish"
+> = {
+  chats: "sortByChats",
+  recommended: "sortRecommended",
+  wish: "sortWish",
+};
 
 const OfficialSortDropdown = () => {
   const t = useTranslations("officialPage");
@@ -24,12 +32,12 @@ const OfficialSortDropdown = () => {
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         onClick={() => setIsOpen((prev) => !prev)}
-        className="flex items-center justify-center gap-1 whitespace-nowrap rounded-xl py-2.5 pl-5 pr-4 hover:bg-btn-hover"
+        className="flex items-center gap-1 whitespace-nowrap rounded-xl border border-main p-2.5 hover:bg-btn-hover"
       >
-        <span className="title-3 whitespace-nowrap text-font-2">
-          {t("sortByChats")}
+        <span className="body-4 whitespace-nowrap text-font-2">
+          {t(SORT_LABEL_KEYS[sortOption])}
         </span>
-        <ArrowDown className="size-6 text-font-2" />
+        <ArrowDown className="size-4 text-font-2" />
       </button>
 
       <AnimatePresence>
@@ -37,7 +45,7 @@ const OfficialSortDropdown = () => {
           <PopoverLayout
             onClose={() => setIsOpen(false)}
             triggerRef={triggerRef}
-            className="left-0 right-auto min-w-30"
+            className="min-w-30"
           >
             <ul className="flex flex-col gap-1" role="listbox">
               {SORT_OPTIONS.map((option) => {
@@ -53,11 +61,11 @@ const OfficialSortDropdown = () => {
                       setIsOpen(false);
                     }}
                     className={cn(
-                      "body-4 flex cursor-pointer items-center justify-between gap-2 whitespace-nowrap rounded-lg px-2.5 py-2 hover:bg-btn-hover",
+                      "menu-item body-4 cursor-pointer justify-between gap-2 whitespace-nowrap",
                       isSelected && "title-5 text-brand",
                     )}
                   >
-                    {t("sortByChats")}
+                    {t(SORT_LABEL_KEYS[option])}
                     {isSelected && <Check className="size-4 text-brand" />}
                   </li>
                 );

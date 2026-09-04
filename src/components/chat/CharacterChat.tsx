@@ -24,7 +24,7 @@ const CharacterChat = ({
         alt={t("chatUI.characterProfileAlt", { name: CharacterName })}
         width={36}
         height={36}
-        className="size-9 rounded-full object-cover"
+        className="avatar-img size-9"
       />
 
       <div id="chat-bubble-container" className="body-4">

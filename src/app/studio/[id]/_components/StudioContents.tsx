@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import React from "react";
-import CharacterShowcase from "@/app/(main)/_components/CharacterShowcase";
+import CharacterShowcase from "@/components/character/CharacterShowcase";
 import CharacterCreateBanner from "./CharacterCreateBanner";
 import CharacterList from "./character-list";
 import { DUMMY_CHARACTERS as charArray } from "./dummyData";

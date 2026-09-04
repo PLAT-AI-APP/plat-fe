@@ -11,6 +11,11 @@ const UnsavedChangesDialog = ({
     onCancel();
   };
 
+  const handleLeave = () => {
+    onClose();
+    onLeave();
+  };
+
   return (
     <Dialog
       onClose={handleCancel}
@@ -18,7 +23,7 @@ const UnsavedChangesDialog = ({
       label="dialog.unsavedChanges.title"
       description="dialog.unsavedChanges.description"
       confirmText="dialog.unsavedChanges.confirm"
-      confirmFn={onLeave}
+      confirmFn={handleLeave}
     />
   );
 };

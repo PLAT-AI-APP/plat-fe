@@ -6,11 +6,16 @@ import {
   HASHTAG_CATEGORY_FOLDER_TITLE_KEYS,
   HASHTAG_CATEGORY_ORDER,
 } from "@/constants/hashtag";
-import { Search } from "@/icons";
+import { Close, Search } from "@/icons";
+import { showAppToast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
+import { SPRING_SOFT, TRANSITION } from "@/constants/motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { TagFolder, TagPill } from "./TagFolder";
+
+const MAX_SELECTED_TAGS = 5;
 
 // 상단의 "취향 맞춤 태그" 카드 데이터입니다.
 // 카드 클릭 시 tags 배열에 들어있는 태그들이 한 번에 선택됩니다.
@@ -317,6 +322,13 @@ export const TAG_FOLDERS = [
 interface TagSidebarProps {
   selectedTags: string[];
   onSelectedTagsChange: Dispatch<SetStateAction<string[]>>;
+  /**
+   * 태블릿 폭에서는 300px 고정폭이 카드 그리드 영역을 압박해 열 개수가 급격히
+   * 줄어드므로, 인라인 배치 대신 토글로 열고 닫는 오버레이 패널로 전환합니다.
+   */
+  isOverlay?: boolean;
+  isOpen?: boolean;
+  onClose?: () => void;
 }
 
 // 피그마의 AI sparkle 아이콘을 사이드바 내부에서만 쓰는 작은 로컬 아이콘입니다.
@@ -345,6 +357,9 @@ const AiLineIcon = ({ className }: { className?: string }) => (
 const TagSidebar = ({
   selectedTags,
   onSelectedTagsChange,
+  isOverlay = false,
+  isOpen = true,
+  onClose,
 }: TagSidebarProps) => {
   const t = useTranslations("tagSidebar");
   const {
@@ -393,7 +408,14 @@ const TagSidebar = ({
 
   // 태그를 누를 때 선택/해제를 토글합니다.
   // 선택된 태그는 하단 "선택 태그" 영역에도 같은 상태로 표시됩니다.
+  // 최대 개수(MAX_SELECTED_TAGS)에 도달한 상태에서 새 태그를 추가하려 하면 토스트로 안내합니다.
   const toggleTag = (tag: string) => {
+    const isSelected = selectedTags.includes(tag);
+    if (!isSelected && selectedTags.length >= MAX_SELECTED_TAGS) {
+      showAppToast("warning", t("maxAlert"));
+      return;
+    }
+
     onSelectedTagsChange((prev) =>
       prev.includes(tag)
         ? prev.filter((selectedTag) => selectedTag !== tag)
@@ -402,13 +424,36 @@ const TagSidebar = ({
   };
 
   // 추천 카드는 여러 태그를 한 번에 추가합니다.
-  // Set을 사용해서 이미 선택된 태그가 중복으로 쌓이지 않게 합니다.
+  // Set을 사용해서 이미 선택된 태그가 중복으로 쌓이지 않게 하고,
+  // 추가로 최대 개수를 넘기면 태그 모달과 동일하게 전체 추가를 막고 안내합니다.
   const selectRecommendation = (tags: string[]) => {
-    onSelectedTagsChange((prev) => Array.from(new Set([...prev, ...tags])));
+    const newTags = tags.filter((tag) => !selectedTags.includes(tag));
+    if (newTags.length === 0) return;
+
+    if (selectedTags.length + newTags.length > MAX_SELECTED_TAGS) {
+      showAppToast("warning", t("maxAlert"));
+      return;
+    }
+
+    onSelectedTagsChange((prev) => Array.from(new Set([...prev, ...newTags])));
   };
 
-  return (
-    <aside className="sticky top-[0px] h-[calc(100vh-var(--header-height))] w-[300px] shrink-0 overflow-y-auto bg-dark no-scrollbar">
+  const sidebarBody = (
+    <>
+      {isOverlay && (
+        <div className="flex items-center justify-between px-5 pt-4">
+          <h2 className="title-5 text-font-1">{t("title")}</h2>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label={t("close")}
+            className="flex size-8 items-center justify-center rounded-lg text-font-2 transition-colors hover:bg-btn-hover hover:text-font-1"
+          >
+            <Close className="size-5" />
+          </button>
+        </div>
+      )}
+
       {/* 검색 영역: 입력값은 폴더 태그 목록을 클라이언트에서 즉시 필터링합니다. */}
       <div className="px-5 py-4">
         <label className="relative block">
@@ -417,7 +462,7 @@ const TagSidebar = ({
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder={t("searchPlaceholder")}
-            className="h-[43px] w-full rounded-xl border border-main bg-darkest pl-[38px] pr-3 body-5 text-font-1 outline-none transition-colors placeholder:text-font-2 focus:border-font-disabled"
+            className="focus-ring-none h-[43px] w-full rounded-xl border border-main bg-darkest pl-[38px] pr-3 body-5 text-font-1 outline-none transition-colors placeholder:text-font-2 focus:field-focus!"
           />
         </label>
       </div>
@@ -511,6 +556,43 @@ const TagSidebar = ({
           ))
         )}
       </div>
+    </>
+  );
+
+  // 태블릿 폭: 토글 버튼으로 열고 닫는 오버레이 패널. 닫힌 상태에서는 아예
+  // 렌더링하지 않아 카드 그리드가 300px를 다시 온전히 돌려받습니다.
+  if (isOverlay) {
+    return (
+      <AnimatePresence>
+        {isOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={TRANSITION}
+              onClick={onClose}
+              className="fixed inset-0 z-20 bg-scrim/50"
+              aria-hidden
+            />
+            <motion.aside
+              initial={{ x: 300 }}
+              animate={{ x: 0 }}
+              exit={{ x: 300 }}
+              transition={SPRING_SOFT}
+              className="fixed right-0 top-0 z-30 h-full w-[300px] shrink-0 overflow-y-auto bg-dark shadow-2xl no-scrollbar"
+            >
+              {sidebarBody}
+            </motion.aside>
+          </>
+        )}
+      </AnimatePresence>
+    );
+  }
+
+  return (
+    <aside className="sticky top-0 h-[calc(100vh-var(--header-height))] w-[300px] shrink-0 overflow-y-auto bg-dark no-scrollbar">
+      {sidebarBody}
     </aside>
   );
 };

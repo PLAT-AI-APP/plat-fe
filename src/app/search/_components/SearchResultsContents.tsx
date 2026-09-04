@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import CharacterCard from "@/app/(main)/_components/character-card";
-import { CharacterCardSkeleton } from "@/app/(main)/_components/CharacterCardSkeleton";
+import CharacterCard from "@/components/character/character-card";
+import { CharacterCardSkeleton } from "@/components/character/character-card/CharacterCardSkeleton";
 import { QueryStateBoundary } from "@/components/state";
 import {
   SEARCH_MIN_KEYWORD_LENGTH,

@@ -72,7 +72,7 @@ const CharacterProfile = ({
             alt={t("characterDetail.creatorImageAlt")}
             width={40}
             height={40}
-            className="aspect-square rounded-full object-cover"
+            className="avatar-img aspect-square"
           />
           <div className="flex flex-col gap-0.5">
             <Link href="/" className="body-2 text-font-1 hover:underline">

@@ -95,7 +95,9 @@ const CharacterProfileImage = () => {
       />
 
       <label
+        id="character-profile-image-field"
         htmlFor="character-profile-image"
+        tabIndex={-1}
         className="group relative flex size-32 cursor-pointer items-center justify-center overflow-visible rounded-xl bg-card"
       >
         <div className="relative flex size-full items-center justify-center overflow-hidden rounded-xl">

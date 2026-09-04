@@ -22,13 +22,17 @@ import GenderField from "../field/GenderField";
 import AccountField from "../field/AccountField";
 import { ProfileEditModalProps } from "@/type/modal";
 import { useModalStore } from "@/store/useModalStore";
+import { showFirstFieldErrorToast } from "@/lib/formError";
+import { useTranslateText } from "@/hooks/useTranslateText";
 
 const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
   const t = useTranslations("modalUi.profileEdit");
   const commonT = useTranslations("modalUi.common");
+  const translateText = useTranslateText();
   const {
     handleSubmit,
     watch,
+    setFocus,
     formState: { isValid },
   } = useFormContext<ProfileEditFormType>();
   const { mutate: updateMyInfo, isPending: isUpdating } =
@@ -56,7 +60,12 @@ const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSave)} className="flex flex-col">
+    <form
+      onSubmit={handleSubmit(onSave, (formErrors) =>
+        showFirstFieldErrorToast(formErrors, setFocus, translateText),
+      )}
+      className="flex flex-col"
+    >
       <header className="flex items-center justify-between pb-8">
         <h2 className="title-1">{t("title")}</h2>
         <Close

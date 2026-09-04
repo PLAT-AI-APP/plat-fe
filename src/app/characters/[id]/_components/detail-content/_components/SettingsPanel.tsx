@@ -180,7 +180,7 @@ const SettingsPanel = ({
             alt={t("profileAlt", { name: character.title })}
             width={32}
             height={32}
-            className="size-8 rounded-full object-cover"
+            className="avatar-img size-8"
           />
           <span className="body-2 text-font-1">{character.title}</span>
         </div>

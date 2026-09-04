@@ -129,8 +129,12 @@ export const BirthDateInput = React.forwardRef<
           maxLength={10}
           placeholder="YYYY-MM-DD"
           className={cn(
-            "body-4 w-full rounded-xl border border-main bg-darkest px-4 py-3 pl-12 text-font-1 outline-none placeholder:text-font-disabled",
-            hasError && "border-font-accents",
+            "focus-ring-none body-4 w-full rounded-xl border bg-darkest px-4 py-3 pl-12 text-font-1 outline-none transition-colors placeholder:text-font-disabled",
+            // border-main/border-font-accents는 특이도가 같은 일반 유틸리티라 동시에 넣으면
+            // JS 조건이 아니라 스타일시트 생성 순서로 승패가 갈린다. 하나만 선택해서 넣는다.
+            hasError
+              ? "border-font-accents focus:border-font-accents"
+              : "border-main focus:field-focus!",
           )}
         />
 

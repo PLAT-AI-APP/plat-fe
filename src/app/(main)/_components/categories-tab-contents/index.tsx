@@ -3,7 +3,10 @@
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import CharacterShowcase from "../CharacterShowcase";
+import Tag from "@/icons/Tag";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { TABLET_MAX_WIDTH_QUERY } from "@/constants/layout";
+import CharacterShowcase from "@/components/character/CharacterShowcase";
 import SearchResultSort from "./_components/SearchResultSort";
 import TagSidebar from "./_components/tag-sidebar";
 import CharacterCreatePrompt from "./_components/CharacterCreatePrompt";
@@ -88,6 +91,10 @@ const CategoriesTabContents = () => {
   const t = useTranslations("categoriesPage");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [isHydrated, setIsHydrated] = useState(false);
+  // 태블릿 폭에서는 300px 고정폭 사이드바가 카드 그리드를 압박하므로 인라인
+  // 배치 대신 토글로 열고 닫는 오버레이 패널로 전환합니다.
+  const isTablet = useMediaQuery(TABLET_MAX_WIDTH_QUERY);
+  const [isTagSidebarOpen, setIsTagSidebarOpen] = useState(false);
 
   useEffect(() => {
     // 포털 렌더링은 hydration 이후로 미뤄 서버/클라이언트 초기 HTML을 맞춥니다.
@@ -113,7 +120,19 @@ const CategoriesTabContents = () => {
               </span>
             </p>
 
-            <SearchResultSort />
+            <div className="flex items-center gap-3">
+              {isTablet && (
+                <button
+                  type="button"
+                  onClick={() => setIsTagSidebarOpen(true)}
+                  className="flex items-center gap-1.5 rounded-xl border border-main px-3 py-2 body-4 text-font-1 transition-colors hover:bg-btn-hover"
+                >
+                  <Tag className="size-4" />
+                  {t("tagFilter")}
+                </button>
+              )}
+              <SearchResultSort />
+            </div>
           </header>
 
           <CharacterShowcase
@@ -149,6 +168,9 @@ const CategoriesTabContents = () => {
           <TagSidebar
             selectedTags={selectedTags}
             onSelectedTagsChange={setSelectedTags}
+            isOverlay={isTablet}
+            isOpen={isTagSidebarOpen}
+            onClose={() => setIsTagSidebarOpen(false)}
           />,
           sidebarRoot,
         )}

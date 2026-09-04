@@ -216,7 +216,7 @@ const Header = ({ userId }: HeaderProps) => {
               className={cn(
                 "title-3 flex h-11 items-center justify-center rounded-2xl px-4 py-2.5",
                 isFollowing ? "bg-main text-font-1" : "bg-font-1 text-dark",
-                isFollowPending && "cursor-wait opacity-70",
+                isFollowPending && "pending-state",
               )}
             >
               {isFollowing ? t("profile.following") : t("profile.follow")}

@@ -3,7 +3,7 @@
 import React, { useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslations } from "next-intl";
-import CharacterShowcase from "@/app/(main)/_components/CharacterShowcase";
+import CharacterShowcase from "@/components/character/CharacterShowcase";
 import CharacterSortPopover, {
   CharacterSortOption,
 } from "@/components/popover/CharacterSortPopover";
@@ -129,7 +129,7 @@ export default function ProfileContent({ id }: { id: string }) {
         <div className="flex min-w-0 flex-1 flex-col gap-4">
           <nav
             ref={tabNavRef as React.RefObject<HTMLElement>}
-            className="relative flex w-full items-end border-b-2 border-card-hover"
+            className="relative flex w-full items-end"
           >
             {TAB_ITEMS.map(({ key, labelKey }) => (
               <React.Fragment key={key}>
@@ -157,6 +157,10 @@ export default function ProfileContent({ id }: { id: string }) {
                 )}
               </React.Fragment>
             ))}
+
+            {/* 활성 표시(motion.span)와 같은 bottom-0/h-0.5 박스를 써서, 서로 다른 두께의
+                border가 겹쳐 어긋나 보이지 않게 기준선도 같은 방식으로 그립니다. */}
+            <div className="absolute inset-x-0 bottom-0 h-0.5 bg-card-hover" />
 
             <motion.span
               className="absolute bottom-0 h-0.5 bg-brand"
@@ -210,6 +214,7 @@ export default function ProfileContent({ id }: { id: string }) {
             cardSize="S"
             rowGap={28}
             columnGap={16}
+            gridFillMode="auto-fill"
           />
         </section>
       </section>

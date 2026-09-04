@@ -3,9 +3,9 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useRankingQuery } from "@/api/ranking/getRanking";
-import { CharacterCardSkeleton } from "../CharacterCardSkeleton";
+import { CharacterCardSkeleton } from "@/components/character/character-card/CharacterCardSkeleton";
 import QueryStateBoundary from "@/components/state/QueryStateBoundary";
-import CharacterCard from "../character-card";
+import CharacterCard from "@/components/character/character-card";
 import RankingHeader from "./_components/RankingHeader";
 import {
   RankingSortId,

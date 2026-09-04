@@ -141,7 +141,7 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
                       alt={character.title}
                       width={40}
                       height={40}
-                      className="size-10 rounded-full object-cover"
+                      className="avatar-img size-10"
                     />
                     <div className="flex min-w-0 flex-1 flex-col items-start gap-1.5">
                       <p className="body-4 text-font-1">{character.title}</p>
