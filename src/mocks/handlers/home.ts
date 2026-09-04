@@ -89,6 +89,8 @@ const OFFICIAL_PREVIEW_ITEMS = Array.from({ length: 24 }, (_, index) => {
     description: seed.description,
     tags: ["일상", "판타지"],
     chatCount: seed.chatCount,
+    // 대화 수와 일부러 반대로 준다 — 정렬을 바꿨을 때 순서가 실제로 뒤집히는지 보이도록.
+    likeCount: 1000 - seed.chatCount,
     remainingFreeChatCount: 5,
     scenarios: [
       {
@@ -204,9 +206,15 @@ export const homeHandlers = [
     const url = new URL(request.url);
     const page = Number(url.searchParams.get("page") ?? 0);
     const size = Number(url.searchParams.get("size") ?? 10);
+    const sort = url.searchParams.get("sort") ?? "CHAT";
     const start = page * size;
 
-    return HttpResponse.json(OFFICIAL_PREVIEW_ITEMS.slice(start, start + size));
+    // 서버처럼 누적 카운터로 줄 세웁니다.
+    const sorted = [...OFFICIAL_PREVIEW_ITEMS].sort((a, b) =>
+      sort === "LIKE" ? b.likeCount - a.likeCount : b.chatCount - a.chatCount,
+    );
+
+    return HttpResponse.json(sorted.slice(start, start + size));
   }),
 
   http.get(endpoint("/home/asset-preview"), ({ request }) => {

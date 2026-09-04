@@ -7,20 +7,25 @@ import { PopoverLayout } from "@/components/popover/layout";
 import { ArrowDown, Check } from "@/icons";
 import { cn } from "@/lib/utils";
 
-const SORT_OPTIONS = ["chats", "recommended", "wish"] as const;
-type SortOption = (typeof SORT_OPTIONS)[number];
-const SORT_LABEL_KEYS: Record<
-  SortOption,
-  "sortByChats" | "sortRecommended" | "sortWish"
-> = {
+/**
+ * 서버가 줄 세울 수 있는 기준만 둡니다 — universes 가 세고 있는 대화 수와 찜 수 둘입니다.
+ * "추천"은 이 섹션에 대응하는 근거가 서버에 없어 뺐습니다.
+ */
+export const OFFICIAL_SORT_OPTIONS = ["chats", "wish"] as const;
+export type OfficialSortOption = (typeof OFFICIAL_SORT_OPTIONS)[number];
+
+const SORT_LABEL_KEYS: Record<OfficialSortOption, "sortByChats" | "sortWish"> = {
   chats: "sortByChats",
-  recommended: "sortRecommended",
   wish: "sortWish",
 };
 
-const OfficialSortDropdown = () => {
+interface OfficialSortDropdownProps {
+  value: OfficialSortOption;
+  onChange: (sort: OfficialSortOption) => void;
+}
+
+const OfficialSortDropdown = ({ value, onChange }: OfficialSortDropdownProps) => {
   const t = useTranslations("officialPage");
-  const [sortOption, setSortOption] = useState<SortOption>("chats");
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
@@ -35,7 +40,7 @@ const OfficialSortDropdown = () => {
         className="flex items-center gap-1 whitespace-nowrap rounded-xl border border-main p-2.5 hover:bg-btn-hover"
       >
         <span className="body-4 whitespace-nowrap text-font-2">
-          {t(SORT_LABEL_KEYS[sortOption])}
+          {t(SORT_LABEL_KEYS[value])}
         </span>
         <ArrowDown className="size-4 text-font-2" />
       </button>
@@ -48,8 +53,8 @@ const OfficialSortDropdown = () => {
             className="min-w-30"
           >
             <ul className="flex flex-col gap-1" role="listbox">
-              {SORT_OPTIONS.map((option) => {
-                const isSelected = option === sortOption;
+              {OFFICIAL_SORT_OPTIONS.map((option) => {
+                const isSelected = option === value;
 
                 return (
                   <li
@@ -57,7 +62,7 @@ const OfficialSortDropdown = () => {
                     role="option"
                     aria-selected={isSelected}
                     onClick={() => {
-                      setSortOption(option);
+                      onChange(option);
                       setIsOpen(false);
                     }}
                     className={cn(

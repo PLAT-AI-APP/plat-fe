@@ -23,8 +23,12 @@ export interface OfficialPreviewItem {
   scenarios: OfficialPreviewScenario[];
 }
 
+/** 대화량순 / 찜순. 서버가 universes 의 누적 카운터로 줄 세웁니다. */
+export type OfficialSort = "CHAT" | "LIKE";
+
 interface GetOfficialPreviewParams {
   tendency?: Tendency;
+  sort?: OfficialSort;
   page?: number;
   size?: number;
 }
@@ -33,12 +37,14 @@ const getOfficialPreview = async ({
   page = 0,
   size = 10,
   tendency = "ALL",
+  sort = "CHAT",
 }: GetOfficialPreviewParams) => {
   const response = await authAxios.get<OfficialPreviewItem[]>(
     "/home/official-preview",
     {
       params: {
         tendency,
+        sort,
         page,
         size,
       },
@@ -62,6 +68,7 @@ export const useOfficialPreviewQuery = (
       "get-official-preview",
       locale,
       tendency,
+      params.sort,
       params.page,
       params.size,
     ],
