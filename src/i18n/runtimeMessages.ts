@@ -24,6 +24,9 @@ const en = {
     characterUpdated: "The character was updated.",
     transactionIdCopied: "Transaction ID copied.",
   },
+  headerAccount: {
+    label: "Account",
+  },
   state: {
     retry: "Try again",
     loadFailed: "Could not load this section.",
@@ -271,6 +274,9 @@ const ko: RuntimeMessages = {
     characterUpdated: "캐릭터가 성공적으로 수정되었습니다!",
     transactionIdCopied: "거래번호가 복사되었습니다.",
   },
+  headerAccount: {
+    label: "계정",
+  },
   state: {
     retry: "다시 시도",
     loadFailed: "이 영역을 불러오지 못했어요.",
@@ -498,6 +504,9 @@ const ja: RuntimeMessages = {
     characterDeleteFailed: "キャラクターの削除に失敗しました。もう一度お試しください。",
     characterUpdated: "キャラクターを更新しました。",
     transactionIdCopied: "取引番号をコピーしました。",
+  },
+  headerAccount: {
+    label: "アカウント",
   },
   state: {
     retry: "再試行",
@@ -730,6 +739,9 @@ const zh: RuntimeMessages = {
     characterUpdated: "角色已成功修改。",
     transactionIdCopied: "已复制交易编号。",
   },
+  headerAccount: {
+    label: "账户",
+  },
   state: {
     retry: "重试",
     loadFailed: "无法加载该区域。",
@@ -951,6 +963,9 @@ const th: RuntimeMessages = {
     characterDeleteFailed: "ลบตัวละครไม่สำเร็จ โปรดลองอีกครั้ง",
     characterUpdated: "แก้ไขตัวละครเรียบร้อยแล้ว",
     transactionIdCopied: "คัดลอกหมายเลขธุรกรรมแล้ว",
+  },
+  headerAccount: {
+    label: "บัญชี",
   },
   state: {
     retry: "ลองอีกครั้ง",
@@ -1185,6 +1200,9 @@ const vi: RuntimeMessages = {
     characterDeleteFailed: "Không xóa được nhân vật. Vui lòng thử lại.",
     characterUpdated: "Đã cập nhật nhân vật.",
     transactionIdCopied: "Đã sao chép mã giao dịch.",
+  },
+  headerAccount: {
+    label: "Tài khoản",
   },
   state: {
     retry: "Thử lại",

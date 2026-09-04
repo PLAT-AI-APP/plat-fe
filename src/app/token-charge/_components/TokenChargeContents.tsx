@@ -10,6 +10,7 @@ import { useWalletStore } from "@/store/useWalletStore";
 import type { Product } from "@/type/product";
 import PolicyGuide from "./PolicyGuide";
 import PageTitle from "@/components/PageTitle";
+import { ErrorState } from "@/components/state";
 
 interface ProductListItemProps {
   product: Product;
@@ -68,7 +69,14 @@ const TokenChargeContents = () => {
   const availableBalance = useWalletStore(
     (state) => state.balance?.availableBalance ?? 0,
   );
-  const { data: products, isPending, isError } = useProductsQuery();
+  // isPending 은 로그인 전 비활성 상태에서도 true 라 스켈레톤이 걷히지 않는다.
+  const {
+    data: products,
+    error,
+    isLoading,
+    isError,
+    refetch,
+  } = useProductsQuery();
 
   return (
     <section className="mx-auto w-full max-w-160 pt-5">
@@ -93,13 +101,10 @@ const TokenChargeContents = () => {
       <div className="flex flex-col gap-4">
         <h2 className="title-2 text-font-0">{t("tokenCharge.purchase")}</h2>
 
-        {isPending && <ProductListSkeleton />}
+        {isLoading && <ProductListSkeleton />}
 
-        {isError && (
-          <p className="body-4 py-10 text-center text-font-2">
-            {t("tokenCharge.loadFailed")}
-          </p>
-        )}
+        {/* 서버가 준 사유와(개발 모드에서는) 실패한 요청까지 함께 보여주고 재시도를 제공한다. */}
+        {isError && <ErrorState error={error} onRetry={refetch} />}
 
         {products && products.length === 0 && (
           <p className="body-4 py-10 text-center text-font-2">

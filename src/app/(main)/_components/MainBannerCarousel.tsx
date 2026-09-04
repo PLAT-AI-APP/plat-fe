@@ -18,7 +18,7 @@ import { cn } from "@/lib/utils";
  */
 export function MainBannerCarousel() {
   const t = useTranslations("home");
-  const { data: banners = [], isPending } = useHomeBannersQuery();
+  const { data: banners = [], isLoading } = useHomeBannersQuery();
 
   const { viewportRef, scrollPrev, scrollNext } = useCarousel({
     options: { loop: true },
@@ -26,9 +26,9 @@ export function MainBannerCarousel() {
   });
 
   // 배너가 없으면 자리만 차지하는 빈 캐러셀 대신 섹션을 통째로 내린다.
-  if (isPending) {
+  if (isLoading) {
     return (
-      <section className="min-h-[437.08px] w-full max-w-full animate-pulse bg-card" />
+      <section className="aspect-[64/23] max-h-[437px] w-full max-w-full animate-pulse bg-card" />
     );
   }
 
@@ -37,7 +37,7 @@ export function MainBannerCarousel() {
   const hasMultiple = banners.length > 1;
 
   return (
-    <section className="relative min-h-[437.08px] w-full max-w-full overflow-hidden bg-scrim">
+    <section className="relative aspect-[64/23] max-h-[437px] w-full max-w-full overflow-hidden bg-scrim">
       <div
         id="carousel-viewport"
         className="h-full w-full overflow-hidden"
@@ -77,7 +77,7 @@ export function MainBannerCarousel() {
             return (
               <div
                 key={banner.mainBannerId}
-                className="relative h-[437.08px] min-w-0 flex-[0_0_100%] overflow-hidden"
+                className="relative h-full min-w-0 flex-[0_0_100%] overflow-hidden"
               >
                 {banner.linkUrl ? (
                   <Link
@@ -101,7 +101,7 @@ export function MainBannerCarousel() {
         onClick={scrollPrev}
         aria-label={t("previousBanner")}
         className={cn(
-          "absolute left-10 top-1/2 z-20 size-8 -translate-y-1/2 overflow-hidden text-overlay-font opacity-25 transition-opacity hover:opacity-100",
+          "absolute left-4 top-1/2 z-20 md:left-10 size-8 -translate-y-1/2 overflow-hidden text-overlay-font opacity-25 transition-opacity hover:opacity-100",
           !hasMultiple && "hidden",
         )}
       >
@@ -112,7 +112,7 @@ export function MainBannerCarousel() {
         onClick={scrollNext}
         aria-label={t("nextBanner")}
         className={cn(
-          "absolute right-10 top-1/2 z-20 size-8 -translate-y-1/2 overflow-hidden text-overlay-font opacity-25 transition-opacity hover:opacity-100",
+          "absolute right-4 top-1/2 z-20 md:right-10 size-8 -translate-y-1/2 overflow-hidden text-overlay-font opacity-25 transition-opacity hover:opacity-100",
           !hasMultiple && "hidden",
         )}
       >

@@ -83,7 +83,8 @@
 
   /* 사이드바를 제외한 모든 콘텐츠 컨테이너가 공유하는 x축 여백.
      창이 좁아져도 콘텐츠가 화면 끝에 붙지 않도록 하는 최소 여유 공간이다.
-     홈 배너 · 채팅방처럼 풀블리드가 필요한 화면만 예외적으로 제외한다. */
+     홈 배너 · 채팅방처럼 풀블리드가 필요한 화면만 예외적으로 제외한다.
+     좁은 화면에서는 36px 가 폭의 상당 부분을 먹어 카드가 뭉개지므로 아래에서 줄인다. */
   --content-margin-x: 36px;
 
   /* 레이아웃 폭 계약.
@@ -111,6 +112,19 @@
   --motion-slow: 300ms;
   --motion-ease-out: cubic-bezier(0.32, 0.72, 0, 1);
   --motion-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* 좁은 화면에서는 좌우 여백을 줄여 카드가 쓸 수 있는 폭을 확보한다. */
+@media (max-width: 639px) {
+  :root {
+    --content-margin-x: 16px;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  :root {
+    --content-margin-x: 24px;
+  }
 }
 
 input:-webkit-autofill,
@@ -556,6 +570,21 @@ button {
 }
 
 @utility content-x {
+  padding-inline: var(--content-margin-x);
+}
+
+/*
+ * 콘텐츠 셸. 카드 그리드가 놓이는 영역의 폭 계약을 한곳에서 정한다.
+ *
+ * max-width 에 좌우 여백까지 포함시키면(예: max-w-300 + content-x) box-sizing: border-box
+ * 때문에 실제 카드 영역이 여백만큼 줄어든다. 1200px 를 기준으로 역산한 카드 폭
+ * (S 186.67 / M 227.2)과 열 계약(CARD_COLUMNS_CLASS)이 그만큼 어긋나 6열이 5열로 떨어진다.
+ * 그래서 여백을 max-width 위에 더해, content box 가 정확히 --content-max-width 가 되게 한다.
+ */
+@utility content-shell {
+  width: 100%;
+  max-width: calc(var(--content-max-width) + 2 * var(--content-margin-x));
+  margin-inline: auto;
   padding-inline: var(--content-margin-x);
 }
 

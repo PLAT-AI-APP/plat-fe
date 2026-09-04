@@ -12,7 +12,7 @@ const MAX_SLIDES = 3;
 
 const CharacterExperience = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const { data, error, isError, isPending, refetch } =
+  const { data, error, isError, isLoading, refetch } =
     useOfficialPreviewQuery();
 
   const items = (data ?? []).slice(0, MAX_SLIDES);
@@ -23,7 +23,7 @@ const CharacterExperience = () => {
 
   const header = (
     <ExperienceHeader
-      items={isPending || isError ? [] : items}
+      items={isLoading || isError ? [] : items}
       handleSelectedIndex={handleSelectedIndex}
       selectedIndex={selectedIndex}
     />
@@ -31,7 +31,7 @@ const CharacterExperience = () => {
 
   // 예전에는 setTimeout(2000) 으로 로딩을 흉내 냈다. 데이터와 무관한 지연이라
   // 홈에 들어올 때마다 이유 없이 2초를 기다려야 했다.
-  if (isPending) {
+  if (isLoading) {
     return (
       <section className="flex flex-col gap-4">
         {header}

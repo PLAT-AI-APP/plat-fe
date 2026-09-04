@@ -47,6 +47,7 @@ const ko = {
     sortChats: "대화량",
     sortRecommended: "맞춤 추천순",
     sortWish: "찜",
+    empty: "아직 순위에 오른 캐릭터가 없어요",
   },
   officialPage: {
     title: "PLAT의 공식캐릭터",
@@ -55,6 +56,7 @@ const ko = {
   newPage: {
     title: "이달의 신규 캐릭터",
     updatedAt: "{date}일 기준 집계",
+    empty: "아직 신작이 없어요",
   },
   searchResults: {
     tabAll: "전체",
@@ -248,6 +250,7 @@ const en = {
     sortChats: "Most chatted",
     sortRecommended: "Recommended for you",
     sortWish: "Wishlist",
+    empty: "No characters have made the ranking yet",
   },
   officialPage: {
     title: "PLAT's official characters",
@@ -256,6 +259,7 @@ const en = {
   newPage: {
     title: "New characters this month",
     updatedAt: "As of {date}",
+    empty: "No new releases yet",
   },
   searchResults: {
     tabAll: "All",
@@ -449,6 +453,7 @@ const ja = {
     sortChats: "会話量",
     sortRecommended: "おすすめ順",
     sortWish: "お気に入り",
+    empty: "まだランキングに載ったキャラクターがありません",
   },
   officialPage: {
     title: "PLATの公式キャラクター",
@@ -457,6 +462,7 @@ const ja = {
   newPage: {
     title: "今月の新作キャラクター",
     updatedAt: "{date}時点の集計",
+    empty: "まだ新作がありません",
   },
   searchResults: {
     tabAll: "すべて",
@@ -646,6 +652,7 @@ const zh = {
     sortChats: "对话量",
     sortRecommended: "个性化推荐顺",
     sortWish: "收藏",
+    empty: "还没有上榜的角色",
   },
   officialPage: {
     title: "PLAT官方角色",
@@ -654,6 +661,7 @@ const zh = {
   newPage: {
     title: "本月新角色",
     updatedAt: "截至{date}统计",
+    empty: "还没有新作",
   },
   searchResults: {
     tabAll: "全部",
@@ -846,6 +854,7 @@ const th = {
     sortChats: "ตามจำนวนแชต",
     sortRecommended: "ตามคำแนะนำเฉพาะคุณ",
     sortWish: "รายการโปรด",
+    empty: "ยังไม่มีตัวละครติดอันดับ",
   },
   officialPage: {
     title: "ตัวละครทางการของ PLAT",
@@ -854,6 +863,7 @@ const th = {
   newPage: {
     title: "ตัวละครใหม่ประจำเดือนนี้",
     updatedAt: "ข้อมูล ณ {date}",
+    empty: "ยังไม่มีผลงานใหม่",
   },
   searchResults: {
     tabAll: "ทั้งหมด",
@@ -1047,6 +1057,7 @@ const vi = {
     sortChats: "Theo lượt chat",
     sortRecommended: "Đề xuất riêng cho bạn",
     sortWish: "Yêu thích",
+    empty: "Chưa có nhân vật nào lọt vào bảng xếp hạng",
   },
   officialPage: {
     title: "Nhân vật chính thức của PLAT",
@@ -1055,6 +1066,7 @@ const vi = {
   newPage: {
     title: "Nhân vật mới trong tháng",
     updatedAt: "Tính đến {date}",
+    empty: "Chưa có tác phẩm mới",
   },
   searchResults: {
     tabAll: "Tất cả",

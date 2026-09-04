@@ -25,7 +25,10 @@ import {
   SKIP_AUTH_ALERT_ONCE_KEY,
   isProtectedPath,
 } from "@/constants/auth";
-import { TABLET_MAX_WIDTH_QUERY } from "@/constants/layout";
+import {
+  MOBILE_MAX_WIDTH_QUERY,
+  TABLET_MAX_WIDTH_QUERY,
+} from "@/constants/layout";
 import { useLayoutStore } from "@/store/useLayoutStore";
 
 // 사이드바 없이 전용 화면을 쓰는 경로
@@ -64,10 +67,20 @@ export default function ClientLayout({
    * 그때만 얇은 스크림을 깔고, 메인 콘텐츠에 블러는 걸지 않는다.
    */
   const isNarrow = useMediaQuery(TABLET_MAX_WIDTH_QUERY);
+  // 모바일에서는 접힌 레일(70px)조차 두지 않는다. 여백까지 합치면 폭의 3분의 1을 메뉴가 먹는다.
+  const isMobile = useMediaQuery(MOBILE_MAX_WIDTH_QUERY);
   const isSidebarExpanded = useLayoutStore((state) => state.isSidebarExpanded);
   const toggleSidebar = useLayoutStore((state) => state.toggleSidebar);
   const setSidebarExpanded = useLayoutStore((state) => state.setSidebarExpanded);
   const isDrawerOpen = isNarrow && isSidebarExpanded;
+  // 모바일에서 접힌 상태면 사이드바를 아예 렌더하지 않는다(드로어로 열 때만 등장).
+  const isSidebarRendered = !isSidebarHidden && (!isMobile || isDrawerOpen);
+  /*
+   * 사이드바가 그리드 열을 차지하는 경우(=콘텐츠를 옆으로 미는 경우)만 2열로 둔다.
+   * 드로어는 position: fixed 라 그리드 흐름에서 빠지므로, 그때도 2열을 유지하면
+   * 콘텐츠가 사이드바 칸으로 들어가 폭이 0 이 된다.
+   */
+  const isSidebarInline = isSidebarRendered && !isMobile && !isDrawerOpen;
   const sidebarToggleRef = useRef<HTMLButtonElement>(null);
 
   const handleFoldToggle = useCallback(() => toggleSidebar(), [toggleSidebar]);
@@ -332,8 +345,9 @@ export default function ClientLayout({
       <main
         id="main-container"
         style={{
-          // 사이드바가 차지하는 열 폭. 드로어(좁은 화면)일 때는 레일 폭으로 고정해
-          // 펼쳐도 콘텐츠가 밀리지 않는다.
+          // 사이드바가 차지하는 열 폭.
+          // 모바일: 0(콘텐츠가 전체 폭을 쓴다) · 태블릿: 레일 폭 고정(펼쳐도 콘텐츠를 밀지 않음)
+          // 데스크탑: 사용자가 정한 접힘/펼침 폭
           ["--sidebar-width" as string]:
             !isNarrow && isSidebarExpanded
               ? "var(--sidebar-width-expanded)"
@@ -341,15 +355,19 @@ export default function ClientLayout({
         }}
         className={cn(
           "grid overflow-hidden",
-          "[grid-template-columns:var(--sidebar-width)_minmax(0,1fr)] [transition:grid-template-columns_var(--motion-base)_var(--motion-ease-out)]",
-          isSidebarHidden && "[grid-template-columns:minmax(0,1fr)]",
+          "[transition:grid-template-columns_var(--motion-base)_var(--motion-ease-out)]",
+          // 사이드바를 렌더하지 않을 때 2열 템플릿을 그대로 두면 콘텐츠가 사이드바 칸(0px)에
+          // 들어가 폭이 0이 된다. 렌더 여부에 따라 열 자체를 바꾼다.
+          isSidebarInline
+            ? "[grid-template-columns:var(--sidebar-width)_minmax(0,1fr)]"
+            : "[grid-template-columns:minmax(0,1fr)]",
           isHeaderHidden ? "h-screen" : "h-[calc(100vh-var(--header-height))]",
         )}
       >
-        {!isSidebarHidden && (
+        {isSidebarRendered && (
           <Sidebar
             isFolded={!isSidebarExpanded}
-            variant={isDrawerOpen ? "overlay" : "inline"}
+            variant={isSidebarInline ? "inline" : "overlay"}
             onFoldToggle={isHeaderHidden ? handleFoldToggle : undefined}
             foldToggleRef={isHeaderHidden ? sidebarToggleRef : undefined}
           />

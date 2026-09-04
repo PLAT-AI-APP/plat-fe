@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
 import { useLocaleStore } from "@/store/useLocaleStore";
+import { Tendency, useTendencyStore } from "@/store/useTendencyStore";
 import { useAuthStore } from "@/store/useAuthStore";
 
 export interface UserRecommendCreator {
@@ -41,6 +42,7 @@ const getNormalizedUserRecommend = (
 };
 
 interface GetUserRecommendParams {
+  tendency?: Tendency;
   page?: number;
   size?: number;
 }
@@ -48,11 +50,13 @@ interface GetUserRecommendParams {
 const getUserRecommend = async ({
   page = 0,
   size = 10,
+  tendency = "ALL",
 }: GetUserRecommendParams) => {
   const response = await authAxios.get<UserRecommendApiResponse>(
     "/home/user-recommend",
     {
       params: {
+        tendency,
         page,
         size,
       },
@@ -66,12 +70,20 @@ const getUserRecommend = async ({
 export const useUserRecommendQuery = (params: GetUserRecommendParams = {}) => {
   // 언어가 바뀌면 Accept-Language 헤더로 나가는 응답도 달라지므로 캐시 키에 반영합니다.
   const locale = useLocaleStore((state) => state.locale);
+  // 성향이 바뀌면 목록도 달라지므로 캐시를 분리합니다.
+  const tendency = useTendencyStore((state) => state.tendency);
   const isAuthReady = useAuthStore((state) => state.isAuthReady);
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
   return useQuery<UserRecommendItem[], AppError>({
-    queryKey: ["get-user-recommend", locale, params.page, params.size],
-    queryFn: () => getUserRecommend(params),
+    queryKey: [
+      "get-user-recommend",
+      locale,
+      tendency,
+      params.page,
+      params.size,
+    ],
+    queryFn: () => getUserRecommend({ ...params, tendency }),
     staleTime: 1000 * 60 * 5,
     enabled: isAuthReady && isLoggedIn,
   });

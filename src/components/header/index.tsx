@@ -27,6 +27,7 @@ const Header = ({ handleFoldToggle, foldToggleRef }: HeaderProps) => {
   const profileModal = useToggle();
 
   const triggerRef = useRef<HTMLImageElement>(null);
+  const loginTriggerRef = useRef<HTMLButtonElement>(null);
 
   const profileImage = useUserStore((state) => state.user?.profileImage);
   // 헤더의 보유 캐시는 전역 지갑 잔액 기준으로 표시합니다.
@@ -115,24 +116,32 @@ const Header = ({ handleFoldToggle, foldToggleRef }: HeaderProps) => {
 
           {/* 비로그인 프로필 */}
           {!isLoggedIn && (
-            <div
-              ref={triggerRef}
+            <button
+              ref={loginTriggerRef}
+              type="button"
+              aria-label={t("headerAccount.label")}
+              aria-haspopup="menu"
+              aria-expanded={profileModal.isOpen}
               onClick={(e) => {
                 // profileModal.open 내부에서 이미 stopPropagation을 하고 있지만
                 // 여기서 한 번 더 명시적으로 막아주는 것이 안전합니다.
                 e.stopPropagation();
                 profileModal.toggle(e);
               }}
-              className="flex items-center justify-center w-10 h-10"
+              className="flex size-10 items-center justify-center rounded-xl text-font-2 transition-colors hover:bg-btn-hover hover:text-font-1"
             >
-              <User className="w-6 h-6 text-font-2 cursor-pointer" />
-            </div>
+              <User className="size-6" />
+            </button>
           )}
 
           {profileModal.isOpen && (
             <ProfilePopover
               onClose={profileModal.toggle}
-              triggerRef={triggerRef}
+              triggerRef={
+                isLoggedIn
+                  ? (triggerRef as React.RefObject<HTMLElement | null>)
+                  : loginTriggerRef
+              }
             />
           )}
         </div>

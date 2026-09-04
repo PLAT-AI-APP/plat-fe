@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { cn, formatWithCommas } from "@/lib/utils";
@@ -28,6 +28,7 @@ import useRouteEffect from "@/hooks/useRouteEffect";
 import Token from "@/icons/Token";
 import { useTranslations } from "next-intl";
 import { useWalletStore } from "@/store/useWalletStore";
+import { Tendency, useTendencyStore } from "@/store/useTendencyStore";
 
 interface ProfilePopoverProps {
   onClose: () => void;
@@ -69,11 +70,11 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
       icon: Gear,
     },
   ];
-  const tendencyArray = [
+  const tendencyArray: { value: Tendency; name: string; color: string }[] = [
     // 성별 선택 칩의 식별색. 상태색이 아니라 항목을 구분하는 고유색이라 테마와 무관하게 고정한다.
-    { name: selectorT("all"), color: "#AA8BD8" },
-    { name: selectorT("male"), color: "#60A5FA" },
-    { name: selectorT("female"), color: "#F472B6" },
+    { value: "ALL", name: selectorT("all"), color: "#AA8BD8" },
+    { value: "MALE_ORIENTED", name: selectorT("male"), color: "#60A5FA" },
+    { value: "FEMALE_ORIENTED", name: selectorT("female"), color: "#F472B6" },
   ];
 
   const handlePersonaModalOpen = () => {
@@ -112,12 +113,15 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
     return true;
   });
 
-  const [currentTendency, setCurrentTendency] = useState<
-    (typeof tendencyArray)[number]["name"]
-  >(selectorT("all"));
+  // 선택한 성향은 홈·랭킹·신작 목록의 조회 조건이라 새로고침 뒤에도 남아야 한다(localStorage).
+  const currentTendency = useTendencyStore((state) => state.tendency);
+  const setCurrentTendency = useTendencyStore((state) => state.setTendency);
+  const currentTendencyName =
+    tendencyArray.find(({ value }) => value === currentTendency)?.name ??
+    selectorT("all");
 
-  const handleCurrentTendency = (name: string) => {
-    setCurrentTendency(name);
+  const handleCurrentTendency = (value: Tendency) => {
+    setCurrentTendency(value);
     tendency.toggle();
   };
 
@@ -253,7 +257,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
                   {tab.hasTendencyOptions && (
                     <span className="flex shrink-0 items-center gap-1">
                       <span className="title-6 text-font-1">
-                        {currentTendency}
+                        {currentTendencyName}
                       </span>
                       <ArrowRight
                         className={cn(
@@ -276,10 +280,10 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
                       className="overflow-hidden"
                     >
                       <ul className="flex flex-col gap-1 p-2.5">
-                        {tendencyArray.map(({ color, name }) => (
+                        {tendencyArray.map(({ color, name, value }) => (
                           <li
-                            key={name}
-                            onClick={() => handleCurrentTendency(name)}
+                            key={value}
+                            onClick={() => handleCurrentTendency(value)}
                             className="body-5 flex cursor-pointer justify-between rounded-xl px-2.5 py-2 transition-colors duration-200 ease-in-out hover:bg-btn-hover"
                           >
                             <div className="flex items-center gap-2">
@@ -290,7 +294,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
                               {name}
                             </div>
 
-                            {currentTendency === name && (
+                            {currentTendency === value && (
                               <Check className="size-[18px] text-brand" />
                             )}
                           </li>
