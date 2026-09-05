@@ -2,18 +2,12 @@
 
 import React from "react";
 import { useTranslations } from "next-intl";
+import type { NoticeCategory } from "@/type/notice";
 import FilterTab from "./FilterTab";
 import NoticeList from "./NoticeList";
 
 interface NotificationContentsProps {
-  currentFilter:
-    | "SERVICE"
-    | "UPDATE"
-    | "EVENT"
-    | "MAINTENANCE"
-    | "POLICY"
-    | null
-    | undefined;
+  currentFilter: NoticeCategory | null | undefined;
 }
 
 const NotificationContents = ({ currentFilter }: NotificationContentsProps) => {

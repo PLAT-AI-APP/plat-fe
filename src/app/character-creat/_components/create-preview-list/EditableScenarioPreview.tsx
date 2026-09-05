@@ -37,7 +37,7 @@ const EditableScenarioPreview = ({
       <textarea
         autoFocus
         rows={5}
-        className="focus-ring-none body-4 min-h-[152px] w-full resize-none rounded-xl border border-main bg-darker px-4 py-3 text-font-1 outline-none transition-colors focus:field-focus!"
+        className="focus-ring-none body-5 min-h-[152px] w-full resize-none rounded-xl border border-main bg-darker px-4 py-3 text-font-1 outline-none transition-colors focus:field-focus!"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         onKeyDown={handleKeyDown}

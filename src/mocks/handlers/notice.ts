@@ -1,61 +1,49 @@
 import { http, HttpResponse } from "msw";
 import { endpoint, pathValue } from "../utils";
+import type { NoticeCategory, NoticeDetail, NoticeSummary } from "@/type/notice";
 
-// 타입 정의
-interface NoticeItem {
-  noticeId: number;
-  category: "SERVICE" | "UPDATE" | "EVENT" | "MAINTENANCE" | "POLICY";
-  title: string;
-  createdAt: string;
-  isPinned: boolean;
-}
+const CATEGORIES: NoticeCategory[] = [
+  "SERVICE",
+  "UPDATE",
+  "EVENT",
+  "MAINTENANCE",
+  "POLICY",
+];
 
-interface NoticeDetail extends NoticeItem {
-  content: string;
-  viewCount: number;
-  updatedAt: string | null;
-}
+const CATEGORY_LABEL: Record<NoticeCategory, string> = {
+  SERVICE: "공지",
+  UPDATE: "업데이트",
+  EVENT: "이벤트",
+  MAINTENANCE: "점검",
+  POLICY: "정책",
+};
 
 // 1. 100개의 목 데이터 생성 (목록용 + 상세용)
 const generateMockData = () => {
-  const categories: NoticeItem["category"][] = [
-    "SERVICE",
-    "UPDATE",
-    "EVENT",
-    "MAINTENANCE",
-    "POLICY",
-  ];
-  const categoryLabel: Record<NoticeItem["category"], string> = {
-    SERVICE: "공지",
-    UPDATE: "업데이트",
-    EVENT: "이벤트",
-    MAINTENANCE: "점검",
-    POLICY: "정책",
-  };
-  const list: NoticeItem[] = [];
-  const details: Record<number, NoticeDetail> = {};
+  const list: NoticeSummary[] = [];
+  const details: Record<string, NoticeDetail> = {};
 
   for (let i = 100; i >= 1; i--) {
-    const category = categories[i % categories.length];
+    const category = CATEGORIES[i % CATEGORIES.length];
     const isPinned = i > 97; // 최신 3개는 상단 고정 테스트용
     const date = new Date(2026, 3, i).toISOString(); // 날짜 분산
+    const noticeId = String(i);
 
-    const item: NoticeItem = {
-      noticeId: i,
+    const item: NoticeSummary = {
+      noticeId,
       category,
-      title: `${categoryLabel[category]} - ${i}번째 게시글입니다.`,
+      title: `${CATEGORY_LABEL[category]} - ${i}번째 게시글입니다.`,
       createdAt: date,
       isPinned,
     };
 
     list.push(item);
 
-    // 상세 데이터 매핑
-    details[i] = {
+    details[noticeId] = {
       ...item,
-      content: `안녕하세요, PLAT 팀입니다.\n\n이것은 ${i}번 게시물의 상세 내용입니다.\n\n서비스 이용에 참고 부탁드립니다.`,
+      content: `안녕하세요, **PLAT 팀**입니다.\n\n## 안내\n\n이것은 ${i}번 게시물의 상세 내용입니다.\n\n- 첫 번째 안내 항목\n- 두 번째 안내 항목\n\n> 서비스 이용에 참고 부탁드립니다.\n\n자세한 내용은 [고객센터](https://plat.so)를 확인해 주세요.`,
       viewCount: i * 3,
-      updatedAt: date,
+      updatedAt: i % 2 === 0 ? date : null,
     };
   }
   return { list, details };
@@ -70,20 +58,17 @@ export const noticeHandlers = [
     const page = parseInt(url.searchParams.get("page") || "0", 10);
     const size = 20;
 
-    // 상단 고정(isPinned) 처리 (고정글 우선, 그 다음 최신순)
-    const sortedNotices = [...mockNotices].sort((a, b) => {
+    // 상단 고정(isPinned) 우선, 그 다음 최신순
+    const sorted = [...mockNotices].sort((a, b) => {
       if (a.isPinned !== b.isPinned) return a.isPinned ? -1 : 1;
-      return b.noticeId - a.noticeId;
+      return Number(b.noticeId) - Number(a.noticeId);
     });
 
-    const totalElements = sortedNotices.length;
+    const totalElements = sorted.length;
     const totalPages = Math.ceil(totalElements / size);
-    const startIndex = page * size;
-    const endIndex = startIndex + size;
-    const content = sortedNotices.slice(startIndex, endIndex);
+    const content = sorted.slice(page * size, page * size + size);
 
     return HttpResponse.json({
-      condition: null,
       page: {
         number: page,
         size,
@@ -99,8 +84,7 @@ export const noticeHandlers = [
   // 공지사항 상세 조회 API
   http.get(/\/notices\/[^/]+(?:\?.*)?$/, ({ request }) => {
     const noticeId = pathValue(request.url, /\/notices\/([^/]+)$/);
-    const id = parseInt(noticeId ?? "", 10);
-    const notice = mockNoticeDetails[id];
+    const notice = noticeId ? mockNoticeDetails[noticeId] : undefined;
 
     if (!notice) {
       return new HttpResponse(null, {

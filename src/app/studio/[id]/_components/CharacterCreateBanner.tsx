@@ -17,7 +17,7 @@ const CharacterCreateBanner = () => {
     >
       <div className="flex flex-col gap-1">
         <span className="title-3">{t("createTitle")}</span>
-        <span className="body-4 text-font-2">{t("createDescription")}</span>
+        <span className="body-5 text-font-2">{t("createDescription")}</span>
       </div>
 
       <Link

@@ -52,7 +52,7 @@ const CommentExpandableBody = ({ content }: CommentExpandableBodyProps) => {
         transition={{ duration: 0.24, ease: "easeInOut" }}
         className="relative w-full overflow-hidden"
       >
-        <p ref={contentRef} className="body-4 whitespace-pre-wrap text-font-1">
+        <p ref={contentRef} className="body-5 whitespace-pre-wrap text-font-1">
           {content}
         </p>
 
@@ -74,7 +74,7 @@ const CommentExpandableBody = ({ content }: CommentExpandableBodyProps) => {
         <button
           type="button"
           onClick={() => setIsExpanded((prev) => !prev)}
-          className="body-6 w-fit text-font-2 transition-colors hover:text-font-1"
+          className="body-7 w-fit text-font-2 transition-colors hover:text-font-1"
         >
           {isExpanded ? t("collapse") : t("expandCompact")}
         </button>

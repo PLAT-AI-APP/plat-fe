@@ -27,8 +27,8 @@ const CharacterChat = ({
         className="avatar-img size-9"
       />
 
-      <div id="chat-bubble-container" className="body-4">
-        <span className="body-5 mb-1.5 block text-font-1">{CharacterName}</span>
+      <div id="chat-bubble-container" className="body-5">
+        <span className="body-6 mb-1.5 block text-font-1">{CharacterName}</span>
         <div className="w-fit rounded-[0px_16px_16px_16px] bg-card px-3 py-2 text-font-1">
           {chatText}
         </div>

@@ -1,117 +1,130 @@
 "use client";
 
-import { useCarousel } from "@/hooks/useCarousel";
-import { ArrowLeft, ArrowRight } from "@/icons";
 import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { useCarousel } from "@/hooks/useCarousel";
+import { useHomeBannersQuery } from "@/api/home/getBanners";
+import { ArrowLeft, ArrowRight } from "@/icons";
+import { cn } from "@/lib/utils";
 
+/**
+ * 메인 최상단 캐러셀.
+ *
+ * 백엔드 HomeBannerResponse 는 이미지 URL 과 이동 링크만 준다 — 배너는 이미지가 전부라는
+ * 설계라 제목·설명·태그 필드가 아예 없다. 그래서 여기서도 문구를 얹지 않는다.
+ * (예전에는 i18n 에 하드코딩한 문구 3벌을 이미지 위에 그려 실제 배너와 무관한 화면이었다.)
+ */
 export function MainBannerCarousel() {
   const t = useTranslations("home");
-  const bannerData = [
-    {
-      id: 1,
-      src: "/images/sample.png",
-      alt: t("bannerAlt", { index: 1 }),
-      title: t("banner1Title"),
-      desc: t("banner1Desc"),
-      tags: [t("eventTag"), t("benefitTag"), t("startTag")],
-    },
-    {
-      id: 2,
-      src: "/images/sample.png",
-      alt: t("bannerAlt", { index: 2 }),
-      title: t("banner2Title"),
-      desc: t("banner2Desc"),
-      tags: [t("promotionTag"), t("discountTag"), t("hotTag")],
-    },
-    {
-      id: 3,
-      src: "/images/sample.png",
-      alt: t("bannerAlt", { index: 3 }),
-      title: t("banner3Title"),
-      desc: t("banner3Desc"),
-      tags: [t("specialTag"), t("couponTag"), t("deadlineTag")],
-    },
-  ];
+  const { data: banners = [], isLoading, isError } = useHomeBannersQuery();
 
   const { viewportRef, scrollPrev, scrollNext } = useCarousel({
     options: { loop: true },
     plugins: [Autoplay({ delay: 5000, stopOnInteraction: false })],
   });
 
+  /*
+   * 배너는 홍보용이고 여기에만 있는 정보가 없다. 그래서 못 불러왔을 때
+   * 화면 최상단에 큰 에러 판을 세우는 것보다 조용히 내리는 편이 낫다.
+   *
+   * 다만 순서는 고친다. 예전에는 실패해도 isLoading 분기를 지나 스켈레톤을
+   * 한 번 보여준 뒤 length === 0 으로 사라져서, 배너가 있다가 없어진 것처럼
+   * 보이고 그만큼 레이아웃이 튀었다. 실패는 스켈레톤 없이 바로 내린다.
+   */
+  if (isError) return null;
+
+  // 배너가 없으면 자리만 차지하는 빈 캐러셀 대신 섹션을 통째로 내린다.
+  if (isLoading) {
+    return (
+      <section className="aspect-[64/23] max-h-[437px] w-full max-w-full animate-pulse bg-card" />
+    );
+  }
+
+  if (banners.length === 0) return null;
+
+  const hasMultiple = banners.length > 1;
+
   return (
-    <section className="relative max-w-full w-full min-h-[437.08px] bg-scrim overflow-hidden">
-      {/* --- Embla Viewport (여기서 영역 밖으로 나가는 슬라이드를 숨깁니다) --- */}
+    <section className="relative aspect-[64/23] max-h-[437px] w-full max-w-full overflow-hidden bg-scrim">
       <div
         id="carousel-viewport"
-        className="w-full h-full overflow-hidden"
+        className="h-full w-full overflow-hidden"
         ref={viewportRef}
       >
-        {/* --- Embla Container --- */}
         <div id="carousel-container" className="flex h-full">
-          {/* --- 개별 슬라이드 루프 --- */}
-          {bannerData.map((banner, index) => (
-            <div
-              key={banner.id}
-              className="relative flex-[0_0_100%] min-w-0 h-full overflow-hidden"
-            >
-              {/* 배경을 채워줄 흐린 블러 이미지 */}
-              <div className="absolute inset-0 z-0 opacity-40 blur-[50px] scale-110">
-                <Image
-                  alt="blur-bg"
-                  fill
-                  priority={index === 0}
-                  className="object-cover"
-                  src={banner.src}
-                />
-              </div>
-
-              {/* 메인 콘텐츠 영역: 내부 여백(px)을 주어 화살표 버튼 공간 확보 */}
-              <div className="relative z-10 w-full h-full flex items-center px-16 md:px-20">
-                {/* 텍스트 정보 콘텐츠 */}
-                <div className="flex flex-col gap-4 text-overlay-font max-w-lg z-20">
-                  <h2 className="heading-2 text-overlay-font">
-                    {banner.title}
-                  </h2>
-                  <p className="body-3 whitespace-pre-line text-overlay-font/70">
-                    {banner.desc}
-                  </p>
-
-                  {/* 해시태그 */}
-                  <ul className="flex gap-2 mt-2">
-                    {banner.tags.map((tag, i) => (
-                      <li
-                        key={i}
-                        className="px-2 py-1 bg-scrim/50 rounded-md backdrop-blur-[2px]"
-                      >
-                        <span className="body-4 text-brand">{tag}</span>
-                      </li>
-                    ))}
-                  </ul>
+          {banners.map((banner, index) => {
+            const image = (
+              <>
+                {/* 배경을 채워줄 흐린 블러 이미지 */}
+                <div className="absolute inset-0 z-0 scale-110 opacity-40 blur-[50px]">
+                  <Image
+                    alt=""
+                    aria-hidden
+                    fill
+                    priority={index === 0}
+                    sizes="100vw"
+                    className="object-cover"
+                    src={banner.imageUrl}
+                  />
                 </div>
-              </div>
 
-              {/* 하단 그라데이션 어둡게 처리 */}
-              <div className="absolute inset-x-0 bottom-0 h-28 bg-linear-to-t from-scrim to-transparent z-10" />
-            </div>
-          ))}
+                <div className="relative z-10 mx-auto h-full w-full max-w-(--content-max-width)">
+                  <Image
+                    alt={t("bannerAlt", { index: index + 1 })}
+                    fill
+                    priority={index === 0}
+                    // 배너는 콘텐츠 최대 폭까지만 커진다.
+                    sizes="(max-width: 1200px) 100vw, 1200px"
+                    className="object-contain"
+                    src={banner.imageUrl}
+                  />
+                </div>
+              </>
+            );
+
+            return (
+              <div
+                key={banner.mainBannerId}
+                className="relative h-full min-w-0 flex-[0_0_100%] overflow-hidden"
+              >
+                {banner.linkUrl ? (
+                  <Link
+                    href={banner.linkUrl}
+                    className="block h-full w-full"
+                    aria-label={t("bannerAlt", { index: index + 1 })}
+                  >
+                    {image}
+                  </Link>
+                ) : (
+                  image
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
 
       <button
         type="button"
         onClick={scrollPrev}
-        data-icon="arrow-right"
-        className="opacity-25 hover:opacity-100 size-8 absolute left-10 top-1/2 -translate-y-1/2 overflow-hidden"
+        aria-label={t("previousBanner")}
+        className={cn(
+          "absolute left-4 top-1/2 z-20 md:left-10 size-8 -translate-y-1/2 overflow-hidden text-overlay-font opacity-25 transition-opacity hover:opacity-100",
+          !hasMultiple && "hidden",
+        )}
       >
         <ArrowLeft className="size-8" />
       </button>
       <button
         type="button"
         onClick={scrollNext}
-        data-icon="arrow-right"
-        className="opacity-25 hover:opacity-100 size-8 absolute right-10 top-1/2 -translate-y-1/2 overflow-hidden"
+        aria-label={t("nextBanner")}
+        className={cn(
+          "absolute right-4 top-1/2 z-20 md:right-10 size-8 -translate-y-1/2 overflow-hidden text-overlay-font opacity-25 transition-opacity hover:opacity-100",
+          !hasMultiple && "hidden",
+        )}
       >
         <ArrowRight className="size-8" />
       </button>

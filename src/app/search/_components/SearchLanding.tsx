@@ -3,16 +3,26 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import CharacterShowcase from "@/components/character/CharacterShowcase";
+import CharacterCard from "@/components/character/character-card";
+import CardGrid from "@/components/character/character-card/CardGrid";
 import { useRecentSearch } from "@/hooks/useRecentSearch";
 import dayjs from "@/lib/dayjs";
 import { cn, formatStatCount } from "@/lib/utils";
 import { useLocaleStore } from "@/store/useLocaleStore";
+import { QueryStateBoundary } from "@/components/state";
 import {
-  DUMMY_LIVE_SEARCH_KEYWORDS,
-  DUMMY_SEARCH_CHARACTERS,
-} from "./dummyData";
-import type { LiveSearchKeyword } from "./dummyData";
+  usePopularSearchTermsQuery,
+  type PopularSearchTerm,
+} from "@/api/search/getPopularSearchTerms";
+import {
+  SEARCH_MIN_KEYWORD_LENGTH,
+  isSearchableKeyword,
+} from "@/api/search/getSearch";
+import { showAppToast } from "@/lib/toast";
+
+/** 실시간 검색어 칸 수. 3열 x 2행 격자에 맞춘다. */
+const LIVE_SEARCH_SIZE = 6;
+import { DUMMY_SEARCH_CHARACTERS } from "./dummyData";
 import SearchQueryBar from "./SearchQueryBar";
 import PageTitle from "@/components/PageTitle";
 
@@ -39,7 +49,7 @@ const TrendTriangle = ({ direction, className }: TrendTriangleProps) => (
 );
 
 interface LiveSearchRankItemProps {
-  item: LiveSearchKeyword;
+  item: PopularSearchTerm;
   onSelect: (keyword: string) => void;
 }
 
@@ -51,49 +61,37 @@ const LiveSearchRankItem = ({ item, onSelect }: LiveSearchRankItemProps) => {
     <button
       type="button"
       onClick={() => onSelect(item.keyword)}
-      className="group flex w-full items-center justify-between rounded-xl bg-darkest p-4 transition-all duration-200 hover:scale-[1.02] hover:bg-btn-hover active:scale-[0.98]"
+      className="flex w-full items-center justify-between rounded-xl bg-darkest p-4 hover:bg-btn-hover"
     >
-      <div className="relative flex min-w-0 flex-1 items-center gap-2">
-        <p
+      <div className="flex items-center gap-2">
+        <span
           className={cn(
-            "title-2 w-4 shrink-0 text-left whitespace-pre-line",
+            "title-2 w-4 text-left",
             isTopThree ? "text-brand" : "text-font-disabled",
           )}
         >
           {item.rank}
-        </p>
-        {/* 기본은 말줄임, hover 시 카드 위로 배경을 깔고 전체 문장을 보여줍니다.
-            position/overflow는 transition이 안 먹어 static→absolute로 바로 전환하면
-            뚝 끊겨 보인다. 그래서 오버레이는 항상 absolute로 고정해두고 opacity만
-            움직여, 자리 이동 없이 페이드로만 부드럽게 나타나게 한다. */}
-        <span
-          className={cn(
-            "body-2 truncate",
-            isTopThree ? "text-font-1" : "text-font-2",
-          )}
-        >
-          {item.keyword}
         </span>
         <span
-          className={cn(
-            "body-2 pointer-events-none absolute left-6 z-10 w-max max-w-[calc(100%+2rem)] rounded-lg bg-btn-hover px-2 py-1 text-left whitespace-normal opacity-0 transition-opacity duration-200 group-hover:opacity-100",
-            isTopThree ? "text-font-1" : "text-font-2",
-          )}
+          className={cn("body-3", isTopThree ? "text-font-1" : "text-font-2")}
         >
           {item.keyword}
         </span>
       </div>
 
-      {/* 순위 변동(카운트+화살표)은 hover 시 뜨는 전체 문장 오버레이(z-10)가 폭 계산상
-          이 영역까지 덮을 수 있어, z-20으로 항상 그 위에 보이게 고정한다. */}
-      <div className="relative z-20 flex shrink-0 items-center gap-1">
-        <span className="body-5 text-font-2">
+      <div className="flex items-center gap-1">
+        <span className="body-6 text-font-2">
           {formatStatCount(item.count, locale)}
         </span>
-        <TrendTriangle
-          direction={item.trend}
-          className={item.trend === "up" ? "text-success" : "text-font-error"}
-        />
+        {/* 새로 올라왔거나 순위가 그대로면 가리킬 방향이 없어 삼각형을 그리지 않습니다. */}
+        {(item.trend === "UP" || item.trend === "DOWN") && (
+          <TrendTriangle
+            direction={item.trend === "UP" ? "up" : "down"}
+            className={
+              item.trend === "UP" ? "text-success" : "text-font-error"
+            }
+          />
+        )}
       </div>
     </button>
   );
@@ -104,12 +102,28 @@ const SearchLanding = () => {
   const router = useRouter();
   const { addKeyword, keywords, removeKeyword, clearAll } = useRecentSearch();
   const [queryDraft, setQueryDraft] = useState("");
+  const {
+    data: popularTerms,
+    isPending: isTermsPending,
+    isError: isTermsError,
+    error: termsError,
+    refetch: refetchTerms,
+  } = usePopularSearchTermsQuery(LIVE_SEARCH_SIZE);
 
   const updatedAt = `${dayjs().format("YY.MM.DD HH")}시 ${t("ranking.liveSuffix")}`;
 
+  // 실시간 검색어·최근 검색어 클릭과 직접 입력이 모두 이 문을 지납니다.
   const handleSearch = (keyword: string) => {
     const trimmedKeyword = keyword.trim();
     if (!trimmedKeyword) return;
+
+    if (!isSearchableKeyword(trimmedKeyword)) {
+      showAppToast(
+        "error",
+        t("searchResults.minLength", { count: SEARCH_MIN_KEYWORD_LENGTH }),
+      );
+      return;
+    }
 
     addKeyword(trimmedKeyword);
     router.push(`/search?q=${encodeURIComponent(trimmedKeyword)}`);
@@ -120,10 +134,8 @@ const SearchLanding = () => {
     handleSearch(queryDraft);
   };
 
-  // x축 여백(content-x)은 ClientLayout의 #page-content가 이미 지고 있어서,
-  // 여기서는 순수 콘텐츠 폭만 다른 화면과 동일하게 1200px로 잡습니다.
   return (
-    <section className="mx-auto flex w-full max-w-300 flex-col gap-10 pt-5 pb-20">
+    <section className="@container mx-auto flex w-full max-w-(--content-max-width) flex-col gap-10 pt-5 pb-20">
       <PageTitle messageKey="pageTitles.search" />
 
       <SearchQueryBar
@@ -137,22 +149,43 @@ const SearchLanding = () => {
       />
 
       <div className="flex flex-col gap-4">
-        <div className="flex items-center justify-between whitespace-nowrap">
-          <h2 className="title-1 text-font-0">
+        <div className="flex items-center justify-between gap-2">
+          <h2 className="title-1 min-w-0 truncate text-font-0">
             {t("searchLanding.liveSearchTitle")}
           </h2>
-          <span className="body-5 text-font-2">{updatedAt}</span>
+          <span className="body-6 shrink-0 whitespace-nowrap text-font-2">
+            {updatedAt}
+          </span>
         </div>
 
-        <div className="grid grid-cols-2 grid-rows-5 grid-flow-col gap-2">
-          {DUMMY_LIVE_SEARCH_KEYWORDS.map((item) => (
-            <LiveSearchRankItem
-              key={item.rank}
-              item={item}
-              onSelect={handleSearch}
-            />
-          ))}
-        </div>
+        <QueryStateBoundary
+          isPending={isTermsPending}
+          isError={isTermsError}
+          error={termsError}
+          isEmpty={popularTerms?.length === 0}
+          onRetry={() => refetchTerms()}
+          pendingFallback={
+            <div className="grid grid-cols-1 gap-2 @lg:grid-cols-2 @2xl:grid-cols-3">
+              {Array.from({ length: LIVE_SEARCH_SIZE }).map((_, index) => (
+                <div
+                  key={`term-skeleton-${index}`}
+                  className="h-[58px] w-full animate-pulse rounded-xl bg-darkest"
+                />
+              ))}
+            </div>
+          }
+          emptyMessage={t("searchResults.empty")}
+        >
+          <div className="grid grid-cols-1 gap-2 @lg:grid-cols-2 @2xl:grid-cols-3">
+            {(popularTerms ?? []).map((item) => (
+              <LiveSearchRankItem
+                key={item.rank}
+                item={item}
+                onSelect={handleSearch}
+              />
+            ))}
+          </div>
+        </QueryStateBoundary>
       </div>
 
       <div className="flex flex-col gap-6">
@@ -161,23 +194,27 @@ const SearchLanding = () => {
             <h2 className="title-1 text-font-0">
               {t("searchLanding.popularCharactersTitle")}
             </h2>
-            <span className="body-5 text-font-2">{updatedAt}</span>
+            <span className="body-6 text-font-2">{updatedAt}</span>
           </div>
 
-          <CharacterShowcase
-            charArray={DUMMY_SEARCH_CHARACTERS.slice(0, 6).map((character) => ({
-              name: character.title,
-              dec: character.description,
-              creatorName: character.creatorName,
-              chatCount: character.chatCount,
-              img: character.image,
-              isNew: character.isNew,
-              isOfficial: character.isOfficial,
-            }))}
-            cardSize="S"
-            columnGap={16}
-            rowGap={28}
-          />
+          {/* 예전에는 flex 한 줄이라 카드 6장이 폭을 나눠 갖다 못해 108px 까지 찌그러졌다.
+              높이는 245px 로 고정이라 187:245 였던 비율이 화면마다 달라졌다. */}
+          <CardGrid size="S">
+            {DUMMY_SEARCH_CHARACTERS.slice(0, 6).map((character) => (
+              <CharacterCard
+                key={character.id}
+                size="S"
+                fluid
+                title={character.title}
+                description={character.description}
+                creatorName={character.creatorName}
+                chatCount={character.chatCount}
+                images={character.image}
+                isNew={character.isNew}
+                isOfficial={character.isOfficial}
+              />
+            ))}
+          </CardGrid>
         </div>
 
         <button
@@ -185,7 +222,7 @@ const SearchLanding = () => {
           onClick={() => router.push("/?tab=ranking")}
           className="flex items-center justify-center gap-1 rounded-xl border border-main bg-dark py-3 hover:bg-btn-hover"
         >
-          <span className="body-4 text-font-2">
+          <span className="body-5 text-font-2">
             {t("searchLanding.viewAllRanking")}
           </span>
         </button>

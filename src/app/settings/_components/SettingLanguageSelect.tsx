@@ -35,7 +35,7 @@ const SettingLanguageSelect = () => {
         type="button"
         aria-expanded={isOpen}
         onClick={() => setIsOpen((prev) => !prev)}
-        className="body-4 flex h-10 min-w-[140px] max-w-[220px] items-center justify-between gap-3 rounded-xl bg-darkest px-4 py-2 text-font-1"
+        className="body-5 flex h-10 min-w-[140px] max-w-[220px] items-center justify-between gap-3 rounded-xl bg-darkest px-4 py-2 text-font-1"
       >
         <span className="truncate">{selectedLanguage.name}</span>
         <ArrowDown
@@ -60,7 +60,7 @@ const SettingLanguageSelect = () => {
                 type="button"
                 onClick={() => handleSelect(language.locale)}
                 className={cn(
-                  "body-2 flex h-8 w-full items-center justify-between rounded-lg px-3 py-1 text-font-1 transition-colors hover:bg-dark",
+                  "body-3 flex h-8 w-full items-center justify-between rounded-lg px-3 py-1 text-font-1 transition-colors hover:bg-dark",
                   isSelected && "bg-dark",
                 )}
               >

@@ -54,14 +54,14 @@ const EditableChatPreview = ({
         height={40}
         className="h-10 w-10 self-start rounded-full"
       />
-      <div className="body-4 min-w-0 flex-1">
-        <span className="body-4 block text-font-1">{characterName}</span>
+      <div className="body-5 min-w-0 flex-1">
+        <span className="body-5 block text-font-1">{characterName}</span>
         <div className="mt-1.5 flex items-center rounded-[0px_16px_16px_16px] bg-card p-2.5">
           <textarea
             ref={textareaRef}
             autoFocus
             rows={1}
-            className="focus-ring-none body-4 min-h-11 w-full resize-none overflow-hidden rounded-xl border border-main bg-darker px-4 py-3 text-font-1 outline-none transition-colors focus:field-focus!"
+            className="focus-ring-none body-5 min-h-11 w-full resize-none overflow-hidden rounded-xl border border-main bg-darker px-4 py-3 text-font-1 outline-none transition-colors focus:field-focus!"
             value={value}
             onChange={(e) => onChange(e.target.value)}
             onKeyDown={handleKeyDown}

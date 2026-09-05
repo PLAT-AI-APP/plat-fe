@@ -106,7 +106,8 @@ const ChattingRoomSection = () => {
           />
         </div>
 
-        <div className="shrink-0 bg-dark py-4">
+        {/* 메시지 목록이 px-4 를 쓰므로 입력창도 같은 여백을 써야 줄이 맞는다. */}
+        <div className="shrink-0 bg-dark px-4 py-4">
           <ChatForm onSendMessage={handleSendMessage} />
         </div>
       </div>

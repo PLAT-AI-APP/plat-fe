@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useUniverseDeleteMutation } from "@/api/universe/deleteUniverse";
 import CharacterMenuPopover from "@/components/popover/CharacterMenuPopover";
+import IconButton from "@/components/ui/IconButton";
 import useToggle from "@/hooks/useToggle";
 import { ChatFill, Dots } from "@/icons";
 import { formatStatCount } from "@/lib/utils";
@@ -33,6 +34,7 @@ const CharacterItem = ({
   description,
   onDeleted,
 }: CharacterItemProps) => {
+  const t = useTranslations();
   const selectorT = useTranslations("selector");
   const profileT = useTranslations("profile");
   const studioT = useTranslations("studio");
@@ -53,11 +55,11 @@ const CharacterItem = ({
 
     deleteUniverse(id, {
       onSuccess: () => {
-        showAppToast("success", studioT("deleteSuccess"));
+        showAppToast("success", t("toast.characterDeleted"));
         onDeleted?.();
       },
       onError: () => {
-        showAppToast("error", studioT("deleteFailed"));
+        showAppToast("error", t("toast.characterDeleteFailed"));
       },
     });
   };
@@ -91,17 +93,17 @@ const CharacterItem = ({
           <header className="flex items-center justify-between">
             <h3 className="title-3">{title}</h3>
             <div className="relative">
-              <button
+              <IconButton
                 ref={triggerRef}
-                type="button"
+                size="sm"
                 onClick={(event) => {
                   event.stopPropagation();
                   toggle();
                 }}
                 aria-label={profileT("moreMenu")}
               >
-                <Dots className="h-3.5 w-3.5 text-font-2" />
-              </button>
+                <Dots className="size-3.5" />
+              </IconButton>
 
               <AnimatePresence>
                 {isOpen && (
@@ -118,11 +120,11 @@ const CharacterItem = ({
             </div>
           </header>
 
-          <p className="body-6 line-clamp-1 whitespace-pre-line pr-5 text-font-2">
+          <p className="body-7 line-clamp-1 whitespace-pre-line pr-5 text-font-2">
             {description}
           </p>
 
-          <footer className="body-6 flex gap-1 pb-0.5 pt-1 text-font-2">
+          <footer className="body-7 flex gap-1 pb-0.5 pt-1 text-font-2">
             <span className="flex items-center gap-1">
               <ChatFill className="h-3.5 w-3.5" />
               {formatStatCount(chatCount)}
@@ -135,7 +137,7 @@ const CharacterItem = ({
         <aside className="flex items-center gap-1.5 text-font-2">
           <ul className="flex gap-0.5">
             {tagList.map((tag, index) => (
-              <li key={index} className="caption-3 text-brand-dark">
+              <li key={index} className="body-8 text-brand-dark">
                 #{tag}
               </li>
             ))}

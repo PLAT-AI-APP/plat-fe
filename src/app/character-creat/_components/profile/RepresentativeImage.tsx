@@ -54,6 +54,7 @@ const RepresentativeImage = () => {
     e.target.value = "";
   };
 
+  // 크롭 결과 확정 즉시 업로드해 fileId를 받아 둡니다. 제출 시점에는 폼 값만 그대로 전송합니다.
   const handleCropApply = async (croppedImage: string) => {
     if (!cropTarget) return;
 
@@ -95,7 +96,7 @@ const RepresentativeImage = () => {
           <span>{t("label")}</span>
           <span className="text-font-accents">*</span>
         </div>
-        <p className="body-5 text-font-2">{t("guide")}</p>
+        <p className="body-6 text-font-2">{t("guide")}</p>
       </header>
 
       <div
@@ -116,7 +117,8 @@ const RepresentativeImage = () => {
           tabIndex={-1}
           className="group relative flex justify-end w-[120px] h-full cursor-pointer flex-col gap-0 rounded-xl"
         >
-          <div className="relative flex aspect-square w-[120px] h-[157px] items-center justify-center rounded-xl bg-card">
+          {/* 안내 문구가 말하는 대로 1:1.13 이다. aspect-square 는 w/h 에 덮여 아무 일도 하지 않으면서 정사각형처럼 읽혔다. */}
+          <div className="relative flex h-[157px] w-[120px] items-center justify-center rounded-xl bg-card">
             {preview ? (
               <Image
                 src={preview}

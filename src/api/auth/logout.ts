@@ -38,9 +38,9 @@ const redirectAfterLogout = () => {
 /** 로그아웃 */
 export const useLogoutMutation = () => {
   const queryClient = useQueryClient();
-  const { logout } = useAuthStore();
-  const { clearUser } = useUserStore();
-  const { clearBalance } = useWalletStore();
+  const logout = useAuthStore((state) => state.logout);
+  const clearUser = useUserStore((state) => state.clearUser);
+  const clearBalance = useWalletStore((state) => state.clearBalance);
   return useMutation<void, AppError>({
     mutationFn: PostLogout,
     onSuccess: () => {

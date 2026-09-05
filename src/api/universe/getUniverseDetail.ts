@@ -61,6 +61,8 @@ export interface UniverseDetailResponse {
   category: UniverseDetailCategory;
   chatCount: number;
   likeCount: number;
+  /** 이 요청을 보낸 사람이 찜했는지. 비로그인이면 항상 false 입니다. */
+  liked: boolean;
   title: string;
   introduce: string;
   detailSetting: string;
@@ -121,6 +123,8 @@ export const adaptUniverseDetailToCharacterDetail = (
     prologue: universe.detailSetting,
     characterDescription: universe.description,
     chatCount: universe.chatCount,
+    likeCount: universe.likeCount,
+    liked: universe.liked,
     tags: universe.hashtags.map((hashtag) => hashtag.label),
     isOfficial: false,
     images,
@@ -146,7 +150,6 @@ export const useUniverseDetailQuery = (universeId?: string) => {
   return useQuery<UniverseDetailResponse, AppError>({
     queryKey: ["get-universe-detail", universeId],
     queryFn: () => getUniverseDetail(universeId ?? ""),
-    staleTime: 1000 * 60 * 5,
     enabled: Boolean(universeId),
   });
 };

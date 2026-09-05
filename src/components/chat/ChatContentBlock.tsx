@@ -80,7 +80,7 @@ const ChatContentBlock = ({
           <textarea
             ref={textareaRef}
             autoFocus
-            className="body-4 w-full resize-none overflow-hidden rounded-[0px_16px_16px_16px] border border-transparent bg-card-hover p-2.5 outline-none transition-colors focus:field-focus!"
+            className="body-5 w-full resize-none overflow-hidden rounded-[0px_16px_16px_16px] border border-transparent bg-card-hover p-2.5 outline-none transition-colors focus:field-focus!"
             value={editedContent}
             onChange={(event) => setEditedContent(event.target.value)}
             onKeyDown={handleKeyDown}

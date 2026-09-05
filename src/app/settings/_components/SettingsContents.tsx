@@ -80,7 +80,7 @@ const SettingsContents = () => {
 
               <Link
                 href="/withdrawal"
-                className="body-3 flex w-full items-center py-3 text-font-2 underline underline-offset-2"
+                className="body-4 flex w-full items-center py-3 text-font-2 underline underline-offset-2"
               >
                 {t("settings.actions.withdrawal")}
               </Link>

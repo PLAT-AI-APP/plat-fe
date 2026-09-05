@@ -54,7 +54,7 @@ const ExpandableText = ({
         ref={contentRef}
         style={!isExpanded ? { maxHeight } : undefined}
         className={cn(
-          "body-4 relative overflow-hidden whitespace-pre-wrap text-font-2",
+          "body-5 relative overflow-hidden whitespace-pre-wrap text-font-2",
           shouldShowMoreButton &&
             !isExpanded &&
             "after:absolute after:inset-x-0 after:bottom-0 after:h-12 after:bg-linear-to-t after:from-dark after:to-transparent",
@@ -66,7 +66,7 @@ const ExpandableText = ({
         <button
           type="button"
           onClick={() => setIsExpanded((prev) => !prev)}
-          className="body-4 flex h-11 w-full items-center justify-center gap-1 rounded-xl border border-main text-font-2 hover:bg-card"
+          className="body-5 flex h-11 w-full items-center justify-center gap-1 rounded-xl border border-main text-font-2 hover:bg-card"
         >
           {isExpanded ? t("collapse") : t("expand")}
           <ArrowDown className={cn("size-4", isExpanded && "rotate-180")} />
@@ -107,8 +107,11 @@ const SettingsPanel = ({
           >
             <Image
               src={currentImageUrl}
-              alt={character.title}
+              alt=""
+              aria-hidden
               fill
+              // 배경 블러라 선명할 필요가 없다. 작은 이미지로 충분하다.
+              sizes="320px"
               className="scale-125 object-cover opacity-35 blur-2xl"
             />
             <Image
@@ -116,7 +119,9 @@ const SettingsPanel = ({
               alt={character.title}
               width={333}
               height={332}
-              className="absolute left-1/2 top-0 h-full w-[333px] -translate-x-1/2 rounded-none object-contain"
+              // 폭이 333px 로 고정이면 그보다 좁은 열에서 스테이지 밖으로 나간다.
+              // object-contain 이라 max-w 로 줄여도 비율은 그대로다.
+              className="absolute left-1/2 top-0 h-full w-[333px] max-w-full -translate-x-1/2 rounded-none object-contain"
             />
             {isImageCtaVisible && (
               <motion.div
@@ -179,7 +184,7 @@ const SettingsPanel = ({
             height={32}
             className="avatar-img size-8"
           />
-          <span className="body-2 text-font-1">{character.title}</span>
+          <span className="body-3 text-font-1">{character.title}</span>
         </div>
         <ExpandableText maxHeight={100}>
           {character.characterDescription}

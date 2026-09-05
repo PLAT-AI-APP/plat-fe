@@ -2,9 +2,9 @@
 
 import React, { ChangeEvent } from "react";
 import Image from "next/image";
-import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
 import { CameraFill } from "@/icons";
+import { useTranslations } from "next-intl";
 import { showAppToast } from "@/lib/toast";
 import { ProfileEditFormType } from "@/schema/profile.schema";
 
@@ -14,8 +14,8 @@ interface ProfileImageFieldProps {
 }
 
 const ProfileImageField = ({ name = "profileImg" }: ProfileImageFieldProps) => {
-  const t = useTranslations("modalUi.profileEdit");
   // useFormContext에 프로필 폼 타입을 주입하여 내부 setValue들의 타입 안정성을 확보합니다.
+  const t = useTranslations();
   const { setValue, control } = useFormContext<ProfileEditFormType>();
   const profileImg = useWatch({ control, name });
 
@@ -28,10 +28,10 @@ const ProfileImageField = ({ name = "profileImg" }: ProfileImageFieldProps) => {
         file.type,
       )
     ) {
-      return showAppToast("warning", t("invalidType"));
+      return showAppToast("warning", t("toast.imageTypeInvalid"));
     }
     if (file.size > 5 * 1024 * 1024) {
-      return showAppToast("warning", t("invalidSize"));
+      return showAppToast("warning", t("toast.imageSizeExceeded"));
     }
 
     // 파일 객체 저장 (ProfileEditFormType에 선언된 키값에 맞게 매핑)

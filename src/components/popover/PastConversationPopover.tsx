@@ -35,10 +35,10 @@ const PastConversationPopover = ({
       textClassName: "text-font-1",
     },
     {
-      icon: <Trash className="size-3.5 text-font-accents" />,
+      icon: <Trash className="size-3.5 text-danger" />,
       label: t("delete"),
       onClick: () => handleAction(onDelete),
-      textClassName: "text-font-accents",
+      textClassName: "text-danger",
     },
   ];
 
@@ -55,7 +55,7 @@ const PastConversationPopover = ({
               key={label}
               type="button"
               onClick={onClick}
-              className="menu-item body-4 w-full gap-2 text-left"
+              className="menu-item body-5 w-full gap-2 text-left"
             >
               {icon}
               <span className={textClassName}>{label}</span>

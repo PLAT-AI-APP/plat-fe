@@ -2,9 +2,9 @@
 
 import React, { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useTranslations } from "next-intl";
 import dayjs from "@/lib/dayjs";
 import { cn, formatWithCommas } from "@/lib/utils";
+import { useTranslations } from "next-intl";
 import { showAppToast } from "@/lib/toast";
 import { ArrowDown } from "@/icons";
 import Copy from "@/icons/Copy";
@@ -26,7 +26,7 @@ const getLedgerDetailText = (item: UsageHistoryItemType) =>
 
 /** 개별 사용내역 아이템 */
 const UsageHistoryItem = ({ item }: { item: UsageHistoryItemType }) => {
-  const t = useTranslations("usageHistory");
+  const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
 
   const isPlusNote = item.amount > 0;
@@ -36,7 +36,7 @@ const UsageHistoryItem = ({ item }: { item: UsageHistoryItemType }) => {
   const handleCopy = (event: React.MouseEvent) => {
     event.stopPropagation();
     navigator.clipboard.writeText(item.referenceId);
-    showAppToast("success", t("copySuccess"));
+    showAppToast("success", t("toast.transactionIdCopied"));
   };
 
   return (
@@ -49,7 +49,7 @@ const UsageHistoryItem = ({ item }: { item: UsageHistoryItemType }) => {
     >
       <header className="flex items-center justify-between gap-4">
         <div className="flex w-[117px] shrink-0 flex-col gap-1">
-          <time className="body-6 text-font-2">
+          <time className="body-7 text-font-2">
             {dayjs(item.createdAt).format("M월 D일 HH:mm")}
           </time>
           <strong className="title-5 text-font-1">{item.description}</strong>
@@ -57,7 +57,7 @@ const UsageHistoryItem = ({ item }: { item: UsageHistoryItemType }) => {
 
         <div className="flex shrink-0 items-center justify-center gap-1.5">
           <div className="flex flex-col items-end justify-center gap-0.5">
-            <p className="body-4 flex items-center gap-1 whitespace-nowrap">
+            <p className="body-5 flex items-center gap-1 whitespace-nowrap">
               <span className={cn("title-5", isPlusNote && "text-brand-dark")}>
                 {amountText}
               </span>
@@ -65,7 +65,7 @@ const UsageHistoryItem = ({ item }: { item: UsageHistoryItemType }) => {
             </p>
 
             {isExpiryVisible && (
-              <time className="body-6 whitespace-nowrap text-font-2">
+              <time className="body-7 whitespace-nowrap text-font-2">
                 {getExpiryDateLabel(item.createdAt)}
               </time>
             )}
@@ -91,7 +91,7 @@ const UsageHistoryItem = ({ item }: { item: UsageHistoryItemType }) => {
             transition={{ duration: 0.2, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <div className="mt-3 flex flex-col gap-1 border-t border-main pt-3 body-6 text-font-2">
+            <div className="mt-3 flex flex-col gap-1 border-t border-main pt-3 body-7 text-font-2">
               <p>상세설명: {getLedgerDetailText(item)}</p>
               <p className="flex items-end gap-1">
                 <span className="truncate">거래번호: {item.referenceId}</span>

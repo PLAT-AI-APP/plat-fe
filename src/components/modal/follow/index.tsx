@@ -20,6 +20,7 @@ import { ModalLayout } from "@/components/ModalLayout";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 import { useTabUnderline } from "@/hooks/useTabUnderline";
 import { Close } from "@/icons";
+import { ErrorState } from "@/components/state";
 import { cn } from "@/lib/utils";
 import { useModalStore } from "@/store/useModalStore";
 import { FollowModalProps } from "@/type/modal";
@@ -27,6 +28,8 @@ import { FOLLOW_TAB_IDS, FollowTab } from "./constants";
 import FollowEmptyState from "./FollowEmptyState";
 import FollowUserItem from "./FollowUserItem";
 import { SPRING_SNAPPY } from "@/constants/motion";
+import IconButton from "@/components/ui/IconButton";
+import { followQueryKeys } from "@/api/follow/queryKeys";
 
 const FollowModal = ({
   onClose,
@@ -55,18 +58,29 @@ const FollowModal = ({
   const displayNickname = nickname || t("fallbackNickname");
   const isFollowPending = isFollowMutating || isUnFollowMutating;
 
+  /*
+   * 이 화면만 useFollowToggle 을 쓰지 않는다. 그 훅은 대상이 하나인 화면을
+   * 위한 것인데, 여기서는 목록 안의 서로 다른 사용자를 각각 토글한다.
+   * 단일 대상 훅을 억지로 끼우려면 항목 컴포넌트마다 훅 인스턴스를 두고
+   * 낙관적 상태를 흩어야 해서, 지금의 followChangeIds 한 곳 관리보다 나빠진다.
+   *
+   * 다만 캐시 키만은 같은 팩토리를 쓴다. 손으로 적은 문자열은 조회 쪽이
+   * 바뀔 때 컴파일 에러 없이 조용히 어긋나기 때문이다.
+   */
   const invalidateFollowQueries = useCallback(
     (targetUserId?: string) => {
-      queryClient.invalidateQueries({ queryKey: ["get-following-list"] });
-      queryClient.invalidateQueries({ queryKey: ["get-follower-list"] });
       queryClient.invalidateQueries({
-        queryKey: ["get-follow-count", userId],
+        queryKey: followQueryKeys.followingList(),
       });
+      queryClient.invalidateQueries({
+        queryKey: followQueryKeys.followerList(),
+      });
+      queryClient.invalidateQueries({ queryKey: followQueryKeys.count(userId) });
 
       if (!targetUserId) return;
 
       queryClient.invalidateQueries({
-        queryKey: ["get-follow-count", targetUserId],
+        queryKey: followQueryKeys.count(targetUserId),
       });
     },
     [queryClient, userId],
@@ -167,7 +181,7 @@ const FollowModal = ({
               ref={(el) => setTabRef(tabId, el)}
               onClick={() => setActiveTabs(tabId)}
               className={cn(
-                "body-2 translate-y-0.5 cursor-pointer px-5 py-2.5 text-font-disabled",
+                "body-3 translate-y-0.5 cursor-pointer px-5 py-2.5 text-font-disabled",
                 activeTabs === tabId && "title-3 text-font-1",
               )}
             >
@@ -183,14 +197,9 @@ const FollowModal = ({
           />
         </nav>
 
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label={commonT("close")}
-          className="flex size-6 items-center justify-center rounded-lg hover:bg-btn-hover"
-        >
+        <IconButton size="xs" onClick={onClose} aria-label={commonT("close")}>
           <Close className="size-5" />
-        </button>
+        </IconButton>
       </header>
 
       {activeQuery.isLoading ? (
@@ -209,6 +218,14 @@ const FollowModal = ({
             </li>
           ))}
         </ul>
+      ) : activeQuery.isError ? (
+        // 불러오지 못한 것과 진짜로 아무도 없는 것은 다르다.
+        // 예전에는 실패해도 "팔로워가 없습니다"가 떠서 사용자가 잘못된 결론을 내렸다.
+        <ErrorState
+          error={activeQuery.error}
+          onRetry={activeQuery.refetch}
+          className="h-95"
+        />
       ) : listData.length === 0 ? (
         <FollowEmptyState
           activeTab={activeTabs}

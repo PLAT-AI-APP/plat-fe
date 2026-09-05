@@ -409,7 +409,7 @@ const CreateHeader = ({
         {t("headerTitle")}
       </h1>
 
-      <div className="body-4 flex gap-4 whitespace-nowrap">
+      <div className="body-5 flex gap-4 whitespace-nowrap">
         <div className="flex gap-2">
           <button
             type="button"

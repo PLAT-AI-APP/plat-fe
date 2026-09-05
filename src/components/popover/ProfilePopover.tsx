@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { cn, formatWithCommas } from "@/lib/utils";
@@ -28,6 +28,7 @@ import useRouteEffect from "@/hooks/useRouteEffect";
 import Token from "@/icons/Token";
 import { useTranslations } from "next-intl";
 import { useWalletStore } from "@/store/useWalletStore";
+import { Tendency, useTendencyStore } from "@/store/useTendencyStore";
 
 interface ProfilePopoverProps {
   onClose: () => void;
@@ -53,7 +54,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
   const router = useRouter();
   const { mutate: logout } = useLogoutMutation();
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
-  const { openModal } = useModalStore();
+  const openModal = useModalStore((state) => state.openModal);
   const tendency = useToggle();
 
   const supportArray = [
@@ -69,11 +70,11 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
       icon: Gear,
     },
   ];
-  const tendencyArray = [
+  const tendencyArray: { value: Tendency; name: string; color: string }[] = [
     // 성별 선택 칩의 식별색. 상태색이 아니라 항목을 구분하는 고유색이라 테마와 무관하게 고정한다.
-    { name: selectorT("all"), color: "#AA8BD8" },
-    { name: selectorT("male"), color: "#60A5FA" },
-    { name: selectorT("female"), color: "#F472B6" },
+    { value: "ALL", name: selectorT("all"), color: "#AA8BD8" },
+    { value: "MALE_ORIENTED", name: selectorT("male"), color: "#60A5FA" },
+    { value: "FEMALE_ORIENTED", name: selectorT("female"), color: "#F472B6" },
   ];
 
   const handlePersonaModalOpen = () => {
@@ -112,12 +113,15 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
     return true;
   });
 
-  const [currentTendency, setCurrentTendency] = useState<
-    (typeof tendencyArray)[number]["name"]
-  >(selectorT("all"));
+  // 선택한 성향은 홈·랭킹·신작 목록의 조회 조건이라 새로고침 뒤에도 남아야 한다(localStorage).
+  const currentTendency = useTendencyStore((state) => state.tendency);
+  const setCurrentTendency = useTendencyStore((state) => state.setTendency);
+  const currentTendencyName =
+    tendencyArray.find(({ value }) => value === currentTendency)?.name ??
+    selectorT("all");
 
-  const handleCurrentTendency = (name: string) => {
-    setCurrentTendency(name);
+  const handleCurrentTendency = (value: Tendency) => {
+    setCurrentTendency(value);
     tendency.toggle();
   };
 
@@ -198,17 +202,17 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
           <ArrowRight className="size-2.5 shrink-0 text-font-disabled" />
         </Link>
       ) : (
-        <div className="body-4 flex flex-col gap-3 p-2">
+        <div className="body-5 flex flex-col gap-3 p-2">
           <div
             onClick={() => handleLoginBtn("KAKAO")}
-            className="flex cursor-pointer items-center justify-center relative body-4 text-center h-11 rounded-lg bg-[#FEE500] w-full py-2 text-scrim"
+            className="flex cursor-pointer items-center justify-center relative body-5 text-center h-11 rounded-lg bg-[#FEE500] w-full py-2 text-scrim"
           >
             <Kakao className="absolute w-5.5 h-5.5 top-1/2 left-7.5 -translate-y-1/2" />
             {t("loginWithKakao")}
           </div>
           <div
             onClick={() => handleLoginBtn("GOOGLE")}
-            className="flex cursor-pointer items-center justify-center relative body-4 text-center h-11 rounded-lg bg-font-1 w-full py-2 text-font-4"
+            className="flex cursor-pointer items-center justify-center relative body-5 text-center h-11 rounded-lg bg-font-1 w-full py-2 text-font-4"
           >
             <Google className="absolute w-5.5 h-5.5 top-1/2 left-7.5 -translate-y-1/2" />
             {t("loginWithGoogle")}
@@ -216,7 +220,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
           <div
             ref={loginModalBtnRef}
             onClick={() => handleLoginBtn("LOGIN")}
-            className="flex cursor-pointer items-center justify-center relative body-4 text-center h-11 rounded-lg bg-card w-full py-2 text-font-2"
+            className="flex cursor-pointer items-center justify-center relative body-5 text-center h-11 rounded-lg bg-card w-full py-2 text-font-2"
           >
             {t("loginWithOther")}
           </div>
@@ -227,7 +231,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
         <div className="h-px w-full bg-main" />
       </div>
 
-      <h3 className="caption-1 pb-1.5 pl-2.5 text-font-2">{t("activity")}</h3>
+      <h3 className="title-7 pb-1.5 pl-2.5 text-font-2">{t("activity")}</h3>
       <div className="flex flex-col gap-1.5">
         {filteredActivityArray.map((tab) => {
           const Icon = tab.icon;
@@ -239,7 +243,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
                 <button
                   type="button"
                   onClick={tab.onClick}
-                  className="menu-item body-4 w-full justify-between gap-2 text-left text-font-1 ease-in-out"
+                  className="menu-item body-5 w-full justify-between gap-2 text-left text-font-1 ease-in-out"
                 >
                   <span className="flex min-w-0 items-center gap-2">
                     <Icon
@@ -253,7 +257,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
                   {tab.hasTendencyOptions && (
                     <span className="flex shrink-0 items-center gap-1">
                       <span className="title-6 text-font-1">
-                        {currentTendency}
+                        {currentTendencyName}
                       </span>
                       <ArrowRight
                         className={cn(
@@ -276,11 +280,11 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
                       className="overflow-hidden"
                     >
                       <ul className="flex flex-col gap-1 p-2.5">
-                        {tendencyArray.map(({ color, name }) => (
+                        {tendencyArray.map(({ color, name, value }) => (
                           <li
-                            key={name}
-                            onClick={() => handleCurrentTendency(name)}
-                            className="body-5 flex cursor-pointer justify-between rounded-xl px-2.5 py-2 transition-colors duration-200 ease-in-out hover:bg-btn-hover"
+                            key={value}
+                            onClick={() => handleCurrentTendency(value)}
+                            className="body-6 flex cursor-pointer justify-between rounded-xl px-2.5 py-2 transition-colors duration-200 ease-in-out hover:bg-btn-hover"
                           >
                             <div className="flex items-center gap-2">
                               <div
@@ -290,7 +294,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
                               {name}
                             </div>
 
-                            {currentTendency === name && (
+                            {currentTendency === value && (
                               <Check className="size-[18px] text-brand" />
                             )}
                           </li>
@@ -308,8 +312,8 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
               key={tab.name}
               href={tab.link}
               className={cn(
-                "menu-item body-4 justify-between gap-2 text-font-1 ease-in-out",
-                !isTokenCharge && "body-4",
+                "menu-item body-5 justify-between gap-2 text-font-1 ease-in-out",
+                !isTokenCharge && "body-5",
               )}
             >
               <span className="flex min-w-0 items-center gap-2">
@@ -338,7 +342,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
         <div className="h-px w-full bg-main" />
       </div>
 
-      <h3 className="caption-1 pb-1.5 pl-2.5 text-font-2">
+      <h3 className="title-7 pb-1.5 pl-2.5 text-font-2">
         {t("inquiryAndSettings")}
       </h3>
       <div className="flex flex-col gap-1.5">
@@ -348,7 +352,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
             <Link
               key={tab.name}
               href={tab.link}
-              className="menu-item body-4 gap-2 text-font-1"
+              className="menu-item body-5 gap-2 text-font-1"
             >
               <Icon
                 size={18}
@@ -368,7 +372,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
           </div>
           <div
             onClick={() => logout()}
-            className="menu-item body-4 cursor-pointer gap-2 text-font-1 ease-in-out"
+            className="menu-item body-5 cursor-pointer gap-2 text-font-1 ease-in-out"
           >
             <Logout size={18} className="size-[18px] shrink-0 text-font-2" />
             {t("logout")}

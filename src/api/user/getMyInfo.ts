@@ -45,7 +45,6 @@ export const useMyInfoQuery = () => {
   const query = useQuery<UserInfo, AppError>({
     queryKey: ["get-my-info"],
     queryFn: GetMyInfo,
-    staleTime: 1000 * 60 * 5,
     enabled: isAuthReady && isLoggedIn && !!accessToken,
   });
 

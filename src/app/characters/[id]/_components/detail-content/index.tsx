@@ -7,6 +7,7 @@ import {
   adaptUniverseDetailToCharacterDetail,
   useUniverseDetailQuery,
 } from "@/api/universe/getUniverseDetail";
+import { ErrorState } from "@/components/state";
 import CommentsPanel from "./_components/CommentsPanel";
 import DetailTabs, { CharacterDetailTab } from "./_components/DetailTabs";
 import ScenarioPanel from "./_components/ScenarioPanel";
@@ -22,8 +23,10 @@ const CharacterDetailContent = ({
 }: CharacterDetailContentProps) => {
   const {
     data: universe,
+    error,
     isError,
     isLoading,
+    refetch,
   } = useUniverseDetailQuery(characterId);
   const character = useMemo(
     () =>
@@ -136,15 +139,27 @@ const CharacterDetailContent = ({
   if (isLoading) {
     return (
       <article className="flex w-full justify-center pb-16 pt-5">
-        <div className="h-[720px] w-full max-w-[1200px] animate-pulse rounded-2xl bg-card" />
+        <div className="h-[720px] w-full max-w-(--content-max-width) animate-pulse rounded-2xl bg-card" />
       </article>
     );
   }
 
-  if (isError || !character) {
+  // 404(삭제된 캐릭터)와 5xx(서버 오류)를 같은 문구로 뭉개면 사용자가 무엇을 해야 할지 모른다.
+  // ErrorState 는 서버가 준 사유를 그대로 보여주고, 재시도해 볼 값이 있을 때만 버튼을 낸다.
+  if (isError) {
     return (
       <article className="flex w-full justify-center pb-16 pt-5">
-        <p className="body-2 text-font-2">{t("loadFailed")}</p>
+        <div className="w-full max-w-(--content-max-width)">
+          <ErrorState error={error} onRetry={refetch} />
+        </div>
+      </article>
+    );
+  }
+
+  if (!character) {
+    return (
+      <article className="flex w-full justify-center pb-16 pt-5">
+        <p className="body-3 text-font-2">{t("loadFailed")}</p>
       </article>
     );
   }
@@ -177,7 +192,11 @@ const CharacterDetailContent = ({
 
   return (
     <article className="flex w-full justify-center pb-16 pt-5">
-      <div className="grid w-full max-w-[1200px] grid-cols-1 gap-[27px] lg:grid-cols-[389px_minmax(0,782px)]">
+      {/* 두 열이 되는 기준은 lg(1024px)가 아니라 "두 열이 실제로 들어가는 폭"이다.
+          389px 요약 열 + 27px 간격 + 본문 최소 366px = 콘텐츠 782px, 사이드바와 좌우
+          여백까지 더하면 900px. lg 로 두면 900~1023px 창에서 자리가 남는데도 한 줄로
+          쌓여, 요약 열이 화면 폭을 그대로 먹었다. */}
+      <div className="grid w-full max-w-(--content-max-width) grid-cols-1 gap-[27px] min-[900px]:grid-cols-[389px_minmax(0,782px)]">
         <SidebarSummary
           character={character}
           onSelectImage={setSelectedImageIndex}
@@ -220,7 +239,7 @@ const CharacterDetailContent = ({
               id="character-detail-comments"
               className="scroll-mt-18"
             >
-              <CommentsPanel character={character} />
+              <CommentsPanel universeId={characterId} />
             </section>
           </div>
         </main>

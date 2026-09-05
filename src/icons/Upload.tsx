@@ -14,7 +14,7 @@ const Upload = (props: IconProps) => {
         <path
           d="M16 8L12 4L8 8M12 4V20"
           stroke="currentColor"
-          strokeWidth="2"
+          strokeWidth="1.8"
           strokeLinecap="round"
           strokeLinejoin="round"
         />

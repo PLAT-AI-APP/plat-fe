@@ -10,7 +10,8 @@ import { useModalStore } from "@/store/useModalStore";
 
 const PasswordReset = () => {
   const t = useTranslations("modalUi.passwordReset");
-  const { mutate: passwrodReset } = usePasswordResetMutation();
+  const { mutate: passwrodReset, isPending: isResetting } =
+    usePasswordResetMutation();
   const {
     control,
     formState: { errors },
@@ -33,7 +34,7 @@ const PasswordReset = () => {
     !errors.passwordCheck &&
     password === passwordCheck;
 
-  const { closeModal } = useModalStore();
+  const closeModal = useModalStore((state) => state.closeModal);
   const onSubmit = (data: PasswordResetFormSchemaValues) => {
     passwrodReset(data);
     closeModal();
@@ -48,7 +49,7 @@ const PasswordReset = () => {
     >
       <header className="flex flex-col gap-1.5 pb-9">
         <h2 className="heading-3">{t("title")}</h2>
-        <p className="body-4 text-font-2">{t("description")}</p>
+        <p className="body-5 text-font-2">{t("description")}</p>
       </header>
 
       <fieldset className="flex flex-col gap-6">
@@ -58,6 +59,7 @@ const PasswordReset = () => {
 
       <ActiveButton
         isActive={isPasswordResetActive}
+        disabled={!isPasswordResetActive || isResetting}
         text={t("submit")}
         className="mt-6"
         type="submit"

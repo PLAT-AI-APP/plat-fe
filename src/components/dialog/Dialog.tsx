@@ -48,7 +48,7 @@ const Dialog = ({
           )}
 
           {typeof description === "string" ? (
-            <p className="body-4 w-full whitespace-pre-line text-font-2">
+            <p className="body-5 w-full whitespace-pre-line text-font-2">
               {translateText(description)}
             </p>
           ) : (

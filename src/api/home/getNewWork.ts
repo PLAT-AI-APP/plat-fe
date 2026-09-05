@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
 import { useLocaleStore } from "@/store/useLocaleStore";
+import { Tendency, useTendencyStore } from "@/store/useTendencyStore";
 
 export interface NewWorkCreator {
   creatorId: string;
@@ -21,13 +22,19 @@ export interface NewWorkItem {
 }
 
 interface GetNewWorkParams {
+  tendency?: Tendency;
   page?: number;
   size?: number;
 }
 
-const getNewWork = async ({ page = 0, size = 10 }: GetNewWorkParams) => {
+const getNewWork = async ({
+  page = 0,
+  size = 10,
+  tendency = "ALL",
+}: GetNewWorkParams) => {
   const response = await authAxios.get<NewWorkItem[]>("/home/new-work", {
     params: {
+      tendency,
       page,
       size,
     },
@@ -40,10 +47,11 @@ const getNewWork = async ({ page = 0, size = 10 }: GetNewWorkParams) => {
 export const useNewWorkQuery = (params: GetNewWorkParams = {}) => {
   // 언어가 바뀌면 Accept-Language 헤더로 나가는 응답도 달라지므로 캐시 키에 반영합니다.
   const locale = useLocaleStore((state) => state.locale);
+  // 성향이 바뀌면 목록도 달라지므로 캐시를 분리합니다.
+  const tendency = useTendencyStore((state) => state.tendency);
 
   return useQuery<NewWorkItem[], AppError>({
-    queryKey: ["get-new-work", locale, params.page, params.size],
-    queryFn: () => getNewWork(params),
-    staleTime: 1000 * 60 * 5,
+    queryKey: ["get-new-work", locale, tendency, params.page, params.size],
+    queryFn: () => getNewWork({ ...params, tendency }),
   });
 };

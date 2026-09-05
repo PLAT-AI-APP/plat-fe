@@ -9,7 +9,7 @@ export const DUMMY_CHARACTERS = [
     isPublic: false,
   },
   {
-    id: "398292",
+    id: "398293",
     name: "옆자리 불량학생",
     chatCount: 123,
     dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
@@ -18,7 +18,7 @@ export const DUMMY_CHARACTERS = [
     isPublic: false,
   },
   {
-    id: "398292",
+    id: "398294",
     name: "옆자리 불량학생",
     chatCount: 123,
     dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
@@ -27,7 +27,7 @@ export const DUMMY_CHARACTERS = [
     isPublic: false,
   },
   {
-    id: "398292",
+    id: "398295",
     name: "옆자리 불량학생",
     chatCount: 123,
     dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
@@ -36,7 +36,7 @@ export const DUMMY_CHARACTERS = [
     isPublic: false,
   },
   {
-    id: "398292",
+    id: "398296",
     name: "옆자리 불량학생",
     chatCount: 123,
     dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
@@ -45,7 +45,7 @@ export const DUMMY_CHARACTERS = [
     isPublic: false,
   },
   {
-    id: "398292",
+    id: "398297",
     name: "옆자리 불량학생",
     chatCount: 123,
     dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
@@ -54,7 +54,7 @@ export const DUMMY_CHARACTERS = [
     isPublic: false,
   },
   {
-    id: "398292",
+    id: "398298",
     name: "옆자리 불량학생",
     chatCount: 123,
     dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
@@ -63,7 +63,7 @@ export const DUMMY_CHARACTERS = [
     isPublic: false,
   },
   {
-    id: "398292",
+    id: "398299",
     name: "옆자리 불량학생",
     chatCount: 123,
     dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",

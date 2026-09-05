@@ -1,5 +1,4 @@
 import type { FieldErrors, FieldValues, Path } from "react-hook-form";
-import { showAppToast } from "@/lib/toast";
 
 interface FieldErrorLeaf {
   type?: string;
@@ -44,22 +43,32 @@ export const findFirstFieldError = <T extends FieldValues>(
 
 /**
  * handleSubmit(onValid, onInvalid)의 onInvalid, 혹은 RHF <Form onError>에
- * 바로 넘길 수 있는 공통 핸들러. 첫 번째 필드 에러를 toast로 안내하고
- * (setFocus를 넘기면) 해당 input으로 포커스를 옮긴다.
+ * 바로 넘길 수 있는 공통 핸들러. 첫 번째 필드 에러로 포커스를 옮긴다.
  *
- * zod 스키마의 에러 메시지는 FIELD_ERROR_MESSAGES처럼 실제 문구가 아니라
- * "field.error.xxx" 형태의 i18n 키인 경우가 많아, useTranslateText()로 얻은
- * translate 함수를 넘겨야 실제 문구가 표시된다(안 넘기면 키가 그대로 노출됨).
+ * 예전에는 여기서 toast 도 함께 띄웠다. 그런데 그 문구는 이미 SmartInput 이
+ * 해당 입력칸 바로 아래에 그리고 있어서 같은 말을 두 번 하는 셈이었고,
+ * warning 색이라 "입력을 빠뜨렸다" 가 아니라 "시스템에 문제가 생겼다" 로
+ * 읽혔다. 입력 실수는 그 입력칸이 말하는 것이 맞다.
+ *
+ * 포커스 이동은 남긴다. 화면 밖에 있는 필드가 문제일 때 사용자를 그리로
+ * 데려가는 일은 필드 자신이 할 수 없다.
+ *
+ * zod 스키마의 에러 메시지는 실제 문구가 아니라 "field.error.xxx" 형태의
+ * i18n 키인 경우가 많다. 반환값을 쓰려면 useTranslateText()로 얻은 translate
+ * 함수를 넘겨야 한다(안 넘기면 키가 그대로 나온다).
  */
-export const showFirstFieldErrorToast = <T extends FieldValues>(
+export const focusFirstFieldError = <T extends FieldValues>(
   errors: FieldErrors<T>,
   setFocus?: (name: Path<T>) => void,
   translate?: (message: string) => string | undefined,
-) => {
+): { path: Path<T>; message: string } | null => {
   const firstError = findFirstFieldError<T>(errors);
-  if (!firstError) return;
+  if (!firstError) return null;
 
-  const message = translate?.(firstError.message) ?? firstError.message;
-  showAppToast("warning", message);
   setFocus?.(firstError.path);
+
+  return {
+    path: firstError.path,
+    message: translate?.(firstError.message) ?? firstError.message,
+  };
 };

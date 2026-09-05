@@ -37,7 +37,7 @@ const ScenarioSelectPopover = ({
                   onClose();
                 }}
                 className={cn(
-                  "menu-item body-4 w-full cursor-pointer justify-between text-left text-font-2 hover:text-font-1",
+                  "menu-item body-5 w-full cursor-pointer justify-between text-left text-font-2 hover:text-font-1",
                   isActive && "bg-btn-hover/50 text-font-1",
                 )}
               >

@@ -12,8 +12,9 @@ import { useEditPersonaMutation } from "@/api/persona/editPersona";
 import { useDetailPersonaQuery } from "@/api/persona/detailPersons";
 import { PersonaAddModalProps } from "@/type/modal";
 import { personaFormSchema, PersonaFormValues } from "@/schema/modal.schema";
-import { showFirstFieldErrorToast } from "@/lib/formError";
+import { focusFirstFieldError } from "@/lib/formError";
 import { useTranslateText } from "@/hooks/useTranslateText";
+import IconButton from "@/components/ui/IconButton";
 
 const PersonaAddModal = ({
   onClose,
@@ -64,8 +65,10 @@ const PersonaAddModal = ({
     }
   }, [initialDescription, initialName, isEditMode, personaDetail, reset]);
 
-  const { mutate: addPersona } = useAddPersonaMutation();
-  const { mutate: editPersona } = useEditPersonaMutation();
+  const { mutate: addPersona, isPending: isAdding } = useAddPersonaMutation();
+  const { mutate: editPersona, isPending: isEditing } =
+    useEditPersonaMutation();
+  const isSubmitting = isAdding || isEditing;
   const name = useWatch({ control, name: "name" }) ?? "";
   const info = useWatch({ control, name: "info" }) ?? "";
 
@@ -92,23 +95,18 @@ const PersonaAddModal = ({
               {isEditMode ? t("titleEdit") : t("titleAdd")}
             </h2>
           </div>
-          <button
-            onClick={onClose}
-            type="button"
-            aria-label={commonT("close")}
-            className="h-5.5 w-5.5 rounded-lg p-1 transition-colors hover:bg-btn-hover"
-          >
-            <Close className="h-3.5 w-3.5" />
-          </button>
+          <IconButton size="xs" onClick={onClose} aria-label={commonT("close")}>
+            <Close className="size-3.5" />
+          </IconButton>
         </div>
-        <p className="body-4 whitespace-normal pt-2 text-font-2">
+        <p className="body-5 whitespace-normal pt-2 text-font-2">
           {t("description")}
         </p>
       </header>
 
       <form
         onSubmit={handleSubmit(onSubmit, (formErrors) =>
-          showFirstFieldErrorToast(formErrors, setFocus, translateText),
+          focusFirstFieldError(formErrors, setFocus, translateText),
         )}
       >
         <div className="flex flex-col gap-6">
@@ -141,7 +139,7 @@ const PersonaAddModal = ({
         <footer className="pt-9">
           <button
             type="submit"
-            disabled={!isValid}
+            disabled={!isValid || isSubmitting}
             className={`mt-3 w-full rounded-xl py-3 title-3 transition-colors ${
               isValid
                 ? "bg-brand/10 text-brand-dark"

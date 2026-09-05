@@ -10,8 +10,9 @@ import { ModalLayout } from "../ModalLayout";
 import ActiveButton from "../ActiveButton";
 import { UserNoteModalProps } from "@/type/modal";
 import { userNoteFormSchema, UserNoteFormValues } from "@/schema/modal.schema";
-import { showFirstFieldErrorToast } from "@/lib/formError";
+import { focusFirstFieldError } from "@/lib/formError";
 import { useTranslateText } from "@/hooks/useTranslateText";
+import IconButton from "@/components/ui/IconButton";
 
 const UserNoteModal = ({ onClose }: UserNoteModalProps) => {
   const t = useTranslations("modalUi.userNote");
@@ -45,7 +46,7 @@ const UserNoteModal = ({ onClose }: UserNoteModalProps) => {
       <form
         className="flex w-full flex-col items-end gap-9"
         onSubmit={handleSubmit(onSubmit, (formErrors) =>
-          showFirstFieldErrorToast(formErrors, setFocus, translateText),
+          focusFirstFieldError(formErrors, setFocus, translateText),
         )}
       >
         <section className="flex w-full flex-col gap-6">
@@ -55,16 +56,15 @@ const UserNoteModal = ({ onClose }: UserNoteModalProps) => {
                 <Note className="h-6 w-6 text-font-1" />
                 <h2 className="title-1 text-font-1">{t("title")}</h2>
               </div>
-              <button
+              <IconButton
+                size="xs"
                 onClick={onClose}
-                type="button"
                 aria-label={commonT("close")}
-                className="flex size-5.5 items-center justify-center rounded-lg p-1 text-font-1 hover:bg-btn-hover"
               >
                 <CloseLine className="size-3.5" />
-              </button>
+              </IconButton>
             </div>
-            <p className="body-4 text-font-2">{t("description")}</p>
+            <p className="body-5 text-font-2">{t("description")}</p>
           </header>
 
           <div className="flex w-full flex-col items-end rounded-2xl border border-main bg-card px-4 py-3 transition-colors focus-within:field-focus!">
@@ -74,10 +74,10 @@ const UserNoteModal = ({ onClose }: UserNoteModalProps) => {
               maxLength={500}
               rows={6}
               placeholder={t("placeholder")}
-              className="focus-ring-none body-4 custom-scrollbar min-h-31.5 max-h-52.5 w-full resize-none overflow-y-auto bg-transparent text-font-1 outline-none placeholder:text-font-disabled"
+              className="focus-ring-none body-5 custom-scrollbar min-h-31.5 max-h-52.5 w-full resize-none overflow-y-auto bg-transparent text-font-1 outline-none placeholder:text-font-disabled"
               aria-invalid={Boolean(errors.userNote)}
             />
-            <p className="body-6 w-full text-right text-font-2">
+            <p className="body-7 w-full text-right text-font-2">
               {(noteValue ?? "").length}/500
             </p>
           </div>

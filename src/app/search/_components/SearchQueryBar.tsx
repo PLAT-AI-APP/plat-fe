@@ -32,13 +32,13 @@ const SearchQueryBar = ({
       >
         <div className="flex flex-1 items-center gap-3">
           <Search className="size-7 shrink-0 text-font-disabled" />
-          <span className="body-1 text-font-disabled">|</span>
+          <span className="body-2 text-font-disabled">|</span>
           <input
             value={queryDraft}
             onChange={(event) => onQueryDraftChange(event.target.value)}
             placeholder={t("searchBar.placeholder")}
             aria-label={t("searchBar.placeholder")}
-            className="focus-ring-none body-2 w-full bg-transparent text-font-1 outline-none placeholder:text-font-disabled"
+            className="focus-ring-none body-3 w-full bg-transparent text-font-1 outline-none placeholder:text-font-disabled"
           />
         </div>
 
@@ -55,17 +55,17 @@ const SearchQueryBar = ({
       {keywords.length > 0 && (
         <div className="flex items-center justify-between px-0.5">
           <div className="flex flex-wrap items-center gap-3">
-            <span className="body-4 text-font-2">
+            <span className="body-5 text-font-2">
               {t("searchBar.recentTitle")}
             </span>
-            <span className="body-4 text-font-disabled">|</span>
+            <span className="body-5 text-font-disabled">|</span>
 
             <ul className="flex flex-wrap items-center gap-2">
               {keywords.map((keyword) => (
                 <li
                   key={keyword}
                   onClick={() => onKeywordClick(keyword)}
-                  className="body-4 flex cursor-pointer items-center gap-1 rounded-lg bg-card py-2 pl-3 pr-2 text-font-2"
+                  className="body-5 flex cursor-pointer items-center gap-1 rounded-lg bg-card py-2 pl-3 pr-2 text-font-2"
                 >
                   {keyword}
                   <button
@@ -86,7 +86,7 @@ const SearchQueryBar = ({
           <button
             type="button"
             onClick={onClearAll}
-            className="body-4 text-font-disabled underline decoration-from-font hover:text-font-2"
+            className="body-5 text-font-disabled underline decoration-from-font hover:text-font-2"
           >
             {t("searchBar.clearAll")}
           </button>

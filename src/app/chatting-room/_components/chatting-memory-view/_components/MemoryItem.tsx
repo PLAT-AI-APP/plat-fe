@@ -63,7 +63,7 @@ const MemoryItem = ({
       <header className="flex w-full items-center justify-between gap-3">
         <span
           className={cn(
-            "body-6 whitespace-nowrap",
+            "body-7 whitespace-nowrap",
             isEditing ? "text-font-2" : "text-font-1",
           )}
         >
@@ -109,7 +109,7 @@ const MemoryItem = ({
               onChange={(event) => onChangeDraft(event.target.value)}
               onKeyDown={handleDraftKeyDown}
               onFocus={(event) => event.target.select()}
-              className="focus-ring-none body-4 min-h-[153px] w-full resize-none bg-transparent text-font-0 outline-none"
+              className="focus-ring-none body-5 min-h-[153px] w-full resize-none bg-transparent text-font-0 outline-none"
             />
           </div>
 
@@ -117,14 +117,14 @@ const MemoryItem = ({
             <button
               type="button"
               onClick={onCancelEdit}
-              className="body-6 rounded border border-main bg-btn-hover px-3 py-1 text-font-1 transition-colors hover:bg-card-selected"
+              className="body-7 rounded border border-main bg-btn-hover px-3 py-1 text-font-1 transition-colors hover:bg-card-selected"
             >
               {t("memoryCancelButton")}
             </button>
             <button
               type="button"
               onClick={onSave}
-              className="body-6 rounded border border-main bg-btn-hover px-3 py-1 text-font-1 transition-colors hover:bg-card-selected"
+              className="body-7 rounded border border-main bg-btn-hover px-3 py-1 text-font-1 transition-colors hover:bg-card-selected"
             >
               {t("memorySaveButton")}
             </button>
@@ -133,7 +133,7 @@ const MemoryItem = ({
       ) : (
         // 패딩이 클램프된 요소에 있으면 잘린 다음 줄이 하단 여백에 비치므로 패딩은 바깥에 둡니다.
         <div className="rounded-lg px-2 py-3">
-          <p className="body-5 line-clamp-[20] text-font-1">{memory.content}</p>
+          <p className="body-6 line-clamp-[20] text-font-1">{memory.content}</p>
         </div>
       )}
     </article>

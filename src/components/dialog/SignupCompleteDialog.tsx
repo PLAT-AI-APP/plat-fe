@@ -22,7 +22,7 @@ const SignupCompleteDialog = ({
       label={
         <div className="flex w-full flex-col items-start justify-end gap-3 break-words">
           <div className="flex w-full flex-col items-start gap-1">
-            <p className="body-5 w-full text-font-2">
+            <p className="body-6 w-full text-font-2">
               {t("dialog.signupComplete.greeting", { nickname })}
             </p>
             <h2 className="title-2 w-full text-font-1">
@@ -30,7 +30,7 @@ const SignupCompleteDialog = ({
             </h2>
           </div>
 
-          <div className="body-4 w-full text-font-2">
+          <div className="body-5 w-full text-font-2">
             <p>{t("dialog.signupComplete.descriptionLine1")}</p>
             <p>{t("dialog.signupComplete.descriptionLine2")}</p>
           </div>

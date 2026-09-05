@@ -21,7 +21,7 @@ const TagList = ({ tags, selectedTagSet, currentTag }: TagListProps) => {
         >
           <div
             className={cn(
-              "body-5 text-font-2",
+              "body-6 text-font-2",
               selectedTagSet.has(tag) && "text-brand",
             )}
           >

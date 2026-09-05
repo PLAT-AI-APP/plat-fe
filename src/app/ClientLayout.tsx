@@ -1,10 +1,10 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Header from "@/components/header";
 import Sidebar from "@/components/Sidebar";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useScrollTimeout } from "@/hooks/useScrollTiemout";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { cn } from "@/lib/utils";
@@ -25,8 +25,11 @@ import {
   SKIP_AUTH_ALERT_ONCE_KEY,
   isProtectedPath,
 } from "@/constants/auth";
-import { TRANSITION } from "@/constants/motion";
-import { SIDEBAR_WIDTH, TABLET_MAX_WIDTH_QUERY } from "@/constants/layout";
+import {
+  MOBILE_MAX_WIDTH_QUERY,
+  TABLET_MAX_WIDTH_QUERY,
+} from "@/constants/layout";
+import { useLayoutStore } from "@/store/useLayoutStore";
 
 // 사이드바 없이 전용 화면을 쓰는 경로
 const HIDE_SIDEBAR_PATHS: string[] = [];
@@ -34,23 +37,13 @@ const HIDE_SIDEBAR_PATHS: string[] = [];
 // 헤더 없이 전용 상단 UI를 쓰는 경로
 const HIDE_HEADER_PATHS = ["/chatting-room"];
 
-/** 사이드바 바깥 화면 오버레이 전환 */
-const sidebarOverlayMotion = {
-  initial: { opacity: 0, backdropFilter: "blur(0px)" },
-  animate: { opacity: 1, backdropFilter: "blur(6px)" },
-  exit: { opacity: 0, backdropFilter: "blur(0px)" },
-};
-
-/** 사이드바 펼침 속도에 맞춘 오버레이 전환 */
-const sidebarOverlayTransition = TRANSITION;
-
 export default function ClientLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const t = useTranslations();
 
   useMyInfoQuery();
   useWalletBalanceQuery();
@@ -63,60 +56,84 @@ export default function ClientLayout({
   const isHeaderHidden = HIDE_HEADER_PATHS.some((path) =>
     pathname?.startsWith(path),
   );
-  const currentMainTab = searchParams.get("tab") ?? "all";
   const isHomePath = pathname === "/";
-  const isCategoryHomePath = isHomePath && currentMainTab === "categories";
   const isChattingRoomPath = pathname?.startsWith("/chatting-room");
-  // 태블릿 폭에서는 콘텐츠 영역을 확보하기 위해 모든 화면에서 접힘 + 블러 사이드바를 씁니다.
-  const isTablet = useMediaQuery(TABLET_MAX_WIDTH_QUERY);
-  const shouldUseFocusSidebar =
-    isCategoryHomePath || isChattingRoomPath || isTablet;
 
-  // 복잡도가 높은 화면 또는 태블릿 폭에서만 접힘 + 블러 사이드바를 사용합니다.
-  const shouldFoldSidebar = useMemo(
-    () => shouldUseFocusSidebar,
-    [shouldUseFocusSidebar],
+  /*
+   * 사이드바는 메뉴라 중요도가 낮다. 그래서 상태는 useLayoutStore 하나뿐이고,
+   * 라우트나 탭이 바뀐다고 앱이 그 값을 덮어쓰지 않는다 — 사용자가 편 것은 펴진 채로 남는다.
+   *
+   * 좁은 화면에서만 펼침이 오버레이 드로어가 되어 콘텐츠를 밀지 않는다.
+   * 그때만 얇은 스크림을 깔고, 메인 콘텐츠에 블러는 걸지 않는다.
+   */
+  const isNarrow = useMediaQuery(TABLET_MAX_WIDTH_QUERY);
+  // 모바일에서는 접힌 레일(70px)조차 두지 않는다. 여백까지 합치면 폭의 3분의 1을 메뉴가 먹는다.
+  const isMobile = useMediaQuery(MOBILE_MAX_WIDTH_QUERY);
+  const isSidebarExpanded = useLayoutStore((state) => state.isSidebarExpanded);
+  const toggleSidebar = useLayoutStore((state) => state.toggleSidebar);
+  const setSidebarExpanded = useLayoutStore((state) => state.setSidebarExpanded);
+  const isDrawerOpen = isNarrow && isSidebarExpanded;
+  // 모바일에서 접힌 상태면 사이드바를 아예 렌더하지 않는다(드로어로 열 때만 등장).
+  const isSidebarRendered = !isSidebarHidden && (!isMobile || isDrawerOpen);
+  /*
+   * 사이드바가 그리드 열을 차지하는 경우(=콘텐츠를 옆으로 미는 경우)만 2열로 둔다.
+   * 드로어는 position: fixed 라 그리드 흐름에서 빠지므로, 그때도 2열을 유지하면
+   * 콘텐츠가 사이드바 칸으로 들어가 폭이 0 이 된다.
+   */
+  const isSidebarInline = isSidebarRendered && !isMobile && !isDrawerOpen;
+  const sidebarToggleRef = useRef<HTMLButtonElement>(null);
+
+  const handleFoldToggle = useCallback(() => toggleSidebar(), [toggleSidebar]);
+  const closeDrawer = useCallback(
+    () => setSidebarExpanded(false),
+    [setSidebarExpanded],
   );
 
-  // 기본 화면은 펼친 상태, 포커스 화면은 접힌 상태로 시작합니다.
-  const [isFolded, setIsFolded] = useState(() => shouldFoldSidebar);
-
-  // 경로, 홈 탭, 뷰포트 폭이 바뀌면 화면 정책에 맞춰 접힘 상태를 재계산합니다.
+  // 드로어가 열린 채 넓은 화면으로 돌아가면 인라인 펼침으로 이어지므로 상태는 그대로 둔다.
+  // 다만 드로어일 때는 Esc 로 닫을 수 있어야 한다.
   useEffect(() => {
-    setIsFolded(shouldFoldSidebar);
-  }, [pathname, shouldFoldSidebar]);
+    if (!isDrawerOpen) return;
 
-  // 한 번의 비교로 경로와 쿼리스트링 변경 모두 감지
-  const handleFoldToggle = () => setIsFolded((prev) => !prev);
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      closeDrawer();
+      sidebarToggleRef.current?.focus();
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [closeDrawer, isDrawerOpen]);
   const { isScrolling, onScroll } = useScrollTimeout();
 
-  const {
-    accessToken,
-    isLoggedIn,
-    logout,
-    setAccessToken,
-    setAuthReady,
-    setLoggedIn,
-  } = useAuthStore();
+  /*
+   * selector 없이 useAuthStore() 를 부르면 스토어 전체를 구독한다. 이 레이아웃은
+   * 앱 껍데기(헤더·사이드바·모달·children)를 감싸므로, 토큰이 갱신될 때마다
+   * 화면 전체가 다시 그려졌다. 필요한 조각만 따로 구독한다.
+   */
+  const accessToken = useAuthStore((state) => state.accessToken);
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const logout = useAuthStore((state) => state.logout);
+  const setAccessToken = useAuthStore((state) => state.setAccessToken);
+  const setAuthReady = useAuthStore((state) => state.setAuthReady);
+  const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
   const router = useRouter();
   const clearModals = useModalStore((state) => state.clearModals);
   const openModal = useModalStore((state) => state.openModal);
+  const allowNextNavigation = useModalStore(
+    (state) => state.allowNextNavigation,
+  );
   const openDialog = useDialogStore((state) => state.openDialog);
   const isProtectedRoute = isProtectedPath(pathname);
   const [hasHydrated, setHasHydrated] = useState(false);
   const [isAuthChecking, setIsAuthChecking] = useState(true);
 
-  const openLoginRequiredDialog = useCallback(() => {
-    // 보호 경로 안내도 전역 Dialog로 통일해 브라우저 alert와 모달 스택이 섞이지 않게 합니다.
-    openDialog("LOGIN_REQUIRED", {
-      label: "dialog.loginRequired.title",
-      description: "dialog.loginRequired.description",
-      confirmText: "dialog.loginRequired.confirm",
-      onConfirm: () => {
-        openModal("LOGIN", { triggerRef: undefined });
-      },
-    });
-  }, [openDialog, openModal]);
+  /*
+   * 로그인 창을 곧장 연다. 예전에는 "로그인이 필요해요" 안내를 한 번 거쳤는데, 보호 경로로 들어가거나 보호 링크를
+   * 누른 사람은 이미 로그인해야 한다는 것을 아는 상태라 확인 버튼 한 번이 더 있을 뿐이었다.
+   */
+  const requestLogin = useCallback(() => {
+    openModal("LOGIN", { triggerRef: undefined });
+  }, [openModal]);
 
   useEffect(() => {
     setHasHydrated(useAuthStore.persist.hasHydrated());
@@ -223,15 +240,21 @@ export default function ClientLayout({
         return;
       }
 
+      /*
+       * 로그인 창을 먼저 올리고 홈으로 튕겨낸다. 모달이 열려 있으면 ModalNavigationGuard 가 이동을 막으므로,
+       * 이 한 번은 통과시켜 달라고 미리 알린다 — 안 그러면 보호 경로에 그대로 남는다.
+       */
       clearModals();
-      openLoginRequiredDialog();
+      requestLogin();
+      allowNextNavigation();
       router.replace("/");
     }
   }, [
+    allowNextNavigation,
     clearModals,
     isAuthChecking,
     isLoggedIn,
-    openLoginRequiredDialog,
+    requestLogin,
     pathname,
     router,
   ]);
@@ -256,7 +279,7 @@ export default function ClientLayout({
       event.stopPropagation();
       if (isAuthChecking) return;
 
-      openLoginRequiredDialog();
+      requestLogin();
     };
 
     document.addEventListener("click", handleProtectedLinkClick, true);
@@ -264,7 +287,7 @@ export default function ClientLayout({
     return () => {
       document.removeEventListener("click", handleProtectedLinkClick, true);
     };
-  }, [isAuthChecking, isLoggedIn, openLoginRequiredDialog]);
+  }, [isAuthChecking, isLoggedIn, requestLogin]);
 
   useEffect(() => {
     if (pathname !== "/" || typeof window === "undefined") return;
@@ -321,18 +344,40 @@ export default function ClientLayout({
 
   return (
     <>
-      {!isHeaderHidden && <Header handleFoldToggle={handleFoldToggle} />}
+      {!isHeaderHidden && (
+        <Header
+          handleFoldToggle={handleFoldToggle}
+          foldToggleRef={sidebarToggleRef}
+        />
+      )}
       <main
         id="main-container"
+        style={{
+          // 사이드바가 차지하는 열 폭.
+          // 모바일: 0(콘텐츠가 전체 폭을 쓴다) · 태블릿: 레일 폭 고정(펼쳐도 콘텐츠를 밀지 않음)
+          // 데스크탑: 사용자가 정한 접힘/펼침 폭
+          ["--sidebar-width" as string]:
+            !isNarrow && isSidebarExpanded
+              ? "var(--sidebar-width-expanded)"
+              : "var(--sidebar-width-folded)",
+        }}
         className={cn(
-          "flex flex-row overflow-hidden",
-          isHeaderHidden ? "h-screen" : "h-[calc(100vh-var(--header-height))]",
+          "grid overflow-hidden",
+          "[transition:grid-template-columns_var(--motion-base)_var(--motion-ease-out)]",
+          // 사이드바를 렌더하지 않을 때 2열 템플릿을 그대로 두면 콘텐츠가 사이드바 칸(0px)에
+          // 들어가 폭이 0이 된다. 렌더 여부에 따라 열 자체를 바꾼다.
+          isSidebarInline
+            ? "[grid-template-columns:var(--sidebar-width)_minmax(0,1fr)]"
+            : "[grid-template-columns:minmax(0,1fr)]",
+          isHeaderHidden ? "h-dvh" : "h-[calc(100dvh-var(--header-height))]",
         )}
       >
-        {!isSidebarHidden && (
+        {isSidebarRendered && (
           <Sidebar
-            isFolded={isFolded}
+            isFolded={!isSidebarExpanded}
+            variant={isSidebarInline ? "inline" : "overlay"}
             onFoldToggle={isHeaderHidden ? handleFoldToggle : undefined}
+            foldToggleRef={isHeaderHidden ? sidebarToggleRef : undefined}
           />
         )}
 
@@ -348,30 +393,16 @@ export default function ClientLayout({
             !isHomePath && !isChattingRoomPath && "content-x",
           )}
         >
-          <AnimatePresence>
-            {/* 사이드바 펼침 시 사이드바를 제외한 화면만 흐리게 처리 */}
-            {!isSidebarHidden && !isFolded && shouldUseFocusSidebar && (
-              <motion.div
-                role="button"
-                tabIndex={0}
-                {...sidebarOverlayMotion}
-                transition={sidebarOverlayTransition}
-                style={{
-                  // 오버레이는 사이드바가 펼쳐진 상태에서만 뜨므로 펼침 폭 기준으로 시작 위치를 잡습니다.
-                  left: SIDEBAR_WIDTH.expanded,
-                  top: isHeaderHidden ? 0 : 60,
-                }}
-                className="fixed bottom-0 right-0 z-20 bg-scrim/50"
-                aria-label="사이드바 접기"
-                onClick={handleFoldToggle}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" || event.key === " ") {
-                    handleFoldToggle();
-                  }
-                }}
-              />
-            )}
-          </AnimatePresence>
+          {/* 좁은 화면에서 사이드바가 콘텐츠 위에 얹힐 때만 스크림을 깐다.
+              메인 콘텐츠에 블러는 걸지 않는다 — 메뉴가 콘텐츠를 가리면 안 된다. */}
+          {isDrawerOpen && (
+            <button
+              type="button"
+              aria-label={t("sidebar.close")}
+              onClick={closeDrawer}
+              className="fixed inset-0 z-30 bg-scrim/40"
+            />
+          )}
           {children}
           <ModalManager />
           <DialogManager />

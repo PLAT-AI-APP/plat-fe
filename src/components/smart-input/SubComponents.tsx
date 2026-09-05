@@ -18,7 +18,7 @@ export const LabelSection = ({
   showOptionalLabel?: boolean;
   description?: string;
   labelFontSize?: "title-3" | "title-5";
-  descFontSize?: "body-4" | "body-5" | "body-6";
+  descFontSize?: "body-5" | "body-6" | "body-7";
 }) => {
   const translateText = useTranslateText();
 
@@ -60,7 +60,7 @@ export const CharacterCounter = ({
   return (
     <div
       className={cn(
-        "absolute right-4 body-6 text-font-disabled pointer-events-none",
+        "absolute right-4 body-7 text-font-disabled pointer-events-none",
         isTextarea ? "bottom-3" : "top-1/2 -translate-y-1/2",
         className,
       )}
@@ -79,7 +79,7 @@ export const ErrorMessage = ({ error }: { error?: FieldError | string }) => {
   if (!message) return null;
 
   return (
-    <span className={cn("pt-2 body-6 block", "text-font-error")}>
+    <span className={cn("pt-2 body-7 block", "text-font-error")}>
       {translateText(message)}
     </span>
   );
@@ -96,7 +96,7 @@ export const HelperMessage = ({
   if (!message) return null;
 
   return (
-    <span className="pt-2 body-6 block text-font-2">
+    <span className="pt-2 body-7 block text-font-2">
       {translateText(message)}
     </span>
   );

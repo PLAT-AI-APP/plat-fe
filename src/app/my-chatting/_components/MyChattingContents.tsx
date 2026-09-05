@@ -42,12 +42,16 @@ const MyChattingContents = () => {
 
   return (
     <section className="mx-auto flex w-full max-w-[860px] flex-col gap-8 pt-6">
-      <header className="flex items-end justify-between">
-        <h1 className="heading-2 text-font-1">{t("myChatting.title")}</h1>
+      {/* 검색창 폭이 354px 로 고정이라 좁은 화면에서 제목 자리를 다 먹어 "내 채팅" 이
+          "내 채 / 팅" 으로 쪼개졌다. 한 줄에 다 안 들어가면 검색창을 아래로 내린다. */}
+      <header className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-end sm:justify-between sm:gap-4">
+        <h1 className="heading-2 shrink-0 text-font-1">
+          {t("myChatting.title")}
+        </h1>
 
         <label
           htmlFor="my-chatting-search"
-          className="group flex h-10 w-[354px] items-center gap-2 rounded-xl border border-main bg-dark px-4 py-2 transition-colors focus-within:field-focus!"
+          className="group flex h-10 w-full items-center gap-2 rounded-xl border border-main bg-dark px-4 py-2 transition-colors focus-within:field-focus! sm:w-[354px]"
         >
           <Search className="size-[18px] shrink-0 text-font-disabled transition-colors group-focus-within:text-font-1" />
           <input
@@ -58,7 +62,7 @@ const MyChattingContents = () => {
             onFocus={() => setIsSearchFocused(true)}
             onBlur={() => setIsSearchFocused(false)}
             placeholder={isSearchFocused ? "" : SEARCH_PLACEHOLDER[locale]}
-            className="focus-ring-none body-4 min-w-0 flex-1 appearance-none bg-transparent text-font-1 outline-none placeholder:text-font-disabled [&::-webkit-search-cancel-button]:appearance-none"
+            className="focus-ring-none body-5 min-w-0 flex-1 appearance-none bg-transparent text-font-1 outline-none placeholder:text-font-disabled [&::-webkit-search-cancel-button]:appearance-none"
           />
           <button
             type="button"

@@ -69,7 +69,7 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
       <header className="flex flex-col gap-2">
         <h2 className="title-2 text-font-1">{selectedScenario.name}</h2>
         {selectedScenario.description && (
-          <p className="body-2 whitespace-pre-wrap text-font-2">
+          <p className="body-3 whitespace-pre-wrap text-font-2">
             {selectedScenario.description}
           </p>
         )}
@@ -128,7 +128,9 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
                     alt={t("assetAlt", { name: selectedScenario.name })}
                     width={482}
                     height={289}
-                    className="h-[289px] w-[482px] rounded-2xl object-cover"
+                    // 고정 폭은 flex 안에서 그대로 줄어드는데 높이는 289px 로 남아,
+                    // 폭에 따라 482:289 가 308:289 로 달라지며 잘리는 부분이 바뀌었다.
+                    className="aspect-[482/289] w-full max-w-[482px] rounded-2xl object-cover"
                   />
                 );
               }
@@ -144,8 +146,8 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
                       className="avatar-img size-10"
                     />
                     <div className="flex min-w-0 flex-1 flex-col items-start gap-1.5">
-                      <p className="body-4 text-font-1">{character.title}</p>
-                      <p className="body-4 rounded-bl-2xl rounded-br-2xl rounded-tr-2xl bg-card px-3 py-2 text-font-1">
+                      <p className="body-5 text-font-1">{character.title}</p>
+                      <p className="body-5 rounded-bl-2xl rounded-br-2xl rounded-tr-2xl bg-card px-3 py-2 text-font-1">
                         {content.value}
                       </p>
                     </div>
@@ -156,7 +158,7 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
               return (
                 <div key={content.id} className="flex w-full gap-5">
                   <Message className="size-7 shrink-0 text-font-2" />
-                  <p className="body-4 min-w-0 flex-1 whitespace-pre-wrap text-font-2">
+                  <p className="body-5 min-w-0 flex-1 whitespace-pre-wrap text-font-2">
                     {content.value}
                   </p>
                 </div>
@@ -169,7 +171,7 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
           <button
             type="button"
             onClick={() => setIsExpanded((prev) => !prev)}
-            className="body-4 flex w-full items-center justify-center gap-1 rounded-xl border border-main bg-darkest py-3 text-font-2 transition-colors hover:bg-dark hover:text-font-1"
+            className="body-5 flex w-full items-center justify-center gap-1 rounded-xl border border-main bg-darkest py-3 text-font-2 transition-colors hover:bg-dark hover:text-font-1"
           >
             {isExpanded ? t("collapse") : t("expand")}
             <ArrowDown

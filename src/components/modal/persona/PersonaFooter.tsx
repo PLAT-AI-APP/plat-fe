@@ -10,11 +10,11 @@ interface PersonaFooterProps {
 
 const PersonaFooter = ({ isMaxPersona }: PersonaFooterProps) => {
   const t = useTranslations("modalUi.personaList");
-  const { openModal } = useModalStore();
+  const openModal = useModalStore((state) => state.openModal);
 
   return (
     <footer className="pt-9">
-      <p className="body-6 text-center text-font-2">{t("helper")}</p>
+      <p className="body-7 text-center text-font-2">{t("helper")}</p>
 
       <button
         onClick={() => !isMaxPersona && openModal("PERSONA_ADD")}

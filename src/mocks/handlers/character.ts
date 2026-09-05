@@ -126,6 +126,8 @@ const mockCharacterDetail: CharacterDetail = {
   characterDescription:
     "이윤아는 장난스럽고 직설적인 말투를 쓰지만, 가까운 사람에게는 은근히 세심한 캐릭터입니다. 늘 별일 아닌 척 다가오지만 사용자의 반응을 누구보다 신경 쓰고, 무심한 척 챙겨주는 순간이 많습니다.\n\n겉으로는 귀찮다는 말을 자주 하지만 실제로는 약속 시간을 가장 먼저 확인하고, 사용자가 놓친 준비물을 챙겨두는 타입입니다. 감정을 정면으로 표현하는 데 서툴러 농담으로 넘기려 하지만, 중요한 순간에는 누구보다 빠르게 곁에 서 있습니다.",
   chatCount: 235,
+  likeCount: 0,
+  liked: false,
   tags: ["학원", "일상", "로맨스", "소꿉친구", "츤데레"],
   isOfficial: true,
   images: [

@@ -7,6 +7,7 @@ import { Close } from "@/icons";
 import { ModalLayout } from "@/components/ModalLayout";
 import { createCroppedImageDataUrl } from "@/lib/cropImage";
 import { cn } from "@/lib/utils";
+import IconButton from "@/components/ui/IconButton";
 
 interface RepresentativeImageCropModalProps {
   imageSrc: string;
@@ -77,17 +78,17 @@ const RepresentativeImageCropModal = ({
         <header className="flex items-start justify-between gap-4">
           <div className="min-w-0">
             <h2 className="title-1 text-font-1">{t("title")}</h2>
-            <p className="body-4 pt-3 text-font-2">{t("description")}</p>
+            <p className="body-5 pt-3 text-font-2">{t("description")}</p>
           </div>
 
-          <button
-            type="button"
+          <IconButton
+            size="md"
             aria-label={commonT("close")}
             onClick={onClose}
-            className="flex size-8 shrink-0 items-center justify-center rounded-lg text-font-disabled hover:bg-btn-hover"
+            className="text-font-disabled"
           >
             <Close className="size-5" />
-          </button>
+          </IconButton>
         </header>
 
         <div className="flex flex-col gap-4">
@@ -112,7 +113,8 @@ const RepresentativeImageCropModal = ({
                   backgroundColor: "#000000",
                 },
                 cropAreaStyle: {
-                  border: "2px solid #000000",
+                  // 크롭 영역 경계는 스크림 위에 얹히므로 얇은 반투명 흰 선이면 충분하다.
+                  border: "1px solid rgba(255, 255, 255, 0.72)",
                 },
               }}
             />

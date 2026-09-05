@@ -81,7 +81,7 @@ const CreateTabs = ({
   };
 
   return (
-    <section className="flex h-full max-h-[calc(100vh-145px)] w-full max-w-[491px] min-w-0 shrink-0 flex-col gap-9 overflow-hidden lg:w-[491px]">
+    <section className="flex h-full max-h-[calc(100dvh-var(--header-height)-5.5rem)] w-full max-w-[491px] min-w-0 shrink-0 flex-col gap-9 overflow-hidden lg:w-[491px]">
       {/* Tabs are unframed in the Figma design; the border belongs only to the tab row. */}
       <nav
         ref={tabNavRef as React.RefObject<HTMLElement>}
@@ -97,7 +97,7 @@ const CreateTabs = ({
               ref={(el) => setTabRef(tabId, el)}
               onClick={() => setCurrentTabId(tabId)}
               className={cn(
-                "body-4 flex h-10 cursor-pointer items-center justify-center whitespace-nowrap p-2.5 text-center text-font-2 outline-none transition-colors",
+                "body-5 flex h-10 cursor-pointer items-center justify-center whitespace-nowrap p-2.5 text-center text-font-2 outline-none transition-colors",
                 TAB_WIDTH_CLASS_BY_ID[tabId],
                 isActive ? "text-font-1" : "hover:text-font-1",
               )}

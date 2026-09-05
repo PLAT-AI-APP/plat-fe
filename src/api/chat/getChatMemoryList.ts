@@ -17,6 +17,5 @@ export const useChatMemoryListQuery = (chatRoomId: string) => {
   return useQuery<ChatMemoryEntry[], AppError>({
     queryKey: ["get-chat-memory-list", chatRoomId],
     queryFn: () => getChatMemoryList(chatRoomId),
-    staleTime: 1000 * 60 * 5,
   });
 };

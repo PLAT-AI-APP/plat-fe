@@ -141,7 +141,7 @@ const CharacterCard = ({
           <ChatCountBadge
             chatCount={chatCount}
             variant="floating"
-            textClassName="body-4"
+            textClassName="body-5"
           />
         )}
 
@@ -161,7 +161,8 @@ const CharacterCard = ({
                   src={image}
                   alt={t("imageAlt", { title, index: index + 1 })}
                   fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 45vw, 390px"
+                  // 열 계약(CARD_COLUMNS_CLASS)과 맞춘다: 1열 → 2열 → 3열(1200px에서 389px).
+                  sizes="(max-width: 767px) 100vw, (max-width: 1279px) 50vw, 400px"
                 />
               </div>
             ))}
@@ -177,7 +178,7 @@ const CharacterCard = ({
               titleClassName="title-3 text-overlay-font"
               icon={titleIcon}
             />
-            <p className="body-5 line-clamp-1 text-overlay-font/70">
+            <p className="body-6 line-clamp-1 text-overlay-font/70">
               {description}
             </p>
           </div>
@@ -214,7 +215,8 @@ const CharacterCard = ({
           src={imageList[currentImgIndex]}
           alt={t("imageAlt", { title, index: currentImgIndex + 1 })}
           fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          // 6열 기준 1200px에서 187px. 예전 33vw는 실제 표시 폭의 두 배가 넘는 이미지를 받아왔다.
+          sizes="(max-width: 447px) 45vw, (max-width: 895px) 30vw, (max-width: 1279px) 20vw, 240px"
         />
 
         {typeof rank === "number" && (

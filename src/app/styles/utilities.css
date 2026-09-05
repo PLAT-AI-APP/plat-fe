@@ -25,6 +25,21 @@
   padding-inline: var(--content-margin-x);
 }
 
+/*
+ * 콘텐츠 셸. 카드 그리드가 놓이는 영역의 폭 계약을 한곳에서 정한다.
+ *
+ * max-width 에 좌우 여백까지 포함시키면(예: max-w-300 + content-x) box-sizing: border-box
+ * 때문에 실제 카드 영역이 여백만큼 줄어든다. 1200px 를 기준으로 역산한 카드 폭
+ * (S 186.67 / M 227.2)과 열 계약(CARD_COLUMNS_CLASS)이 그만큼 어긋나 6열이 5열로 떨어진다.
+ * 그래서 여백을 max-width 위에 더해, content box 가 정확히 --content-max-width 가 되게 한다.
+ */
+@utility content-shell {
+  width: 100%;
+  max-width: calc(var(--content-max-width) + 2 * var(--content-margin-x));
+  margin-inline: auto;
+  padding-inline: var(--content-margin-x);
+}
+
 @utility skeleton {
   background-color: var(--bg-card-hover);
   animation: skeleton-pulse 1.4s var(--motion-ease-in-out) infinite;
@@ -74,4 +89,77 @@
  */
 @utility menu-item {
   @apply flex items-center rounded-lg px-2.5 py-2 transition-colors hover:bg-btn-hover;
+}
+
+/*
+ * 콘텐츠 셸의 좁은 변형들.
+ *
+ * 설정(592px)·공지(620px)·내 채팅(860px)·스튜디오(700px)처럼 페이지마다
+ * max-w-* 를 따로 달고 있었다. #page-content 가 이미 content-x 로 좌우 여백을
+ * 주는 위에 페이지가 또 폭을 잡으니 여백이 두 번 들어가고, 값도 제각각이었다.
+ *
+ * --content-max-width 만 덮어쓰고 폭 계산은 content-shell 한 곳에 맡긴다.
+ * (max-width 에 여백을 더해 content box 를 정확히 맞추는 계산이 거기 있다.)
+ */
+@utility content-shell-narrow {
+  --content-max-width: 620px;
+  @apply content-shell;
+}
+
+@utility content-shell-mid {
+  --content-max-width: 860px;
+  @apply content-shell;
+}
+
+/*
+ * 터치 히트 영역 보정.
+ *
+ * 아이콘 버튼이 size-4 ~ size-8(16~32px)로 만들어져 있어 터치 기기에서
+ * 44px 기준을 한참 밑돈다. 특히 카드 캐러셀 화살표와 케밥 메뉴는 서로
+ * 붙어 있어 잘못 누르기 쉽다.
+ *
+ * 보이는 크기는 그대로 두고 눌리는 영역만 넓힌다. inset 을 음수로 주는 방식은
+ * 원래 크기에 비례해 커지므로 24px 버튼이 40px 에 그친다. 그래서 최소 44px 를
+ * 직접 보장하고, 이미 그보다 큰 버튼은 자기 크기를 유지하게 max() 를 쓴다.
+ */
+@utility tap-target {
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+  }
+}
+
+/*
+ * 가로로 미는 탭 줄.
+ *
+ * 홈 상단 탭 5개가 `flex w-full gap-2` 만 걸고 있어서, 라벨이 긴 언어(영어·태국어)
+ * 에서는 375px 화면에 들어가지 않았다. flex 가 항목을 줄여 한국어에서는 "카테 /
+ * 고리" 처럼 단어 중간에서 줄이 바뀌었고, 그러고도 남는 넘침은 #page-content 의
+ * overflow-x-hidden 에 잘려 스크롤할 방법조차 없었다.
+ *
+ * 컴포넌트가 아니라 유틸리티로 두는 이유: 앱의 탭 구현 6종은 렌더하는 요소도
+ * (Link / button / a) 활성 표시 방식도(border-b-2 / 절대배치 밑줄 / framer-motion
+ * layoutId) 제각각이다. 하나의 컴포넌트로 묶으면 그 차이를 없애야 하지만,
+ * 실제 결함은 넘침 하나뿐이므로 그것만 고친다.
+ *
+ * 항목의 shrink-0 / whitespace-nowrap 을 자식 선택자로 함께 건다. 이 둘을
+ * 호출부에 맡기면 새 탭을 추가할 때 빠뜨리면서 같은 문제가 되돌아온다.
+ */
+@utility tab-strip {
+  @apply no-scrollbar;
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+
+  & > * {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
 }

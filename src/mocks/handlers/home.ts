@@ -89,6 +89,8 @@ const OFFICIAL_PREVIEW_ITEMS = Array.from({ length: 24 }, (_, index) => {
     description: seed.description,
     tags: ["일상", "판타지"],
     chatCount: seed.chatCount,
+    // 대화 수와 일부러 반대로 준다 — 정렬을 바꿨을 때 순서가 실제로 뒤집히는지 보이도록.
+    likeCount: 1000 - seed.chatCount,
     remainingFreeChatCount: 5,
     scenarios: [
       {
@@ -155,7 +157,16 @@ const TODAY_PICK_ITEMS = Array.from({ length: 24 }, (_, index) => {
   };
 });
 
+/** 메인 배너. 실제 응답과 마찬가지로 이미지 URL과 이동 링크만 내려갑니다. */
+const BANNER_ITEMS = Array.from({ length: 3 }, (_, index) => ({
+  mainBannerId: String(index + 1),
+  imageUrl: `https://picsum.photos/seed/plat-banner-${index}/1200/437`,
+  linkUrl: index === 0 ? null : "/?tab=new",
+}));
+
 export const homeHandlers = [
+  http.get(endpoint("/home/banners"), () => HttpResponse.json(BANNER_ITEMS)),
+
   http.get(endpoint("/home/today-pick"), ({ request }) => {
     const url = new URL(request.url);
     const page = Number(url.searchParams.get("page") ?? 0);
@@ -194,18 +205,39 @@ export const homeHandlers = [
     const url = new URL(request.url);
     const page = Number(url.searchParams.get("page") ?? 0);
     const size = Number(url.searchParams.get("size") ?? 10);
+    const sort = url.searchParams.get("sort") ?? "CHAT";
     const start = page * size;
 
-    return HttpResponse.json(OFFICIAL_PREVIEW_ITEMS.slice(start, start + size));
+    // 서버처럼 누적 카운터로 줄 세웁니다.
+    const sorted = [...OFFICIAL_PREVIEW_ITEMS].sort((a, b) =>
+      sort === "LIKE" ? b.likeCount - a.likeCount : b.chatCount - a.chatCount,
+    );
+
+    return HttpResponse.json(sorted.slice(start, start + size));
   }),
 
-  http.get(endpoint("/home/asset-preview"), ({ request }) => {
+  // 실시간(오늘 0시~현재) 대화량 상위 3편. 페이지가 없어 항상 같은 3건입니다.
+  http.get(endpoint("/home/asset-preview"), () =>
+    HttpResponse.json(ASSET_PREVIEW_ITEMS.slice(0, 3)),
+  ),
+
+  // 전체 캐릭터 모음. 조건 없이 누적 대화량 순으로 SliceWith 에 담아 내려줍니다.
+  http.get(endpoint("/home/all"), ({ request }) => {
     const url = new URL(request.url);
     const page = Number(url.searchParams.get("page") ?? 0);
-    const size = Number(url.searchParams.get("size") ?? 10);
+    const size = Number(url.searchParams.get("size") ?? 24);
     const start = page * size;
+    const content = USER_RECOMMEND_ITEMS.slice(start, start + size);
 
-    return HttpResponse.json(ASSET_PREVIEW_ITEMS.slice(start, start + size));
+    return HttpResponse.json({
+      page: {
+        number: page,
+        size,
+        numberOfElements: content.length,
+        hasNext: start + size < USER_RECOMMEND_ITEMS.length,
+      },
+      content,
+    });
   }),
 
   http.get(endpoint("/home/popular-tag"), ({ request }) => {

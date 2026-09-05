@@ -1,31 +1,21 @@
 "use client";
 
-import { useState } from "react";
 import { useTranslations } from "next-intl";
 import dayjs from "@/lib/dayjs";
 import FilterDropdown from "../../FilterDropdown";
+import {
+  RANKING_SORTS,
+  RANKING_SORT_LABEL_KEYS,
+  RankingSortId,
+} from "../../ranking-tab-contents/_components/rankingFilters";
 
-type MessageKey = Parameters<ReturnType<typeof useTranslations>>[0];
+interface NewCharacterHeaderProps {
+  sort: RankingSortId;
+  onSortChange: (sort: RankingSortId) => void;
+}
 
-const CONTENT_TYPES = ["character", "world"] as const;
-type ContentType = (typeof CONTENT_TYPES)[number];
-const CONTENT_TYPE_LABEL_KEYS: Record<ContentType, MessageKey> = {
-  character: "rankingPage.contentTypeCharacter",
-  world: "rankingPage.contentTypeWorld",
-};
-
-const SORT_OPTIONS = ["chats", "recommended", "wish"] as const;
-type SortOption = (typeof SORT_OPTIONS)[number];
-const SORT_LABEL_KEYS: Record<SortOption, MessageKey> = {
-  chats: "rankingPage.sortChats",
-  recommended: "rankingPage.sortRecommended",
-  wish: "rankingPage.sortWish",
-};
-
-const NewCharacterHeader = () => {
+const NewCharacterHeader = ({ sort, onSortChange }: NewCharacterHeaderProps) => {
   const t = useTranslations();
-  const [contentType, setContentType] = useState<ContentType>("character");
-  const [sortOption, setSortOption] = useState<SortOption>("chats");
 
   const updatedAt = t("newPage.updatedAt", {
     date: dayjs().format("YY.MM.DD"),
@@ -35,23 +25,15 @@ const NewCharacterHeader = () => {
     <div className="flex w-full items-center justify-between">
       <div className="flex items-center gap-2">
         <h2 className="title-2 text-font-1">{t("newPage.title")}</h2>
-        <span className="body-5 text-font-disabled">{updatedAt}</span>
+        <span className="body-6 text-font-disabled">{updatedAt}</span>
       </div>
 
-      <div className="flex items-center gap-2">
-        <FilterDropdown
-          value={contentType}
-          options={CONTENT_TYPES}
-          labelKeys={CONTENT_TYPE_LABEL_KEYS}
-          onChange={setContentType}
-        />
-        <FilterDropdown
-          value={sortOption}
-          options={SORT_OPTIONS}
-          labelKeys={SORT_LABEL_KEYS}
-          onChange={setSortOption}
-        />
-      </div>
+      <FilterDropdown
+        value={sort}
+        options={RANKING_SORTS}
+        labelKeys={RANKING_SORT_LABEL_KEYS}
+        onChange={onSortChange}
+      />
     </div>
   );
 };

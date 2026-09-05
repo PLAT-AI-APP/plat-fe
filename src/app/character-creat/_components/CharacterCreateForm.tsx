@@ -376,7 +376,7 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
             <ModalLayout
               hasBackground
               onClose={() => setIsPreviewOpen(false)}
-              className="flex h-[80vh] w-full max-w-[693px] flex-col"
+              className="flex h-[80dvh] w-full max-w-[693px] flex-col"
             >
               {shouldShowCardPreview ? (
                 <CharacterCardPreviewPanel />

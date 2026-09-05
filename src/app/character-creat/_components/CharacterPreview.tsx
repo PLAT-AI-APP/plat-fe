@@ -177,7 +177,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
   };
 
   return (
-    <section className="flex h-full max-h-[calc(100vh-145px)] w-full max-w-[693px] shrink-0 flex-col gap-12 rounded-3xl bg-darker p-4 lg:h-[919px]">
+    <section className="flex h-full max-h-[calc(100dvh-var(--header-height)-5.5rem)] w-full max-w-[693px] shrink-0 flex-col gap-12 overflow-y-auto rounded-3xl bg-darker p-4 lg:h-[919px]">
       <header className="flex h-12 shrink-0 items-center justify-between rounded-2xl bg-darkest px-4 py-3">
         <strong className="title-3 truncate text-font-1">
           {scenarioName ||
@@ -243,7 +243,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
           onChange={(e) => setMsg(e.target.value)}
           onKeyDown={handleTextareaKeyDown}
           placeholder={t("scenarioPlaceholder")}
-          className="focus-ring-none body-4 custom-scrollbar min-h-[42px] w-full resize-none bg-transparent px-2 outline-none placeholder:text-font-disabled"
+          className="focus-ring-none body-5 custom-scrollbar min-h-[42px] w-full resize-none bg-transparent px-2 outline-none placeholder:text-font-disabled"
         />
 
         <div className="flex items-center justify-between gap-3">
@@ -255,7 +255,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
                 textareaRef.current?.focus();
               }}
               className={cn(
-                "body-4 flex h-8 items-center justify-center gap-1.5 rounded-full border border-main bg-dark py-1.5 pl-2.5 pr-3 text-font-2",
+                "body-5 flex h-8 items-center justify-center gap-1.5 rounded-full border border-main bg-dark py-1.5 pl-2.5 pr-3 text-font-2",
                 currentMode === "action" && "border-brand text-brand",
               )}
             >
@@ -270,7 +270,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
                 textareaRef.current?.focus();
               }}
               className={cn(
-                "body-4 flex h-8 items-center justify-center gap-1.5 rounded-full border border-main bg-dark py-1.5 pl-2.5 pr-3 text-font-2",
+                "body-5 flex h-8 items-center justify-center gap-1.5 rounded-full border border-main bg-dark py-1.5 pl-2.5 pr-3 text-font-2",
                 currentMode === "chat" && "border-brand text-brand",
               )}
             >
@@ -295,7 +295,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
                 textareaRef.current?.focus();
               }}
               className={cn(
-                "body-4 flex h-8 items-center justify-center gap-1.5 rounded-full border border-main bg-dark py-1.5 pl-2.5 pr-3 text-font-2",
+                "body-5 flex h-8 items-center justify-center gap-1.5 rounded-full border border-main bg-dark py-1.5 pl-2.5 pr-3 text-font-2",
                 currentMode === "userChat" && "border-brand text-brand",
               )}
             >
@@ -309,14 +309,14 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
               <button
                 type="button"
                 onClick={() => insertComposerText("{{user}}")}
-                className="body-4 flex h-8 items-center rounded-lg px-2 py-1.5 text-font-2 hover:bg-btn-hover hover:text-font-1"
+                className="body-5 flex h-8 items-center rounded-lg px-2 py-1.5 text-font-2 hover:bg-btn-hover hover:text-font-1"
               >
                 {"{{user}}"}
               </button>
               <button
                 type="button"
                 onClick={() => insertComposerText("{{img:}}")}
-                className="body-4 flex h-8 items-center rounded-lg px-2 py-1.5 text-font-2 hover:bg-btn-hover hover:text-font-1"
+                className="body-5 flex h-8 items-center rounded-lg px-2 py-1.5 text-font-2 hover:bg-btn-hover hover:text-font-1"
               >
                 {"{{img:}}"}
               </button>

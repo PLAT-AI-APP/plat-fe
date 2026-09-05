@@ -16,7 +16,7 @@ const CharacterCreateBanner = () => {
         className="absolute z-10 left-13 top-0 h-full flex flex-col justify-center items-start gap-5"
       >
         <header className="flex flex-col justify-center items-start gap-1">
-          <p className="body-5 text-font-2">{t("createPromptCaption")}</p>
+          <p className="body-6 text-font-2">{t("createPromptCaption")}</p>
           <h2 className="title-1 text-font-0">{t("createPromptTitle")}</h2>
         </header>
 

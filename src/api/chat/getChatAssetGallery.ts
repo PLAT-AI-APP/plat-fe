@@ -17,6 +17,5 @@ export const useChatAssetGalleryQuery = (chatRoomId: string) => {
   return useQuery<ChatAssetGalleryResponse, AppError>({
     queryKey: ["get-chat-asset-gallery", chatRoomId],
     queryFn: () => getChatAssetGallery(chatRoomId),
-    staleTime: 1000 * 60 * 5,
   });
 };

@@ -35,14 +35,14 @@ const PersonaMenuPopover = ({
         <button
           onClick={() => handleAction(onEdit)}
           type="button"
-          className="flex items-center gap-2 text-left body-4 p-2 rounded-lg hover:bg-btn-hover"
+          className="flex items-center gap-2 text-left body-5 p-2 rounded-lg hover:bg-btn-hover"
         >
           <Pen className="size-5 text-font-2" /> {t("editPersona")}
         </button>
         <button
           onClick={() => handleAction(onDelete)}
           type="button"
-          className="flex items-center gap-2 body-4 text-left p-2 rounded-lg hover:bg-btn-hover"
+          className="flex items-center gap-2 body-5 text-left p-2 rounded-lg hover:bg-btn-hover"
         >
           <Trash className="size-5 text-font-2" />
           {t("deletePersona")}

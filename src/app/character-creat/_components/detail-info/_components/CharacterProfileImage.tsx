@@ -60,6 +60,7 @@ const CharacterProfileImage = () => {
     e.target.value = "";
   };
 
+  // 크롭 결과 확정 즉시 업로드해 fileId를 받아 둡니다. 제출 시점에는 폼 값만 그대로 전송합니다.
   const handleCropApply = async (croppedImage: string) => {
     if (!cropTarget) return;
 

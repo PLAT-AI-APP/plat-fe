@@ -1,53 +1,61 @@
 import { ChatFill } from "@/icons";
 import Image from "next/image";
 import React from "react";
-import { OfficialPreviewItem } from "@/api/home/getOfficialPreview";
+import type { OfficialPreviewItem } from "@/api/home/getOfficialPreview";
+import { formatWithCommas } from "@/lib/utils";
 
 interface CharacterProfileCardProps {
   item: OfficialPreviewItem;
+  /** 첫 슬라이드만 우선 로드해 홈 LCP를 앞당깁니다. */
+  priority?: boolean;
 }
 
-const CharacterProfileCard = ({ item }: CharacterProfileCardProps) => {
+/**
+ * 좌측 캐릭터 카드.
+ *
+ * 폭은 부모 그리드의 열이 정한다. 예전에는 이쪽만 md:w-95 로 고정되어 있어
+ * 창을 줄이면 오른쪽 대화 영역만 눌렸다 — 좌우가 같은 비율로 함께 움직여야
+ * 일관되게 보인다.
+ */
+const CharacterProfileCard = ({ item, priority }: CharacterProfileCardProps) => {
+  const imageUrl = item.images?.[0];
+
   return (
-    // md 미만: 전체 폭 + 정사각형 비율(반응형 수정 전 w-95×h-full 정사각형과 동일 비율)로
-    // 위쪽에 쌓인다. 고정 높이(h-56) 대신 aspect-square를 쓰는 이유: 폭이 화면마다
-    // 다른데 높이만 고정이면 화면이 넓을수록 크롭 비율이 가로로 길어져 이상하게 잘려 보인다.
-    // max-h-95(380px)는 반응형 수정 전 원래 높이(w-95/h-full 정사각형의 절대값)를 넘지
-    // 않도록 잡은 상한이다 — 폭이 380px보다 넓은 화면에서도 이미지가 끝없이 커지지 않는다.
-    // md 이상: 원래처럼 고정폭+고정높이(aspect 해제)로 왼쪽에 붙는다.
-    <section className="relative w-full aspect-square max-h-95 shrink-0 rounded-tl-2xl rounded-tr-2xl overflow-hidden bg-scrim inline-flex flex-col justify-end items-start md:aspect-auto md:max-h-none md:min-w-86.75 md:w-95 md:h-full md:shrink md:rounded-tr-none md:rounded-bl-2xl">
+    <section className="relative inline-flex aspect-square w-full min-w-0 flex-col items-start justify-end overflow-hidden rounded-t-2xl bg-scrim md:aspect-auto md:h-full md:rounded-tr-none md:rounded-bl-2xl">
+      {imageUrl && (
+        <Image
+          src={imageUrl}
+          alt={item.title}
+          fill
+          priority={priority}
+          // 좁은 화면은 한 줄 전체, md 이상은 콘텐츠 폭의 1/3(1fr : 2fr 분할)을 차지합니다.
+          sizes="(max-width: 767px) 100vw, 33vw"
+          className="object-cover"
+        />
+      )}
 
-      <Image
-        src={item.images[0]}
-        alt={item.title}
-        width={100}
-        height={100}
-        className="absolute inset-0 h-full w-full object-cover"
-      />
       <header className="absolute bottom-0 left-0 flex w-full flex-col items-start justify-center gap-1 self-stretch bg-linear-to-b from-scrim/0 via-scrim/80 to-scrim px-6 pb-7 pt-9">
-        <div className="inline-flex items-center gap-2.5">
-          <h2 className="text-font-0 title-2 line-clamp-1">{item.title}</h2>
-        </div>
-        <p className="body-3 text-font-1 line-clamp-1">{item.description}</p>
+        <h3 className="title-2 line-clamp-1 text-overlay-font">{item.title}</h3>
 
-        {/* 태그 리스트 영역 */}
+        <p className="body-4 line-clamp-1 text-overlay-font/80">
+          {item.description}
+        </p>
+
         {item.tags.length > 0 && (
           <div className="inline-flex items-start gap-1">
-            {item.tags.map((tag) => (
-              <span
-                key={tag}
-                className="body-5 flex justify-center items-center"
-              >
-                <span className="text-font-2">#{tag}</span>
+            {item.tags.slice(0, 3).map((tag) => (
+              <span key={tag} className="body-6 text-overlay-font/60">
+                #{tag}
               </span>
             ))}
           </div>
         )}
 
-        {/* 대화수 정보 */}
-        <div className="inline-flex justify-center items-center gap-[4.86px]">
-          <ChatFill className="size-4 text-font-2" />
-          <span className="text-font-2 body-5">{item.chatCount}</span>
+        <div className="inline-flex items-center justify-center gap-1">
+          <ChatFill className="size-4 text-overlay-font/60" />
+          <span className="body-6 text-overlay-font/60">
+            {formatWithCommas(item.chatCount)}
+          </span>
         </div>
       </header>
     </section>

@@ -43,7 +43,7 @@ const AuthClient = ({ code }: AuthClientProps) => {
   }, [code, mutate, router]);
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-dark">
+    <div className="flex min-h-dvh flex-col items-center justify-center bg-dark">
       <h1 className="title-1 animate-pulse text-font-1">
         인증을 처리하고 있습니다.
       </h1>

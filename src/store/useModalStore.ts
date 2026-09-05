@@ -13,7 +13,6 @@ import {
   UserNoteModalProps,
 } from "@/type/modal";
 import { useAuthStore } from "./useAuthStore";
-import { useDialogStore } from "./useDialogStore";
 
 export type ModalTypeMap = {
   ADD_LANGUAGE: AddLanguageModalProps;
@@ -74,15 +73,9 @@ export const useModalStore = create<ModalState>((set, get) => ({
     const isLoggedIn = useAuthStore.getState().isLoggedIn;
 
     if (!isLoggedIn && requiresAuthModalTypes.includes(type)) {
-      // 로그인 필요 안내는 모달 스택이 아니라 다이얼로그 매니저로 열어 두 레이어의 책임을 분리합니다.
-      useDialogStore.getState().openDialog("LOGIN_REQUIRED", {
-        label: "dialog.loginRequired.title",
-        description: "dialog.loginRequired.description",
-        confirmText: "dialog.loginRequired.confirm",
-        onConfirm: () => {
-          get().openModal("LOGIN", { triggerRef: undefined });
-        },
-      });
+      // 열려던 모달 대신 로그인 창을 바로 띄운다. "로그인이 필요해요" 를 한 번 거치면 사용자가 이미 아는
+      // 사실을 확인 버튼으로 한 번 더 누르게 할 뿐이다.
+      get().openModal("LOGIN", { triggerRef: undefined });
       return;
     }
 

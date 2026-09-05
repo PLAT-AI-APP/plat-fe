@@ -1,17 +1,20 @@
 "use client";
 
-import { useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useUnFollowMutation } from "@/api/follow/deleteFollow";
-import { useFollowMutation } from "@/api/follow/postFollow";
+import {
+  useDeleteUniverseLikeMutation,
+  usePostUniverseLikeMutation,
+} from "@/api/universe/postUniverseLike";
 import ActiveButton from "@/components/ActiveButton";
-import { ChatFill, Gear } from "@/icons";
+import { ChatFill, Gear, Heart, HeartFill } from "@/icons";
 import { cn, formatStatCount } from "@/lib/utils";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useModalStore } from "@/store/useModalStore";
 import { useUserStore } from "@/store/useUserStore";
 import { CharacterDetail } from "@/type/character";
+import { useFollowToggle } from "@/features/follow/useFollowToggle";
 
 interface SidebarSummaryProps {
   character: CharacterDetail;
@@ -26,61 +29,46 @@ const SidebarSummary = ({
 }: SidebarSummaryProps) => {
   const t = useTranslations("characterDetail");
   const router = useRouter();
-  const queryClient = useQueryClient();
   const userId = useUserStore((state) => state.user?.id);
   const creatorId = character.creator.id;
   const canUseCreatorActions = Boolean(creatorId);
   // TODO: 상세 조회 응답에 creatorId 또는 editable 필드가 추가되면 수정 버튼 노출 조건을 연결합니다.
   const isCreator = Boolean(userId && creatorId && userId === creatorId);
-  const [optimisticIsFollowingCreator, setOptimisticIsFollowingCreator] =
-    useState<boolean | null>(null);
-  const { mutate: follow, isPending: isFollowMutating } = useFollowMutation();
-  const { mutate: unFollow, isPending: isUnFollowMutating } =
-    useUnFollowMutation();
-  const isFollowPending = isFollowMutating || isUnFollowMutating;
-  const isFollowingCreator =
-    optimisticIsFollowingCreator ?? character.creator.isFollowing;
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const openModal = useModalStore((state) => state.openModal);
+  const { mutate: likeUniverse, isPending: isLikeMutating } =
+    usePostUniverseLikeMutation();
+  const { mutate: unlikeUniverse, isPending: isUnlikeMutating } =
+    useDeleteUniverseLikeMutation();
+  const isLikePending = isLikeMutating || isUnlikeMutating;
 
-  const invalidateFollowQueries = () => {
-    queryClient.invalidateQueries({
-      queryKey: ["get-universe-detail", character.characterId],
-    });
-    if (creatorId) {
-      queryClient.invalidateQueries({
-        queryKey: ["get-follow-count", creatorId],
-      });
-    }
-    queryClient.invalidateQueries({ queryKey: ["get-following-list"] });
-    queryClient.invalidateQueries({ queryKey: ["get-follower-list"] });
-  };
+  /* 찜은 로그인이 있어야 합니다. 조용히 무시하면 눌러도 아무 일이 없어 보이므로 로그인 창을 바로 엽니다. */
+  const handleToggleLike = () => {
+    if (isLikePending) return;
 
-  const handleCreatorFollowToggle = () => {
-    if (isFollowPending || !creatorId) return;
-
-    if (isFollowingCreator) {
-      setOptimisticIsFollowingCreator(false);
-      unFollow(
-        { userId: creatorId },
-        {
-          onSuccess: invalidateFollowQueries,
-          onError: () => setOptimisticIsFollowingCreator(true),
-        },
-      );
+    if (!isLoggedIn) {
+      openModal("LOGIN", { triggerRef: undefined });
       return;
     }
 
-    setOptimisticIsFollowingCreator(true);
-    follow(
-      { userId: creatorId },
-      {
-        onSuccess: invalidateFollowQueries,
-        onError: () => setOptimisticIsFollowingCreator(false),
-      },
-    );
+    const variables = { universeId: character.characterId };
+    if (character.liked) unlikeUniverse(variables);
+    else likeUniverse(variables);
   };
 
+  const {
+    isFollowing: isFollowingCreator,
+    isPending: isFollowPending,
+    toggle: handleCreatorFollowToggle,
+  } = useFollowToggle({
+    userId: creatorId ?? "",
+    isFollowing: character.creator.isFollowing,
+    // 상세 응답에 creator.isFollowing 이 함께 실려 오므로 같이 다시 받는다.
+    extraInvalidateKeys: [["get-universe-detail", character.characterId]],
+  });
+
   return (
-    <aside className="flex w-full shrink-0 flex-col gap-5 self-start lg:sticky lg:top-0 lg:w-[389px]">
+    <aside className="flex w-full shrink-0 flex-col gap-5 self-start min-[900px]:sticky min-[900px]:top-0 min-[900px]:w-[389px]">
       <section className="flex flex-col gap-4">
         {isCreator && (
           <button
@@ -90,7 +78,7 @@ const SidebarSummary = ({
                 `/character-creat?universeId=${character.characterId}`,
               )
             }
-            className="body-4 flex w-fit items-center gap-1 rounded-xl border border-btn-selected bg-darker px-3 py-2 text-font-2 transition-colors hover:bg-card"
+            className="body-5 flex w-fit items-center gap-1 rounded-xl border border-btn-selected bg-darker px-3 py-2 text-font-2 transition-colors hover:bg-card"
           >
             <Gear className="size-5 shrink-0" aria-hidden="true" />
             {t("editCharacter")}
@@ -98,34 +86,43 @@ const SidebarSummary = ({
         )}
 
         {!isCreator && character.isOfficial && (
-          <span className="body-6 w-fit rounded-xl bg-brand/10 px-3 py-2 text-brand-dark">
+          <span className="body-7 w-fit rounded-xl bg-brand/10 px-3 py-2 text-brand-dark">
             {t("officialCharacter")}
           </span>
         )}
 
-        <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-card">
+        {/* lg 미만에서는 이 열이 한 줄을 통째로 쓴다. 상한이 없으면 정사각형이 콘텐츠 폭을
+            그대로 따라가 940px 화면에서 812×812 로 그려졌다. 데스크탑 열 폭이 곧 상한이다. */}
+        <div className="relative aspect-square w-full max-w-[389px] overflow-hidden rounded-2xl bg-card">
           <Image
             src={character.mainImage}
             alt={t("profileAlt", { name: character.title })}
             fill
+            sizes="(max-width: 420px) 100vw, 389px"
             className="object-contain"
             priority
           />
         </div>
 
         <div className="flex flex-col gap-2">
-          <h1 className="heading-1 text-font-1">{character.title}</h1>
-          <p className="body-1 text-font-1">{character.introduce}</p>
+          <h1 className="heading-2 text-font-1">{character.title}</h1>
+          <p className="body-2 text-font-1">{character.introduce}</p>
           <div className="flex flex-col gap-0.5">
-            <div className="body-3 flex flex-wrap gap-x-2 gap-y-1 text-font-2">
+            <div className="body-4 flex flex-wrap gap-x-2 gap-y-1 text-font-2">
               {character.tags.map((tag) => (
                 <span key={tag}>#{tag}</span>
               ))}
             </div>
-            <span className="body-4 flex items-center gap-1 text-font-2">
-              <ChatFill className="size-4" />
-              {formatStatCount(character.chatCount)}
-            </span>
+            <div className="body-5 flex items-center gap-3 text-font-2">
+              <span className="flex items-center gap-1">
+                <ChatFill className="size-4" aria-hidden="true" />
+                {formatStatCount(character.chatCount)}
+              </span>
+              <span className="flex items-center gap-1">
+                <HeartFill className="size-4" aria-hidden="true" />
+                {formatStatCount(character.likeCount)}
+              </span>
+            </div>
           </div>
         </div>
       </section>
@@ -149,19 +146,37 @@ const SidebarSummary = ({
                 index: index + 1,
               })}
               fill
+              sizes="64px"
               className="object-cover"
             />
           </button>
         ))}
       </div>
 
-      <ActiveButton
-        text={t("chatStart")}
-        isActive
-        type="button"
-        onClick={onStartChat}
-        className="h-[52px] rounded-2xl bg-brand/20 text-brand-dark hover:bg-brand/25"
-      />
+      <div className="flex items-stretch gap-2">
+        <ActiveButton
+          text={t("chatStart")}
+          isActive
+          type="button"
+          onClick={onStartChat}
+          className="h-[52px] flex-1 rounded-2xl bg-brand/20 text-brand-dark hover:bg-brand/25"
+        />
+        <button
+          type="button"
+          onClick={handleToggleLike}
+          disabled={isLikePending}
+          aria-pressed={character.liked}
+          aria-label={character.liked ? t("unlike") : t("like")}
+          title={character.liked ? t("unlike") : t("like")}
+          className="flex size-[52px] shrink-0 items-center justify-center rounded-2xl bg-card text-font-2 transition-colors hover:bg-card-hover disabled:opacity-60"
+        >
+          {character.liked ? (
+            <HeartFill className="size-5 text-brand" aria-hidden="true" />
+          ) : (
+            <Heart className="size-5" aria-hidden="true" />
+          )}
+        </button>
+      </div>
 
       <section className="rounded-2xl bg-btn-hover px-5 py-4">
         <div className="flex flex-col gap-3">
@@ -180,7 +195,7 @@ const SidebarSummary = ({
                 <p className="title-4 truncate text-font-1">
                   {character.creator.nickname}
                 </p>
-                <p className="body-5 text-font-2">
+                <p className="body-6 text-font-2">
                   {t("followingCount", {
                     count: character.creator.followingCount,
                   })}
@@ -205,7 +220,7 @@ const SidebarSummary = ({
             )}
           </div>
 
-          <div className="body-5 flex gap-4 text-font-2">
+          <div className="body-6 flex gap-4 text-font-2">
             <span>{t("createdAt", { date: character.createdAt })}</span>
             <span>{t("updatedAt", { date: character.updatedAt })}</span>
           </div>

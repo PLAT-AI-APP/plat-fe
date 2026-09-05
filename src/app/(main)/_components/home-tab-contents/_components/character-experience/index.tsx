@@ -1,39 +1,70 @@
 "use client";
+
 import React, { useState } from "react";
+import { useOfficialPreviewQuery } from "@/api/home/getOfficialPreview";
+import { ErrorState } from "@/components/state";
+import SkeletonCharacterExperience from "@/components/skeleton/SkeletonCharacterExperience";
 import ExperienceHeader from "./ExperienceHeader";
 import ExperienceCarousel from "./ExperienceCarousel";
-import SkeletonCharacterExperience from "@/components/skeleton/SkeletonCharacterExperience";
-import { useOfficialPreviewQuery } from "@/api/home/getOfficialPreview";
 
+/** 캐러셀에 올릴 최대 장수. 헤더 썸네일 개수와 함께 움직입니다. */
+const MAX_SLIDES = 3;
+
+/*
+ * MVP 에서 화면을 내린 섹션이라 지금은 부르는 곳이 없다. 서버도 같은 이유로 경로를 떼어 뒀으므로
+ * 지금 부르면 404 다 — 섹션을 다시 열 때 서버 경로와 함께 되살린다.
+ */
 const CharacterExperience = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const { data: officialPreviewList, isPending } = useOfficialPreviewQuery();
-  const items = officialPreviewList ?? [];
+  const { data, error, isError, isLoading, refetch } =
+    useOfficialPreviewQuery();
+
+  const items = (data ?? []).slice(0, MAX_SLIDES);
 
   const handleSelectedIndex = (index: number) => {
     setSelectedIndex(index);
   };
 
-  if (!isPending && items.length === 0) return null;
+  const header = (
+    <ExperienceHeader
+      items={isLoading || isError ? [] : items}
+      handleSelectedIndex={handleSelectedIndex}
+      selectedIndex={selectedIndex}
+    />
+  );
+
+  // 예전에는 setTimeout(2000) 으로 로딩을 흉내 냈다. 데이터와 무관한 지연이라
+  // 홈에 들어올 때마다 이유 없이 2초를 기다려야 했다.
+  if (isLoading) {
+    return (
+      <section className="flex flex-col gap-4">
+        {header}
+        <SkeletonCharacterExperience />
+      </section>
+    );
+  }
+
+  if (isError) {
+    return (
+      <section className="flex flex-col gap-4">
+        {header}
+        <ErrorState error={error} onRetry={refetch} />
+      </section>
+    );
+  }
+
+  // 보여줄 공식 캐릭터가 없으면 섹션을 통째로 내린다.
+  if (items.length === 0) return null;
 
   return (
     <section className="flex flex-col gap-4">
-      <ExperienceHeader
-        items={items}
-        handleSelectedIndex={handleSelectedIndex}
-        selectedIndex={selectedIndex}
-      />
+      {header}
 
-      {/* 로딩 상태에 따른 조건부 렌더링 */}
-      {isPending ? (
-        <SkeletonCharacterExperience />
-      ) : (
-        <ExperienceCarousel
-          items={items}
-          selectedIndex={selectedIndex}
-          handleSelectedIndex={handleSelectedIndex}
-        />
-      )}
+      <ExperienceCarousel
+        items={items}
+        selectedIndex={selectedIndex}
+        handleSelectedIndex={handleSelectedIndex}
+      />
     </section>
   );
 };

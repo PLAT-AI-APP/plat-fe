@@ -4,6 +4,7 @@ import Link from "next/link";
 import React from "react";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
+import type { NoticeCategory } from "@/type/notice";
 
 const FILTER_TAB_IDS = [
   "ALL",
@@ -15,14 +16,7 @@ const FILTER_TAB_IDS = [
 ] as const;
 
 interface FilterTabProps {
-  currentFilter:
-    | "SERVICE"
-    | "UPDATE"
-    | "EVENT"
-    | "MAINTENANCE"
-    | "POLICY"
-    | null
-    | undefined;
+  currentFilter: NoticeCategory | null | undefined;
 }
 
 const FilterTab = ({ currentFilter }: FilterTabProps) => {
@@ -30,7 +24,7 @@ const FilterTab = ({ currentFilter }: FilterTabProps) => {
 
   const filterLabelMap = {
     ALL: t("notification.filters.all"),
-    SERVICE: t("notification.filters.notice"),
+    SERVICE: t("notification.filters.service"),
     UPDATE: t("notification.filters.update"),
     EVENT: t("notification.filters.event"),
     MAINTENANCE: t("notification.filters.maintenance"),
@@ -57,7 +51,7 @@ const FilterTab = ({ currentFilter }: FilterTabProps) => {
                   query: id === "ALL" ? {} : { filter: id },
                 }}
                 className={cn(
-                  "body-4 text-font-2 transition-colors",
+                  "body-5 text-font-2 transition-colors",
                   isActive && "text-font-1",
                 )}
               >

@@ -47,7 +47,7 @@ const Header = ({ id }: HeaderProps) => {
           </div>
         </div>
 
-        <p className="body-4 text-font-2">{bio}</p>
+        <p className="body-5 text-font-2">{bio}</p>
       </section>
 
       <Link

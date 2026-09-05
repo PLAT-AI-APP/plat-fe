@@ -51,7 +51,7 @@ const ChattingItem = ({
         src={thumbnail}
         width={84}
         height={84}
-        alt=""
+        alt={title}
         className="size-[84px] shrink-0 rounded-2xl bg-card-hover object-cover"
       />
 
@@ -69,7 +69,7 @@ const ChattingItem = ({
                 )}
               </div>
 
-              <p className="body-3 w-full min-w-0 truncate text-font-2">
+              <p className="body-4 w-full min-w-0 truncate text-font-2">
                 {description}
               </p>
             </div>
@@ -103,15 +103,15 @@ const ChattingItem = ({
           <footer className="flex items-center justify-between gap-3">
             <div className="flex min-w-0 items-center gap-1.5 text-font-2">
               <User className="size-4 shrink-0" />
-              <span className="body-5 truncate">{creator}</span>
-              <span className="body-5 text-font-disabled">·</span>
+              <span className="body-6 truncate">{creator}</span>
+              <span className="body-6 text-font-disabled">·</span>
               <Message className="size-4 shrink-0" />
-              <span className="body-5">
+              <span className="body-6">
                 {formatStatCount(chatCount, locale)}
               </span>
             </div>
 
-            <time className="body-6 shrink-0 text-nowrap text-font-disabled">
+            <time className="body-7 shrink-0 text-nowrap text-font-disabled">
               {dayjs(updatedAt).fromNow()}
             </time>
           </footer>

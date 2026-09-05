@@ -7,6 +7,7 @@ import ActiveButton from "../ActiveButton";
 import Check from "@/icons/Check";
 import { cn } from "@/lib/utils";
 import { AddLanguageModalProps } from "@/type/modal";
+import IconButton from "@/components/ui/IconButton";
 
 const AddLanguageModal = ({ onClose }: AddLanguageModalProps) => {
   const t = useTranslations("modalUi.addLanguage");
@@ -30,14 +31,9 @@ const AddLanguageModal = ({ onClose }: AddLanguageModalProps) => {
           <Global className="h-6 w-6" /> {t("title")}
         </div>
 
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label={commonT("close")}
-          className="flex h-5.5 w-5.5 items-center justify-center rounded-lg p-1 hover:bg-btn-hover"
-        >
-          <Close className="h-3.5 w-3.5" />
-        </button>
+        <IconButton size="xs" onClick={onClose} aria-label={commonT("close")}>
+          <Close className="size-3.5" />
+        </IconButton>
       </header>
 
       <ul className="mb-9 mt-6 flex flex-col gap-2.5">
@@ -63,8 +59,8 @@ const AddLanguageModal = ({ onClose }: AddLanguageModalProps) => {
               </div>
 
               <div className="flex min-w-0 flex-1 items-center gap-1">
-                <span className="body-4 whitespace-nowrap">{name}</span>
-                <span className="body-6 text-font-2">{eng}</span>
+                <span className="body-5 whitespace-nowrap">{name}</span>
+                <span className="body-7 text-font-2">{eng}</span>
               </div>
             </li>
           );

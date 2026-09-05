@@ -31,7 +31,7 @@ const CharacterMenuPopover = ({
         <button
           onClick={() => handleAction(onEdit)}
           type="button"
-          className="flex items-center gap-2 text-left body-4 px-2.5 py-2 rounded-lg hover:bg-btn-hover transition-colors"
+          className="flex items-center gap-2 text-left body-5 px-2.5 py-2 rounded-lg hover:bg-btn-hover transition-colors"
         >
           <Edit className="w-4 h-4" />
           <span>{t("edit")}</span>
@@ -39,9 +39,9 @@ const CharacterMenuPopover = ({
         <button
           onClick={() => handleAction(onDelete)}
           type="button"
-          className="flex items-center gap-2 text-font-accents body-4 text-left px-2.5 py-2 rounded-lg hover:bg-btn-hover transition-colors"
+          className="flex items-center gap-2 text-danger body-5 text-left px-2.5 py-2 rounded-lg hover:bg-btn-hover transition-colors"
         >
-          <Trash className="w-4 h-4 text-font-accents" />
+          <Trash className="w-4 h-4 text-danger" />
           <span>{t("delete")}</span>
         </button>
       </menu>

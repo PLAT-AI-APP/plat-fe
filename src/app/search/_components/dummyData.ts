@@ -1,5 +1,3 @@
-import type { SearchUserResult } from "./UserResultCard";
-
 export interface SearchCharacterResult {
   id: string;
   title: string;
@@ -11,6 +9,8 @@ export interface SearchCharacterResult {
   isOfficial?: boolean;
 }
 
+// TODO: "최근 많은 사람들이 찾아본 캐릭터" 는 대응하는 API 가 아직 없어 더미로 둡니다.
+// 검색 결과·실시간 검색어는 /search, /search/popular-terms 로 이미 연결돼 있습니다.
 export const DUMMY_SEARCH_CHARACTERS: SearchCharacterResult[] = Array.from(
   { length: 9 },
   (_, index) => ({
@@ -21,54 +21,5 @@ export const DUMMY_SEARCH_CHARACTERS: SearchCharacterResult[] = Array.from(
     chatCount: 235,
     image: `https://picsum.photos/seed/search-character-${index}/374/490`,
     isNew: index % 4 === 0,
-  }),
-);
-
-export const DUMMY_SEARCH_WORLDS: SearchCharacterResult[] = Array.from(
-  { length: 9 },
-  (_, index) => ({
-    id: `search-world-${index}`,
-    title: "고양이 마을 세계관",
-    description: "골목마다 고양이 대장이 정해져 있는 작은 마을 이야기",
-    creatorName: "흐물거리는무말랭이",
-    chatCount: 128,
-    image: `https://picsum.photos/seed/search-world-${index}/374/490`,
-    isOfficial: index % 5 === 0,
-  }),
-);
-
-export interface LiveSearchKeyword {
-  rank: number;
-  keyword: string;
-  count: number;
-  trend: "up" | "down";
-}
-
-export const DUMMY_LIVE_SEARCH_KEYWORDS: LiveSearchKeyword[] = [
-  { rank: 1, keyword: "오늘일만보걸었다", count: 123, trend: "up" },
-  { rank: 2, keyword: "오늘일만보걸었다", count: 123, trend: "down" },
-  { rank: 3, keyword: "오늘일만보걸었다", count: 123, trend: "up" },
-  { rank: 4, keyword: "오늘일만보걸었다", count: 123, trend: "up" },
-  { rank: 5, keyword: "오늘일만보걸었다", count: 123, trend: "down" },
-  { rank: 6, keyword: "오늘일만보걸었다", count: 123, trend: "up" },
-  { rank: 7, keyword: "오늘일만보걸었다", count: 123, trend: "down" },
-  {
-    rank: 8,
-    keyword: "오늘일만보걸었다 오늘일만보걸었다오늘일만보걸었다",
-    count: 123,
-    trend: "up",
-  },
-  { rank: 9, keyword: "오늘일만보걸었다", count: 123, trend: "down" },
-  { rank: 10, keyword: "오늘일만보걸었다", count: 123, trend: "up" },
-];
-
-export const DUMMY_SEARCH_USERS: SearchUserResult[] = Array.from(
-  { length: 3 },
-  (_, index) => ({
-    userId: `search-user-${index}`,
-    nickname: "흐물거리는달팽이",
-    followerCount: 1293,
-    chatVolumeLabel: "12k",
-    isFollowing: index === 1,
   }),
 );

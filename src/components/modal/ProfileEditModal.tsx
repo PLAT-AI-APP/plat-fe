@@ -22,7 +22,7 @@ import GenderField from "../field/GenderField";
 import AccountField from "../field/AccountField";
 import { ProfileEditModalProps } from "@/type/modal";
 import { useModalStore } from "@/store/useModalStore";
-import { showFirstFieldErrorToast } from "@/lib/formError";
+import { focusFirstFieldError } from "@/lib/formError";
 import { useTranslateText } from "@/hooks/useTranslateText";
 
 const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
@@ -35,7 +35,8 @@ const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
     setFocus,
     formState: { isValid },
   } = useFormContext<ProfileEditFormType>();
-  const { mutate: updateMyInfo } = useUpdateMyInfoMutation();
+  const { mutate: updateMyInfo, isPending: isUpdating } =
+    useUpdateMyInfoMutation();
   const { setFieldErrors } = useFormServerError<ProfileEditFormType>();
   const openModal = useModalStore((state) => state.openModal);
   const birth = watch("birth");
@@ -61,7 +62,7 @@ const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
   return (
     <form
       onSubmit={handleSubmit(onSave, (formErrors) =>
-        showFirstFieldErrorToast(formErrors, setFocus, translateText),
+        focusFirstFieldError(formErrors, setFocus, translateText),
       )}
       className="flex flex-col"
     >
@@ -92,7 +93,7 @@ const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
           <button
             type="button"
             onClick={() => openModal("FIND_PASSWORD")}
-            className="body-4 w-fit text-font-2 underline hover:text-font-1"
+            className="body-5 w-fit text-font-2 underline hover:text-font-1"
           >
             {t("changePassword")}
           </button>
@@ -102,6 +103,7 @@ const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
           text={t("submit")}
           type="submit"
           isActive={isValid}
+          disabled={!isValid || isUpdating}
           className="mt-10 mb-5 rounded-xl"
         />
       </section>
@@ -131,7 +133,7 @@ const ProfileEditModal = ({ onClose }: ProfileEditModalProps) => {
     <ModalLayout
       onClose={onClose}
       hasBackground
-      className="min-h-112.5 max-h-160 w-150 max-w-[80vw] p-5"
+      className="min-h-[min(28.125rem,90dvh)] max-h-160 w-150 max-w-[80vw] p-5"
     >
       <FormProvider {...methods}>
         <ProfileEditForm onClose={onClose} />

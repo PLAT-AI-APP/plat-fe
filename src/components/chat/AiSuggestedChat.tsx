@@ -31,7 +31,7 @@ const AiSuggestedChat = () => {
         {MOCK_AI_RESPONSES.map((res, index) => (
           <li
             key={res.id}
-            className="body-4 cursor-pointer rounded-2xl bg-btn-hover px-3 py-4 text-font-1 transition-colors hover:bg-btn-selected"
+            className="body-5 cursor-pointer rounded-2xl bg-btn-hover px-3 py-4 text-font-1 transition-colors hover:bg-btn-selected"
           >
             <span>{`"${res.quote}"`}</span>{" "}
             <span className="text-font-2">{res.narration}</span>
