@@ -10,6 +10,10 @@ import ExperienceCarousel from "./ExperienceCarousel";
 /** 캐러셀에 올릴 최대 장수. 헤더 썸네일 개수와 함께 움직입니다. */
 const MAX_SLIDES = 3;
 
+/*
+ * MVP 에서 화면을 내린 섹션이라 지금은 부르는 곳이 없다. 서버도 같은 이유로 경로를 떼어 뒀으므로
+ * 지금 부르면 404 다 — 섹션을 다시 열 때 서버 경로와 함께 되살린다.
+ */
 const CharacterExperience = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const { data, error, isError, isLoading, refetch } =

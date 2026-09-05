@@ -4,7 +4,6 @@ import New from "@/icons/New";
 import { useTranslations } from "next-intl";
 import React from "react";
 import CharacterShowcase from "@/components/character/CharacterShowcase";
-import CharacterExperience from "./_components/character-experience";
 import CharacterCreateBanner from "../CharacterCreateBanner";
 import { useTodayPickQuery } from "@/api/home/getTodayPick";
 import { useAllCharactersQuery } from "@/api/home/getAllCharacters";
@@ -98,9 +97,6 @@ const HomeTabContents = () => {
         layout="carousel"
         limit={12}
       />
-
-      {/* 플랫의 공식 캐릭터 맛보기 섹션 */}
-      <CharacterExperience />
 
       {/* 인기 태그 캐릭터 모음 — 한 줄 6개 × 2줄 */}
       <CharacterShowcase
