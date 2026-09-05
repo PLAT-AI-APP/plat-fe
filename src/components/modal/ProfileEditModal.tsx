@@ -75,10 +75,8 @@ const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
         />
       </header>
 
-      <section
-        id="profile-form-body"
-        className="max-h-140 flex-1 overflow-y-auto"
-      >
+      {/* 스크롤은 배경 모달(ModalLayout)이 이미 처리합니다 — 여기서 또 걸면 이중 스크롤이 생깁니다. */}
+      <section id="profile-form-body" className="flex-1">
         <ProfileImageField />
 
         <div className="flex flex-col gap-6">
