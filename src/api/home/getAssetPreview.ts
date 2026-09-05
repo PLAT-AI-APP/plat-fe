@@ -19,30 +19,20 @@ export interface AssetPreviewItem {
 
 interface GetAssetPreviewParams {
   tendency?: Tendency;
-  page?: number;
-  size?: number;
 }
 
 const getAssetPreview = async ({
-  page = 0,
-  size = 10,
   tendency = "ALL",
 }: GetAssetPreviewParams) => {
   const response = await authAxios.get<AssetPreviewItem[]>(
     "/home/asset-preview",
-    {
-      params: {
-        tendency,
-        page,
-        size,
-      },
-    },
+    { params: { tendency } },
   );
 
   return response.data;
 };
 
-/** 홈 화면 상황 에셋이 많은 캐릭터 미리보기 목록 조회 */
+/** 홈 미리보기 섹션. 실시간(오늘 0시~현재) 대화량 상위 3편이라 페이지가 없습니다. */
 export const useAssetPreviewQuery = (params: GetAssetPreviewParams = {}) => {
   // 언어가 바뀌면 Accept-Language 헤더로 나가는 응답도 달라지므로 캐시 키에 반영합니다.
   const locale = useLocaleStore((state) => state.locale);
@@ -50,7 +40,9 @@ export const useAssetPreviewQuery = (params: GetAssetPreviewParams = {}) => {
   const tendency = useTendencyStore((state) => state.tendency);
 
   return useQuery<AssetPreviewItem[], AppError>({
-    queryKey: ["get-asset-preview", locale, tendency, params.page, params.size],
+    queryKey: ["get-asset-preview", locale, tendency],
+    // 실시간 랭킹이 1분마다 갱신되므로 그보다 짧게 잡을 이유가 없습니다.
+    staleTime: 1000 * 60,
     queryFn: () => getAssetPreview({ ...params, tendency }),
   });
 };

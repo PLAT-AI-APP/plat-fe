@@ -23,7 +23,7 @@ const HomeTabContents = () => {
   // 그대로 두면 서버가 준 10장이 상한이 되어 12장이 채워지지 않는다.
   const todayPick = useTodayPickQuery({ size: 12 });
   const allCharacters = useAllCharactersQuery({ size: 24 });
-  const assetPreview = useAssetPreviewQuery({ size: 3 });
+  const assetPreview = useAssetPreviewQuery();
   const popularTag = usePopularTagQuery();
   const newWork = useNewWorkQuery();
 
@@ -111,8 +111,9 @@ const HomeTabContents = () => {
         limit={12}
       />
 
-      {/* 상황 에셋이 많은 캐릭터 미리보기 — 큰 카드 3장을 항상 한 줄에 둔다.
-          격자로 두면 폭이 좁아질 때 2+1 로 접혀 세 번째 카드만 아래로 떨어졌다. */}
+      {/* 실시간 인기 캐릭터 미리보기 — 오늘 0시부터 지금까지의 대화량 상위 3편.
+          큰 카드 3장을 항상 한 줄에 둔다. 격자로 두면 폭이 좁아질 때 2+1 로 접혀
+          세 번째 카드만 아래로 떨어졌다. */}
       <CharacterShowcase
         charArray={assetPreviewCharArray}
         isLoading={assetPreview.isLoading}

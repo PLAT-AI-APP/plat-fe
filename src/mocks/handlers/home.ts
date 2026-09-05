@@ -217,14 +217,10 @@ export const homeHandlers = [
     return HttpResponse.json(sorted.slice(start, start + size));
   }),
 
-  http.get(endpoint("/home/asset-preview"), ({ request }) => {
-    const url = new URL(request.url);
-    const page = Number(url.searchParams.get("page") ?? 0);
-    const size = Number(url.searchParams.get("size") ?? 10);
-    const start = page * size;
-
-    return HttpResponse.json(ASSET_PREVIEW_ITEMS.slice(start, start + size));
-  }),
+  // 실시간(오늘 0시~현재) 대화량 상위 3편. 페이지가 없어 항상 같은 3건입니다.
+  http.get(endpoint("/home/asset-preview"), () =>
+    HttpResponse.json(ASSET_PREVIEW_ITEMS.slice(0, 3)),
+  ),
 
   // 전체 캐릭터 모음. 조건 없이 누적 대화량 순으로 SliceWith 에 담아 내려줍니다.
   http.get(endpoint("/home/all"), ({ request }) => {
