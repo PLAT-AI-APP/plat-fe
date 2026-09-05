@@ -115,7 +115,7 @@ const SidebarSummary = ({
   };
 
   return (
-    <aside className="flex w-full shrink-0 flex-col gap-5 self-start lg:sticky lg:top-0 lg:w-[389px]">
+    <aside className="flex w-full shrink-0 flex-col gap-5 self-start min-[900px]:sticky min-[900px]:top-0 min-[900px]:w-[389px]">
       <section className="flex flex-col gap-4">
         {isCreator && (
           <button
@@ -138,12 +138,14 @@ const SidebarSummary = ({
           </span>
         )}
 
-        <div className="relative aspect-square w-full overflow-hidden rounded-2xl bg-card">
+        {/* lg 미만에서는 이 열이 한 줄을 통째로 쓴다. 상한이 없으면 정사각형이 콘텐츠 폭을
+            그대로 따라가 940px 화면에서 812×812 로 그려졌다. 데스크탑 열 폭이 곧 상한이다. */}
+        <div className="relative aspect-square w-full max-w-[389px] overflow-hidden rounded-2xl bg-card">
           <Image
             src={character.mainImage}
             alt={t("profileAlt", { name: character.title })}
             fill
-            sizes="(max-width: 1023px) 100vw, 320px"
+            sizes="(max-width: 420px) 100vw, 389px"
             className="object-contain"
             priority
           />

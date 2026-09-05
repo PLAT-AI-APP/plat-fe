@@ -39,6 +39,7 @@ const ko = {
     recommendedCharacters: "PLAT에서 추천하는 캐릭터",
     recommendedDescription: "태그에 맞지는 않지만, 취향에 잘 맞을지도 몰라요",
     tagFilter: "태그 필터",
+    empty: "아직 이 조건에 맞는 캐릭터가 없어요",
   },
   rankingPage: {
     title: "실시간 랭킹 캐릭터",
@@ -253,6 +254,7 @@ const en = {
     recommendedDescription:
       "They may not match your tags exactly, but they could still fit your taste",
     tagFilter: "Tag filter",
+    empty: "No characters match these tags yet",
   },
   rankingPage: {
     title: "Live popular characters",
@@ -467,6 +469,7 @@ const ja = {
     recommendedDescription:
       "タグにぴったり合わなくても、好みに合うかもしれません",
     tagFilter: "タグフィルター",
+    empty: "この条件に合うキャラクターはまだありません",
   },
   rankingPage: {
     title: "リアルタイム人気キャラクター",
@@ -677,6 +680,7 @@ const zh = {
     recommendedCharacters: "PLAT 推荐角色",
     recommendedDescription: "虽然不一定完全符合标签，但也许会很合你的口味",
     tagFilter: "标签筛选",
+    empty: "还没有符合该条件的角色",
   },
   rankingPage: {
     title: "实时热门角色",
@@ -890,6 +894,7 @@ const th = {
     recommendedDescription:
       "แม้จะไม่ตรงกับแท็กที่เลือกเป๊ะ ก็อาจตรงกับรสนิยมของคุณได้",
     tagFilter: "ตัวกรองแท็ก",
+    empty: "ยังไม่มีตัวละครที่ตรงกับเงื่อนไขนี้",
   },
   rankingPage: {
     title: "ตัวละครยอดนิยมแบบเรียลไทม์",
@@ -1104,6 +1109,7 @@ const vi = {
     recommendedDescription:
       "Dù không khớp hoàn toàn với thẻ đã chọn, vẫn có thể hợp gu của bạn",
     tagFilter: "Bộ lọc thẻ",
+    empty: "Chưa có nhân vật nào phù hợp với điều kiện này",
   },
   rankingPage: {
     title: "Nhân vật phổ biến theo thời gian thực",

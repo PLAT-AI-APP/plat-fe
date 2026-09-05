@@ -20,9 +20,11 @@ const HomeTabContents = () => {
   // isError 를 함께 넘기지 않으면 실패한 섹션이 "결과 없음"으로 조용히 사라진다.
   // 로딩은 isPending 이 아니라 isLoading 을 본다 — 로그인 전에는 비활성인 쿼리(추천)가
   // isPending 상태로 머물러, 스켈레톤이 영구히 떠 있게 된다.
-  const todayPick = useTodayPickQuery();
+  // 화면에 몇 장을 두는지가 곧 몇 장을 받아 와야 하는지다. limit 만 올리고 size 를
+  // 그대로 두면 서버가 준 10장이 상한이 되어 12장이 채워지지 않는다.
+  const todayPick = useTodayPickQuery({ size: 12 });
   const userRecommend = useUserRecommendQuery();
-  const assetPreview = useAssetPreviewQuery();
+  const assetPreview = useAssetPreviewQuery({ size: 3 });
   const popularTag = usePopularTagQuery();
   const newWork = useNewWorkQuery();
 
@@ -76,7 +78,8 @@ const HomeTabContents = () => {
 
   return (
     <article className="mt-6 flex flex-col gap-12">
-      {/* 오늘의 PICK — 홈의 주력 섹션이라 제목 한 단계를 올려 강조한다. 한 줄 6개. */}
+      {/* 오늘의 PICK — 홈의 주력 섹션이라 제목 한 단계를 올려 강조한다.
+          12장을 줄바꿈 없이 한 줄에 두고 좌우 버튼으로 밀어서 본다. */}
       <CharacterShowcase
         charArray={todayPickCharArray}
         isLoading={todayPick.isLoading}
@@ -87,8 +90,8 @@ const HomeTabContents = () => {
         emphasis="primary"
         allViewLink=""
         cardSize="S"
-        columns={6}
-        limit={6}
+        layout="carousel"
+        limit={12}
       />
 
       {/* 플랫의 공식 캐릭터 맛보기 섹션 */}
@@ -105,10 +108,10 @@ const HomeTabContents = () => {
         cardSize="S"
         columns={6}
         limit={12}
-        rowGap={28}
       />
 
-      {/* 상황 에셋이 많은 캐릭터 미리보기 — 카드가 커서 한 줄 3개 */}
+      {/* 상황 에셋이 많은 캐릭터 미리보기 — 큰 카드 3장을 항상 한 줄에 둔다.
+          격자로 두면 폭이 좁아질 때 2+1 로 접혀 세 번째 카드만 아래로 떨어졌다. */}
       <CharacterShowcase
         charArray={assetPreviewCharArray}
         isLoading={assetPreview.isLoading}
@@ -117,7 +120,7 @@ const HomeTabContents = () => {
         onRetry={assetPreview.refetch}
         title={t("popularCharacterPreview")}
         cardSize="L"
-        columns={3}
+        layout="carousel"
         limit={3}
       />
 
@@ -134,7 +137,6 @@ const HomeTabContents = () => {
         columns={5}
         limit={10}
         TitleLogo={<New className="h-4.5 w-4.5" />}
-        rowGap={28}
       />
 
       {/* (유저이름)님을 위한 추천 — 한 줄 6개 */}
@@ -148,7 +150,6 @@ const HomeTabContents = () => {
         cardSize="S"
         columns={6}
         limit={12}
-        rowGap={28}
       />
 
       <CharacterCreateBanner />

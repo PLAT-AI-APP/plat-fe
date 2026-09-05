@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import CharacterCard from "@/components/character/character-card";
+import CardGrid from "@/components/character/character-card/CardGrid";
 import { useRecentSearch } from "@/hooks/useRecentSearch";
 import dayjs from "@/lib/dayjs";
 import { cn, formatStatCount } from "@/lib/utils";
@@ -134,7 +135,7 @@ const SearchLanding = () => {
   };
 
   return (
-    <section className="mx-auto flex w-full max-w-[1272px] flex-col gap-10 pt-5 pb-20">
+    <section className="@container mx-auto flex w-full max-w-(--content-max-width) flex-col gap-10 pt-5 pb-20">
       <PageTitle messageKey="pageTitles.search" />
 
       <SearchQueryBar
@@ -162,7 +163,7 @@ const SearchLanding = () => {
           isEmpty={popularTerms?.length === 0}
           onRetry={() => refetchTerms()}
           pendingFallback={
-            <div className="grid grid-cols-3 grid-rows-2 gap-2">
+            <div className="grid grid-cols-1 gap-2 @lg:grid-cols-2 @2xl:grid-cols-3">
               {Array.from({ length: LIVE_SEARCH_SIZE }).map((_, index) => (
                 <div
                   key={`term-skeleton-${index}`}
@@ -173,7 +174,7 @@ const SearchLanding = () => {
           }
           emptyMessage={t("searchResults.empty")}
         >
-          <div className="grid grid-cols-3 grid-rows-2 gap-2">
+          <div className="grid grid-cols-1 gap-2 @lg:grid-cols-2 @2xl:grid-cols-3">
             {(popularTerms ?? []).map((item) => (
               <LiveSearchRankItem
                 key={item.rank}
@@ -194,11 +195,14 @@ const SearchLanding = () => {
             <span className="body-5 text-font-2">{updatedAt}</span>
           </div>
 
-          <div className="flex items-center gap-4">
+          {/* 예전에는 flex 한 줄이라 카드 6장이 폭을 나눠 갖다 못해 108px 까지 찌그러졌다.
+              높이는 245px 로 고정이라 187:245 였던 비율이 화면마다 달라졌다. */}
+          <CardGrid size="S">
             {DUMMY_SEARCH_CHARACTERS.slice(0, 6).map((character) => (
               <CharacterCard
                 key={character.id}
                 size="S"
+                fluid
                 title={character.title}
                 description={character.description}
                 creatorName={character.creatorName}
@@ -208,7 +212,7 @@ const SearchLanding = () => {
                 isOfficial={character.isOfficial}
               />
             ))}
-          </div>
+          </CardGrid>
         </div>
 
         <button

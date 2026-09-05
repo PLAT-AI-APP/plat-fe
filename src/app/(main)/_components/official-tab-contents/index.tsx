@@ -39,9 +39,6 @@ const OfficialTabContents = () => {
           isOfficial: true,
         }))}
         cardSize="S"
-        columnGap={16}
-        rowGap={28}
-        gridFillMode="auto-fill"
         isLoading={isPending}
         isError={isError}
         error={error}

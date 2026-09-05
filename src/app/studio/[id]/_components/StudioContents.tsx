@@ -60,8 +60,6 @@ const StudioContents = ({ id, sort, viewMode }: StudioContentsProps) => {
             <CharacterShowcase
               charArray={charArray}
               cardSize="S"
-              rowGap={12}
-              columnGap={12}
             />
           )}
         </div>

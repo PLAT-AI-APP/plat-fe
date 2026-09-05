@@ -128,7 +128,9 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
                     alt={t("assetAlt", { name: selectedScenario.name })}
                     width={482}
                     height={289}
-                    className="h-[289px] w-[482px] rounded-2xl object-cover"
+                    // 고정 폭은 flex 안에서 그대로 줄어드는데 높이는 289px 로 남아,
+                    // 폭에 따라 482:289 가 308:289 로 달라지며 잘리는 부분이 바뀌었다.
+                    className="aspect-[482/289] w-full max-w-[482px] rounded-2xl object-cover"
                   />
                 );
               }

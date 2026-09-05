@@ -66,8 +66,7 @@ export const SIZE_CONFIG: Record<CardSize, SizeConfig> = {
  *
  * max-width로 카드 자체를 캡핑하지 않는다. 아이템 수가 열 개수보다 적어 트랙이 넓어지는
  * 상황(예: limit=3 미리보기가 한 줄에 다 들어갈 때)에도 카드가 트랙 폭을 그대로 채워야
- * 하기 때문. 과도하게 넓어지는 것은 getCardGridTemplateColumns의 auto-fit + 열 개수
- * 계산(CARD_MIN_WIDTH)이 막아 준다.
+ * 하기 때문. 카드가 과도하게 넓어지지 않게 막는 것은 CARD_COLUMNS_CLASS 의 열 계약이다.
  */
 export const FLUID_SIZE_OVERRIDE: Record<
   CardSize,
@@ -94,69 +93,57 @@ export const FLUID_SIZE_OVERRIDE: Record<
 };
 
 /**
- * 카드 그리드가 줄어들 때 flex-wrap처럼 아무 데서나 줄바꿈되며 오른쪽에 빈 여백이
- * 남는 대신, 이 폭을 최소값으로 잡아 grid-template-columns: repeat(auto-fill, minmax(...))
- * 에 사용한다. 컨테이너 폭에 맞춰 열 개수가 정해지고, 남는 폭은 카드들이 고르게 나눠 가진다.
+ * 카드 한 장의 기준 폭(px). 콘텐츠 영역 1200px 에서의 폭이다.
+ *
+ * 격자는 열 계약이 폭을 정하므로 이 값을 쓰지 않는다. 쓰는 곳은 가로 캐러셀 하나다 —
+ * 캐러셀은 "한 줄에 몇 개"가 아니라 "카드 한 장이 몇 px"로 슬라이드 폭이 정해지고,
+ * 남는 것은 옆으로 밀어서 본다. 화면이 카드보다 좁으면 카드가 화면을 넘지 않게
+ * 100% 로 잘린다(min()).
  */
-export const CARD_MIN_WIDTH: Record<CardSize, number> = {
+export const CARD_BASE_WIDTH: Record<CardSize, number> = {
   S: 186.67,
   M: 227.2,
   L: 388.67,
   XL: 386.5,
 };
 
-/**
- * 카드 그리드 컨테이너에 그대로 꽂아 쓰는 gridTemplateColumns 값.
- *
- * auto-fill이 아니라 auto-fit을 쓴다. 아이템 수가 열 개수보다 적을 때(예: limit=3인
- * "상황 에셋이 많은 캐릭터 미리보기"가 한 줄에 다 들어가는 경우) auto-fill은 빈 트랙을
- * 그대로 남겨 오른쪽에 gap보다 훨씬 큰 여백이 생긴다. auto-fit은 빈 트랙을 0으로
- * 접어 그 폭을 실제 아이템이 있는 트랙에 1fr로 재분배해, 카드가 남는 폭을 그대로
- * 나눠 갖고 진짜 gap만 남는다. 한 줄이 꽉 차는 경우는 auto-fill과 결과가 동일해
- * 다른 화면에는 영향이 없다.
- *
- * 상한을 1fr(가변)로 둔다. 고정 px 상한을 쓰면 auto-fit/auto-fill의 열 개수 계산이
- * 그 상한 기준으로 이루어져, 실제로는 min 기준으로 더 들어갈 수 있는 폭에서도 열이
- * 덜 채워지고 빈 공간이 남는다(예: 616px 컨테이너, min 186.67/max 240 → 3열이 들어갈
- * 수 있는데도 2열만 채워짐). 카드가 트랙보다 넓어지는 것은 열 개수 자체가 min 기준으로
- * 최대한 채워지므로 실질적으로 문제가 되지 않는다.
- *
- * auto-fit과 auto-fill은 열 개수 계산 방식은 동일하고, 아이템이 없는 트랙을 접느냐만
- * 다르다. limit이 있어 한 줄이 항상 꽉 차는 미리보기(홈 탭 등)는 auto-fit으로 빈
- * 트랙을 접어 카드가 남는 폭을 나눠 갖게 하고, 프로필의 찜 탭처럼 아이템 수가
- * 들쭉날쭉해 마지막 줄(또는 한 줄짜리 목록 전체)이 자주 덜 찰 수 있는 목록은
- * auto-fill로 빈 트랙을 남겨 카드가 늘어나지 않고 왼쪽 정렬 + 다른 탭과 같은
- * 크기를 유지하게 한다.
- *
- * min 값은 CSS 변수 --card-min-width로 감싸 CARD_MIN_WIDTH[size]를 기본값으로 쓴다.
- * 특정 화면 하나만 "한 줄 → 여러 줄로 바뀌는 폭 기준"을 다르게 주고 싶을 때, 공용
- * 상수를 건드리지 않고 CharacterShowcase의 className으로 이 변수만 오버라이드하면 된다
- * (예: className="[--card-min-width:194.335px]").
- */
-export const getCardGridTemplateColumns = (
-  size: CardSize,
-  fillMode: "auto-fit" | "auto-fill" = "auto-fit",
-) =>
-  `repeat(${fillMode}, minmax(var(--card-min-width, ${CARD_MIN_WIDTH[size]}px), 1fr))`;
-
 export const LAST_SWIPE_THRESHOLD = 40;
 
 /**
  * 섹션이 한 줄에 몇 개를 보여줄지의 계약.
  *
- * auto-fit + minmax 는 컨테이너 폭에서 열 개수를 역산하므로 "몇 개 보인다"가
- * 확정되지 않는다. 디자인 검수와 QA 가 가능하려면 그 수가 고정이어야 한다.
+ * 예전에는 이 계약을 쓰는 섹션(홈 탭)과 auto-fit + minmax 로 열 수를 역산하는 섹션
+ * (프로필·공식·스튜디오)과 고정폭 카드를 flex-wrap 하는 섹션(랭킹·신작·검색)이 섞여 있었다.
+ * 같은 size="S" 카드가 화면에 따라 폭 171px 로도, 358px 로도 그려져 "카드 크기"라는 말이
+ * 성립하지 않았다. 이제 카드 격자는 이 표 하나만 쓴다(CardGrid).
  *
  * 기준은 콘텐츠 영역 폭 1200px(= --content-max-width). 컨테이너 쿼리를 쓰므로
  * 뷰포트가 아니라 카드가 실제로 놓이는 영역의 폭에 반응한다 — 사이드바를 펼치거나
  * 접어도 즉시 올바른 열 수로 맞춰진다.
  *
  *   1200px 기준 카드 폭: 6열 186.67px · 5열 227.2px · 3열 389.33px (gap 16px)
+ *
+ * 단계는 "어느 폭에서도 카드가 기준 폭 근처에 머무르도록" 잡는다. 열이 늘어나는 지점을
+ * 늦게 두면 마지막 한 열이 남는 폭을 전부 먹어 카드가 기준의 1.5~2배로 부푼다.
+ *
+ *   6열: 139~216px · 5열: 152~279px · 3열: 280~575px
  */
 export type CardColumnCount = 3 | 5 | 6;
 
 export const CARD_COLUMNS_CLASS: Record<CardColumnCount, string> = {
   6: "grid-cols-2 @md:grid-cols-3 @2xl:grid-cols-4 @4xl:grid-cols-5 @6xl:grid-cols-6",
-  5: "grid-cols-2 @2xl:grid-cols-3 @4xl:grid-cols-4 @6xl:grid-cols-5",
-  3: "grid-cols-1 @2xl:grid-cols-2 @6xl:grid-cols-3",
+  5: "grid-cols-2 @xl:grid-cols-3 @3xl:grid-cols-4 @5xl:grid-cols-5",
+  3: "grid-cols-1 @xl:grid-cols-2 @4xl:grid-cols-3",
+};
+
+/**
+ * 카드 크기가 정해지면 한 줄에 몇 개인지도 정해진다 — 같은 크기의 카드가 화면마다
+ * 다른 열 수로 깔리면 크기 자체가 의미를 잃는다. 그래서 열 수는 기본값이 있고,
+ * 섹션이 특별히 다르게 보여야 할 때만 columns 로 덮어쓴다.
+ */
+export const DEFAULT_CARD_COLUMNS: Record<CardSize, CardColumnCount> = {
+  S: 6,
+  M: 5,
+  L: 3,
+  XL: 3,
 };

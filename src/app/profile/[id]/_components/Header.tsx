@@ -149,7 +149,7 @@ const Header = ({ userId }: HeaderProps) => {
   return (
     <header
       id="profile-header"
-      className="flex w-full max-w-[1200px] flex-col gap-5"
+      className="flex w-full max-w-(--content-max-width) flex-col gap-5"
     >
       <section id="profile-info-summary" className="flex w-full flex-col gap-3">
         <div className="flex w-full items-center justify-between gap-4">

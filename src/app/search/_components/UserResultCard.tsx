@@ -70,7 +70,7 @@ const UserResultCard = ({ user }: UserResultCardProps) => {
   };
 
   return (
-    <div className="flex w-[389px] shrink-0 flex-col items-start rounded-2xl bg-btn-hover px-5 py-4">
+    <div className="flex w-full max-w-[389px] flex-col items-start rounded-2xl bg-btn-hover px-5 py-4">
       <div className="flex w-full items-center justify-between">
         <div className="flex items-center gap-2">
           {user.profileImageUrl && !imageFailed ? (

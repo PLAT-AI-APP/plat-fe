@@ -119,7 +119,9 @@ const SettingsPanel = ({
               alt={character.title}
               width={333}
               height={332}
-              className="absolute left-1/2 top-0 h-full w-[333px] -translate-x-1/2 rounded-none object-contain"
+              // 폭이 333px 로 고정이면 그보다 좁은 열에서 스테이지 밖으로 나간다.
+              // object-contain 이라 max-w 로 줄여도 비율은 그대로다.
+              className="absolute left-1/2 top-0 h-full w-[333px] max-w-full -translate-x-1/2 rounded-none object-contain"
             />
             {isImageCtaVisible && (
               <motion.div

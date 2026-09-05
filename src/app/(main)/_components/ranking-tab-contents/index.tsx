@@ -6,6 +6,7 @@ import { useRankingQuery } from "@/api/ranking/getRanking";
 import { CharacterCardSkeleton } from "@/components/character/character-card/CharacterCardSkeleton";
 import QueryStateBoundary from "@/components/state/QueryStateBoundary";
 import CharacterCard from "@/components/character/character-card";
+import CardGrid from "@/components/character/character-card/CardGrid";
 import RankingHeader from "./_components/RankingHeader";
 import {
   RankingSortId,
@@ -52,18 +53,23 @@ const RankingTabContents = () => {
         emptyMessage={t("rankingPage.empty")}
         onRetry={refetch}
         pendingFallback={
-          <div className="flex w-full flex-wrap gap-x-4 gap-y-7">
+          <CardGrid size="S">
             {Array.from({ length: 8 }).map((_, index) => (
-              <CharacterCardSkeleton key={`rank-skeleton-${index}`} size="S" />
+              <CharacterCardSkeleton
+                key={`rank-skeleton-${index}`}
+                size="S"
+                fluid
+              />
             ))}
-          </div>
+          </CardGrid>
         }
       >
-        <div className="flex w-full flex-wrap gap-x-4 gap-y-7">
+        <CardGrid size="S">
           {items.map(({ rank, card }) => (
             <CharacterCard
               key={card.universeId}
               size="S"
+              fluid
               rank={rank}
               title={card.title}
               description={card.description}
@@ -74,7 +80,7 @@ const RankingTabContents = () => {
               isOfficial={card.isOfficial}
             />
           ))}
-        </div>
+        </CardGrid>
       </QueryStateBoundary>
     </article>
   );

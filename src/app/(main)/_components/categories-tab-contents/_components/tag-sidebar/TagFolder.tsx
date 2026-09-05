@@ -57,19 +57,25 @@ export const TagPill = ({
   );
 };
 
+/** 태그의 정체는 id 이고 라벨은 보여 주기 위한 글자다 — 라벨은 언어에 따라 바뀐다. */
+export interface TagOption {
+  id: string;
+  label: string;
+}
+
 interface TagFolderProps {
   title: string;
-  tags?: string[];
-  selectedTags?: string[];
+  tags?: TagOption[];
+  selectedTagIds?: string[];
   children?: React.ReactNode;
   titleSuffix?: React.ReactNode;
-  onTagToggle?: (tag: string) => void;
+  onTagToggle?: (tagId: string) => void;
 }
 
 export const TagFolder = ({
   title,
   tags,
-  selectedTags = [],
+  selectedTagIds = [],
   children,
   titleSuffix,
   onTagToggle,
@@ -81,19 +87,19 @@ export const TagFolder = ({
     if (!tags) return 0;
 
     // 접힌 상태의 카운트는 전체 선택 개수가 아니라 이 폴더에 속한 선택 태그 개수만 보여줍니다.
-    return tags.filter((tag) => selectedTags.includes(tag)).length;
-  }, [selectedTags, tags]);
+    return tags.filter((tag) => selectedTagIds.includes(tag.id)).length;
+  }, [selectedTagIds, tags]);
 
   const orderedTags = useMemo(() => {
     if (!tags) return [];
 
     // 원본 tags 배열은 유지하고, 화면에 보여줄 때만 선택된 태그를 앞으로 보냅니다.
-    // 선택을 해제하면 selectedTags에서 빠져 다시 원래 tags 순서의 자리로 돌아갑니다.
-    const selected = tags.filter((tag) => selectedTags.includes(tag));
-    const unselected = tags.filter((tag) => !selectedTags.includes(tag));
+    // 선택을 해제하면 selectedTagIds에서 빠져 다시 원래 tags 순서의 자리로 돌아갑니다.
+    const selected = tags.filter((tag) => selectedTagIds.includes(tag.id));
+    const unselected = tags.filter((tag) => !selectedTagIds.includes(tag.id));
 
     return [...selected, ...unselected];
-  }, [selectedTags, tags]);
+  }, [selectedTagIds, tags]);
 
   return (
     <section className="w-full">
@@ -132,10 +138,10 @@ export const TagFolder = ({
               <div className="flex flex-wrap gap-x-2 gap-y-2">
                 {orderedTags.map((tag) => (
                   <TagPill
-                    key={tag}
-                    label={tag}
-                    isSelected={selectedTags.includes(tag)}
-                    onClick={() => onTagToggle?.(tag)}
+                    key={tag.id}
+                    label={tag.label}
+                    isSelected={selectedTagIds.includes(tag.id)}
+                    onClick={() => onTagToggle?.(tag.id)}
                   />
                 ))}
               </div>

@@ -95,7 +95,8 @@ const RepresentativeImage = () => {
           tabIndex={-1}
           className="group relative flex justify-end w-[120px] h-full cursor-pointer flex-col gap-0 rounded-xl"
         >
-          <div className="relative flex aspect-square w-[120px] h-[157px] items-center justify-center rounded-xl bg-card">
+          {/* 안내 문구가 말하는 대로 1:1.13 이다. aspect-square 는 w/h 에 덮여 아무 일도 하지 않으면서 정사각형처럼 읽혔다. */}
+          <div className="relative flex h-[157px] w-[120px] items-center justify-center rounded-xl bg-card">
             {preview ? (
               <Image
                 src={preview}

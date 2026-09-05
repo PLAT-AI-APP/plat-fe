@@ -13,7 +13,7 @@ import { SPRING_SOFT, TRANSITION } from "@/constants/motion";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
-import { TagFolder, TagPill } from "./TagFolder";
+import { TagFolder, TagOption, TagPill } from "./TagFolder";
 
 const MAX_SELECTED_TAGS = 5;
 
@@ -320,8 +320,9 @@ export const TAG_FOLDERS = [
 ];
 
 interface TagSidebarProps {
-  selectedTags: string[];
-  onSelectedTagsChange: Dispatch<SetStateAction<string[]>>;
+  /** 고른 태그의 id. 서버가 받는 값이라 라벨이 아니라 id 를 들고 다닙니다. */
+  selectedTagIds: string[];
+  onSelectedTagIdsChange: Dispatch<SetStateAction<string[]>>;
   /**
    * 태블릿 폭에서는 300px 고정폭이 카드 그리드 영역을 압박해 열 개수가 급격히
    * 줄어드므로, 인라인 배치 대신 토글로 열고 닫는 오버레이 패널로 전환합니다.
@@ -355,8 +356,8 @@ const AiLineIcon = ({ className }: { className?: string }) => (
 );
 
 const TagSidebar = ({
-  selectedTags,
-  onSelectedTagsChange,
+  selectedTagIds,
+  onSelectedTagIdsChange,
   isOverlay = false,
   isOpen = true,
   onClose,
@@ -377,19 +378,31 @@ const TagSidebar = ({
 
     if (apiTags.length === 0) return [];
 
-    const labelsByCategory = new Map<string, string[]>();
+    const tagsByCategory = new Map<string, TagOption[]>();
     apiTags.forEach((tag) => {
-      const labels = labelsByCategory.get(tag.category) ?? [];
-      labels.push(tag.label);
-      labelsByCategory.set(tag.category, labels);
+      const tags = tagsByCategory.get(tag.category) ?? [];
+      tags.push({ id: tag.id, label: tag.label });
+      tagsByCategory.set(tag.category, tags);
     });
 
     return HASHTAG_CATEGORY_ORDER.filter((category) =>
-      labelsByCategory.has(category),
+      tagsByCategory.has(category),
     ).map((category) => ({
       title: HASHTAG_CATEGORY_FOLDER_TITLE_KEYS[category],
-      tags: labelsByCategory.get(category) ?? [],
+      tags: tagsByCategory.get(category) ?? [],
     }));
+  }, [hashtagList]);
+
+  // 선택 태그 영역은 id 만 들고 있어 라벨을 되찾아야 하고, 추천 카드는 반대로 라벨로 id 를 찾습니다.
+  const { labelById, idByLabel } = useMemo(() => {
+    const labels = new Map<string, string>();
+    const ids = new Map<string, string>();
+    (hashtagList?.tags ?? []).forEach((tag) => {
+      labels.set(tag.id, tag.label);
+      ids.set(tag.label, tag.id);
+    });
+
+    return { labelById: labels, idByLabel: ids };
   }, [hashtagList]);
 
   // 검색어가 있으면 각 폴더의 태그를 필터링하고, 결과가 없는 폴더는 숨깁니다.
@@ -401,7 +414,7 @@ const TagSidebar = ({
     return tagFolders
       .map((folder) => ({
         ...folder,
-        tags: folder.tags.filter((tag) => tag.includes(trimmedQuery)),
+        tags: folder.tags.filter((tag) => tag.label.includes(trimmedQuery)),
       }))
       .filter((folder) => folder.tags.length > 0);
   }, [query, tagFolders]);
@@ -409,33 +422,36 @@ const TagSidebar = ({
   // 태그를 누를 때 선택/해제를 토글합니다.
   // 선택된 태그는 하단 "선택 태그" 영역에도 같은 상태로 표시됩니다.
   // 최대 개수(MAX_SELECTED_TAGS)에 도달한 상태에서 새 태그를 추가하려 하면 토스트로 안내합니다.
-  const toggleTag = (tag: string) => {
-    const isSelected = selectedTags.includes(tag);
-    if (!isSelected && selectedTags.length >= MAX_SELECTED_TAGS) {
+  const toggleTag = (tagId: string) => {
+    const isSelected = selectedTagIds.includes(tagId);
+    if (!isSelected && selectedTagIds.length >= MAX_SELECTED_TAGS) {
       showAppToast("warning", t("maxAlert"));
       return;
     }
 
-    onSelectedTagsChange((prev) =>
-      prev.includes(tag)
-        ? prev.filter((selectedTag) => selectedTag !== tag)
-        : [...prev, tag],
+    onSelectedTagIdsChange((prev) =>
+      prev.includes(tagId)
+        ? prev.filter((selectedTagId) => selectedTagId !== tagId)
+        : [...prev, tagId],
     );
   };
 
-  // 추천 카드는 여러 태그를 한 번에 추가합니다.
-  // Set을 사용해서 이미 선택된 태그가 중복으로 쌓이지 않게 하고,
-  // 추가로 최대 개수를 넘기면 태그 모달과 동일하게 전체 추가를 막고 안내합니다.
-  const selectRecommendation = (tags: string[]) => {
-    const newTags = tags.filter((tag) => !selectedTags.includes(tag));
-    if (newTags.length === 0) return;
+  // 추천 카드는 여러 태그를 한 번에 추가합니다. 카드의 태그는 글자로 적혀 있어 id 로 옮겨 담고,
+  // 서버에 없는 태그는 고를 수 없으므로 그대로 버립니다.
+  // 최대 개수를 넘기면 태그 모달과 동일하게 전체 추가를 막고 안내합니다.
+  const selectRecommendation = (labels: string[]) => {
+    const newTagIds = labels
+      .map((label) => idByLabel.get(label))
+      .filter((tagId): tagId is string => !!tagId)
+      .filter((tagId) => !selectedTagIds.includes(tagId));
+    if (newTagIds.length === 0) return;
 
-    if (selectedTags.length + newTags.length > MAX_SELECTED_TAGS) {
+    if (selectedTagIds.length + newTagIds.length > MAX_SELECTED_TAGS) {
       showAppToast("warning", t("maxAlert"));
       return;
     }
 
-    onSelectedTagsChange((prev) => Array.from(new Set([...prev, ...newTags])));
+    onSelectedTagIdsChange((prev) => Array.from(new Set([...prev, ...newTagIds])));
   };
 
   const sidebarBody = (
@@ -473,7 +489,7 @@ const TagSidebar = ({
           <h2 className="title-6 text-font-2">{t("selectedTags")}</h2>
           <button
             type="button"
-            onClick={() => onSelectedTagsChange([])}
+            onClick={() => onSelectedTagIdsChange([])}
             className="body-6 text-font-2 underline-offset-2 hover:underline"
           >
             {t("clearAll")}
@@ -481,13 +497,13 @@ const TagSidebar = ({
         </header>
 
         <div className="flex flex-wrap content-start gap-2">
-          {selectedTags.map((tag) => (
+          {selectedTagIds.map((tagId) => (
             <TagPill
-              key={tag}
-              label={tag}
+              key={tagId}
+              label={labelById.get(tagId) ?? ""}
               size="lg"
               isSelected
-              onRemove={() => toggleTag(tag)}
+              onRemove={() => toggleTag(tagId)}
             />
           ))}
         </div>
@@ -550,7 +566,7 @@ const TagSidebar = ({
               key={folder.title}
               title={t.has(folder.title) ? t(folder.title) : folder.title}
               tags={folder.tags}
-              selectedTags={selectedTags}
+              selectedTagIds={selectedTagIds}
               onTagToggle={toggleTag}
             />
           ))

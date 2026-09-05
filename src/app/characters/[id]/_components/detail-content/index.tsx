@@ -139,7 +139,7 @@ const CharacterDetailContent = ({
   if (isLoading) {
     return (
       <article className="flex w-full justify-center pb-16 pt-5">
-        <div className="h-[720px] w-full max-w-[1200px] animate-pulse rounded-2xl bg-card" />
+        <div className="h-[720px] w-full max-w-(--content-max-width) animate-pulse rounded-2xl bg-card" />
       </article>
     );
   }
@@ -149,7 +149,7 @@ const CharacterDetailContent = ({
   if (isError) {
     return (
       <article className="flex w-full justify-center pb-16 pt-5">
-        <div className="w-full max-w-[1200px]">
+        <div className="w-full max-w-(--content-max-width)">
           <ErrorState error={error} onRetry={refetch} />
         </div>
       </article>
@@ -192,7 +192,11 @@ const CharacterDetailContent = ({
 
   return (
     <article className="flex w-full justify-center pb-16 pt-5">
-      <div className="grid w-full max-w-[1200px] grid-cols-1 gap-[27px] lg:grid-cols-[389px_minmax(0,782px)]">
+      {/* 두 열이 되는 기준은 lg(1024px)가 아니라 "두 열이 실제로 들어가는 폭"이다.
+          389px 요약 열 + 27px 간격 + 본문 최소 366px = 콘텐츠 782px, 사이드바와 좌우
+          여백까지 더하면 900px. lg 로 두면 900~1023px 창에서 자리가 남는데도 한 줄로
+          쌓여, 요약 열이 화면 폭을 그대로 먹었다. */}
+      <div className="grid w-full max-w-(--content-max-width) grid-cols-1 gap-[27px] min-[900px]:grid-cols-[389px_minmax(0,782px)]">
         <SidebarSummary
           character={character}
           onSelectImage={setSelectedImageIndex}

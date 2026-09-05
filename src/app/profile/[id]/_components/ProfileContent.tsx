@@ -164,7 +164,7 @@ export default function ProfileContent({ id }: { id: string }) {
     : displayArray.length;
 
   return (
-    <article className="@container mx-auto flex w-[1200px] max-w-full flex-col gap-10 pt-6 pb-10">
+    <article className="mx-auto flex w-full max-w-(--content-max-width) flex-col gap-10 pt-6 pb-10">
       <Header userId={id} />
 
       <section
@@ -274,9 +274,6 @@ export default function ProfileContent({ id }: { id: string }) {
           <CharacterShowcase
             charArray={displayArray}
             cardSize="S"
-            rowGap={28}
-            columnGap={16}
-            gridFillMode="auto-fill"
             isLoading={isWishTab && isLikedLoading}
             isError={isWishTab && isLikedError}
             error={likedError}

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import CharacterCard from "@/components/character/character-card";
+import CardGrid from "@/components/character/character-card/CardGrid";
 import { CharacterCardSkeleton } from "@/components/character/character-card/CharacterCardSkeleton";
 import { QueryStateBoundary } from "@/components/state";
 import {
@@ -20,22 +21,27 @@ import SearchQueryBar from "./SearchQueryBar";
 import UserResultCard from "./UserResultCard";
 import PageTitle from "@/components/PageTitle";
 
-interface CardGridProps {
+interface SearchCardGridProps {
   items: SearchCardItem[];
   isLoading: boolean;
 }
 
 /** 캐릭터·세계관 결과가 같은 격자를 쓰므로 한곳에 둡니다. */
-const CardGrid = ({ items, isLoading }: CardGridProps) => (
-  <div className="flex flex-wrap gap-x-4 gap-y-7">
+const SearchCardGrid = ({ items, isLoading }: SearchCardGridProps) => (
+  <CardGrid size="S">
     {isLoading
       ? Array.from({ length: 6 }).map((_, index) => (
-          <CharacterCardSkeleton key={`card-skeleton-${index}`} size="S" />
+          <CharacterCardSkeleton
+            key={`card-skeleton-${index}`}
+            size="S"
+            fluid
+          />
         ))
       : items.map((item) => (
           <CharacterCard
             key={item.universeId}
             size="S"
+            fluid
             title={item.title}
             description={item.description}
             creatorName={item.creator.nickname}
@@ -45,7 +51,7 @@ const CardGrid = ({ items, isLoading }: CardGridProps) => (
             isOfficial={item.isOfficial}
           />
         ))}
-  </div>
+  </CardGrid>
 );
 
 type SearchTab = "all" | "character" | "world" | "user";
@@ -158,7 +164,7 @@ const SearchResultsContents = ({
   return (
     // 카드 6개(186.67px) + 간격 5개(16px) ≈ 1200px가 한 줄에 들어가도록
     // 좌우 패딩(px-9=72px)을 더한 폭으로 컨테이너를 잡습니다.
-    <section className="mx-auto flex w-full max-w-[1272px] flex-col gap-6 pt-5">
+    <section className="mx-auto flex w-full max-w-(--content-max-width) flex-col gap-6 pt-5">
       <PageTitle messageKey="pageTitles.search" />
 
       <SearchQueryBar
@@ -225,7 +231,7 @@ const SearchResultsContents = ({
               title={t("searchResults.tabCharacter")}
               count={characters?.page.totalElements}
             >
-              <CardGrid
+              <SearchCardGrid
                 items={characters?.content ?? []}
                 isLoading={isPending}
               />
@@ -237,7 +243,10 @@ const SearchResultsContents = ({
               title={t("searchResults.tabWorld")}
               count={universes?.page.totalElements}
             >
-              <CardGrid items={universes?.content ?? []} isLoading={isPending} />
+              <SearchCardGrid
+                items={universes?.content ?? []}
+                isLoading={isPending}
+              />
             </ResultSection>
           )}
 
@@ -246,7 +255,7 @@ const SearchResultsContents = ({
               title={t("searchResults.tabUser")}
               count={users?.page.totalElements}
             >
-              <div className="flex flex-wrap gap-4">
+              <CardGrid columns={3}>
                 {(users?.content ?? []).map((user) => (
                   <UserResultCard
                     key={user.userId}
@@ -260,7 +269,7 @@ const SearchResultsContents = ({
                     }}
                   />
                 ))}
-              </div>
+              </CardGrid>
             </ResultSection>
           )}
         </QueryStateBoundary>
