@@ -18,12 +18,22 @@ import { cn } from "@/lib/utils";
  */
 export function MainBannerCarousel() {
   const t = useTranslations("home");
-  const { data: banners = [], isLoading } = useHomeBannersQuery();
+  const { data: banners = [], isLoading, isError } = useHomeBannersQuery();
 
   const { viewportRef, scrollPrev, scrollNext } = useCarousel({
     options: { loop: true },
     plugins: [Autoplay({ delay: 5000, stopOnInteraction: false })],
   });
+
+  /*
+   * 배너는 홍보용이고 여기에만 있는 정보가 없다. 그래서 못 불러왔을 때
+   * 화면 최상단에 큰 에러 판을 세우는 것보다 조용히 내리는 편이 낫다.
+   *
+   * 다만 순서는 고친다. 예전에는 실패해도 isLoading 분기를 지나 스켈레톤을
+   * 한 번 보여준 뒤 length === 0 으로 사라져서, 배너가 있다가 없어진 것처럼
+   * 보이고 그만큼 레이아웃이 튀었다. 실패는 스켈레톤 없이 바로 내린다.
+   */
+  if (isError) return null;
 
   // 배너가 없으면 자리만 차지하는 빈 캐러셀 대신 섹션을 통째로 내린다.
   if (isLoading) {

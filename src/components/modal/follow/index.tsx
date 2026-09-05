@@ -29,6 +29,7 @@ import FollowEmptyState from "./FollowEmptyState";
 import FollowUserItem from "./FollowUserItem";
 import { SPRING_SNAPPY } from "@/constants/motion";
 import IconButton from "@/components/ui/IconButton";
+import { followQueryKeys } from "@/api/follow/queryKeys";
 
 const FollowModal = ({
   onClose,
@@ -57,18 +58,29 @@ const FollowModal = ({
   const displayNickname = nickname || t("fallbackNickname");
   const isFollowPending = isFollowMutating || isUnFollowMutating;
 
+  /*
+   * 이 화면만 useFollowToggle 을 쓰지 않는다. 그 훅은 대상이 하나인 화면을
+   * 위한 것인데, 여기서는 목록 안의 서로 다른 사용자를 각각 토글한다.
+   * 단일 대상 훅을 억지로 끼우려면 항목 컴포넌트마다 훅 인스턴스를 두고
+   * 낙관적 상태를 흩어야 해서, 지금의 followChangeIds 한 곳 관리보다 나빠진다.
+   *
+   * 다만 캐시 키만은 같은 팩토리를 쓴다. 손으로 적은 문자열은 조회 쪽이
+   * 바뀔 때 컴파일 에러 없이 조용히 어긋나기 때문이다.
+   */
   const invalidateFollowQueries = useCallback(
     (targetUserId?: string) => {
-      queryClient.invalidateQueries({ queryKey: ["get-following-list"] });
-      queryClient.invalidateQueries({ queryKey: ["get-follower-list"] });
       queryClient.invalidateQueries({
-        queryKey: ["get-follow-count", userId],
+        queryKey: followQueryKeys.followingList(),
       });
+      queryClient.invalidateQueries({
+        queryKey: followQueryKeys.followerList(),
+      });
+      queryClient.invalidateQueries({ queryKey: followQueryKeys.count(userId) });
 
       if (!targetUserId) return;
 
       queryClient.invalidateQueries({
-        queryKey: ["get-follow-count", targetUserId],
+        queryKey: followQueryKeys.count(targetUserId),
       });
     },
     [queryClient, userId],

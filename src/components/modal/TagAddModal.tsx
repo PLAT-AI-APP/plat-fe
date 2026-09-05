@@ -18,6 +18,7 @@ import { CharacterCreateFormValues } from "@/schema/character.schema";
 import { useModalStore } from "@/store/useModalStore";
 import { TagAddModalProps } from "@/type/modal";
 import IconButton from "@/components/ui/IconButton";
+import { ErrorState } from "@/components/state";
 
 type TagOption = { id: string; label: string };
 
@@ -32,7 +33,12 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
   const t = useTranslations("characterCreate.tagModal");
   const tagSidebarT = useTranslations("tagSidebar");
   const commonT = useTranslations("modalUi.common");
-  const { data: hashtagList } = useHashtagListQuery();
+  const {
+    data: hashtagList,
+    isError: isHashtagError,
+    error: hashtagError,
+    refetch: refetchHashtags,
+  } = useHashtagListQuery();
   const { control, setValue } = useFormContext<CharacterCreateFormValues>();
   const currentTagsWatch = useWatch({ control, name: "tagIds" });
   const [localSelectedNames, setLocalSelectedNames] = useState<TagOption[]>(
@@ -195,6 +201,16 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
         </div>
 
         <nav className="custom-scrollbar flex max-h-85 min-h-[min(21.25rem,50dvh)] flex-col gap-5 overflow-auto rounded-xl bg-darkest p-4">
+          {/* 태그 목록을 못 불러오면 예전에는 그냥 빈 상자였다. 고를 태그가
+              없는 것인지 서버가 죽은 것인지 화면만 봐서는 알 수 없었다. */}
+          {isHashtagError && (
+            <ErrorState
+              error={hashtagError}
+              onRetry={refetchHashtags}
+              className="bg-transparent"
+            />
+          )}
+
           {matchedTags.length > 0 && (
             <section>
               <h3 className="body-5 text-font-2">{t("matchedSearch")}</h3>

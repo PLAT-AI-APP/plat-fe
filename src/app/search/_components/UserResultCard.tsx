@@ -1,12 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { useUnFollowMutation } from "@/api/follow/deleteFollow";
-import { useFollowMutation } from "@/api/follow/postFollow";
 import { cn } from "@/lib/utils";
 import DefaultAvatar from "./DefaultAvatar";
+import { useFollowToggle } from "@/features/follow/useFollowToggle";
 
 export interface SearchUserResult {
   userId: string;
@@ -24,50 +22,16 @@ interface UserResultCardProps {
 
 const UserResultCard = ({ user }: UserResultCardProps) => {
   const t = useTranslations();
-  const queryClient = useQueryClient();
-  const [optimisticIsFollowing, setOptimisticIsFollowing] = useState<
-    boolean | null
-  >(null);
   // 이미지가 깨지면(만료·잘못된 경로) 기본 아바타로 되돌립니다.
   const [imageFailed, setImageFailed] = useState(false);
-  const { mutate: follow, isPending: isFollowMutating } = useFollowMutation();
-  const { mutate: unFollow, isPending: isUnFollowMutating } =
-    useUnFollowMutation();
-  const isFollowPending = isFollowMutating || isUnFollowMutating;
-  const isFollowing = optimisticIsFollowing ?? user.isFollowing;
-
-  const invalidateFollowQueries = () => {
-    queryClient.invalidateQueries({
-      queryKey: ["get-follow-count", user.userId],
-    });
-    queryClient.invalidateQueries({ queryKey: ["get-following-list"] });
-    queryClient.invalidateQueries({ queryKey: ["get-follower-list"] });
-  };
-
-  const handleFollowToggle = () => {
-    if (isFollowPending) return;
-
-    if (isFollowing) {
-      setOptimisticIsFollowing(false);
-      unFollow(
-        { userId: user.userId },
-        {
-          onSuccess: invalidateFollowQueries,
-          onError: () => setOptimisticIsFollowing(true),
-        },
-      );
-      return;
-    }
-
-    setOptimisticIsFollowing(true);
-    follow(
-      { userId: user.userId },
-      {
-        onSuccess: invalidateFollowQueries,
-        onError: () => setOptimisticIsFollowing(false),
-      },
-    );
-  };
+  const {
+    isFollowing,
+    isPending: isFollowPending,
+    toggle: handleFollowToggle,
+  } = useFollowToggle({
+    userId: user.userId,
+    isFollowing: user.isFollowing,
+  });
 
   return (
     <div className="flex w-full max-w-[389px] flex-col items-start rounded-2xl bg-btn-hover px-5 py-4">

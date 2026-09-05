@@ -6,9 +6,9 @@ import React from "react";
 import { useTranslations } from "next-intl";
 import dayjs from "@/lib/dayjs";
 import PinFill from "@/icons/PinFill";
-import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+import { useInfiniteList } from "@/hooks/useInfiniteList";
 import type { NoticeCategory } from "@/type/notice";
-import { EmptyState, ErrorState } from "@/components/state";
+import { InfiniteQueryBoundary } from "@/components/state";
 
 const NOTICE_CATEGORY_STYLE: Record<
   NoticeCategory,
@@ -76,33 +76,26 @@ const NoticeList = ({ currentFilter }: NoticeListProps) => {
   } = useNoticeListInfiniteQuery({ category: currentFilter });
 
   // 분류는 서버가 걸러 주므로 받아온 것을 그대로 씁니다.
-  const noticeList = noticeListData?.pages.flatMap((page) => page.content) ?? [];
-
-  const { targetRef } = useIntersectionObserver({
-    onIntersect: () => {
-      if (hasNextPage && !isFetchingNextPage) {
-        fetchNextPage();
-      }
-    },
-  });
-
-  if (isPending) return <NoticeListSkeleton />;
-
-  // 실패를 "아직 공지가 없어요"로 뭉개면 서버가 죽은 걸 정상으로 읽게 됩니다.
-  if (isError) return <ErrorState error={error} onRetry={refetch} />;
-
-  if (noticeList.length === 0) {
-    return (
-      <EmptyState
-        message={t(
-          currentFilter ? "notification.emptyFiltered" : "notification.empty",
-        )}
-      />
-    );
-  }
+  const { items: noticeList, hasItems, sentinelRef } = useInfiniteList(
+    { data: noticeListData, hasNextPage, isFetchingNextPage, fetchNextPage },
+  );
 
   return (
-    <ul>
+    <InfiniteQueryBoundary
+      isPending={isPending}
+      isError={isError}
+      error={error}
+      hasItems={hasItems}
+      isEmpty={noticeList.length === 0}
+      isFetchingNextPage={isFetchingNextPage}
+      onRetry={refetch}
+      onRetryNextPage={fetchNextPage}
+      pendingFallback={<NoticeListSkeleton />}
+      emptyMessage={t(
+        currentFilter ? "notification.emptyFiltered" : "notification.empty",
+      )}
+    >
+      <ul>
       {noticeList.map(({ category, createdAt, isPinned, noticeId, title }) => {
         const colorStyle = NOTICE_CATEGORY_STYLE[category];
 
@@ -157,14 +150,15 @@ const NoticeList = ({ currentFilter }: NoticeListProps) => {
         );
       })}
 
-      {hasNextPage && <div ref={targetRef} className="h-0.5" />}
+      {hasNextPage && <div ref={sentinelRef} className="h-0.5" />}
       {isFetchingNextPage && (
         <li aria-hidden="true" className="flex flex-col gap-3 px-2.5 py-4">
           <div className="skeleton h-5 w-16 rounded-md" />
           <div className="skeleton h-5 w-2/3 rounded-full" />
         </li>
       )}
-    </ul>
+      </ul>
+    </InfiniteQueryBoundary>
   );
 };
 

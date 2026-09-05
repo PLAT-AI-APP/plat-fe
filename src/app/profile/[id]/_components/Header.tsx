@@ -3,11 +3,9 @@
 import { AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { useRef, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { useUnFollowMutation } from "@/api/follow/deleteFollow";
 import { useFollowCountQuery } from "@/api/follow/getFollowCount";
-import { useFollowMutation } from "@/api/follow/postFollow";
+import { useFollowToggle } from "@/features/follow/useFollowToggle";
 import ProfileActionPopover from "@/components/popover/ProfileActionPopover";
 import { Dots } from "@/icons";
 import { cn, formatWithCommas } from "@/lib/utils";
@@ -21,15 +19,24 @@ interface HeaderProps {
 
 interface StatItemProps {
   label: string;
-  value: number | string;
+  /**
+   * 아직 모르는 값(불러오는 중이거나 실패)은 undefined 를 넘긴다.
+   * 0 으로 바꿔 놓으면 "팔로워가 0명" 이라는 사실과 구별되지 않는다.
+   */
+  value: number | string | undefined;
   onClick?: () => void;
 }
+
+/** 값을 모를 때 자리를 지키는 표시. 0 이라고 단언하지 않는다. */
+const UNKNOWN_STAT = "—";
 
 const StatItem = ({ label, value, onClick }: StatItemProps) => {
   const content = (
     <>
       <span className="body-3 text-font-2">{label}</span>
-      <span className="title-3 text-font-1">{formatWithCommas(value)}</span>
+      <span className="title-3 text-font-1">
+        {value === undefined ? UNKNOWN_STAT : formatWithCommas(value)}
+      </span>
     </>
   );
 
@@ -60,19 +67,13 @@ const StatDivider = () => (
 
 const Header = ({ userId }: HeaderProps) => {
   const t = useTranslations();
-  const queryClient = useQueryClient();
   const { data: followCount } = useFollowCountQuery(userId);
-  const { followerCount = 0, followingCount = 0 } = followCount ?? {};
+  // 기본값 0 을 주지 않는다. 못 불러온 것과 0 명인 것은 다른 사실이다.
+  const { followerCount, followingCount } = followCount ?? {};
   const { openModal } = useModalStore();
   const { user } = useUserStore();
-  const { mutate: follow, isPending: isFollowMutating } = useFollowMutation();
-  const { mutate: unFollow, isPending: isUnFollowMutating } =
-    useUnFollowMutation();
   const openDialog = useDialogStore((state) => state.openDialog);
   const closeDialog = useDialogStore((state) => state.closeDialog);
-  const [optimisticIsFollowing, setOptimisticIsFollowing] = useState<
-    boolean | null
-  >(null);
   const [isActionPopoverOpen, setIsActionPopoverOpen] = useState(false);
   const actionTriggerRef = useRef<HTMLButtonElement>(null);
 
@@ -81,14 +82,17 @@ const Header = ({ userId }: HeaderProps) => {
   const nickname = user?.nickname || t("profile.defaultName");
   const bio = user?.bio || "";
   const chatCount = 0;
-  const isFollowPending = isFollowMutating || isUnFollowMutating;
-  const isFollowing = optimisticIsFollowing ?? false;
 
-  const invalidateFollowQueries = () => {
-    queryClient.invalidateQueries({ queryKey: ["get-follow-count", userId] });
-    queryClient.invalidateQueries({ queryKey: ["get-following-list"] });
-    queryClient.invalidateQueries({ queryKey: ["get-follower-list"] });
-  };
+  const {
+    isFollowing,
+    isPending: isFollowPending,
+    toggle: handleFollowToggle,
+  } = useFollowToggle({
+    // 이 화면은 아직 서버에서 팔로우 여부를 받아오지 않는다. 팔로우 카운트만
+    // 조회하고 있어, 처음에는 "팔로우 안 함"으로 두고 누른 뒤부터 반영한다.
+    userId,
+    isFollowing: false,
+  });
 
   const openFollowModal = (tab: "followers" | "following") => {
     // 팔로워/팔로잉 목록은 본인만 볼 수 있으므로 타인 프로필에서는 모달을 열지 않습니다.
@@ -106,31 +110,6 @@ const Header = ({ userId }: HeaderProps) => {
 
   const handleProfileEdit = () => {
     openModal("PROFILE_EDIT");
-  };
-
-  const handleFollowToggle = () => {
-    if (isFollowPending) return;
-
-    if (isFollowing) {
-      setOptimisticIsFollowing(false);
-      unFollow(
-        { userId },
-        {
-          onSuccess: invalidateFollowQueries,
-          onError: () => setOptimisticIsFollowing(true),
-        },
-      );
-      return;
-    }
-
-    setOptimisticIsFollowing(true);
-    follow(
-      { userId },
-      {
-        onSuccess: invalidateFollowQueries,
-        onError: () => setOptimisticIsFollowing(false),
-      },
-    );
   };
 
   const handleShareProfile = () => {

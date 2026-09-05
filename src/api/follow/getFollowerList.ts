@@ -2,6 +2,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
 import { FollowPageResponse, normalizeFollowPage } from "./followPage";
+import { followQueryKeys } from "./queryKeys";
 
 interface GetFollowerListProps {
   pageParam: number;
@@ -28,7 +29,7 @@ export const useFollowerListQuery = (enabled: boolean) => {
     ReturnType<typeof normalizeFollowPage>,
     AppError
   >({
-    queryKey: ["get-follower-list"],
+    queryKey: followQueryKeys.followerList(),
     initialPageParam: 0,
 
     // pageParam을 가져와서 page라는 이름으로 별칭(Alias) 지정

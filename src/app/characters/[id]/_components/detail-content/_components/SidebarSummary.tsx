@@ -1,12 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useUnFollowMutation } from "@/api/follow/deleteFollow";
-import { useFollowMutation } from "@/api/follow/postFollow";
 import {
   useDeleteUniverseLikeMutation,
   usePostUniverseLikeMutation,
@@ -19,6 +15,7 @@ import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
 import { useUserStore } from "@/store/useUserStore";
 import { CharacterDetail } from "@/type/character";
+import { useFollowToggle } from "@/features/follow/useFollowToggle";
 
 interface SidebarSummaryProps {
   character: CharacterDetail;
@@ -33,14 +30,11 @@ const SidebarSummary = ({
 }: SidebarSummaryProps) => {
   const t = useTranslations("characterDetail");
   const router = useRouter();
-  const queryClient = useQueryClient();
   const userId = useUserStore((state) => state.user?.id);
   const creatorId = character.creator.id;
   const canUseCreatorActions = Boolean(creatorId);
   // TODO: 상세 조회 응답에 creatorId 또는 editable 필드가 추가되면 수정 버튼 노출 조건을 연결합니다.
   const isCreator = Boolean(userId && creatorId && userId === creatorId);
-  const [optimisticIsFollowingCreator, setOptimisticIsFollowingCreator] =
-    useState<boolean | null>(null);
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const openDialog = useDialogStore((state) => state.openDialog);
   const openModal = useModalStore((state) => state.openModal);
@@ -69,50 +63,16 @@ const SidebarSummary = ({
     else likeUniverse(variables);
   };
 
-  const { mutate: follow, isPending: isFollowMutating } = useFollowMutation();
-  const { mutate: unFollow, isPending: isUnFollowMutating } =
-    useUnFollowMutation();
-  const isFollowPending = isFollowMutating || isUnFollowMutating;
-  const isFollowingCreator =
-    optimisticIsFollowingCreator ?? character.creator.isFollowing;
-
-  const invalidateFollowQueries = () => {
-    queryClient.invalidateQueries({
-      queryKey: ["get-universe-detail", character.characterId],
-    });
-    if (creatorId) {
-      queryClient.invalidateQueries({
-        queryKey: ["get-follow-count", creatorId],
-      });
-    }
-    queryClient.invalidateQueries({ queryKey: ["get-following-list"] });
-    queryClient.invalidateQueries({ queryKey: ["get-follower-list"] });
-  };
-
-  const handleCreatorFollowToggle = () => {
-    if (isFollowPending || !creatorId) return;
-
-    if (isFollowingCreator) {
-      setOptimisticIsFollowingCreator(false);
-      unFollow(
-        { userId: creatorId },
-        {
-          onSuccess: invalidateFollowQueries,
-          onError: () => setOptimisticIsFollowingCreator(true),
-        },
-      );
-      return;
-    }
-
-    setOptimisticIsFollowingCreator(true);
-    follow(
-      { userId: creatorId },
-      {
-        onSuccess: invalidateFollowQueries,
-        onError: () => setOptimisticIsFollowingCreator(false),
-      },
-    );
-  };
+  const {
+    isFollowing: isFollowingCreator,
+    isPending: isFollowPending,
+    toggle: handleCreatorFollowToggle,
+  } = useFollowToggle({
+    userId: creatorId ?? "",
+    isFollowing: character.creator.isFollowing,
+    // 상세 응답에 creator.isFollowing 이 함께 실려 오므로 같이 다시 받는다.
+    extraInvalidateKeys: [["get-universe-detail", character.characterId]],
+  });
 
   return (
     <aside className="flex w-full shrink-0 flex-col gap-5 self-start min-[900px]:sticky min-[900px]:top-0 min-[900px]:w-[389px]">

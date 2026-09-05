@@ -6,6 +6,7 @@ import PersonaEmptyState from "./PersonaEmptyState";
 import { ModalLayout } from "../../ModalLayout";
 import { useMePersonasQuery } from "@/api/persona/mePersonas";
 import SkeletonPersona from "../../skeleton/SkeletonPersona";
+import { ErrorState } from "@/components/state";
 
 import { PersonaModalProps } from "@/type/modal";
 
@@ -22,7 +23,13 @@ const PersonaModal = ({ onClose }: PersonaModalProps) => {
   }, []);
 
   // 옵션 객체를 넘겨서 enabled 상태를 제어합니다.
-  const { data: personas, isLoading } = useMePersonasQuery({
+  const {
+    data: personas,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useMePersonasQuery({
     enabled: shouldFetch,
   });
 
@@ -49,6 +56,10 @@ const PersonaModal = ({ onClose }: PersonaModalProps) => {
       <div className="mt-4">
         {isDataLoading ? (
           <SkeletonPersona />
+        ) : isError ? (
+          /* 실패를 빈 목록으로 두면 "아직 만든 게 없으니 만들어 보세요" 라는
+             엉뚱한 안내가 뜬다. 이미 만들어 둔 사용자에게는 사라진 것처럼 보인다. */
+          <ErrorState error={error} onRetry={refetch} />
         ) : !hasPersonas ? (
           <PersonaEmptyState />
         ) : (
@@ -64,7 +75,7 @@ const PersonaModal = ({ onClose }: PersonaModalProps) => {
             ))}
           </ul>
         )}
-        {!isDataLoading && (
+        {!isDataLoading && !isError && (
           <PersonaFooter isMaxPersona={(personas?.length ?? 0) >= 5} />
         )}
       </div>
