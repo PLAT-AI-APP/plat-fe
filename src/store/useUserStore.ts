@@ -13,10 +13,6 @@ export interface UserInfo {
   profileImage: string;
   birth: string;
   gender: Gender;
-  phone: {
-    countryCode: string;
-    number: string;
-  };
   provider: Provider;
   email: string;
 }
@@ -38,10 +34,6 @@ export const useUserStore = create<UserState>()(
         profileImage: "",
         birth: "",
         gender: "MALE",
-        phone: {
-          countryCode: "",
-          number: "",
-        },
         provider: "EMAIL",
         email: "",
       },

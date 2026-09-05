@@ -2,48 +2,36 @@ import { http, HttpResponse } from "msw";
 import type { UserInfo } from "@/store/useUserStore";
 import { endpoint } from "../utils";
 
-let mockUser: UserInfo = {
+interface MockUserProfileResponse {
+  id: string;
+  email: string;
+  nickname: string;
+  bio: string | null;
+  profileImageUrl: string | null;
+  birth: string | null;
+  gender: UserInfo["gender"] | null;
+  provider: UserInfo["provider"];
+}
+
+let mockUser: MockUserProfileResponse = {
   id: "1234567890123456789",
   nickname: "플랫유저",
   bio: "안녕하세요. PLAT를 사용 중입니다.",
-  profileImage: "/images/sample.png",
+  profileImageUrl: "/images/sample.png",
   birth: "2000-01-15",
   gender: "MALE",
-  phone: {
-    countryCode: "+82",
-    number: "01012345678",
-  },
   provider: "EMAIL",
   email: "mock@example.com",
 };
 
-type PatchUserBody = {
-  nickname?: string;
+interface PatchUserBody {
+  nickname: string;
   bio?: string;
   birth?: string;
   gender?: UserInfo["gender"];
   removeImage?: boolean;
-  profileImageFile?: File | null;
-};
-
-const parsePatchUserBody = async (request: Request): Promise<PatchUserBody> => {
-  const contentType = request.headers.get("content-type") ?? "";
-
-  if (contentType.includes("multipart/form-data")) {
-    const formData = await request.formData();
-
-    return {
-      nickname: String(formData.get("nickname") ?? ""),
-      bio: String(formData.get("bio") ?? ""),
-      birth: String(formData.get("birth") ?? ""),
-      gender: String(formData.get("gender") ?? "") as UserInfo["gender"],
-      removeImage: formData.get("removeImage") === "true",
-      profileImageFile: formData.get("profileImage") as File | null,
-    };
-  }
-
-  return (await request.json()) as PatchUserBody;
-};
+  profileImageFileId?: string;
+}
 
 export const userHandlers = [
   http.get(endpoint("/users/me"), async () => {
@@ -51,16 +39,10 @@ export const userHandlers = [
   }),
 
   http.patch(endpoint("/users/me"), async ({ request }) => {
-    const body = await parsePatchUserBody(request);
-    const nickname = body.nickname ?? "";
-    const bio = body.bio ?? "";
-    const birth = body.birth ?? mockUser.birth;
-    const gender = body.gender ?? mockUser.gender;
-    const removeImage = body.removeImage === true;
-    const profileImageFile = body.profileImageFile;
+    const body = (await request.json()) as PatchUserBody;
 
     const fields: Record<string, string> = {};
-    if (!nickname) fields.nickname = "닉네임을 입력해 주세요.";
+    if (!body.nickname) fields.nickname = "닉네임을 입력해 주세요.";
 
     if (Object.keys(fields).length > 0) {
       return HttpResponse.json(
@@ -74,7 +56,7 @@ export const userHandlers = [
     }
 
     // 프로필 수정 화면에서 토스트 디자인을 확인할 때 사용하는 케이스입니다.
-    if (nickname === "toast-alert") {
+    if (body.nickname === "toast-alert") {
       return HttpResponse.json(
         {
           code: "TOO_MANY_REQUESTS",
@@ -87,18 +69,18 @@ export const userHandlers = [
 
     mockUser = {
       ...mockUser,
-      nickname,
-      bio,
-      birth,
-      gender,
-      profileImage: removeImage
-        ? ""
-        : profileImageFile instanceof File
-          ? URL.createObjectURL(profileImageFile)
-          : mockUser.profileImage,
+      nickname: body.nickname,
+      bio: body.bio ?? null,
+      birth: body.birth ?? mockUser.birth,
+      gender: body.gender ?? mockUser.gender,
+      profileImageUrl: body.removeImage
+        ? null
+        : body.profileImageFileId
+          ? `https://picsum.photos/seed/user-profile-${body.profileImageFileId}/320/320`
+          : mockUser.profileImageUrl,
     };
 
-    return HttpResponse.json(mockUser);
+    return new HttpResponse(null, { status: 204 });
   }),
 
   http.delete(endpoint("/users/me"), async () => {
