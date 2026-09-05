@@ -148,7 +148,7 @@ const NoticeList = ({ currentFilter }: NoticeListProps) => {
               </div>
               <time
                 dateTime={dayjs(createdAt).format("YYYY-MM-DD")}
-                className="body-5 text-font-2"
+                className="body-6 text-font-2"
               >
                 {dayjs(createdAt).format("YYYY-MM-DD")}
               </time>

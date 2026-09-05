@@ -104,11 +104,11 @@ const CommentListItem = ({
             <span className="title-6 text-font-1">
               {comment.author.nickname}
             </span>
-            <span className="body-6 text-font-2">
+            <span className="body-7 text-font-2">
               {dayjs(comment.meta.createdAt).format("YYYY-MM-DD")}
             </span>
             {comment.meta.edited && (
-              <span className="body-6 text-font-2">{t("commentEdited")}</span>
+              <span className="body-7 text-font-2">{t("commentEdited")}</span>
             )}
             {comment.meta.pinned && (
               <span className="caption-2 rounded-md bg-brand-opacity px-2 py-1 text-brand">
@@ -134,13 +134,13 @@ const CommentListItem = ({
               value={editedContent}
               onChange={(event) => setEditedContent(event.target.value)}
               maxLength={COMMENT_MAX_LENGTH}
-              className="body-4 min-h-9 w-full resize-none bg-transparent text-font-1 outline-none"
+              className="body-5 min-h-9 w-full resize-none bg-transparent text-font-1 outline-none"
             />
             <div className="flex gap-2">
               <button
                 type="button"
                 onClick={() => setIsEditing(false)}
-                className="body-4 rounded-xl px-4 py-1.5 text-font-2 transition-colors hover:text-font-1"
+                className="body-5 rounded-xl px-4 py-1.5 text-font-2 transition-colors hover:text-font-1"
               >
                 {t("commentEditCancel")}
               </button>
@@ -148,7 +148,7 @@ const CommentListItem = ({
                 type="button"
                 onClick={handleSubmitEdit}
                 disabled={isPatching || !editedContent.trim()}
-                className="body-4 rounded-xl bg-main px-4 py-1.5 text-font-1 transition-colors hover:bg-btn-selected disabled:cursor-not-allowed disabled:text-font-disabled"
+                className="body-5 rounded-xl bg-main px-4 py-1.5 text-font-1 transition-colors hover:bg-btn-selected disabled:cursor-not-allowed disabled:text-font-disabled"
               >
                 {t("commentEditSave")}
               </button>
@@ -166,7 +166,7 @@ const CommentListItem = ({
             aria-label={
               comment.meta.liked ? t("commentUnlike") : t("commentLike")
             }
-            className="body-6 flex items-center gap-1 text-font-2 transition-colors hover:text-font-1 disabled:cursor-default"
+            className="body-7 flex items-center gap-1 text-font-2 transition-colors hover:text-font-1 disabled:cursor-default"
           >
             {comment.meta.liked ? (
               <HeartFill className="size-4 text-brand" />
@@ -180,7 +180,7 @@ const CommentListItem = ({
             <button
               type="button"
               onClick={() => setIsReplyOpen((prev) => !prev)}
-              className="body-6 text-font-2 transition-colors hover:text-font-1"
+              className="body-7 text-font-2 transition-colors hover:text-font-1"
             >
               {isReplyOpen
                 ? t("commentRepliesCollapse")
@@ -198,13 +198,13 @@ const CommentListItem = ({
                   onChange={(event) => setReplyContent(event.target.value)}
                   maxLength={COMMENT_MAX_LENGTH}
                   placeholder={t("replyPlaceholder")}
-                  className="body-4 min-h-9 w-full resize-none bg-transparent text-font-1 outline-none placeholder:text-font-disabled"
+                  className="body-5 min-h-9 w-full resize-none bg-transparent text-font-1 outline-none placeholder:text-font-disabled"
                 />
                 <button
                   type="button"
                   onClick={handleSubmitReply}
                   disabled={isReplying || !replyContent.trim()}
-                  className="body-4 rounded-xl bg-main px-4 py-1.5 text-font-1 transition-colors hover:bg-btn-selected disabled:cursor-not-allowed disabled:text-font-disabled"
+                  className="body-5 rounded-xl bg-main px-4 py-1.5 text-font-1 transition-colors hover:bg-btn-selected disabled:cursor-not-allowed disabled:text-font-disabled"
                 >
                   {t("submitComment")}
                 </button>
@@ -226,7 +226,7 @@ const CommentListItem = ({
               <button
                 type="button"
                 onClick={() => fetchNextPage()}
-                className="body-6 w-fit text-font-2 transition-colors hover:text-font-1"
+                className="body-7 w-fit text-font-2 transition-colors hover:text-font-1"
               >
                 {t("commentLoadMore")}
               </button>

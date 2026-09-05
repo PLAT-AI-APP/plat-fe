@@ -150,7 +150,7 @@ const CharacterShowcase = ({
               href={{
                 query: { tab: allViewLink },
               }}
-              className="body-4 shrink-0 text-font-2 transition-colors hover:text-font-1"
+              className="body-5 shrink-0 text-font-2 transition-colors hover:text-font-1"
             >
               {t("allView")}
             </Link>

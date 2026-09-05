@@ -49,7 +49,7 @@ const PasswordReset = () => {
     >
       <header className="flex flex-col gap-1.5 pb-9">
         <h2 className="heading-3">{t("title")}</h2>
-        <p className="body-4 text-font-2">{t("description")}</p>
+        <p className="body-5 text-font-2">{t("description")}</p>
       </header>
 
       <fieldset className="flex flex-col gap-6">

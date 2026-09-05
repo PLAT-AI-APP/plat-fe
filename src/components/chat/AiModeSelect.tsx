@@ -55,7 +55,7 @@ const AiModelListItem = ({ model, onSelect }: AiModelListItemProps) => {
 
             <div className="flex min-w-0 flex-1 flex-col gap-0.5">
               <div className="flex min-w-0 items-center gap-2">
-                <p className="body-4 truncate text-font-1">{model.id}</p>
+                <p className="body-5 truncate text-font-1">{model.id}</p>
                 {model.discountRate && (
                   <span className="caption-2 shrink-0 rounded-lg border border-brand bg-brand-opacity px-1.5 py-0.5 text-brand">
                     {model.discountRate}%
@@ -65,7 +65,7 @@ const AiModelListItem = ({ model, onSelect }: AiModelListItemProps) => {
 
               <div className="flex items-center gap-1 whitespace-nowrap">
                 {model.originalPrice && (
-                  <span className="body-2 text-font-disabled line-through">
+                  <span className="body-3 text-font-disabled line-through">
                     {t("chatUI.modelPrice", { price: model.originalPrice })}
                   </span>
                 )}
@@ -75,13 +75,13 @@ const AiModelListItem = ({ model, onSelect }: AiModelListItemProps) => {
                     : t("chatUI.modelPrice", { price: model.price })}
                 </span>
                 {model.price > 0 && (
-                  <span className="body-6 text-font-2">/ {model.unit}</span>
+                  <span className="body-7 text-font-2">/ {model.unit}</span>
                 )}
               </div>
             </div>
           </header>
 
-          <p className="body-6 w-full text-font-2">{model.description}</p>
+          <p className="body-7 w-full text-font-2">{model.description}</p>
         </article>
       </button>
     </li>
@@ -184,7 +184,7 @@ const AiModelSelect = ({ currentAi, handleCurrentAi }: AiModelSelectProps) => {
           height={24}
           className="size-6 rounded-full object-contain"
         />
-        <span className="body-4">{currentAi.name}</span>
+        <span className="body-5">{currentAi.name}</span>
       </button>
 
       {isAiModelSelect && (

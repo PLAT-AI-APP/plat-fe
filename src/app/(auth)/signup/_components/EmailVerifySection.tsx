@@ -197,7 +197,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
               isOtpSent &&
                 "border border-brand-dark bg-brand/10 text-brand-dark",
             )}
-            textClassName="body-4"
+            textClassName="body-5"
             onClick={handleEmailBtnClick}
           >
             {isEmailVerifyPending && (
@@ -206,7 +206,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
                   aria-hidden="true"
                   className="h-4 w-4 animate-spin rounded-full border-2 border-on-brand/40 border-t-on-brand"
                 />
-                <span className="body-4">
+                <span className="body-5">
                   {t("auth.emailVerification.requesting")}
                 </span>
               </>
@@ -245,13 +245,13 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
                     );
                   }}
                   inputClassName={cn(
-                    "body-4 h-11 rounded-lg bg-darkest px-4 py-3 pr-16 text-font-1",
+                    "body-5 h-11 rounded-lg bg-darkest px-4 py-3 pr-16 text-font-1",
                     "placeholder:text-font-2/50 focus:border-brand transition-colors",
                     errors.code &&
                       "border-font-accents focus:border-font-accents",
                   )}
                   rightElement={
-                    <span className="body-4 text-font-2">{formatTime()}</span>
+                    <span className="body-5 text-font-2">{formatTime()}</span>
                   }
                 />
                 <ActiveButton
@@ -259,7 +259,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
                   isActive={(code?.length ?? 0) >= 6 && timeLeft > 0}
                   text={t("auth.emailVerification.confirm")}
                   onClick={handleVerifyOtp}
-                  className="body-4 mt-[29px] max-h-11 w-fit text-nowrap px-4 py-3"
+                  className="body-5 mt-[29px] max-h-11 w-fit text-nowrap px-4 py-3"
                 />
               </div>
             </div>
@@ -271,7 +271,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
         <span
           role={isDisplayMessageError ? "alert" : "status"}
           className={cn(
-            "body-6 pt-2",
+            "body-7 pt-2",
             isDisplayMessageError ? "text-font-accents" : "text-font-2",
           )}
         >

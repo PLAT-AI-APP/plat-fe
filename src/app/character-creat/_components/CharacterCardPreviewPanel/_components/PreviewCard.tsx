@@ -50,16 +50,16 @@ const PreviewCard = ({
         <p
           className={
             isSmall
-              ? "body-4 max-w-full truncate text-font-2"
-              : "body-4 line-clamp-2 min-h-[42px] text-font-2"
+              ? "body-5 max-w-full truncate text-font-2"
+              : "body-5 line-clamp-2 min-h-[42px] text-font-2"
           }
         >
           {description}
         </p>
-        <p className="body-6 max-w-full truncate text-font-2">
+        <p className="body-7 max-w-full truncate text-font-2">
           @ {creatorName}
         </p>
-        <div className="body-6 flex items-center gap-1 text-font-2">
+        <div className="body-7 flex items-center gap-1 text-font-2">
           <ChatFill className="size-3.5 text-font-2" />
           {formatStatCount(chatCount, locale)}
         </div>

@@ -26,7 +26,7 @@ const Profile = () => {
       <div className="flex flex-col gap-5">
         <RepresentativeImage />
 
-        <div className="body-6 flex w-full items-center justify-center gap-2 rounded-xl bg-card py-3 pl-3 pr-5 text-font-2">
+        <div className="body-7 flex w-full items-center justify-center gap-2 rounded-xl bg-card py-3 pl-3 pr-5 text-font-2">
           <StatusWarning className="size-3.5 shrink-0" />
           <p>{t("policyNotice")}</p>
         </div>

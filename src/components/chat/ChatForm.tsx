@@ -87,14 +87,14 @@ const ChatForm = ({ onSendMessage }: ChatFormProps) => {
           onKeyDown={handleTextareaKeyDown}
           placeholder={t("chatUI.messagePlaceholder")}
           rows={1}
-          className="focus-ring-none body-4 custom-scrollbar min-h-[21px] flex-1 resize-none bg-transparent py-1.5 text-font-1 outline-none placeholder:text-font-disabled"
+          className="focus-ring-none body-5 custom-scrollbar min-h-[21px] flex-1 resize-none bg-transparent py-1.5 text-font-1 outline-none placeholder:text-font-disabled"
         />
 
         <footer className="flex shrink-0 items-center gap-3">
           <button
             type="button"
             onClick={handleSituationInsert}
-            className="body-4 flex h-8 items-center justify-center gap-1.5 rounded-full border border-main bg-card/50 py-1.5 pl-2.5 pr-3 text-font-2 transition-colors hover:bg-btn-hover"
+            className="body-5 flex h-8 items-center justify-center gap-1.5 rounded-full border border-main bg-card/50 py-1.5 pl-2.5 pr-3 text-font-2 transition-colors hover:bg-btn-hover"
           >
             <Asterisk className="size-4" />
             {t("chatUI.situation")}

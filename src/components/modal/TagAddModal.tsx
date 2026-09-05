@@ -172,7 +172,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
             type="text"
             value={searchKeyword}
             className={cn(
-              "focus-ring-none body-4 h-10 w-full rounded-xl px-4 pl-10 text-font-1 outline-none transition-colors placeholder:text-font-disabled focus:field-focus!",
+              "focus-ring-none body-5 h-10 w-full rounded-xl px-4 pl-10 text-font-1 outline-none transition-colors placeholder:text-font-disabled focus:field-focus!",
               shouldShowSearchPrefix && "pl-14",
               searchKeyword
                 ? "border border-transparent bg-card"
@@ -190,7 +190,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
             <Search className="h-4.5 w-4.5 text-font-disabled" />
           </label>
           {shouldShowSearchPrefix && (
-            <span className="body-4 pointer-events-none absolute left-10 text-font-1">
+            <span className="body-5 pointer-events-none absolute left-10 text-font-1">
               #
             </span>
           )}
@@ -199,7 +199,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
         <nav className="custom-scrollbar flex max-h-85 min-h-85 flex-col gap-5 overflow-auto rounded-xl bg-darkest p-4">
           {matchedTags.length > 0 && (
             <section>
-              <h3 className="body-4 text-font-2">{t("matchedSearch")}</h3>
+              <h3 className="body-5 text-font-2">{t("matchedSearch")}</h3>
               <ul className="mt-3 flex flex-wrap content-start gap-x-2 gap-y-2">
                 {matchedTags.map((tag) => {
                   const isSelected = localSelectedNames.some(
@@ -212,7 +212,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
                         type="button"
                         onClick={() => handleTagToggle(tag)}
                         className={cn(
-                          "body-6 flex h-7 items-center rounded-md border border-font-2 bg-dark px-2.5 text-font-1 hover:bg-card-hover",
+                          "body-7 flex h-7 items-center rounded-md border border-font-2 bg-dark px-2.5 text-font-1 hover:bg-card-hover",
                           isSelected && "border-brand bg-brand/10 text-brand",
                         )}
                       >
@@ -238,7 +238,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
                   onClick={() => toggleFolderOpen(folder.title)}
                   className="flex h-6 w-full items-center justify-between text-left hover:text-font-1"
                 >
-                  <span className="body-4 flex min-w-0 items-center gap-1.5 text-font-2">
+                  <span className="body-5 flex min-w-0 items-center gap-1.5 text-font-2">
                     <span className="truncate">
                       {tagSidebarT.has(folder.title)
                         ? tagSidebarT(folder.title)
@@ -271,7 +271,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
                             type="button"
                             onClick={() => handleTagToggle(tag)}
                             className={cn(
-                              "body-6 flex h-7 items-center rounded-md border border-transparent bg-card px-2.5 text-font-2 hover:bg-card-hover",
+                              "body-7 flex h-7 items-center rounded-md border border-transparent bg-card px-2.5 text-font-2 hover:bg-card-hover",
                               isSelected &&
                                 "border-brand bg-brand/10 text-brand",
                             )}
@@ -288,14 +288,14 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
           })}
 
           {!hasTags && (
-            <p className="body-6 w-full py-10 text-center text-font-disabled">
+            <p className="body-7 w-full py-10 text-center text-font-disabled">
               {t("empty")}
             </p>
           )}
         </nav>
 
         <section className="mt-3 flex flex-col gap-3">
-          <div className="body-6 flex items-center justify-between text-font-2">
+          <div className="body-7 flex items-center justify-between text-font-2">
             <span>
               {t("selectedCount", { count: localSelectedNames.length })}
             </span>
@@ -315,7 +315,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
                   <button
                     type="button"
                     onClick={() => handleTagToggle(tag)}
-                    className="caption-1 flex h-8 items-center gap-1 rounded-md bg-brand/10 px-2.5 text-brand hover:bg-brand/20"
+                    className="title-7 flex h-8 items-center gap-1 rounded-md bg-brand/10 px-2.5 text-brand hover:bg-brand/20"
                   >
                     #{tag.label}
                     <Close className="size-3" />
@@ -330,11 +330,11 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
           <button
             type="button"
             onClick={() => openModal("TAG_SUGGESTIONS", {})}
-            className="flex flex-1 items-center justify-between rounded-xl bg-card p-3 body-6 text-font-2 hover:bg-card-hover"
+            className="flex flex-1 items-center justify-between rounded-xl bg-card p-3 body-7 text-font-2 hover:bg-card-hover"
           >
             <div className="flex items-center gap-2">
               <Megaphone className="h-4 w-4" />
-              <span className="body-6">{t("request")}</span>
+              <span className="body-7">{t("request")}</span>
             </div>
             <ArrowRight className="h-3 w-3" />
           </button>

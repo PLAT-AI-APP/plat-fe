@@ -103,7 +103,7 @@ const PersonaAddModal = ({
             <Close className="h-3.5 w-3.5" />
           </button>
         </div>
-        <p className="body-4 whitespace-normal pt-2 text-font-2">
+        <p className="body-5 whitespace-normal pt-2 text-font-2">
           {t("description")}
         </p>
       </header>

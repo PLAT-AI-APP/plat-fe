@@ -37,14 +37,14 @@ const CharacterProfileCard = ({ item, priority }: CharacterProfileCardProps) => 
       <header className="absolute bottom-0 left-0 flex w-full flex-col items-start justify-center gap-1 self-stretch bg-linear-to-b from-scrim/0 via-scrim/80 to-scrim px-6 pb-7 pt-9">
         <h3 className="title-2 line-clamp-1 text-overlay-font">{item.title}</h3>
 
-        <p className="body-3 line-clamp-1 text-overlay-font/80">
+        <p className="body-4 line-clamp-1 text-overlay-font/80">
           {item.description}
         </p>
 
         {item.tags.length > 0 && (
           <div className="inline-flex items-start gap-1">
             {item.tags.slice(0, 3).map((tag) => (
-              <span key={tag} className="body-5 text-overlay-font/60">
+              <span key={tag} className="body-6 text-overlay-font/60">
                 #{tag}
               </span>
             ))}
@@ -53,7 +53,7 @@ const CharacterProfileCard = ({ item, priority }: CharacterProfileCardProps) => 
 
         <div className="inline-flex items-center justify-center gap-1">
           <ChatFill className="size-4 text-overlay-font/60" />
-          <span className="body-5 text-overlay-font/60">
+          <span className="body-6 text-overlay-font/60">
             {formatWithCommas(item.chatCount)}
           </span>
         </div>

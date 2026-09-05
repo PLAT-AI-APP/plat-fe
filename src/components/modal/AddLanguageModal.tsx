@@ -63,8 +63,8 @@ const AddLanguageModal = ({ onClose }: AddLanguageModalProps) => {
               </div>
 
               <div className="flex min-w-0 flex-1 items-center gap-1">
-                <span className="body-4 whitespace-nowrap">{name}</span>
-                <span className="body-6 text-font-2">{eng}</span>
+                <span className="body-5 whitespace-nowrap">{name}</span>
+                <span className="body-7 text-font-2">{eng}</span>
               </div>
             </li>
           );

@@ -51,7 +51,7 @@ const FilterTab = ({ currentFilter }: FilterTabProps) => {
                   query: id === "ALL" ? {} : { filter: id },
                 }}
                 className={cn(
-                  "body-4 text-font-2 transition-colors",
+                  "body-5 text-font-2 transition-colors",
                   isActive && "text-font-1",
                 )}
               >

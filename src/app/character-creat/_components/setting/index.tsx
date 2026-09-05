@@ -101,7 +101,7 @@ const Setting = () => {
       <section className="flex items-center justify-between">
         <div className="flex flex-col gap-1">
           <h3 className="title-3 text-font-1">{t("publicLabel")}</h3>
-          <p className="body-5 text-font-2">{t("publicHelp")}</p>
+          <p className="body-6 text-font-2">{t("publicHelp")}</p>
         </div>
 
         <button
@@ -127,7 +127,7 @@ const Setting = () => {
       <section className="flex items-center justify-between">
         <div className="flex flex-col gap-1">
           <h3 className="title-3 text-font-1">{t("commentAllowLabel")}</h3>
-          <p className="body-6 text-font-2">{t("commentAllowHelp")}</p>
+          <p className="body-7 text-font-2">{t("commentAllowHelp")}</p>
         </div>
 
         <button
@@ -155,7 +155,7 @@ const Setting = () => {
           <h3 className="title-3 text-font-1">
             {t("tendencyLabel")} <span className="text-font-accents">*</span>
           </h3>
-          <p className="body-5 text-font-2">{t("tendencyHelp")}</p>
+          <p className="body-6 text-font-2">{t("tendencyHelp")}</p>
         </div>
 
         <div className="grid grid-cols-3 gap-2">
@@ -168,7 +168,7 @@ const Setting = () => {
                 type="button"
                 onClick={() => handleTendency(item)}
                 className={cn(
-                  "body-4 flex h-10 items-center justify-center rounded-xl",
+                  "body-5 flex h-10 items-center justify-center rounded-xl",
                   isActive
                     ? "bg-brand/10 text-brand-dark"
                     : "bg-darkest text-font-2",
@@ -186,7 +186,7 @@ const Setting = () => {
           <h3 className="title-3 text-font-1">
             {t("categoryLabel")} <span className="text-font-accents">*</span>
           </h3>
-          <p className="body-5 text-font-2">{t("categoryHelp")}</p>
+          <p className="body-6 text-font-2">{t("categoryHelp")}</p>
         </div>
 
         <div className="flex flex-wrap gap-x-1.5 gap-y-2">
@@ -201,7 +201,7 @@ const Setting = () => {
                 type="button"
                 onClick={() => handleCategory(category)}
                 className={cn(
-                  "body-4 flex h-8 items-center rounded-full border border-main bg-dark px-3",
+                  "body-5 flex h-8 items-center rounded-full border border-main bg-dark px-3",
                   isActive && "bg-brand/10 text-brand-dark",
                   selectedCategories.length === 0 && "text-font-1",
                   isInactive && "text-font-disabled",
@@ -224,7 +224,7 @@ const Setting = () => {
           <button
             type="button"
             onClick={toggleIsTagModal}
-            className="body-4 flex h-11 items-center justify-between rounded-xl border border-main bg-darkest px-4 text-font-2 hover:bg-btn-hover hover:text-font-1"
+            className="body-5 flex h-11 items-center justify-between rounded-xl border border-main bg-darkest px-4 text-font-2 hover:bg-btn-hover hover:text-font-1"
           >
             <span>
               {isTagFull ? t("tagFullPlaceholder") : t("tagPlaceholder")}
@@ -233,7 +233,7 @@ const Setting = () => {
           </button>
         </section>
 
-        <div className="body-6 mt-2 flex items-center justify-between gap-3 text-font-2">
+        <div className="body-7 mt-2 flex items-center justify-between gap-3 text-font-2">
           <span className="shrink-0">
             {t("selectedTagCount", { count: tagList.length })}
           </span>

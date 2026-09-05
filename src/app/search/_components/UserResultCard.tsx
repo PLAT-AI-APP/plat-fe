@@ -88,7 +88,7 @@ const UserResultCard = ({ user }: UserResultCardProps) => {
 
           <div className="flex flex-col items-start justify-center gap-1">
             <span className="title-4 text-font-1">@{user.nickname}</span>
-            <div className="body-5 flex items-start gap-1 text-font-disabled">
+            <div className="body-6 flex items-start gap-1 text-font-disabled">
               <span>
                 {t("searchResults.followerCount", {
                   count: user.followerCount,

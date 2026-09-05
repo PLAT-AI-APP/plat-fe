@@ -59,7 +59,7 @@ const MyChattingMenuPopover = ({
     >
       <nav
         id="chat-menu-nav"
-        className="body-4 flex flex-col gap-1 whitespace-nowrap"
+        className="body-5 flex flex-col gap-1 whitespace-nowrap"
         onClick={(e) => e.stopPropagation()}
       >
         <ul className="flex w-full flex-col gap-1">

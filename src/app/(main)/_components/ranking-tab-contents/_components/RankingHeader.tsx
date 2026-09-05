@@ -30,7 +30,7 @@ const PeriodPills = () => {
             <Link
               href={{ query: { tab: "ranking", period: id, sort: currentSort } }}
               className={cn(
-                "body-4 flex items-center justify-center whitespace-nowrap rounded-2xl px-4 py-2 transition-colors",
+                "body-5 flex items-center justify-center whitespace-nowrap rounded-2xl px-4 py-2 transition-colors",
                 isActive
                   ? "bg-font-1 text-font-4"
                   : "text-font-1 bg-card-selected",
@@ -61,7 +61,7 @@ const RankingHeader = ({ sort, onSortChange }: RankingHeaderProps) => {
     <div className="flex w-full flex-col gap-3">
       <div className="flex items-center gap-2">
         <h2 className="title-2 text-font-1">{t("rankingPage.title")}</h2>
-        <span className="body-5 text-font-disabled">{updatedAt}</span>
+        <span className="body-6 text-font-disabled">{updatedAt}</span>
       </div>
 
       <div className="flex w-full items-center justify-between">

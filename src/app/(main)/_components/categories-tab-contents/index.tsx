@@ -150,7 +150,7 @@ const CategoriesTabContents = () => {
                 <button
                   type="button"
                   onClick={() => setIsTagSidebarOpen(true)}
-                  className="body-4 flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl border border-main px-3 py-2 text-font-1 transition-colors hover:bg-btn-hover"
+                  className="body-5 flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl border border-main px-3 py-2 text-font-1 transition-colors hover:bg-btn-hover"
                 >
                   <Tag className="size-4 shrink-0" />
                   {t("tagFilter")}
@@ -203,7 +203,7 @@ const CategoriesTabContents = () => {
           <header className="flex flex-col heading-3">
             <p>{t("recommendedCharacters")}</p>
 
-            <p className="body-2 text-font-2">{t("recommendedDescription")}</p>
+            <p className="body-3 text-font-2">{t("recommendedDescription")}</p>
           </header>
 
           <CharacterShowcase charArray={DUMMY_CHARACTERS} cardSize="S" />

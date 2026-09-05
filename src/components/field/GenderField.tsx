@@ -29,7 +29,7 @@ const GenderField = () => {
               })
             }
             className={cn(
-              "body-4 flex-1 rounded-xl bg-card py-3 text-font-2 transition-colors hover:bg-card-hover hover:text-font-1",
+              "body-5 flex-1 rounded-xl bg-card py-3 text-font-2 transition-colors hover:bg-card-hover hover:text-font-1",
               gender === g &&
                 "bg-brand/10 text-brand hover:bg-brand/20 hover:text-brand",
             )}

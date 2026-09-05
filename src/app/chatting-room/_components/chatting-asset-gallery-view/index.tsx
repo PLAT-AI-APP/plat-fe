@@ -33,10 +33,10 @@ const ChattingAssetGalleryView = ({
       <header className="flex w-full items-center justify-between gap-4">
         <div className="flex items-center gap-2">
           <ImageIcon className="size-6 text-font-2" />
-          <h2 className="body-2 text-font-1">{t("assetGallery")}</h2>
+          <h2 className="body-3 text-font-1">{t("assetGallery")}</h2>
         </div>
 
-        <span className="body-6 shrink-0 whitespace-nowrap text-font-2">
+        <span className="body-7 shrink-0 whitespace-nowrap text-font-2">
           {assetGallery?.visibleCount ?? 0}/{assetGallery?.totalCount ?? 0}
         </span>
       </header>

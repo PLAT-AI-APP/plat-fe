@@ -4,7 +4,7 @@ import React from "react";
  * 캐릭터 카드 로딩 자리표시자.
  *
  * 블록 높이는 실제 카드의 글자 높이에 맞춘다 —
- * 제목(title-5, 14px × 1.5 ≈ 21px)과 설명(body-6, 12px × 1.5 = 18px).
+ * 제목(title-5, 14px × 1.5 ≈ 21px)과 설명(body-7, 12px × 1.5 = 18px).
  * 자리표시자가 실제 콘텐츠보다 크면 로딩이 끝나는 순간 레이아웃이 튄다.
  */
 const SkeletonCharacterCard = () => {

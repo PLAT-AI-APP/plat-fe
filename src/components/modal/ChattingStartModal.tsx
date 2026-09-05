@@ -56,14 +56,14 @@ const ChattingStartModal = ({
           rightElement={
             <button
               type="button"
-              className="body-6 rounded-sm bg-card px-3 py-1 text-font-2 hover:bg-card-hover"
+              className="body-7 rounded-sm bg-card px-3 py-1 text-font-2 hover:bg-card-hover"
             >
               {t("chattingStart.change")}
             </button>
           }
           disabled
           value={t("chattingStart.personaValue")}
-          descFontSize="body-4"
+          descFontSize="body-5"
         />
 
         <SmartInput
@@ -86,7 +86,7 @@ const ChattingStartModal = ({
               triggerRef={triggerRef}
             />
           }
-          descFontSize="body-4"
+          descFontSize="body-5"
         />
       </section>
 

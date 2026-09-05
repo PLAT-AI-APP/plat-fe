@@ -19,21 +19,21 @@ const StudioStats = () => {
   return (
     <div className="grid grid-cols-2 gap-3 @[516px]:grid-cols-4">
       <div className="flex min-w-27.5 flex-1 flex-col gap-2">
-        <span className="body-4 text-font-2">{t("stats.characters")}</span>
+        <span className="body-5 text-font-2">{t("stats.characters")}</span>
         <span className="title-3">
           {formatWithCommas(MOCK_STUDIO_DATA.characterCount)}
         </span>
       </div>
 
       <div className="flex min-w-27.5 flex-1 flex-col gap-2">
-        <span className="body-4 text-font-2">{t("stats.chats")}</span>
+        <span className="body-5 text-font-2">{t("stats.chats")}</span>
         <span className="title-3">
           {formatWithCommas(MOCK_STUDIO_DATA.chatCount)}
         </span>
       </div>
 
       <div className="flex min-w-27.5 flex-1 flex-col gap-2">
-        <span className="body-4 text-font-2">{t("stats.identity")}</span>
+        <span className="body-5 text-font-2">{t("stats.identity")}</span>
         <span className="title-3">
           {MOCK_STUDIO_DATA.isIdentityVerified
             ? t("stats.verified")
@@ -43,7 +43,7 @@ const StudioStats = () => {
 
       <div className="relative flex min-w-27.5 flex-1 items-center gap-2">
         <div className="flex flex-1 flex-col gap-2">
-          <span className="body-4 text-font-2">{t("stats.adult")}</span>
+          <span className="body-5 text-font-2">{t("stats.adult")}</span>
           <span
             className={`title-3 ${!MOCK_STUDIO_DATA.isAdultVerified ? "text-font-disabled" : ""}`}
           >

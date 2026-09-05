@@ -20,7 +20,7 @@ const EmptyState = ({ message, children, className }: EmptyStateProps) => (
       className,
     )}
   >
-    <p className="body-3 text-font-2">{message}</p>
+    <p className="body-4 text-font-2">{message}</p>
     {children}
   </div>
 );

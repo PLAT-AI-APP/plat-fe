@@ -25,7 +25,7 @@ const NewCharacterHeader = ({ sort, onSortChange }: NewCharacterHeaderProps) => 
     <div className="flex w-full items-center justify-between">
       <div className="flex items-center gap-2">
         <h2 className="title-2 text-font-1">{t("newPage.title")}</h2>
-        <span className="body-5 text-font-disabled">{updatedAt}</span>
+        <span className="body-6 text-font-disabled">{updatedAt}</span>
       </div>
 
       <FilterDropdown

@@ -154,7 +154,7 @@ const AssetItem = ({ id, index, remove }: AssetItemProps) => {
                 <p className="title-4 truncate text-font-1">
                   {displayAssetName}
                 </p>
-                <p className="body-6 line-clamp-2 text-font-2">
+                <p className="body-7 line-clamp-2 text-font-2">
                   {assetSituation}
                 </p>
               </div>
@@ -208,7 +208,7 @@ const AssetItem = ({ id, index, remove }: AssetItemProps) => {
                 description={t("situationHelp")}
                 value={assetSituation}
                 labelFontSize="title-5"
-                descFontSize="body-6"
+                descFontSize="body-7"
                 error={currentAssetError?.assetSituation?.message}
               />
               <button

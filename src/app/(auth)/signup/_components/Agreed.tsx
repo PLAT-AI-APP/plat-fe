@@ -70,7 +70,7 @@ const Agreed = () => {
             <CheckboxEmpty />
           )}
         </div>
-        <span className="text-font-1 body-2">약관 전체 동의</span>
+        <span className="text-font-1 body-3">약관 전체 동의</span>
       </article>
 
       <hr className="border-main" />
@@ -93,7 +93,7 @@ const Agreed = () => {
                 <div className="flex items-center justify-center h-6 w-6">
                   {checked ? <Checkbox /> : <CheckboxEmpty />}
                 </div>
-                <span className="body-4">{title}</span>
+                <span className="body-5">{title}</span>
               </div>
 
               <Link

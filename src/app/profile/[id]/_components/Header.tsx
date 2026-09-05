@@ -28,7 +28,7 @@ interface StatItemProps {
 const StatItem = ({ label, value, onClick }: StatItemProps) => {
   const content = (
     <>
-      <span className="body-2 text-font-2">{label}</span>
+      <span className="body-3 text-font-2">{label}</span>
       <span className="title-3 text-font-1">{formatWithCommas(value)}</span>
     </>
   );
@@ -224,7 +224,7 @@ const Header = ({ userId }: HeaderProps) => {
           )}
         </div>
 
-        <nav className="body-2 flex items-center gap-1.5 whitespace-nowrap">
+        <nav className="body-3 flex items-center gap-1.5 whitespace-nowrap">
           <StatItem
             label={t("profile.followers")}
             value={followerCount}
@@ -246,7 +246,7 @@ const Header = ({ userId }: HeaderProps) => {
       </section>
 
       {bio && (
-        <p className="body-4 w-full whitespace-pre-line text-font-2">{bio}</p>
+        <p className="body-5 w-full whitespace-pre-line text-font-2">{bio}</p>
       )}
     </header>
   );

@@ -47,7 +47,7 @@ const CharacterSortPopover = ({
                   handleSort(option);
                 }}
                 className={cn(
-                  "menu-item body-4 w-33.5 cursor-pointer justify-between",
+                  "menu-item body-5 w-33.5 cursor-pointer justify-between",
                   isSelected && "title-5 text-brand",
                 )}
               >

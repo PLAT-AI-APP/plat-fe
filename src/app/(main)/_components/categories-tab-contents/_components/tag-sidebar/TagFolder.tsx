@@ -28,8 +28,8 @@ export const TagPill = ({
     "group-hover:text-brand-dark",
     isInteractive && "hover:text-font-1",
     isSelected && "border-brand bg-brand-opacity text-brand",
-    size === "sm" && "h-5 body-5 bg-transparent",
-    size === "md" && "h-[29px] px-2 py-1 body-4",
+    size === "sm" && "h-5 body-6 bg-transparent",
+    size === "md" && "h-[29px] px-2 py-1 body-5",
     size === "lg" && "h-[33px] pl-3 py-1.5 pr-2 title-5 border-none",
     isInteractive ? "cursor-pointer" : "cursor-default",
   );
@@ -108,7 +108,7 @@ export const TagFolder = ({
         onClick={() => setIsOpen((prev) => !prev)}
         className="flex h-[21px] w-full items-center justify-between text-left text-font-2 hover:text-font-1"
       >
-        <span className="body-4 flex items-center gap-1.5 text-font-2">
+        <span className="body-5 flex items-center gap-1.5 text-font-2">
           {title}
           {titleSuffix}
           {!isOpen && selectedTagCount > 0 && (

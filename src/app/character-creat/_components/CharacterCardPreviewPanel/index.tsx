@@ -21,10 +21,10 @@ const CharacterCardPreviewPanel = () => {
     <section className="flex h-full max-h-[calc(100vh-145px)] w-full max-w-[693px] shrink-0 flex-col overflow-y-auto rounded-3xl bg-darker p-4 lg:h-[919px]">
       <header className="flex h-12 items-center rounded-2xl bg-darkest px-4">
         <h2 className="title-3 text-font-1">{t("cardPreview")}</h2>
-        <span className="body-2 px-3 text-font-2" aria-hidden="true">
+        <span className="body-3 px-3 text-font-2" aria-hidden="true">
           |
         </span>
-        <p className="body-2 text-font-2">{t("detailPreview")}</p>
+        <p className="body-3 text-font-2">{t("detailPreview")}</p>
       </header>
 
       <div className="flex flex-1 items-start justify-center gap-10 pt-[145px]">

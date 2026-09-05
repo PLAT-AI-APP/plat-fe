@@ -46,7 +46,7 @@ const SmartInput = forwardRef<
     leftElement,
     rightElement,
     labelFontSize = "title-3",
-    descFontSize = "body-5",
+    descFontSize = "body-6",
     onFocus,
     onBlur,
     ...rest
@@ -156,7 +156,7 @@ const SmartInput = forwardRef<
         descFontSize={descFontSize}
       />
 
-      <div className="group body-4">
+      <div className="group body-5">
         <div className="relative">
           {leftElement && (
             <div
@@ -234,7 +234,7 @@ const SmartInput = forwardRef<
               onClick={toggleIsOpen}
               style={{ paddingLeft: `${paddingLeft}px` }}
               className={cn(
-                "relative flex cursor-pointer items-center justify-between rounded-xl border bg-darkest px-4 py-3 body-4",
+                "relative flex cursor-pointer items-center justify-between rounded-xl border bg-darkest px-4 py-3 body-5",
                 hasError ? "border-font-accents" : "border-main",
                 inputBoxClassName,
               )}

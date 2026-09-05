@@ -74,7 +74,7 @@ const UserChatBubble = ({
           <div className="flex w-full max-w-[520px] items-center rounded-[16px_16px_0px_16px] bg-brand-opacity-2 p-2.5">
             <textarea
               autoFocus
-              className="body-4 w-full resize-none rounded-[16px_16px_0px_16px] border border-transparent bg-card-hover p-2.5 text-font-1 outline-none transition-colors focus:field-focus!"
+              className="body-5 w-full resize-none rounded-[16px_16px_0px_16px] border border-transparent bg-card-hover p-2.5 text-font-1 outline-none transition-colors focus:field-focus!"
               rows={2}
               value={editedText}
               onChange={(event) => setEditedText(event.target.value)}
@@ -108,7 +108,7 @@ const UserChatBubble = ({
         </div>
       )}
 
-      <span className="body-4 rounded-[16px_16px_0px_16px] bg-brand-opacity-2 px-3 py-2 text-font-1">
+      <span className="body-5 rounded-[16px_16px_0px_16px] bg-brand-opacity-2 px-3 py-2 text-font-1">
         {text}
       </span>
     </div>

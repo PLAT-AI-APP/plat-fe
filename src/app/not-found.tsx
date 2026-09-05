@@ -10,7 +10,7 @@ const NotFoundPage = () => {
       <h2 id="not-found-code" className="display-1 text-brand">
         404
       </h2>
-      <p id="not-found-message" className="body-1 mt-4 text-font-2">
+      <p id="not-found-message" className="body-2 mt-4 text-font-2">
         요청하신 페이지를 찾을 수 없습니다.
       </p>
       <Link

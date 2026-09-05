@@ -119,11 +119,11 @@ const CharacterItem = ({
             </div>
           </header>
 
-          <p className="body-6 line-clamp-1 whitespace-pre-line pr-5 text-font-2">
+          <p className="body-7 line-clamp-1 whitespace-pre-line pr-5 text-font-2">
             {description}
           </p>
 
-          <footer className="body-6 flex gap-1 pb-0.5 pt-1 text-font-2">
+          <footer className="body-7 flex gap-1 pb-0.5 pt-1 text-font-2">
             <span className="flex items-center gap-1">
               <ChatFill className="h-3.5 w-3.5" />
               {formatStatCount(chatCount)}
@@ -136,7 +136,7 @@ const CharacterItem = ({
         <aside className="flex items-center gap-1.5 text-font-2">
           <ul className="flex gap-0.5">
             {tagList.map((tag, index) => (
-              <li key={index} className="caption-3 text-brand-dark">
+              <li key={index} className="body-8 text-brand-dark">
                 #{tag}
               </li>
             ))}

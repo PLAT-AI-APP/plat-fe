@@ -79,9 +79,9 @@ const ChattingMemoryView = ({ onBack }: ChattingMemoryViewProps) => {
         <header className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
             <Storage className="size-6 text-font-2" />
-            <h2 className="body-2 text-font-1">{t("pastConversations")}</h2>
+            <h2 className="body-3 text-font-1">{t("pastConversations")}</h2>
           </div>
-          <p className="body-5 text-font-2">{t("memoryDescription")}</p>
+          <p className="body-6 text-font-2">{t("memoryDescription")}</p>
         </header>
 
         <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto">

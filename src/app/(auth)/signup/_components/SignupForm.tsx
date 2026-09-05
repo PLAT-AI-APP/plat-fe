@@ -108,7 +108,7 @@ const SignupForm = () => {
     >
       <header className="flex flex-col gap-1.5">
         <h1 className="heading-3">{t("auth.signup.title")}</h1>
-        <p className="body-4 text-font-2">{t("auth.signup.subtitle")}</p>
+        <p className="body-5 text-font-2">{t("auth.signup.subtitle")}</p>
       </header>
 
       <fieldset className="flex flex-col gap-5">

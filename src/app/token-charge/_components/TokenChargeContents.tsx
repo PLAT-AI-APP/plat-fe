@@ -27,7 +27,7 @@ const ProductListItem = ({ product }: ProductListItemProps) => {
         <div className="flex items-center gap-3">
           <Token className="h-8 w-8" />
           <div className="flex items-center gap-2">
-            <p className="body-2 flex gap-1">
+            <p className="body-3 flex gap-1">
               <span>{formatWithCommas(credits.base)}</span>
               <span>{t("tokenCharge.noteUnit")}</span>
             </p>
@@ -84,7 +84,7 @@ const TokenChargeContents = () => {
 
       <div className="mb-9 flex items-center justify-between gap-4 rounded-3xl border border-main bg-darker px-5 py-4">
         <div className="flex flex-col gap-2">
-          <span className="body-4 text-font-2">{t("tokenCharge.myNote")}</span>
+          <span className="body-5 text-font-2">{t("tokenCharge.myNote")}</span>
           <div className="title-1 flex items-center gap-2">
             <Token className="h-6 w-6" /> {formatWithCommas(availableBalance)}
           </div>
@@ -92,7 +92,7 @@ const TokenChargeContents = () => {
 
         <Link
           href="/usage-history"
-          className="body-4 shrink-0 rounded-2xl bg-main px-4 py-2 text-font-1 transition-colors hover:bg-btn-hover"
+          className="body-5 shrink-0 rounded-2xl bg-main px-4 py-2 text-font-1 transition-colors hover:bg-btn-hover"
         >
           {t("tokenCharge.viewUsageHistory")}
         </Link>
@@ -107,7 +107,7 @@ const TokenChargeContents = () => {
         {isError && <ErrorState error={error} onRetry={refetch} />}
 
         {products && products.length === 0 && (
-          <p className="body-4 py-10 text-center text-font-2">
+          <p className="body-5 py-10 text-center text-font-2">
             {t("tokenCharge.empty")}
           </p>
         )}

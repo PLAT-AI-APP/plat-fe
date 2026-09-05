@@ -97,7 +97,7 @@ const CreateTabs = ({
               ref={(el) => setTabRef(tabId, el)}
               onClick={() => setCurrentTabId(tabId)}
               className={cn(
-                "body-4 flex h-10 cursor-pointer items-center justify-center whitespace-nowrap p-2.5 text-center text-font-2 outline-none transition-colors",
+                "body-5 flex h-10 cursor-pointer items-center justify-center whitespace-nowrap p-2.5 text-center text-font-2 outline-none transition-colors",
                 TAB_WIDTH_CLASS_BY_ID[tabId],
                 isActive ? "text-font-1" : "hover:text-font-1",
               )}

@@ -26,7 +26,7 @@ const PersonaHeader = ({ onClose }: PersonaHeaderProps) => {
           <Close className="h-3.5 w-3.5" />
         </button>
       </div>
-      <p className="body-4 pt-2 text-font-2">{t("description")}</p>
+      <p className="body-5 pt-2 text-font-2">{t("description")}</p>
     </header>
   );
 };

@@ -74,7 +74,7 @@ const RepresentativeImage = () => {
           <span>{t("label")}</span>
           <span className="text-font-accents">*</span>
         </div>
-        <p className="body-5 text-font-2">{t("guide")}</p>
+        <p className="body-6 text-font-2">{t("guide")}</p>
       </header>
 
       <div

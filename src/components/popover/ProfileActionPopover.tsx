@@ -58,7 +58,7 @@ const ProfileActionPopover = ({
             key={label}
             type="button"
             onClick={onClick}
-            className="body-2 flex w-full items-center gap-2 rounded-lg p-2 text-left text-font-1 transition-colors hover:bg-btn-hover"
+            className="body-3 flex w-full items-center gap-2 rounded-lg p-2 text-left text-font-1 transition-colors hover:bg-btn-hover"
           >
             {icon}
             <span className="whitespace-nowrap">{label}</span>

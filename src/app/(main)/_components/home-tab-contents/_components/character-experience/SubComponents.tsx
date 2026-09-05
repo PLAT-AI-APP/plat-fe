@@ -24,9 +24,9 @@ export const ChatBubble = ({
   <div className="w-full inline-flex justify-start items-start gap-2">
     <CharacterAvatar />
     <div className="inline-flex flex-col justify-start items-start gap-1.5 overflow-hidden">
-      <span className="body-4 justify-start text-font-1">{name}</span>
+      <span className="body-5 justify-start text-font-1">{name}</span>
       <div className="px-3 py-2 bg-card rounded-tr-2xl rounded-bl-2xl rounded-br-2xl inline-flex justify-center items-center gap-2.5 overflow-hidden">
-        <p className="body-4 justify-start text-font-1">{message}</p>
+        <p className="body-5 justify-start text-font-1">{message}</p>
       </div>
     </div>
   </div>
@@ -35,7 +35,7 @@ export const ChatBubble = ({
 export const NarrativeBlock = ({ content }: { content: string }) => (
   <div className="inline-flex justify-start items-start gap-5 w-full">
     <Message className="size-7 text-font-2" />
-    <p className="flex-1 justify-start text-font-2 body-4 whitespace-pre-line">
+    <p className="flex-1 justify-start text-font-2 body-5 whitespace-pre-line">
       {content}
     </p>
   </div>
@@ -51,7 +51,7 @@ export const ActionFooter = ({ isActive = true }: { isActive: boolean }) => (
     />
     <div className="self-stretch flex flex-col justify-start items-center gap-1 z-30">
       <div className="self-stretch inline-flex justify-center items-center gap-1">
-        <p className="body-5 text-center justify-start text-font-1">
+        <p className="body-6 text-center justify-start text-font-1">
           {isActive
             ? "이 캐릭터와 무료로 3회 대화할 수 있어요"
             : "이미 3번의 무료 대화를 진행했어요 "}

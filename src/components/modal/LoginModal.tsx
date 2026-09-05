@@ -222,7 +222,7 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
                   id="btn-forgot-password"
                   type="button"
                   onClick={handleFindPasswordClick}
-                  className="body-6 w-fit cursor-pointer pl-1 text-font-2 transition-colors hover:text-font-1"
+                  className="body-7 w-fit cursor-pointer pl-1 text-font-2 transition-colors hover:text-font-1"
                 >
                   {t("auth.login.forgotPassword")}
                 </button>
@@ -264,7 +264,7 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
           id="login-card-footer"
           className="flex items-center justify-center gap-3 pt-7"
         >
-          <p className="body-6 text-font-2">{t("auth.login.signupPrompt")}</p>
+          <p className="body-7 text-font-2">{t("auth.login.signupPrompt")}</p>
           <Link
             id="link-to-signup"
             href="/signup"

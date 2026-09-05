@@ -168,7 +168,7 @@ const FollowModal = ({
               ref={(el) => setTabRef(tabId, el)}
               onClick={() => setActiveTabs(tabId)}
               className={cn(
-                "body-2 translate-y-0.5 cursor-pointer px-5 py-2.5 text-font-disabled",
+                "body-3 translate-y-0.5 cursor-pointer px-5 py-2.5 text-font-disabled",
                 activeTabs === tabId && "title-3 text-font-1",
               )}
             >

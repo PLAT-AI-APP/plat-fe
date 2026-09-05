@@ -75,7 +75,7 @@ const Header = ({ handleFoldToggle, foldToggleRef }: HeaderProps) => {
               className="flex cursor-pointer items-center gap-1 transition-colors hover:bg-btn-hover rounded-lg p-1 pr-2.5"
             >
               <Token className="w-5 h-5" />
-              <span id="user-point-value" className="body-2">
+              <span id="user-point-value" className="body-3">
                 {formatWithCommas(availableBalance)}
               </span>
             </Link>

@@ -159,7 +159,7 @@ const CharacterDetailContent = ({
   if (!character) {
     return (
       <article className="flex w-full justify-center pb-16 pt-5">
-        <p className="body-2 text-font-2">{t("loadFailed")}</p>
+        <p className="body-3 text-font-2">{t("loadFailed")}</p>
       </article>
     );
   }

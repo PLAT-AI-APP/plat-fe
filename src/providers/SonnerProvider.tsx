@@ -39,9 +39,9 @@ const SonnerProvider = () => {
           // 내용 칸이 남는 폭만큼만 줄어들어야(min-w-0) title 의 truncate 가 먹는다.
           content: "min-w-0 flex-1",
           // 제목은 아이콘과 한 줄에 나란히 놓이는 디자인이라 1줄로 자른다.
-          title: "body-4 text-font-0 truncate",
+          title: "body-5 text-font-0 truncate",
           // 설명은 길면 줄바꿈되고, 그만큼 카드 높이(min-height)도 함께 늘어난다.
-          description: "body-4 mt-1 text-font-disabled",
+          description: "body-5 mt-1 text-font-disabled",
           closeButton:
             "absolute right-4 top-4 cursor-pointer rounded-md transition hover:opacity-70",
         },

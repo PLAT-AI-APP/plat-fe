@@ -73,14 +73,14 @@ const LiveSearchRankItem = ({ item, onSelect }: LiveSearchRankItemProps) => {
           {item.rank}
         </span>
         <span
-          className={cn("body-2", isTopThree ? "text-font-1" : "text-font-2")}
+          className={cn("body-3", isTopThree ? "text-font-1" : "text-font-2")}
         >
           {item.keyword}
         </span>
       </div>
 
       <div className="flex items-center gap-1">
-        <span className="body-5 text-font-2">
+        <span className="body-6 text-font-2">
           {formatStatCount(item.count, locale)}
         </span>
         {/* 새로 올라왔거나 순위가 그대로면 가리킬 방향이 없어 삼각형을 그리지 않습니다. */}
@@ -153,7 +153,7 @@ const SearchLanding = () => {
           <h2 className="title-1 text-font-0">
             {t("searchLanding.liveSearchTitle")}
           </h2>
-          <span className="body-5 text-font-2">{updatedAt}</span>
+          <span className="body-6 text-font-2">{updatedAt}</span>
         </div>
 
         <QueryStateBoundary
@@ -192,7 +192,7 @@ const SearchLanding = () => {
             <h2 className="title-1 text-font-0">
               {t("searchLanding.popularCharactersTitle")}
             </h2>
-            <span className="body-5 text-font-2">{updatedAt}</span>
+            <span className="body-6 text-font-2">{updatedAt}</span>
           </div>
 
           {/* 예전에는 flex 한 줄이라 카드 6장이 폭을 나눠 갖다 못해 108px 까지 찌그러졌다.
@@ -220,7 +220,7 @@ const SearchLanding = () => {
           onClick={() => router.push("/?tab=ranking")}
           className="flex items-center justify-center gap-1 rounded-xl border border-main bg-dark py-3 hover:bg-btn-hover"
         >
-          <span className="body-4 text-font-2">
+          <span className="body-5 text-font-2">
             {t("searchLanding.viewAllRanking")}
           </span>
         </button>

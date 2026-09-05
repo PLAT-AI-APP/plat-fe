@@ -83,7 +83,7 @@ const PersonaItem = ({
               )}
             </div>
             {description && (
-              <p className="body-4 line-clamp-1 min-w-full whitespace-nowrap text-font-2">
+              <p className="body-5 line-clamp-1 min-w-full whitespace-nowrap text-font-2">
                 {description}
               </p>
             )}

@@ -55,7 +55,7 @@ const PastConversationPopover = ({
               key={label}
               type="button"
               onClick={onClick}
-              className="menu-item body-4 w-full gap-2 text-left"
+              className="menu-item body-5 w-full gap-2 text-left"
             >
               {icon}
               <span className={textClassName}>{label}</span>

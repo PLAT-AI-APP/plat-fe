@@ -72,7 +72,7 @@ const ResultSection = ({ title, count, children }: ResultSectionProps) => {
           <h2 className="title-1 text-font-0">{title}</h2>
           {/* 개수는 서버가 센 총계입니다. 아직 못 받았으면 0건이라 단정하지 않고 비워 둡니다. */}
           {count !== undefined && (
-            <span className="body-4 text-font-2">
+            <span className="body-5 text-font-2">
               {t("categoriesPage.resultCount", { count })}
             </span>
           )}
@@ -80,7 +80,7 @@ const ResultSection = ({ title, count, children }: ResultSectionProps) => {
 
         <button
           type="button"
-          className="body-4 text-font-2 transition-colors hover:text-font-1"
+          className="body-5 text-font-2 transition-colors hover:text-font-1"
         >
           {t("characterShowcase.allView")}
         </button>
@@ -190,7 +190,7 @@ const SearchResultsContents = ({
           >
             <span
               className={cn(
-                "body-4 transition-colors",
+                "body-5 transition-colors",
                 activeTab === tab.key ? "text-font-1" : "text-font-2",
               )}
             >
@@ -205,7 +205,7 @@ const SearchResultsContents = ({
           onClick={() => router.push("/?tab=categories")}
           className="flex w-21 flex-col items-center justify-center border-b-2 border-transparent p-2.5"
         >
-          <span className="body-4 text-font-2">
+          <span className="body-5 text-font-2">
             {t("searchResults.tabCategory")}
           </span>
         </button>

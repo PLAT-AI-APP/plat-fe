@@ -35,10 +35,10 @@ const ErrorState = ({ error, onRetry, className }: ErrorStateProps) => {
         className,
       )}
     >
-      <p className="body-3 text-font-1">{resolveErrorMessage(error)}</p>
+      <p className="body-4 text-font-1">{resolveErrorMessage(error)}</p>
 
       {detail && (
-        <code className="body-6 max-w-full truncate text-font-disabled">
+        <code className="body-7 max-w-full truncate text-font-disabled">
           {detail}
         </code>
       )}

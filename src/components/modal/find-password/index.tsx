@@ -48,7 +48,7 @@ const FindPasswordModal = ({ onClose, stackIndex }: FindPasswordModalProps) => {
           <section className="w-screen max-w-97 rounded-3xl border border-main bg-darker px-6 py-9">
             <header className="flex flex-col gap-1.5 pb-9">
               <h2 className="heading-3">{t("title")}</h2>
-              <p className="body-4 text-font-2">{t("description")}</p>
+              <p className="body-5 text-font-2">{t("description")}</p>
             </header>
 
             <EmailVerifySection

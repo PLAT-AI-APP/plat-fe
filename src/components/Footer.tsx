@@ -23,7 +23,7 @@ const Footer = () => {
               <Link
                 id={`footer-link-${menu.text}`}
                 href={menu.link}
-                className="body-4 text-font-1 hover:underline"
+                className="body-5 text-font-1 hover:underline"
               >
                 {menu.text}
               </Link>
@@ -34,7 +34,7 @@ const Footer = () => {
 
       <address
         id="footer-business-info"
-        className="body-4 flex flex-wrap gap-3 text-font-disabled not-italic"
+        className="body-5 flex flex-wrap gap-3 text-font-disabled not-italic"
       >
         <span id="footer-company-name">{t("footer.companyName")}</span>|
         <span id="footer-representative">{t("footer.representative")}</span>|
@@ -45,7 +45,7 @@ const Footer = () => {
         |<span id="footer-office-address">{t("footer.address")}</span>
       </address>
 
-      <p id="footer-copyright" className="body-4 text-font-disabled">
+      <p id="footer-copyright" className="body-5 text-font-disabled">
         {t("footer.copyright")}
       </p>
     </footer>

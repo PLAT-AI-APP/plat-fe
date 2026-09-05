@@ -62,7 +62,7 @@ const MyChattingContents = () => {
             onFocus={() => setIsSearchFocused(true)}
             onBlur={() => setIsSearchFocused(false)}
             placeholder={isSearchFocused ? "" : SEARCH_PLACEHOLDER[locale]}
-            className="focus-ring-none body-4 min-w-0 flex-1 appearance-none bg-transparent text-font-1 outline-none placeholder:text-font-disabled [&::-webkit-search-cancel-button]:appearance-none"
+            className="focus-ring-none body-5 min-w-0 flex-1 appearance-none bg-transparent text-font-1 outline-none placeholder:text-font-disabled [&::-webkit-search-cancel-button]:appearance-none"
           />
           <button
             type="button"

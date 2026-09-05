@@ -14,7 +14,7 @@ const PersonaFooter = ({ isMaxPersona }: PersonaFooterProps) => {
 
   return (
     <footer className="pt-9">
-      <p className="body-6 text-center text-font-2">{t("helper")}</p>
+      <p className="body-7 text-center text-font-2">{t("helper")}</p>
 
       <button
         onClick={() => !isMaxPersona && openModal("PERSONA_ADD")}

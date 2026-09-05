@@ -28,5 +28,5 @@ export interface SmartInputProps extends React.InputHTMLAttributes<
   rightElement?: React.ReactNode;
   // fontSize?: "md" | "lg";
   labelFontSize?: "title-3" | "title-5";
-  descFontSize?: "body-4" | "body-5" | "body-6";
+  descFontSize?: "body-5" | "body-6" | "body-7";
 }

@@ -77,7 +77,7 @@ const RepresentativeImageCropModal = ({
         <header className="flex items-start justify-between gap-4">
           <div className="min-w-0">
             <h2 className="title-1 text-font-1">{t("title")}</h2>
-            <p className="body-4 pt-3 text-font-2">{t("description")}</p>
+            <p className="body-5 pt-3 text-font-2">{t("description")}</p>
           </div>
 
           <button

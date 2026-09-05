@@ -47,7 +47,7 @@ const SearchResultSort = ({ value, onChange }: SearchResultSortProps) => {
                     "flex h-[29px] items-center justify-center gap-1 px-2 py-1 transition-colors",
                     isSelected
                       ? "title-5 text-brand"
-                      : "body-4 text-font-2 hover:text-font-1",
+                      : "body-5 text-font-2 hover:text-font-1",
                   )}
                 >
                   {isSelected && (

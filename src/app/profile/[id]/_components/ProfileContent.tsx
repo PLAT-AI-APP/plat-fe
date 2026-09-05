@@ -195,7 +195,7 @@ export default function ProfileContent({ id }: { id: string }) {
                         "flex w-fit items-center justify-center px-5 py-2.5 text-center",
                         currentTab === key
                           ? "title-3 text-font-1"
-                          : "body-2 text-font-disabled",
+                          : "body-3 text-font-disabled",
                       )}
                     >
                       {t(labelKey)}
@@ -204,7 +204,7 @@ export default function ProfileContent({ id }: { id: string }) {
                       <button
                         type="button"
                         disabled
-                        className="body-2 flex w-fit cursor-default items-center justify-center px-5 py-2.5 text-center text-font-disabled"
+                        className="body-3 flex w-fit cursor-default items-center justify-center px-5 py-2.5 text-center text-font-disabled"
                       >
                         -
                       </button>

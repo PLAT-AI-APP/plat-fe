@@ -77,14 +77,14 @@ const WithdrawalContents = () => {
               <h2 className="heading-3R text-font-1">
                 {t("withdrawalPage.heading", { nickname })}
               </h2>
-              <p className="body-2 text-font-2">
+              <p className="body-3 text-font-2">
                 {t("withdrawalPage.description")}
               </p>
             </header>
 
             <div className="flex w-full flex-col gap-1">
               <div className="rounded-2xl bg-darkest px-4 py-6">
-                <ul className="body-4 list-disc space-y-0 pl-5 text-font-disabled">
+                <ul className="body-5 list-disc space-y-0 pl-5 text-font-disabled">
                   {notices.map((notice) => (
                     <li key={notice}>{notice}</li>
                   ))}
@@ -96,7 +96,7 @@ const WithdrawalContents = () => {
                 </ul>
               </div>
 
-              <p className="caption-3 text-font-disabled">
+              <p className="body-8 text-font-disabled">
                 {t("withdrawalPage.legalNotice")}
               </p>
             </div>
@@ -106,7 +106,7 @@ const WithdrawalContents = () => {
             type="button"
             role="checkbox"
             aria-checked={isConfirmed}
-            className="body-4 flex items-end gap-1.5 text-font-2 hover:text-font-1"
+            className="body-5 flex items-end gap-1.5 text-font-2 hover:text-font-1"
             onClick={() => setIsConfirmed((prev) => !prev)}
           >
             {isConfirmed ? (

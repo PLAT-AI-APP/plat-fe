@@ -13,7 +13,7 @@ export const ScenarioPreview = ({ currentScenario }: ScenarioPreviewProps) => {
       {/* 지문 섹션 */}
       <article className="flex items-center gap-5">
         <Message className="min-w-7 h-7 text-font-2" />
-        <p className="body-4 text-font-2 whitespace-pre-line">{situation}</p>
+        <p className="body-5 text-font-2 whitespace-pre-line">{situation}</p>
       </article>
 
       {/* 시나리오 이미지(이미지 파일로 내려오지 않을 것 같다) */}
@@ -34,7 +34,7 @@ export const ScenarioPreview = ({ currentScenario }: ScenarioPreviewProps) => {
           height={40}
           className="rounded-full w-10 h-10"
         />
-        <div className="flex flex-col gap-1.5 body-4">
+        <div className="flex flex-col gap-1.5 body-5">
           {/* 추후 캐릭터 api연동시 name */}
           <p>{"charName"}</p>
           <p className="px-3 py-2 bg-card rounded-[0px_16px_16px_16px]">

@@ -79,7 +79,7 @@ const Asset = ({ assetFieldArray }: AssetProps) => {
         <div className="title-3 flex items-center gap-1">
           <span>{t("header", { count: fields.length })}</span>
         </div>
-        <p className="body-5 text-font-2">{t("guide")}</p>
+        <p className="body-6 text-font-2">{t("guide")}</p>
       </header>
 
       <div id="asset-management-container" className="mt-5 flex flex-col">
@@ -106,7 +106,7 @@ const Asset = ({ assetFieldArray }: AssetProps) => {
         <button
           type="button"
           onClick={addAsset}
-          className="body-4 mt-2 flex h-[45px] items-center justify-center gap-2 rounded-xl bg-darkest text-font-2 hover:bg-card"
+          className="body-5 mt-2 flex h-[45px] items-center justify-center gap-2 rounded-xl bg-darkest text-font-2 hover:bg-card"
         >
           <Plus className="size-4" />
           {t("add")}

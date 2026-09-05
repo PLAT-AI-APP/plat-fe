@@ -24,14 +24,14 @@ const CommentsPanel = ({ universeId }: CommentsPanelProps) => {
 
   return (
     <section className="flex flex-col gap-6">
-      <h2 className="body-2 text-font-1">
+      <h2 className="body-3 text-font-1">
         {t("commentsCount", { count: totalCount })}
       </h2>
 
       <CommentInputBox universeId={universeId} />
 
       {comments.length === 0 ? (
-        <p className="body-4 text-font-2">{t("commentEmpty")}</p>
+        <p className="body-5 text-font-2">{t("commentEmpty")}</p>
       ) : (
         <ul className="flex flex-col gap-5">
           {comments.map((comment) => (
@@ -49,7 +49,7 @@ const CommentsPanel = ({ universeId }: CommentsPanelProps) => {
           type="button"
           onClick={() => fetchNextPage()}
           disabled={isFetchingNextPage}
-          className="body-4 w-fit text-font-2 transition-colors hover:text-font-1"
+          className="body-5 w-fit text-font-2 transition-colors hover:text-font-1"
         >
           {t("commentLoadMore")}
         </button>

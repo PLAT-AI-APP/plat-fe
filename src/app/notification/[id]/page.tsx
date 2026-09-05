@@ -80,7 +80,7 @@ const NotificationDetailPage = ({ params }: PageProps) => {
   const backToList = (
     <Link
       href="/notification"
-      className="body-4 flex w-fit items-center gap-1.5 text-font-2 transition-colors hover:text-font-1"
+      className="body-5 flex w-fit items-center gap-1.5 text-font-2 transition-colors hover:text-font-1"
     >
       <ArrowLeft className="size-4" aria-hidden="true" />
       {t("notification.backToList")}
@@ -121,7 +121,7 @@ const NotificationDetailPage = ({ params }: PageProps) => {
 
             <h1 className="heading-3 text-font-1">{notice.title}</h1>
 
-            <div className="body-4 flex items-center gap-3 text-font-2">
+            <div className="body-5 flex items-center gap-3 text-font-2">
               <time
                 dateTime={dayjs(notice.updatedAt ?? notice.createdAt).toISOString()}
                 className="flex items-center gap-1.5"
@@ -138,7 +138,7 @@ const NotificationDetailPage = ({ params }: PageProps) => {
             </div>
           </header>
 
-          <section className="body-2 flex flex-col gap-3 border-t border-main pt-6 text-font-1">
+          <section className="body-3 flex flex-col gap-3 border-t border-main pt-6 text-font-1">
             <ReactMarkdown
               remarkPlugins={[remarkGfm, remarkBreaks]}
               components={markdownComponents}

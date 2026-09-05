@@ -125,7 +125,7 @@ const SidebarSummary = ({
                 `/character-creat?universeId=${character.characterId}`,
               )
             }
-            className="body-4 flex w-fit items-center gap-1 rounded-xl border border-btn-selected bg-darker px-3 py-2 text-font-2 transition-colors hover:bg-card"
+            className="body-5 flex w-fit items-center gap-1 rounded-xl border border-btn-selected bg-darker px-3 py-2 text-font-2 transition-colors hover:bg-card"
           >
             <Gear className="size-5 shrink-0" aria-hidden="true" />
             {t("editCharacter")}
@@ -133,7 +133,7 @@ const SidebarSummary = ({
         )}
 
         {!isCreator && character.isOfficial && (
-          <span className="body-6 w-fit rounded-xl bg-brand/10 px-3 py-2 text-brand-dark">
+          <span className="body-7 w-fit rounded-xl bg-brand/10 px-3 py-2 text-brand-dark">
             {t("officialCharacter")}
           </span>
         )}
@@ -152,15 +152,15 @@ const SidebarSummary = ({
         </div>
 
         <div className="flex flex-col gap-2">
-          <h1 className="heading-1 text-font-1">{character.title}</h1>
-          <p className="body-1 text-font-1">{character.introduce}</p>
+          <h1 className="heading-2 text-font-1">{character.title}</h1>
+          <p className="body-2 text-font-1">{character.introduce}</p>
           <div className="flex flex-col gap-0.5">
-            <div className="body-3 flex flex-wrap gap-x-2 gap-y-1 text-font-2">
+            <div className="body-4 flex flex-wrap gap-x-2 gap-y-1 text-font-2">
               {character.tags.map((tag) => (
                 <span key={tag}>#{tag}</span>
               ))}
             </div>
-            <div className="body-4 flex items-center gap-3 text-font-2">
+            <div className="body-5 flex items-center gap-3 text-font-2">
               <span className="flex items-center gap-1">
                 <ChatFill className="size-4" aria-hidden="true" />
                 {formatStatCount(character.chatCount)}
@@ -242,7 +242,7 @@ const SidebarSummary = ({
                 <p className="title-4 truncate text-font-1">
                   {character.creator.nickname}
                 </p>
-                <p className="body-5 text-font-2">
+                <p className="body-6 text-font-2">
                   {t("followingCount", {
                     count: character.creator.followingCount,
                   })}
@@ -267,7 +267,7 @@ const SidebarSummary = ({
             )}
           </div>
 
-          <div className="body-5 flex gap-4 text-font-2">
+          <div className="body-6 flex gap-4 text-font-2">
             <span>{t("createdAt", { date: character.createdAt })}</span>
             <span>{t("updatedAt", { date: character.updatedAt })}</span>
           </div>

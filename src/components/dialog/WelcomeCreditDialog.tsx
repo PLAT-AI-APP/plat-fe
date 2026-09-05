@@ -20,7 +20,7 @@ const WelcomeCreditDialog = ({
       onClose={handleConfirm}
       label="dialog.welcomeCredit.title"
       description={
-        <div className="body-4 w-full text-font-2">
+        <div className="body-5 w-full text-font-2">
           <p>
             {t("dialog.welcomeCredit.descriptionBefore")}
             <span className="title-5 text-font-1">

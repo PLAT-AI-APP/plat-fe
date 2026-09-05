@@ -141,7 +141,7 @@ const CharacterCard = ({
           <ChatCountBadge
             chatCount={chatCount}
             variant="floating"
-            textClassName="body-4"
+            textClassName="body-5"
           />
         )}
 
@@ -178,7 +178,7 @@ const CharacterCard = ({
               titleClassName="title-3 text-overlay-font"
               icon={titleIcon}
             />
-            <p className="body-5 line-clamp-1 text-overlay-font/70">
+            <p className="body-6 line-clamp-1 text-overlay-font/70">
               {description}
             </p>
           </div>

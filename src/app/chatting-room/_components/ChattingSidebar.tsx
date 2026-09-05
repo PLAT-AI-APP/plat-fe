@@ -88,7 +88,7 @@ const SidebarMenuItem = ({
 
   if (trailing && !onClick) {
     return (
-      <div className="body-2 flex w-full items-center justify-between px-2 py-2 text-font-1">
+      <div className="body-3 flex w-full items-center justify-between px-2 py-2 text-font-1">
         {content}
       </div>
     );
@@ -98,7 +98,7 @@ const SidebarMenuItem = ({
     <button
       type="button"
       onClick={onClick}
-      className="body-4 flex w-full items-center justify-between rounded-lg px-2 py-2 text-font-1 transition-colors hover:bg-btn-hover"
+      className="body-5 flex w-full items-center justify-between rounded-lg px-2 py-2 text-font-1 transition-colors hover:bg-btn-hover"
     >
       {content}
     </button>
@@ -246,7 +246,7 @@ const ChattingSidebar = ({
                       className="flex items-center gap-1.5 rounded-lg bg-card px-3 py-2 transition-colors hover:bg-card-hover"
                     >
                       <Token className="size-[21px]" />
-                      <span className="body-4 whitespace-nowrap text-font-1">
+                      <span className="body-5 whitespace-nowrap text-font-1">
                         {formatWithCommas(availableBalance)}
                       </span>
                     </Link>
@@ -254,7 +254,7 @@ const ChattingSidebar = ({
 
                   <nav className="flex flex-col gap-6">
                     <section className="flex flex-col gap-3">
-                      <h2 className="body-4 text-font-2">
+                      <h2 className="body-5 text-font-2">
                         {t("userSettings")}
                       </h2>
                       <menu className="flex list-none flex-col gap-1">
@@ -284,7 +284,7 @@ const ChattingSidebar = ({
                     </section>
 
                     <section className="flex flex-col gap-3">
-                      <h2 className="body-4 text-font-2">{t("memoryLog")}</h2>
+                      <h2 className="body-5 text-font-2">{t("memoryLog")}</h2>
                       <menu className="flex list-none flex-col gap-1">
                         <li>
                           <SidebarMenuItem
@@ -304,7 +304,7 @@ const ChattingSidebar = ({
                     </section>
 
                     <section className="flex flex-col gap-3">
-                      <h2 className="body-4 text-font-2">
+                      <h2 className="body-5 text-font-2">
                         {t("chatSettings")}
                       </h2>
                       <menu className="flex list-none flex-col gap-1">
@@ -347,7 +347,7 @@ const ChattingSidebar = ({
                 <button
                   type="button"
                   onClick={handleLeaveChat}
-                  className="body-4 flex w-full items-center gap-2 px-2 py-3 text-font-2 transition-colors hover:text-font-1"
+                  className="body-5 flex w-full items-center gap-2 px-2 py-3 text-font-2 transition-colors hover:text-font-1"
                 >
                   <Logout className="size-6 scale-x-[-1]" />
                   <span>{t("leaveChat")}</span>

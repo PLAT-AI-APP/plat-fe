@@ -50,7 +50,7 @@ const DetailTabs = ({
               onChange(tab.id, tab.targetId);
             }}
             className={cn(
-              "body-4 flex h-11 items-center gap-1 justify-center border-b-2 text-font-2 transition-colors",
+              "body-5 flex h-11 items-center gap-1 justify-center border-b-2 text-font-2 transition-colors",
               isCommentsTab ? "w-[104px]" : "w-[88px]",
               isActive
                 ? "border-brand text-font-1"
@@ -59,7 +59,7 @@ const DetailTabs = ({
           >
             <span>{t(tab.labelKey)}</span>
             {isCommentsTab && (
-              <span className="body-6 text-font-2">
+              <span className="body-7 text-font-2">
                 {t("tabs.commentsCount", { count: commentsCount })}
               </span>
             )}

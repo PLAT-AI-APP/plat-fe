@@ -54,7 +54,7 @@ const CommentInputBox = ({ universeId }: CommentInputBoxProps) => {
           disabled={!isLoggedIn}
           maxLength={COMMENT_MAX_LENGTH}
           className={cn(
-            "focus-ring-none body-4 min-h-9 w-full resize-none bg-transparent text-font-1 outline-none placeholder:text-font-disabled disabled:cursor-default",
+            "focus-ring-none body-5 min-h-9 w-full resize-none bg-transparent text-font-1 outline-none placeholder:text-font-disabled disabled:cursor-default",
             !isLoggedIn && "placeholder:text-font-1",
           )}
           placeholder={placeholder}
@@ -65,7 +65,7 @@ const CommentInputBox = ({ universeId }: CommentInputBoxProps) => {
           onClick={handleSubmit}
           disabled={!canSubmit}
           className={cn(
-            "body-4 rounded-xl bg-main px-4 py-1.5 transition-colors",
+            "body-5 rounded-xl bg-main px-4 py-1.5 transition-colors",
             canSubmit
               ? "text-font-1 hover:bg-btn-selected"
               : "cursor-not-allowed text-font-disabled",

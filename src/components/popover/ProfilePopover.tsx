@@ -202,17 +202,17 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
           <ArrowRight className="size-2.5 shrink-0 text-font-disabled" />
         </Link>
       ) : (
-        <div className="body-4 flex flex-col gap-3 p-2">
+        <div className="body-5 flex flex-col gap-3 p-2">
           <div
             onClick={() => handleLoginBtn("KAKAO")}
-            className="flex cursor-pointer items-center justify-center relative body-4 text-center h-11 rounded-lg bg-[#FEE500] w-full py-2 text-scrim"
+            className="flex cursor-pointer items-center justify-center relative body-5 text-center h-11 rounded-lg bg-[#FEE500] w-full py-2 text-scrim"
           >
             <Kakao className="absolute w-5.5 h-5.5 top-1/2 left-7.5 -translate-y-1/2" />
             {t("loginWithKakao")}
           </div>
           <div
             onClick={() => handleLoginBtn("GOOGLE")}
-            className="flex cursor-pointer items-center justify-center relative body-4 text-center h-11 rounded-lg bg-font-1 w-full py-2 text-font-4"
+            className="flex cursor-pointer items-center justify-center relative body-5 text-center h-11 rounded-lg bg-font-1 w-full py-2 text-font-4"
           >
             <Google className="absolute w-5.5 h-5.5 top-1/2 left-7.5 -translate-y-1/2" />
             {t("loginWithGoogle")}
@@ -220,7 +220,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
           <div
             ref={loginModalBtnRef}
             onClick={() => handleLoginBtn("LOGIN")}
-            className="flex cursor-pointer items-center justify-center relative body-4 text-center h-11 rounded-lg bg-card w-full py-2 text-font-2"
+            className="flex cursor-pointer items-center justify-center relative body-5 text-center h-11 rounded-lg bg-card w-full py-2 text-font-2"
           >
             {t("loginWithOther")}
           </div>
@@ -231,7 +231,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
         <div className="h-px w-full bg-main" />
       </div>
 
-      <h3 className="caption-1 pb-1.5 pl-2.5 text-font-2">{t("activity")}</h3>
+      <h3 className="title-7 pb-1.5 pl-2.5 text-font-2">{t("activity")}</h3>
       <div className="flex flex-col gap-1.5">
         {filteredActivityArray.map((tab) => {
           const Icon = tab.icon;
@@ -243,7 +243,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
                 <button
                   type="button"
                   onClick={tab.onClick}
-                  className="menu-item body-4 w-full justify-between gap-2 text-left text-font-1 ease-in-out"
+                  className="menu-item body-5 w-full justify-between gap-2 text-left text-font-1 ease-in-out"
                 >
                   <span className="flex min-w-0 items-center gap-2">
                     <Icon
@@ -284,7 +284,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
                           <li
                             key={value}
                             onClick={() => handleCurrentTendency(value)}
-                            className="body-5 flex cursor-pointer justify-between rounded-xl px-2.5 py-2 transition-colors duration-200 ease-in-out hover:bg-btn-hover"
+                            className="body-6 flex cursor-pointer justify-between rounded-xl px-2.5 py-2 transition-colors duration-200 ease-in-out hover:bg-btn-hover"
                           >
                             <div className="flex items-center gap-2">
                               <div
@@ -312,8 +312,8 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
               key={tab.name}
               href={tab.link}
               className={cn(
-                "menu-item body-4 justify-between gap-2 text-font-1 ease-in-out",
-                !isTokenCharge && "body-4",
+                "menu-item body-5 justify-between gap-2 text-font-1 ease-in-out",
+                !isTokenCharge && "body-5",
               )}
             >
               <span className="flex min-w-0 items-center gap-2">
@@ -342,7 +342,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
         <div className="h-px w-full bg-main" />
       </div>
 
-      <h3 className="caption-1 pb-1.5 pl-2.5 text-font-2">
+      <h3 className="title-7 pb-1.5 pl-2.5 text-font-2">
         {t("inquiryAndSettings")}
       </h3>
       <div className="flex flex-col gap-1.5">
@@ -352,7 +352,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
             <Link
               key={tab.name}
               href={tab.link}
-              className="menu-item body-4 gap-2 text-font-1"
+              className="menu-item body-5 gap-2 text-font-1"
             >
               <Icon
                 size={18}
@@ -372,7 +372,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
           </div>
           <div
             onClick={() => logout()}
-            className="menu-item body-4 cursor-pointer gap-2 text-font-1 ease-in-out"
+            className="menu-item body-5 cursor-pointer gap-2 text-font-1 ease-in-out"
           >
             <Logout size={18} className="size-[18px] shrink-0 text-font-2" />
             {t("logout")}

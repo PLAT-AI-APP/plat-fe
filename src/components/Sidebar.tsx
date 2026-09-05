@@ -182,7 +182,7 @@ const Sidebar = ({
                           exit={{ opacity: 0, x: -10 }}
                           transition={TRANSITION}
                           className={cn(
-                            "body-4 ml-1 whitespace-nowrap transition-colors",
+                            "body-5 ml-1 whitespace-nowrap transition-colors",
                             isActive ? "text-brand" : "text-font-2",
                           )}
                         >
@@ -224,7 +224,7 @@ const Sidebar = ({
                     x: { duration: DURATION.base, ease: EASE_OUT },
                   },
                 }}
-                className="body-4 mb-1 overflow-hidden whitespace-nowrap pl-2 text-font-2"
+                className="body-5 mb-1 overflow-hidden whitespace-nowrap pl-2 text-font-2"
               >
                 {t("sidebar.recentChats")}
               </motion.p>
@@ -278,10 +278,10 @@ const Sidebar = ({
                         }}
                         className="ml-3 flex min-w-0 flex-1 flex-col overflow-hidden whitespace-nowrap"
                       >
-                        <p className="body-4 truncate text-font-1">
+                        <p className="body-5 truncate text-font-1">
                           {chat.name}
                         </p>
-                        <p className="body-5 truncate text-font-2">
+                        <p className="body-6 truncate text-font-2">
                           {chat.lastMessage}
                         </p>
                       </motion.div>

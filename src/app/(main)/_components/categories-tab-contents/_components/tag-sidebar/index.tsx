@@ -478,7 +478,7 @@ const TagSidebar = ({
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder={t("searchPlaceholder")}
-            className="focus-ring-none h-[43px] w-full rounded-xl border border-main bg-darkest pl-[38px] pr-3 body-5 text-font-1 outline-none transition-colors placeholder:text-font-2 focus:field-focus!"
+            className="focus-ring-none h-[43px] w-full rounded-xl border border-main bg-darkest pl-[38px] pr-3 body-6 text-font-1 outline-none transition-colors placeholder:text-font-2 focus:field-focus!"
           />
         </label>
       </div>
@@ -490,7 +490,7 @@ const TagSidebar = ({
           <button
             type="button"
             onClick={() => onSelectedTagIdsChange([])}
-            className="body-6 text-font-2 underline-offset-2 hover:underline"
+            className="body-7 text-font-2 underline-offset-2 hover:underline"
           >
             {t("clearAll")}
           </button>
@@ -557,7 +557,7 @@ const TagSidebar = ({
           // 해시태그를 못 불러온 것을 "태그가 없다"로 보여주면 사용자가 필터가 사라진 줄 안다.
           <ErrorState error={error} onRetry={refetch} className="my-4" />
         ) : !isLoading && tagFolders.length === 0 ? (
-          <p className="body-5 py-10 text-center text-font-disabled">
+          <p className="body-6 py-10 text-center text-font-disabled">
             {t("emptyHashtags")}
           </p>
         ) : (
