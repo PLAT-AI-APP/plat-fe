@@ -4,38 +4,18 @@ import type { FileUploadType } from "@/api/file/postFileUpload";
 const fileUploadTypes: FileUploadType[] = [
   "USER_PROFILE",
   "CHARACTER_PROFILE",
-  "CHARACTER_ASSET",
   "UNIVERSE_PROFILE",
+  "UNIVERSE_ASSET",
 ];
 
-const getUploadedFileExtension = (file: File) => {
-  // MSW 응답 URL은 실제 스토리지 저장이 없으므로 업로드 파일명을 참고해 확장자만 보존합니다.
-  const extension = file.name.split(".").pop()?.toLowerCase();
-
-  return extension || "webp";
-};
-
-const createMockFileUploadResponse = (fileType: FileUploadType, file: File) => {
-  const baseId = Date.now();
-  const fileId = crypto.randomUUID();
-  const extension = getUploadedFileExtension(file);
-  const filePathPrefix = fileType.toLowerCase().replaceAll("_", "/");
-
-  return {
-    originalFileId: baseId,
-    mdFileId: baseId + 1,
-    smFileId: baseId + 2,
-    originalUrl: `/files/${filePathPrefix}/${fileId}.${extension}`,
-    mdUrl: `/files/${filePathPrefix}/${fileId}_md.${extension}`,
-    smUrl: `/files/${filePathPrefix}/${fileId}_sm.${extension}`,
-    expiredAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-    assetCode: fileType === "CHARACTER_ASSET" ? `asset-${fileId}` : null,
-  };
-};
+const createMockFileUploadResponse = (fileType: FileUploadType) => ({
+  fileId: crypto.randomUUID(),
+  imageType: fileType,
+});
 
 export const fileHandlers = [
   http.post(
-    /\/files\/upload\/([^/]+)(?:\?.*)?$/,
+    /\/files\/images\/([^/]+)(?:\?.*)?$/,
     async ({ request, params }) => {
       const fileType = params[0] as FileUploadType;
 
@@ -50,22 +30,24 @@ export const fileHandlers = [
       }
 
       const formData = await request.formData();
-      const file = formData.get("file");
+      const image = formData.get("image");
 
-      if (!(file instanceof File)) {
+      if (!(image instanceof File)) {
         return HttpResponse.json(
           {
             code: "FILE_EMPTY",
             message: "업로드할 이미지 파일을 선택해 주세요.",
             fields: {
-              file: "파일을 선택해 주세요.",
+              image: "파일을 선택해 주세요.",
             },
           },
           { status: 400 },
         );
       }
 
-      return HttpResponse.json(createMockFileUploadResponse(fileType, file));
+      return HttpResponse.json(createMockFileUploadResponse(fileType), {
+        status: 201,
+      });
     },
   ),
 ];

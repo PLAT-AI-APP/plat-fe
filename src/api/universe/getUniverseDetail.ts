@@ -12,18 +12,14 @@ export type UniverseDetailVisibility = "PUBLIC" | "PRIVATE";
 export type UniverseDetailTendency =
   "ALL" | "MALE_ORIENTED" | "FEMALE_ORIENTED";
 export type UniverseDetailCategory =
-  | "SIMULATION"
   | "ROMANCE"
   | "FANTASY"
   | "DRAMA"
-  | "MARTIAL_ARTS_HISTORICAL"
+  | "MARTIAL_ARTS"
   | "GL"
   | "BL"
-  | "HORROR_MYSTERY"
-  | "ACTION"
-  | "COMIC_DAILY"
-  | "SPORTS_SCHOOL"
-  | "ETC";
+  | "HORROR"
+  | "MYSTERY";
 
 export interface UniverseDetailHashtag {
   hashtagId: string;
@@ -38,13 +34,27 @@ export interface UniverseDetailAsset {
 }
 
 export interface UniverseDetailScenario {
+  scenarioId: string;
   episodeNo: number;
+  displayOrder: number;
   name: string;
   content: string;
 }
 
+export interface UniverseDetailCharacter {
+  universeCharacterId: string;
+  name: string | null;
+  description: string | null;
+  detailSetting: string | null;
+  profileImageUrl: string;
+}
+
 export interface UniverseDetailResponse {
   universeId: string;
+  creatorId: string;
+  editable: boolean;
+  createdAt: string;
+  updatedAt: string;
   visibility: UniverseDetailVisibility;
   commentEnabled: boolean;
   tendency: UniverseDetailTendency;
@@ -56,8 +66,7 @@ export interface UniverseDetailResponse {
   detailSetting: string;
   description: string;
   profileImageUrl: string;
-  characterName: string;
-  characterProfileUrl: string;
+  character: UniverseDetailCharacter;
   hashtags: UniverseDetailHashtag[];
   assets: UniverseDetailAsset[];
   scenarios: UniverseDetailScenario[];
@@ -76,12 +85,12 @@ const createScenarioContents = (
   assets: UniverseDetailAsset[],
 ): CharacterScenario["contents"] => [
   {
-    id: `scenario-${scenario.episodeNo}-content`,
+    id: `scenario-${scenario.scenarioId}-content`,
     type: "action" as const,
     value: scenario.content,
   },
   ...assets.map((asset) => ({
-    id: `scenario-${scenario.episodeNo}-asset-${asset.assetImageFileId}`,
+    id: `scenario-${scenario.scenarioId}-asset-${asset.assetImageFileId}`,
     type: "asset" as const,
     value: asset.originalUrl,
   })),
@@ -95,7 +104,7 @@ export const adaptUniverseDetailToCharacterDetail = (
     url: asset.originalUrl,
   }));
   const scenarios: CharacterScenario[] = universe.scenarios.map((scenario) => ({
-    scenarioId: String(scenario.episodeNo),
+    scenarioId: scenario.scenarioId,
     name: scenario.name,
     description: scenario.content,
     situation: scenario.content,
@@ -116,14 +125,15 @@ export const adaptUniverseDetailToCharacterDetail = (
     isOfficial: false,
     images,
     mainImage: universe.profileImageUrl,
-    profileImage: universe.characterProfileUrl,
-    createdAt: "",
-    updatedAt: "",
+    profileImage: universe.character.profileImageUrl,
+    createdAt: universe.createdAt,
+    updatedAt: universe.updatedAt,
     creator: {
-      // TODO: 세계관 상세 조회 응답에 creatorId가 추가되면 이 값에 연결합니다.
-      id: null,
-      nickname: universe.characterName,
-      profileImage: universe.characterProfileUrl,
+      id: universe.creatorId,
+      // 백엔드 세계관 상세 응답에는 제작자(creatorId)의 닉네임/프로필 사진을 조회하는 공개 API가
+      // 아직 없어, 임시로 세계관 소속 캐릭터의 이름/이미지를 대신 표시합니다.
+      nickname: universe.character.name ?? "",
+      profileImage: universe.character.profileImageUrl,
       followingCount: 0,
       isFollowing: false,
     },

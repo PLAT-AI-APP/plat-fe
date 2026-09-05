@@ -57,23 +57,16 @@ const createCharacterCreateDefaultValues = (
   tagIds: [],
 });
 
-const toFormTendency = (tendency: UniverseDetailResponse["tendency"]) => {
-  if (tendency === "MALE_ORIENTED") return "MALE";
-  if (tendency === "FEMALE_ORIENTED") return "FEMALE";
-
-  return tendency;
-};
-
 const createCharacterEditDefaultValues = (
   universe: UniverseDetailResponse,
   defaultScenarioName: string,
 ): CharacterCreateFormValues => ({
   representativeImage: universe.profileImageUrl,
   representativeImageId: null,
-  characterProfileImage: universe.characterProfileUrl,
+  characterProfileImage: universe.character.profileImageUrl,
   characterProfileImageId: null,
   title: universe.title,
-  name: universe.characterName,
+  name: universe.character.name ?? "",
   characterIntroduce: universe.introduce,
   profileSituationDescription: "",
   characterDetailSetting: universe.detailSetting,
@@ -104,7 +97,7 @@ const createCharacterEditDefaultValues = (
   isPublic: universe.visibility === "PUBLIC",
   allowComments: universe.commentEnabled,
   characterDescription: universe.description,
-  tendency: toFormTendency(universe.tendency),
+  tendency: universe.tendency,
   category: [universe.category],
   tagIds: universe.hashtags.map((hashtag) => ({
     id: hashtag.hashtagId,

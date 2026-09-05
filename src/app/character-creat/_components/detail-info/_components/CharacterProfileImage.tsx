@@ -78,7 +78,7 @@ const CharacterProfileImage = () => {
         shouldDirty: true,
         shouldValidate: true,
       });
-      setValue("characterProfileImageId", uploadedImage.originalFileId, {
+      setValue("characterProfileImageId", uploadedImage.fileId, {
         shouldDirty: true,
         shouldValidate: true,
       });

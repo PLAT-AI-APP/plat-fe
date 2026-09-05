@@ -64,7 +64,7 @@ const RepresentativeImage = () => {
         cropTarget.type,
       );
       const uploadedImage = await uploadFile({
-        fileType: "CHARACTER_PROFILE",
+        fileType: "UNIVERSE_PROFILE",
         file: croppedFile,
       });
 
@@ -72,7 +72,7 @@ const RepresentativeImage = () => {
         shouldDirty: true,
         shouldValidate: true,
       });
-      setValue("representativeImageId", uploadedImage.originalFileId, {
+      setValue("representativeImageId", uploadedImage.fileId, {
         shouldDirty: true,
         shouldValidate: true,
       });
