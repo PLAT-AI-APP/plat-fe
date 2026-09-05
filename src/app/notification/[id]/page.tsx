@@ -18,7 +18,8 @@ const NotificationDetailPage = ({ params }: PageProps) => {
 
   if (!noticeDetailContents) return null;
 
-  const { title, content, updatedAt } = noticeDetailContents;
+  const { title, content, createdAt, updatedAt } = noticeDetailContents;
+  const displayedAt = updatedAt ?? createdAt;
   return (
     <article
       id="notice-detail-container"
@@ -32,7 +33,7 @@ const NotificationDetailPage = ({ params }: PageProps) => {
         <time className="flex items-center gap-1.5 text-font-2">
           <Clock className="w-4 h-4" />
           <span className="body-4">
-            {dayjs(updatedAt).format("YYYY-MM-DD HH:mm:ss")}
+            {dayjs(displayedAt).format("YYYY-MM-DD HH:mm:ss")}
           </span>
         </time>
       </header>

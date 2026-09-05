@@ -1,14 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "..";
 import { AppError } from "@/type/api";
+import type { NoticeCategory } from "./getNoticeList";
 
-export interface NoticeListResponseData {
+export interface NoticeDetailResponseData {
   noticeId: string;
-  type: "NOTICE" | "EVENT" | "UPDATE";
+  category: NoticeCategory;
   title: string;
   content: string;
+  isPinned: boolean;
+  viewCount: number;
   createdAt: string;
-  updatedAt: string;
+  updatedAt: string | null;
 }
 
 export interface GetNoticeDetailContentsProps {
@@ -19,8 +22,8 @@ export interface GetNoticeDetailContentsProps {
 const getNoticeDetailContents = async ({
   noticeId,
 }: GetNoticeDetailContentsProps) => {
-  const response = await axiosInstance.get<NoticeListResponseData>(
-    `/notice/${noticeId}`,
+  const response = await axiosInstance.get<NoticeDetailResponseData>(
+    `/notices/${noticeId}`,
   );
 
   return response.data;
@@ -30,7 +33,7 @@ const getNoticeDetailContents = async ({
 export const useNoticeDetailContentsQuery = ({
   noticeId,
 }: GetNoticeDetailContentsProps) => {
-  return useQuery<NoticeListResponseData, AppError>({
+  return useQuery<NoticeDetailResponseData, AppError>({
     queryKey: ["get-notice-detail-contents", noticeId],
     queryFn: () => getNoticeDetailContents({ noticeId }),
     staleTime: 1000 * 60 * 5,

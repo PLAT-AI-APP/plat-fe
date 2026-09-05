@@ -1,50 +1,54 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { axiosInstance } from "..";
-import { AppError, PageResponse } from "@/type/api";
+import { AppError } from "@/type/api";
+
+export type NoticeCategory =
+  "SERVICE" | "UPDATE" | "EVENT" | "MAINTENANCE" | "POLICY";
 
 export interface NoticeListResponseData {
   noticeId: string;
-  type: "NOTICE" | "UPDATE" | "EVENT";
+  category: NoticeCategory;
   title: string;
   createdAt: string;
   isPinned: boolean;
 }
 
-export interface GetNoticeListParams {
-  size?: number;
-  type?: "NOTICE" | "UPDATE" | "EVENT" | null;
+/** 백엔드 PageWith<NoticeSummaryResponse> 응답 구조 */
+export interface NoticeListPageResponse {
+  page: {
+    number: number;
+    size: number;
+    numberOfElements: number;
+    hasNext: boolean;
+    totalElements: number;
+    totalPages: number;
+  };
+  content: NoticeListResponseData[];
 }
 
 // API 요청 함수
-const getNoticeList = async (
-  params: GetNoticeListParams,
-  pageParam: number,
-) => {
-  const response = await axiosInstance.get<
-    PageResponse<NoticeListResponseData>
-  >(`/notice`, {
-    params: {
-      page: pageParam,
-      size: params.size ?? 20,
-      ...(params.type && { type: params.type }), // type이 있을 때만 쿼리 스트링에 포함
+// 실서버 GET /notices는 page만 받고, 페이지 크기(20)와 카테고리 필터는 서버에서 지원하지 않습니다.
+const getNoticeList = async (pageParam: number) => {
+  const response = await axiosInstance.get<NoticeListPageResponse>(
+    `/notices`,
+    {
+      params: {
+        page: pageParam,
+      },
     },
-  });
+  );
 
   return response.data;
 };
 
 /** 공지사항 목록 조회 */
-export const useNoticeListInfiniteQuery = (
-  params: GetNoticeListParams = {},
-) => {
-  return useInfiniteQuery<PageResponse<NoticeListResponseData>, AppError>({
-    queryKey: ["get-notice-list", params],
-    queryFn: ({ pageParam }) => getNoticeList(params, pageParam as number),
+export const useNoticeListInfiniteQuery = () => {
+  return useInfiniteQuery<NoticeListPageResponse, AppError>({
+    queryKey: ["get-notice-list"],
+    queryFn: ({ pageParam }) => getNoticeList(pageParam as number),
     initialPageParam: 0,
-    getNextPageParam: (lastPage) => {
-      return lastPage.last ? null : lastPage.number + 1;
-    },
-
+    getNextPageParam: (lastPage) =>
+      lastPage.page.hasNext ? lastPage.page.number + 1 : null,
     staleTime: 1000 * 60 * 5,
   });
 };

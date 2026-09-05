@@ -4,7 +4,7 @@ import { endpoint, pathValue } from "../utils";
 // 타입 정의
 interface NoticeItem {
   noticeId: number;
-  type: "NOTICE" | "UPDATE" | "EVENT";
+  category: "SERVICE" | "UPDATE" | "EVENT" | "MAINTENANCE" | "POLICY";
   title: string;
   createdAt: string;
   isPinned: boolean;
@@ -12,28 +12,38 @@ interface NoticeItem {
 
 interface NoticeDetail extends NoticeItem {
   content: string;
+  viewCount: number;
   updatedAt: string | null;
 }
 
 // 1. 100개의 목 데이터 생성 (목록용 + 상세용)
 const generateMockData = () => {
-  const types: ("NOTICE" | "UPDATE" | "EVENT")[] = [
-    "NOTICE",
+  const categories: NoticeItem["category"][] = [
+    "SERVICE",
     "UPDATE",
     "EVENT",
+    "MAINTENANCE",
+    "POLICY",
   ];
+  const categoryLabel: Record<NoticeItem["category"], string> = {
+    SERVICE: "공지",
+    UPDATE: "업데이트",
+    EVENT: "이벤트",
+    MAINTENANCE: "점검",
+    POLICY: "정책",
+  };
   const list: NoticeItem[] = [];
   const details: Record<number, NoticeDetail> = {};
 
   for (let i = 100; i >= 1; i--) {
-    const type = types[i % 3];
+    const category = categories[i % categories.length];
     const isPinned = i > 97; // 최신 3개는 상단 고정 테스트용
     const date = new Date(2026, 3, i).toISOString(); // 날짜 분산
 
     const item: NoticeItem = {
       noticeId: i,
-      type,
-      title: `${type === "NOTICE" ? "공지" : type === "UPDATE" ? "업데이트" : "이벤트"} - ${i}번째 게시글입니다.`,
+      category,
+      title: `${categoryLabel[category]} - ${i}번째 게시글입니다.`,
       createdAt: date,
       isPinned,
     };
@@ -44,6 +54,7 @@ const generateMockData = () => {
     details[i] = {
       ...item,
       content: `안녕하세요, PLAT 팀입니다.\n\n이것은 ${i}번 게시물의 상세 내용입니다.\n\n서비스 이용에 참고 부탁드립니다.`,
+      viewCount: i * 3,
       updatedAt: date,
     };
   }
@@ -53,46 +64,41 @@ const generateMockData = () => {
 const { list: mockNotices, details: mockNoticeDetails } = generateMockData();
 
 export const noticeHandlers = [
-  // 공지사항 목록 조회 API
-  http.get(endpoint("/notice"), ({ request }) => {
+  // 공지사항 목록 조회 API — 실서버는 page만 받고, 크기(20)와 카테고리 필터는 지원하지 않습니다.
+  http.get(endpoint("/notices"), ({ request }) => {
     const url = new URL(request.url);
     const page = parseInt(url.searchParams.get("page") || "0", 10);
-    const size = parseInt(url.searchParams.get("size") || "20", 10);
-    const type = url.searchParams.get("type");
+    const size = 20;
 
-    // 1. 필터링
-    let filteredNotices = [...mockNotices];
-    if (type && ["NOTICE", "UPDATE", "EVENT"].includes(type)) {
-      filteredNotices = filteredNotices.filter((item) => item.type === type);
-    }
-
-    // 2. 상단 고정(isPinned) 처리 (고정글 우선, 그 다음 최신순)
-    filteredNotices.sort((a, b) => {
+    // 상단 고정(isPinned) 처리 (고정글 우선, 그 다음 최신순)
+    const sortedNotices = [...mockNotices].sort((a, b) => {
       if (a.isPinned !== b.isPinned) return a.isPinned ? -1 : 1;
       return b.noticeId - a.noticeId;
     });
 
-    // 3. 페이지네이션
-    const totalElements = filteredNotices.length;
+    const totalElements = sortedNotices.length;
     const totalPages = Math.ceil(totalElements / size);
     const startIndex = page * size;
     const endIndex = startIndex + size;
-    const paginatedContent = filteredNotices.slice(startIndex, endIndex);
+    const content = sortedNotices.slice(startIndex, endIndex);
 
     return HttpResponse.json({
-      content: paginatedContent,
-      totalElements,
-      totalPages,
-      number: page,
-      size,
-      first: page === 0,
-      last: page >= totalPages - 1 || totalPages === 0,
+      condition: null,
+      page: {
+        number: page,
+        size,
+        numberOfElements: content.length,
+        hasNext: page < totalPages - 1,
+        totalElements,
+        totalPages,
+      },
+      content,
     });
   }),
 
-  // 공지사항 상세 조회 API (요청하신 대로 data 래핑 제거)
-  http.get(/\/notice\/[^/]+(?:\?.*)?$/, ({ request }) => {
-    const noticeId = pathValue(request.url, /\/notice\/([^/]+)$/);
+  // 공지사항 상세 조회 API
+  http.get(/\/notices\/[^/]+(?:\?.*)?$/, ({ request }) => {
+    const noticeId = pathValue(request.url, /\/notices\/([^/]+)$/);
     const id = parseInt(noticeId ?? "", 10);
     const notice = mockNoticeDetails[id];
 
@@ -103,14 +109,6 @@ export const noticeHandlers = [
       });
     }
 
-    // 성공 응답은 공통 봉투 없이 데이터 객체만 바로 반환
-    return HttpResponse.json({
-      noticeId: notice.noticeId,
-      type: notice.type,
-      title: notice.title,
-      content: notice.content,
-      createdAt: notice.createdAt,
-      updatedAt: notice.updatedAt,
-    });
+    return HttpResponse.json(notice);
   }),
 ];

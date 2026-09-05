@@ -113,6 +113,8 @@ const en = {
       notice: "Notice",
       update: "Update",
       event: "Event",
+      maintenance: "Maintenance",
+      policy: "Policy",
     },
   },
   tokenCharge: {
@@ -334,6 +336,8 @@ const ko: RuntimeMessages = {
       notice: "공지",
       update: "업데이트",
       event: "이벤트",
+      maintenance: "점검",
+      policy: "정책",
     },
   },
   tokenCharge: {
@@ -542,6 +546,8 @@ const ja: RuntimeMessages = {
       notice: "お知らせ",
       update: "アップデート",
       event: "イベント",
+      maintenance: "メンテナンス",
+      policy: "ポリシー",
     },
   },
   tokenCharge: {
@@ -749,6 +755,8 @@ const zh: RuntimeMessages = {
       notice: "公告",
       update: "更新",
       event: "活动",
+      maintenance: "维护",
+      policy: "政策",
     },
   },
   tokenCharge: {
@@ -956,6 +964,8 @@ const th: RuntimeMessages = {
       notice: "ประกาศ",
       update: "อัปเดต",
       event: "อีเวนต์",
+      maintenance: "ปิดปรับปรุงระบบ",
+      policy: "นโยบาย",
     },
   },
   tokenCharge: {
@@ -1171,6 +1181,8 @@ const vi: RuntimeMessages = {
       notice: "Thông báo",
       update: "Cập nhật",
       event: "Sự kiện",
+      maintenance: "Bảo trì",
+      policy: "Chính sách",
     },
   },
   tokenCharge: {

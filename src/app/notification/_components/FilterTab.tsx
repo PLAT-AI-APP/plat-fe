@@ -5,10 +5,24 @@ import React from "react";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
-const FILTER_TAB_IDS = ["ALL", "NOTICE", "UPDATE", "EVENT"] as const;
+const FILTER_TAB_IDS = [
+  "ALL",
+  "SERVICE",
+  "UPDATE",
+  "EVENT",
+  "MAINTENANCE",
+  "POLICY",
+] as const;
 
 interface FilterTabProps {
-  currentFilter: "NOTICE" | "UPDATE" | "EVENT" | null | undefined;
+  currentFilter:
+    | "SERVICE"
+    | "UPDATE"
+    | "EVENT"
+    | "MAINTENANCE"
+    | "POLICY"
+    | null
+    | undefined;
 }
 
 const FilterTab = ({ currentFilter }: FilterTabProps) => {
@@ -16,9 +30,11 @@ const FilterTab = ({ currentFilter }: FilterTabProps) => {
 
   const filterLabelMap = {
     ALL: t("notification.filters.all"),
-    NOTICE: t("notification.filters.notice"),
+    SERVICE: t("notification.filters.notice"),
     UPDATE: t("notification.filters.update"),
     EVENT: t("notification.filters.event"),
+    MAINTENANCE: t("notification.filters.maintenance"),
+    POLICY: t("notification.filters.policy"),
   } as const;
 
   return (

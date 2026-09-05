@@ -6,7 +6,14 @@ import FilterTab from "./FilterTab";
 import NoticeList from "./NoticeList";
 
 interface NotificationContentsProps {
-  currentFilter: "NOTICE" | "UPDATE" | "EVENT" | null | undefined;
+  currentFilter:
+    | "SERVICE"
+    | "UPDATE"
+    | "EVENT"
+    | "MAINTENANCE"
+    | "POLICY"
+    | null
+    | undefined;
 }
 
 const NotificationContents = ({ currentFilter }: NotificationContentsProps) => {

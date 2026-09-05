@@ -11,7 +11,7 @@ const NotificationConfig: Record<
   string,
   { bg: string; color: string; label: string }
 > = {
-  NOTICE: {
+  SERVICE: {
     bg: "bg-info-bg",
     color: "text-info",
     label: "공지",
@@ -26,10 +26,27 @@ const NotificationConfig: Record<
     color: "text-warning",
     label: "이벤트",
   },
+  MAINTENANCE: {
+    bg: "bg-info-bg",
+    color: "text-info",
+    label: "점검",
+  },
+  POLICY: {
+    bg: "bg-info-bg",
+    color: "text-info",
+    label: "정책",
+  },
 };
 
 interface NoticeListProps {
-  currentFilter: "NOTICE" | "UPDATE" | "EVENT" | null | undefined;
+  currentFilter:
+    | "SERVICE"
+    | "UPDATE"
+    | "EVENT"
+    | "MAINTENANCE"
+    | "POLICY"
+    | null
+    | undefined;
 }
 const NoticeList = ({ currentFilter }: NoticeListProps) => {
   const {
@@ -37,12 +54,12 @@ const NoticeList = ({ currentFilter }: NoticeListProps) => {
     fetchNextPage,
     hasNextPage, // 다음 페이지 존재 여부
     isFetchingNextPage, // 추가 데이터 요청 진행 상태
-  } = useNoticeListInfiniteQuery({
-    type: currentFilter,
-  });
+  } = useNoticeListInfiniteQuery();
 
-  const noticeList =
-    noticeListData?.pages.flatMap((page) => page.content) ?? [];
+  // 실서버 GET /notices는 카테고리 필터 쿼리를 지원하지 않아, 불러온 목록을 클라이언트에서 걸러냅니다.
+  const noticeList = (
+    noticeListData?.pages.flatMap((page) => page.content) ?? []
+  ).filter((notice) => !currentFilter || notice.category === currentFilter);
 
   const { targetRef } = useIntersectionObserver({
     onIntersect: () => {
@@ -53,8 +70,8 @@ const NoticeList = ({ currentFilter }: NoticeListProps) => {
   });
   return (
     <ul>
-      {noticeList?.map(({ createdAt, isPinned, noticeId, title, type }) => {
-        const colorStyle = NotificationConfig[type];
+      {noticeList?.map(({ createdAt, isPinned, noticeId, title, category }) => {
+        const colorStyle = NotificationConfig[category];
 
         return (
           <li

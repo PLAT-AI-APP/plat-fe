@@ -13,7 +13,13 @@ interface NotificationPageProps {
 const NotificationPage = async ({ searchParams }: NotificationPageProps) => {
   const sParams = await searchParams;
   const currentFilter = sParams.filter as
-    "NOTICE" | "UPDATE" | "EVENT" | null | undefined;
+    | "SERVICE"
+    | "UPDATE"
+    | "EVENT"
+    | "MAINTENANCE"
+    | "POLICY"
+    | null
+    | undefined;
 
   return <NotificationContents currentFilter={currentFilter} />;
 };
