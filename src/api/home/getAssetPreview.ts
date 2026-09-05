@@ -12,8 +12,7 @@ export interface AssetPreviewItem {
   description: string;
   isNew: boolean;
   isOfficial: boolean;
-  // 채팅수 뱃지 노출용. 백엔드 응답에 추후 추가될 예정이라 우선 옵셔널로 선언.
-  chatCount?: number;
+  chatCount: number;
 }
 
 interface GetAssetPreviewParams {

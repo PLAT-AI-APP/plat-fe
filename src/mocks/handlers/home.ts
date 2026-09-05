@@ -115,7 +115,6 @@ const ASSET_PREVIEW_ITEMS = Array.from({ length: 24 }, (_, index) => {
     description: seed.description,
     isNew: index % 5 === 0,
     isOfficial: index % 7 === 0,
-    // TODO: 백엔드 응답에 chatCount 추가되면 이 목업 값은 실제 스펙에 맞춰 정리
     chatCount: seed.chatCount,
   };
 });
