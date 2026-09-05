@@ -18,7 +18,7 @@ const CharacterCardPreviewPanel = () => {
   const previewCreatorName = t("creatorFallback");
 
   return (
-    <section className="flex h-full max-h-[calc(100vh-145px)] w-full max-w-[693px] shrink-0 flex-col overflow-y-auto rounded-3xl bg-darker p-4 lg:h-[919px]">
+    <section className="flex h-full max-h-[calc(100dvh-var(--header-height)-5.5rem)] w-full max-w-[693px] shrink-0 flex-col overflow-y-auto rounded-3xl bg-darker p-4 lg:h-[919px]">
       <header className="flex h-12 items-center rounded-2xl bg-darkest px-4">
         <h2 className="title-3 text-font-1">{t("cardPreview")}</h2>
         <span className="body-3 px-3 text-font-2" aria-hidden="true">

@@ -23,7 +23,7 @@ const GlobalError = ({ error, reset }: GlobalErrorProps) => {
       <body
         style={{
           margin: 0,
-          minHeight: "100vh",
+          minHeight: "100dvh",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",

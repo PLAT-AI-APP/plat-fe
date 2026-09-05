@@ -67,8 +67,8 @@ const ResultSection = ({ title, count, children }: ResultSectionProps) => {
 
   return (
     <section className="flex w-full flex-col gap-4">
-      <header className="flex items-end justify-between whitespace-nowrap">
-        <div className="flex items-end gap-1">
+      <header className="flex items-end justify-between gap-2">
+        <div className="flex min-w-0 items-end gap-1">
           <h2 className="title-1 text-font-0">{title}</h2>
           {/* 개수는 서버가 센 총계입니다. 아직 못 받았으면 0건이라 단정하지 않고 비워 둡니다. */}
           {count !== undefined && (

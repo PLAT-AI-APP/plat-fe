@@ -73,7 +73,7 @@
   --elevation-modal: 0 24px 48px -12px rgba(16, 24, 40, 0.18);
   --elevation-card-heavy: 0 10px 40px 0 rgba(16, 24, 40, 0.16);
 
-  /* 상단 헤더 높이. 본문 영역이 calc(100vh - 이 값) 으로 높이를 잡으므로
+  /* 상단 헤더 높이. 본문 영역이 calc(100dvh - 이 값) 으로 높이를 잡으므로
      헤더 크기를 바꿀 때 반드시 여기 하나만 고치면 되도록 모아 둔다. */
   --header-height: 56px;
 

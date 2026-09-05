@@ -40,7 +40,12 @@ const Header = ({ handleFoldToggle, foldToggleRef }: HeaderProps) => {
       className="h-(--header-height) flex items-center justify-between px-5 sticky top-0 bg-dark z-20"
     >
       {/* 왼쪽 영역: 사이드바 토글 및 로고 */}
-      <div id="header-left-section" className="flex gap-4 items-center">
+      {/* min-w-0 이 없으면 이 flex 아이템이 로고의 min-content 폭 밑으로
+          줄어들지 못해, 좁은 화면에서 오른쪽 영역을 밀어낸다. */}
+      <div
+        id="header-left-section"
+        className="flex min-w-0 items-center gap-4"
+      >
         <button
           id="sidebar-toggle-button"
           ref={foldToggleRef}
@@ -65,7 +70,7 @@ const Header = ({ handleFoldToggle, foldToggleRef }: HeaderProps) => {
       {/* 오른쪽 영역: 검색, 언어, 포인트, 알림, 프로필 */}
       <div
         id="header-right-section"
-        className="flex h-10 flex-1 items-center justify-end gap-2"
+        className="flex h-10 min-w-0 flex-1 items-center justify-end gap-2"
       >
         <div id="header-utility-group" className="flex items-center gap-2">
           {/* 포인트 표시 영역 */}
@@ -75,7 +80,12 @@ const Header = ({ handleFoldToggle, foldToggleRef }: HeaderProps) => {
               className="flex cursor-pointer items-center gap-1 transition-colors hover:bg-btn-hover rounded-lg p-1 pr-2.5"
             >
               <Token className="w-5 h-5" />
-              <span id="user-point-value" className="body-3">
+              {/* 잔액은 자릿수가 늘어날 수 있다. 그대로 두면 좁은 화면에서
+                  오른쪽 버튼들을 화면 밖으로 밀어낸다. */}
+              <span
+                id="user-point-value"
+                className="body-3 max-w-24 truncate"
+              >
                 {formatWithCommas(availableBalance)}
               </span>
             </Link>

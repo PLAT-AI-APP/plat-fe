@@ -215,7 +215,7 @@ const ChattingSidebar = ({
         onClick={(event) => event.stopPropagation()}
         {...sidebarPanelMotion}
         transition={sidebarTransition}
-        className="h-screen w-[336px] overflow-hidden border border-main bg-dark"
+        className="h-dvh w-[336px] overflow-hidden border border-main bg-dark"
       >
         <AnimatePresence mode="wait" initial={false}>
           <motion.div

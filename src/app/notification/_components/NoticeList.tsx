@@ -109,9 +109,11 @@ const NoticeList = ({ currentFilter }: NoticeListProps) => {
           >
             <Link
               href={`/notification/${noticeId}`}
-              className="flex justify-between pt-4 px-2.5 pb-5"
+              className="flex justify-between gap-3 pt-4 px-2.5 pb-5"
             >
-              <div className="flex flex-col gap-1.5">
+              {/* min-w-0 이 없으면 제목이 자기 min-content 폭 밑으로 줄지 못해
+                  날짜를 밀어낸다. 날짜는 접히면 안 되므로 shrink-0. */}
+              <div className="flex min-w-0 flex-col gap-1.5">
                 {/* 공지사항 분류 배지 */}
                 <div className="flex gap-1.5">
                   {isPinned && (
@@ -137,11 +139,11 @@ const NoticeList = ({ currentFilter }: NoticeListProps) => {
                 </div>
 
                 {/* 공지사항 제목 */}
-                <p className="title-5">{title}</p>
+                <p className="title-5 truncate">{title}</p>
               </div>
               <time
                 dateTime={dayjs(createdAt).format("YYYY-MM-DD")}
-                className="body-6 text-font-2"
+                className="body-6 shrink-0 text-font-2"
               >
                 {dayjs(createdAt).format("YYYY-MM-DD")}
               </time>

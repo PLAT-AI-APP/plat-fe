@@ -364,7 +364,7 @@ export default function ClientLayout({
           isSidebarInline
             ? "[grid-template-columns:var(--sidebar-width)_minmax(0,1fr)]"
             : "[grid-template-columns:minmax(0,1fr)]",
-          isHeaderHidden ? "h-screen" : "h-[calc(100vh-var(--header-height))]",
+          isHeaderHidden ? "h-dvh" : "h-[calc(100dvh-var(--header-height))]",
         )}
       >
         {isSidebarRendered && (

@@ -149,11 +149,13 @@ const SearchLanding = () => {
       />
 
       <div className="flex flex-col gap-4">
-        <div className="flex items-center justify-between whitespace-nowrap">
-          <h2 className="title-1 text-font-0">
+        <div className="flex items-center justify-between gap-2">
+          <h2 className="title-1 min-w-0 truncate text-font-0">
             {t("searchLanding.liveSearchTitle")}
           </h2>
-          <span className="body-6 text-font-2">{updatedAt}</span>
+          <span className="body-6 shrink-0 whitespace-nowrap text-font-2">
+            {updatedAt}
+          </span>
         </div>
 
         <QueryStateBoundary
