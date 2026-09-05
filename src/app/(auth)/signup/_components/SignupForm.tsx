@@ -11,7 +11,7 @@ import PasswordCheckField from "@/components/field/PasswordCheckField";
 import PasswordField from "@/components/field/PasswordField";
 import { useFormServerError } from "@/hooks/useFormServerError";
 import { useTranslateText } from "@/hooks/useTranslateText";
-import { showFirstFieldErrorToast } from "@/lib/formError";
+import { focusFirstFieldError } from "@/lib/formError";
 import { AuthFormValues } from "@/schema/auth.schema";
 import Agreed from "./Agreed";
 import EmailVerifySection from "./EmailVerifySection";
@@ -102,7 +102,7 @@ const SignupForm = () => {
     <form
       id="signup-form"
       onSubmit={handleSubmit(onSubmit, (formErrors) =>
-        showFirstFieldErrorToast(formErrors, setFocus, translateText),
+        focusFirstFieldError(formErrors, setFocus, translateText),
       )}
       className="flex w-screen max-w-112.5 flex-col gap-9 rounded-3xl border border-main bg-darker px-6 py-9"
     >

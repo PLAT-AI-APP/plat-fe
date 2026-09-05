@@ -52,10 +52,27 @@ const TIMEOUT_ERROR_MESSAGE = "서버 응답이 너무 늦어 요청을 중단�
 /** 응답 없는 실패를 하염없이 기다리지 않도록 상한을 둡니다. */
 const REQUEST_TIMEOUT_MS = 20_000;
 const API_ERROR_TOAST_COOLDOWN_MS = 1_000;
+/**
+ * 연결 실패만 창을 길게 잡는다.
+ *
+ * 서버가 죽거나 네트워크가 끊기면 한 화면의 여러 요청이 동시에 같은 이유로
+ * 깨진다. 홈 탭만 해도 쿼리가 5개 함께 나간다. 그런데 열쇠가 문구였던 탓에,
+ * 다섯 응답의 문구가 조금씩만 달라도 토스트가 그만큼 쌓였다. 지금까지 그게
+ * 안 보였던 건 다섯 요청이 전부 똑같은 네트워크 문구를 돌려줘서였을 뿐이다.
+ *
+ * 이 부류는 문구가 아니라 에러 코드를 열쇠로 삼는다. 원인이 하나면 알림도
+ * 하나여야 한다.
+ */
+const CONNECTIVITY_TOAST_COOLDOWN_MS = 10_000;
+
+const CONNECTIVITY_ERROR_CODES: readonly string[] = [
+  NETWORK_ERROR_CODE,
+  TIMEOUT_ERROR_CODE,
+];
 
 let lastApiErrorToast:
   | {
-      message: string;
+      key: string;
       shownAt: number;
     }
   | undefined;
@@ -127,24 +144,25 @@ useAuthStore.subscribe((state, prevState) => {
   }
 });
 
-const showGlobalApiErrorToast = (message?: string, detail?: string) => {
+const showGlobalApiErrorToast = (error: AppError, detail?: string) => {
   if (typeof window === "undefined") return;
 
-  const normalizedMessage = message?.trim();
+  const normalizedMessage = error.message?.trim();
   if (!normalizedMessage) return;
 
+  const isConnectivity = CONNECTIVITY_ERROR_CODES.includes(error.code);
+  // 연결 실패는 코드가, 나머지는 문구가 같은 알림인지 판단하는 기준이다.
+  const key = isConnectivity ? `code:${error.code}` : `message:${normalizedMessage}`;
+  const cooldown = isConnectivity
+    ? CONNECTIVITY_TOAST_COOLDOWN_MS
+    : API_ERROR_TOAST_COOLDOWN_MS;
+
   const now = Date.now();
-  if (
-    lastApiErrorToast?.message === normalizedMessage &&
-    now - lastApiErrorToast.shownAt < API_ERROR_TOAST_COOLDOWN_MS
-  ) {
+  if (lastApiErrorToast?.key === key && now - lastApiErrorToast.shownAt < cooldown) {
     return;
   }
 
-  lastApiErrorToast = {
-    message: normalizedMessage,
-    shownAt: now,
-  };
+  lastApiErrorToast = { key, shownAt: now };
 
   showAppToast("error", normalizedMessage, { description: detail });
 };
@@ -165,11 +183,26 @@ const isAppError = (error: unknown): error is AppError =>
 export const notifyApiError = (error: unknown) => {
   if (!isAppError(error) || error.suppressToast) return;
 
+  const detail = logApiError(error);
+
+  showGlobalApiErrorToast(error, detail);
+};
+
+/**
+ * 토스트 없이 기록만 남긴다.
+ *
+ * 화면에 실패를 표시할 자리가 있는 요청(대부분의 조회)은 그 자리에서 알리는
+ * 것이 맞고, 전역 토스트는 오히려 같은 실패를 두 번 말하게 된다. 다만 개발
+ * 중에는 어느 호출이 왜 깨졌는지 알아야 하므로 한 줄은 남긴다.
+ */
+export const logApiError = (error: unknown): string | undefined => {
+  if (!isAppError(error)) return undefined;
+
   // 개발 모드에서는 어느 요청이 왜 깨졌는지 한 줄로 함께 남긴다.
   const detail = formatErrorDetail(error);
   if (detail) console.error(`[API] ${detail}`, error);
 
-  showGlobalApiErrorToast(error.message, detail);
+  return detail;
 };
 
 /** 기존 공통 응답 봉투만 골라내는 가드입니다. */

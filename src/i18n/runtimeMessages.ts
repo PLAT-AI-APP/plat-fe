@@ -30,6 +30,7 @@ const en = {
   state: {
     retry: "Try again",
     loadFailed: "Could not load this section.",
+    loadMoreFailed: "Could not load more.",
     empty: "Nothing to show yet.",
   },
   sidebar: {
@@ -284,6 +285,7 @@ const ko: RuntimeMessages = {
   state: {
     retry: "다시 시도",
     loadFailed: "이 영역을 불러오지 못했어요.",
+    loadMoreFailed: "더 불러오지 못했어요.",
     empty: "아직 표시할 내용이 없어요.",
   },
   sidebar: {
@@ -519,6 +521,7 @@ const ja: RuntimeMessages = {
   state: {
     retry: "再試行",
     loadFailed: "この領域を読み込めませんでした。",
+    loadMoreFailed: "これ以上読み込めませんでした。",
     empty: "まだ表示する内容がありません。",
   },
   sidebar: {
@@ -757,6 +760,7 @@ const zh: RuntimeMessages = {
   state: {
     retry: "重试",
     loadFailed: "无法加载该区域。",
+    loadMoreFailed: "无法加载更多内容。",
     empty: "暂时没有可显示的内容。",
   },
   sidebar: {
@@ -986,6 +990,7 @@ const th: RuntimeMessages = {
   state: {
     retry: "ลองอีกครั้ง",
     loadFailed: "โหลดส่วนนี้ไม่สำเร็จ",
+    loadMoreFailed: "โหลดเพิ่มเติมไม่สำเร็จ",
     empty: "ยังไม่มีเนื้อหาที่จะแสดง",
   },
   sidebar: {
@@ -1227,6 +1232,7 @@ const vi: RuntimeMessages = {
   state: {
     retry: "Thử lại",
     loadFailed: "Không tải được phần này.",
+    loadMoreFailed: "Không tải thêm được.",
     empty: "Chưa có nội dung để hiển thị.",
   },
   sidebar: {

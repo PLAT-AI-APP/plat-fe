@@ -12,7 +12,7 @@ import { useEditPersonaMutation } from "@/api/persona/editPersona";
 import { useDetailPersonaQuery } from "@/api/persona/detailPersons";
 import { PersonaAddModalProps } from "@/type/modal";
 import { personaFormSchema, PersonaFormValues } from "@/schema/modal.schema";
-import { showFirstFieldErrorToast } from "@/lib/formError";
+import { focusFirstFieldError } from "@/lib/formError";
 import { useTranslateText } from "@/hooks/useTranslateText";
 import IconButton from "@/components/ui/IconButton";
 
@@ -106,7 +106,7 @@ const PersonaAddModal = ({
 
       <form
         onSubmit={handleSubmit(onSubmit, (formErrors) =>
-          showFirstFieldErrorToast(formErrors, setFocus, translateText),
+          focusFirstFieldError(formErrors, setFocus, translateText),
         )}
       >
         <div className="flex flex-col gap-6">
