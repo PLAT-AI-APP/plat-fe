@@ -61,7 +61,7 @@ const CommentMenuPopover = ({
             <button
               type="button"
               onClick={() => handleAction(onDelete)}
-              className="whitespace-nowrap flex items-center gap-2 body-5 p-1.5 hover:bg-btn-hover rounded-lg transition-colors text-font-accents"
+              className="whitespace-nowrap flex items-center gap-2 body-5 p-1.5 hover:bg-btn-hover rounded-lg transition-colors text-danger"
             >
               <Trash className="w-5 h-5" />
               {t("delete")}

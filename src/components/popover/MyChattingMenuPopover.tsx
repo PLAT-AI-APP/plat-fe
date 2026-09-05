@@ -47,7 +47,7 @@ const MyChattingMenuPopover = ({
       icon: <Trash className="size-4 shrink-0" />,
       label: t("delete"),
       onClick: onDelete,
-      textClassName: "text-font-accents",
+      textClassName: "text-danger",
     },
   ];
 

@@ -14,6 +14,7 @@ import { PersonaAddModalProps } from "@/type/modal";
 import { personaFormSchema, PersonaFormValues } from "@/schema/modal.schema";
 import { showFirstFieldErrorToast } from "@/lib/formError";
 import { useTranslateText } from "@/hooks/useTranslateText";
+import IconButton from "@/components/ui/IconButton";
 
 const PersonaAddModal = ({
   onClose,
@@ -94,14 +95,9 @@ const PersonaAddModal = ({
               {isEditMode ? t("titleEdit") : t("titleAdd")}
             </h2>
           </div>
-          <button
-            onClick={onClose}
-            type="button"
-            aria-label={commonT("close")}
-            className="h-5.5 w-5.5 rounded-lg p-1 transition-colors hover:bg-btn-hover"
-          >
-            <Close className="h-3.5 w-3.5" />
-          </button>
+          <IconButton size="xs" onClick={onClose} aria-label={commonT("close")}>
+            <Close className="size-3.5" />
+          </IconButton>
         </div>
         <p className="body-5 whitespace-normal pt-2 text-font-2">
           {t("description")}

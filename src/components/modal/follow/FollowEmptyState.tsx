@@ -98,7 +98,7 @@ const FollowEmptyState = ({
 
   if (state.variant === "own") {
     return (
-      <div className="flex min-h-95 items-center justify-center">
+      <div className="flex min-h-[min(23.75rem,45dvh)] items-center justify-center">
         <div className="flex w-full flex-col items-center justify-center gap-4 text-center">
           <div className="body-3 text-font-1">
             {state.lines.map((line) => (
@@ -123,7 +123,7 @@ const FollowEmptyState = ({
   }
 
   return (
-    <div className="flex min-h-95 items-center justify-center">
+    <div className="flex min-h-[min(23.75rem,45dvh)] items-center justify-center">
       <div className="flex w-full flex-col items-center gap-4 text-center">
         <div className="flex flex-col items-center gap-1">
           <p className="body-7 max-w-[280px] text-font-2">

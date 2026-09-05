@@ -17,6 +17,7 @@ import { showAppToast } from "@/lib/toast";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
 import { useModalStore } from "@/store/useModalStore";
 import { TagAddModalProps } from "@/type/modal";
+import IconButton from "@/components/ui/IconButton";
 
 type TagOption = { id: string; label: string };
 
@@ -30,6 +31,7 @@ const TAG_ID_OFFSET = 1;
 const TagAddModal = ({ onClose }: TagAddModalProps) => {
   const t = useTranslations("characterCreate.tagModal");
   const tagSidebarT = useTranslations("tagSidebar");
+  const commonT = useTranslations("modalUi.common");
   const { data: hashtagList } = useHashtagListQuery();
   const { control, setValue } = useFormContext<CharacterCreateFormValues>();
   const currentTagsWatch = useWatch({ control, name: "tagIds" });
@@ -157,13 +159,9 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
             <Tag className="size-6 text-font-1" aria-hidden="true" />
             <h2 className="title-1">{t("title")}</h2>
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="flex h-5.5 w-5.5 items-center justify-center rounded-lg p-1 hover:bg-btn-hover"
-          >
-            <Close className="h-3.5 w-3.5" />
-          </button>
+          <IconButton size="xs" onClick={onClose} aria-label={commonT("close")}>
+            <Close className="size-3.5" />
+          </IconButton>
         </header>
 
         <div className="group relative flex w-full items-center pb-3">
@@ -196,7 +194,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
           )}
         </div>
 
-        <nav className="custom-scrollbar flex max-h-85 min-h-85 flex-col gap-5 overflow-auto rounded-xl bg-darkest p-4">
+        <nav className="custom-scrollbar flex max-h-85 min-h-[min(21.25rem,50dvh)] flex-col gap-5 overflow-auto rounded-xl bg-darkest p-4">
           {matchedTags.length > 0 && (
             <section>
               <h3 className="body-5 text-font-2">{t("matchedSearch")}</h3>

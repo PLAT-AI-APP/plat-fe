@@ -1,6 +1,7 @@
 import React from "react";
 import { useTranslations } from "next-intl";
 import { Persona, Close } from "@/icons";
+import IconButton from "@/components/ui/IconButton";
 
 interface PersonaHeaderProps {
   onClose: () => void;
@@ -17,14 +18,9 @@ const PersonaHeader = ({ onClose }: PersonaHeaderProps) => {
           <Persona className="h-6 w-6" />
           <h2 className="title-1">{t("title")}</h2>
         </div>
-        <button
-          onClick={onClose}
-          type="button"
-          aria-label={commonT("close")}
-          className="h-5.5 w-5.5 rounded-lg p-1 hover:bg-btn-hover"
-        >
-          <Close className="h-3.5 w-3.5" />
-        </button>
+        <IconButton size="xs" onClick={onClose} aria-label={commonT("close")}>
+          <Close className="size-3.5" />
+        </IconButton>
       </div>
       <p className="body-5 pt-2 text-font-2">{t("description")}</p>
     </header>

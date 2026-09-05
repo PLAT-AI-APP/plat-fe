@@ -12,6 +12,7 @@ import { UserNoteModalProps } from "@/type/modal";
 import { userNoteFormSchema, UserNoteFormValues } from "@/schema/modal.schema";
 import { showFirstFieldErrorToast } from "@/lib/formError";
 import { useTranslateText } from "@/hooks/useTranslateText";
+import IconButton from "@/components/ui/IconButton";
 
 const UserNoteModal = ({ onClose }: UserNoteModalProps) => {
   const t = useTranslations("modalUi.userNote");
@@ -55,14 +56,13 @@ const UserNoteModal = ({ onClose }: UserNoteModalProps) => {
                 <Note className="h-6 w-6 text-font-1" />
                 <h2 className="title-1 text-font-1">{t("title")}</h2>
               </div>
-              <button
+              <IconButton
+                size="xs"
                 onClick={onClose}
-                type="button"
                 aria-label={commonT("close")}
-                className="flex size-5.5 items-center justify-center rounded-lg p-1 text-font-1 hover:bg-btn-hover"
               >
                 <CloseLine className="size-3.5" />
-              </button>
+              </IconButton>
             </div>
             <p className="body-5 text-font-2">{t("description")}</p>
           </header>

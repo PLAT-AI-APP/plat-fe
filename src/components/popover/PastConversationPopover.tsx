@@ -35,10 +35,10 @@ const PastConversationPopover = ({
       textClassName: "text-font-1",
     },
     {
-      icon: <Trash className="size-3.5 text-font-accents" />,
+      icon: <Trash className="size-3.5 text-danger" />,
       label: t("delete"),
       onClick: () => handleAction(onDelete),
-      textClassName: "text-font-accents",
+      textClassName: "text-danger",
     },
   ];
 

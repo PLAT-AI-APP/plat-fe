@@ -7,6 +7,7 @@ import { Close } from "@/icons";
 import { ModalLayout } from "@/components/ModalLayout";
 import { createCroppedImageDataUrl } from "@/lib/cropImage";
 import { cn } from "@/lib/utils";
+import IconButton from "@/components/ui/IconButton";
 
 interface RepresentativeImageCropModalProps {
   imageSrc: string;
@@ -80,14 +81,14 @@ const RepresentativeImageCropModal = ({
             <p className="body-5 pt-3 text-font-2">{t("description")}</p>
           </div>
 
-          <button
-            type="button"
+          <IconButton
+            size="md"
             aria-label={commonT("close")}
             onClick={onClose}
-            className="flex size-8 shrink-0 items-center justify-center rounded-lg text-font-disabled hover:bg-btn-hover"
+            className="text-font-disabled"
           >
             <Close className="size-5" />
-          </button>
+          </IconButton>
         </header>
 
         <div className="flex flex-col gap-4">

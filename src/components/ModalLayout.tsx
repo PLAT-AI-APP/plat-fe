@@ -62,9 +62,21 @@ export const ModalLayout = ({
 
   const handleClose = triggerRef && !hasBackground ? onClose : () => {};
 
-  // 배경 모달과 팝오버의 기준 위치가 달라 위치 클래스를 분리
+  /*
+   * 배경 모달과 팝오버의 기준 위치가 달라 위치 클래스를 분리한다.
+   *
+   * 배경 모달에는 화면 밖으로 넘치지 않게 하는 계약을 함께 건다. 이게 없어서
+   * 모달이 화면보다 크면 위아래가 잘려 나가고, 잘린 부분에 확인 버튼이 있으면
+   * 그 모달은 아예 쓸 수 없었다. base.css 가 body 에 overflow:hidden 을 걸어
+   * 페이지를 스크롤해 도달할 수도 없다. 세로 중앙 정렬(top-1/2 + -translate-y-1/2)
+   * 이라 넘침이 위아래로 반씩 갈리는 것도 한몫했다.
+   *
+   * 호출부가 자기 max-w/max-h 를 주면 cn(tailwind-merge)이 그쪽을 살린다.
+   * 고정 h-[...] 를 준 모달도 max-height 가 상한으로 작동해 함께 해결된다.
+   * dvh 를 쓰는 이유는 모바일 주소창이 접혔다 펴질 때 vh 가 따라오지 않아서다.
+   */
   const modalPositionClass = hasBackground
-    ? "fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+    ? "fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-h-[90dvh] max-w-[calc(100vw-2rem)] overflow-y-auto overscroll-contain"
     : "absolute right-0 top-full translate-y-2.5";
 
   useClickAway(modalRef, handleClose, triggerRef);

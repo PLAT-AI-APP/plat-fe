@@ -135,3 +135,31 @@
     height: max(100%, 44px);
   }
 }
+
+/*
+ * 가로로 미는 탭 줄.
+ *
+ * 홈 상단 탭 5개가 `flex w-full gap-2` 만 걸고 있어서, 라벨이 긴 언어(영어·태국어)
+ * 에서는 375px 화면에 들어가지 않았다. flex 가 항목을 줄여 한국어에서는 "카테 /
+ * 고리" 처럼 단어 중간에서 줄이 바뀌었고, 그러고도 남는 넘침은 #page-content 의
+ * overflow-x-hidden 에 잘려 스크롤할 방법조차 없었다.
+ *
+ * 컴포넌트가 아니라 유틸리티로 두는 이유: 앱의 탭 구현 6종은 렌더하는 요소도
+ * (Link / button / a) 활성 표시 방식도(border-b-2 / 절대배치 밑줄 / framer-motion
+ * layoutId) 제각각이다. 하나의 컴포넌트로 묶으면 그 차이를 없애야 하지만,
+ * 실제 결함은 넘침 하나뿐이므로 그것만 고친다.
+ *
+ * 항목의 shrink-0 / whitespace-nowrap 을 자식 선택자로 함께 건다. 이 둘을
+ * 호출부에 맡기면 새 탭을 추가할 때 빠뜨리면서 같은 문제가 되돌아온다.
+ */
+@utility tab-strip {
+  @apply no-scrollbar;
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+
+  & > * {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+}

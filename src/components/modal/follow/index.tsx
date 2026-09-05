@@ -28,6 +28,7 @@ import { FOLLOW_TAB_IDS, FollowTab } from "./constants";
 import FollowEmptyState from "./FollowEmptyState";
 import FollowUserItem from "./FollowUserItem";
 import { SPRING_SNAPPY } from "@/constants/motion";
+import IconButton from "@/components/ui/IconButton";
 
 const FollowModal = ({
   onClose,
@@ -184,14 +185,9 @@ const FollowModal = ({
           />
         </nav>
 
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label={commonT("close")}
-          className="flex size-6 items-center justify-center rounded-lg hover:bg-btn-hover"
-        >
+        <IconButton size="xs" onClick={onClose} aria-label={commonT("close")}>
           <Close className="size-5" />
-        </button>
+        </IconButton>
       </header>
 
       {activeQuery.isLoading ? (

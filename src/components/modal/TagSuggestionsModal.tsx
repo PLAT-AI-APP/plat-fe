@@ -16,6 +16,7 @@ import {
 import { TagSuggestionsModalProps } from "@/type/modal";
 import { showFirstFieldErrorToast } from "@/lib/formError";
 import { useTranslateText } from "@/hooks/useTranslateText";
+import IconButton from "@/components/ui/IconButton";
 
 const TagSuggestionsModal = ({ onClose }: TagSuggestionsModalProps) => {
   const t = useTranslations("characterCreate.tagSuggestion");
@@ -66,14 +67,9 @@ const TagSuggestionsModal = ({ onClose }: TagSuggestionsModalProps) => {
             <Megaphone className="size-6 text-font-1" aria-hidden="true" />
             <h2 className="title-1">{t("title")}</h2>
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            aria-label={t("close")}
-            className="flex size-5.5 items-center justify-center rounded-lg hover:bg-btn-hover"
-          >
-            <Close className="h-3.5 w-3.5 cursor-pointer" />
-          </button>
+          <IconButton size="xs" onClick={onClose} aria-label={t("close")}>
+            <Close className="size-3.5" />
+          </IconButton>
         </header>
         <div className="flex flex-col gap-7">
           <SmartInput

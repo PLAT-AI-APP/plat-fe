@@ -10,6 +10,7 @@ import useToggle from "@/hooks/useToggle";
 import { Close, Message, User } from "@/icons";
 import { CharacterScenario } from "@/type/character";
 import { ChattingStartModalProps } from "@/type/modal";
+import IconButton from "@/components/ui/IconButton";
 
 const ChattingStartModal = ({
   onClose,
@@ -18,6 +19,7 @@ const ChattingStartModal = ({
   setCurrentScenario,
 }: ChattingStartModalProps) => {
   const t = useTranslations();
+  const commonT = useTranslations("modalUi.common");
   const [localScenario, setLocalScenario] = useState(currentScenario);
   const { isOpen, close, toggle } = useToggle();
   const triggerRef = useRef<HTMLElement>(null);
@@ -39,13 +41,9 @@ const ChattingStartModal = ({
           <Message />
           {t("chattingStart.title")}
         </div>
-        <button
-          onClick={onClose}
-          type="button"
-          className="rounded-lg p-1 hover:bg-btn-hover"
-        >
-          <Close className="h-3.5 w-3.5" />
-        </button>
+        <IconButton size="xs" onClick={onClose} aria-label={commonT("close")}>
+          <Close className="size-3.5" />
+        </IconButton>
       </header>
 
       <section className="flex flex-col gap-6">

@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useUniverseDeleteMutation } from "@/api/universe/deleteUniverse";
 import CharacterMenuPopover from "@/components/popover/CharacterMenuPopover";
+import IconButton from "@/components/ui/IconButton";
 import useToggle from "@/hooks/useToggle";
 import { ChatFill, Dots } from "@/icons";
 import { formatStatCount } from "@/lib/utils";
@@ -92,17 +93,17 @@ const CharacterItem = ({
           <header className="flex items-center justify-between">
             <h3 className="title-3">{title}</h3>
             <div className="relative">
-              <button
+              <IconButton
                 ref={triggerRef}
-                type="button"
+                size="sm"
                 onClick={(event) => {
                   event.stopPropagation();
                   toggle();
                 }}
                 aria-label={profileT("moreMenu")}
               >
-                <Dots className="h-3.5 w-3.5 text-font-2" />
-              </button>
+                <Dots className="size-3.5" />
+              </IconButton>
 
               <AnimatePresence>
                 {isOpen && (
