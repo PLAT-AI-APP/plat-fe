@@ -11,7 +11,6 @@ import ActiveButton from "@/components/ActiveButton";
 import { ChatFill, Gear, Heart, HeartFill } from "@/icons";
 import { cn, formatStatCount } from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
-import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
 import { useUserStore } from "@/store/useUserStore";
 import { CharacterDetail } from "@/type/character";
@@ -36,7 +35,6 @@ const SidebarSummary = ({
   // TODO: 상세 조회 응답에 creatorId 또는 editable 필드가 추가되면 수정 버튼 노출 조건을 연결합니다.
   const isCreator = Boolean(userId && creatorId && userId === creatorId);
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
-  const openDialog = useDialogStore((state) => state.openDialog);
   const openModal = useModalStore((state) => state.openModal);
   const { mutate: likeUniverse, isPending: isLikeMutating } =
     usePostUniverseLikeMutation();
@@ -44,17 +42,12 @@ const SidebarSummary = ({
     useDeleteUniverseLikeMutation();
   const isLikePending = isLikeMutating || isUnlikeMutating;
 
-  /* 찜은 로그인이 있어야 합니다. 조용히 무시하면 눌러도 아무 일이 없어 보이므로 로그인으로 안내합니다. */
+  /* 찜은 로그인이 있어야 합니다. 조용히 무시하면 눌러도 아무 일이 없어 보이므로 로그인 창을 바로 엽니다. */
   const handleToggleLike = () => {
     if (isLikePending) return;
 
     if (!isLoggedIn) {
-      openDialog("LOGIN_REQUIRED", {
-        label: "dialog.loginRequired.title",
-        description: "dialog.loginRequired.description",
-        confirmText: "dialog.loginRequired.confirm",
-        onConfirm: () => openModal("LOGIN", { triggerRef: undefined }),
-      });
+      openModal("LOGIN", { triggerRef: undefined });
       return;
     }
 

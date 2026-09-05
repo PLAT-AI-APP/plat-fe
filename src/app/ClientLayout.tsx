@@ -119,22 +119,21 @@ export default function ClientLayout({
   const router = useRouter();
   const clearModals = useModalStore((state) => state.clearModals);
   const openModal = useModalStore((state) => state.openModal);
+  const allowNextNavigation = useModalStore(
+    (state) => state.allowNextNavigation,
+  );
   const openDialog = useDialogStore((state) => state.openDialog);
   const isProtectedRoute = isProtectedPath(pathname);
   const [hasHydrated, setHasHydrated] = useState(false);
   const [isAuthChecking, setIsAuthChecking] = useState(true);
 
-  const openLoginRequiredDialog = useCallback(() => {
-    // 보호 경로 안내도 전역 Dialog로 통일해 브라우저 alert와 모달 스택이 섞이지 않게 합니다.
-    openDialog("LOGIN_REQUIRED", {
-      label: "dialog.loginRequired.title",
-      description: "dialog.loginRequired.description",
-      confirmText: "dialog.loginRequired.confirm",
-      onConfirm: () => {
-        openModal("LOGIN", { triggerRef: undefined });
-      },
-    });
-  }, [openDialog, openModal]);
+  /*
+   * 로그인 창을 곧장 연다. 예전에는 "로그인이 필요해요" 안내를 한 번 거쳤는데, 보호 경로로 들어가거나 보호 링크를
+   * 누른 사람은 이미 로그인해야 한다는 것을 아는 상태라 확인 버튼 한 번이 더 있을 뿐이었다.
+   */
+  const requestLogin = useCallback(() => {
+    openModal("LOGIN", { triggerRef: undefined });
+  }, [openModal]);
 
   useEffect(() => {
     setHasHydrated(useAuthStore.persist.hasHydrated());
@@ -241,15 +240,21 @@ export default function ClientLayout({
         return;
       }
 
+      /*
+       * 로그인 창을 먼저 올리고 홈으로 튕겨낸다. 모달이 열려 있으면 ModalNavigationGuard 가 이동을 막으므로,
+       * 이 한 번은 통과시켜 달라고 미리 알린다 — 안 그러면 보호 경로에 그대로 남는다.
+       */
       clearModals();
-      openLoginRequiredDialog();
+      requestLogin();
+      allowNextNavigation();
       router.replace("/");
     }
   }, [
+    allowNextNavigation,
     clearModals,
     isAuthChecking,
     isLoggedIn,
-    openLoginRequiredDialog,
+    requestLogin,
     pathname,
     router,
   ]);
@@ -274,7 +279,7 @@ export default function ClientLayout({
       event.stopPropagation();
       if (isAuthChecking) return;
 
-      openLoginRequiredDialog();
+      requestLogin();
     };
 
     document.addEventListener("click", handleProtectedLinkClick, true);
@@ -282,7 +287,7 @@ export default function ClientLayout({
     return () => {
       document.removeEventListener("click", handleProtectedLinkClick, true);
     };
-  }, [isAuthChecking, isLoggedIn, openLoginRequiredDialog]);
+  }, [isAuthChecking, isLoggedIn, requestLogin]);
 
   useEffect(() => {
     if (pathname !== "/" || typeof window === "undefined") return;
