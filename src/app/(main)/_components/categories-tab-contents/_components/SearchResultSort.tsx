@@ -11,7 +11,6 @@ import React from "react";
  * 결과에 오르는 지금 규칙에서는 모든 줄의 일치 태그 수가 같아 순서를 만들지 못해 뺐다.
  */
 const SORT_OPTIONS: { id: CategorySort; messageKey: string }[] = [
-  { id: "POPULAR", messageKey: "popular" },
   { id: "CHAT", messageKey: "chats" },
   { id: "LATEST", messageKey: "latest" },
 ];

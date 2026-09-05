@@ -8,7 +8,6 @@ import {
 } from "@/constants/hashtag";
 import { Close, Search } from "@/icons";
 import { showAppToast } from "@/lib/toast";
-import { cn } from "@/lib/utils";
 import { SPRING_SOFT, TRANSITION } from "@/constants/motion";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslations } from "next-intl";
@@ -16,20 +15,6 @@ import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { TagFolder, TagOption, TagPill } from "./TagFolder";
 
 const MAX_SELECTED_TAGS = 5;
-
-// 상단의 "취향 맞춤 태그" 카드 데이터입니다.
-// 카드 클릭 시 tags 배열에 들어있는 태그들이 한 번에 선택됩니다.
-const RECOMMENDED_TAGS = [
-  {
-    title: "recommendation1Title",
-    tags: ["친구", "다크판타지"],
-  },
-  {
-    title: "recommendation2Title",
-    tags: ["소꿉친구", "햇살느낌"],
-  },
-];
-
 
 interface TagSidebarProps {
   /** 고른 태그의 id. 서버가 받는 값이라 라벨이 아니라 id 를 들고 다닙니다. */
@@ -44,28 +29,6 @@ interface TagSidebarProps {
   onClose?: () => void;
 }
 
-// 피그마의 AI sparkle 아이콘을 사이드바 내부에서만 쓰는 작은 로컬 아이콘입니다.
-const AiLineIcon = ({ className }: { className?: string }) => (
-  <svg
-    viewBox="0 0 20 20"
-    fill="none"
-    className={cn("text-brand", className)}
-    aria-hidden
-  >
-    <path
-      d="M7.6 4.54c.5-1.46 2.52-1.5 3.1-.13l.04.13.68 1.97a4.4 4.4 0 0 0 2.07 2.07l1.97.68c1.46.5 1.5 2.52.13 3.1l-.13.05-1.97.67a4.4 4.4 0 0 0-2.07 2.08l-.68 1.97c-.5 1.46-2.51 1.5-3.1.13l-.05-.13-.67-1.97a4.4 4.4 0 0 0-2.08-2.07l-1.97-.68c-1.46-.5-1.5-2.51-.13-3.1l.13-.05 1.97-.67a4.4 4.4 0 0 0 2.08-2.08l.67-1.97Z"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M15.83 1.67 16.5 3.5l1.83.67-1.83.66-.67 1.84-.66-1.84-1.84-.66 1.84-.67.66-1.83Z"
-      stroke="currentColor"
-      strokeWidth="1.4"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
 
 const TagSidebar = ({
   selectedTagIds,
@@ -105,16 +68,12 @@ const TagSidebar = ({
     }));
   }, [hashtagList]);
 
-  // 선택 태그 영역은 id 만 들고 있어 라벨을 되찾아야 하고, 추천 카드는 반대로 라벨로 id 를 찾습니다.
-  const { labelById, idByLabel } = useMemo(() => {
+  // 선택 태그 영역은 id 만 들고 있어 라벨을 되찾아야 합니다.
+  const labelById = useMemo(() => {
     const labels = new Map<string, string>();
-    const ids = new Map<string, string>();
-    (hashtagList?.tags ?? []).forEach((tag) => {
-      labels.set(tag.id, tag.label);
-      ids.set(tag.label, tag.id);
-    });
+    (hashtagList?.tags ?? []).forEach((tag) => labels.set(tag.id, tag.label));
 
-    return { labelById: labels, idByLabel: ids };
+    return labels;
   }, [hashtagList]);
 
   // 검색어가 있으면 각 폴더의 태그를 필터링하고, 결과가 없는 폴더는 숨깁니다.
@@ -146,24 +105,6 @@ const TagSidebar = ({
         ? prev.filter((selectedTagId) => selectedTagId !== tagId)
         : [...prev, tagId],
     );
-  };
-
-  // 추천 카드는 여러 태그를 한 번에 추가합니다. 카드의 태그는 글자로 적혀 있어 id 로 옮겨 담고,
-  // 서버에 없는 태그는 고를 수 없으므로 그대로 버립니다.
-  // 최대 개수를 넘기면 태그 모달과 동일하게 전체 추가를 막고 안내합니다.
-  const selectRecommendation = (labels: string[]) => {
-    const newTagIds = labels
-      .map((label) => idByLabel.get(label))
-      .filter((tagId): tagId is string => !!tagId)
-      .filter((tagId) => !selectedTagIds.includes(tagId));
-    if (newTagIds.length === 0) return;
-
-    if (selectedTagIds.length + newTagIds.length > MAX_SELECTED_TAGS) {
-      showAppToast("warning", t("maxAlert"));
-      return;
-    }
-
-    onSelectedTagIdsChange((prev) => Array.from(new Set([...prev, ...newTagIds])));
   };
 
   const sidebarBody = (
@@ -221,50 +162,11 @@ const TagSidebar = ({
         </div>
       </section>
 
-      {/* 태그 폴더 영역: 취향 맞춤 카드와 일반 태그 폴더가 같은 접힘 UI를 공유합니다. */}
+      {/* 태그 폴더 영역: 카테고리별 폴더가 같은 접힘 UI를 공유합니다. */}
       <div
         id="tag-sidebar-content"
         className="flex w-full flex-col gap-6 px-5 py-4"
       >
-        <TagFolder
-          title={t("personalizedTags")}
-          // titleSuffix={<AiLineIcon className="size-3" />}
-        >
-          <div className="flex flex-col gap-2">
-            {RECOMMENDED_TAGS.map((item) => {
-              return (
-                <button
-                  key={item.title}
-                  type="button"
-                  onClick={() => selectRecommendation(item.tags)}
-                  className="group flex w-full items-center justify-between rounded-xl bg-darkest p-3 text-left transition-colors hover:bg-brand/10"
-                >
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-1">
-                      <AiLineIcon className="size-5 shrink-0 transition-colors group-hover:text-brand-dark" />
-                      <strong className="title-6 truncate text-font-1">
-                        {t(item.title)}
-                      </strong>
-                    </div>
-                    <div className="mt-2 flex gap-1">
-                      {item.tags.map((tag) => (
-                        <TagPill key={tag} label={tag} size="sm" />
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* <Check
-                    className={cn(
-                      "size-4 shrink-0 transition-colors",
-                      isSelected ? "text-brand" : "text-main",
-                    )}
-                  /> */}
-                </button>
-              );
-            })}
-          </div>
-        </TagFolder>
-
         {isError ? (
           // 해시태그를 못 불러온 것을 "태그가 없다"로 보여주면 사용자가 필터가 사라진 줄 안다.
           <ErrorState error={error} onRetry={refetch} className="my-4" />

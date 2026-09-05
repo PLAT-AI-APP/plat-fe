@@ -10,7 +10,6 @@ import {
 import Tag from "@/icons/Tag";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { TABLET_MAX_WIDTH_QUERY } from "@/constants/layout";
-import CharacterShowcase from "@/components/character/CharacterShowcase";
 import CharacterCard from "@/components/character/character-card";
 import CardGrid from "@/components/character/character-card/CardGrid";
 import { CharacterCardSkeleton } from "@/components/character/character-card/CharacterCardSkeleton";
@@ -21,88 +20,11 @@ import CharacterCreatePrompt from "./_components/CharacterCreatePrompt";
 
 const PAGE_SIZE = 24;
 
-// 아래 "PLAT에서 추천하는 캐릭터" 섹션은 아직 서버에 대응하는 API 가 없어 이 목 데이터를 씁니다.
-export const DUMMY_CHARACTERS = [
-  {
-    id: "398292",
-    name: "옆자리 불량학생",
-    creatorName: "플랫메이커", // 새로 추가된 속성
-    dec: "옆자리 불량학생이 매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
-    tag: ["학교", "일상", "친구", "고교생", "츤데레"],
-    img: "/images/sample.png", // URL 대신 실제 사용하실 샘플 이미지로 변경
-  },
-  {
-    id: "398293",
-    name: "다정한 동아리 선배",
-    creatorName: "로맨스장인",
-    dec: "언제나 나를 챙겨주는 다정한 사진부 선배와의 두근거리는 일상",
-    tag: ["학교", "선배", "다정", "로맨스"],
-    img: "/images/sample.png",
-  },
-  {
-    id: "398294",
-    name: "비밀을 아는 소꿉친구",
-    creatorName: "스토리텔러",
-    dec: "10년 지기 소꿉친구가 내 흑역사를 빌미로 장난을 치기 시작했다.",
-    tag: ["일상", "소꿉친구", "장난스러움", "개그"],
-    img: "/images/sample.png",
-  },
-  {
-    id: "398295",
-    name: "냉혹한 황태자",
-    creatorName: "판타지조아",
-    dec: "피도 눈물도 없는 제국의 황태자. 하지만 내게만은 다르다?",
-    tag: ["판타지", "카리스마", "연상", "로맨스"],
-    img: "/images/sample.png",
-  },
-  {
-    id: "398296",
-    name: "사이버펑크 해커 리온",
-    creatorName: "네온드리머",
-    dec: "네온 사인이 깜빡이는 뒷골목. 어떤 정보를 찾으러 왔어?",
-    tag: ["사이버펑크", "해커", "도시", "미스터리"],
-    img: "/images/sample.png",
-  },
-  {
-    id: "398297",
-    name: "판타지 엘프 마법사",
-    creatorName: "숲의이야기꾼",
-    dec: "고대 숲의 깊은 곳. 은빛 머리카락이 흩날리는 그녀가 손을 내밉니다.",
-    tag: ["판타지", "엘프", "마법", "숲"],
-    img: "/images/sample.png",
-  },
-  {
-    id: "398298",
-    name: "냉혹한 춤꾼",
-    creatorName: "무대위의그림자",
-    dec: "음악이 멈추면 모든 게 끝나는 거야. 마지막 춤을 출 준비는 됐어?",
-    tag: ["느와르", "카리스마", "긴장감"],
-    img: "/images/sample.png",
-  },
-  {
-    id: "398299",
-    name: "우주 정거장 AI 안나",
-    creatorName: "스페이스오페라",
-    dec: "현재 산소 포화도 98%입니다. 다음 목적지 궤도를 수정할까요?",
-    tag: ["SF", "우주", "AI", "미래"],
-    img: "/images/sample.png",
-  },
-  {
-    id: "398300",
-    name: "조선 시대 무사 강혁",
-    creatorName: "역사덕후",
-    dec: "이 칼 끝은 오직 정의만을 향한다. 도적이 이곳에 숨어 있다고 생각하느냐?",
-    tag: ["사극", "무사", "정의", "액션"],
-    img: "/images/sample.png",
-  },
-  // 필요에 따라 객체를 더 복사해서 사용하세요.
-];
-
 const CategoriesTabContents = () => {
   const t = useTranslations("categoriesPage");
   // 고른 태그는 서버가 받는 id 로 들고 다닙니다 — 라벨은 언어에 따라 바뀝니다.
   const [selectedTagIds, setSelectedTagIds] = useState<string[]>([]);
-  const [sort, setSort] = useState<CategorySort>("POPULAR");
+  const [sort, setSort] = useState<CategorySort>("CHAT");
   const [isHydrated, setIsHydrated] = useState(false);
   // 태블릿 폭에서는 300px 고정폭 사이드바가 카드 그리드를 압박하므로 인라인
   // 배치 대신 토글로 열고 닫는 오버레이 패널로 전환합니다.
@@ -198,16 +120,6 @@ const CategoriesTabContents = () => {
           </QueryStateBoundary>
         </div>
 
-        {/* 플랫에서 추천하는 캐릭터 — 아직 목 데이터입니다. */}
-        <div className="flex-1 flex flex-col gap-4 justify-start">
-          <header className="flex flex-col heading-3">
-            <p>{t("recommendedCharacters")}</p>
-
-            <p className="body-3 text-font-2">{t("recommendedDescription")}</p>
-          </header>
-
-          <CharacterShowcase charArray={DUMMY_CHARACTERS} cardSize="S" />
-        </div>
         <CharacterCreatePrompt />
       </article>
 

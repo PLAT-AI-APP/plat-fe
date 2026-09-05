@@ -7,8 +7,8 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useLocaleStore } from "@/store/useLocaleStore";
 import { Tendency, useTendencyStore } from "@/store/useTendencyStore";
 
-/** 인기순=최근 7일 대화량, 대화량순=누적 대화 수, 최신순=등록순. 서버 CategorySort 와 같은 값입니다. */
-export type CategorySort = "POPULAR" | "CHAT" | "LATEST";
+/** 대화량순=누적 대화 수, 최신순=등록순. 서버 CategorySort 와 같은 값입니다. */
+export type CategorySort = "CHAT" | "LATEST";
 
 /** 서버가 태그를 최대 5개까지만 받습니다(초과하면 400). 태그 사이드바의 선택 상한과 같은 값입니다. */
 export const MAX_CATEGORY_TAGS = 5;
@@ -44,7 +44,7 @@ interface GetCategorySearchParams {
 const getCategorySearch = async (
   {
     tagIds = [],
-    sort = "POPULAR",
+    sort = "CHAT",
     tendency = "ALL",
     page = 0,
     size = 24,
