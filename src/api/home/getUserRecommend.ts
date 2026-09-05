@@ -66,6 +66,10 @@ const getUserRecommend = async ({
   return getNormalizedUserRecommend(response.data);
 };
 
+/*
+ * MVP 에서 화면을 내린 섹션이라 지금은 부르는 곳이 없다. 서버도 같은 이유로 경로를 떼어 뒀으므로
+ * 지금 부르면 404 다 — 섹션을 다시 열 때 서버 경로와 함께 되살린다.
+ */
 /** 홈 화면 사용자 맞춤 추천 목록 조회. 로그인 필수 API라 비로그인 상태에선 401 재시도 낭비 없이 아예 호출하지 않습니다. */
 export const useUserRecommendQuery = (params: GetUserRecommendParams = {}) => {
   // 언어가 바뀌면 Accept-Language 헤더로 나가는 응답도 달라지므로 캐시 키에 반영합니다.

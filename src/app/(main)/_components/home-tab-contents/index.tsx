@@ -7,25 +7,23 @@ import CharacterShowcase from "@/components/character/CharacterShowcase";
 import CharacterExperience from "./_components/character-experience";
 import CharacterCreateBanner from "../CharacterCreateBanner";
 import { useTodayPickQuery } from "@/api/home/getTodayPick";
-import { useUserRecommendQuery } from "@/api/home/getUserRecommend";
+import { useAllCharactersQuery } from "@/api/home/getAllCharacters";
 import { useAssetPreviewQuery } from "@/api/home/getAssetPreview";
 import { usePopularTagQuery } from "@/api/home/getPopularTag";
 import { useNewWorkQuery } from "@/api/home/getNewWork";
-import { useAuthStore } from "@/store/useAuthStore";
 
 const HomeTabContents = () => {
   // 홈 탭 언어는 설정 변경 직후 바로 반영되어야 하므로 클라이언트 번역 컨텍스트를 사용합니다.
   const t = useTranslations("home");
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
   // 로딩·실패 여부는 데이터를 가져오는 이곳만 정확히 알 수 있으므로 CharacterShowcase 에 그대로 내려 준다.
   // isError 를 함께 넘기지 않으면 실패한 섹션이 "결과 없음"으로 조용히 사라진다.
-  // 로딩은 isPending 이 아니라 isLoading 을 본다 — 로그인 전에는 비활성인 쿼리(추천)가
-  // isPending 상태로 머물러, 스켈레톤이 영구히 떠 있게 된다.
+  // 로딩은 isPending 이 아니라 isLoading 을 본다 — 로그인 여부가 정해질 때까지 비활성인
+  // 쿼리(전체 모음)가 isPending 상태로 머물러, 스켈레톤이 영구히 떠 있게 된다.
   // 화면에 몇 장을 두는지가 곧 몇 장을 받아 와야 하는지다. limit 만 올리고 size 를
   // 그대로 두면 서버가 준 10장이 상한이 되어 12장이 채워지지 않는다.
   const todayPick = useTodayPickQuery({ size: 12 });
-  const userRecommend = useUserRecommendQuery();
+  const allCharacters = useAllCharactersQuery({ size: 24 });
   const assetPreview = useAssetPreviewQuery({ size: 3 });
   const popularTag = usePopularTagQuery();
   const newWork = useNewWorkQuery();
@@ -41,7 +39,7 @@ const HomeTabContents = () => {
     isOfficial: item.isOfficial,
   }));
 
-  const userRecommendCharArray = (userRecommend.data ?? []).map((item) => ({
+  const allCharacterArray = (allCharacters.data?.content ?? []).map((item) => ({
     id: item.universeId,
     name: item.title,
     chatCount: item.chatCount,
@@ -146,21 +144,18 @@ const HomeTabContents = () => {
         TitleLogo={<New className="h-4.5 w-4.5" />}
       />
 
-      {/* (유저이름)님을 위한 추천 — 한 줄 6개.
-          로그인 필수 API라 비로그인 상태에선 섹션 자체를 렌더링하지 않는다. */}
-      {isLoggedIn && (
-        <CharacterShowcase
-          charArray={userRecommendCharArray}
-          isLoading={userRecommend.isLoading}
-          isError={userRecommend.isError}
-          error={userRecommend.error}
-          onRetry={userRecommend.refetch}
-          title={t("recommendationForYou")}
-          cardSize="S"
-          columns={6}
-          limit={12}
-        />
-      )}
+      {/* 전체 캐릭터 모음 — 조건 없이 누적 대화량 순. 로그인하지 않아도 보인다. */}
+      <CharacterShowcase
+        charArray={allCharacterArray}
+        isLoading={allCharacters.isLoading}
+        isError={allCharacters.isError}
+        error={allCharacters.error}
+        onRetry={allCharacters.refetch}
+        title={t("allCharacters")}
+        cardSize="S"
+        columns={6}
+        limit={24}
+      />
 
       <CharacterCreateBanner />
     </article>

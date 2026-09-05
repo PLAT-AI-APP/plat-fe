@@ -226,6 +226,25 @@ export const homeHandlers = [
     return HttpResponse.json(ASSET_PREVIEW_ITEMS.slice(start, start + size));
   }),
 
+  // 전체 캐릭터 모음. 조건 없이 누적 대화량 순으로 SliceWith 에 담아 내려줍니다.
+  http.get(endpoint("/home/all"), ({ request }) => {
+    const url = new URL(request.url);
+    const page = Number(url.searchParams.get("page") ?? 0);
+    const size = Number(url.searchParams.get("size") ?? 24);
+    const start = page * size;
+    const content = USER_RECOMMEND_ITEMS.slice(start, start + size);
+
+    return HttpResponse.json({
+      page: {
+        number: page,
+        size,
+        numberOfElements: content.length,
+        hasNext: start + size < USER_RECOMMEND_ITEMS.length,
+      },
+      content,
+    });
+  }),
+
   http.get(endpoint("/home/popular-tag"), ({ request }) => {
     const url = new URL(request.url);
     const page = Number(url.searchParams.get("page") ?? 0);
