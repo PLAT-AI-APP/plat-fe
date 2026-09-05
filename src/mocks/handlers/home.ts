@@ -216,7 +216,7 @@ export const homeHandlers = [
     return HttpResponse.json(sorted.slice(start, start + size));
   }),
 
-  // 실시간(오늘 0시~현재) 대화량 상위 3편. 페이지가 없어 항상 같은 3건입니다.
+  // 상황 에셋이 많은 캐릭터 상위 3편. 페이지가 없어 항상 같은 3건입니다.
   http.get(endpoint("/home/asset-preview"), () =>
     HttpResponse.json(ASSET_PREVIEW_ITEMS.slice(0, 3)),
   ),
