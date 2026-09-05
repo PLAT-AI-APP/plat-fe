@@ -23,30 +23,30 @@ const CharacterList = ({ char }: CharacterListProps) => {
     setCharacters(char);
   }, [char]);
 
-  const handleCharacterDeleted = (index: number) => {
+  // 목록의 신원은 배열 위치가 아니라 id 다. 위치로 지우면 상위가 목록을
+  // 다시 받아오거나 정렬이 바뀐 사이에 클릭하면 엉뚱한 캐릭터가 지워진다.
+  const handleCharacterDeleted = (deletedId: string) => {
     setCharacters((prevCharacters) =>
-      prevCharacters.filter((_, characterIndex) => characterIndex !== index),
+      prevCharacters.filter((character) => character.id !== deletedId),
     );
   };
 
   return (
     <ul className="flex flex-col gap-3">
-      {characters.map(
-        ({ chatCount, id, isPublic, dec, img, name, tag }, index) => (
-          <li key={index}>
-            <CharacterItem
-              description={dec}
-              chatCount={chatCount}
-              id={id}
-              isPublic={isPublic}
-              tagList={tag || []}
-              thumbnail={img}
-              title={name}
-              onDeleted={() => handleCharacterDeleted(index)}
-            />
-          </li>
-        ),
-      )}
+      {characters.map(({ chatCount, id, isPublic, dec, img, name, tag }) => (
+        <li key={id}>
+          <CharacterItem
+            description={dec}
+            chatCount={chatCount}
+            id={id}
+            isPublic={isPublic}
+            tagList={tag || []}
+            thumbnail={img}
+            title={name}
+            onDeleted={() => handleCharacterDeleted(id)}
+          />
+        </li>
+      ))}
     </ul>
   );
 };

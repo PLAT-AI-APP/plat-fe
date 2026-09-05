@@ -16,7 +16,7 @@ export const metadata: Metadata = {
 };
 
 interface HomePageProps {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 const Home = async ({ searchParams }: HomePageProps) => {

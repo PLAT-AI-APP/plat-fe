@@ -28,14 +28,3 @@ export const showAppToast = (
     duration: APP_TOAST_DURATION,
   });
 };
-
-/** API 에러 응답을 toast로 노출한다. */
-export const showErrorToast = (
-  error: unknown,
-  fallback = "요청에 실패했습니다.",
-) => {
-  const message =
-    error instanceof Error && error.message ? error.message : fallback;
-
-  showAppToast("error", message);
-};

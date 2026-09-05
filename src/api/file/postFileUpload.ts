@@ -41,8 +41,6 @@ export const postFileUpload = async ({
     createFileUploadFormData(file),
   );
 
-  console.log("/files/upload response:", response.data);
-
   const uploadedFile = response.data;
 
   // 업로드 성공 응답에 fileId가 없으면 이후 생성 API에 잘못된 값을 넘기므로 여기서 먼저 중단합니다.

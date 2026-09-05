@@ -31,7 +31,6 @@ export const useRecentSearch = () => {
     const newList = keywords.filter((k) => k !== text);
     setKeywords(newList);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(newList));
-    console.log("삭제");
   };
 
   /** 전체 삭제 함수 **/
