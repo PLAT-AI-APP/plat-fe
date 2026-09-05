@@ -54,6 +54,10 @@ const getOfficialPreview = async ({
   return response.data;
 };
 
+/*
+ * MVP 에서 화면을 내린 섹션이라 지금은 부르는 곳이 없다. 서버도 같은 이유로 경로를 떼어 뒀으므로
+ * 지금 부르면 404 다 — 공식 탭은 /ranking?scope=OFFICIAL 로 옮겼다.
+ */
 /** 홈 화면 공식 캐릭터 미리보기 목록 조회 */
 export const useOfficialPreviewQuery = (
   params: GetOfficialPreviewParams = {},

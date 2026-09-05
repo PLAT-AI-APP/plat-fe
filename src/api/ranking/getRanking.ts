@@ -7,12 +7,18 @@ import { useLocaleStore } from "@/store/useLocaleStore";
 import { Tendency, useTendencyStore } from "@/store/useTendencyStore";
 
 /** 백엔드 StatPeriod. 실시간은 오늘 0시부터 지금까지고 1분마다 갱신됩니다. */
-export type RankingPeriod = "REALTIME" | "DAILY" | "WEEKLY" | "MONTHLY";
+export type RankingPeriod =
+  | "REALTIME"
+  | "DAILY"
+  | "WEEKLY"
+  | "MONTHLY"
+  /** 전체 기간 누적. 기간 탭이 없는 공식 랭킹이 씁니다. */
+  | "ALL_TIME";
 /** 대화량순 / 찜순 */
 export type RankingSort = "CHAT" | "LIKE";
-/** 전체 랭킹 / 신작 랭킹 */
-export type RankingScope = "ALL" | "NEW";
-/** 순위 등락. 신작 랭킹은 직전 스냅샷이 없어 내려오지 않습니다. */
+/** 전체 랭킹 / 신작 랭킹 / 공식 랭킹 */
+export type RankingScope = "ALL" | "NEW" | "OFFICIAL";
+/** 순위 등락. 신작·공식 랭킹은 직전 스냅샷이 없어 내려오지 않습니다. */
 export type RankTrend = "NEW" | "UP" | "DOWN" | "SAME";
 
 export interface RankedCardCreator {
@@ -62,7 +68,7 @@ const getRanking = async ({
   return response.data;
 };
 
-/** 랭킹·신작 랭킹 조회. 로그인하지 않아도 볼 수 있습니다. */
+/** 랭킹·신작·공식 랭킹 조회. 로그인하지 않아도 볼 수 있습니다. */
 export const useRankingQuery = (params: GetRankingParams = {}) => {
   const locale = useLocaleStore((state) => state.locale);
   const tendency = useTendencyStore((state) => state.tendency);
