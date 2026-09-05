@@ -98,7 +98,6 @@ const TagSuggestionsModal = ({ onClose }: TagSuggestionsModalProps) => {
             placeholder={t("opinionPlaceholder")}
             required
             error={errors.opinion}
-            inputBoxClassName="h-[400px]"
             className="flex-none"
           />
         </div>
