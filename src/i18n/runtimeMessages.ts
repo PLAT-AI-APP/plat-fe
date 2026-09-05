@@ -1095,7 +1095,7 @@ const th: RuntimeMessages = {
       service: "ประกาศ",
       update: "อัปเดต",
       event: "อีเวนต์",
-      maintenance: "ปิดปรับปรุง",
+      maintenance: "ปิดปรับปรุงระบบ",
       policy: "นโยบาย",
     },
     empty: "ยังไม่มีประกาศ",

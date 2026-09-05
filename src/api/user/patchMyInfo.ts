@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
+import { postFileUpload } from "@/api/file/postFileUpload";
 
 interface PatchMyInfoProps {
   nickname: string;
@@ -15,40 +16,36 @@ interface PatchMyInfoPayload {
   bio: string;
   birth?: string;
   gender?: string;
+  profileImageFileId?: string;
 }
 
-const createProfilePayload = (data: PatchMyInfoProps): PatchMyInfoPayload => ({
-  nickname: data.nickname,
-  bio: data.bio,
-  ...(data.birth ? { birth: data.birth } : {}),
-  ...(data.gender ? { gender: data.gender } : {}),
-});
+const createProfilePayload = async (
+  data: PatchMyInfoProps,
+): Promise<PatchMyInfoPayload> => {
+  // 프로필 이미지는 임시 업로드 API로 먼저 fileId를 발급받은 뒤 PATCH 본문에 실어 보냅니다.
+  const uploadedFileId =
+    data.profileImgFile instanceof File
+      ? (
+          await postFileUpload({
+            fileType: "USER_PROFILE",
+            file: data.profileImgFile,
+          })
+        ).fileId
+      : undefined;
 
-/** 프로필 수정 multipart payload 생성 */
-const createProfileFormData = (
-  payload: PatchMyInfoPayload,
-  profileFile: File | string,
-) => {
-  const formData = new FormData();
-
-  formData.append("nickname", payload.nickname);
-  if (payload.bio) formData.append("bio", payload.bio);
-  if (payload.birth) formData.append("birth", payload.birth);
-  if (payload.gender) formData.append("gender", payload.gender);
-  if (profileFile instanceof File) {
-    formData.append("profile", profileFile);
-  }
-
-  return formData;
+  return {
+    nickname: data.nickname,
+    bio: data.bio,
+    ...(data.birth ? { birth: data.birth } : {}),
+    ...(data.gender ? { gender: data.gender } : {}),
+    ...(uploadedFileId ? { profileImageFileId: uploadedFileId } : {}),
+  };
 };
 
 const PatchMyInfo = async (data: PatchMyInfoProps) => {
-  const payload = createProfilePayload(data);
+  const payload = await createProfilePayload(data);
 
-  await authAxios.patch(
-    "/users/me",
-    createProfileFormData(payload, data.profileImgFile),
-  );
+  await authAxios.patch("/users/me", payload);
 };
 
 /** 내 정보 수정 */

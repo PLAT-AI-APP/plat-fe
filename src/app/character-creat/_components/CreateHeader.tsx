@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import ActiveButton from "@/components/ActiveButton";
 import ArrowLineLeft from "@/icons/ArrowLineLeft";
 import { Redo } from "@/icons";
-import { dataUrlToFile } from "@/lib/file";
 import { showAppToast } from "@/lib/toast";
 import { useLocaleStore } from "@/store/useLocaleStore";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
@@ -18,7 +17,10 @@ import {
   UniverseCreateTendency,
   useUniverseCreateMutation,
 } from "@/api/universe/postUniverseCreate";
-import { useUniverseUpdateMutation } from "@/api/universe/patchUniverseUpdate";
+import {
+  UniverseUpdateRequest,
+  useUniverseUpdateMutation,
+} from "@/api/universe/patchUniverseUpdate";
 import { useTranslateText } from "@/hooks/useTranslateText";
 import { TabId } from "./CreateTabs";
 
@@ -44,21 +46,21 @@ interface ValidationJumpTarget {
   message: string;
 }
 
-const UNIVERSE_TENDENCIES: UniverseCreateTendency[] = ["ALL", "MALE", "FEMALE"];
+const UNIVERSE_TENDENCIES: UniverseCreateTendency[] = [
+  "ALL",
+  "MALE_ORIENTED",
+  "FEMALE_ORIENTED",
+];
 
 const UNIVERSE_CATEGORIES: UniverseCreateCategory[] = [
-  "SIMULATION",
   "ROMANCE",
   "FANTASY",
   "DRAMA",
-  "MARTIAL_ARTS_HISTORICAL",
+  "MARTIAL_ARTS",
   "GL",
   "BL",
-  "HORROR_MYSTERY",
-  "ACTION",
-  "COMIC_DAILY",
-  "SPORTS_SCHOOL",
-  "ETC",
+  "HORROR",
+  "MYSTERY",
 ];
 
 const LANGUAGE_BY_LOCALE: Record<string, UniverseCreateLanguage> = {
@@ -68,30 +70,6 @@ const LANGUAGE_BY_LOCALE: Record<string, UniverseCreateLanguage> = {
   zh: "ZH",
   th: "TH",
   vi: "VI",
-};
-
-const getDataUrlMimeType = (dataUrl: string) =>
-  dataUrl.match(/^data:(.*?);/)?.[1] || "image/webp";
-
-const isDataUrl = (value: string) => value.startsWith("data:");
-
-const createImageFileFromDataUrl = (
-  dataUrl: string,
-  fileNamePrefix: string,
-) => {
-  const mimeType = getDataUrlMimeType(dataUrl);
-  const extension = mimeType.split("/")[1] || "webp";
-
-  return dataUrlToFile(dataUrl, `${fileNamePrefix}.${extension}`, mimeType);
-};
-
-const createOptionalImageFileFromDataUrl = (
-  imageUrl: string,
-  fileNamePrefix: string,
-) => {
-  if (!isDataUrl(imageUrl)) return undefined;
-
-  return createImageFileFromDataUrl(imageUrl, fileNamePrefix);
 };
 
 const serializeScenarioContent = (
@@ -121,7 +99,7 @@ const toUniverseCategory = (categories: string[]): UniverseCreateCategory => {
     return category as UniverseCreateCategory;
   }
 
-  return "ETC";
+  return "ROMANCE";
 };
 
 const isApiErrorLike = (error: unknown) =>
@@ -316,52 +294,59 @@ const CreateHeader = ({
     const currentFormData = getValues();
 
     try {
-      const request: UniverseCreateRequest = {
-        commentEnabled: currentFormData.allowComments,
-        scenarios: currentFormData.scenarios.map((scenario, index) => ({
-          name: scenario.name || `Scenario ${index + 1}`,
-          content: serializeScenarioContent(scenario),
-        })),
-        assets:
-          currentFormData.asset
-            ?.filter((asset) => asset.assetImageFileId)
-            .map((asset) => ({
-              assetImageFileId: String(asset.assetImageFileId),
-              assetName: asset.assetName,
-              assetSituation: asset.assetSituation,
-            })) || [],
-        tendency: toUniverseTendency(currentFormData.tendency),
-        name: currentFormData.name,
-        visibility: currentFormData.isPublic ? "PUBLIC" : "PRIVATE",
-        title: currentFormData.title,
-        language: LANGUAGE_BY_LOCALE[locale] ?? "KO",
-        description:
-          currentFormData.characterDescription ||
-          currentFormData.profileSituationDescription,
-        tagIds: currentFormData.tagIds.map((tag) => tag.id),
-        category: toUniverseCategory(currentFormData.category),
-        detailSetting: currentFormData.characterDetailSetting,
-        introduce: currentFormData.characterIntroduce,
-      };
+      const scenarios = currentFormData.scenarios.map((scenario, index) => ({
+        name: scenario.name || `Scenario ${index + 1}`,
+        content: serializeScenarioContent(scenario),
+      }));
+      const assets =
+        currentFormData.asset
+          ?.filter((asset) => asset.assetImageFileId)
+          .map((asset) => ({
+            assetImageFileId: String(asset.assetImageFileId),
+            assetName: asset.assetName,
+            assetSituation: asset.assetSituation,
+          })) || [];
+      const description =
+        currentFormData.characterDescription ||
+        currentFormData.profileSituationDescription;
 
       if (isEditMode && universeId) {
-        const [profileImage, characterProfileImage] = await Promise.all([
-          createOptionalImageFileFromDataUrl(
-            currentFormData.representativeImage,
-            "universe-profile-image",
-          ),
-          createOptionalImageFileFromDataUrl(
-            currentFormData.characterProfileImage,
-            "character-profile-image",
-          ),
-        ]);
+        const request: UniverseUpdateRequest = {
+          language: LANGUAGE_BY_LOCALE[locale] ?? "KO",
+          commentEnabled: currentFormData.allowComments,
+          scenarios,
+          assets,
+          tendency: toUniverseTendency(currentFormData.tendency),
+          visibility: currentFormData.isPublic ? "PUBLIC" : "PRIVATE",
+          title: currentFormData.title,
+          description,
+          tagIds: currentFormData.tagIds.map((tag) => tag.id),
+          category: toUniverseCategory(currentFormData.category),
+          detailSetting: currentFormData.characterDetailSetting,
+          introduce: currentFormData.characterIntroduce,
+          // 이미지를 새로 업로드해 fileId를 발급받은 경우에만 전달합니다. 없으면 기존 이미지를 유지합니다.
+          ...(currentFormData.representativeImageId
+            ? {
+                profileImageFileId: String(
+                  currentFormData.representativeImageId,
+                ),
+              }
+            : {}),
+          character: {
+            name: currentFormData.name,
+            description: currentFormData.characterDescription,
+            detailSetting: currentFormData.characterDetailSetting,
+            ...(currentFormData.characterProfileImageId
+              ? {
+                  profileImageFileId: String(
+                    currentFormData.characterProfileImageId,
+                  ),
+                }
+              : {}),
+          },
+        };
 
-        await updateUniverse({
-          universeId,
-          request,
-          ...(profileImage ? { profileImage } : {}),
-          ...(characterProfileImage ? { characterProfileImage } : {}),
-        });
+        await updateUniverse({ universeId, request });
 
         showAppToast("success", t("updateSuccess"));
         markSubmitSuccess();
@@ -369,22 +354,39 @@ const CreateHeader = ({
         return;
       }
 
-      const [profileImage, characterProfileImage] = await Promise.all([
-        createImageFileFromDataUrl(
-          currentFormData.representativeImage,
-          "universe-profile-image",
-        ),
-        createImageFileFromDataUrl(
-          currentFormData.characterProfileImage,
-          "character-profile-image",
-        ),
-      ]);
+      if (
+        !currentFormData.representativeImageId ||
+        !currentFormData.characterProfileImageId
+      ) {
+        showAppToast("error", t("createFailed"));
+        return;
+      }
 
-      const created = await createUniverse({
-        request,
-        profileImage,
-        characterProfileImage,
-      });
+      const request: UniverseCreateRequest = {
+        commentEnabled: currentFormData.allowComments,
+        scenarios,
+        assets,
+        tendency: toUniverseTendency(currentFormData.tendency),
+        visibility: currentFormData.isPublic ? "PUBLIC" : "PRIVATE",
+        title: currentFormData.title,
+        language: LANGUAGE_BY_LOCALE[locale] ?? "KO",
+        description,
+        tagIds: currentFormData.tagIds.map((tag) => tag.id),
+        category: toUniverseCategory(currentFormData.category),
+        detailSetting: currentFormData.characterDetailSetting,
+        introduce: currentFormData.characterIntroduce,
+        profileImageFileId: String(currentFormData.representativeImageId),
+        character: {
+          profileImageFileId: String(
+            currentFormData.characterProfileImageId,
+          ),
+          name: currentFormData.name,
+          description: currentFormData.characterDescription,
+          detailSetting: currentFormData.characterDetailSetting,
+        },
+      };
+
+      const created = await createUniverse(request);
 
       showAppToast("success", t("createSuccess"));
       markSubmitSuccess();

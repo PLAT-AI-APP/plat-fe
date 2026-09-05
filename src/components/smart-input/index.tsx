@@ -105,7 +105,9 @@ const SmartInput = forwardRef<
     );
   };
 
-  const LINE_HEIGHT = 20;
+  // body-4(font-size 14px, line-height 1.5)의 실제 렌더링 줄 높이와 맞춰야
+  // maxLine 줄 수만큼 꽉 채워도 스크롤이 생기지 않습니다.
+  const LINE_HEIGHT = 21;
   const currentLength = currentDisplayValue.length;
   const isLengthExceeded =
     typeof maxLength === "number" && currentLength > maxLength;

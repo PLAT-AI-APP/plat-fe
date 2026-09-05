@@ -69,7 +69,6 @@ const Profile = () => {
           minLine={8}
           maxLine={8}
           isBorder
-          inputBoxClassName="h-[180px]"
           {...register("profileSituationDescription")}
           value={profileSituationDescriptionValue}
           helperMessage=""

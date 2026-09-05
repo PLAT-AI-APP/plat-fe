@@ -17,13 +17,20 @@ export type UniverseUpdateCategory = UniverseCreateCategory;
 export type UniverseUpdateScenario = UniverseCreateScenario;
 export type UniverseUpdateAsset = UniverseCreateAsset;
 
+export interface UniverseUpdateCharacter {
+  profileImageFileId?: string | null;
+  name?: string | null;
+  description?: string | null;
+  detailSetting?: string | null;
+}
+
 export interface UniverseUpdateRequest {
   language: UniverseUpdateLanguage;
+  profileImageFileId?: string | null;
   commentEnabled?: boolean | null;
   scenarios?: UniverseUpdateScenario[] | null;
   assets?: UniverseUpdateAsset[] | null;
   tendency?: UniverseUpdateTendency | null;
-  name?: string | null;
   visibility?: UniverseUpdateVisibility | null;
   title?: string | null;
   description?: string | null;
@@ -31,44 +38,19 @@ export interface UniverseUpdateRequest {
   category?: UniverseUpdateCategory | null;
   detailSetting?: string | null;
   introduce?: string | null;
+  character?: UniverseUpdateCharacter | null;
 }
 
 export interface PatchUniverseUpdateParams {
   universeId: string;
   request: UniverseUpdateRequest;
-  profileImage?: File;
-  characterProfileImage?: File;
 }
 
-const createUniverseUpdateFormData = ({
+export const patchUniverseUpdate = async ({
+  universeId,
   request,
-  profileImage,
-  characterProfileImage,
 }: PatchUniverseUpdateParams) => {
-  const formData = new FormData();
-  formData.append(
-    "request",
-    new Blob([JSON.stringify(request)], { type: "application/json" }),
-  );
-
-  if (profileImage) {
-    formData.append("profileImage", profileImage);
-  }
-
-  if (characterProfileImage) {
-    formData.append("characterProfileImage", characterProfileImage);
-  }
-
-  return formData;
-};
-
-export const patchUniverseUpdate = async (
-  params: PatchUniverseUpdateParams,
-) => {
-  await authAxios.patch(
-    `/universe/${params.universeId}`,
-    createUniverseUpdateFormData(params),
-  );
+  await authAxios.patch(`/universe/${universeId}`, request);
 };
 
 export const useUniverseUpdateMutation = () => {
