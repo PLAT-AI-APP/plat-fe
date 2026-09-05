@@ -54,6 +54,5 @@ export const usePopularTagQuery = (params: GetPopularTagParams = {}) => {
   return useQuery<PopularTagItem[], AppError>({
     queryKey: ["get-popular-tag", locale, tendency, params.page, params.size],
     queryFn: () => getPopularTag({ ...params, tendency }),
-    staleTime: 1000 * 60 * 5,
   });
 };

@@ -70,8 +70,8 @@ const Header = ({ userId }: HeaderProps) => {
   const { data: followCount } = useFollowCountQuery(userId);
   // 기본값 0 을 주지 않는다. 못 불러온 것과 0 명인 것은 다른 사실이다.
   const { followerCount, followingCount } = followCount ?? {};
-  const { openModal } = useModalStore();
-  const { user } = useUserStore();
+  const openModal = useModalStore((state) => state.openModal);
+  const user = useUserStore((state) => state.user);
   const openDialog = useDialogStore((state) => state.openDialog);
   const closeDialog = useDialogStore((state) => state.closeDialog);
   const [isActionPopoverOpen, setIsActionPopoverOpen] = useState(false);

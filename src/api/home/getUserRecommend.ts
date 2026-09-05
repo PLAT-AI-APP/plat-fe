@@ -84,7 +84,6 @@ export const useUserRecommendQuery = (params: GetUserRecommendParams = {}) => {
       params.size,
     ],
     queryFn: () => getUserRecommend({ ...params, tendency }),
-    staleTime: 1000 * 60 * 5,
     enabled: isAuthReady && isLoggedIn,
   });
 };

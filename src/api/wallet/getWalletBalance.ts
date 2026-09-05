@@ -24,7 +24,6 @@ export const useWalletBalanceQuery = () => {
   const query = useQuery<WalletBalance, AppError>({
     queryKey: ["get-wallet-balance"],
     queryFn: GetWalletBalance,
-    staleTime: 1000 * 60 * 5,
     enabled: isAuthReady && isLoggedIn && !!accessToken,
   });
 

@@ -33,7 +33,8 @@ export const refreshAccessToken = async () => {
 
 /** refreshToken 갱신 */
 export const useRefrshMutation = () => {
-  const { setAccessToken, setLoggedIn } = useAuthStore();
+  const setAccessToken = useAuthStore((state) => state.setAccessToken);
+  const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
 
   return useMutation({
     mutationFn: refreshAccessToken,

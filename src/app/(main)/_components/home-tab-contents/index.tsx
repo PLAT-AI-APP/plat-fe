@@ -29,6 +29,7 @@ const HomeTabContents = () => {
   const newWork = useNewWorkQuery();
 
   const todayPickCharArray = (todayPick.data ?? []).map((item) => ({
+    id: item.universeId,
     name: item.title,
     chatCount: item.chatCount,
     dec: item.description,
@@ -39,6 +40,7 @@ const HomeTabContents = () => {
   }));
 
   const userRecommendCharArray = (userRecommend.data ?? []).map((item) => ({
+    id: item.universeId,
     name: item.title,
     chatCount: item.chatCount,
     dec: item.description,
@@ -49,6 +51,7 @@ const HomeTabContents = () => {
   }));
 
   const assetPreviewCharArray = (assetPreview.data ?? []).map((item) => ({
+    id: item.universeId,
     name: item.title,
     chatCount: item.chatCount,
     dec: item.description,
@@ -58,6 +61,7 @@ const HomeTabContents = () => {
   }));
 
   const popularTagCharArray = (popularTag.data ?? []).map((item) => ({
+    id: item.universeId,
     name: item.title,
     chatCount: item.chatCount,
     dec: item.description,
@@ -68,6 +72,7 @@ const HomeTabContents = () => {
   }));
 
   const newWorkCharArray = (newWork.data ?? []).map((item) => ({
+    id: item.universeId,
     name: item.title,
     chatCount: item.chatCount,
     dec: item.description,

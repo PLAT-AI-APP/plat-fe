@@ -53,6 +53,5 @@ export const useNewWorkQuery = (params: GetNewWorkParams = {}) => {
   return useQuery<NewWorkItem[], AppError>({
     queryKey: ["get-new-work", locale, tendency, params.page, params.size],
     queryFn: () => getNewWork({ ...params, tendency }),
-    staleTime: 1000 * 60 * 5,
   });
 };

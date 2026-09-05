@@ -43,7 +43,6 @@ export const useHashtagListQuery = (enabled = true) => {
   return useQuery<GetHashtagListResponse, AppError>({
     queryKey: ["get-hashtag-list", locale],
     queryFn: getHashtagList,
-    staleTime: 1000 * 60 * 5,
     enabled,
   });
 };

@@ -25,7 +25,7 @@ const PersonaItem = ({
   const t = useTranslations("modalUi.personaList");
   const commonT = useTranslations("modalUi.common");
   const { name, description, isDefault } = persona;
-  const { openModal } = useModalStore();
+  const openModal = useModalStore((state) => state.openModal);
   const openDialog = useDialogStore((state) => state.openDialog);
   const closeDialog = useDialogStore((state) => state.closeDialog);
   const { mutate: deletePersona } = useDeletePersonaMutation();

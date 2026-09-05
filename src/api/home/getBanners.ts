@@ -26,6 +26,5 @@ export const useHomeBannersQuery = () => {
   return useQuery<HomeBanner[], AppError>({
     queryKey: ["get-home-banners", locale],
     queryFn: getBanners,
-    staleTime: 1000 * 60 * 5,
   });
 };

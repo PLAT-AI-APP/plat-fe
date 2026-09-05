@@ -54,6 +54,5 @@ export const useTodayPickQuery = (params: GetTodayPickParams = {}) => {
   return useQuery<TodayPickItem[], AppError>({
     queryKey: ["get-today-pick", locale, tendency, params.page, params.size],
     queryFn: () => getTodayPick({ ...params, tendency }),
-    staleTime: 1000 * 60 * 5,
   });
 };

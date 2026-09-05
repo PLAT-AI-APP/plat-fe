@@ -46,6 +46,7 @@ const OfficialTabContents = () => {
 
       <CharacterShowcase
         charArray={(officialPreviewList ?? []).map((character) => ({
+          id: character.universeId,
           name: character.title,
           dec: character.description,
           creatorName: "PLAT",

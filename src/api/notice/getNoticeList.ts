@@ -36,6 +36,5 @@ export const useNoticeListInfiniteQuery = (
     initialPageParam: 0,
     getNextPageParam: (lastPage) =>
       lastPage.page.hasNext ? lastPage.page.number + 1 : null,
-    staleTime: 1000 * 60 * 5,
   });
 };

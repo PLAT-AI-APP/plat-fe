@@ -10,7 +10,7 @@ interface PersonaFooterProps {
 
 const PersonaFooter = ({ isMaxPersona }: PersonaFooterProps) => {
   const t = useTranslations("modalUi.personaList");
-  const { openModal } = useModalStore();
+  const openModal = useModalStore((state) => state.openModal);
 
   return (
     <footer className="pt-9">

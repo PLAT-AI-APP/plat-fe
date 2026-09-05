@@ -3,11 +3,7 @@ import { MainBannerCarousel } from "@/app/(main)/_components/MainBannerCarousel"
 import MenuTab from "./_components/MenuTab";
 import { cn } from "@/lib/utils";
 import { Metadata } from "next";
-import HomeTabContents from "./_components/home-tab-contents";
-import RankingTabContents from "./_components/ranking-tab-contents";
-import CategoriesTabContents from "./_components/categories-tab-contents";
-import OfficialTabContents from "./_components/official-tab-contents";
-import NewTabContents from "./_components/new-tab-contents";
+import dynamic from "next/dynamic";
 import PageTitle from "@/components/PageTitle";
 // import OverflowTagList from "@/components/OverflowTagList";
 
@@ -19,19 +15,33 @@ interface HomePageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
+/*
+ * 탭 다섯 개를 정적으로 가져오면 한 번에 하나만 그리는데도 다섯 트리가 전부
+ * 번들에 들어간다. 실제로 홈 탭에서 카테고리 탭의 TagSidebar·태그 상수까지
+ * 내려받고 있었다(카테고리 탭 하나가 framer-motion 과 300줄짜리 태그 상수를
+ * 끌고 온다). 각자 청크로 나눠 고른 탭만 받게 한다.
+ *
+ * ssr:false 는 쓰지 않는다 — 서버 컴포넌트에서는 허용되지 않고, 첫 화면이
+ * 비어 보이는 대가도 크다. 여기서 필요한 건 코드 분할뿐이다.
+ */
+const TAB_COMPONENTS = {
+  all: dynamic(() => import("./_components/home-tab-contents")),
+  ranking: dynamic(() => import("./_components/ranking-tab-contents")),
+  new: dynamic(() => import("./_components/new-tab-contents")),
+  official: dynamic(() => import("./_components/official-tab-contents")),
+  categories: dynamic(() => import("./_components/categories-tab-contents")),
+} as const;
+
+type HomeTab = keyof typeof TAB_COMPONENTS;
+
+const isHomeTab = (value: unknown): value is HomeTab =>
+  typeof value === "string" && value in TAB_COMPONENTS;
+
 const Home = async ({ searchParams }: HomePageProps) => {
   const params = await searchParams;
-  const currentTab =
-    (params.tab as "all" | "ranking" | "new" | "official" | "categories") ||
-    "all";
-
-  const TabComponents: { [key: string]: React.ReactNode } = {
-    all: <HomeTabContents />,
-    ranking: <RankingTabContents />,
-    new: <NewTabContents />,
-    official: <OfficialTabContents />,
-    categories: <CategoriesTabContents />,
-  };
+  // 주소로 아무 값이나 들어올 수 있으므로 아는 탭인지 먼저 확인한다.
+  const currentTab: HomeTab = isHomeTab(params.tab) ? params.tab : "all";
+  const TabContents = TAB_COMPONENTS[currentTab];
 
   const isCategories = currentTab === "categories";
 
@@ -98,7 +108,7 @@ const Home = async ({ searchParams }: HomePageProps) => {
             id="contents-wrapper"
             className="flex flex-col grow w-full pb-12"
           >
-            {TabComponents[currentTab]}
+            <TabContents />
           </div>
 
           <div className="shrink-0 w-full">

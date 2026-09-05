@@ -52,6 +52,5 @@ export const useAssetPreviewQuery = (params: GetAssetPreviewParams = {}) => {
   return useQuery<AssetPreviewItem[], AppError>({
     queryKey: ["get-asset-preview", locale, tendency, params.page, params.size],
     queryFn: () => getAssetPreview({ ...params, tendency }),
-    staleTime: 1000 * 60 * 5,
   });
 };

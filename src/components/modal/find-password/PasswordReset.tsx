@@ -34,7 +34,7 @@ const PasswordReset = () => {
     !errors.passwordCheck &&
     password === passwordCheck;
 
-  const { closeModal } = useModalStore();
+  const closeModal = useModalStore((state) => state.closeModal);
   const onSubmit = (data: PasswordResetFormSchemaValues) => {
     passwrodReset(data);
     closeModal();

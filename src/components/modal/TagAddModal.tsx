@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
 import { ModalLayout } from "../ModalLayout";
 import { useHashtagListQuery } from "@/api/hashtag/getHashtagList";
-import { TAG_FOLDERS } from "@/app/(main)/_components/categories-tab-contents/_components/tag-sidebar";
+import { TAG_FOLDERS } from "@/constants/tagFolders";
 import {
   HASHTAG_CATEGORY_FOLDER_TITLE_KEYS,
   HASHTAG_CATEGORY_ORDER,
@@ -151,7 +151,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
     );
   };
 
-  const { openModal } = useModalStore();
+  const openModal = useModalStore((state) => state.openModal);
 
   return (
     <ModalLayout

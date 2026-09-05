@@ -18,6 +18,12 @@ import { CharacterCardSkeleton } from "./character-card/CharacterCardSkeleton";
 interface CharacterShowcaseProps {
   title?: string;
   charArray: {
+    /**
+     * 목록에서의 신원. CharacterCard 가 현재 이미지 인덱스 등을 자체 state 로
+     * 들고 있어서, 정렬이나 필터가 바뀔 때 배열 위치로 키를 잡으면 React 가
+     * 다른 카드의 인스턴스를 재사용해 이미지가 뒤섞인다.
+     */
+    id?: string;
     name: string;
     chatCount?: number;
     dec: string;
@@ -108,7 +114,7 @@ const CharacterShowcase = ({
       ))
     : displayChars.map((char, index) => (
         <CharacterCard
-          key={`card-${index}`}
+          key={char.id ?? `card-${index}`}
           size={cardSize}
           title={char.name}
           description={char.dec}

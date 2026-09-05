@@ -32,7 +32,6 @@ export const useFollowingListQuery = (enabled: boolean) => {
       getFollowingList({ pageParam: pageParam as number }),
     getNextPageParam: (lastPage) =>
       lastPage.page.hasNext ? lastPage.page.number + 1 : null,
-    staleTime: 1000 * 60 * 5,
     enabled,
   });
 };

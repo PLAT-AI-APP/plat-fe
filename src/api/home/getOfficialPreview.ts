@@ -73,6 +73,5 @@ export const useOfficialPreviewQuery = (
       params.size,
     ],
     queryFn: () => getOfficialPreview({ ...params, tendency }),
-    staleTime: 1000 * 60 * 5,
   });
 };

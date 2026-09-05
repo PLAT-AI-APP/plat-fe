@@ -54,7 +54,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
   const router = useRouter();
   const { mutate: logout } = useLogoutMutation();
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
-  const { openModal } = useModalStore();
+  const openModal = useModalStore((state) => state.openModal);
   const tendency = useToggle();
 
   const supportArray = [

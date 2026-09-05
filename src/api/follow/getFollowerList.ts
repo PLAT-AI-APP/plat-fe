@@ -38,7 +38,6 @@ export const useFollowerListQuery = (enabled: boolean) => {
 
     getNextPageParam: (lastPage) =>
       lastPage.page.hasNext ? lastPage.page.number + 1 : null,
-    staleTime: 1000 * 60 * 5,
     enabled: enabled,
   });
 };

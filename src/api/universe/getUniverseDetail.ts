@@ -140,7 +140,6 @@ export const useUniverseDetailQuery = (universeId?: string) => {
   return useQuery<UniverseDetailResponse, AppError>({
     queryKey: ["get-universe-detail", universeId],
     queryFn: () => getUniverseDetail(universeId ?? ""),
-    staleTime: 1000 * 60 * 5,
     enabled: Boolean(universeId),
   });
 };

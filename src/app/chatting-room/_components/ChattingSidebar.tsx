@@ -140,7 +140,7 @@ const ChattingSidebar = ({
   const t = useTranslations("chatRoom.sidebar");
   const router = useRouter();
   const openDialog = useDialogStore((state) => state.openDialog);
-  const { openModal } = useModalStore();
+  const openModal = useModalStore((state) => state.openModal);
   const availableBalance = useWalletStore(
     (state) => state.balance?.availableBalance ?? 0,
   );

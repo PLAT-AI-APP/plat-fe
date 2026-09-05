@@ -105,14 +105,17 @@ export default function ClientLayout({
   }, [closeDrawer, isDrawerOpen]);
   const { isScrolling, onScroll } = useScrollTimeout();
 
-  const {
-    accessToken,
-    isLoggedIn,
-    logout,
-    setAccessToken,
-    setAuthReady,
-    setLoggedIn,
-  } = useAuthStore();
+  /*
+   * selector 없이 useAuthStore() 를 부르면 스토어 전체를 구독한다. 이 레이아웃은
+   * 앱 껍데기(헤더·사이드바·모달·children)를 감싸므로, 토큰이 갱신될 때마다
+   * 화면 전체가 다시 그려졌다. 필요한 조각만 따로 구독한다.
+   */
+  const accessToken = useAuthStore((state) => state.accessToken);
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const logout = useAuthStore((state) => state.logout);
+  const setAccessToken = useAuthStore((state) => state.setAccessToken);
+  const setAuthReady = useAuthStore((state) => state.setAuthReady);
+  const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
   const router = useRouter();
   const clearModals = useModalStore((state) => state.clearModals);
   const openModal = useModalStore((state) => state.openModal);

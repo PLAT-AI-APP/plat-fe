@@ -26,7 +26,6 @@ export const useFollowCountQuery = (userId: string) => {
   return useQuery<GetFollowCountResponse, AppError>({
     queryKey: followQueryKeys.count(userId),
     queryFn: () => getFollowCount(userId),
-    staleTime: 1000 * 60 * 5,
     enabled: !!userId,
   });
 };

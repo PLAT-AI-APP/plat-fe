@@ -37,6 +37,5 @@ export const useUsageHistoryListQuery = ({
     getNextPageParam: (lastPage) => {
       return lastPage.page.hasNext ? lastPage.page.number + 1 : null;
     },
-    staleTime: 1000 * 60 * 5,
   });
 };
