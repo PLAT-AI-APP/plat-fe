@@ -54,7 +54,7 @@ const ko = {
   },
   officialPage: {
     title: "PLAT의 공식캐릭터",
-    sortByChats: "대화량 순",
+    sortByChats: "대화량",
     sortRecommended: "맞춤 추천순",
     sortWish: "찜",
   },
