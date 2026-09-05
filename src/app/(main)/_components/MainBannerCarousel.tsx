@@ -111,7 +111,7 @@ export function MainBannerCarousel() {
         onClick={scrollPrev}
         aria-label={t("previousBanner")}
         className={cn(
-          "absolute left-4 top-1/2 z-20 md:left-10 size-8 -translate-y-1/2 overflow-hidden text-overlay-font opacity-25 transition-opacity hover:opacity-100",
+          "absolute left-4 top-1/2 z-20 md:left-10 size-8 -translate-y-1/2 overflow-hidden text-overlay-font opacity-80 transition-opacity hover:opacity-100",
           !hasMultiple && "hidden",
         )}
       >
@@ -122,7 +122,7 @@ export function MainBannerCarousel() {
         onClick={scrollNext}
         aria-label={t("nextBanner")}
         className={cn(
-          "absolute right-4 top-1/2 z-20 md:right-10 size-8 -translate-y-1/2 overflow-hidden text-overlay-font opacity-25 transition-opacity hover:opacity-100",
+          "absolute right-4 top-1/2 z-20 md:right-10 size-8 -translate-y-1/2 overflow-hidden text-overlay-font opacity-80 transition-opacity hover:opacity-100",
           !hasMultiple && "hidden",
         )}
       >
