@@ -126,9 +126,6 @@ export default function ClientLayout({
   const router = useRouter();
   const clearModals = useModalStore((state) => state.clearModals);
   const openModal = useModalStore((state) => state.openModal);
-  const allowNextNavigation = useModalStore(
-    (state) => state.allowNextNavigation,
-  );
   const openDialog = useDialogStore((state) => state.openDialog);
   const isProtectedRoute = isProtectedPath(pathname);
   const [hasHydrated, setHasHydrated] = useState(false);
@@ -216,27 +213,12 @@ export default function ClientLayout({
   ]);
 
   useEffect(() => {
-    // 인증(로그인)이 꼭 필요한 보호 경로 목록 정의
-    const protectedRoutes = [
-      "/my-chatting",
-      "/chatting-room",
-      "/character-creat",
-      "/studio",
-      "/usage-history",
-      "/token-charge",
-      "/withdrawal",
-      "/profile",
-    ];
-
-    // 현재 접속한 pathname이 보호 경로 중 하나로 시작하는지 검사
-    const isProtectedRoute = protectedRoutes.some((route) =>
-      pathname.startsWith(route),
-    );
-
-    // 보호된 경로인데 토큰이 없다면 홈으로 튕겨내기
     if (isAuthChecking) return;
 
     if (isProtectedRoute && !isLoggedIn) {
+      // 로그아웃/회원탈퇴가 미리 남겨 둔 신호일 때만 홈으로 보낸다 — 그 흐름은
+      // 이미 자기 손으로 window.location.replace("/")까지 마쳤으므로 여기서는
+      // 남은 모달만 정리한다.
       const shouldSkipAuthAlert =
         sessionStorage.getItem(SKIP_AUTH_ALERT_ONCE_KEY) === "true";
 
@@ -248,21 +230,18 @@ export default function ClientLayout({
       }
 
       /*
-       * 로그인 창을 먼저 올리고 홈으로 튕겨낸다. 모달이 열려 있으면 ModalNavigationGuard 가 이동을 막으므로,
-       * 이 한 번은 통과시켜 달라고 미리 알린다 — 안 그러면 보호 경로에 그대로 남는다.
+       * 그 외(세션 만료 등 사용자가 직접 로그아웃하지 않은 경우)는 페이지를 벗어나지 않는다.
+       * 로그인 창만 띄워, 다시 로그인하면 있던 페이지를 그대로 이어서 쓸 수 있게 한다.
        */
       clearModals();
       requestLogin();
-      allowNextNavigation();
-      router.replace("/");
     }
   }, [
-    allowNextNavigation,
     clearModals,
     isAuthChecking,
     isLoggedIn,
+    isProtectedRoute,
     requestLogin,
-    pathname,
     router,
   ]);
 
@@ -345,7 +324,12 @@ export default function ClientLayout({
     sessionStorage.removeItem(LOGOUT_REDIRECT_IN_PROGRESS_KEY);
   }, [pathname]);
 
-  if (isProtectedRoute && (isAuthChecking || !isLoggedIn)) {
+  /*
+   * 로그인 여부가 아직 안 정해졌을 때만 감춘다. 로그인 여부가 정해진 뒤 세션이
+   * 만료돼 isLoggedIn이 false가 돼도 페이지는 그대로 두어야 한다 — 위 effect가
+   * 로그인 창만 띄우고 이동시키지 않으므로, 여기서도 내용을 지우면 안 된다.
+   */
+  if (isProtectedRoute && isAuthChecking) {
     return null;
   }
 
