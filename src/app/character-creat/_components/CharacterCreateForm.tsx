@@ -7,6 +7,7 @@ import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import { useNavigationGuard } from "next-navigation-guard";
 import { useRouter } from "next/navigation";
+import { decodeScenarioContent } from "@/lib/scenarioContent";
 import { showAppToast } from "@/lib/toast";
 import { ModalLayout } from "@/components/ModalLayout";
 import { Eye } from "@/icons";
@@ -45,7 +46,7 @@ const createCharacterCreateDefaultValues = (
     {
       name: defaultScenarioName,
       description: "",
-      difficulty: "",
+      difficulty: "NORMAL",
       contents: [],
     },
   ],
@@ -82,15 +83,13 @@ const createCharacterEditDefaultValues = (
     universe.scenarios.length > 0
       ? universe.scenarios.map((scenario) => ({
           name: scenario.name,
-          description: scenario.content,
-          difficulty: "",
-          contents: [],
+          ...decodeScenarioContent(scenario.content),
         }))
       : [
           {
             name: defaultScenarioName,
             description: "",
-            difficulty: "",
+            difficulty: "NORMAL",
             contents: [],
           },
         ],
@@ -232,6 +231,7 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
         id: String(Date.now()),
         type: "asset",
         value: asset.assetImage,
+        assetImageFileId: asset.assetImageFileId,
       });
       updateScenarioContentsFromDrag(nextContents);
     }

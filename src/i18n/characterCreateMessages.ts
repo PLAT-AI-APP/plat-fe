@@ -91,13 +91,8 @@ const ko = {
       situationHelp: "에셋을 보여줄 상황을 알려주세요.",
       guidePanelTitle: "에셋을 시나리오에 추가해 보세요",
       guidePanelDescription: "나만의 멋진 시나리오를 만들어 보세요",
-      guideCopyTitle: "복사해서 시나리오에 붙여보세요",
-      guideCopyDescription:
-        "에셋 오른쪽의 복사 버튼 클릭 후, 직접 붙여넣어 추가할 수 있어요",
       guideDragTitle: "직접 시나리오에 넣어보세요",
       guideDragDescription: "에셋을 끌어 시나리오에 직접 넣을 수도 있어요",
-      guideCodeTitle: "텍스트로 직접 추가할 수 있어요",
-      guideCodeDescription: "직접 코드를 타이핑하여 추가할 수 있어요",
       closeGuide: "에셋 안내 닫기",
       invalidType: "jpg, png, webp 이미지 파일만 가능합니다.",
       invalidSize: "파일 용량은 최대 5MB까지 가능합니다.",
@@ -114,8 +109,27 @@ const ko = {
       descriptionLabel: "시나리오 설명",
       descriptionPlaceholder: "어떤 시나리오인지 설명해 주세요",
       difficultyLabel: "시나리오 난이도",
-      difficultyPlaceholder:
-        "이 시나리오 속 캐릭터와의 친밀도가 얼마나 까다로운지, 관계에 어떤 걸림돌이 있는지 알려주세요",
+      difficultyOptions: {
+        EASY: {
+          label: "쉬움",
+          caption: "캐릭터를 내가 원하는 방향으로 대화를 쉽게 이끌어갈 수 있어요.",
+        },
+        NORMAL: {
+          label: "보통",
+          caption:
+            "캐릭터가 적당히 자기 색을 지켜서, 대화를 이끌려면 약간의 노력이 필요해요.",
+        },
+        HARD: {
+          label: "어려움",
+          caption:
+            "캐릭터가 자기 뜻을 꽤 강하게 지켜서, 원하는 방향으로 이끌기 쉽지 않아요.",
+        },
+        VERY_HARD: {
+          label: "매우 어려움",
+          caption:
+            "캐릭터가 좀처럼 뜻을 굽히지 않아서, 마음을 얻으려면 많은 노력이 필요해요.",
+        },
+      },
     },
     preview: {
       defaultCharacterName: "캐릭터",
@@ -292,14 +306,9 @@ const en: typeof ko = {
       situationHelp: "Tell us when this asset should be shown.",
       guidePanelTitle: "Add assets to your scenario",
       guidePanelDescription: "Create your own great scenario",
-      guideCopyTitle: "Copy and paste into the scenario",
-      guideCopyDescription:
-        "Click the copy button on the right side of an asset, then paste it manually.",
       guideDragTitle: "Drop it directly into the scenario",
       guideDragDescription:
         "You can also drag an asset directly into a scenario.",
-      guideCodeTitle: "Add it directly as text",
-      guideCodeDescription: "You can type the code manually to add it.",
       closeGuide: "Close asset guide",
       invalidType: "Only jpg, png, and webp image files are allowed.",
       invalidSize: "File size can be up to 5MB.",
@@ -316,8 +325,27 @@ const en: typeof ko = {
       descriptionLabel: "Scenario description",
       descriptionPlaceholder: "Describe what kind of scenario this is",
       difficultyLabel: "Scenario difficulty",
-      difficultyPlaceholder:
-        "Tell us how challenging the relationship with the character is in this scenario, and what obstacles stand in the way",
+      difficultyOptions: {
+        EASY: {
+          label: "Easy",
+          caption: "You can easily steer the conversation with the character the way you want.",
+        },
+        NORMAL: {
+          label: "Normal",
+          caption:
+            "The character holds onto their own personality somewhat, so leading the conversation takes a little effort.",
+        },
+        HARD: {
+          label: "Hard",
+          caption:
+            "The character sticks to their views fairly firmly, so it's not easy to steer them your way.",
+        },
+        VERY_HARD: {
+          label: "Very hard",
+          caption:
+            "The character rarely budges, so winning them over takes a lot of effort.",
+        },
+      },
     },
     preview: {
       defaultCharacterName: "Character",
@@ -495,14 +523,9 @@ const ja: typeof ko = {
       situationHelp: "アセットを見せる状況を教えてください。",
       guidePanelTitle: "アセットをシナリオに追加してみましょう",
       guidePanelDescription: "自分だけの素敵なシナリオを作ってみましょう",
-      guideCopyTitle: "コピーしてシナリオに貼り付けてください",
-      guideCopyDescription:
-        "アセット右側のコピーボタンをクリック後、直接貼り付けて追加できます",
       guideDragTitle: "シナリオに直接入れてみましょう",
       guideDragDescription:
         "アセットをドラッグしてシナリオに直接入れることもできます",
-      guideCodeTitle: "テキストで直接追加できます",
-      guideCodeDescription: "コードを直接入力して追加できます",
       closeGuide: "アセット案内を閉じる",
       invalidType: "jpg、png、webp 画像ファイルのみ可能です。",
       invalidSize: "ファイル容量は最大 5MB まで可能です。",
@@ -520,8 +543,27 @@ const ja: typeof ko = {
       descriptionLabel: "シナリオ説明",
       descriptionPlaceholder: "どのようなシナリオか説明してください",
       difficultyLabel: "シナリオ難易度",
-      difficultyPlaceholder:
-        "このシナリオでのキャラクターとの親密度がどれくらい難しいか、関係にどんな障害があるか教えてください",
+      difficultyOptions: {
+        EASY: {
+          label: "簡単",
+          caption: "キャラクターとの会話を自分が望む方向に簡単に進められます。",
+        },
+        NORMAL: {
+          label: "普通",
+          caption:
+            "キャラクターがある程度自分らしさを保つので、会話を進めるには少し工夫が必要です。",
+        },
+        HARD: {
+          label: "難しい",
+          caption:
+            "キャラクターが自分の考えをかなり強く持っているため、思う方向に進めるのは簡単ではありません。",
+        },
+        VERY_HARD: {
+          label: "非常に難しい",
+          caption:
+            "キャラクターがなかなか意見を曲げないため、心を開いてもらうには多くの努力が必要です。",
+        },
+      },
     },
     preview: {
       defaultCharacterName: "キャラクター",
@@ -690,12 +732,8 @@ const zh: typeof ko = {
       situationHelp: "请告诉我们该在什么情境下展示这个素材。",
       guidePanelTitle: "将素材添加到场景中",
       guidePanelDescription: "创建属于你的精彩场景",
-      guideCopyTitle: "复制后粘贴到场景中",
-      guideCopyDescription: "点击素材右侧的复制按钮后，可以手动粘贴添加",
       guideDragTitle: "直接放入场景",
       guideDragDescription: "也可以将素材拖拽到场景中",
-      guideCodeTitle: "可以用文本直接添加",
-      guideCodeDescription: "可以手动输入代码来添加",
       closeGuide: "关闭素材指南",
       invalidType: "仅支持 jpg、png、webp 图片文件。",
       invalidSize: "文件大小最多为 5MB。",
@@ -712,8 +750,24 @@ const zh: typeof ko = {
       descriptionLabel: "场景说明",
       descriptionPlaceholder: "请说明这是怎样的场景",
       difficultyLabel: "场景难度",
-      difficultyPlaceholder:
-        "请说明在这个场景中与角色的亲密度有多难，关系中有哪些障碍",
+      difficultyOptions: {
+        EASY: {
+          label: "简单",
+          caption: "可以轻松地按自己想要的方向引导与角色的对话。",
+        },
+        NORMAL: {
+          label: "普通",
+          caption: "角色会保持一定的自我个性，引导对话需要花点心思。",
+        },
+        HARD: {
+          label: "困难",
+          caption: "角色相当坚持自己的想法，很难按你想要的方向引导。",
+        },
+        VERY_HARD: {
+          label: "非常困难",
+          caption: "角色几乎不会让步，需要付出很多努力才能打动对方。",
+        },
+      },
     },
     preview: {
       defaultCharacterName: "角色",
@@ -885,13 +939,8 @@ const th: typeof ko = {
       situationHelp: "บอกเราว่าควรแสดงแอสเซ็ตนี้ในสถานการณ์ไหน",
       guidePanelTitle: "เพิ่มแอสเซ็ตลงในสถานการณ์",
       guidePanelDescription: "สร้างสถานการณ์สุดเจ๋งของคุณเอง",
-      guideCopyTitle: "คัดลอกแล้ววางลงในสถานการณ์",
-      guideCopyDescription:
-        "คลิกปุ่มคัดลอกด้านขวาของแอสเซ็ต แล้ววางเพื่อเพิ่มได้โดยตรง",
       guideDragTitle: "ใส่ลงในสถานการณ์โดยตรง",
       guideDragDescription: "ลากแอสเซ็ตลงในสถานการณ์ได้โดยตรง",
-      guideCodeTitle: "เพิ่มด้วยข้อความได้โดยตรง",
-      guideCodeDescription: "พิมพ์โค้ดเองเพื่อเพิ่มได้",
       closeGuide: "ปิดคู่มือแอสเซ็ต",
       invalidType: "อนุญาตเฉพาะไฟล์รูป jpg, png, webp เท่านั้น",
       invalidSize: "ขนาดไฟล์สูงสุดคือ 5MB",
@@ -908,8 +957,28 @@ const th: typeof ko = {
       descriptionLabel: "คำอธิบายสถานการณ์",
       descriptionPlaceholder: "อธิบายว่านี่เป็นสถานการณ์แบบไหน",
       difficultyLabel: "ความยากของสถานการณ์",
-      difficultyPlaceholder:
-        "โปรดบอกว่าความสนิทสนมกับตัวละครในสถานการณ์นี้ยากแค่ไหน และมีอุปสรรคอะไรในความสัมพันธ์",
+      difficultyOptions: {
+        EASY: {
+          label: "ง่าย",
+          caption:
+            "คุณสามารถนำบทสนทนากับตัวละครไปในทิศทางที่ต้องการได้อย่างง่ายดาย",
+        },
+        NORMAL: {
+          label: "ปานกลาง",
+          caption:
+            "ตัวละครยังคงความเป็นตัวเองอยู่บ้าง จึงต้องใช้ความพยายามเล็กน้อยในการนำบทสนทนา",
+        },
+        HARD: {
+          label: "ยาก",
+          caption:
+            "ตัวละครยึดมั่นในความคิดของตัวเองค่อนข้างมาก จึงไม่ง่ายที่จะนำไปในทิศทางที่ต้องการ",
+        },
+        VERY_HARD: {
+          label: "ยากมาก",
+          caption:
+            "ตัวละครแทบไม่ยอมเปลี่ยนใจ จึงต้องใช้ความพยายามอย่างมากในการเอาชนะใจ",
+        },
+      },
     },
     preview: {
       defaultCharacterName: "ตัวละคร",
@@ -1085,14 +1154,9 @@ const vi: typeof ko = {
       situationHelp: "Hãy cho biết khi nào nên hiển thị asset này.",
       guidePanelTitle: "Thêm tài sản vào kịch bản",
       guidePanelDescription: "Tạo kịch bản tuyệt vời của riêng bạn",
-      guideCopyTitle: "Sao chép rồi dán vào kịch bản",
-      guideCopyDescription:
-        "Nhấn nút sao chép bên phải tài sản, sau đó dán thủ công để thêm.",
       guideDragTitle: "Đưa trực tiếp vào kịch bản",
       guideDragDescription:
         "Bạn cũng có thể kéo tài sản trực tiếp vào kịch bản.",
-      guideCodeTitle: "Có thể thêm trực tiếp bằng văn bản",
-      guideCodeDescription: "Bạn có thể tự nhập mã để thêm.",
       closeGuide: "Đóng hướng dẫn tài sản",
       invalidType: "Chỉ cho phép tệp ảnh jpg, png, webp.",
       invalidSize: "Dung lượng tệp tối đa là 5MB.",
@@ -1109,8 +1173,28 @@ const vi: typeof ko = {
       descriptionLabel: "Mô tả kịch bản",
       descriptionPlaceholder: "Hãy mô tả đây là kịch bản như thế nào",
       difficultyLabel: "Độ khó kịch bản",
-      difficultyPlaceholder:
-        "Hãy cho biết mức độ thân thiết với nhân vật trong kịch bản này khó khăn ra sao và có trở ngại gì trong mối quan hệ",
+      difficultyOptions: {
+        EASY: {
+          label: "Dễ",
+          caption:
+            "Bạn có thể dễ dàng dẫn dắt cuộc trò chuyện với nhân vật theo hướng mình muốn.",
+        },
+        NORMAL: {
+          label: "Bình thường",
+          caption:
+            "Nhân vật vẫn giữ cá tính riêng ở mức vừa phải, nên cần một chút nỗ lực để dẫn dắt cuộc trò chuyện.",
+        },
+        HARD: {
+          label: "Khó",
+          caption:
+            "Nhân vật khá kiên định với quan điểm của mình, nên không dễ để dẫn dắt theo hướng bạn muốn.",
+        },
+        VERY_HARD: {
+          label: "Rất khó",
+          caption:
+            "Nhân vật hiếm khi lung lay, nên cần rất nhiều nỗ lực để chinh phục được họ.",
+        },
+      },
     },
     preview: {
       defaultCharacterName: "Nhân vật",

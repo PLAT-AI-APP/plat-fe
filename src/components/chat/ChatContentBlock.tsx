@@ -5,10 +5,18 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import CharacterChat from "@/components/chat/CharacterChat";
 import Scenario from "@/components/chat/Scenario";
+import UserChatBubble from "@/components/chat/UserChatBubble";
 import { ChatRetry, ChatTrash, Close, Pen, Trash } from "@/icons";
 import { useAutoResizeTextarea } from "@/hooks/useAutoResizeTextarea";
 import Check from "@/icons/Check";
-import { parsePlat } from "@/lib/platParse";
+import { getResourceImageUrl } from "@/lib/file";
+import { PlatSegment, parsePlat } from "@/lib/platParse";
+
+/** 인라인 토큰({{user}} 등)을 유지한 표시용 문자열로 변환합니다. */
+const segmentsToText = (segments: PlatSegment[]) =>
+  segments
+    .map((segment) => (segment.type === "TEXT" ? segment.value : "{{user}}"))
+    .join("");
 
 interface ChatContentBlockProps {
   rawData: string;
@@ -116,9 +124,15 @@ const ChatContentBlock = ({
             <CharacterChat
               key={index}
               image={profileImage}
-              chatText={block.content}
+              chatText={segmentsToText(block.segments)}
               CharacterName={characterName}
             />
+          );
+        }
+
+        if (block.type === "USER_DIALOGUE") {
+          return (
+            <UserChatBubble key={index} text={segmentsToText(block.segments)} />
           );
         }
 
@@ -126,7 +140,8 @@ const ChatContentBlock = ({
           return (
             <Image
               key={index}
-              src={block.code}
+              // block.code는 세계관 에셋 업로드로 받은 fileId이므로, 렌더링용 URL로 변환해야 합니다.
+              src={getResourceImageUrl(block.code, "UNIVERSE_ASSET")}
               alt={t("chatUI.chatAssetAlt")}
               width={171}
               height={250}
@@ -137,14 +152,9 @@ const ChatContentBlock = ({
         }
 
         if (block.type === "NARRATIVE") {
-          // 사용자 치환 토큰을 유지하는 서술문 표시용 문자열
-          const fullText = block.segments
-            .map((segment) =>
-              segment.type === "TEXT" ? segment.value : "{{user}}",
-            )
-            .join("");
-
-          return <Scenario key={index} text={fullText} />;
+          return (
+            <Scenario key={index} text={segmentsToText(block.segments)} />
+          );
         }
 
         return null;

@@ -71,7 +71,6 @@ export const FIELD_ERROR_MESSAGES = {
   assetMaxCount: "field.error.assetMaxCount",
   scenarioNameRequired: "field.error.scenarioNameRequired",
   scenarioDescriptionMaxLength: "field.error.scenarioDescriptionMaxLength",
-  scenarioDifficultyMaxLength: "field.error.scenarioDifficultyMaxLength",
   scenarioContentRequired: "field.error.scenarioContentRequired",
   scenarioContentMaxLength: "field.error.scenarioContentMaxLength",
   scenarioMaxCount: "field.error.scenarioMaxCount",

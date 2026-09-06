@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import ActiveButton from "@/components/ActiveButton";
 import ArrowLineLeft from "@/icons/ArrowLineLeft";
 import { Redo } from "@/icons";
+import { encodeScenarioContent } from "@/lib/scenarioContent";
 import { showAppToast } from "@/lib/toast";
 import { useLocaleStore } from "@/store/useLocaleStore";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
@@ -71,18 +72,6 @@ const LANGUAGE_BY_LOCALE: Record<string, UniverseCreateLanguage> = {
   th: "TH",
   vi: "VI",
 };
-
-const serializeScenarioContent = (
-  scenario: CharacterCreateFormValues["scenarios"][number],
-) =>
-  [
-    scenario.description,
-    scenario.difficulty,
-    ...(scenario.contents ?? []).map((content) => content.value),
-  ]
-    .map((value) => value?.trim())
-    .filter(Boolean)
-    .join("\n\n");
 
 const toUniverseTendency = (tendency: string): UniverseCreateTendency => {
   if (UNIVERSE_TENDENCIES.includes(tendency as UniverseCreateTendency)) {
@@ -296,7 +285,7 @@ const CreateHeader = ({
     try {
       const scenarios = currentFormData.scenarios.map((scenario, index) => ({
         name: scenario.name || `Scenario ${index + 1}`,
-        content: serializeScenarioContent(scenario),
+        content: encodeScenarioContent(scenario),
       }));
       const assets =
         currentFormData.asset

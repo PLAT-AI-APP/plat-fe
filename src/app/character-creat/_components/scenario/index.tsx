@@ -7,7 +7,10 @@ import SmartInput from "@/components/smart-input";
 import { Close, Plus } from "@/icons";
 import { cn } from "@/lib/utils";
 import { showAppToast } from "@/lib/toast";
-import { CharacterCreateFormValues } from "@/schema/character.schema";
+import {
+  CharacterCreateFormValues,
+  SCENARIO_DIFFICULTY_LEVELS,
+} from "@/schema/character.schema";
 
 interface ScenarioProps {
   activeScenarioIndex: number;
@@ -19,7 +22,8 @@ const Scenario = ({
   setActiveScenarioIndex,
 }: ScenarioProps) => {
   const t = useTranslations("characterCreate.scenario");
-  const { control, register } = useFormContext<CharacterCreateFormValues>();
+  const { control, register, setValue } =
+    useFormContext<CharacterCreateFormValues>();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "scenarios",
@@ -30,8 +34,10 @@ const Scenario = ({
     useWatch({ control, name: `scenarios.${currentIndex}.name` }) || "";
   const currentScenarioDescription =
     useWatch({ control, name: `scenarios.${currentIndex}.description` }) || "";
-  const currentScenarioDifficulty =
-    useWatch({ control, name: `scenarios.${currentIndex}.difficulty` }) || "";
+  const currentScenarioDifficulty = useWatch({
+    control,
+    name: `scenarios.${currentIndex}.difficulty`,
+  });
 
   const selectScenario = (index: number) => {
     setActiveScenarioIndex(index);
@@ -47,7 +53,7 @@ const Scenario = ({
       // 새 탭을 만들 때 보이는 기본 이름을 실제 input 값에도 같이 넣습니다.
       name: t("fallbackName", { index: fields.length + 1 }),
       description: "",
-      difficulty: "",
+      difficulty: "NORMAL",
       contents: [],
     });
   };
@@ -166,17 +172,42 @@ const Scenario = ({
         value={currentScenarioDescription}
       />
 
-      <SmartInput
-        {...register(`scenarios.${currentIndex}.difficulty`)}
-        label={t("difficultyLabel")}
-        type="textarea"
-        maxLength={500}
-        minLine={3}
-        placeholder={t("difficultyPlaceholder")}
-        placeholderClassName="placeholder:text-font-2"
-        counterClassName="text-font-disabled"
-        value={currentScenarioDifficulty}
-      />
+      <div className="flex flex-col gap-1">
+        <div className="title-3 flex items-center gap-1">
+          <span>{t("difficultyLabel")}</span>
+        </div>
+
+        <div className="flex items-center gap-1 rounded-xl bg-darkest p-2">
+          {SCENARIO_DIFFICULTY_LEVELS.map((level) => {
+            const isActive = currentScenarioDifficulty === level;
+
+            return (
+              <button
+                key={level}
+                type="button"
+                onClick={() =>
+                  setValue(`scenarios.${currentIndex}.difficulty`, level, {
+                    shouldDirty: true,
+                    shouldValidate: true,
+                  })
+                }
+                className={cn(
+                  "flex-1 whitespace-nowrap rounded-xl px-3 py-2 text-center transition-colors",
+                  isActive
+                    ? "title-5 bg-brand-opacity text-brand-dark"
+                    : "body-5 text-font-disabled hover:text-font-2",
+                )}
+              >
+                {t(`difficultyOptions.${level}.label`)}
+              </button>
+            );
+          })}
+        </div>
+
+        <p className="body-6 text-font-2">
+          {t(`difficultyOptions.${currentScenarioDifficulty}.caption`)}
+        </p>
+      </div>
     </section>
   );
 };

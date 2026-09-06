@@ -4,6 +4,15 @@ import { FIELD_ERROR_MESSAGES } from "@/constants/fieldMessages";
 // 파일 업로드 ID는 백엔드 직렬화 정책에 따라 숫자 또는 문자열로 올 수 있어 두 타입을 모두 허용합니다.
 const fileUploadIdSchema = z.union([z.number(), z.string()]);
 
+/** 시나리오 난이도. 자유 서술 대신 정해진 네 단계 중 하나를 고릅니다. */
+export const SCENARIO_DIFFICULTY_LEVELS = [
+  "EASY",
+  "NORMAL",
+  "HARD",
+  "VERY_HARD",
+] as const;
+export type ScenarioDifficulty = (typeof SCENARIO_DIFFICULTY_LEVELS)[number];
+
 /** 캐릭터 생성 form의 필수값과 입력 제한을 한 곳에서 검증합니다. */
 export const characterCreateSchema = z.object({
   representativeImage: z
@@ -64,10 +73,8 @@ export const characterCreateSchema = z.object({
         description: z
           .string()
           .max(100, FIELD_ERROR_MESSAGES.scenarioDescriptionMaxLength),
-        // 시나리오 난이도도 선택 입력값이며 최대 길이만 검증합니다.
-        difficulty: z
-          .string()
-          .max(500, FIELD_ERROR_MESSAGES.scenarioDifficultyMaxLength),
+        // 시나리오 난이도는 네 단계 중 하나를 고르는 값이라 기본값(NORMAL)이 항상 있습니다.
+        difficulty: z.enum(SCENARIO_DIFFICULTY_LEVELS),
         contents: z.array(
           z.object({
             id: z.string(),
@@ -76,6 +83,9 @@ export const characterCreateSchema = z.object({
               .string()
               .min(1, FIELD_ERROR_MESSAGES.scenarioContentRequired)
               .max(1500, FIELD_ERROR_MESSAGES.scenarioContentMaxLength),
+            // asset 타입만 갖는 값. value는 미리보기 표시용 이미지(base64/URL)라
+            // 그대로 백엔드에 보낼 수 없어, 임시 업로드 API가 내려준 식별자를 따로 들고 다닌다.
+            assetImageFileId: fileUploadIdSchema.nullable().optional(),
           }),
         ),
       }),

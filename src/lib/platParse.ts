@@ -1,12 +1,16 @@
 // ============================================================
-// .plat 포맷 파서
+// .plat 포맷 파서 (v2)
 // ============================================================
-// 블록 타입:
-//   DIALOGUE   : "..."          캐릭터 대사 (단일라인)
-//   NARRATIVE  : *...* 상황묘사 (멀티라인, 내부 \n\n 허용)
-//   ASSET_IMG  : {{img:url}}    이미지 단독 블록
+// 메타 블록:
+//   META       : [[key=value]]   시나리오 설명(d)/난이도(f) 등 대화 로그가 아닌 정보
 //
-// 인라인 토큰 (NARRATIVE 내부):
+// 블록 타입:
+//   DIALOGUE      : "..."        캐릭터 대사
+//   USER_DIALOGUE : '...'        유저 대사
+//   NARRATIVE     : *...*        상황묘사 (멀티라인, 내부 \n\n 허용)
+//   ASSET_IMG     : {{img:code}} 이미지 단독 블록
+//
+// 인라인 토큰 (DIALOGUE / USER_DIALOGUE / NARRATIVE 내부 공통):
 //   {{user}}                    유저 이름 치환
 // ============================================================
 
@@ -16,17 +20,19 @@ export type PlatSegment =
   | { type: "ASSET_INLINE"; assetType: string; code: string };
 
 export type PlatBlock =
-  | { type: "DIALOGUE"; content: string }
+  | { type: "DIALOGUE"; segments: PlatSegment[] }
+  | { type: "USER_DIALOGUE"; segments: PlatSegment[] }
   | { type: "NARRATIVE"; segments: PlatSegment[] }
   | { type: "ASSET_IMG"; code: string }
-  | { type: "ASSET_BLOCK"; assetType: string; code: string };
+  | { type: "ASSET_BLOCK"; assetType: string; code: string }
+  | { type: "META"; key: string; value: string };
 
 /**
- * 인라인 토큰 파서 (NARRATIVE 내부용)
+ * 인라인 토큰 파서 (DIALOGUE / USER_DIALOGUE / NARRATIVE 내부용)
  */
 function parseInlineTokens(raw: string): PlatSegment[] {
   const segments: PlatSegment[] = [];
-  const tokenRegex = /\{\{([^}]+)\\}\}/g;
+  const tokenRegex = /\{\{([^}]+)\}\}/g;
   let lastIndex = 0;
   let match: RegExpExecArray | null;
 
@@ -62,7 +68,15 @@ function parseBlock(raw: string): PlatBlock | null {
 
   // DIALOGUE: "..."
   if (trimmed.startsWith('"') && trimmed.endsWith('"')) {
-    return { type: "DIALOGUE", content: trimmed.slice(1, -1) };
+    return { type: "DIALOGUE", segments: parseInlineTokens(trimmed.slice(1, -1)) };
+  }
+
+  // USER_DIALOGUE: '...'
+  if (trimmed.startsWith("'") && trimmed.endsWith("'")) {
+    return {
+      type: "USER_DIALOGUE",
+      segments: parseInlineTokens(trimmed.slice(1, -1)),
+    };
   }
 
   // NARRATIVE: *...*
@@ -70,6 +84,13 @@ function parseBlock(raw: string): PlatBlock | null {
     const inner = trimmed.slice(1, -1);
     const segments = parseInlineTokens(inner);
     return { type: "NARRATIVE", segments };
+  }
+
+  // META: [[key=value]]
+  const metaRegex = /^\[\[([a-zA-Z0-9_]+)=([\s\S]*)\]\]$/;
+  const metaMatch = metaRegex.exec(trimmed);
+  if (metaMatch) {
+    return { type: "META", key: metaMatch[1], value: metaMatch[2] };
   }
 
   // ASSET 블록: {{type:code}}
@@ -119,19 +140,33 @@ export function parsePlat(source: string): PlatBlock[] {
       while (i < len && source[i] !== '"') i++;
       if (i < len) i++; // 닫는 " 포함
     }
-    // CASE C: ASSET ({{)
+    // CASE C: USER_DIALOGUE (')
+    else if (source[i] === "'") {
+      i++;
+      while (i < len && source[i] !== "'") i++;
+      if (i < len) i++; // 닫는 ' 포함
+    }
+    // CASE D: META ([[)
+    else if (source[i] === "[" && source[i + 1] === "[") {
+      i += 2;
+      while (i < len && !(source[i] === "]" && source[i + 1] === "]")) i++;
+      if (i < len) i += 2; // 닫는 ]] 포함
+    }
+    // CASE E: ASSET ({{)
     else if (source[i] === "{" && source[i + 1] === "{") {
       i += 2;
       while (i < len && !(source[i] === "}" && source[i + 1] === "}")) i++;
       if (i < len) i += 2; // 닫는 }} 포함
     }
-    // CASE D: FALLBACK (기호 없는 일반 텍스트)
+    // CASE F: FALLBACK (기호 없는 일반 텍스트)
     else {
       while (i < len) {
         // 다음 블록의 시작 기호를 만나면 중단
         if (
           source[i] === "*" ||
           source[i] === '"' ||
+          source[i] === "'" ||
+          (source[i] === "[" && source[i + 1] === "[") ||
           (source[i] === "{" && source[i + 1] === "{")
         )
           break;
