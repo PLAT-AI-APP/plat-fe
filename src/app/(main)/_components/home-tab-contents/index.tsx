@@ -112,8 +112,8 @@ const HomeTabContents = () => {
       />
 
       {/* 상황 에셋이 많은 캐릭터 미리보기 — 상황 에셋 개수 상위 3편.
-          큰 카드 3장을 항상 한 줄에 둔다. 격자로 두면 폭이 좁아질 때 2+1 로 접혀
-          세 번째 카드만 아래로 떨어졌다. */}
+          폭에 따라 3열 → 2열(+1) → 1열로 접히고, 각 단계 안에서는 카드 자체(fluid)가
+          폭에 맞춰 커지고 작아진다(CARD_COLUMNS_CLASS 기본 단계 그대로). */}
       <CharacterShowcase
         charArray={assetPreviewCharArray}
         isLoading={assetPreview.isLoading}
@@ -122,7 +122,6 @@ const HomeTabContents = () => {
         onRetry={assetPreview.refetch}
         title={t("popularCharacterPreview")}
         cardSize="L"
-        layout="carousel"
         limit={3}
       />
 
