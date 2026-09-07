@@ -1,6 +1,7 @@
 import { useAuthStore } from "@/store/useAuthStore";
 import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
+import { isProtectedPath } from "@/constants/auth";
 import { showAppToast } from "@/lib/toast";
 import {
   NETWORK_ERROR_CODE,
@@ -115,6 +116,11 @@ const handleSessionExpired = () => {
 
   // 애초에 로그아웃 상태였다면 만료 안내가 아니라 일반 권한 에러이므로 건너뜁니다.
   if (!isLoggedIn) return;
+
+  // 보호 경로에서는 ClientLayout의 인증 가드가 로그인 모달을 직접 띄운다.
+  // 여기서도 별도 안내 Dialog를 띄우면, 로그인 모달이 먼저 뜨고 그 뒤에 남아있던
+  // 이 Dialog가 확인 버튼으로 로그인 모달을 한 번 더 여는 중복 팝업이 생긴다.
+  if (isProtectedPath(window.location.pathname)) return;
 
   isSessionExpiredHandled = true;
 
