@@ -102,6 +102,12 @@ const ko = {
       descriptionAfter: "생생한 대화를 즐길 준비가 되셨나요?",
       confirm: "확인",
     },
+    commentDelete: {
+      title: "댓글을 삭제할까요?",
+      description: "삭제한 댓글은 복구할 수 없어요.",
+      cancel: "취소하기",
+      confirm: "삭제하기",
+    },
     personaDelete: {
       title: "페르소나를 삭제할까요?",
       description: "는 삭제 후 복구할 수 없어요.",
@@ -331,6 +337,12 @@ const en: Messages = {
       descriptionHighlight: "we gifted you welcome note credits",
       descriptionAfter: "Are you ready to enjoy vivid conversations?",
       confirm: "OK",
+    },
+    commentDelete: {
+      title: "Delete this comment?",
+      description: "A deleted comment cannot be restored.",
+      cancel: "Cancel",
+      confirm: "Delete",
     },
     personaDelete: {
       title: "Delete this persona?",
@@ -563,6 +575,12 @@ const ja: Messages = {
       descriptionAfter: "臨場感ある会話を楽しむ準備はできましたか？",
       confirm: "確認",
     },
+    commentDelete: {
+      title: "コメントを削除しますか？",
+      description: "削除したコメントは復元できません。",
+      cancel: "キャンセル",
+      confirm: "削除",
+    },
     personaDelete: {
       title: "ペルソナを削除しますか？",
       description: "は削除後に復元できません。",
@@ -786,6 +804,12 @@ const zh: Messages = {
       descriptionAfter: "准备好享受生动的对话了吗？",
       confirm: "确认",
     },
+    commentDelete: {
+      title: "要删除这条评论吗？",
+      description: "删除后的评论将无法恢复。",
+      cancel: "取消",
+      confirm: "删除",
+    },
     personaDelete: {
       title: "要删除这个人格吗？",
       description: "删除后将无法恢复。",
@@ -1004,6 +1028,12 @@ const th: Messages = {
       descriptionHighlight: "เราได้มอบเครดิตโน้ตต้อนรับให้คุณ",
       descriptionAfter: "พร้อมจะสนุกกับบทสนทนาที่มีชีวิตชีวาหรือยัง?",
       confirm: "ยืนยัน",
+    },
+    commentDelete: {
+      title: "ลบความคิดเห็นนี้หรือไม่?",
+      description: "ความคิดเห็นที่ลบแล้วไม่สามารถกู้คืนได้",
+      cancel: "ยกเลิก",
+      confirm: "ลบ",
     },
     personaDelete: {
       title: "ลบเพอร์โซนานี้หรือไม่?",
@@ -1230,6 +1260,12 @@ const vi: Messages = {
       descriptionAfter:
         "Bạn đã sẵn sàng tận hưởng những cuộc trò chuyện sống động chưa?",
       confirm: "Xác nhận",
+    },
+    commentDelete: {
+      title: "Xóa bình luận này?",
+      description: "Bình luận đã xóa sẽ không thể khôi phục.",
+      cancel: "Hủy",
+      confirm: "Xóa",
     },
     personaDelete: {
       title: "Xóa persona này?",

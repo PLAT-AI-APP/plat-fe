@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { Heart, HeartFill } from "@/icons";
 import type { Comment } from "@/type/comment";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useDialogStore } from "@/store/useDialogStore";
 import { useUserStore } from "@/store/useUserStore";
 import { useCommentRepliesInfiniteQuery } from "@/api/comment/getCommentReplies";
 import { usePostCommentReplyMutation } from "@/api/comment/postCommentReply";
@@ -38,6 +39,8 @@ const CommentListItem = ({
   const t = useTranslations("characterDetail");
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const myUserId = useUserStore((state) => state.user?.id);
+  const openDialog = useDialogStore((state) => state.openDialog);
+  const closeDialog = useDialogStore((state) => state.closeDialog);
   const isReply = Boolean(parentCommentId);
 
   const [isEditing, setIsEditing] = useState(false);
@@ -88,6 +91,17 @@ const CommentListItem = ({
     );
   };
 
+  const handleDeleteComment = () => {
+    openDialog("COMMENT_DELETE", {
+      onConfirm: () => {
+        deleteComment(
+          { commentId: comment.commentId, ...scope },
+          { onSettled: closeDialog },
+        );
+      },
+    });
+  };
+
   return (
     <li className={cn("flex gap-2", isReply && "pl-11")}>
       <Image
@@ -122,9 +136,7 @@ const CommentListItem = ({
               setEditedContent(comment.content);
               setIsEditing(true);
             }}
-            onDelete={() =>
-              deleteComment({ commentId: comment.commentId, ...scope })
-            }
+            onDelete={handleDeleteComment}
           />
         </header>
 
