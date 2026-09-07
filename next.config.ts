@@ -30,6 +30,28 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/**",
       },
+      /*
+       * 이미지 URL은 스토리지가 아니라 API 오리진을 가리킨다(`/images/...`).
+       * 실제 바이트는 서버가 302로 넘겨주므로 여기에는 API 호스트만 있으면 된다.
+       */
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "8080",
+        pathname: "/images/**",
+      },
+      {
+        protocol: "https",
+        hostname: "api-dev.plat.so",
+        port: "",
+        pathname: "/images/**",
+      },
+      {
+        protocol: "https",
+        hostname: "api.plat.so",
+        port: "",
+        pathname: "/images/**",
+      },
     ],
   },
 };
