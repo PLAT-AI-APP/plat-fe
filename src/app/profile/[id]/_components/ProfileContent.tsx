@@ -87,10 +87,10 @@ const CHARACTER_TAB = {
 const WISH_TAB = { key: "wish" as const, labelKey: "profile.wishTab" };
 
 /**
- * 탭 자리표시자. 폭은 실제 라벨(캐릭터 · 구분자 · 찜)의 글자 수에, 높이(h-6)는 활성 탭의
+ * 탭 자리표시자. 폭은 실제 라벨(캐릭터 · 찜)의 글자 수에, 높이(h-6)는 활성 탭의
  * 글자 높이(title-3, 24px)에 맞춥니다 — 자리표시자가 더 낮으면 탭이 그려지는 순간 줄이 튑니다.
  */
-const TAB_SKELETON_WIDTHS = ["w-12", "w-2", "w-6"];
+const TAB_SKELETON_WIDTHS = ["w-12", "w-6"];
 
 export default function ProfileContent({ id }: { id: string }) {
   const t = useTranslations();
@@ -186,30 +186,20 @@ export default function ProfileContent({ id }: { id: string }) {
                   </div>
                 ))
               : tabItems.map(({ key, labelKey }) => (
-                  <React.Fragment key={key}>
-                    <button
-                      type="button"
-                      ref={(el) => setTabRef(key, el)}
-                      onClick={() => setActiveTab(key)}
-                      className={cn(
-                        "flex w-fit items-center justify-center px-5 py-2.5 text-center",
-                        currentTab === key
-                          ? "title-3 text-font-1"
-                          : "body-3 text-font-disabled",
-                      )}
-                    >
-                      {t(labelKey)}
-                    </button>
-                    {key === "character" && (
-                      <button
-                        type="button"
-                        disabled
-                        className="body-3 flex w-fit cursor-default items-center justify-center px-5 py-2.5 text-center text-font-disabled"
-                      >
-                        -
-                      </button>
+                  <button
+                    key={key}
+                    type="button"
+                    ref={(el) => setTabRef(key, el)}
+                    onClick={() => setActiveTab(key)}
+                    className={cn(
+                      "flex w-fit items-center justify-center px-5 py-2.5 text-center",
+                      currentTab === key
+                        ? "title-3 text-font-1"
+                        : "body-3 text-font-disabled",
                     )}
-                  </React.Fragment>
+                  >
+                    {t(labelKey)}
+                  </button>
                 ))}
 
             {/* 활성 표시(motion.span)와 같은 bottom-0/h-0.5 박스를 써서, 서로 다른 두께의
