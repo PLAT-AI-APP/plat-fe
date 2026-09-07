@@ -45,6 +45,7 @@ const ko = {
       description: "이메일 인증을 통해 비밀번호를 재설정할 수 있습니다.",
       next: "다음",
       submit: "비밀번호 변경",
+      successToast: "비밀번호가 변경되었습니다",
     },
     imageCrop: {
       title: "이미지 편집",
@@ -141,6 +142,7 @@ const en: typeof ko = {
       description: "You can reset your password through email verification.",
       next: "Next",
       submit: "Change password",
+      successToast: "Your password has been changed.",
     },
     imageCrop: {
       title: "Edit image",
@@ -237,6 +239,7 @@ const ja: typeof ko = {
       description: "メール認証を通してパスワードを再設定できます。",
       next: "次へ",
       submit: "パスワード変更",
+      successToast: "パスワードが変更されました",
     },
     imageCrop: {
       title: "画像を編集",
@@ -331,6 +334,7 @@ const zh: typeof ko = {
       description: "你可以通过邮箱验证来重设密码。",
       next: "下一步",
       submit: "修改密码",
+      successToast: "密码已修改",
     },
     imageCrop: {
       title: "编辑图片",
@@ -424,6 +428,7 @@ const th: typeof ko = {
       description: "คุณสามารถรีเซ็ตรหัสผ่านผ่านการยืนยันอีเมลได้",
       next: "ถัดไป",
       submit: "เปลี่ยนรหัสผ่าน",
+      successToast: "เปลี่ยนรหัสผ่านเรียบร้อยแล้ว",
     },
     imageCrop: {
       title: "แก้ไขรูปภาพ",
@@ -522,6 +527,7 @@ const vi: typeof ko = {
       description: "Bạn có thể đặt lại mật khẩu thông qua xác thực email.",
       next: "Tiếp theo",
       submit: "Đổi mật khẩu",
+      successToast: "Mật khẩu của bạn đã được thay đổi.",
     },
     imageCrop: {
       title: "Chỉnh sửa ảnh",
