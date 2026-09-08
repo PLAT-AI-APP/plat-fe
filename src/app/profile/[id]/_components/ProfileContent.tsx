@@ -9,7 +9,7 @@ import CharacterSortPopover, {
   CharacterSortOption,
 } from "@/components/popover/CharacterSortPopover";
 import useToggle from "@/hooks/useToggle";
-import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+import { useInfiniteList } from "@/hooks/useInfiniteList";
 import { useTabUnderline } from "@/hooks/useTabUnderline";
 import { Sort } from "@/icons";
 import { cn } from "@/lib/utils";
@@ -136,9 +136,18 @@ export default function ProfileContent({ id }: { id: string }) {
     isFetchingNextPage,
   } = useLikedUniversesInfiniteQuery(isWishTab && isOwnProfile);
 
+  const {
+    items: likedItems,
+    totalCount: likedTotalCount,
+    sentinelRef,
+  } = useInfiniteList(
+    { data: likedData, hasNextPage, isFetchingNextPage, fetchNextPage },
+    { enabled: isWishTab },
+  );
+
   const likedCards = useMemo(
     () =>
-      (likedData?.pages.flatMap((page) => page.content) ?? []).map((card) => ({
+      likedItems.map((card) => ({
         name: card.title,
         chatCount: card.chatCount,
         dec: card.description,
@@ -147,21 +156,12 @@ export default function ProfileContent({ id }: { id: string }) {
         isNew: card.isNew,
         isOfficial: card.isOfficial,
       })),
-    [likedData],
+    [likedItems],
   );
-
-  const { targetRef } = useIntersectionObserver({
-    onIntersect: () => {
-      if (hasNextPage && !isFetchingNextPage) fetchNextPage();
-    },
-    enabled: isWishTab,
-  });
 
   const displayArray = isWishTab ? likedCards : CharArray;
   // 찜은 서버가 전체 개수를 세어 주므로 지금 받아 둔 페이지 수가 아니라 그 값을 씁니다.
-  const displayCount = isWishTab
-    ? (likedData?.pages[0]?.page.totalElements ?? 0)
-    : displayArray.length;
+  const displayCount = isWishTab ? (likedTotalCount ?? 0) : displayArray.length;
 
   return (
     <article className="mx-auto flex w-full max-w-(--content-max-width) flex-col gap-10 pt-6 pb-10">
@@ -271,7 +271,7 @@ export default function ProfileContent({ id }: { id: string }) {
           />
 
           {isWishTab && hasNextPage && (
-            <div ref={targetRef} aria-hidden="true" className="h-px" />
+            <div ref={sentinelRef} aria-hidden="true" className="h-px" />
           )}
         </section>
       </section>

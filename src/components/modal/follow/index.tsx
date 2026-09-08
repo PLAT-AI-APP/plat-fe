@@ -8,7 +8,6 @@ import React, {
   useCallback,
   useEffect,
   useLayoutEffect,
-  useMemo,
   useRef,
   useState,
 } from "react";
@@ -17,7 +16,7 @@ import { useFollowerListQuery } from "@/api/follow/getFollowerList";
 import { useFollowingListQuery } from "@/api/follow/getFollowingList";
 import { useFollowMutation } from "@/api/follow/postFollow";
 import { ModalLayout } from "@/components/ModalLayout";
-import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+import { useInfiniteList } from "@/hooks/useInfiniteList";
 import { useTabUnderline } from "@/hooks/useTabUnderline";
 import { Close } from "@/icons";
 import { ErrorState } from "@/components/state";
@@ -112,16 +111,15 @@ const FollowModal = ({
   const activeQuery =
     activeTabs === "following" ? followingQuery : followerQuery;
 
-  const listData = useMemo(
-    () => activeQuery.data?.pages.flatMap((page) => page.content) ?? [],
-    [activeQuery.data],
+  const { items: listData, sentinelRef } = useInfiniteList(
+    {
+      data: activeQuery.data,
+      hasNextPage: activeQuery.hasNextPage,
+      isFetchingNextPage: activeQuery.isFetchingNextPage,
+      fetchNextPage: activeQuery.fetchNextPage,
+    },
+    { rootMargin: "200px" },
   );
-
-  const { targetRef } = useIntersectionObserver({
-    onIntersect: activeQuery.fetchNextPage,
-    enabled: !!activeQuery.hasNextPage && !activeQuery.isFetchingNextPage,
-    rootMargin: "200px",
-  });
 
   const handleToggleFollow = (targetUserId: string, isFollowing: boolean) => {
     if (isFollowPending) return;
@@ -257,7 +255,7 @@ const FollowModal = ({
           })}
 
           <li className="py-0.5 text-center">
-            <div ref={targetRef}>
+            <div ref={sentinelRef}>
               {activeQuery.isFetchingNextPage ? (
                 <span
                   className="mx-auto block size-4 animate-spin rounded-full border border-main border-t-brand"
