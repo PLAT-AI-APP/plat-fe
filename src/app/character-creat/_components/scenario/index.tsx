@@ -7,10 +7,7 @@ import SmartInput from "@/components/smart-input";
 import { Close, Plus } from "@/icons";
 import { cn } from "@/lib/utils";
 import { showAppToast } from "@/lib/toast";
-import {
-  CharacterCreateFormValues,
-  SCENARIO_DIFFICULTY_LEVELS,
-} from "@/schema/character.schema";
+import { CharacterCreateFormValues } from "@/schema/character.schema";
 
 interface ScenarioProps {
   activeScenarioIndex: number;
@@ -22,8 +19,8 @@ const Scenario = ({
   setActiveScenarioIndex,
 }: ScenarioProps) => {
   const t = useTranslations("characterCreate.scenario");
-  const { control, register, setValue } =
-    useFormContext<CharacterCreateFormValues>();
+  // 난이도 UI 비노출로 setValue 임시 미사용
+  const { control, register } = useFormContext<CharacterCreateFormValues>();
   const { fields, append, remove } = useFieldArray({
     control,
     name: "scenarios",
@@ -34,10 +31,11 @@ const Scenario = ({
     useWatch({ control, name: `scenarios.${currentIndex}.name` }) || "";
   const currentScenarioDescription =
     useWatch({ control, name: `scenarios.${currentIndex}.description` }) || "";
-  const currentScenarioDifficulty = useWatch({
-    control,
-    name: `scenarios.${currentIndex}.difficulty`,
-  });
+  // 난이도 UI 비노출로 임시 주석 처리
+  // const currentScenarioDifficulty = useWatch({
+  //   control,
+  //   name: `scenarios.${currentIndex}.difficulty`,
+  // });
 
   const selectScenario = (index: number) => {
     setActiveScenarioIndex(index);
@@ -172,6 +170,7 @@ const Scenario = ({
         value={currentScenarioDescription}
       />
 
+      {/* 난이도 UI 임시 비노출
       <div className="flex flex-col gap-1">
         <div className="title-3 flex items-center gap-1">
           <span>{t("difficultyLabel")}</span>
@@ -208,6 +207,7 @@ const Scenario = ({
           {t(`difficultyOptions.${currentScenarioDifficulty}.caption`)}
         </p>
       </div>
+      */}
     </section>
   );
 };
