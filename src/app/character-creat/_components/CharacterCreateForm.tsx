@@ -20,13 +20,6 @@ import {
   characterCreateSchema,
   CharacterCreateFormValues,
 } from "@/schema/character.schema";
-import {
-  applyCharacterDraft,
-  buildCharacterDraft,
-  collectCharacterDraftFileIds,
-  migrateCharacterDraft,
-  sanitizeCharacterDraft,
-} from "@/schema/characterDraft.schema";
 import { useScenarioPreviewHistoryStore } from "@/store/useScenarioPreviewHistoryStore";
 import { useUnsavedChangesFallbackGuard } from "@/hooks/useUnsavedChangesFallbackGuard";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
@@ -35,10 +28,7 @@ import {
   UniverseDetailResponse,
   useUniverseDetailQuery,
 } from "@/api/universe/getUniverseDetail";
-import { useDraftCreateMutation } from "@/api/draft/postDraftCreate";
-import { useDraftUpdateMutation } from "@/api/draft/putDraftUpdate";
-import { useDraftCurrentQuery } from "@/api/draft/getDraftCurrent";
-import { useDraftMutation } from "@/api/draft/getDraft";
+import { useUniverseDraft } from "../_hooks/useUniverseDraft";
 
 const createCharacterCreateDefaultValues = (
   defaultScenarioName: string,
@@ -128,15 +118,6 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
   const isEditMode = Boolean(universeId);
   const { data: universeDetail, isError: isUniverseDetailError } =
     useUniverseDetailQuery(universeId);
-  // 초안(임시저장)은 새로 만드는 흐름에만 있고, 이미 만들어진 세계관을 수정할 때는 없습니다.
-  // 이번 세션에서 새로 만든 초안 id를 우선 쓰고, 없으면 서버가 갖고 있던 기존 초안 id를 씁니다.
-  const [createdDraftId, setCreatedDraftId] = useState<string | null>(null);
-  const { data: currentDraft, refetch: refetchCurrentDraft } =
-    useDraftCurrentQuery("UNIVERSE", !isEditMode);
-  const draftId = createdDraftId ?? currentDraft?.draftId ?? null;
-  const { mutateAsync: createDraft } = useDraftCreateMutation();
-  const { mutateAsync: updateDraft } = useDraftUpdateMutation();
-  const { mutateAsync: fetchDraft } = useDraftMutation();
   const methods = useForm<CharacterCreateFormValues>({
     mode: "onChange",
     resolver: zodResolver(characterCreateSchema),
@@ -181,6 +162,13 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
     getValues,
     setValue,
   } = methods;
+  // 초안(임시저장)은 새로 만드는 흐름에만 있고, 이미 만들어진 세계관을 수정할 때는 없습니다.
+  const { draftId, saveDraft, loadDraft } = useUniverseDraft({
+    enabled: !isEditMode,
+    defaultScenarioName,
+    getValues,
+    reset,
+  });
 
   useEffect(() => {
     if (!universeDetail) return;
@@ -262,71 +250,19 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
     setActiveModal(null);
   };
 
-  const handleSave = async () => {
-    const currentData = getValues();
-    const draft = buildCharacterDraft(currentData);
-    const fileIds = collectCharacterDraftFileIds(draft);
-    // 백엔드는 제목을 필수로 받는데, 임시저장은 제목을 채우기 전에도 눌러볼 수 있습니다.
-    const title = currentData.title.trim() || t("untitledDraftTitle");
-
-    try {
-      if (draftId) {
-        await updateDraft({ draftId, request: { title, payload: draft, fileIds } });
-      } else {
-        const created = await createDraft({
-          type: "UNIVERSE",
-          title,
-          payload: draft,
-          fileIds,
-        });
-        setCreatedDraftId(created.draftId);
-      }
-      reset(currentData);
-      showAppToast("success", t("draftSaved"));
-    } catch (error) {
-      console.error("Draft save failed:", error);
-      showAppToast("error", t("draftSaveFailed"));
-    }
-  };
-
-  const handleDraftClick = () => {
+  const handleLoadDraftClick = () => {
+    // 편집 중인 내용이 있으면 덮어써도 되는지 먼저 확인부터 받습니다.
     if (isDirty) {
       setActiveModal("OVERWRITE");
       return;
     }
 
-    void loadDraftData();
+    void handleConfirmLoadDraft();
   };
 
-  const loadDraftData = async () => {
-    // 페이지에 막 들어와 GET /drafts/current 응답이 아직 안 돌아온 시점에 눌렀을 수 있어,
-    // 이미 아는 값이 없을 때만 그 자리에서 한 번 더 확인합니다.
-    const targetDraftId =
-      draftId ?? (await refetchCurrentDraft()).data?.draftId ?? null;
-
-    if (!targetDraftId) {
-      closeModal();
-      showAppToast("warning", t("draftNotFound"));
-      return;
-    }
-
-    try {
-      const draft = await fetchDraft(targetDraftId);
-      // payload는 백엔드가 내부 구조를 검증하지 않는 자유 형식 JSON이라, 폼에 넣기 전에
-      // 먼저 안전한 모양으로 정리(sanitize)한 뒤에만 버전 이관을 적용합니다.
-      const latest = migrateCharacterDraft(
-        sanitizeCharacterDraft(draft.payload),
-      );
-      reset({
-        ...createCharacterCreateDefaultValues(defaultScenarioName),
-        ...applyCharacterDraft(latest, defaultScenarioName),
-      });
-      closeModal();
-    } catch (error) {
-      console.error("Draft load failed:", error);
-      showAppToast("error", t("draftLoadFailed"));
-      closeModal();
-    }
+  const handleConfirmLoadDraft = async () => {
+    await loadDraft(createCharacterCreateDefaultValues(defaultScenarioName));
+    closeModal();
   };
 
   // next-navigation-guard가 router.push/back으로 가는 이동은 잘 잡지만, Next.js 16에서
@@ -389,15 +325,15 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
         closeModal={closeModal}
         handleConfirmExit={handleConfirmExit}
         rejectNavigation={reject}
-        handleLoadDraft={loadDraftData}
+        handleLoadDraft={handleConfirmLoadDraft}
       />
 
       <div className="flex h-full min-h-0 flex-col gap-4">
         <CreateHeader
           universeId={universeId}
           draftId={draftId}
-          onSave={handleSave}
-          onDraftClick={handleDraftClick}
+          onSave={saveDraft}
+          onDraftClick={handleLoadDraftClick}
           setCurrentTabId={setCurrentTabId}
           setActiveScenarioIndex={setActiveScenarioIndex}
           markSubmitSuccess={markSubmitSuccess}

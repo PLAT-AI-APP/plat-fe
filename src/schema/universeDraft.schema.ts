@@ -36,14 +36,15 @@ const draftTagSchema = z.object({
 });
 
 /**
- * 임시저장 데이터 v1. 백엔드 /drafts의 payload(자유 형식 JSON, 최대 256KiB)로 그대로 전송됩니다.
+ * 캐릭터 생성 폼의 임시저장 데이터 v1. 백엔드 /drafts에는 type: "UNIVERSE"로 저장되며,
+ * payload(자유 형식 JSON, 최대 256KiB)로 그대로 전송됩니다.
  * 미리보기용 base64(assetImage 등)는 용량만 잡아먹고 fileId로 얼마든지 다시 만들 수 있어 담지 않습니다.
  *
  * payload는 백엔드가 내부 구조를 전혀 검증하지 않는 자유 형식 JSON이라(DraftPayloadValidator는
  * 객체인지·용량만 봅니다), API로 직접 만든 테스트 데이터 등 프론트가 모르는 모양이 얼마든지 올 수
  * 있습니다. 필드마다 .catch()로 기본값을 둬서, 무엇이 오든 파싱 자체는 절대 실패하지 않게 합니다.
  */
-export const characterDraftV1Schema = z.object({
+export const universeDraftV1Schema = z.object({
   schemaVersion: z.literal(1).catch(1),
   title: z.string().catch(""),
   name: z.string().catch(""),
@@ -62,44 +63,48 @@ export const characterDraftV1Schema = z.object({
   scenarios: z.array(draftScenarioSchema).catch([]),
 });
 
-export type CharacterDraftV1 = z.infer<typeof characterDraftV1Schema>;
+export type UniverseDraftV1 = z.infer<typeof universeDraftV1Schema>;
 
 /** 필드 단위 .catch()로도 못 잡는 경우(최상위 값 자체가 객체가 아닌 경우)의 마지막 안전망입니다. */
-const EMPTY_CHARACTER_DRAFT = characterDraftV1Schema.parse({});
+const EMPTY_UNIVERSE_DRAFT = universeDraftV1Schema.parse({});
 
 /**
- * 서버에서 받아온 draft.payload(타입이 unknown인 자유 형식 JSON)를 CharacterDraftV1로 안전하게
+ * 서버에서 받아온 draft.payload(타입이 unknown인 자유 형식 JSON)를 UniverseDraftV1로 안전하게
  * 변환합니다. 필드가 없거나 모양이 다르면 각 필드의 기본값으로 채워질 뿐, 절대 throw하지 않습니다
  * — 여기서 막지 않으면 reset() 이후 렌더링 단계에서 형태를 예상 못 한 값이 컴포넌트를 깨뜨립니다.
  * (최상위 값 자체가 객체가 아니면 필드별 .catch()가 적용될 대상이 없어 그때만 빈 초안으로 대체합니다.)
+ *
+ * 주의: v2가 추가되면 이 함수도 payload.schemaVersion을 보고 맞는 버전 스키마로 파싱하도록
+ * 바뀌어야 합니다. 지금처럼 v1 스키마로 고정 파싱하면 v2 payload가 와도 v1로 강등되어
+ * migrateUniverseDraft가 이미 최신인 데이터를 다시 마이그레이션하면서 값이 유실됩니다.
  */
-export const sanitizeCharacterDraft = (payload: unknown): CharacterDraftV1 => {
-  const result = characterDraftV1Schema.safeParse(payload ?? {});
-  return result.success ? result.data : EMPTY_CHARACTER_DRAFT;
+export const sanitizeUniverseDraft = (payload: unknown): UniverseDraftV1 => {
+  const result = universeDraftV1Schema.safeParse(payload ?? {});
+  return result.success ? result.data : EMPTY_UNIVERSE_DRAFT;
 };
 
-/** 지금까지 존재했던 모든 버전의 캐릭터 임시저장 데이터 */
-export type AnyCharacterDraft = CharacterDraftV1;
+/** 지금까지 존재했던 모든 버전의 임시저장 데이터 */
+export type AnyUniverseDraft = UniverseDraftV1;
 
 /** 서비스가 현재 사용하는 최신 임시저장 스키마 */
-export type LatestCharacterDraft = CharacterDraftV1;
+export type LatestUniverseDraft = UniverseDraftV1;
 
 // 아직 v1뿐이라 비어 있습니다. v2가 생기면 [v1 -> v2 변환 함수]를 여기 추가하면 됩니다.
-const characterDraftMigrations: SchemaMigrationStep[] = [];
+const universeDraftMigrations: SchemaMigrationStep[] = [];
 
 /** 서버에서 받아온 payload(과거 버전일 수 있음)를 최신 스키마로 변환합니다. */
-export const migrateCharacterDraft = createSchemaMigrator<
-  LatestCharacterDraft,
-  AnyCharacterDraft
->(characterDraftMigrations);
+export const migrateUniverseDraft = createSchemaMigrator<
+  LatestUniverseDraft,
+  AnyUniverseDraft
+>(universeDraftMigrations);
 
 const toFileId = (value: string | number | null | undefined): string | null =>
   value == null ? null : String(value);
 
 /** 캐릭터 생성 폼의 현재 값을 임시저장 payload로 직렬화합니다. */
-export const buildCharacterDraft = (
+export const buildUniverseDraft = (
   values: CharacterCreateFormValues,
-): CharacterDraftV1 => ({
+): UniverseDraftV1 => ({
   schemaVersion: 1,
   title: values.title,
   name: values.name,
@@ -134,8 +139,8 @@ export const buildCharacterDraft = (
 });
 
 /** 이 draft가 참조하는 모든 fileId. 초안 생성/수정 요청의 최상위 fileIds로 그대로 실어 보냅니다. */
-export const collectCharacterDraftFileIds = (
-  draft: CharacterDraftV1,
+export const collectUniverseDraftFileIds = (
+  draft: UniverseDraftV1,
 ): string[] => {
   const ids = [
     draft.representativeImageFileId,
@@ -150,8 +155,8 @@ export const collectCharacterDraftFileIds = (
 };
 
 /** 서버에서 불러온 draft를 캐릭터 생성 폼이 바로 reset()에 쓸 수 있는 값으로 되돌립니다. */
-export const applyCharacterDraft = (
-  draft: CharacterDraftV1,
+export const applyUniverseDraft = (
+  draft: UniverseDraftV1,
   defaultScenarioName: string,
 ): Partial<CharacterCreateFormValues> => ({
   title: draft.title ?? "",
