@@ -17,6 +17,7 @@ export type UniverseCreateCategory =
 
 export interface UniverseCreateScenario {
   name: string;
+  description: string;
   content: string;
 }
 

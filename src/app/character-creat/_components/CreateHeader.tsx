@@ -195,6 +195,19 @@ const findFirstValidationTarget = (
       };
     }
 
+    // contents 항목을 합친 뒤(encodeScenarioContent)의 총 길이 초과는 배열 자체에
+    // 에러가 달려 항목별 에러(.contents[j].value)와 모양이 다릅니다.
+    const contentsTotalError = scenarioError?.contents as
+      | { message?: string }
+      | undefined;
+    if (contentsTotalError?.message && !Array.isArray(contentsTotalError)) {
+      return {
+        tabId: "scenario",
+        scenarioIndex: i,
+        message: contentsTotalError.message,
+      };
+    }
+
     const contents = values.scenarios[i].contents ?? [];
     for (let j = 0; j < contents.length; j += 1) {
       if (scenarioError?.contents?.[j]?.value) {
@@ -285,6 +298,7 @@ const CreateHeader = ({
     try {
       const scenarios = currentFormData.scenarios.map((scenario, index) => ({
         name: scenario.name || `Scenario ${index + 1}`,
+        description: scenario.description ?? "",
         content: encodeScenarioContent(scenario),
       }));
       const assets =

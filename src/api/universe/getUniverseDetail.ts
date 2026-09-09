@@ -38,6 +38,7 @@ export interface UniverseDetailScenario {
   episodeNo: number;
   displayOrder: number;
   name: string;
+  description: string;
   content: string;
 }
 
@@ -108,7 +109,7 @@ export const adaptUniverseDetailToCharacterDetail = (
   const scenarios: CharacterScenario[] = universe.scenarios.map((scenario) => ({
     scenarioId: scenario.scenarioId,
     name: scenario.name,
-    description: scenario.content,
+    description: scenario.description,
     situation: scenario.content,
     firstDialogue: scenario.content,
     lang: "KO",

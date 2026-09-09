@@ -217,7 +217,9 @@ const ko = {
       scenarioDescriptionMaxLength:
         "시나리오 설명은 최대 100자까지 입력할 수 있어요",
       scenarioContentRequired: "내용을 입력해 주세요",
-      scenarioContentMaxLength: "내용은 최대 1500자까지 입력할 수 있어요",
+      scenarioContentMaxLength: "내용은 최대 5000자까지 입력할 수 있어요",
+      scenarioContentTotalMaxLength:
+        "시나리오 내용은 합쳐서 최대 5000자까지 입력할 수 있어요",
       scenarioMaxCount: "시나리오는 최대 5개까지 생성할 수 있어요",
       characterDescriptionRequired: "캐릭터 설명을 입력해 주세요",
       characterDescriptionMaxLength:
@@ -460,7 +462,9 @@ const en: Messages = {
       scenarioDescriptionMaxLength:
         "Scenario descriptions can be up to 100 characters long",
       scenarioContentRequired: "Please enter the content.",
-      scenarioContentMaxLength: "Content can be up to 1500 characters long",
+      scenarioContentMaxLength: "Content can be up to 5000 characters long",
+      scenarioContentTotalMaxLength:
+        "The scenario's content can be up to 5000 characters combined",
       scenarioMaxCount: "You can create up to 5 scenarios.",
       characterDescriptionRequired: "Please enter a character description.",
       characterDescriptionMaxLength:
@@ -691,7 +695,9 @@ const ja: Messages = {
       scenarioNameRequired: "シナリオ名を入力してください",
       scenarioDescriptionMaxLength: "シナリオ説明は最大100文字まで入力できます",
       scenarioContentRequired: "内容を入力してください",
-      scenarioContentMaxLength: "内容は最大1500文字まで入力できます",
+      scenarioContentMaxLength: "内容は最大5000文字まで入力できます",
+      scenarioContentTotalMaxLength:
+        "シナリオの内容は合計最大5000文字まで入力できます",
       scenarioMaxCount: "シナリオは最大5個まで作成できます",
       characterDescriptionRequired: "キャラクター説明を入力してください",
       characterDescriptionMaxLength:
@@ -915,7 +921,8 @@ const zh: Messages = {
       scenarioNameRequired: "请输入场景名称",
       scenarioDescriptionMaxLength: "场景说明最多可输入 100 个字符",
       scenarioContentRequired: "请输入内容",
-      scenarioContentMaxLength: "内容最多可输入 1500 个字符",
+      scenarioContentMaxLength: "内容最多可输入 5000 个字符",
+      scenarioContentTotalMaxLength: "场景内容合计最多可输入 5000 个字符",
       scenarioMaxCount: "场景最多可创建 5 个",
       characterDescriptionRequired: "请输入角色说明",
       characterDescriptionMaxLength: "角色说明最多可输入 1000 个字符",
@@ -1146,7 +1153,9 @@ const th: Messages = {
       scenarioDescriptionMaxLength:
         "คำอธิบายสถานการณ์สามารถกรอกได้สูงสุด 100 ตัวอักษร",
       scenarioContentRequired: "กรุณากรอกเนื้อหา",
-      scenarioContentMaxLength: "เนื้อหาสามารถกรอกได้สูงสุด 1500 ตัวอักษร",
+      scenarioContentMaxLength: "เนื้อหาสามารถกรอกได้สูงสุด 5000 ตัวอักษร",
+      scenarioContentTotalMaxLength:
+        "เนื้อหาของสถานการณ์รวมกันสามารถกรอกได้สูงสุด 5000 ตัวอักษร",
       scenarioMaxCount: "สามารถสร้างสถานการณ์ได้สูงสุด 5 รายการ",
       characterDescriptionRequired: "กรุณากรอกคำอธิบายตัวละคร",
       characterDescriptionMaxLength:
@@ -1380,7 +1389,9 @@ const vi: Messages = {
       scenarioDescriptionMaxLength:
         "Mô tả kịch bản có thể dài tối đa 100 ký tự",
       scenarioContentRequired: "Vui lòng nhập nội dung",
-      scenarioContentMaxLength: "Nội dung có thể dài tối đa 1500 ký tự",
+      scenarioContentMaxLength: "Nội dung có thể dài tối đa 5000 ký tự",
+      scenarioContentTotalMaxLength:
+        "Tổng nội dung kịch bản có thể dài tối đa 5000 ký tự",
       scenarioMaxCount: "Bạn có thể tạo tối đa 5 kịch bản",
       characterDescriptionRequired: "Vui lòng nhập mô tả nhân vật",
       characterDescriptionMaxLength:

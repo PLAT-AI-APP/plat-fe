@@ -83,6 +83,7 @@ const createCharacterEditDefaultValues = (
     universe.scenarios.length > 0
       ? universe.scenarios.map((scenario) => ({
           name: scenario.name,
+          description: scenario.description,
           ...decodeScenarioContent(scenario.content),
         }))
       : [

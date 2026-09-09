@@ -1,33 +1,28 @@
 import { getResourceImageUrl } from "@/lib/file";
 import { PlatBlock, PlatSegment, parsePlat } from "@/lib/platParse";
-import {
-  CharacterCreateFormValues,
-  ScenarioDifficulty,
-} from "@/schema/character.schema";
 
-type ScenarioFormValue = CharacterCreateFormValues["scenarios"][number];
-type ScenarioContentItem = ScenarioFormValue["contents"][number];
-type DecodedScenarioContent = Pick<
-  ScenarioFormValue,
-  "description" | "difficulty" | "contents"
->;
+/**
+ * character.schema.ts의 동명 타입과 구조적으로 동일하게 맞춰 둡니다(중복 정의).
+ * character.schema.ts가 합산 길이 검증을 위해 이 파일의 encodeScenarioContent를
+ * 값으로 import하는데, 반대로 여기서 그 schema의 타입을 가져오면 zod의 스키마
+ * 타입 추론이 자기 자신을 참조하는 순환 타입 에러(TS2456)가 됩니다.
+ */
+export interface ScenarioContentItem {
+  id: string;
+  type: "chat" | "userChat" | "action" | "asset";
+  value: string;
+  assetImageFileId?: string | number | null;
+}
 
-const DIFFICULTY_CODE: Record<ScenarioDifficulty, string> = {
-  EASY: "E",
-  NORMAL: "N",
-  HARD: "H",
-  VERY_HARD: "V",
-};
+export interface ScenarioFormValue {
+  description?: string;
+  contents?: ScenarioContentItem[];
+}
 
-const DIFFICULTY_FROM_CODE: Record<string, ScenarioDifficulty> = {
-  E: "EASY",
-  N: "NORMAL",
-  H: "HARD",
-  V: "VERY_HARD",
-};
-
-/** description에 메타 블록의 종료 시퀀스가 그대로 섞여 들어가면 파싱이 깨지므로 방어합니다. */
-const sanitizeMetaValue = (value: string) => value.replace(/\]\]/g, "] ]");
+/** decodeScenarioContent는 항상 채워서 반환하므로 optional이 아닌 필수 필드로 못 박습니다. */
+interface DecodedScenarioContent {
+  contents: ScenarioContentItem[];
+}
 
 /** {{user}} 등 인라인 토큰을 표시용 텍스트로 되돌립니다. 실제 유저명 치환은 아직 미구현이라 토큰 그대로 남깁니다. */
 const segmentsToText = (segments: PlatSegment[]) =>
@@ -38,16 +33,9 @@ const segmentsToText = (segments: PlatSegment[]) =>
 /**
  * 폼에 입력된 시나리오 데이터를 .plat v2 마크업 문자열로 합칩니다.
  * 백엔드 scenarios[].content(자유 텍스트, 최대 5000자)로 그대로 전송됩니다.
+ * description/난이도는 이제 다루지 않습니다(설명은 별도 필드, 난이도는 더 이상 보내지 않음).
  */
 export const encodeScenarioContent = (scenario: ScenarioFormValue): string => {
-  const description = scenario.description?.trim();
-  const metaDesc = description ? `[[d=${sanitizeMetaValue(description)}]]` : "";
-
-  const difficulty = scenario.difficulty;
-  const metaDifficulty = difficulty
-    ? `[[f=${DIFFICULTY_CODE[difficulty]}]]`
-    : "";
-
   const blocks = (scenario.contents ?? []).map((item) => {
     // asset의 value는 미리보기용 base64/URL이라 그대로 보낼 수 없으므로 fileId를 씁니다.
     const value =
@@ -71,27 +59,23 @@ export const encodeScenarioContent = (scenario: ScenarioFormValue): string => {
     }
   });
 
-  return [metaDesc, metaDifficulty, ...blocks].filter(Boolean).join("\n\n");
+  return blocks.filter(Boolean).join("\n\n");
 };
 
 /**
  * 백엔드가 돌려준 .plat v2 문자열을 시나리오 수정 폼이 바로 쓸 수 있는 형태로 되돌립니다.
+ * description/난이도는 이제 다루지 않습니다. 과거 데이터에 남아있는 [[f=...]] 같은
+ * 메타 블록은 그냥 건너뜁니다(더 이상 의미를 해석하지 않음).
  */
 export const decodeScenarioContent = (
   content: string,
 ): DecodedScenarioContent => {
   const blocks = parsePlat(content);
 
-  let description = "";
-  let difficulty: ScenarioDifficulty = "NORMAL";
   const contents: ScenarioContentItem[] = [];
 
   blocks.forEach((block: PlatBlock, index) => {
     if (block.type === "META") {
-      if (block.key === "d") description = block.value;
-      if (block.key === "f") {
-        difficulty = DIFFICULTY_FROM_CODE[block.value] ?? "NORMAL";
-      }
       return;
     }
 
@@ -126,5 +110,5 @@ export const decodeScenarioContent = (
     }
   });
 
-  return { description, difficulty, contents };
+  return { contents };
 };

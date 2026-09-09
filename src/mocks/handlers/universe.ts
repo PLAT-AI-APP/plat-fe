@@ -57,6 +57,7 @@ const createMockUniverseDetail = (
       episodeNo: 1,
       displayOrder: 1,
       name: "기본 시나리오",
+      description: "입학식 날 처음 마주치는 장면입니다.",
       content: "문이 열리자 연우는 놀란 표정으로 고개를 들었다.",
     },
   ],
@@ -145,6 +146,7 @@ const createUpdatedUniverseDetail = (
           episodeNo: index + 1,
           displayOrder: index + 1,
           name: scenario.name,
+          description: scenario.description,
           content: scenario.content,
         })),
 });
