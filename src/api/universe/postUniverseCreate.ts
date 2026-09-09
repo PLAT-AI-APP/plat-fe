@@ -49,6 +49,8 @@ export interface UniverseCreateRequest {
   character: UniverseCreateCharacter;
   profileImageFileId: string;
   assets?: UniverseCreateAsset[];
+  /** 이 초안에서 세계관을 만든 경우 삭제할 본인 소유 UNIVERSE 임시 저장 ID. 일반 생성은 생략합니다. */
+  draftId?: string;
 }
 
 export interface UniverseCreateResponse {

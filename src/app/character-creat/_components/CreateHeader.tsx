@@ -27,6 +27,8 @@ import { TabId } from "./CreateTabs";
 
 interface CreateHeaderProps {
   universeId?: string;
+  // 이 초안에서 세계관을 만든 경우에만 있습니다. 등록 성공 시 실어 보내면 백엔드가 그 초안을 자동 삭제합니다.
+  draftId: string | null;
   onSave: () => void;
   onDraftClick: () => void;
   setCurrentTabId: (id: TabId) => void;
@@ -235,6 +237,7 @@ const findFirstValidationTarget = (
 
 const CreateHeader = ({
   universeId,
+  draftId,
   onSave,
   onDraftClick,
   setCurrentTabId,
@@ -387,6 +390,8 @@ const CreateHeader = ({
           description: currentFormData.characterDescription,
           detailSetting: currentFormData.characterDetailSetting,
         },
+        // 이 초안에서 만든 경우에만 실어 보냅니다 — 성공하면 백엔드가 해당 초안을 자동 삭제합니다.
+        ...(draftId ? { draftId } : {}),
       };
 
       const created = await createUniverse(request);
