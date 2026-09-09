@@ -24,6 +24,7 @@ const CharacterChat = ({
         alt={t("chatUI.characterProfileAlt", { name: CharacterName })}
         width={36}
         height={36}
+        unoptimized
         className="avatar-img size-9"
       />
 

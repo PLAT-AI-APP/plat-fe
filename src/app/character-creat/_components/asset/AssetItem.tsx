@@ -136,6 +136,7 @@ const AssetItem = ({ id, index, remove }: AssetItemProps) => {
                     alt={t("imageAlt")}
                     fill
                     sizes="96px"
+                    unoptimized
                     className="object-cover"
                   />
                 ) : (

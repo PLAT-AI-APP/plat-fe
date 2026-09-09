@@ -125,6 +125,7 @@ const RepresentativeImage = () => {
                 alt={t("previewAlt")}
                 width={120}
                 height={157}
+                unoptimized
                 className="h-full w-full object-cover"
               />
             ) : (

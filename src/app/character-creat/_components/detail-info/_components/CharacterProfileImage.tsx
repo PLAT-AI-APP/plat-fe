@@ -129,6 +129,7 @@ const CharacterProfileImage = () => {
               alt={t("profileImagePreviewAlt")}
               width={128}
               height={128}
+              unoptimized
               className="size-full object-cover"
             />
           ) : (

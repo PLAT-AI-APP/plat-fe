@@ -52,6 +52,7 @@ const EditableChatPreview = ({
         alt={profileAlt}
         width={40}
         height={40}
+        unoptimized
         className="h-10 w-10 self-start rounded-full"
       />
       <div className="body-5 min-w-0 flex-1">

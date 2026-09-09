@@ -280,6 +280,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
                   alt={characterChipText}
                   width={16}
                   height={16}
+                  unoptimized
                   className="avatar-img size-4"
                 />
               ) : (
