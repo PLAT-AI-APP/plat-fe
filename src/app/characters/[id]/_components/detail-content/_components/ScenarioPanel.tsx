@@ -5,8 +5,12 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import ScenarioSelectPopover from "@/components/popover/ScenarioSelectPopover";
+import UserChatBubble from "@/components/chat/UserChatBubble";
 import { ArrowDown, Message } from "@/icons";
+import { getResourceImageUrl } from "@/lib/file";
+import { parsePlat, segmentsToDisplayText } from "@/lib/platParse";
 import { cn } from "@/lib/utils";
+import { useUserStore } from "@/store/useUserStore";
 import { CharacterDetail, CharacterScenario } from "@/type/character";
 
 interface ScenarioPanelProps {
@@ -17,6 +21,7 @@ const SCENARIO_CONTENT_MAX_HEIGHT = 1471;
 
 const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
   const t = useTranslations("characterDetail");
+  const rootT = useTranslations();
   // 시나리오 변경 버튼을 팝오버 위치 기준으로 사용하기 위해 ref로 보관합니다.
   const scenarioSelectTriggerRef = useRef<HTMLButtonElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -33,6 +38,14 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
         (scenario) => scenario.scenarioId === selectedScenarioId,
       ) ?? character.scenarios[0],
     [character.scenarios, selectedScenarioId],
+  );
+  // {{user}} 자리에 채워 넣을 표시용 이름. 닉네임이 없으면(비로그인 등) 일반 대체 문구로 대신합니다.
+  const userNickname = useUserStore((state) => state.user?.nickname);
+  const userDisplayName = userNickname || rootT("profile.defaultName");
+  // situation에는 원본 .plat 마크업 전체(대사/유저대사/지문/에셋 태그)가 그대로 들어 있습니다.
+  const scenarioBlocks = useMemo(
+    () => parsePlat(selectedScenario?.situation ?? ""),
+    [selectedScenario?.situation],
   );
 
   useEffect(() => {
@@ -55,7 +68,7 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
     resizeObserver.observe(contentElement);
 
     return () => resizeObserver.disconnect();
-  }, [selectedScenario?.contents]);
+  }, [scenarioBlocks]);
 
   const handleScenarioChange = (scenario: CharacterScenario) => {
     setSelectedScenarioId(scenario.scenarioId);
@@ -119,12 +132,12 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
         >
           {/* 높이 측정은 애니메이션 대상 바깥에서 해야 실제 콘텐츠 높이를 얻을 수 있습니다. */}
           <div ref={contentRef} className="flex flex-col items-center gap-5">
-            {selectedScenario.contents?.map((content) => {
-              if (content.type === "asset") {
+            {scenarioBlocks.map((block, index) => {
+              if (block.type === "ASSET_IMG") {
                 return (
                   <Image
-                    key={content.id}
-                    src={content.value}
+                    key={index}
+                    src={getResourceImageUrl(block.code, "UNIVERSE_ASSET")}
                     alt={t("assetAlt", { name: selectedScenario.name })}
                     width={482}
                     height={289}
@@ -135,34 +148,53 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
                 );
               }
 
-              if (content.type === "chat") {
+              if (block.type === "DIALOGUE") {
                 return (
-                  <div key={content.id} className="flex w-full gap-2">
+                  <div key={index} className="flex w-full gap-2">
                     <Image
                       src={character.profileImage}
-                      alt={character.title}
+                      alt={character.characterName}
                       width={40}
                       height={40}
                       className="avatar-img size-10"
                     />
                     <div className="flex min-w-0 flex-1 flex-col items-start gap-1.5">
-                      <p className="body-5 text-font-1">{character.title}</p>
+                      <p className="body-5 text-font-1">
+                        {character.characterName}
+                      </p>
                       <p className="body-5 rounded-bl-2xl rounded-br-2xl rounded-tr-2xl bg-card px-3 py-2 text-font-1">
-                        {content.value}
+                        {segmentsToDisplayText(block.segments, userDisplayName)}
                       </p>
                     </div>
                   </div>
                 );
               }
 
-              return (
-                <div key={content.id} className="flex w-full gap-5">
-                  <Message className="size-7 shrink-0 text-font-2" />
-                  <p className="body-5 min-w-0 flex-1 whitespace-pre-wrap text-font-2">
-                    {content.value}
-                  </p>
-                </div>
-              );
+              if (block.type === "USER_DIALOGUE") {
+                return (
+                  <div key={index} className="w-full">
+                    <UserChatBubble
+                      text={segmentsToDisplayText(
+                        block.segments,
+                        userDisplayName,
+                      )}
+                    />
+                  </div>
+                );
+              }
+
+              if (block.type === "NARRATIVE") {
+                return (
+                  <div key={index} className="flex w-full gap-5">
+                    <Message className="size-7 shrink-0 text-font-2" />
+                    <p className="body-5 min-w-0 flex-1 whitespace-pre-wrap text-font-2">
+                      {segmentsToDisplayText(block.segments, userDisplayName)}
+                    </p>
+                  </div>
+                );
+              }
+
+              return null;
             })}
           </div>
         </motion.div>

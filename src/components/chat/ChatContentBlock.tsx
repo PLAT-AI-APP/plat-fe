@@ -10,13 +10,8 @@ import { ChatRetry, ChatTrash, Close, Pen, Trash } from "@/icons";
 import { useAutoResizeTextarea } from "@/hooks/form/useAutoResizeTextarea";
 import Check from "@/icons/Check";
 import { getResourceImageUrl } from "@/lib/file";
-import { PlatSegment, parsePlat } from "@/lib/platParse";
-
-/** 인라인 토큰({{user}} 등)을 유지한 표시용 문자열로 변환합니다. */
-const segmentsToText = (segments: PlatSegment[]) =>
-  segments
-    .map((segment) => (segment.type === "TEXT" ? segment.value : "{{user}}"))
-    .join("");
+import { parsePlat, segmentsToDisplayText } from "@/lib/platParse";
+import { useUserStore } from "@/store/useUserStore";
 
 interface ChatContentBlockProps {
   rawData: string;
@@ -38,6 +33,9 @@ const ChatContentBlock = ({
   onRetry,
 }: ChatContentBlockProps) => {
   const t = useTranslations();
+  // {{user}} 자리에 채워 넣을 표시용 이름. 닉네임이 없으면(드묾) 일반 대체 문구로 대신합니다.
+  const userNickname = useUserStore((state) => state.user?.nickname);
+  const userDisplayName = userNickname || t("profile.defaultName");
   const [isEditing, setIsEditing] = React.useState(false);
   const [editedContent, setEditedContent] = React.useState(rawData);
 
@@ -124,7 +122,7 @@ const ChatContentBlock = ({
             <CharacterChat
               key={index}
               image={profileImage}
-              chatText={segmentsToText(block.segments)}
+              chatText={segmentsToDisplayText(block.segments, userDisplayName)}
               CharacterName={characterName}
             />
           );
@@ -132,7 +130,7 @@ const ChatContentBlock = ({
 
         if (block.type === "USER_DIALOGUE") {
           return (
-            <UserChatBubble key={index} text={segmentsToText(block.segments)} />
+            <UserChatBubble key={index} text={segmentsToDisplayText(block.segments, userDisplayName)} />
           );
         }
 
@@ -153,7 +151,7 @@ const ChatContentBlock = ({
 
         if (block.type === "NARRATIVE") {
           return (
-            <Scenario key={index} text={segmentsToText(block.segments)} />
+            <Scenario key={index} text={segmentsToDisplayText(block.segments, userDisplayName)} />
           );
         }
 
