@@ -42,6 +42,8 @@ export interface CharacterDetail {
   likeCount: number;
   /** 이 요청을 보낸 사람이 찜했는지. 비로그인이면 항상 false 입니다. */
   liked: boolean;
+  /** 이 요청을 보낸 사람이 수정 권한이 있는지. 백엔드가 판단해 내려주므로 그대로 씁니다. */
+  editable: boolean;
   tags: string[];
   isOfficial: boolean;
   images: CharacterImageItem[];

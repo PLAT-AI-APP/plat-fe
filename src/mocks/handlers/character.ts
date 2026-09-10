@@ -128,6 +128,7 @@ const mockCharacterDetail: CharacterDetail = {
   chatCount: 235,
   likeCount: 0,
   liked: false,
+  editable: false,
   tags: ["학원", "일상", "로맨스", "소꿉친구", "츤데레"],
   isOfficial: true,
   images: [

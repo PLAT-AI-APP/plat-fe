@@ -61,6 +61,7 @@ const mockCharacterDetail: CharacterDetail = {
   chatCount: 235,
   likeCount: 0,
   liked: false,
+  editable: false,
   tags: ["daily", "mystery", "school", "friend"],
   isOfficial: true,
   images: [

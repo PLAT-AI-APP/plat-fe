@@ -126,6 +126,7 @@ export const adaptUniverseDetailToCharacterDetail = (
     chatCount: universe.chatCount,
     likeCount: universe.likeCount,
     liked: universe.liked,
+    editable: universe.editable,
     tags: universe.hashtags.map((hashtag) => hashtag.label),
     isOfficial: false,
     images,
