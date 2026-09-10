@@ -1,5 +1,9 @@
-import { cn } from "@/lib/utils";
+import type { RefObject } from "react";
+import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
+import { useTabUnderline } from "@/hooks/dom/useTabUnderline";
+import { SPRING_SNAPPY } from "@/constants/motion";
+import { cn } from "@/lib/utils";
 
 export type CharacterDetailTab = "settings" | "scenario" | "comments";
 
@@ -33,9 +37,17 @@ const DetailTabs = ({
   onChange,
 }: DetailTabsProps) => {
   const t = useTranslations("characterDetail");
+  const {
+    containerRef: tabNavRef,
+    setTabRef,
+    rect: underlineRect,
+  } = useTabUnderline(currentTab);
 
   return (
-    <nav className="flex w-full gap-1 bg-dark">
+    <nav
+      ref={tabNavRef as RefObject<HTMLElement>}
+      className="relative flex w-full gap-1 bg-dark"
+    >
       {tabs.map((tab) => {
         const isActive = currentTab === tab.id;
 
@@ -44,17 +56,16 @@ const DetailTabs = ({
         return (
           <a
             key={tab.id}
+            ref={(el) => setTabRef(tab.id, el)}
             href={`#${tab.targetId}`}
             onClick={(event) => {
               event.preventDefault();
               onChange(tab.id, tab.targetId);
             }}
             className={cn(
-              "body-5 flex h-11 items-center gap-1 justify-center border-b-2 text-font-2 transition-colors",
+              "body-5 flex h-11 items-center gap-1 justify-center text-font-2 transition-colors",
               isCommentsTab ? "w-[104px]" : "w-[88px]",
-              isActive
-                ? "border-brand text-font-1"
-                : "border-main hover:text-font-1",
+              isActive ? "text-font-1" : "hover:text-font-1",
             )}
           >
             <span>{t(tab.labelKey)}</span>
@@ -66,6 +77,17 @@ const DetailTabs = ({
           </a>
         );
       })}
+
+      {/* 활성 표시(motion.span)와 같은 bottom-0/h-0.5 박스를 써서, 탭 사이 gap이나
+          마지막 탭 뒤 여백에서 기준선이 끊겨 보이지 않게 전체 폭에 한 번만 그립니다. */}
+      <div className="absolute inset-x-0 bottom-0 h-0.5 bg-main" />
+
+      <motion.span
+        className="absolute bottom-0 h-0.5 bg-brand"
+        initial={false}
+        animate={{ x: underlineRect.left, width: underlineRect.width }}
+        transition={SPRING_SNAPPY}
+      />
     </nav>
   );
 };
