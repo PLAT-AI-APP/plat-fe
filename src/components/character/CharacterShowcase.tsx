@@ -128,6 +128,8 @@ const CharacterShowcase = ({
           rank={char.rank}
           selectedTags={selectedTags}
           fluid={isFluid}
+          // id가 아직 없는 자리(더미 데이터 등)는 갈 곳이 없어 href를 생략해 비활성 상태로 둡니다.
+          href={char.id ? `/characters/${char.id}` : undefined}
         />
       ));
 

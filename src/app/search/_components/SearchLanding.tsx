@@ -212,6 +212,7 @@ const SearchLanding = () => {
                 images={character.image}
                 isNew={character.isNew}
                 isOfficial={character.isOfficial}
+                href={`/characters/${character.id}`}
               />
             ))}
           </CardGrid>

@@ -78,6 +78,7 @@ const RankingTabContents = () => {
               images={card.images}
               isNew={card.isNew}
               isOfficial={card.isOfficial}
+              href={`/characters/${card.universeId}`}
             />
           ))}
         </CardGrid>

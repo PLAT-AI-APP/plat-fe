@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils";
 import useEmblaCarousel from "embla-carousel-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ChatCountBadge from "./ChatCountBadge";
@@ -39,6 +40,7 @@ const CharacterCard = ({
   selectedTags,
   rank,
   fluid = false,
+  href,
 }: CharacterCardProps) => {
   const t = useTranslations("characterCard");
   const config = SIZE_CONFIG[size];
@@ -137,6 +139,16 @@ const CharacterCard = ({
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUp}
       >
+        {/* 나머지 컨트롤(인디케이터, 프로필 보기 CTA)과 형제로 깔리는 stretched link입니다.
+            <a> 안에 <button>을 중첩시키지 않으면서도 카드 전체를 클릭 가능하게 합니다. */}
+        {href && (
+          <Link
+            href={href}
+            aria-label={title}
+            className="absolute inset-0 z-0"
+          />
+        )}
+
         {hasChatCount && (
           <ChatCountBadge
             chatCount={chatCount}
@@ -147,7 +159,7 @@ const CharacterCard = ({
 
         {/* Embla viewport: 소수점 너비 카드에서 다음 슬라이드가 1px 보이는 현상을 clip-path로 보정합니다. */}
         <div
-          className="absolute inset-0 overflow-hidden rounded-2xl bg-scrim [clip-path:inset(0_1px_0_0_round_16px)]"
+          className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl bg-scrim [clip-path:inset(0_1px_0_0_round_16px)]"
           ref={emblaRef}
         >
           <div className="flex h-full w-full">
@@ -171,7 +183,7 @@ const CharacterCard = ({
 
         <LastImageActionOverlay isVisible={isLastActionVisible} />
 
-        <div className="relative z-10 flex h-36 self-stretch flex-col items-start justify-end gap-1 bg-[linear-gradient(180deg,rgba(0,0,0,0)_0%,rgba(0,0,0,0.4)_20%,rgba(0,0,0,0.8)_100%)] px-4 pb-5 pt-6">
+        <div className="pointer-events-none relative z-10 flex h-36 self-stretch flex-col items-start justify-end gap-1 bg-[linear-gradient(180deg,rgba(0,0,0,0)_0%,rgba(0,0,0,0.4)_20%,rgba(0,0,0,0.8)_100%)] px-4 pb-5 pt-6">
           <div className="flex self-stretch flex-col items-start justify-start gap-1">
             <TitleLine
               title={title}
@@ -200,13 +212,19 @@ const CharacterCard = ({
   return (
     <article
       className={cn(
-        "group inline-flex cursor-pointer flex-col items-start justify-start",
+        "group relative inline-flex cursor-pointer flex-col items-start justify-start",
         fluid ? fluidOverride.wrapper : config.wrapper,
       )}
     >
+      {/* 나머지 컨트롤(인디케이터)과 형제로 깔리는 stretched link입니다.
+          <a> 안에 <button>을 중첩시키지 않으면서도 카드 전체를 클릭 가능하게 합니다. */}
+      {href && (
+        <Link href={href} aria-label={title} className="absolute inset-0 z-0" />
+      )}
+
       <div
         className={cn(
-          "relative overflow-hidden bg-scrim",
+          "pointer-events-none relative overflow-hidden bg-scrim",
           fluid ? fluidOverride.imageArea : config.imageArea,
         )}
       >
@@ -237,7 +255,7 @@ const CharacterCard = ({
 
       <div
         className={cn(
-          "flex w-full flex-col items-start justify-start self-stretch",
+          "pointer-events-none flex w-full flex-col items-start justify-start self-stretch",
           config.infoArea,
           tagList && "gap-0.5",
         )}
