@@ -14,7 +14,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useModalStore } from "@/store/useModalStore";
 import { useUserStore } from "@/store/useUserStore";
 import { CharacterDetail } from "@/type/character";
-import { useFollowToggle } from "@/features/follow/useFollowToggle";
+import { useFollowToggle } from "@/hooks/follow/useFollowToggle";
 
 interface SidebarSummaryProps {
   character: CharacterDetail;

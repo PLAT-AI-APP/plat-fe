@@ -5,7 +5,7 @@ import { useRef } from "react";
 import type { KeyboardEvent } from "react";
 import { useTranslations } from "next-intl";
 import PastConversationPopover from "@/components/popover/PastConversationPopover";
-import useToggle from "@/hooks/useToggle";
+import useToggle from "@/hooks/common/useToggle";
 import { Dots } from "@/icons";
 import { cn } from "@/lib/utils";
 import type { ChatMemoryEntry } from "@/type/chat";

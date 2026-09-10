@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useFollowCountQuery } from "@/api/follow/getFollowCount";
-import { useFollowToggle } from "@/features/follow/useFollowToggle";
+import { useFollowToggle } from "@/hooks/follow/useFollowToggle";
 import ProfileActionPopover from "@/components/popover/ProfileActionPopover";
 import { Dots } from "@/icons";
 import { cn, formatWithCommas } from "@/lib/utils";

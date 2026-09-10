@@ -1,6 +1,6 @@
 "use client";
 
-import { useCarousel } from "@/hooks/useCarousel";
+import { useCarousel } from "@/hooks/dom/useCarousel";
 import { ArrowLeft, ArrowRight } from "@/icons";
 import Fade from "embla-carousel-fade";
 import { motion } from "framer-motion";

@@ -3,8 +3,8 @@
 import { motion } from "framer-motion";
 import { useEffect, useRef, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
-import { useClickAway } from "@/hooks/useClickAway";
-import { useFocusTrap } from "@/hooks/useFocusTrap";
+import { useClickAway } from "@/hooks/dom/useClickAway";
+import { useFocusTrap } from "@/hooks/dom/useFocusTrap";
 import { cn } from "@/lib/utils";
 import { TRANSITION_FAST, popVariants } from "@/constants/motion";
 

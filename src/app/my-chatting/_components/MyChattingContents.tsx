@@ -7,7 +7,7 @@ import MyChattingSortPopover, {
   MY_CHATTING_SORT_LABELS,
   type MyChattingSortOption,
 } from "@/components/popover/MyChattingSortPopover";
-import useToggle from "@/hooks/useToggle";
+import useToggle from "@/hooks/common/useToggle";
 import type { AppLocale } from "@/i18n/config";
 import { cn } from "@/lib/utils";
 import { ArrowDown, Close, Search } from "@/icons";

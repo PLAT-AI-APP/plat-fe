@@ -8,9 +8,9 @@ import CharacterShowcase from "@/components/character/CharacterShowcase";
 import CharacterSortPopover, {
   CharacterSortOption,
 } from "@/components/popover/CharacterSortPopover";
-import useToggle from "@/hooks/useToggle";
-import { useInfiniteList } from "@/hooks/useInfiniteList";
-import { useTabUnderline } from "@/hooks/useTabUnderline";
+import useToggle from "@/hooks/common/useToggle";
+import { useInfiniteList } from "@/hooks/data/useInfiniteList";
+import { useTabUnderline } from "@/hooks/dom/useTabUnderline";
 import { Sort } from "@/icons";
 import { cn } from "@/lib/utils";
 import { useUserStore } from "@/store/useUserStore";

@@ -8,7 +8,7 @@ import { useTranslations } from "next-intl";
 import { useUniverseDeleteMutation } from "@/api/universe/deleteUniverse";
 import CharacterMenuPopover from "@/components/popover/CharacterMenuPopover";
 import IconButton from "@/components/ui/IconButton";
-import useToggle from "@/hooks/useToggle";
+import useToggle from "@/hooks/common/useToggle";
 import { ChatFill, Dots } from "@/icons";
 import { formatStatCount } from "@/lib/utils";
 import { showAppToast } from "@/lib/toast";

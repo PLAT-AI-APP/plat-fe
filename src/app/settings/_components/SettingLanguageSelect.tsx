@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { ArrowDown, Check } from "@/icons";
 import { LANGUAGE_LIST } from "@/constants/language";
-import { useClickAway } from "@/hooks/useClickAway";
+import { useClickAway } from "@/hooks/dom/useClickAway";
 import { cn } from "@/lib/utils";
 import { useLocaleStore } from "@/store/useLocaleStore";
 

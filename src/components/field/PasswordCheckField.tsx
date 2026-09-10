@@ -8,7 +8,7 @@ import {
   FIELD_FEEDBACK_MESSAGES,
   FIELD_HELPER_MESSAGES,
 } from "@/constants/fieldMessages";
-import { useTogglePassword } from "@/hooks/useTogglePassword";
+import { useTogglePassword } from "@/hooks/form/useTogglePassword";
 
 const PasswordCheckField = () => {
   const {

@@ -4,7 +4,7 @@ import React, { useCallback, useState } from "react";
 import { useTranslations } from "next-intl";
 import ChatForm from "@/components/chat/ChatForm";
 import MessageList from "@/components/chat/MessageList";
-import { useScrollTimeout } from "@/hooks/useScrollTiemout";
+import { useScrollTimeout } from "@/hooks/dom/useScrollTiemout";
 import { cn } from "@/lib/utils";
 import { AIModelType, ChatMessageType } from "@/type/chat";
 import ChattingRoomHeader from "./ChattingRoomHeader";

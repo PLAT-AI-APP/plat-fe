@@ -5,7 +5,7 @@ import { FieldError, useFormContext } from "react-hook-form";
 import { PasswordToggle } from "@/components/auth/PasswordToggle";
 import SmartInput from "@/components/smart-input";
 import { FIELD_HELPER_MESSAGES } from "@/constants/fieldMessages";
-import { useTogglePassword } from "@/hooks/useTogglePassword";
+import { useTogglePassword } from "@/hooks/form/useTogglePassword";
 
 interface PasswordFieldProps {
   id?: string;

@@ -3,7 +3,7 @@
 import React, { FormEvent, useCallback, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Asterisk, MoveUp } from "@/icons";
-import { useAutoResizeTextarea } from "@/hooks/useAutoResizeTextarea";
+import { useAutoResizeTextarea } from "@/hooks/form/useAutoResizeTextarea";
 import ActiveButton from "../ActiveButton";
 
 interface ChatFormProps {

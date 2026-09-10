@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useRef } from "react";
 import MyChattingMenuPopover from "@/components/popover/MyChattingMenuPopover";
-import useToggle from "@/hooks/useToggle";
+import useToggle from "@/hooks/common/useToggle";
 import { Dots, Message, Pin, User } from "@/icons";
 import dayjs from "@/lib/dayjs";
 import { formatStatCount } from "@/lib/utils";

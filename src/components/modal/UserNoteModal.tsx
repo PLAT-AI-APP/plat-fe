@@ -11,7 +11,7 @@ import ActiveButton from "../ActiveButton";
 import { UserNoteModalProps } from "@/type/modal";
 import { userNoteFormSchema, UserNoteFormValues } from "@/schema/modal.schema";
 import { focusFirstFieldError } from "@/lib/formError";
-import { useTranslateText } from "@/hooks/useTranslateText";
+import { useTranslateText } from "@/hooks/i18n/useTranslateText";
 import IconButton from "@/components/ui/IconButton";
 
 const UserNoteModal = ({ onClose }: UserNoteModalProps) => {

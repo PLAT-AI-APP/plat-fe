@@ -6,7 +6,7 @@ import React from "react";
 import { useTranslations } from "next-intl";
 import dayjs from "@/lib/dayjs";
 import PinFill from "@/icons/PinFill";
-import { useInfiniteList } from "@/hooks/useInfiniteList";
+import { useInfiniteList } from "@/hooks/data/useInfiniteList";
 import type { NoticeCategory } from "@/type/notice";
 import { InfiniteQueryBoundary } from "@/components/state";
 

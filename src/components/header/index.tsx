@@ -10,7 +10,7 @@ import { useLayoutStore } from "@/store/useLayoutStore";
 import { useUserStore } from "@/store/useUserStore";
 import { useWalletStore } from "@/store/useWalletStore";
 import ProfilePopover from "../popover/ProfilePopover";
-import useToggle from "@/hooks/useToggle";
+import useToggle from "@/hooks/common/useToggle";
 import Token from "@/icons/Token";
 import { formatWithCommas } from "@/lib/utils";
 

@@ -10,7 +10,7 @@ import { BirthDateInput } from "../BirthDateInput";
 import ActiveButton from "../ActiveButton";
 import { useUserStore } from "@/store/useUserStore";
 import { useUpdateMyInfoMutation } from "@/api/user/patchMyInfo";
-import { useFormServerError } from "@/hooks/useFormServerError";
+import { useFormServerError } from "@/hooks/form/useFormServerError";
 import {
   profileEditFormSchema,
   ProfileEditFormType,
@@ -23,7 +23,7 @@ import AccountField from "../field/AccountField";
 import { ProfileEditModalProps } from "@/type/modal";
 import { useModalStore } from "@/store/useModalStore";
 import { focusFirstFieldError } from "@/lib/formError";
-import { useTranslateText } from "@/hooks/useTranslateText";
+import { useTranslateText } from "@/hooks/i18n/useTranslateText";
 
 const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
   const t = useTranslations("modalUi.profileEdit");

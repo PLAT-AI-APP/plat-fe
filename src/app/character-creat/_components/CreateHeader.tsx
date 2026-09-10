@@ -22,7 +22,7 @@ import {
   UniverseUpdateRequest,
   useUniverseUpdateMutation,
 } from "@/api/universe/patchUniverseUpdate";
-import { useTranslateText } from "@/hooks/useTranslateText";
+import { useTranslateText } from "@/hooks/i18n/useTranslateText";
 import { TabId } from "./CreateTabs";
 
 interface CreateHeaderProps {

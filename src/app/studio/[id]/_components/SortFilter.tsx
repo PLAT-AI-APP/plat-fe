@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import CharacterSortPopover, {
   CharacterSortOption,
 } from "@/components/popover/CharacterSortPopover";
-import { useChangeQueryString } from "@/hooks/useChangeQueryString";
+import { useChangeQueryString } from "@/hooks/navigation/useChangeQueryString";
 import { Sort } from "@/icons";
 
 interface SortFilterProps {

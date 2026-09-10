@@ -1,6 +1,6 @@
 "use client";
 
-import { useVisibleItemCount } from "@/hooks/useVisibleItemCount";
+import { useVisibleItemCount } from "@/hooks/dom/useVisibleItemCount";
 
 interface OverflowTagListProps {
   tags: { id: string; label: string }[];

@@ -4,7 +4,7 @@ import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { useCarousel } from "@/hooks/useCarousel";
+import { useCarousel } from "@/hooks/dom/useCarousel";
 import { useHomeBannersQuery } from "@/api/home/getBanners";
 import { ArrowLeft, ArrowRight } from "@/icons";
 import { cn } from "@/lib/utils";

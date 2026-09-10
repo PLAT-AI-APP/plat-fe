@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowLeft, ArrowRight } from "@/icons";
-import { useCarousel } from "@/hooks/useCarousel";
+import { useCarousel } from "@/hooks/dom/useCarousel";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useTranslations } from "next-intl";

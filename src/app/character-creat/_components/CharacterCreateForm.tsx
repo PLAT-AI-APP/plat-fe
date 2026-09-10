@@ -21,14 +21,14 @@ import {
   CharacterCreateFormValues,
 } from "@/schema/character.schema";
 import { useScenarioPreviewHistoryStore } from "@/store/useScenarioPreviewHistoryStore";
-import { useUnsavedChangesFallbackGuard } from "@/hooks/useUnsavedChangesFallbackGuard";
-import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useUnsavedChangesFallbackGuard } from "@/hooks/navigation/useUnsavedChangesFallbackGuard";
+import { useMediaQuery } from "@/hooks/dom/useMediaQuery";
+import { useUniverseDraft } from "@/hooks/draft/useUniverseDraft";
 import { LOGOUT_REDIRECT_IN_PROGRESS_KEY } from "@/constants/auth";
 import {
   UniverseDetailResponse,
   useUniverseDetailQuery,
 } from "@/api/universe/getUniverseDetail";
-import { useUniverseDraft } from "../_hooks/useUniverseDraft";
 
 const createCharacterCreateDefaultValues = (
   defaultScenarioName: string,

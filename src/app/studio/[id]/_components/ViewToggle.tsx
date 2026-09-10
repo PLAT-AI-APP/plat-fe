@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { ViewGrid, ViewList } from "@/icons";
-import { useChangeQueryString } from "@/hooks/useChangeQueryString";
+import { useChangeQueryString } from "@/hooks/navigation/useChangeQueryString";
 import { SPRING_SNAPPY } from "@/constants/motion";
 
 interface ViewToggleProps {

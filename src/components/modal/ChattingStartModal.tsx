@@ -6,7 +6,7 @@ import ActiveButton from "../ActiveButton";
 import { ModalLayout } from "../ModalLayout";
 import ScenarioSelectPopover from "../popover/ScenarioSelectPopover";
 import SmartInput from "@/components/smart-input";
-import useToggle from "@/hooks/useToggle";
+import useToggle from "@/hooks/common/useToggle";
 import { Close, Message, User } from "@/icons";
 import { CharacterScenario } from "@/type/character";
 import { ChattingStartModalProps } from "@/type/modal";

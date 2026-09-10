@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+import { useIntersectionObserver } from "@/hooks/dom/useIntersectionObserver";
 
 /**
  * 백엔드의 PageWith/SliceWith 가 공통으로 갖는 부분만 본다.

@@ -8,7 +8,7 @@ import {
   useCategorySearchQuery,
 } from "@/api/search/getCategorySearch";
 import Tag from "@/icons/Tag";
-import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useMediaQuery } from "@/hooks/dom/useMediaQuery";
 import { TABLET_MAX_WIDTH_QUERY } from "@/constants/layout";
 import CharacterCard from "@/components/character/character-card";
 import CardGrid from "@/components/character/character-card/CardGrid";

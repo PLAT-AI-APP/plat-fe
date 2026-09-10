@@ -7,7 +7,7 @@ import CharacterChat from "@/components/chat/CharacterChat";
 import Scenario from "@/components/chat/Scenario";
 import UserChatBubble from "@/components/chat/UserChatBubble";
 import { ChatRetry, ChatTrash, Close, Pen, Trash } from "@/icons";
-import { useAutoResizeTextarea } from "@/hooks/useAutoResizeTextarea";
+import { useAutoResizeTextarea } from "@/hooks/form/useAutoResizeTextarea";
 import Check from "@/icons/Check";
 import { getResourceImageUrl } from "@/lib/file";
 import { PlatSegment, parsePlat } from "@/lib/platParse";

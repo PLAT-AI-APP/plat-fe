@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import CharacterCard from "@/components/character/character-card";
 import CardGrid from "@/components/character/character-card/CardGrid";
-import { useRecentSearch } from "@/hooks/useRecentSearch";
+import { useRecentSearch } from "@/hooks/search/useRecentSearch";
 import dayjs from "@/lib/dayjs";
 import { cn, formatStatCount } from "@/lib/utils";
 import { useLocaleStore } from "@/store/useLocaleStore";

@@ -8,7 +8,7 @@ import {
   FIELD_FEEDBACK_MESSAGES,
   FIELD_HELPER_MESSAGES,
 } from "@/constants/fieldMessages";
-import { useDebounce } from "@/hooks/useDebounce";
+import { useDebounce } from "@/hooks/common/useDebounce";
 import { NICKNAME_REGEX } from "@/lib/regex";
 import { useUserStore } from "@/store/useUserStore";
 

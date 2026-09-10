@@ -13,7 +13,7 @@ import { useDetailPersonaQuery } from "@/api/persona/detailPersons";
 import { PersonaAddModalProps } from "@/type/modal";
 import { personaFormSchema, PersonaFormValues } from "@/schema/modal.schema";
 import { focusFirstFieldError } from "@/lib/formError";
-import { useTranslateText } from "@/hooks/useTranslateText";
+import { useTranslateText } from "@/hooks/i18n/useTranslateText";
 import IconButton from "@/components/ui/IconButton";
 
 const PersonaAddModal = ({

@@ -14,7 +14,7 @@ import {
 } from "@/api/search/getSearch";
 import type { SearchCardItem } from "@/api/search/getSearch";
 import { showAppToast } from "@/lib/toast";
-import { useRecentSearch } from "@/hooks/useRecentSearch";
+import { useRecentSearch } from "@/hooks/search/useRecentSearch";
 import { cn, formatStatCount } from "@/lib/utils";
 import { useLocaleStore } from "@/store/useLocaleStore";
 import SearchQueryBar from "./SearchQueryBar";

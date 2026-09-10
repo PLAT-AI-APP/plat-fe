@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowDown, ArrowRight, ArrowUp } from "@/icons";
-import { useTranslateText } from "@/hooks/useTranslateText";
+import { useTranslateText } from "@/hooks/i18n/useTranslateText";
 import { cn } from "@/lib/utils";
 import React, { forwardRef, useState } from "react";
 import {
@@ -10,7 +10,7 @@ import {
   HelperMessage,
   LabelSection,
 } from "./SubComponents";
-import { useAutoResizeTextarea } from "@/hooks/useAutoResizeTextarea";
+import { useAutoResizeTextarea } from "@/hooks/form/useAutoResizeTextarea";
 import { useLeftPadding } from "./hooks";
 import { SmartInputProps } from "./types";
 

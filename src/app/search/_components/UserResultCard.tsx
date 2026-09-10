@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import DefaultAvatar from "./DefaultAvatar";
-import { useFollowToggle } from "@/features/follow/useFollowToggle";
+import { useFollowToggle } from "@/hooks/follow/useFollowToggle";
 
 export interface SearchUserResult {
   userId: string;

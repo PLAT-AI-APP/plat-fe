@@ -1,5 +1,5 @@
 import type { KeyboardEvent } from "react";
-import { useAutoResizeTextarea } from "@/hooks/useAutoResizeTextarea";
+import { useAutoResizeTextarea } from "@/hooks/form/useAutoResizeTextarea";
 import PreviewEditControls from "./PreviewEditControls";
 import { PreviewEditLabels } from "./types";
 
