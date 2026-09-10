@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
 import CreatePreviewList from "./create-preview-list";
 import { useAutoResizeTextarea } from "@/hooks/form/useAutoResizeTextarea";
+import { useTextareaSubmitShortcuts } from "@/hooks/form/useTextareaSubmitShortcuts";
 import { useScrollTimeout } from "@/hooks/dom/useScrollTiemout";
 import { ArrowLeft, ArrowRight, Asterisk, User } from "@/icons";
 import { cn } from "@/lib/utils";
@@ -142,15 +143,9 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
     submitScenarioMessage();
   };
 
-  const handleTextareaKeyDown = (
-    e: React.KeyboardEvent<HTMLTextAreaElement>,
-  ) => {
-    // Shift+Enter는 줄바꿈으로 두고, Enter만으로 바로 전송합니다.
-    if (e.key !== "Enter" || e.shiftKey || e.nativeEvent.isComposing) return;
-
-    e.preventDefault();
-    submitScenarioMessage();
-  };
+  const { handleKeyDown: handleTextareaKeyDown } = useTextareaSubmitShortcuts({
+    onSubmit: submitScenarioMessage,
+  });
 
   const insertComposerText = (text: string) => {
     // 커서 위치에 토큰/이름을 삽입해 사용자가 긴 문장을 다시 작성하지 않게 합니다.

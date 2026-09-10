@@ -1,4 +1,4 @@
-import type { KeyboardEvent } from "react";
+import { useTextareaSubmitShortcuts } from "@/hooks/form/useTextareaSubmitShortcuts";
 
 interface EditableScenarioPreviewProps {
   value: string;
@@ -13,23 +13,10 @@ const EditableScenarioPreview = ({
   onCancel,
   onConfirm,
 }: EditableScenarioPreviewProps) => {
-  // 엔터는 확정, esc는 취소, 쉬프트+엔터는 줄바꿈으로 동작합니다.
-  const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.key === "Escape") {
-      event.preventDefault();
-      onCancel();
-      return;
-    }
-
-    if (
-      event.key === "Enter" &&
-      !event.shiftKey &&
-      !event.nativeEvent.isComposing
-    ) {
-      event.preventDefault();
-      onConfirm();
-    }
-  };
+  const { handleKeyDown, handleFocus } = useTextareaSubmitShortcuts({
+    onSubmit: onConfirm,
+    onCancel,
+  });
 
   return (
     // Scenario text is edited as a full-width block to match the preview canvas.
@@ -41,7 +28,7 @@ const EditableScenarioPreview = ({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         onKeyDown={handleKeyDown}
-        onFocus={(e) => e.target.select()}
+        onFocus={handleFocus}
       />
     </div>
   );

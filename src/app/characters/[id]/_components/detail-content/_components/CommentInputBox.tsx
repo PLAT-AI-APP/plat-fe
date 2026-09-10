@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useUserStore } from "@/store/useUserStore";
+import { useTextareaSubmitShortcuts } from "@/hooks/form/useTextareaSubmitShortcuts";
 import { usePostUniverseCommentMutation } from "@/api/comment/postUniverseComment";
 
 /** 서버가 받는 댓글 최대 길이 */
@@ -37,6 +38,10 @@ const CommentInputBox = ({ universeId }: CommentInputBoxProps) => {
     );
   };
 
+  const { handleKeyDown } = useTextareaSubmitShortcuts({
+    onSubmit: handleSubmit,
+  });
+
   return (
     <div className="flex gap-2">
       <Image
@@ -51,6 +56,7 @@ const CommentInputBox = ({ universeId }: CommentInputBoxProps) => {
         <textarea
           value={comment}
           onChange={(event) => setComment(event.target.value)}
+          onKeyDown={handleKeyDown}
           disabled={!isLoggedIn}
           maxLength={COMMENT_MAX_LENGTH}
           className={cn(

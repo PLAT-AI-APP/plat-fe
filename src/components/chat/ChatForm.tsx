@@ -1,9 +1,10 @@
 "use client";
 
-import React, { FormEvent, useCallback, useState } from "react";
+import { FormEvent, useCallback, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Asterisk, MoveUp } from "@/icons";
 import { useAutoResizeTextarea } from "@/hooks/form/useAutoResizeTextarea";
+import { useTextareaSubmitShortcuts } from "@/hooks/form/useTextareaSubmitShortcuts";
 import ActiveButton from "../ActiveButton";
 
 interface ChatFormProps {
@@ -32,20 +33,9 @@ const ChatForm = ({ onSendMessage }: ChatFormProps) => {
     submitMessage();
   };
 
-  const handleTextareaKeyDown = (
-    event: React.KeyboardEvent<HTMLTextAreaElement>,
-  ) => {
-    if (
-      event.key !== "Enter" ||
-      event.shiftKey ||
-      event.nativeEvent.isComposing
-    ) {
-      return;
-    }
-
-    event.preventDefault();
-    submitMessage();
-  };
+  const { handleKeyDown: handleTextareaKeyDown } = useTextareaSubmitShortcuts({
+    onSubmit: submitMessage,
+  });
 
   const handleSituationInsert = () => {
     const textarea = textareaRef.current;

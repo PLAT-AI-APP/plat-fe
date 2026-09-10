@@ -1,6 +1,6 @@
 import Image from "next/image";
-import type { KeyboardEvent } from "react";
 import { useAutoResizeTextarea } from "@/hooks/form/useAutoResizeTextarea";
+import { useTextareaSubmitShortcuts } from "@/hooks/form/useTextareaSubmitShortcuts";
 import PreviewEditControls from "./PreviewEditControls";
 import { PreviewEditLabels } from "./types";
 
@@ -26,24 +26,10 @@ const EditableChatPreview = ({
   onConfirm,
 }: EditableChatPreviewProps) => {
   const { textareaRef } = useAutoResizeTextarea({ value });
-
-  // 엔터는 확정, esc는 취소, 쉬프트+엔터는 줄바꿈으로 동작합니다.
-  const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.key === "Escape") {
-      event.preventDefault();
-      onCancel();
-      return;
-    }
-
-    if (
-      event.key === "Enter" &&
-      !event.shiftKey &&
-      !event.nativeEvent.isComposing
-    ) {
-      event.preventDefault();
-      onConfirm();
-    }
-  };
+  const { handleKeyDown, handleFocus } = useTextareaSubmitShortcuts({
+    onSubmit: onConfirm,
+    onCancel,
+  });
 
   return (
     <div className="flex items-end gap-3">
@@ -66,7 +52,7 @@ const EditableChatPreview = ({
             value={value}
             onChange={(e) => onChange(e.target.value)}
             onKeyDown={handleKeyDown}
-            onFocus={(e) => e.target.select()}
+            onFocus={handleFocus}
           />
         </div>
       </div>

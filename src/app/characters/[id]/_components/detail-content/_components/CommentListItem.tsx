@@ -10,6 +10,7 @@ import type { Comment } from "@/type/comment";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useDialogStore } from "@/store/useDialogStore";
 import { useUserStore } from "@/store/useUserStore";
+import { useTextareaSubmitShortcuts } from "@/hooks/form/useTextareaSubmitShortcuts";
 import { useCommentRepliesInfiniteQuery } from "@/api/comment/getCommentReplies";
 import { usePostCommentReplyMutation } from "@/api/comment/postCommentReply";
 import {
@@ -81,6 +82,17 @@ const CommentListItem = ({
     );
   };
 
+  const handleCancelEdit = () => {
+    setEditedContent(comment.content);
+    setIsEditing(false);
+  };
+
+  const { handleKeyDown: handleEditKeyDown, handleFocus: handleEditFocus } =
+    useTextareaSubmitShortcuts({
+      onSubmit: handleSubmitEdit,
+      onCancel: handleCancelEdit,
+    });
+
   const handleSubmitReply = () => {
     const content = replyContent.trim();
     if (!content || isReplying) return;
@@ -90,6 +102,10 @@ const CommentListItem = ({
       { onSuccess: () => setReplyContent("") },
     );
   };
+
+  const { handleKeyDown: handleReplyKeyDown } = useTextareaSubmitShortcuts({
+    onSubmit: handleSubmitReply,
+  });
 
   const handleDeleteComment = () => {
     openDialog("COMMENT_DELETE", {
@@ -141,17 +157,20 @@ const CommentListItem = ({
         </header>
 
         {isEditing ? (
-          <div className="flex flex-col items-end gap-1 rounded-2xl bg-btn-hover px-3 py-2">
+          <div className="flex flex-col items-end gap-1 rounded-2xl border border-main bg-btn-hover px-3 py-2 transition-colors focus-within:field-focus!">
             <textarea
+              autoFocus
               value={editedContent}
               onChange={(event) => setEditedContent(event.target.value)}
+              onKeyDown={handleEditKeyDown}
+              onFocus={handleEditFocus}
               maxLength={COMMENT_MAX_LENGTH}
-              className="body-5 min-h-9 w-full resize-none bg-transparent text-font-1 outline-none"
+              className="focus-ring-none body-5 min-h-9 w-full resize-none bg-transparent text-font-1 outline-none"
             />
             <div className="flex gap-2">
               <button
                 type="button"
-                onClick={() => setIsEditing(false)}
+                onClick={handleCancelEdit}
                 className="body-5 rounded-xl px-4 py-1.5 text-font-2 transition-colors hover:text-font-1"
               >
                 {t("commentEditCancel")}
@@ -204,13 +223,14 @@ const CommentListItem = ({
         {!isReply && isReplyOpen && (
           <div className="flex flex-col gap-4">
             {isLoggedIn && (
-              <div className="flex flex-col items-end gap-1 rounded-2xl bg-btn-hover px-3 py-2">
+              <div className="flex flex-col items-end gap-1 rounded-2xl border border-main bg-btn-hover px-3 py-2 transition-colors focus-within:field-focus!">
                 <textarea
                   value={replyContent}
                   onChange={(event) => setReplyContent(event.target.value)}
+                  onKeyDown={handleReplyKeyDown}
                   maxLength={COMMENT_MAX_LENGTH}
                   placeholder={t("replyPlaceholder")}
-                  className="body-5 min-h-9 w-full resize-none bg-transparent text-font-1 outline-none placeholder:text-font-disabled"
+                  className="focus-ring-none body-5 min-h-9 w-full resize-none bg-transparent text-font-1 outline-none placeholder:text-font-disabled"
                 />
                 <button
                   type="button"

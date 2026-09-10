@@ -2,10 +2,10 @@
 
 import { AnimatePresence } from "framer-motion";
 import { useRef } from "react";
-import type { KeyboardEvent } from "react";
 import { useTranslations } from "next-intl";
 import PastConversationPopover from "@/components/popover/PastConversationPopover";
 import useToggle from "@/hooks/common/useToggle";
+import { useTextareaSubmitShortcuts } from "@/hooks/form/useTextareaSubmitShortcuts";
 import { Dots } from "@/icons";
 import { cn } from "@/lib/utils";
 import type { ChatMemoryEntry } from "@/type/chat";
@@ -34,24 +34,8 @@ const MemoryItem = ({
   const t = useTranslations("chatRoom.sidebar");
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const { isOpen: isPopoverOpen, toggle, close: closePopover } = useToggle();
-
-  // 엔터는 확정, esc는 취소, 쉬프트+엔터는 줄바꿈으로 동작합니다.
-  const handleDraftKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.key === "Escape") {
-      event.preventDefault();
-      onCancelEdit();
-      return;
-    }
-
-    if (
-      event.key === "Enter" &&
-      !event.shiftKey &&
-      !event.nativeEvent.isComposing
-    ) {
-      event.preventDefault();
-      onSave();
-    }
-  };
+  const { handleKeyDown: handleDraftKeyDown, handleFocus: handleDraftFocus } =
+    useTextareaSubmitShortcuts({ onSubmit: onSave, onCancel: onCancelEdit });
 
   return (
     <article
@@ -108,7 +92,7 @@ const MemoryItem = ({
               value={draft}
               onChange={(event) => onChangeDraft(event.target.value)}
               onKeyDown={handleDraftKeyDown}
-              onFocus={(event) => event.target.select()}
+              onFocus={handleDraftFocus}
               className="focus-ring-none body-5 min-h-[153px] w-full resize-none bg-transparent text-font-0 outline-none"
             />
           </div>
