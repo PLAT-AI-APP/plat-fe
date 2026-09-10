@@ -34,7 +34,10 @@ export interface CharacterImageItem {
 
 export interface CharacterDetail {
   characterId: string;
+  /** 세계관 제목. 페이지 대표 타이틀(카드/헤더)로 쓰입니다 — 캐릭터 이름과 다를 수 있습니다. */
   title: string;
+  /** 캐릭터 본인의 이름. "캐릭터 소개" 같이 캐릭터 개인을 가리키는 자리에서만 씁니다. */
+  characterName: string;
   introduce: string;
   prologue: string;
   characterDescription: string;

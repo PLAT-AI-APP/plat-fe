@@ -120,6 +120,7 @@ export const adaptUniverseDetailToCharacterDetail = (
   return {
     characterId: universe.universeId,
     title: universe.title,
+    characterName: universe.character.name ?? "",
     introduce: universe.introduce,
     prologue: universe.detailSetting,
     characterDescription: universe.description,

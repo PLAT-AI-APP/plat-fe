@@ -179,12 +179,12 @@ const SettingsPanel = ({
         <div className="flex items-center gap-2">
           <Image
             src={character.profileImage}
-            alt={t("profileAlt", { name: character.title })}
+            alt={t("profileAlt", { name: character.characterName })}
             width={32}
             height={32}
             className="avatar-img size-8"
           />
-          <span className="body-3 text-font-1">{character.title}</span>
+          <span className="body-3 text-font-1">{character.characterName}</span>
         </div>
         <ExpandableText maxHeight={100}>
           {character.characterDescription}

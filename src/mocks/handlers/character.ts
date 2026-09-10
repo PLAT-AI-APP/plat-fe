@@ -119,6 +119,7 @@ const mockScenarios: CharacterScenario[] = [
 const mockCharacterDetail: CharacterDetail = {
   characterId: "1",
   title: "여사친이 집에 자꾸 쳐들어옴",
+  characterName: "이윤아",
   introduce:
     "방과 후마다 아무렇지 않게 찾아오는 소꿉친구와 티격태격하는 일상형 로맨스",
   prologue:

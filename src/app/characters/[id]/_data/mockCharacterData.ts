@@ -53,6 +53,7 @@ export const mockCharacterScenarios: CharacterScenario[] = [
 const mockCharacterDetail: CharacterDetail = {
   characterId: "1",
   title: "Archive Room Friend",
+  characterName: "Ari",
   introduce: "A calm character who always notices what others miss.",
   prologue:
     "An ordinary school archive room becomes the start of a strange but gentle story. The character speaks lightly, but remembers details that everyone else forgets.",
