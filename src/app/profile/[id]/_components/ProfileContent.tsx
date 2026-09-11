@@ -143,6 +143,7 @@ export default function ProfileContent({ id }: { id: string }) {
   const likedCards = useMemo(
     () =>
       likedItems.map((card) => ({
+        id: card.universeId,
         name: card.title,
         chatCount: card.chatCount,
         dec: card.description,
