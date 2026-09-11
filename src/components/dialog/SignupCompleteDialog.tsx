@@ -38,6 +38,8 @@ const SignupCompleteDialog = ({
       }
       confirmText="dialog.signupComplete.confirm"
       confirmFn={handleLogin}
+      cancelText="dialog.signupComplete.skip"
+      cancelFn={onClose}
     />
   );
 };

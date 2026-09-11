@@ -94,6 +94,7 @@ const ko = {
       descriptionLine1: "회원님의 정보 보호와 안전한 서비스 이용을 위해,",
       descriptionLine2: "방금 만든 계정으로 로그인해 주세요.",
       confirm: "로그인하기",
+      skip: "다음에 할게요",
     },
     welcomeCredit: {
       title: "웰컴 크레딧이 도착했어요",
@@ -332,6 +333,7 @@ const en: Messages = {
       descriptionLine1: "For your privacy and safe access to the service,",
       descriptionLine2: "please log in with the account you just created.",
       confirm: "Log in",
+      skip: "Maybe later",
     },
     welcomeCredit: {
       title: "Your welcome credit has arrived",
@@ -571,6 +573,7 @@ const ja: Messages = {
       descriptionLine1: "安全なサービス利用と情報保護のため、",
       descriptionLine2: "作成したアカウントでログインしてください。",
       confirm: "ログインする",
+      skip: "後でやる",
     },
     welcomeCredit: {
       title: "ウェルカムクレジットが届きました",
@@ -802,6 +805,7 @@ const zh: Messages = {
       descriptionLine1: "为了保护你的信息并安全使用服务，",
       descriptionLine2: "请使用刚创建的账号登录。",
       confirm: "去登录",
+      skip: "以后再说",
     },
     welcomeCredit: {
       title: "欢迎积分已到账",
@@ -1028,6 +1032,7 @@ const th: Messages = {
         "เพื่อความปลอดภัยของข้อมูลและการใช้งานบริการอย่างปลอดภัย",
       descriptionLine2: "กรุณาเข้าสู่ระบบด้วยบัญชีที่เพิ่งสร้าง",
       confirm: "เข้าสู่ระบบ",
+      skip: "ไว้คราวหน้า",
     },
     welcomeCredit: {
       title: "เครดิตต้อนรับมาถึงแล้ว",
@@ -1261,6 +1266,7 @@ const vi: Messages = {
       descriptionLine1: "Để bảo vệ thông tin và sử dụng dịch vụ an toàn,",
       descriptionLine2: "vui lòng đăng nhập bằng tài khoản bạn vừa tạo.",
       confirm: "Đăng nhập",
+      skip: "Để sau",
     },
     welcomeCredit: {
       title: "Tín dụng chào mừng đã đến",
