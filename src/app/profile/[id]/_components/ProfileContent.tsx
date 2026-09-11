@@ -1,17 +1,14 @@
 "use client";
 
-import React, { useMemo, useRef, useState, useSyncExternalStore } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import React, { useMemo, useState, useSyncExternalStore } from "react";
+import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { useLikedUniversesInfiniteQuery } from "@/api/user/getLikedUniverses";
 import CharacterShowcase from "@/components/character/CharacterShowcase";
-import CharacterSortPopover, {
-  CharacterSortOption,
-} from "@/components/popover/CharacterSortPopover";
-import useToggle from "@/hooks/common/useToggle";
+import SortFilter from "@/components/character/SortFilter";
+import { CharacterSortOption } from "@/components/popover/CharacterSortPopover";
 import { useInfiniteList } from "@/hooks/data/useInfiniteList";
 import { useTabUnderline } from "@/hooks/dom/useTabUnderline";
-import { Sort } from "@/icons";
 import { cn } from "@/lib/utils";
 import { useUserStore } from "@/store/useUserStore";
 import Header from "./Header";
@@ -110,8 +107,6 @@ export default function ProfileContent({ id }: { id: string }) {
   const isOwnProfile = Boolean(myUserId && myUserId === id);
   const [activeTab, setActiveTab] = useState<ProfileTab>("character");
   const [sort, setSort] = useState<CharacterSortOption>("latest");
-  const { isOpen, toggle } = useToggle();
-  const triggerRef = useRef<HTMLButtonElement>(null);
 
   const tabItems = isOwnProfile ? [CHARACTER_TAB, WISH_TAB] : [CHARACTER_TAB];
   // 남의 프로필을 보다가 찜 탭이 사라지면 아무 탭도 선택되지 않은 채로 남습니다.
@@ -225,34 +220,8 @@ export default function ProfileContent({ id }: { id: string }) {
 
             {/* 찜 목록은 서버가 찜한 시각 역순 하나만 지원합니다. 고를 수 없는 정렬을
                 띄워 두면 눌러도 아무 일이 없어 고장으로 보입니다. */}
-            <div
-              id="sort-filter-container"
-              className={cn("relative", isWishTab && "hidden")}
-            >
-              <button
-                ref={triggerRef}
-                type="button"
-                onClick={toggle}
-                className="title-5 flex items-center gap-1.5 rounded-lg px-1.5 py-1 text-font-2 transition-colors duration-200 hover:bg-btn-hover hover:text-font-1"
-                aria-haspopup="listbox"
-                aria-expanded={isOpen}
-              >
-                <Sort className="size-4" />
-                {t(`profile.sort.${sort}`)}
-              </button>
-
-              <AnimatePresence>
-                {isOpen && (
-                  <CharacterSortPopover
-                    onChange={setSort}
-                    onClose={toggle}
-                    triggerRef={
-                      triggerRef as React.RefObject<HTMLButtonElement>
-                    }
-                    value={sort}
-                  />
-                )}
-              </AnimatePresence>
+            <div className={cn(isWishTab && "hidden")}>
+              <SortFilter currentSort={sort} onChange={setSort} />
             </div>
           </header>
         </div>

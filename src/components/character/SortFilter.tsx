@@ -6,21 +6,20 @@ import { useTranslations } from "next-intl";
 import CharacterSortPopover, {
   CharacterSortOption,
 } from "@/components/popover/CharacterSortPopover";
-import { useChangeQueryString } from "@/hooks/navigation/useChangeQueryString";
 import { Sort } from "@/icons";
 
 interface SortFilterProps {
   currentSort: CharacterSortOption;
+  onChange: (nextSort: CharacterSortOption) => void;
 }
 
-const SortFilter = ({ currentSort }: SortFilterProps) => {
+const SortFilter = ({ currentSort, onChange }: SortFilterProps) => {
   const t = useTranslations();
   const [isSortOpen, setIsSortOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const changeQueryString = useChangeQueryString();
 
   const handleSortChange = (newSort: CharacterSortOption) => {
-    changeQueryString({ updateKey: "sort", updateValue: newSort });
+    onChange(newSort);
     setIsSortOpen(false);
   };
 
