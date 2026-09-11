@@ -4,6 +4,7 @@ import { AnimatePresence } from "framer-motion";
 import type { ComponentType } from "react";
 import { useDialogStore } from "@/store/useDialogStore";
 import type { DialogTypeMap } from "@/type/dialog";
+import ChatDeleteDialog from "./ChatDeleteDialog";
 import ChatLeaveDialog from "./ChatLeaveDialog";
 import ChatRestartDialog from "./ChatRestartDialog";
 import CommentDeleteDialog from "./CommentDeleteDialog";
@@ -22,6 +23,7 @@ const DIALOG_COMPONENTS: {
     DialogTypeMap[K] & { onClose: () => void }
   >;
 } = {
+  CHAT_DELETE: ChatDeleteDialog,
   CHAT_LEAVE: ChatLeaveDialog,
   CHAT_RESTART: ChatRestartDialog,
   COMMENT_DELETE: CommentDeleteDialog,

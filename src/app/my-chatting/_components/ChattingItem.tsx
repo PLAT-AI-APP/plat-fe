@@ -9,6 +9,7 @@ import useToggle from "@/hooks/common/useToggle";
 import { Dots, Message, Pin, User } from "@/icons";
 import dayjs from "@/lib/dayjs";
 import { formatStatCount } from "@/lib/utils";
+import { useDialogStore } from "@/store/useDialogStore";
 import { useLocaleStore } from "@/store/useLocaleStore";
 
 interface ChattingItemProps {
@@ -36,9 +37,18 @@ const ChattingItem = ({
   const { close, isOpen, toggle } = useToggle();
   const triggerRef = useRef<HTMLSpanElement>(null);
   const locale = useLocaleStore((state) => state.locale);
+  const openDialog = useDialogStore((state) => state.openDialog);
 
   const chattingItemOnClick = () => {
     router.push("/chatting-room");
+  };
+
+  const handleDeleteClick = () => {
+    // 채팅 기록은 복구할 수 없으므로 삭제 전 확인을 거친다.
+    // 삭제 API 연결 전까지는 확인 다이얼로그만 연결한다.
+    openDialog("CHAT_DELETE", {
+      onConfirm: () => undefined,
+    });
   };
 
   return (
@@ -91,7 +101,7 @@ const ChattingItem = ({
                   <MyChattingMenuPopover
                     triggerRef={triggerRef}
                     onClose={close}
-                    onDelete={() => null}
+                    onDelete={handleDeleteClick}
                     onEdit={() => null}
                     onPin={() => null}
                   />

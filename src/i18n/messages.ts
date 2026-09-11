@@ -79,6 +79,12 @@ const ko = {
       cancel: "취소하기",
       confirm: "나가기",
     },
+    chatDelete: {
+      title: "정말 채팅방을 삭제할까요?",
+      description: "그 동안의 캐릭터와 진행한 대화는 복구할 수 없어요",
+      cancel: "취소하기",
+      confirm: "삭제",
+    },
     loginRequired: {
       title: "로그인이 필요해요",
       description: "로그인 후 이용할 수 있는 기능입니다.",
@@ -317,6 +323,13 @@ const en: Messages = {
         "The conversation you had with this character cannot be restored.",
       cancel: "Cancel",
       confirm: "Leave",
+    },
+    chatDelete: {
+      title: "Delete this chat room?",
+      description:
+        "The conversation you had with this character cannot be restored.",
+      cancel: "Cancel",
+      confirm: "Delete",
     },
     loginRequired: {
       title: "Login is required",
@@ -558,6 +571,12 @@ const ja: Messages = {
       cancel: "キャンセル",
       confirm: "退出",
     },
+    chatDelete: {
+      title: "本当にチャットルームを削除しますか？",
+      description: "このキャラクターとのこれまでの会話は復元できません。",
+      cancel: "キャンセル",
+      confirm: "削除",
+    },
     loginRequired: {
       title: "ログインが必要です",
       description: "ログイン後に利用できる機能です。",
@@ -790,6 +809,12 @@ const zh: Messages = {
       cancel: "取消",
       confirm: "退出",
     },
+    chatDelete: {
+      title: "确定要删除聊天室吗？",
+      description: "与该角色进行过的对话将无法恢复。",
+      cancel: "取消",
+      confirm: "删除",
+    },
     loginRequired: {
       title: "需要登录",
       description: "登录后才可以使用此功能。",
@@ -1015,6 +1040,12 @@ const th: Messages = {
       description: "บทสนทนาที่คุณมีกับตัวละครนี้จะไม่สามารถกู้คืนได้",
       cancel: "ยกเลิก",
       confirm: "ออก",
+    },
+    chatDelete: {
+      title: "ต้องการลบห้องแชตนี้จริงหรือไม่?",
+      description: "บทสนทนาที่คุณมีกับตัวละครนี้จะไม่สามารถกู้คืนได้",
+      cancel: "ยกเลิก",
+      confirm: "ลบ",
     },
     loginRequired: {
       title: "จำเป็นต้องเข้าสู่ระบบ",
@@ -1250,6 +1281,12 @@ const vi: Messages = {
       description: "Cuộc trò chuyện với nhân vật này sẽ không thể khôi phục.",
       cancel: "Hủy",
       confirm: "Rời đi",
+    },
+    chatDelete: {
+      title: "Bạn thật sự muốn xóa phòng chat này?",
+      description: "Cuộc trò chuyện với nhân vật này sẽ không thể khôi phục.",
+      cancel: "Hủy",
+      confirm: "Xóa",
     },
     loginRequired: {
       title: "Cần đăng nhập",
