@@ -11,11 +11,9 @@ import { useAuthReady } from "@/hooks/data/useAuthReady";
 const CLIENT_PLATFORM = "WEB";
 
 const getProducts = async () => {
-  // X-Client-Platform은 서버가 CORS 허용 헤더 목록에 올려두지 않아 preflight가 막힌다.
-  // 서버도 이 헤더를 선택값(required=false)으로 받고 platform 쿼리파라미터로 이미 같은
-  // 정보를 보내므로, 헤더 없이도 요청은 그대로 성립한다.
   const response = await authAxios.get<Product[]>("/products", {
     params: { platform: CLIENT_PLATFORM },
+    headers: { "X-Client-Platform": CLIENT_PLATFORM },
   });
 
   return response.data;
