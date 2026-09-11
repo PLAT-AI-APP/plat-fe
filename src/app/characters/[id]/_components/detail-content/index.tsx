@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useModalStore } from "@/store/useModalStore";
+import { useUniverseCommentsInfiniteQuery } from "@/api/comment/getUniverseComments";
 import {
   adaptUniverseDetailToCharacterDetail,
   useUniverseDetailQuery,
@@ -33,6 +34,9 @@ const CharacterDetailContent = ({
       universe ? adaptUniverseDetailToCharacterDetail(universe) : undefined,
     [universe],
   );
+  // CommentsPanel도 같은 쿼리를 구독하므로 react-query 캐시를 공유해 요청이 중복되지 않는다.
+  const { data: commentsData } = useUniverseCommentsInfiniteQuery(characterId);
+  const commentsCount = commentsData?.pages[0]?.page.totalElements ?? 0;
   const t = useTranslations("characterDetail");
   const openModal = useModalStore((state) => state.openModal);
   const [currentTab, setCurrentTab] = useState<CharacterDetailTab>("settings");
@@ -206,13 +210,13 @@ const CharacterDetailContent = ({
         <main className="flex min-w-0 flex-col">
           <div className="sticky top-0 z-[1] bg-dark">
             <DetailTabs
-              commentsCount={character.comments.length}
+              commentsCount={commentsCount}
               currentTab={currentTab}
               onChange={handleTabChange}
             />
           </div>
 
-          <div className="mt-6 flex flex-col gap-16">
+          <div className="mt-6 flex flex-col gap-8">
             <section
               ref={settingsRef}
               id="character-detail-settings"
