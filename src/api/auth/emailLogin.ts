@@ -3,6 +3,7 @@ import { axiosInstance } from "..";
 import { AppError } from "@/type/api";
 import { useAuthStore } from "@/store/useAuthStore";
 import type { AppToastType } from "@/lib/toast";
+import { userQueryKeys } from "@/api/user/queryKeys";
 
 export type LoginToastType = AppToastType;
 
@@ -95,7 +96,7 @@ export const useEmailLoginMutation = () => {
       setAccessToken(data.token);
       setLoggedIn(true);
       // 로그인 성공 UI 흐름을 막지 않도록 내 정보 갱신은 백그라운드로 실행
-      void queryClient.invalidateQueries({ queryKey: ["get-my-info"] });
+      void queryClient.invalidateQueries({ queryKey: userQueryKeys.myInfo() });
     },
   });
 };

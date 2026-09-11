@@ -5,6 +5,7 @@ import { axiosInstance } from "..";
 import { AppError, PageWith } from "@/type/api";
 import { useLocaleStore } from "@/store/useLocaleStore";
 import { Tendency, useTendencyStore } from "@/store/useTendencyStore";
+import type { BaseCard, CardCreator } from "@/type/card";
 
 /** 백엔드 StatPeriod. 실시간은 오늘 0시부터 지금까지고 1분마다 갱신됩니다. */
 export type RankingPeriod =
@@ -21,25 +22,13 @@ export type RankingScope = "ALL" | "NEW" | "OFFICIAL";
 /** 순위 등락. 신작·공식 랭킹은 직전 스냅샷이 없어 내려오지 않습니다. */
 export type RankTrend = "NEW" | "UP" | "DOWN" | "SAME";
 
-export interface RankedCardCreator {
-  creatorId: string;
-  nickname: string;
-}
+export type RankedCardCreator = CardCreator;
 
 export interface RankedCardItem {
   rank: number;
   score: number;
   trend: RankTrend | null;
-  card: {
-    universeId: string;
-    images: string[];
-    title: string;
-    description: string;
-    creator: RankedCardCreator;
-    chatCount: number;
-    isNew: boolean;
-    isOfficial: boolean;
-  };
+  card: BaseCard;
 }
 
 interface GetRankingParams {

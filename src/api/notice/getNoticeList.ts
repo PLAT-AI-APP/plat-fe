@@ -2,6 +2,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { axiosInstance } from "..";
 import { AppError, PageWith } from "@/type/api";
 import type { NoticeSummary } from "@/type/notice";
+import { getNextPageNumber } from "@/lib/pagination";
 
 // 실서버 GET /notices는 page만 받고, 페이지 크기와 카테고리 필터는 서버에서 지원하지 않습니다.
 const getNoticeList = async (pageParam: number) => {
@@ -23,8 +24,7 @@ export const useNoticeListInfiniteQuery = () => {
     queryKey: ["get-notice-list"],
     queryFn: ({ pageParam }) => getNoticeList(pageParam as number),
     initialPageParam: 0,
-    getNextPageParam: (lastPage) =>
-      lastPage.page.hasNext ? lastPage.page.number + 1 : null,
+    getNextPageParam: getNextPageNumber,
     staleTime: 1000 * 60 * 5,
   });
 };

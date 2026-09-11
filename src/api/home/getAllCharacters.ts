@@ -6,25 +6,14 @@ import { AppError, SliceWith } from "@/type/api";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useLocaleStore } from "@/store/useLocaleStore";
 import { Tendency, useTendencyStore } from "@/store/useTendencyStore";
+import { useAuthReady } from "@/hooks/data/useAuthReady";
+import type { CardCreator, LikableCard } from "@/type/card";
 
 /** 백엔드 BaseCard. 랭킹·카테고리 검색과 같은 모양입니다. */
-export interface AllCharacterCreator {
-  creatorId: string;
-  nickname: string;
-}
+export type AllCharacterCreator = CardCreator;
 
-export interface AllCharacterItem {
-  universeId: string;
-  images: string[];
-  title: string;
-  description: string;
-  creator: AllCharacterCreator;
-  chatCount: number;
-  isNew: boolean;
-  isOfficial: boolean;
-  /** 로그인하지 않았으면 항상 false */
-  liked: boolean;
-}
+/** 로그인하지 않았으면 liked는 항상 false */
+export type AllCharacterItem = LikableCard;
 
 interface GetAllCharactersParams {
   tendency?: Tendency;
@@ -47,9 +36,8 @@ const getAllCharacters = async (
 
 /** 전체 캐릭터 모음. 조건 없이 누적 대화 수 순으로 내려오고 로그인 없이도 볼 수 있습니다. */
 export const useAllCharactersQuery = (params: GetAllCharactersParams = {}) => {
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const isAuthReady = useAuthStore((state) => state.isAuthReady);
-  const authenticated = isAuthReady && isLoggedIn;
+  const authenticated = useAuthReady();
   // 언어가 바뀌면 Accept-Language 헤더로 나가는 응답도 달라지므로 캐시 키에 반영합니다.
   const locale = useLocaleStore((state) => state.locale);
   // 성향이 바뀌면 목록도 달라지므로 캐시를 분리합니다.

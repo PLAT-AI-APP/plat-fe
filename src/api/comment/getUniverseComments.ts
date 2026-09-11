@@ -2,7 +2,8 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { authAxios, axiosInstance } from "..";
 import { AppError, PageWith } from "@/type/api";
 import type { Comment } from "@/type/comment";
-import { useAuthStore } from "@/store/useAuthStore";
+import { getNextPageNumber } from "@/lib/pagination";
+import { useAuthReady } from "@/hooks/data/useAuthReady";
 
 export const universeCommentsQueryKey = (universeId?: string) => [
   "get-universe-comments",
@@ -29,17 +30,14 @@ const getUniverseComments = async (
 
 /** 세계관 댓글 목록 조회 */
 export const useUniverseCommentsInfiniteQuery = (universeId?: string) => {
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
-  const isAuthReady = useAuthStore((state) => state.isAuthReady);
-  const authenticated = isAuthReady && isLoggedIn;
+  const authenticated = useAuthReady();
 
   return useInfiniteQuery<PageWith<Comment>, AppError>({
     queryKey: [...universeCommentsQueryKey(universeId), authenticated],
     initialPageParam: 0,
     queryFn: ({ pageParam }) =>
       getUniverseComments(universeId ?? "", pageParam as number, authenticated),
-    getNextPageParam: (lastPage) =>
-      lastPage.page.hasNext ? lastPage.page.number + 1 : null,
+    getNextPageParam: getNextPageNumber,
     staleTime: 1000 * 60,
     enabled: Boolean(universeId),
   });

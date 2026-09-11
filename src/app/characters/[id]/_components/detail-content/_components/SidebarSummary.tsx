@@ -14,6 +14,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useModalStore } from "@/store/useModalStore";
 import { CharacterDetail } from "@/type/character";
 import { useFollowToggle } from "@/hooks/follow/useFollowToggle";
+import { universeQueryKeys } from "@/api/universe/queryKeys";
 
 interface SidebarSummaryProps {
   character: CharacterDetail;
@@ -64,7 +65,7 @@ const SidebarSummary = ({
     userId: creatorId ?? "",
     isFollowing: character.creator.isFollowing,
     // 상세 응답에 creator.isFollowing 이 함께 실려 오므로 같이 다시 받는다.
-    extraInvalidateKeys: [["get-universe-detail", character.characterId]],
+    extraInvalidateKeys: [universeQueryKeys.detail(character.characterId)],
   });
 
   return (

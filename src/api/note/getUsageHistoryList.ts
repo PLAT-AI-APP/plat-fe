@@ -2,6 +2,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
 import { WalletLedgerListResponse } from "@/type/note";
+import { getNextPageNumber } from "@/lib/pagination";
 
 interface GetUsageHistoryListProps {
   page?: number;
@@ -34,8 +35,6 @@ export const useUsageHistoryListQuery = ({
     initialPageParam: 0,
     queryFn: ({ pageParam = 0 }) =>
       getUsageHistoryList({ page: pageParam as number, size }),
-    getNextPageParam: (lastPage) => {
-      return lastPage.page.hasNext ? lastPage.page.number + 1 : null;
-    },
+    getNextPageParam: getNextPageNumber,
   });
 };

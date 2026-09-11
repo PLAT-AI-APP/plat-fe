@@ -6,6 +6,8 @@ import { authAxios } from "..";
 import { AppError } from "@/type/api";
 import { Gender, Provider, UserInfo, useUserStore } from "@/store/useUserStore";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthReady } from "@/hooks/data/useAuthReady";
+import { userQueryKeys } from "./queryKeys";
 
 interface UserProfileResponse {
   id: string;
@@ -38,14 +40,13 @@ const GetMyInfo = async () => {
 /** 내 정보 조회 */
 export const useMyInfoQuery = () => {
   const setUser = useUserStore((state) => state.setUser);
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
-  const isAuthReady = useAuthStore((state) => state.isAuthReady);
+  const authReady = useAuthReady();
   const accessToken = useAuthStore((state) => state.accessToken);
 
   const query = useQuery<UserInfo, AppError>({
-    queryKey: ["get-my-info"],
+    queryKey: userQueryKeys.myInfo(),
     queryFn: GetMyInfo,
-    enabled: isAuthReady && isLoggedIn && !!accessToken,
+    enabled: authReady && !!accessToken,
   });
 
   useEffect(() => {

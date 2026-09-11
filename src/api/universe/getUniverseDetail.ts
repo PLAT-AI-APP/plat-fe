@@ -7,6 +7,7 @@ import type {
   CharacterImageItem,
   CharacterScenario,
 } from "@/type/character";
+import { universeQueryKeys } from "./queryKeys";
 
 export type UniverseDetailVisibility = "PUBLIC" | "PRIVATE";
 export type UniverseDetailTendency =
@@ -151,7 +152,7 @@ export const adaptUniverseDetailToCharacterDetail = (
 
 export const useUniverseDetailQuery = (universeId?: string) => {
   return useQuery<UniverseDetailResponse, AppError>({
-    queryKey: ["get-universe-detail", universeId],
+    queryKey: universeQueryKeys.detail(universeId),
     queryFn: () => getUniverseDetail(universeId ?? ""),
     enabled: Boolean(universeId),
   });

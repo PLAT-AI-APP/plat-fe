@@ -2,7 +2,8 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { authAxios, axiosInstance } from "..";
 import { AppError, SliceWith } from "@/type/api";
 import type { Comment } from "@/type/comment";
-import { useAuthStore } from "@/store/useAuthStore";
+import { getNextPageNumber } from "@/lib/pagination";
+import { useAuthReady } from "@/hooks/data/useAuthReady";
 
 export const commentRepliesQueryKey = (commentId?: string) => [
   "get-comment-replies",
@@ -28,17 +29,14 @@ export const useCommentRepliesInfiniteQuery = (
   commentId?: string,
   enabled = true,
 ) => {
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
-  const isAuthReady = useAuthStore((state) => state.isAuthReady);
-  const authenticated = isAuthReady && isLoggedIn;
+  const authenticated = useAuthReady();
 
   return useInfiniteQuery<SliceWith<Comment>, AppError>({
     queryKey: [...commentRepliesQueryKey(commentId), authenticated],
     initialPageParam: 0,
     queryFn: ({ pageParam }) =>
       getCommentReplies(commentId ?? "", pageParam as number, authenticated),
-    getNextPageParam: (lastPage) =>
-      lastPage.page.hasNext ? lastPage.page.number + 1 : null,
+    getNextPageParam: getNextPageNumber,
     staleTime: 1000 * 60,
     enabled: Boolean(commentId) && enabled,
   });

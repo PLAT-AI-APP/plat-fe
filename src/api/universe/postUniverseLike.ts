@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
 import type { UniverseDetailResponse } from "./getUniverseDetail";
+import { universeQueryKeys } from "./queryKeys";
 
 interface UniverseLikeProps {
   universeId: string;
@@ -17,11 +18,6 @@ const postUniverseLike = async ({ universeId }: UniverseLikeProps) => {
 const deleteUniverseLike = async ({ universeId }: UniverseLikeProps) => {
   await authAxios.delete(`/universe/${universeId}/like`);
 };
-
-const universeDetailQueryKey = (universeId: string) => [
-  "get-universe-detail",
-  universeId,
-];
 
 interface LikeSnapshot {
   previous?: UniverseDetailResponse;
@@ -42,7 +38,7 @@ const useUniverseLikeMutation = (
     mutationKey: [mutationKey],
     mutationFn,
     onMutate: async ({ universeId }) => {
-      const queryKey = universeDetailQueryKey(universeId);
+      const queryKey = universeQueryKeys.detail(universeId);
       // 진행 중인 조회가 끝나면서 낙관적 값을 덮어쓰지 않도록 먼저 멈춥니다.
       await queryClient.cancelQueries({ queryKey });
 
@@ -65,14 +61,14 @@ const useUniverseLikeMutation = (
     onError: (_error, { universeId }, context) => {
       if (context?.previous) {
         queryClient.setQueryData(
-          universeDetailQueryKey(universeId),
+          universeQueryKeys.detail(universeId),
           context.previous,
         );
       }
     },
     onSettled: (_data, _error, { universeId }) => {
       queryClient.invalidateQueries({
-        queryKey: universeDetailQueryKey(universeId),
+        queryKey: universeQueryKeys.detail(universeId),
       });
       // 찜 수·찜 여부가 실린 목록들도 다시 받습니다.
       queryClient.invalidateQueries({ queryKey: ["get-ranking"] });

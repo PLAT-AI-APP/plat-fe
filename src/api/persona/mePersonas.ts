@@ -2,6 +2,7 @@ import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
 import { Persona } from "@/type/persona";
+import { personaQueryKeys } from "./queryKeys";
 
 interface MePersonasApiResponse {
   code?: string;
@@ -73,7 +74,7 @@ export const useMePersonasQuery = (
   options?: Partial<UseQueryOptions<Persona[], AppError, Persona[]>>,
 ) => {
   return useQuery<Persona[], AppError, Persona[]>({
-    queryKey: ["me-persona-list"],
+    queryKey: personaQueryKeys.myList(),
     queryFn: GetMePersonas,
     ...options,
   });

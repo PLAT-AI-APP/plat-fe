@@ -9,6 +9,7 @@ import type {
   UniverseCreateTendency,
   UniverseCreateVisibility,
 } from "./postUniverseCreate";
+import { universeQueryKeys } from "./queryKeys";
 
 export type UniverseUpdateVisibility = UniverseCreateVisibility;
 export type UniverseUpdateTendency = UniverseCreateTendency;
@@ -65,7 +66,7 @@ export const useUniverseUpdateMutation = () => {
     mutationFn: patchUniverseUpdate,
     onSuccess: (_, { universeId }) => {
       queryClient.invalidateQueries({
-        queryKey: ["get-universe-detail", universeId],
+        queryKey: universeQueryKeys.detail(universeId),
       });
     },
   });

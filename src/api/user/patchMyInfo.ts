@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
 import { postFileUpload } from "@/api/file/postFileUpload";
+import { userQueryKeys } from "./queryKeys";
 
 interface PatchMyInfoProps {
   nickname: string;
@@ -56,7 +57,7 @@ export const useUpdateMyInfoMutation = () => {
     mutationKey: ["patch-my-info"],
     mutationFn: PatchMyInfo,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["get-my-info"] });
+      queryClient.invalidateQueries({ queryKey: userQueryKeys.myInfo() });
     },
   });
 };

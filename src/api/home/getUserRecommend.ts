@@ -5,23 +5,12 @@ import { authAxios } from "..";
 import { AppError } from "@/type/api";
 import { useLocaleStore } from "@/store/useLocaleStore";
 import { Tendency, useTendencyStore } from "@/store/useTendencyStore";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthReady } from "@/hooks/data/useAuthReady";
+import type { BaseCard, CardCreator } from "@/type/card";
 
-export interface UserRecommendCreator {
-  creatorId: string;
-  nickname: string;
-}
+export type UserRecommendCreator = CardCreator;
 
-export interface UserRecommendItem {
-  universeId: string;
-  images: string[];
-  title: string;
-  description: string;
-  creator: UserRecommendCreator;
-  chatCount: number;
-  isNew: boolean;
-  isOfficial: boolean;
-}
+export type UserRecommendItem = BaseCard;
 
 /** 선호 태그 근거가 있을 때만 SliceWith로 감싸져 내려오고, 없으면 204(빈 문자열)로 내려옵니다. */
 interface UserRecommendSliceResponse {
@@ -76,8 +65,7 @@ export const useUserRecommendQuery = (params: GetUserRecommendParams = {}) => {
   const locale = useLocaleStore((state) => state.locale);
   // 성향이 바뀌면 목록도 달라지므로 캐시를 분리합니다.
   const tendency = useTendencyStore((state) => state.tendency);
-  const isAuthReady = useAuthStore((state) => state.isAuthReady);
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const authReady = useAuthReady();
 
   return useQuery<UserRecommendItem[], AppError>({
     queryKey: [
@@ -88,6 +76,6 @@ export const useUserRecommendQuery = (params: GetUserRecommendParams = {}) => {
       params.size,
     ],
     queryFn: () => getUserRecommend({ ...params, tendency }),
-    enabled: isAuthReady && isLoggedIn,
+    enabled: authReady,
   });
 };
