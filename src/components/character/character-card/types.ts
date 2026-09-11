@@ -8,6 +8,7 @@ export interface CharacterCardProps {
   images: string[] | string;
   size?: CardSize;
   tagList?: string[];
+  /** 강조 표시할 태그. 없으면 강조 없이 태그 목록만 보여준다. */
   currentTag?: string;
   isNew?: boolean;
   isOfficial?: boolean;

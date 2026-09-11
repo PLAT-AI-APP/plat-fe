@@ -1,13 +1,15 @@
 "use client";
 
 import { useVisibleItemCount } from "@/hooks/dom/useVisibleItemCount";
+import { cn } from "@/lib/utils";
 
 interface OverflowTagListProps {
+  title: string;
   tags: { id: string; label: string }[];
   maxLines?: number;
 }
 
-const OverflowTagList = ({ tags, maxLines = 1 }: OverflowTagListProps) => {
+const OverflowTagList = ({ title, tags, maxLines = 1 }: OverflowTagListProps) => {
   const { containerRef, itemRefs, visibleCount, hiddenCount } =
     useVisibleItemCount({
       items: tags,
@@ -27,7 +29,7 @@ const OverflowTagList = ({ tags, maxLines = 1 }: OverflowTagListProps) => {
       "
     >
       <div className="flex-1 flex flex-col gap-2 min-w-0">
-        <div className="body-5 text-font-1">장난꾸러기 소꿉친구</div>
+        <div className="body-5 text-font-1">{title}</div>
 
         <div className="flex">
           <div
@@ -49,17 +51,10 @@ const OverflowTagList = ({ tags, maxLines = 1 }: OverflowTagListProps) => {
                   ref={(el) => {
                     itemRefs.current[index] = el;
                   }}
-                  className={`
-                    px-1.5
-                    py-0.5
-                    bg-card-hover
-                    rounded-md
-                    flex
-                    items-center
-                    gap-0.5
-                    shrink-0
-                    ${isVisible ? "" : "invisible pointer-events-none"}
-                  `}
+                  className={cn(
+                    "px-1.5 py-0.5 bg-card-hover rounded-md flex items-center gap-0.5 shrink-0",
+                    !isVisible && "invisible pointer-events-none",
+                  )}
                 >
                   <span className="body-7 text-font-2">#</span>
 

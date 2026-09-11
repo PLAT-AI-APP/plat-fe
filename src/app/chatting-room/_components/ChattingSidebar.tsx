@@ -264,11 +264,8 @@ const ChattingSidebar = ({
                             label={t("persona")}
                             onClick={() => handleOpenModal("PERSONA")}
                             trailing={
-                              <span className="title-5 flex items-center gap-0.5 whitespace-nowrap text-font-0">
-                                이름이름이름
-                                <span className="flex size-6 items-center justify-center">
-                                  <ArrowLeft className="size-4 rotate-180 text-font-2" />
-                                </span>
+                              <span className="flex size-6 items-center justify-center">
+                                <ArrowLeft className="size-4 rotate-180 text-font-2" />
                               </span>
                             }
                           />

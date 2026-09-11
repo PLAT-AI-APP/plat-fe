@@ -33,7 +33,7 @@ const CharacterCard = ({
   chatCount,
   images,
   size = "M",
-  currentTag = "학교생활",
+  currentTag,
   tagList,
   isNew = false,
   isOfficial = false,
