@@ -6,6 +6,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useDialogStore } from "@/store/useDialogStore";
+import { useModalStore } from "@/store/useModalStore";
 import ChatCountBadge from "./ChatCountBadge";
 import {
   FLUID_SIZE_OVERRIDE,
@@ -43,6 +46,9 @@ const CharacterCard = ({
   href,
 }: CharacterCardProps) => {
   const t = useTranslations("characterCard");
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const openDialog = useDialogStore((state) => state.openDialog);
+  const openModal = useModalStore((state) => state.openModal);
   const config = SIZE_CONFIG[size];
   const fluidOverride = FLUID_SIZE_OVERRIDE[size];
   const imageList = useMemo(() => normalizeImages(images), [images]);
@@ -72,6 +78,21 @@ const CharacterCard = ({
   const [isLastActionVisible, setIsLastActionVisible] = useState(false);
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
   const isLastImageSlideActive = currentImgIndex === lastImageIndex;
+
+  // 세계관 상세 조회는 백엔드가 로그인 없이는 항상 401을 주므로, 비로그인 상태로
+  // 들어가 날것의 에러 화면을 보기 전에 여기서 먼저 로그인 안내로 막습니다.
+  const handleCardLinkClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (isLoggedIn) return;
+    if (event.button !== 0) return;
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+    event.preventDefault();
+    openDialog("LOGIN_REQUIRED", {
+      label: "dialog.loginRequired.title",
+      description: "dialog.loginRequired.description",
+      onConfirm: () => openModal("LOGIN", { triggerRef: undefined }),
+    });
+  };
 
   const handleIndicatorClick = (event: React.MouseEvent, index: number) => {
     event.preventDefault();
@@ -146,6 +167,7 @@ const CharacterCard = ({
             href={href}
             aria-label={title}
             className="absolute inset-0 z-0"
+            onClick={handleCardLinkClick}
           />
         )}
 
@@ -219,7 +241,12 @@ const CharacterCard = ({
       {/* 나머지 컨트롤(인디케이터)과 형제로 깔리는 stretched link입니다.
           <a> 안에 <button>을 중첩시키지 않으면서도 카드 전체를 클릭 가능하게 합니다. */}
       {href && (
-        <Link href={href} aria-label={title} className="absolute inset-0 z-0" />
+        <Link
+          href={href}
+          aria-label={title}
+          className="absolute inset-0 z-0"
+          onClick={handleCardLinkClick}
+        />
       )}
 
       <div
