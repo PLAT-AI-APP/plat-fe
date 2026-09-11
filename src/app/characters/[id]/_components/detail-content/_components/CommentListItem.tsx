@@ -4,15 +4,12 @@ import Image from "next/image";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import dayjs from "@/lib/dayjs";
-import { cn } from "@/lib/utils";
 import { Heart, HeartFill } from "@/icons";
 import type { Comment } from "@/type/comment";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useDialogStore } from "@/store/useDialogStore";
 import { useUserStore } from "@/store/useUserStore";
 import { useTextareaSubmitShortcuts } from "@/hooks/form/useTextareaSubmitShortcuts";
-import { useCommentRepliesInfiniteQuery } from "@/api/comment/getCommentReplies";
-import { usePostCommentReplyMutation } from "@/api/comment/postCommentReply";
 import {
   useDeleteCommentLikeMutation,
   usePostCommentLikeMutation,
@@ -28,40 +25,25 @@ const DEFAULT_PROFILE_IMAGE = "/p1.png";
 interface CommentListItemProps {
   comment: Comment;
   universeId: string;
-  /** 답글이면 부모 댓글 id. 루트 댓글이면 비웁니다. */
-  parentCommentId?: string;
 }
 
-const CommentListItem = ({
-  comment,
-  universeId,
-  parentCommentId,
-}: CommentListItemProps) => {
+const CommentListItem = ({ comment, universeId }: CommentListItemProps) => {
   const t = useTranslations("characterDetail");
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const myUserId = useUserStore((state) => state.user?.id);
   const openDialog = useDialogStore((state) => state.openDialog);
   const closeDialog = useDialogStore((state) => state.closeDialog);
-  const isReply = Boolean(parentCommentId);
 
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(comment.content);
-  const [isReplyOpen, setIsReplyOpen] = useState(false);
-  const [replyContent, setReplyContent] = useState("");
-
-  const { data: repliesData, fetchNextPage, hasNextPage } =
-    useCommentRepliesInfiniteQuery(comment.commentId, !isReply && isReplyOpen);
-  const replies = repliesData?.pages.flatMap((page) => page.content) ?? [];
 
   const { mutate: like } = usePostCommentLikeMutation();
   const { mutate: unlike } = useDeleteCommentLikeMutation();
   const { mutate: patchComment, isPending: isPatching } =
     usePatchCommentMutation();
   const { mutate: deleteComment } = useDeleteCommentMutation();
-  const { mutate: postReply, isPending: isReplying } =
-    usePostCommentReplyMutation();
 
-  const scope = { universeId, parentCommentId };
+  const scope = { universeId };
   const isMine = Boolean(myUserId && myUserId === comment.author.userId);
 
   const handleToggleLike = () => {
@@ -93,20 +75,6 @@ const CommentListItem = ({
       onCancel: handleCancelEdit,
     });
 
-  const handleSubmitReply = () => {
-    const content = replyContent.trim();
-    if (!content || isReplying) return;
-
-    postReply(
-      { commentId: comment.commentId, content, universeId },
-      { onSuccess: () => setReplyContent("") },
-    );
-  };
-
-  const { handleKeyDown: handleReplyKeyDown } = useTextareaSubmitShortcuts({
-    onSubmit: handleSubmitReply,
-  });
-
   const handleDeleteComment = () => {
     openDialog("COMMENT_DELETE", {
       onConfirm: () => {
@@ -119,7 +87,7 @@ const CommentListItem = ({
   };
 
   return (
-    <li className={cn("flex gap-2", isReply && "pl-11")}>
+    <li className="flex gap-2">
       <Image
         src={comment.author.profileImageUrl || DEFAULT_PROFILE_IMAGE}
         alt={t("profileAlt", { name: comment.author.nickname })}
@@ -190,56 +158,7 @@ const CommentListItem = ({
             )}
             {comment.meta.likeCount}
           </button>
-
-          {!isReply && (
-            <button
-              type="button"
-              onClick={() => setIsReplyOpen((prev) => !prev)}
-              className="body-7 text-font-2 transition-colors hover:text-font-1"
-            >
-              {isReplyOpen
-                ? t("commentRepliesCollapse")
-                : t("commentReplies", { count: comment.meta.replyCount })}
-            </button>
-          )}
         </footer>
-
-        {!isReply && isReplyOpen && (
-          <div className="flex flex-col gap-4">
-            {isLoggedIn && (
-              <CommentComposer
-                value={replyContent}
-                onChange={setReplyContent}
-                onKeyDown={handleReplyKeyDown}
-                onSubmit={handleSubmitReply}
-                canSubmit={!isReplying && Boolean(replyContent.trim())}
-                placeholder={t("replyPlaceholder")}
-                submitLabel={t("submitComment")}
-              />
-            )}
-
-            <ul className="flex flex-col gap-5">
-              {replies.map((reply) => (
-                <CommentListItem
-                  key={reply.commentId}
-                  comment={reply}
-                  universeId={universeId}
-                  parentCommentId={comment.commentId}
-                />
-              ))}
-            </ul>
-
-            {hasNextPage && (
-              <button
-                type="button"
-                onClick={() => fetchNextPage()}
-                className="body-7 w-fit text-font-2 transition-colors hover:text-font-1"
-              >
-                {t("commentLoadMore")}
-              </button>
-            )}
-          </div>
-        )}
       </article>
     </li>
   );
