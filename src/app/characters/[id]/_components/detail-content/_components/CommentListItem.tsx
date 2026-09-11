@@ -19,10 +19,10 @@ import {
 } from "@/api/comment/postCommentLike";
 import { usePatchCommentMutation } from "@/api/comment/patchComment";
 import { useDeleteCommentMutation } from "@/api/comment/deleteComment";
+import CommentComposer from "./CommentComposer";
 import CommentExpandableBody from "./CommentExpandableBody";
 import CommentMenuButton from "./CommentMenuButton";
 
-const COMMENT_MAX_LENGTH = 1000;
 const DEFAULT_PROFILE_IMAGE = "/p1.png";
 
 interface CommentListItemProps {
@@ -157,34 +157,18 @@ const CommentListItem = ({
         </header>
 
         {isEditing ? (
-          <div className="flex flex-col items-end gap-1 rounded-2xl border border-main bg-btn-hover px-3 py-2 transition-colors focus-within:field-focus!">
-            <textarea
-              autoFocus
-              value={editedContent}
-              onChange={(event) => setEditedContent(event.target.value)}
-              onKeyDown={handleEditKeyDown}
-              onFocus={handleEditFocus}
-              maxLength={COMMENT_MAX_LENGTH}
-              className="focus-ring-none body-5 min-h-9 w-full resize-none bg-transparent text-font-1 outline-none"
-            />
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={handleCancelEdit}
-                className="body-5 rounded-xl px-4 py-1.5 text-font-2 transition-colors hover:text-font-1"
-              >
-                {t("commentEditCancel")}
-              </button>
-              <button
-                type="button"
-                onClick={handleSubmitEdit}
-                disabled={isPatching || !editedContent.trim()}
-                className="body-5 rounded-xl bg-main px-4 py-1.5 text-font-1 transition-colors hover:bg-btn-selected disabled:cursor-not-allowed disabled:text-font-disabled"
-              >
-                {t("commentEditSave")}
-              </button>
-            </div>
-          </div>
+          <CommentComposer
+            autoFocus
+            value={editedContent}
+            onChange={setEditedContent}
+            onKeyDown={handleEditKeyDown}
+            onFocus={handleEditFocus}
+            onSubmit={handleSubmitEdit}
+            onCancel={handleCancelEdit}
+            canSubmit={!isPatching && Boolean(editedContent.trim())}
+            submitLabel={t("commentEditSave")}
+            cancelLabel={t("commentEditCancel")}
+          />
         ) : (
           <CommentExpandableBody content={comment.content} />
         )}
@@ -223,24 +207,15 @@ const CommentListItem = ({
         {!isReply && isReplyOpen && (
           <div className="flex flex-col gap-4">
             {isLoggedIn && (
-              <div className="flex flex-col items-end gap-1 rounded-2xl border border-main bg-btn-hover px-3 py-2 transition-colors focus-within:field-focus!">
-                <textarea
-                  value={replyContent}
-                  onChange={(event) => setReplyContent(event.target.value)}
-                  onKeyDown={handleReplyKeyDown}
-                  maxLength={COMMENT_MAX_LENGTH}
-                  placeholder={t("replyPlaceholder")}
-                  className="focus-ring-none body-5 min-h-9 w-full resize-none bg-transparent text-font-1 outline-none placeholder:text-font-disabled"
-                />
-                <button
-                  type="button"
-                  onClick={handleSubmitReply}
-                  disabled={isReplying || !replyContent.trim()}
-                  className="body-5 rounded-xl bg-main px-4 py-1.5 text-font-1 transition-colors hover:bg-btn-selected disabled:cursor-not-allowed disabled:text-font-disabled"
-                >
-                  {t("submitComment")}
-                </button>
-              </div>
+              <CommentComposer
+                value={replyContent}
+                onChange={setReplyContent}
+                onKeyDown={handleReplyKeyDown}
+                onSubmit={handleSubmitReply}
+                canSubmit={!isReplying && Boolean(replyContent.trim())}
+                placeholder={t("replyPlaceholder")}
+                submitLabel={t("submitComment")}
+              />
             )}
 
             <ul className="flex flex-col gap-5">

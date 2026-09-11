@@ -3,14 +3,11 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useUserStore } from "@/store/useUserStore";
 import { useTextareaSubmitShortcuts } from "@/hooks/form/useTextareaSubmitShortcuts";
 import { usePostUniverseCommentMutation } from "@/api/comment/postUniverseComment";
-
-/** 서버가 받는 댓글 최대 길이 */
-const COMMENT_MAX_LENGTH = 1000;
+import CommentComposer from "./CommentComposer";
 
 interface CommentInputBoxProps {
   universeId: string;
@@ -52,34 +49,18 @@ const CommentInputBox = ({ universeId }: CommentInputBoxProps) => {
         className="avatar-img size-10"
       />
 
-      <div className="flex min-h-[70px] flex-1 flex-col items-end justify-end gap-1 rounded-2xl border border-main bg-btn-hover px-3 py-2 transition-colors focus-within:field-focus!">
-        <textarea
-          value={comment}
-          onChange={(event) => setComment(event.target.value)}
-          onKeyDown={handleKeyDown}
-          disabled={!isLoggedIn}
-          maxLength={COMMENT_MAX_LENGTH}
-          className={cn(
-            "focus-ring-none body-5 min-h-9 w-full resize-none bg-transparent text-font-1 outline-none placeholder:text-font-disabled disabled:cursor-default",
-            !isLoggedIn && "placeholder:text-font-1",
-          )}
-          placeholder={placeholder}
-        />
-
-        <button
-          type="button"
-          onClick={handleSubmit}
-          disabled={!canSubmit}
-          className={cn(
-            "body-5 rounded-xl bg-main px-4 py-1.5 transition-colors",
-            canSubmit
-              ? "text-font-1 hover:bg-btn-selected"
-              : "cursor-not-allowed text-font-disabled",
-          )}
-        >
-          {t("submitComment")}
-        </button>
-      </div>
+      <CommentComposer
+        className="min-h-[70px] flex-1 justify-end"
+        value={comment}
+        onChange={setComment}
+        onKeyDown={handleKeyDown}
+        onSubmit={handleSubmit}
+        canSubmit={canSubmit}
+        disabled={!isLoggedIn}
+        placeholder={placeholder}
+        textareaClassName={!isLoggedIn ? "placeholder:text-font-1" : undefined}
+        submitLabel={t("submitComment")}
+      />
     </div>
   );
 };
