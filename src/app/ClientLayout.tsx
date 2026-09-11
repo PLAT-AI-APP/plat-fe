@@ -298,6 +298,10 @@ export default function ClientLayout({
         nickname?: string;
       };
 
+      // 보호 경로에서 뜬 로그인 모달의 "회원가입" 링크로 들어왔다면, 그 모달이 닫히지
+      // 않은 채로 여기까지 남아있다. 완료 다이얼로그가 로그인보다 먼저 보여야 하므로
+      // 먼저 정리한다.
+      clearModals();
       // 회원가입 페이지에서 홈으로 이동한 뒤 완료 Dialog를 열어 라우팅과 레이어 순서를 분리합니다.
       openDialog("SIGNUP_COMPLETE", {
         nickname: parsedDialogData.nickname || "",
@@ -316,7 +320,7 @@ export default function ClientLayout({
     // 홈에 진입한 뒤 한 번만 소비해 로그인 모달이 닫힌 다음 환영 다이얼로그가 뜨도록 맞춥니다.
     sessionStorage.removeItem(PENDING_WELCOME_CREDIT_DIALOG_KEY);
     openDialog("WELCOME_CREDIT", {});
-  }, [openDialog, openModal, pathname]);
+  }, [clearModals, openDialog, openModal, pathname]);
 
   useEffect(() => {
     if (pathname !== "/" || typeof window === "undefined") return;
