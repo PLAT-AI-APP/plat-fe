@@ -4,6 +4,7 @@ import React from "react";
 import { Edit, Trash } from "@/icons";
 import { useTranslations } from "next-intl";
 import { PopoverLayout } from "./layout";
+import PopoverMenuList from "./PopoverMenuList";
 
 interface CharacterMenuPopoverProps {
   onEdit?: () => void;
@@ -20,31 +21,27 @@ const CharacterMenuPopover = ({
 }: CharacterMenuPopoverProps) => {
   const t = useTranslations("popover");
 
-  const handleAction = (action?: () => void) => {
-    action?.();
-    onClose();
-  };
-
   return (
     <PopoverLayout triggerRef={triggerRef} onClose={onClose}>
-      <menu className="flex flex-col gap-1">
-        <button
-          onClick={() => handleAction(onEdit)}
-          type="button"
-          className="flex items-center gap-2 text-left body-5 px-2.5 py-2 rounded-lg hover:bg-btn-hover transition-colors"
-        >
-          <Edit className="w-4 h-4" />
-          <span>{t("edit")}</span>
-        </button>
-        <button
-          onClick={() => handleAction(onDelete)}
-          type="button"
-          className="flex items-center gap-2 text-danger body-5 text-left px-2.5 py-2 rounded-lg hover:bg-btn-hover transition-colors"
-        >
-          <Trash className="w-4 h-4 text-danger" />
-          <span>{t("delete")}</span>
-        </button>
-      </menu>
+      <PopoverMenuList
+        onClose={onClose}
+        itemClassName="rounded-lg px-2.5 py-2"
+        items={[
+          {
+            key: "edit",
+            icon: <Edit className="w-4 h-4" />,
+            label: t("edit"),
+            onClick: onEdit,
+          },
+          {
+            key: "delete",
+            icon: <Trash className="w-4 h-4 text-danger" />,
+            label: t("delete"),
+            onClick: onDelete,
+            danger: true,
+          },
+        ]}
+      />
     </PopoverLayout>
   );
 };
