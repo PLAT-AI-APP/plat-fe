@@ -1,21 +1,22 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { ArrowDown, Check } from "@/icons";
 import { LANGUAGE_LIST } from "@/constants/language";
 import { useClickAway } from "@/hooks/dom/useClickAway";
+import useToggle from "@/hooks/common/useToggle";
 import { cn } from "@/lib/utils";
 import { useLocaleStore } from "@/store/useLocaleStore";
 
 const SettingLanguageSelect = () => {
   const locale = useLocaleStore((state) => state.locale);
   const setLocale = useLocaleStore((state) => state.setLocale);
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, toggle, close } = useToggle();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
   // 드롭다운 바깥 클릭 시 열린 상태를 정리해 다른 설정 행과 겹치지 않게 합니다.
-  useClickAway(dropdownRef, () => setIsOpen(false), triggerRef);
+  useClickAway(dropdownRef, close, triggerRef);
 
   const selectedLanguage =
     LANGUAGE_LIST.find((language) => language.locale === locale) ??
@@ -25,7 +26,7 @@ const SettingLanguageSelect = () => {
     nextLocale: (typeof LANGUAGE_LIST)[number]["locale"],
   ) => {
     setLocale(nextLocale);
-    setIsOpen(false);
+    close();
   };
 
   return (
@@ -34,7 +35,7 @@ const SettingLanguageSelect = () => {
         ref={triggerRef}
         type="button"
         aria-expanded={isOpen}
-        onClick={() => setIsOpen((prev) => !prev)}
+        onClick={toggle}
         className="body-5 flex h-10 min-w-[140px] max-w-[220px] items-center justify-between gap-3 rounded-xl bg-darkest px-4 py-2 text-font-1"
       >
         <span className="truncate">{selectedLanguage.name}</span>

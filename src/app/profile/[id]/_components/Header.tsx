@@ -2,10 +2,11 @@
 
 import { AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useFollowCountQuery } from "@/api/follow/getFollowCount";
 import { useFollowToggle } from "@/hooks/follow/useFollowToggle";
+import useToggle from "@/hooks/common/useToggle";
 import ProfileActionPopover from "@/components/popover/ProfileActionPopover";
 import { Dots } from "@/icons";
 import { cn, formatWithCommas } from "@/lib/utils";
@@ -74,7 +75,11 @@ const Header = ({ userId }: HeaderProps) => {
   const user = useUserStore((state) => state.user);
   const openDialog = useDialogStore((state) => state.openDialog);
   const closeDialog = useDialogStore((state) => state.closeDialog);
-  const [isActionPopoverOpen, setIsActionPopoverOpen] = useState(false);
+  const {
+    isOpen: isActionPopoverOpen,
+    toggle: toggleActionPopover,
+    close: closeActionPopover,
+  } = useToggle();
   const actionTriggerRef = useRef<HTMLButtonElement>(null);
 
   const isOwnProfile = user?.id === userId;
@@ -153,7 +158,7 @@ const Header = ({ userId }: HeaderProps) => {
                     type="button"
                     aria-label={t("profile.moreMenu")}
                     aria-expanded={isActionPopoverOpen}
-                    onClick={() => setIsActionPopoverOpen((prev) => !prev)}
+                    onClick={toggleActionPopover}
                     className="flex size-6 items-center justify-center text-font-2 transition-colors hover:text-font-1"
                   >
                     <Dots className="size-6 rotate-90" aria-hidden="true" />
@@ -163,7 +168,7 @@ const Header = ({ userId }: HeaderProps) => {
                     {isActionPopoverOpen && (
                       <ProfileActionPopover
                         triggerRef={actionTriggerRef}
-                        onClose={() => setIsActionPopoverOpen(false)}
+                        onClose={closeActionPopover}
                         onShare={handleShareProfile}
                         onBlock={() =>
                           openDialog("USER_BLOCK", {
