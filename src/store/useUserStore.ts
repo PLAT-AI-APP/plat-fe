@@ -27,16 +27,7 @@ interface UserState {
 export const useUserStore = create<UserState>()(
   persist(
     (set) => ({
-      user: {
-        id: "0",
-        nickname: "",
-        bio: "",
-        profileImage: "",
-        birth: "",
-        gender: "MALE",
-        provider: "EMAIL",
-        email: "",
-      },
+      user: null,
 
       // 전체 유저 정보 저장
       setUser: (user) => set({ user }),
