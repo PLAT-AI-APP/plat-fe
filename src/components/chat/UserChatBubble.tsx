@@ -1,7 +1,6 @@
-import React from "react";
-import { useTextareaSubmitShortcuts } from "@/hooks/form/useTextareaSubmitShortcuts";
-import { Close, Pen, Trash } from "@/icons";
-import Check from "@/icons/Check";
+import InlineEditActions from "@/components/chat/InlineEditActions";
+import { useInlineTextEdit } from "@/hooks/form/useInlineTextEdit";
+import { Pen, Trash } from "@/icons";
 
 interface UserChatBubbleProps {
   text: string;
@@ -16,47 +15,21 @@ const UserChatBubble = ({
   onUpdate,
   onDelete,
 }: UserChatBubbleProps) => {
-  const [isEditing, setIsEditing] = React.useState(false);
-  const [editedText, setEditedText] = React.useState(text);
-
-  React.useEffect(() => {
-    setEditedText(text);
-  }, [text]);
-
-  const handleUpdate = () => {
-    onUpdate?.(editedText);
-    setIsEditing(false);
-  };
-
-  const handleCancel = () => {
-    setEditedText(text);
-    setIsEditing(false);
-  };
-
-  const { handleKeyDown, handleFocus } = useTextareaSubmitShortcuts({
-    onSubmit: handleUpdate,
-    onCancel: handleCancel,
-  });
+  const {
+    isEditing,
+    draft: editedText,
+    setDraft: setEditedText,
+    startEditing,
+    handleCancel,
+    handleSubmit: handleUpdate,
+    handleKeyDown,
+    handleFocus,
+  } = useInlineTextEdit({ value: text, onSubmit: onUpdate });
 
   if (isEditing) {
     return (
       <div className="flex items-end justify-end gap-2">
-        <div className="flex h-fit shrink-0 gap-1 text-font-2">
-          <button
-            type="button"
-            onClick={handleCancel}
-            className="flex items-center justify-center rounded-lg p-1.5 hover:bg-btn-hover"
-          >
-            <Close className="size-4" />
-          </button>
-          <button
-            type="button"
-            onClick={handleUpdate}
-            className="flex items-center justify-center rounded-lg p-1.5 hover:bg-btn-hover"
-          >
-            <Check className="size-4" />
-          </button>
-        </div>
+        <InlineEditActions onCancel={handleCancel} onConfirm={handleUpdate} />
 
         <div className="flex flex-1 justify-end">
           <div className="flex w-full max-w-[520px] items-center rounded-[16px_16px_0px_16px] bg-brand-opacity-2 p-2.5">
@@ -81,7 +54,7 @@ const UserChatBubble = ({
         <div className="flex gap-1">
           <button
             type="button"
-            onClick={() => setIsEditing(true)}
+            onClick={startEditing}
             className="rounded-lg p-1.5 hover:bg-btn-hover"
           >
             <Pen className="size-4 text-font-2" />

@@ -4,15 +4,15 @@ import React, { useMemo } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import CharacterChat from "@/components/chat/CharacterChat";
+import InlineEditActions from "@/components/chat/InlineEditActions";
 import Scenario from "@/components/chat/Scenario";
 import UserChatBubble from "@/components/chat/UserChatBubble";
-import { ChatRetry, ChatTrash, Close, Pen, Trash } from "@/icons";
+import { ChatRetry, ChatTrash, Pen, Trash } from "@/icons";
 import { useAutoResizeTextarea } from "@/hooks/form/useAutoResizeTextarea";
-import { useTextareaSubmitShortcuts } from "@/hooks/form/useTextareaSubmitShortcuts";
-import Check from "@/icons/Check";
+import { useInlineTextEdit } from "@/hooks/form/useInlineTextEdit";
 import { getResourceImageUrl } from "@/lib/file";
 import { parsePlat, segmentsToDisplayText } from "@/lib/platParse";
-import { useUserStore } from "@/store/useUserStore";
+import { useUserDisplayName } from "@/hooks/data/useUserDisplayName";
 
 interface ChatContentBlockProps {
   rawData: string;
@@ -34,34 +34,21 @@ const ChatContentBlock = ({
   onRetry,
 }: ChatContentBlockProps) => {
   const t = useTranslations();
-  // {{user}} 자리에 채워 넣을 표시용 이름. 닉네임이 없으면(드묾) 일반 대체 문구로 대신합니다.
-  const userNickname = useUserStore((state) => state.user?.nickname);
-  const userDisplayName = userNickname || t("profile.defaultName");
-  const [isEditing, setIsEditing] = React.useState(false);
-  const [editedContent, setEditedContent] = React.useState(rawData);
-
-  React.useEffect(() => {
-    setEditedContent(rawData);
-  }, [rawData]);
+  const userDisplayName = useUserDisplayName();
+  const {
+    isEditing,
+    draft: editedContent,
+    setDraft: setEditedContent,
+    startEditing,
+    handleCancel,
+    handleSubmit: handleUpdate,
+    handleKeyDown,
+    handleFocus,
+  } = useInlineTextEdit({ value: rawData, onSubmit: onUpdate });
 
   const { textareaRef } = useAutoResizeTextarea({
     enabled: isEditing,
     value: editedContent,
-  });
-
-  const handleUpdate = () => {
-    onUpdate?.(editedContent);
-    setIsEditing(false);
-  };
-
-  const handleCancel = () => {
-    setEditedContent(rawData);
-    setIsEditing(false);
-  };
-
-  const { handleKeyDown, handleFocus } = useTextareaSubmitShortcuts({
-    onSubmit: handleUpdate,
-    onCancel: handleCancel,
   });
 
   /** 대화 원문을 말풍선, 이미지, 서술문 블록으로 분리 */
@@ -82,22 +69,7 @@ const ChatContentBlock = ({
           />
         </div>
 
-        <div className="flex h-fit shrink-0 gap-1 text-font-2">
-          <button
-            type="button"
-            onClick={handleCancel}
-            className="flex items-center justify-center rounded-lg p-1.5 hover:bg-btn-hover"
-          >
-            <Close className="size-4" />
-          </button>
-          <button
-            type="button"
-            onClick={handleUpdate}
-            className="flex items-center justify-center rounded-lg p-1.5 hover:bg-btn-hover"
-          >
-            <Check className="size-4" />
-          </button>
-        </div>
+        <InlineEditActions onCancel={handleCancel} onConfirm={handleUpdate} />
       </div>
     );
   }
@@ -150,7 +122,7 @@ const ChatContentBlock = ({
         <div className="-mt-4 flex gap-1 pl-11">
           <button
             type="button"
-            onClick={() => setIsEditing(true)}
+            onClick={startEditing}
             className="rounded-lg bg-card p-1.5 hover:bg-btn-hover"
           >
             <Pen className="size-4 text-font-2" />

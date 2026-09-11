@@ -5,12 +5,14 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import ScenarioSelectPopover from "@/components/popover/ScenarioSelectPopover";
+import CharacterChat from "@/components/chat/CharacterChat";
+import Scenario from "@/components/chat/Scenario";
 import UserChatBubble from "@/components/chat/UserChatBubble";
-import { ArrowDown, Message } from "@/icons";
+import { ArrowDown } from "@/icons";
 import { getResourceImageUrl } from "@/lib/file";
 import { parsePlat, segmentsToDisplayText } from "@/lib/platParse";
 import { cn } from "@/lib/utils";
-import { useUserStore } from "@/store/useUserStore";
+import { useUserDisplayName } from "@/hooks/data/useUserDisplayName";
 import { CharacterDetail, CharacterScenario } from "@/type/character";
 
 interface ScenarioPanelProps {
@@ -21,7 +23,6 @@ const SCENARIO_CONTENT_MAX_HEIGHT = 1471;
 
 const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
   const t = useTranslations("characterDetail");
-  const rootT = useTranslations();
   // 시나리오 변경 버튼을 팝오버 위치 기준으로 사용하기 위해 ref로 보관합니다.
   const scenarioSelectTriggerRef = useRef<HTMLButtonElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -39,9 +40,7 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
       ) ?? character.scenarios[0],
     [character.scenarios, selectedScenarioId],
   );
-  // {{user}} 자리에 채워 넣을 표시용 이름. 닉네임이 없으면(비로그인 등) 일반 대체 문구로 대신합니다.
-  const userNickname = useUserStore((state) => state.user?.nickname);
-  const userDisplayName = userNickname || rootT("profile.defaultName");
+  const userDisplayName = useUserDisplayName();
   // situation에는 원본 .plat 마크업 전체(대사/유저대사/지문/에셋 태그)가 그대로 들어 있습니다.
   const scenarioBlocks = useMemo(
     () => parsePlat(selectedScenario?.situation ?? ""),
@@ -150,22 +149,18 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
 
               if (block.type === "DIALOGUE") {
                 return (
-                  <div key={index} className="flex w-full gap-2">
-                    <Image
-                      src={character.profileImage}
-                      alt={character.characterName}
-                      width={40}
-                      height={40}
-                      className="avatar-img size-10"
+                  <div key={index} className="w-full">
+                    <CharacterChat
+                      image={character.profileImage}
+                      CharacterName={character.characterName}
+                      chatText={segmentsToDisplayText(
+                        block.segments,
+                        userDisplayName,
+                      )}
+                      imageSize={40}
+                      imageClassName="size-10"
+                      bubbleClassName="rounded-bl-2xl rounded-br-2xl rounded-tr-2xl"
                     />
-                    <div className="flex min-w-0 flex-1 flex-col items-start gap-1.5">
-                      <p className="body-5 text-font-1">
-                        {character.characterName}
-                      </p>
-                      <p className="body-5 rounded-bl-2xl rounded-br-2xl rounded-tr-2xl bg-card px-3 py-2 text-font-1">
-                        {segmentsToDisplayText(block.segments, userDisplayName)}
-                      </p>
-                    </div>
                   </div>
                 );
               }
@@ -185,12 +180,13 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
 
               if (block.type === "NARRATIVE") {
                 return (
-                  <div key={index} className="flex w-full gap-5">
-                    <Message className="size-7 shrink-0 text-font-2" />
-                    <p className="body-5 min-w-0 flex-1 whitespace-pre-wrap text-font-2">
-                      {segmentsToDisplayText(block.segments, userDisplayName)}
-                    </p>
-                  </div>
+                  <Scenario
+                    key={index}
+                    className="w-full"
+                    iconClassName="size-7"
+                    textClassName="min-w-0 flex-1"
+                    text={segmentsToDisplayText(block.segments, userDisplayName)}
+                  />
                 );
               }
 
