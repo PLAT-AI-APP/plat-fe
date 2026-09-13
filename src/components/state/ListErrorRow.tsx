@@ -2,7 +2,11 @@
 
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
-import { isRetryableError, resolveErrorMessage } from "@/lib/apiError";
+import {
+  isRetryableError,
+  isSuppressedError,
+  resolveErrorMessage,
+} from "@/lib/apiError";
 
 interface ListErrorRowProps {
   error: unknown;
@@ -28,6 +32,9 @@ const ListErrorRow = ({
 }: ListErrorRowProps) => {
   const t = useTranslations("state");
   const canRetry = isRetryableError(error);
+
+  // 세션 만료는 이미 LOGIN_REQUIRED 다이얼로그가 안내한다.
+  if (isSuppressedError(error)) return null;
 
   return (
     <div

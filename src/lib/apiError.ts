@@ -28,6 +28,16 @@ export const resolveErrorMessage = (error: unknown): string => {
   return error.message?.trim() || FALLBACK_MESSAGE;
 };
 
+/**
+ * 세션 만료처럼 이미 Dialog(LOGIN_REQUIRED)로 안내한 에러인지.
+ *
+ * api/index.ts의 onResponseError/onPlainResponseError가 세션 만료 401에 suppressToast를
+ * 표시해 둔다. 그 자리(ErrorState 등)에 원문 메시지·요청 정보를 또 그리면 다이얼로그와
+ * 같은 내용을 두 번 말하고, 로그인해야 풀리는 상황인데 "재시도" 버튼까지 뜬다.
+ */
+export const isSuppressedError = (error: unknown): boolean =>
+  isAppError(error) && Boolean(error.suppressToast);
+
 /** 재시도해서 풀릴 만한 실패인지. 네트워크·타임아웃·5xx는 다시 눌러볼 값이 있습니다. */
 export const isRetryableError = (error: unknown): boolean => {
   if (!isAppError(error)) return true;

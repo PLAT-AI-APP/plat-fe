@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import {
   formatErrorDetail,
   isRetryableError,
+  isSuppressedError,
   resolveErrorMessage,
 } from "@/lib/apiError";
 
@@ -37,6 +38,10 @@ const ErrorState = ({
   const detail = formatErrorDetail(error);
   // 4xx 는 다시 눌러도 답이 같다. 재시도 버튼을 띄우면 사용자를 헛수고시킨다.
   const canRetry = Boolean(onRetry) && isRetryableError(error);
+
+  // 세션 만료는 이미 LOGIN_REQUIRED 다이얼로그가 안내한다. 여기서 또 그리면
+  // 같은 내용을 두 번 말하고, 로그인해야 풀리는데 재시도 버튼까지 뜬다.
+  if (isSuppressedError(error)) return null;
 
   if (variant === "inline") {
     return (
