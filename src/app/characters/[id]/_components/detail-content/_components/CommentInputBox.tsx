@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import { resolveApiImageUrl } from "@/lib/file";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useUserStore } from "@/store/useUserStore";
 import { useTextareaSubmitShortcuts } from "@/hooks/form/useTextareaSubmitShortcuts";
@@ -42,7 +43,7 @@ const CommentInputBox = ({ universeId }: CommentInputBoxProps) => {
   return (
     <div className="flex gap-2">
       <Image
-        src={profileImage || "/p1.png"}
+        src={resolveApiImageUrl(profileImage) || "/p1.png"}
         alt={t("myProfileAlt")}
         width={40}
         height={40}

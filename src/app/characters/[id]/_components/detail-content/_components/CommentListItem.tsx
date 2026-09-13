@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import dayjs from "@/lib/dayjs";
+import { resolveApiImageUrl } from "@/lib/file";
 import { Heart, HeartFill } from "@/icons";
 import type { Comment } from "@/type/comment";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -89,7 +90,10 @@ const CommentListItem = ({ comment, universeId }: CommentListItemProps) => {
   return (
     <li className="flex gap-2">
       <Image
-        src={comment.author.profileImageUrl || DEFAULT_PROFILE_IMAGE}
+        src={
+          resolveApiImageUrl(comment.author.profileImageUrl) ||
+          DEFAULT_PROFILE_IMAGE
+        }
         alt={t("profileAlt", { name: comment.author.nickname })}
         width={36}
         height={36}
