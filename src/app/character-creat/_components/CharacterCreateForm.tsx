@@ -70,8 +70,8 @@ const createCharacterEditDefaultValues = (
   title: universe.title,
   name: universe.character.name ?? "",
   characterIntroduce: universe.introduce,
-  profileSituationDescription: "",
-  characterDetailSetting: universe.detailSetting,
+  profileSituationDescription: universe.detailSetting,
+  characterDetailSetting: universe.character.detailSetting ?? "",
   asset: universe.assets.map((asset) => ({
     assetFile: null,
     assetImage: asset.originalUrl,

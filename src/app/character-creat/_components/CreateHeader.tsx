@@ -328,7 +328,7 @@ const CreateHeader = ({
           description,
           tagIds: currentFormData.tagIds.map((tag) => tag.id),
           category: toUniverseCategory(currentFormData.category),
-          detailSetting: currentFormData.characterDetailSetting,
+          detailSetting: currentFormData.profileSituationDescription,
           introduce: currentFormData.characterIntroduce,
           // 이미지를 새로 업로드해 fileId를 발급받은 경우에만 전달합니다. 없으면 기존 이미지를 유지합니다.
           ...(currentFormData.representativeImageId
@@ -379,7 +379,7 @@ const CreateHeader = ({
         description,
         tagIds: currentFormData.tagIds.map((tag) => tag.id),
         category: toUniverseCategory(currentFormData.category),
-        detailSetting: currentFormData.characterDetailSetting,
+        detailSetting: currentFormData.profileSituationDescription,
         introduce: currentFormData.characterIntroduce,
         profileImageFileId: String(currentFormData.representativeImageId),
         character: {
