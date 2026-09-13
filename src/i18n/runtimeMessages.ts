@@ -128,6 +128,11 @@ const en = {
       latest: "Latest",
       chats: "Most chatted",
     },
+    wishEmpty: {
+      caption: "No characters you like yet?",
+      title: "Explore to find the perfect character for you",
+      searchTag: "Search by tag",
+    },
   },
   notification: {
     title: "Notice",
@@ -374,6 +379,11 @@ const ko: RuntimeMessages = {
     characterTab: "캐릭터",
     wishTab: "찜",
     worksList: "작품 목록",
+    wishEmpty: {
+      caption: "마음에 드는 캐릭터가 없나요?",
+      title: "꼭 맞는 캐릭터를 탐색해 볼 수 있어요",
+      searchTag: "태그 검색하기",
+    },
     sort: {
       latest: "최신순",
       chats: "채팅순",
@@ -611,6 +621,11 @@ const ja: RuntimeMessages = {
     characterTab: "キャラクター",
     wishTab: "お気に入り",
     worksList: "作品一覧",
+    wishEmpty: {
+      caption: "気に入ったキャラクターがありませんか?",
+      title: "ぴったりのキャラクターを探してみましょう",
+      searchTag: "タグで検索する",
+    },
     sort: {
       latest: "最新順",
       chats: "チャット順",
@@ -847,6 +862,11 @@ const zh: RuntimeMessages = {
     characterTab: "角色",
     wishTab: "收藏",
     worksList: "作品列表",
+    wishEmpty: {
+      caption: "还没有喜欢的角色吗?",
+      title: "去探索最适合你的角色吧",
+      searchTag: "按标签搜索",
+    },
     sort: {
       latest: "最新顺",
       chats: "聊天顺",
@@ -1083,6 +1103,11 @@ const th: RuntimeMessages = {
     characterTab: "ตัวละคร",
     wishTab: "รายการโปรด",
     worksList: "รายการผลงาน",
+    wishEmpty: {
+      caption: "ยังไม่มีตัวละครที่ถูกใจใช่ไหม?",
+      title: "ลองสำรวจหาตัวละครที่ใช่สำหรับคุณ",
+      searchTag: "ค้นหาด้วยแท็ก",
+    },
     sort: {
       latest: "ล่าสุด",
       chats: "ตามจำนวนแชต",
@@ -1327,6 +1352,11 @@ const vi: RuntimeMessages = {
     characterTab: "Nhân vật",
     wishTab: "Yêu thích",
     worksList: "Danh sách tác phẩm",
+    wishEmpty: {
+      caption: "Chưa có nhân vật nào bạn thích?",
+      title: "Khám phá để tìm nhân vật phù hợp với bạn",
+      searchTag: "Tìm theo thẻ",
+    },
     sort: {
       latest: "Mới nhất",
       chats: "Theo lượt chat",

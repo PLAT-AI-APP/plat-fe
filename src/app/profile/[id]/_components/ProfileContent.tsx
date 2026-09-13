@@ -12,6 +12,7 @@ import { useTabUnderline } from "@/hooks/dom/useTabUnderline";
 import { cn } from "@/lib/utils";
 import { useUserStore } from "@/store/useUserStore";
 import Header from "./Header";
+import WishlistEmptyState from "./WishlistEmptyState";
 import { SPRING_SNAPPY } from "@/constants/motion";
 
 type ProfileTab = "character" | "wish";
@@ -158,6 +159,10 @@ export default function ProfileContent({ id }: { id: string }) {
   const displayArray = isWishTab ? likedCards : CharArray;
   // 찜은 서버가 전체 개수를 세어 주므로 지금 받아 둔 페이지 수가 아니라 그 값을 씁니다.
   const displayCount = isWishTab ? (likedTotalCount ?? 0) : displayArray.length;
+  // 불러오지 못한 것과 진짜로 찜한 게 없는 것은 다르다 — 실패는 CharacterShowcase의
+  // 에러 표시에 맡기고, 정말 0개일 때만 태그 탐색을 안내한다.
+  const isWishEmpty =
+    isWishTab && !isLikedLoading && !isLikedError && likedCards.length === 0;
 
   return (
     <article className="mx-auto flex w-full max-w-(--content-max-width) flex-col gap-10 pt-6 pb-10">
@@ -231,14 +236,18 @@ export default function ProfileContent({ id }: { id: string }) {
           id="character-list-section"
           className="flex h-auto w-full flex-col justify-center gap-4"
         >
-          <CharacterShowcase
-            charArray={displayArray}
-            cardSize="S"
-            isLoading={isWishTab && isLikedLoading}
-            isError={isWishTab && isLikedError}
-            error={likedError}
-            onRetry={refetchLiked}
-          />
+          {isWishEmpty ? (
+            <WishlistEmptyState />
+          ) : (
+            <CharacterShowcase
+              charArray={displayArray}
+              cardSize="S"
+              isLoading={isWishTab && isLikedLoading}
+              isError={isWishTab && isLikedError}
+              error={likedError}
+              onRetry={refetchLiked}
+            />
+          )}
 
           {isWishTab && hasNextPage && (
             <div ref={sentinelRef} aria-hidden="true" className="h-px" />
