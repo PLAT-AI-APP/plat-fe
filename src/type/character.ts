@@ -43,6 +43,8 @@ export interface CharacterDetail {
   characterDescription: string;
   chatCount: number;
   likeCount: number;
+  /** 창작자가 댓글을 허용했는지. false면 새 댓글 작성을 막습니다. */
+  commentEnabled: boolean;
   /** 이 요청을 보낸 사람이 찜했는지. 비로그인이면 항상 false 입니다. */
   liked: boolean;
   /** 이 요청을 보낸 사람이 수정 권한이 있는지. 백엔드가 판단해 내려주므로 그대로 씁니다. */

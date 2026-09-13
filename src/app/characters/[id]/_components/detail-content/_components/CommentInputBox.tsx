@@ -12,9 +12,13 @@ import CommentComposer from "./CommentComposer";
 
 interface CommentInputBoxProps {
   universeId: string;
+  commentEnabled: boolean;
 }
 
-const CommentInputBox = ({ universeId }: CommentInputBoxProps) => {
+const CommentInputBox = ({
+  universeId,
+  commentEnabled,
+}: CommentInputBoxProps) => {
   const t = useTranslations("characterDetail");
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const profileImage = useUserStore((state) => state.user?.profileImage);
@@ -39,6 +43,15 @@ const CommentInputBox = ({ universeId }: CommentInputBoxProps) => {
   const { handleKeyDown } = useTextareaSubmitShortcuts({
     onSubmit: handleSubmit,
   });
+
+  // 창작자가 댓글을 막아둔 캐릭터는 새 댓글을 아예 못 쓰게 합니다.
+  if (!commentEnabled) {
+    return (
+      <p className="body-5 rounded-2xl bg-btn-hover px-3 py-4 text-center text-font-2">
+        {t("commentsDisabled")}
+      </p>
+    );
+  }
 
   return (
     <div className="flex gap-2">

@@ -243,7 +243,10 @@ const CharacterDetailContent = ({
               id="character-detail-comments"
               className="scroll-mt-18"
             >
-              <CommentsPanel universeId={characterId} />
+              <CommentsPanel
+                universeId={characterId}
+                commentEnabled={character.commentEnabled}
+              />
             </section>
           </div>
         </main>

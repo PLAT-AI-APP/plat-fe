@@ -61,6 +61,7 @@ const mockCharacterDetail: CharacterDetail = {
     "This character is direct, observant, and quietly warm. They tend to hide concern behind dry remarks, then show up exactly when the user needs them.",
   chatCount: 235,
   likeCount: 0,
+  commentEnabled: true,
   liked: false,
   editable: false,
   tags: ["daily", "mystery", "school", "friend"],
