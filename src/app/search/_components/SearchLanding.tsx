@@ -5,11 +5,13 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import CharacterCard from "@/components/character/character-card";
 import CardGrid from "@/components/character/character-card/CardGrid";
+import { CharacterCardSkeleton } from "@/components/character/character-card/CharacterCardSkeleton";
 import { useRecentSearch } from "@/hooks/search/useRecentSearch";
 import dayjs from "@/lib/dayjs";
 import { cn, formatStatCount } from "@/lib/utils";
 import { useLocaleStore } from "@/store/useLocaleStore";
 import { QueryStateBoundary } from "@/components/state";
+import { useRankingQuery } from "@/api/ranking/getRanking";
 import {
   usePopularSearchTermsQuery,
   type PopularSearchTerm,
@@ -22,7 +24,8 @@ import { showAppToast } from "@/lib/toast";
 
 /** 실시간 검색어 칸 수. 3열 x 2행 격자에 맞춘다. */
 const LIVE_SEARCH_SIZE = 6;
-import { DUMMY_SEARCH_CHARACTERS } from "./dummyData";
+/** 최근 많이 찾아본 캐릭터 칸 수. 별도 API가 없어 실시간 대화량 랭킹을 재사용한다. */
+const POPULAR_CHARACTERS_SIZE = 6;
 import SearchQueryBar from "./SearchQueryBar";
 import PageTitle from "@/components/PageTitle";
 
@@ -109,6 +112,21 @@ const SearchLanding = () => {
     error: termsError,
     refetch: refetchTerms,
   } = usePopularSearchTermsQuery(LIVE_SEARCH_SIZE);
+
+  // "최근 많이 찾아본 캐릭터" 전용 API가 없어 실시간 대화량 랭킹을 그대로 가져다 씁니다.
+  const {
+    data: popularCharacters,
+    isPending: isCharactersPending,
+    isError: isCharactersError,
+    error: charactersError,
+    refetch: refetchCharacters,
+  } = useRankingQuery({
+    period: "REALTIME",
+    sort: "CHAT",
+    scope: "ALL",
+    size: POPULAR_CHARACTERS_SIZE,
+  });
+  const characterItems = popularCharacters?.content ?? [];
 
   const updatedAt = `${dayjs().format("YY.MM.DD HH")}시 ${t("ranking.liveSuffix")}`;
 
@@ -199,23 +217,45 @@ const SearchLanding = () => {
 
           {/* 예전에는 flex 한 줄이라 카드 6장이 폭을 나눠 갖다 못해 108px 까지 찌그러졌다.
               높이는 245px 로 고정이라 187:245 였던 비율이 화면마다 달라졌다. */}
-          <CardGrid size="S">
-            {DUMMY_SEARCH_CHARACTERS.slice(0, 6).map((character) => (
-              <CharacterCard
-                key={character.id}
-                size="S"
-                fluid
-                title={character.title}
-                description={character.description}
-                creatorName={character.creatorName}
-                chatCount={character.chatCount}
-                images={character.image}
-                isNew={character.isNew}
-                isOfficial={character.isOfficial}
-                href={`/characters/${character.id}`}
-              />
-            ))}
-          </CardGrid>
+          <QueryStateBoundary
+            isPending={isCharactersPending}
+            isError={isCharactersError}
+            error={charactersError}
+            isEmpty={characterItems.length === 0}
+            onRetry={refetchCharacters}
+            pendingFallback={
+              <CardGrid size="S">
+                {Array.from({ length: POPULAR_CHARACTERS_SIZE }).map(
+                  (_, index) => (
+                    <CharacterCardSkeleton
+                      key={`popular-character-skeleton-${index}`}
+                      size="S"
+                      fluid
+                    />
+                  ),
+                )}
+              </CardGrid>
+            }
+            emptyMessage={t("searchResults.empty")}
+          >
+            <CardGrid size="S">
+              {characterItems.map(({ card }) => (
+                <CharacterCard
+                  key={card.universeId}
+                  size="S"
+                  fluid
+                  title={card.title}
+                  description={card.description}
+                  creatorName={card.creator.nickname}
+                  chatCount={card.chatCount}
+                  images={card.images}
+                  isNew={card.isNew}
+                  isOfficial={card.isOfficial}
+                  href={`/characters/${card.universeId}`}
+                />
+              ))}
+            </CardGrid>
+          </QueryStateBoundary>
         </div>
 
         <button
