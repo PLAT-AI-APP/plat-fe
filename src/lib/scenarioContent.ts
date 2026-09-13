@@ -24,6 +24,14 @@ interface DecodedScenarioContent {
   contents: ScenarioContentItem[];
 }
 
+/**
+ * 역슬래시 자체와 이 블록의 구분자로 쓰이는 문자를 이스케이프합니다.
+ * 기존 역슬래시부터 먼저 이스케이프해야, 뒤이어 넣는 구분자용 역슬래시가
+ * 이중으로 다시 이스케이프되지 않습니다.
+ */
+const escapeDelimiter = (value: string, delimiter: string) =>
+  value.replaceAll("\\", "\\\\").replaceAll(delimiter, `\\${delimiter}`);
+
 /** {{user}} 등 인라인 토큰을 표시용 텍스트로 되돌립니다. 실제 유저명 치환은 아직 미구현이라 토큰 그대로 남깁니다. */
 const segmentsToText = (segments: PlatSegment[]) =>
   segments
@@ -46,15 +54,17 @@ export const encodeScenarioContent = (scenario: ScenarioFormValue): string => {
     if (!value) return "";
 
     // 값 안에 구분자 문자가 그대로 있으면 findBlockEnd가 첫 번째로 만나는 걸
-    // 닫는 기호로 오인해 블록이 중간에서 끊깁니다. 실제 구분자와 안 겹치는
-    // 비슷한 문자로 바꿔서, 화면엔 거의 같아 보이되 파싱은 절대 안 깨지게 합니다.
+    // 닫는 기호로 오인해 블록이 중간에서 끊깁니다. 역슬래시로 이스케이프해서
+    // (기존 역슬래시도 먼저 이스케이프) 사용자가 입력한 글자를 한 글자도 안
+    // 바꾸면서 파싱만 안전하게 만듭니다. parsePlat/parseInlineTokens이 짝을
+    // 이뤄 다시 원래 글자로 되돌립니다.
     switch (item.type) {
       case "action":
-        return `*${value.replaceAll("*", "＊")}*`;
+        return `*${escapeDelimiter(value, "*")}*`;
       case "chat":
-        return `"${value.replaceAll('"', "”")}"`;
+        return `"${escapeDelimiter(value, '"')}"`;
       case "userChat":
-        return `'${value.replaceAll("'", "’")}'`;
+        return `'${escapeDelimiter(value, "'")}'`;
       case "asset":
         return `{{img:${value}}}`;
       default:

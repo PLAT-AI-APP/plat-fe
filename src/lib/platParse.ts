@@ -83,6 +83,12 @@ export const segmentsToDisplayText = (
     .join("");
 
 /**
+ * encodeScenarioContent가 구분자 문자·역슬래시 앞에 붙인 역슬래시를 지워
+ * 사용자가 원래 입력한 글자 그대로 되돌립니다.
+ */
+const unescapeDelimiters = (raw: string) => raw.replace(/\\(.)/g, "$1");
+
+/**
  * 대사류 블록(DIALOGUE / USER_DIALOGUE / NARRATIVE) 내부 문자열에서
  * {{user}}, {{img:code}} 같은 인라인 토큰을 찾아 일반 텍스트와 분리합니다.
  */
@@ -94,7 +100,10 @@ function parseInlineTokens(raw: string): PlatSegment[] {
   INLINE_TOKEN_REGEX.lastIndex = 0;
   while ((match = INLINE_TOKEN_REGEX.exec(raw)) !== null) {
     if (match.index > cursor) {
-      segments.push({ type: "TEXT", value: raw.slice(cursor, match.index) });
+      segments.push({
+        type: "TEXT",
+        value: unescapeDelimiters(raw.slice(cursor, match.index)),
+      });
     }
 
     const inner = match[1];
@@ -111,7 +120,7 @@ function parseInlineTokens(raw: string): PlatSegment[] {
   }
 
   if (cursor < raw.length) {
-    segments.push({ type: "TEXT", value: raw.slice(cursor) });
+    segments.push({ type: "TEXT", value: unescapeDelimiters(raw.slice(cursor)) });
   }
 
   return segments;
@@ -170,7 +179,11 @@ const findBlockEnd = (
   { open, close }: { open: string; close: string },
 ) => {
   let i = index + open.length;
-  while (i < source.length && !startsWithAt(source, i, close)) i++;
+  while (i < source.length && !startsWithAt(source, i, close)) {
+    // 역슬래시로 이스케이프된 문자(예: \")는 닫는 기호로 오인하지 않도록
+    // 한 쌍(역슬래시+다음 한 글자)을 통째로 건너뜁니다.
+    i += source[i] === "\\" ? 2 : 1;
+  }
   if (i < source.length) i += close.length; // 닫는 기호까지 포함
 
   return i;
