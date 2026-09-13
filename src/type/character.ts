@@ -60,7 +60,7 @@ export interface CharacterDetail {
     id: string | null;
     nickname: string;
     profileImage: string;
-    followingCount: number;
+    followerCount: number;
     isFollowing: boolean;
   };
   scenarios: CharacterScenario[];

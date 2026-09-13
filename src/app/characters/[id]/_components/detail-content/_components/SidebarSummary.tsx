@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import {
@@ -67,6 +68,30 @@ const SidebarSummary = ({
     // 상세 응답에 creator.isFollowing 이 함께 실려 오므로 같이 다시 받는다.
     extraInvalidateKeys: [universeQueryKeys.detail(character.characterId)],
   });
+
+  // 프로필 이동 가능 여부(canUseCreatorActions)에 따라 링크로도, 그냥 div로도
+  // 감싸야 해서 내용만 따로 빼둔다.
+  const creatorInfoContent = (
+    <>
+      <Image
+        src={character.creator.profileImage}
+        alt={t("creatorProfileAlt", {
+          nickname: character.creator.nickname,
+        })}
+        width={48}
+        height={48}
+        className="avatar-img size-12"
+      />
+      <div className="flex min-w-0 flex-col gap-1">
+        <p className="title-4 truncate text-font-1">
+          {character.creator.nickname}
+        </p>
+        <p className="body-6 text-font-2">
+          {t("followerCount", { count: character.creator.followerCount })}
+        </p>
+      </div>
+    </>
+  );
 
   return (
     <aside className="flex w-full shrink-0 flex-col gap-5 self-start min-[900px]:sticky min-[900px]:top-0 min-[900px]:w-[389px]">
@@ -183,27 +208,18 @@ const SidebarSummary = ({
       {!isCreator && (
         <section className="rounded-2xl bg-btn-hover px-5 py-4">
           <div className="flex items-center justify-between gap-3">
-            <div className="flex min-w-0 items-center gap-2">
-              <Image
-                src={character.creator.profileImage}
-                alt={t("creatorProfileAlt", {
-                  nickname: character.creator.nickname,
-                })}
-                width={48}
-                height={48}
-                className="avatar-img size-12"
-              />
-              <div className="flex min-w-0 flex-col gap-1">
-                <p className="title-4 truncate text-font-1">
-                  {character.creator.nickname}
-                </p>
-                <p className="body-6 text-font-2">
-                  {t("followingCount", {
-                    count: character.creator.followingCount,
-                  })}
-                </p>
+            {canUseCreatorActions ? (
+              <Link
+                href={`/profile/${creatorId}`}
+                className="flex min-w-0 items-center gap-2 transition-opacity hover:opacity-80"
+              >
+                {creatorInfoContent}
+              </Link>
+            ) : (
+              <div className="flex min-w-0 items-center gap-2">
+                {creatorInfoContent}
               </div>
-            </div>
+            )}
             {canUseCreatorActions && (
               <button
                 type="button"

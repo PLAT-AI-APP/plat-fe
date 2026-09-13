@@ -8,6 +8,7 @@ import type {
   CharacterScenario,
 } from "@/type/character";
 import { universeQueryKeys } from "./queryKeys";
+import { useAuthReady } from "@/hooks/data/useAuthReady";
 
 export type UniverseDetailVisibility = "PUBLIC" | "PRIVATE";
 export type UniverseDetailTendency =
@@ -53,7 +54,11 @@ export interface UniverseDetailCharacter {
 
 export interface UniverseDetailResponse {
   universeId: string;
+  /** 창작자(Creator) 도메인 식별자. 팔로우 등 유저 기능에는 creatorUserId를 씁니다. */
   creatorId: string;
+  creatorUserId: string;
+  creatorName: string;
+  creatorFollowerCount: number;
   editable: boolean;
   createdAt: string;
   updatedAt: string;
@@ -138,12 +143,15 @@ export const adaptUniverseDetailToCharacterDetail = (
     createdAt: universe.createdAt,
     updatedAt: universe.updatedAt,
     creator: {
-      id: universe.creatorId,
-      // 백엔드 세계관 상세 응답에는 제작자(creatorId)의 닉네임/프로필 사진을 조회하는 공개 API가
-      // 아직 없어, 임시로 세계관 소속 캐릭터의 이름/이미지를 대신 표시합니다.
-      nickname: universe.character.name ?? "",
+      // 팔로우 등 유저 기능은 UserId 기준이라 creatorId(Creator 도메인 식별자)가 아니라
+      // creatorUserId를 씁니다.
+      id: universe.creatorUserId,
+      nickname: universe.creatorName,
+      // 백엔드 세계관 상세 응답에 아직 창작자 프로필 사진은 없어, 임시로 세계관 소속
+      // 캐릭터의 이미지를 대신 표시합니다.
       profileImage: universe.character.profileImageUrl,
-      followingCount: 0,
+      followerCount: universe.creatorFollowerCount,
+      // 이 요청을 보낸 사람이 창작자를 팔로우하는지는 아직 상세 응답에 실려 오지 않습니다.
       isFollowing: false,
     },
     scenarios,
@@ -152,8 +160,13 @@ export const adaptUniverseDetailToCharacterDetail = (
 };
 
 export const useUniverseDetailQuery = (universeId?: string) => {
+  // 세계관 상세는 로그인이 필수라, 보고 있던 중 세션이 만료되면 401로 실패한
+  // 채 멈춘다. 쿼리 키에 로그인 상태를 반영해 두면, 로그인 안내 모달에서 다시
+  // 로그인했을 때 키가 바뀌면서 자동으로 재요청된다 — 새로고침 없이도 내용이 채워진다.
+  const authReady = useAuthReady();
+
   return useQuery<UniverseDetailResponse, AppError>({
-    queryKey: universeQueryKeys.detail(universeId),
+    queryKey: [...universeQueryKeys.detail(universeId), authReady],
     queryFn: () => getUniverseDetail(universeId ?? ""),
     enabled: Boolean(universeId),
   });

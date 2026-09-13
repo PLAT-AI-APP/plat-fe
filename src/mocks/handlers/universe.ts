@@ -15,6 +15,9 @@ const createMockUniverseDetail = (
 ): UniverseDetailResponse => ({
   universeId,
   creatorId: "1234567890123456789",
+  creatorUserId: "1234567890123456789",
+  creatorName: "흐물거리는달팽이",
+  creatorFollowerCount: 24,
   editable: true,
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
