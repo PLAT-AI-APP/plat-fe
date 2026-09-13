@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { Pen } from "@/icons";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
@@ -44,6 +45,7 @@ const CharacterCard = ({
   rank,
   fluid = false,
   href,
+  editHref,
 }: CharacterCardProps) => {
   const t = useTranslations("characterCard");
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
@@ -69,6 +71,19 @@ const CharacterCard = ({
     [selectedTagSet, tagList],
   );
   const titleIcon = <TitleStatusIcon isOfficial={isOfficial} isNew={isNew} />;
+
+  // 카드 전체를 덮는 stretched link(href)와 형제로 깔아, 수정 배지를 눌러도
+  // 상세페이지로 이동하는 카드 클릭과 겹치지 않게 합니다.
+  const editBadge = editHref && (
+    <Link
+      href={editHref}
+      aria-label={t("editButtonLabel")}
+      onClick={(event) => event.stopPropagation()}
+      className="absolute right-2 top-2 z-10 flex items-center justify-center rounded-full bg-main p-2 text-font-1 transition-colors hover:bg-btn-hover"
+    >
+      <Pen className="size-4" />
+    </Link>
+  );
 
   const lastImageIndex = imageList.length - 1;
   const hasIndicator = imageList.length > 1;
@@ -179,6 +194,8 @@ const CharacterCard = ({
           />
         )}
 
+        {editBadge}
+
         {/* Embla viewport: 소수점 너비 카드에서 다음 슬라이드가 1px 보이는 현상을 clip-path로 보정합니다. */}
         <div
           className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl bg-scrim [clip-path:inset(0_1px_0_0_round_16px)]"
@@ -248,6 +265,8 @@ const CharacterCard = ({
           onClick={handleCardLinkClick}
         />
       )}
+
+      {editBadge}
 
       <div
         className={cn(

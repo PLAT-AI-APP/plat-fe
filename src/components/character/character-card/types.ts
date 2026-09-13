@@ -27,6 +27,12 @@ export interface CharacterCardProps {
    * 아직 갈 곳이 없는 자리(더미 데이터 등)는 생략해 카드를 비활성 상태로 둡니다.
    */
   href?: string;
+  /**
+   * 넘기면 카드 우상단에 수정 배지가 뜨고, 눌렀을 때 이 경로로 이동한다
+   * (예: `/character-creat?universeId={id}`). 카드 클릭(href)과 겹치지 않도록
+   * 별도 배지로 띄운다 — 없으면 배지 자체가 안 뜬다.
+   */
+  editHref?: string;
 }
 
 export interface SizeConfig {
