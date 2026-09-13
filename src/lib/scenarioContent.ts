@@ -45,13 +45,16 @@ export const encodeScenarioContent = (scenario: ScenarioFormValue): string => {
 
     if (!value) return "";
 
+    // 값 안에 구분자 문자가 그대로 있으면 findBlockEnd가 첫 번째로 만나는 걸
+    // 닫는 기호로 오인해 블록이 중간에서 끊깁니다. 실제 구분자와 안 겹치는
+    // 비슷한 문자로 바꿔서, 화면엔 거의 같아 보이되 파싱은 절대 안 깨지게 합니다.
     switch (item.type) {
       case "action":
-        return `*${value}*`;
+        return `*${value.replaceAll("*", "＊")}*`;
       case "chat":
-        return `"${value}"`;
+        return `"${value.replaceAll('"', "”")}"`;
       case "userChat":
-        return `'${value}'`;
+        return `'${value.replaceAll("'", "’")}'`;
       case "asset":
         return `{{img:${value}}}`;
       default:
