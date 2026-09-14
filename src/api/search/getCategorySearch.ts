@@ -17,8 +17,17 @@ export const MAX_CATEGORY_TAGS = 5;
 
 export type CategoryCardCreator = CardCreator;
 
-/** 백엔드 BaseCard. 랭킹·찜 목록과 같은 모양입니다. 로그인하지 않았으면 liked는 항상 false */
-export type CategoryCardItem = LikableCard;
+/** 카테고리 검색 카드에만 실리는 태그. 화면에 그대로 찍히는 라벨(name)이다. */
+export interface CategoryCardTag {
+  tagId: string;
+  name: string;
+}
+
+/**
+ * 백엔드 BaseCard + tags. 랭킹·찜 목록과 같은 모양에 태그만 더 실려 온다.
+ * 로그인하지 않았으면 liked는 항상 false
+ */
+export type CategoryCardItem = LikableCard & { tags: CategoryCardTag[] };
 
 interface GetCategorySearchParams {
   /** 고른 태그 id. 고른 것을 전부 가진 세계관만 나오므로 더할수록 결과가 좁아집니다. */

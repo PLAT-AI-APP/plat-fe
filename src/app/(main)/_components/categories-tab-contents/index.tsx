@@ -112,6 +112,7 @@ const CategoriesTabContents = () => {
                   creatorName={card.creator.nickname}
                   chatCount={card.chatCount}
                   images={card.images}
+                  tagList={card.tags.map((tag) => tag.name)}
                   isNew={card.isNew}
                   isOfficial={card.isOfficial}
                   href={`/characters/${card.universeId}`}
