@@ -209,7 +209,7 @@ export const authHandlers = [
     return HttpResponse.json(
       {
         accessToken: "mock-access-token",
-        isFirstLogin: firstLoginEmails.has(username),
+        isNew: firstLoginEmails.has(username),
         // toast 디자인 확인용 MSW 계정에서만 내려주는 테스트 전용 필드입니다.
         ...(toastTestCase && {
           toastDescription: toastTestCase.description,

@@ -122,7 +122,7 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
             data.toastDescription,
           );
 
-          if (data.isFirstLogin) {
+          if (data.isNew) {
             handleFirstLoginSuccess();
             return;
           }

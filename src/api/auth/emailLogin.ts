@@ -14,7 +14,7 @@ interface PostEmailLoginProps {
 
 interface EmailLoginResponse {
   accessToken?: string;
-  isFirstLogin?: boolean;
+  isNew?: boolean;
   token?: string;
   toastDescription?: string;
   toastMessage?: string;
@@ -66,7 +66,7 @@ const PostEmailLogin = async (props: PostEmailLoginProps) => {
   }
 
   return {
-    isFirstLogin: Boolean(responseData?.isFirstLogin),
+    isNew: Boolean(responseData?.isNew),
     // MSW toast 테스트 계정에서만 내려주는 검수용 필드
     toastDescription: responseData?.toastDescription,
     toastMessage: responseData?.toastMessage,
@@ -82,7 +82,7 @@ export const useEmailLoginMutation = () => {
   const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
   return useMutation<
     {
-      isFirstLogin: boolean;
+      isNew: boolean;
       toastDescription?: string;
       toastMessage?: string;
       toastType?: LoginToastType;
