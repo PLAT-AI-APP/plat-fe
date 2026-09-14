@@ -26,6 +26,21 @@ export const tagSuggestionFormSchema = z.object({
 
 export type TagSuggestionFormValues = z.input<typeof tagSuggestionFormSchema>;
 
+export const commentReportFormSchema = z.object({
+  title: z
+    .string()
+    .trim()
+    .min(1, FIELD_ERROR_MESSAGES.commentReportTitleRequired)
+    .max(200, FIELD_ERROR_MESSAGES.commentReportTitleMaxLength),
+  content: z
+    .string()
+    .trim()
+    .min(1, FIELD_ERROR_MESSAGES.commentReportContentRequired)
+    .max(2000, FIELD_ERROR_MESSAGES.commentReportContentMaxLength),
+});
+
+export type CommentReportFormValues = z.input<typeof commentReportFormSchema>;
+
 export const personaFormSchema = z.object({
   name: z
     .string()

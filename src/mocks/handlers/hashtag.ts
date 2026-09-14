@@ -335,4 +335,22 @@ export const hashtagHandlers = [
 
     return new HttpResponse(null, { status: 204 });
   }),
+
+  http.post(endpoint("/feedback/report"), async ({ request }) => {
+    const body = (await request.json()) as {
+      type?: string;
+      targetId?: string;
+      title?: string;
+      content?: string;
+    };
+
+    if (!body.title || !body.content || !body.targetId) {
+      return HttpResponse.json(
+        { code: "INVALID_INPUT", message: "신고 내용을 입력해 주세요." },
+        { status: 400 },
+      );
+    }
+
+    return new HttpResponse(null, { status: 204 });
+  }),
 ];

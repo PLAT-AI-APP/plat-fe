@@ -9,6 +9,7 @@ import { Heart, HeartFill } from "@/icons";
 import type { Comment } from "@/type/comment";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useDialogStore } from "@/store/useDialogStore";
+import { useModalStore } from "@/store/useModalStore";
 import { useUserStore } from "@/store/useUserStore";
 import { useTextareaSubmitShortcuts } from "@/hooks/form/useTextareaSubmitShortcuts";
 import {
@@ -34,6 +35,7 @@ const CommentListItem = ({ comment, universeId }: CommentListItemProps) => {
   const myUserId = useUserStore((state) => state.user?.id);
   const openDialog = useDialogStore((state) => state.openDialog);
   const closeDialog = useDialogStore((state) => state.closeDialog);
+  const openModal = useModalStore((state) => state.openModal);
 
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(comment.content);
@@ -87,6 +89,10 @@ const CommentListItem = ({ comment, universeId }: CommentListItemProps) => {
     });
   };
 
+  const handleReportComment = () => {
+    openModal("COMMENT_REPORT", { commentId: comment.commentId });
+  };
+
   return (
     <li className="flex gap-2">
       <Image
@@ -125,6 +131,7 @@ const CommentListItem = ({ comment, universeId }: CommentListItemProps) => {
               setIsEditing(true);
             }}
             onDelete={handleDeleteComment}
+            onReport={handleReportComment}
           />
         </header>
 

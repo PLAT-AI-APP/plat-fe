@@ -40,6 +40,15 @@ const ko = {
       placeholder: "잊으면 안되는 중요한 내용, 추가하고 싶은 설정 등",
       submit: "저장",
     },
+    commentReport: {
+      title: "댓글 신고",
+      titleLabel: "제목",
+      titlePlaceholder: "신고 제목을 입력해 주세요",
+      contentLabel: "신고 사유",
+      contentPlaceholder: "신고 사유를 자세히 알려주세요",
+      submit: "신고하기",
+      successToast: "신고가 접수되었습니다",
+    },
     passwordReset: {
       title: "비밀번호 재설정",
       description: "이메일 인증을 통해 비밀번호를 재설정할 수 있습니다.",
@@ -136,6 +145,15 @@ const en: typeof ko = {
       placeholder:
         "Important things not to forget, settings you want to add, etc.\n...",
       submit: "Save",
+    },
+    commentReport: {
+      title: "Report comment",
+      titleLabel: "Title",
+      titlePlaceholder: "Enter a report title",
+      contentLabel: "Reason",
+      contentPlaceholder: "Tell us why you're reporting this comment",
+      submit: "Report",
+      successToast: "Your report has been submitted",
     },
     passwordReset: {
       title: "Reset password",
@@ -234,6 +252,15 @@ const ja: typeof ko = {
       placeholder: "忘れてはいけない大事な内容、追加したい設定など\n...",
       submit: "保存",
     },
+    commentReport: {
+      title: "コメントを通報",
+      titleLabel: "タイトル",
+      titlePlaceholder: "通報タイトルを入力してください",
+      contentLabel: "通報理由",
+      contentPlaceholder: "通報理由を詳しく教えてください",
+      submit: "通報する",
+      successToast: "通報を受け付けました",
+    },
     passwordReset: {
       title: "パスワード再設定",
       description: "メール認証を通してパスワードを再設定できます。",
@@ -329,6 +356,15 @@ const zh: typeof ko = {
       placeholder: "不要忘记的重要内容、想追加的设定等\n...",
       submit: "保存",
     },
+    commentReport: {
+      title: "举报评论",
+      titleLabel: "标题",
+      titlePlaceholder: "请输入举报标题",
+      contentLabel: "举报原因",
+      contentPlaceholder: "请详细说明举报原因",
+      submit: "举报",
+      successToast: "举报已提交",
+    },
     passwordReset: {
       title: "重设密码",
       description: "你可以通过邮箱验证来重设密码。",
@@ -422,6 +458,15 @@ const th: typeof ko = {
       description: "บทสนทนาจะถูกสรุปอัตโนมัติ เพื่อให้ตัวละครจดจำได้ยาวนานขึ้น",
       placeholder: "เรื่องสำคัญที่ห้ามลืม หรือการตั้งค่าที่อยากเพิ่ม\n...",
       submit: "บันทึก",
+    },
+    commentReport: {
+      title: "รายงานความคิดเห็น",
+      titleLabel: "หัวข้อ",
+      titlePlaceholder: "กรอกหัวข้อการรายงาน",
+      contentLabel: "เหตุผลการรายงาน",
+      contentPlaceholder: "บอกเหตุผลที่คุณรายงานความคิดเห็นนี้",
+      submit: "รายงาน",
+      successToast: "ส่งรายงานเรียบร้อยแล้ว",
     },
     passwordReset: {
       title: "รีเซ็ตรหัสผ่าน",
@@ -521,6 +566,15 @@ const vi: typeof ko = {
       placeholder:
         "Những nội dung quan trọng không được quên, các thiết lập muốn thêm\n...",
       submit: "Lưu",
+    },
+    commentReport: {
+      title: "Báo cáo bình luận",
+      titleLabel: "Tiêu đề",
+      titlePlaceholder: "Nhập tiêu đề báo cáo",
+      contentLabel: "Lý do báo cáo",
+      contentPlaceholder: "Cho chúng tôi biết lý do bạn báo cáo bình luận này",
+      submit: "Báo cáo",
+      successToast: "Đã gửi báo cáo của bạn",
     },
     passwordReset: {
       title: "Đặt lại mật khẩu",

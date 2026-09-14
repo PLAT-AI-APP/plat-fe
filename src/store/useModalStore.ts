@@ -2,6 +2,7 @@ import { create } from "zustand";
 import {
   AddLanguageModalProps,
   ChattingStartModalProps,
+  CommentReportModalProps,
   FindPasswordModalProps,
   FollowModalProps,
   LoginModalProps,
@@ -17,6 +18,7 @@ import { useAuthStore } from "./useAuthStore";
 export type ModalTypeMap = {
   ADD_LANGUAGE: AddLanguageModalProps;
   CHATTING_START: ChattingStartModalProps;
+  COMMENT_REPORT: CommentReportModalProps;
   FIND_PASSWORD: FindPasswordModalProps;
   FOLLOW: FollowModalProps;
   LOGIN: LoginModalProps;
@@ -63,6 +65,7 @@ const requiresAuthModalTypes: (keyof ModalTypeMap)[] = [
   "USER_NOTE",
   "TAG_ADD",
   "TAG_SUGGESTIONS",
+  "COMMENT_REPORT",
 ];
 
 export const useModalStore = create<ModalState>((set, get) => ({

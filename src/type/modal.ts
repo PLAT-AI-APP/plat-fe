@@ -41,4 +41,8 @@ export type TagSuggestionsModalProps = GlobalModalProps;
 
 export type UserNoteModalProps = GlobalModalProps;
 
+export interface CommentReportModalProps extends GlobalModalProps {
+  commentId: string;
+}
+
 export type PersonaModalProps = GlobalModalProps;
