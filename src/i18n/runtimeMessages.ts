@@ -183,6 +183,7 @@ const en = {
   },
   myChatting: {
     title: "My chats",
+    empty: "No chats yet.",
   },
   fieldsExtra: {
     bioLabel: "Bio",
@@ -434,6 +435,7 @@ const ko: RuntimeMessages = {
   },
   myChatting: {
     title: "내 채팅",
+    empty: "아직 대화한 채팅방이 없어요.",
   },
   fieldsExtra: {
     bioLabel: "소개글",
@@ -677,6 +679,7 @@ const ja: RuntimeMessages = {
   },
   myChatting: {
     title: "マイチャット",
+    empty: "まだチャットがありません。",
   },
   fieldsExtra: {
     bioLabel: "紹介文",
@@ -914,6 +917,7 @@ const zh: RuntimeMessages = {
   },
   myChatting: {
     title: "我的聊天",
+    empty: "还没有聊天记录。",
   },
   fieldsExtra: {
     bioLabel: "简介",
@@ -1158,6 +1162,7 @@ const th: RuntimeMessages = {
   },
   myChatting: {
     title: "แชตของฉัน",
+    empty: "ยังไม่มีแชต",
   },
   fieldsExtra: {
     bioLabel: "แนะนำตัว",
@@ -1410,6 +1415,7 @@ const vi: RuntimeMessages = {
   },
   myChatting: {
     title: "Chat của tôi",
+    empty: "Chưa có cuộc trò chuyện nào.",
   },
   fieldsExtra: {
     bioLabel: "Giới thiệu",

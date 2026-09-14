@@ -4,40 +4,38 @@ import { AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useRef } from "react";
+import { useDeleteRoomMutation } from "@/api/room/deleteRoom";
+import { usePinRoomMutation, useUnpinRoomMutation } from "@/api/room/patchRoomPin";
 import MyChattingMenuPopover from "@/components/popover/MyChattingMenuPopover";
 import useToggle from "@/hooks/common/useToggle";
-import { Dots, Message, Pin, User } from "@/icons";
-import dayjs from "@/lib/dayjs";
-import { formatStatCount } from "@/lib/utils";
+import { Dots, Pin } from "@/icons";
 import { useDialogStore } from "@/store/useDialogStore";
-import { useLocaleStore } from "@/store/useLocaleStore";
+
+const DEFAULT_THUMBNAIL = "/images/sample.png";
 
 interface ChattingItemProps {
-  chatCount: number;
-  creator: string;
-  description: string;
-  id: string;
-  isPinned?: boolean;
-  thumbnail: string;
+  roomId: string;
   title: string;
-  updatedAt: string;
+  thumbnailUrl: string | null;
+  lastMessage: string;
+  isPinned: boolean;
 }
 
 const ChattingItem = ({
-  chatCount,
-  creator,
-  description,
-  id,
-  isPinned = false,
-  thumbnail,
+  roomId,
   title,
-  updatedAt,
+  thumbnailUrl,
+  lastMessage,
+  isPinned,
 }: ChattingItemProps) => {
   const router = useRouter();
   const { close, isOpen, toggle } = useToggle();
   const triggerRef = useRef<HTMLSpanElement>(null);
-  const locale = useLocaleStore((state) => state.locale);
   const openDialog = useDialogStore((state) => state.openDialog);
+  const { mutate: deleteRoom } = useDeleteRoomMutation();
+  const { mutate: pinRoom, isPending: isPinning } = usePinRoomMutation();
+  const { mutate: unpinRoom, isPending: isUnpinning } = useUnpinRoomMutation();
+  const isPinPending = isPinning || isUnpinning;
 
   const chattingItemOnClick = () => {
     router.push("/chatting-room");
@@ -45,20 +43,26 @@ const ChattingItem = ({
 
   const handleDeleteClick = () => {
     // 채팅 기록은 복구할 수 없으므로 삭제 전 확인을 거친다.
-    // 삭제 API 연결 전까지는 확인 다이얼로그만 연결한다.
     openDialog("CHAT_DELETE", {
-      onConfirm: () => undefined,
+      onConfirm: () => deleteRoom(roomId),
     });
+  };
+
+  const handlePinToggle = () => {
+    if (isPinPending) return;
+
+    if (isPinned) unpinRoom(roomId);
+    else pinRoom(roomId);
   };
 
   return (
     <li
       onClick={chattingItemOnClick}
-      data-chat-id={id}
+      data-chat-id={roomId}
       className="flex cursor-pointer gap-3 rounded-lg px-4 py-3 transition-colors duration-200 hover:bg-btn-hover"
     >
       <Image
-        src={thumbnail}
+        src={thumbnailUrl || DEFAULT_THUMBNAIL}
         width={84}
         height={84}
         alt={title}
@@ -69,7 +73,7 @@ const ChattingItem = ({
         id="chat-item-content"
         className="flex min-w-0 flex-1 items-center"
       >
-        <div className="flex h-full min-w-0 flex-1 flex-col gap-3">
+        <div className="flex h-full min-w-0 flex-1 flex-col gap-1.5 justify-center">
           <div className="flex min-h-0 flex-1 items-start justify-between gap-3">
             <div className="flex h-full min-w-0 flex-1 flex-col gap-1.5 overflow-hidden">
               <div className="flex items-center gap-1.5">
@@ -80,7 +84,7 @@ const ChattingItem = ({
               </div>
 
               <p className="body-4 w-full min-w-0 truncate text-font-2">
-                {description}
+                {lastMessage}
               </p>
             </div>
 
@@ -103,28 +107,13 @@ const ChattingItem = ({
                     onClose={close}
                     onDelete={handleDeleteClick}
                     onEdit={() => null}
-                    onPin={() => null}
+                    onPin={handlePinToggle}
+                    isPinned={isPinned}
                   />
                 )}
               </AnimatePresence>
             </span>
           </div>
-
-          <footer className="flex items-center justify-between gap-3">
-            <div className="flex min-w-0 items-center gap-1.5 text-font-2">
-              <User className="size-4 shrink-0" />
-              <span className="body-6 truncate">{creator}</span>
-              <span className="body-6 text-font-disabled">·</span>
-              <Message className="size-4 shrink-0" />
-              <span className="body-6">
-                {formatStatCount(chatCount, locale)}
-              </span>
-            </div>
-
-            <time className="body-7 shrink-0 text-nowrap text-font-disabled">
-              {dayjs(updatedAt).fromNow()}
-            </time>
-          </footer>
         </div>
       </article>
     </li>
