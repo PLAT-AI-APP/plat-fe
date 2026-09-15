@@ -164,6 +164,7 @@ const Scenario = ({
         type="textarea"
         maxLength={100}
         minLine={2}
+        maxLine={5}
         placeholder={t("descriptionPlaceholder")}
         placeholderClassName="placeholder:text-font-2"
         counterClassName="text-font-disabled"
