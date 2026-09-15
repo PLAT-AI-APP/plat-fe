@@ -30,6 +30,15 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        // GET /images/{type}/{fileId}/{variant} — 백엔드가 직접 서빙(로컬 스토리지)하거나
+        // S3/CDN으로 리다이렉트한다. next/image는 이 진입 호스트만 허용하면 되고,
+        // 리다이렉트 대상은 fetch가 알아서 따라간다.
+        hostname: "api-dev.plat.so",
+        port: "",
+        pathname: "/images/**",
+      },
     ],
   },
 };
