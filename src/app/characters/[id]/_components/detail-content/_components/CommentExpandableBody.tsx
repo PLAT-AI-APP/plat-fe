@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 
 interface CommentExpandableBodyProps {
@@ -17,7 +17,9 @@ const CommentExpandableBody = ({ content }: CommentExpandableBodyProps) => {
   const [shouldShowMoreButton, setShouldShowMoreButton] = useState(false);
   const [contentHeight, setContentHeight] = useState(0);
 
-  useEffect(() => {
+  // 새로 등록한 긴 댓글이 한 프레임 동안 펼쳐진 채로 보였다가 접히는 것을 막기 위해,
+  // 페인트 전에(useEffect가 아니라 useLayoutEffect로) 넘침 여부를 먼저 계산합니다.
+  useLayoutEffect(() => {
     if (!contentRef.current) return;
 
     const contentElement = contentRef.current;
