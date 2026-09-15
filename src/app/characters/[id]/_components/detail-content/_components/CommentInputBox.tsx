@@ -6,7 +6,6 @@ import { useTranslations } from "next-intl";
 import { resolveApiImageUrl } from "@/lib/file";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useUserStore } from "@/store/useUserStore";
-import { useTextareaSubmitShortcuts } from "@/hooks/form/useTextareaSubmitShortcuts";
 import { usePostUniverseCommentMutation } from "@/api/comment/postUniverseComment";
 import CommentComposer from "./CommentComposer";
 
@@ -40,10 +39,6 @@ const CommentInputBox = ({
     );
   };
 
-  const { handleKeyDown } = useTextareaSubmitShortcuts({
-    onSubmit: handleSubmit,
-  });
-
   // 창작자가 댓글을 막아둔 캐릭터는 새 댓글을 아예 못 쓰게 합니다.
   if (!commentEnabled) {
     return (
@@ -64,10 +59,10 @@ const CommentInputBox = ({
       />
 
       <CommentComposer
-        className="min-h-[70px] flex-1 justify-end"
+        className="flex-1"
+        bordered={false}
         value={comment}
         onChange={setComment}
-        onKeyDown={handleKeyDown}
         onSubmit={handleSubmit}
         canSubmit={canSubmit}
         disabled={!isLoggedIn}
