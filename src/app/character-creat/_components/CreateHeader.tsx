@@ -414,30 +414,40 @@ const CreateHeader = ({
           onClick={() => handleSafeBack("/")}
           className="h-6 w-6 cursor-pointer text-font-2"
         />
-        {t("headerTitle")}
+        {isEditMode ? t("headerTitleEdit") : t("headerTitle")}
       </h1>
 
       <div className="body-5 flex gap-4 whitespace-nowrap">
-        <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={onSave}
-            className="rounded-xl border border-main bg-card px-5 py-2 hover:bg-card-hover"
-          >
-            {t("temporarySave")}
-          </button>
-          <button
-            type="button"
-            onClick={onDraftClick}
-            className="flex aspect-square h-full items-center justify-center rounded-xl border border-main bg-card p-2 hover:bg-card-hover"
-          >
-            <Redo className="h-4 w-4" />
-          </button>
-        </div>
+        {!isEditMode && (
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={onSave}
+              className="rounded-xl border border-main bg-card px-5 py-2 hover:bg-card-hover"
+            >
+              {t("temporarySave")}
+            </button>
+            <button
+              type="button"
+              onClick={onDraftClick}
+              className="flex aspect-square h-full items-center justify-center rounded-xl border border-main bg-card p-2 hover:bg-card-hover"
+            >
+              <Redo className="h-4 w-4" />
+            </button>
+          </div>
+        )}
 
         <ActiveButton
           isActive
-          text={isPending ? t("submitting") : t("submit")}
+          text={
+            isEditMode
+              ? isPending
+                ? t("submittingEdit")
+                : t("submitEdit")
+              : isPending
+                ? t("submitting")
+                : t("submit")
+          }
           className="h-9 rounded-xl px-4 py-2"
           onClick={handleRegisterClick}
         />
