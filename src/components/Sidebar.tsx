@@ -32,7 +32,7 @@ const Sidebar = ({
   const menuArray = [
     { name: t("sidebar.home"), link: "/", icon: Home },
     { name: t("sidebar.myChatting"), link: "/my-chatting", icon: Chat },
-    { name: t("sidebar.studio"), link: "/studio/1", icon: Camera },
+    { name: t("sidebar.characterCreate"), link: "/character-creat", icon: Camera },
     { name: t("sidebar.noteCharge"), link: "/token-charge", icon: NoteLine },
   ];
 

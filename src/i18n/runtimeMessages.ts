@@ -36,7 +36,7 @@ const en = {
   sidebar: {
     home: "Home",
     myChatting: "My chats",
-    studio: "Studio",
+    characterCreate: "Create character",
     noteCharge: "Charge notes",
     navigation: "Sidebar menu",
     toggle: "Fold or expand sidebar",
@@ -297,7 +297,7 @@ const ko: RuntimeMessages = {
   sidebar: {
     home: "홈",
     myChatting: "내 채팅",
-    studio: "스튜디오",
+    characterCreate: "캐릭터 제작",
     noteCharge: "노트 충전",
     navigation: "사이드바 메뉴",
     toggle: "사이드바 접기/펼치기",
@@ -539,7 +539,7 @@ const ja: RuntimeMessages = {
   sidebar: {
     home: "ホーム",
     myChatting: "マイチャット",
-    studio: "スタジオ",
+    characterCreate: "キャラクター制作",
     noteCharge: "ノートチャージ",
     navigation: "サイドバーメニュー",
     toggle: "サイドバーを折りたたむ/展開",
@@ -784,7 +784,7 @@ const zh: RuntimeMessages = {
   sidebar: {
     home: "首页",
     myChatting: "我的聊天",
-    studio: "工作室",
+    characterCreate: "制作角色",
     noteCharge: "充值笔记",
     navigation: "侧边栏菜单",
     toggle: "折叠或展开侧边栏",
@@ -1020,7 +1020,7 @@ const th: RuntimeMessages = {
   sidebar: {
     home: "หน้าแรก",
     myChatting: "แชตของฉัน",
-    studio: "สตูดิโอ",
+    characterCreate: "สร้างตัวละคร",
     noteCharge: "เติมโน้ต",
     navigation: "เมนูแถบด้านข้าง",
     toggle: "พับหรือขยายแถบด้านข้าง",
@@ -1268,7 +1268,7 @@ const vi: RuntimeMessages = {
   sidebar: {
     home: "Trang chủ",
     myChatting: "Chat của tôi",
-    studio: "Studio",
+    characterCreate: "Tạo nhân vật",
     noteCharge: "Nap note",
     navigation: "Menu thanh bên",
     toggle: "Thu gọn hoặc mở rộng thanh bên",
