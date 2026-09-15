@@ -3,6 +3,7 @@ import { authAxios } from "..";
 import { AppError } from "@/type/api";
 import { WalletLedgerListResponse } from "@/type/note";
 import { getNextPageNumber } from "@/lib/pagination";
+import { useAuthReady } from "@/hooks/data/useAuthReady";
 
 interface GetUsageHistoryListProps {
   page?: number;
@@ -30,11 +31,14 @@ const getUsageHistoryList = async ({
 export const useUsageHistoryListQuery = ({
   size,
 }: GetUsageHistoryListProps) => {
+  const authReady = useAuthReady();
+
   return useInfiniteQuery<WalletLedgerListResponse, AppError>({
     queryKey: ["get-usage-history-list", size],
     initialPageParam: 0,
     queryFn: ({ pageParam = 0 }) =>
       getUsageHistoryList({ page: pageParam as number, size }),
     getNextPageParam: getNextPageNumber,
+    enabled: authReady,
   });
 };
