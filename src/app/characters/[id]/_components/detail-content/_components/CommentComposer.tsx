@@ -6,6 +6,10 @@ import type {
 } from "react";
 import { cn } from "@/lib/utils";
 import { COMMENT_MAX_LENGTH } from "@/constants/comment";
+import { useAutoResizeTextarea } from "@/hooks/form/useAutoResizeTextarea";
+
+/** 채팅 입력창(ChatForm)과 같은 기준: 최소 1줄, 5줄부터는 내부 스크롤. */
+const COMMENT_TEXTAREA_MAX_ROWS = 5;
 
 interface CommentComposerProps {
   value: string;
@@ -44,6 +48,11 @@ const CommentComposer = ({
   className,
   textareaClassName,
 }: CommentComposerProps) => {
+  const { textareaRef } = useAutoResizeTextarea({
+    maxRows: COMMENT_TEXTAREA_MAX_ROWS,
+    value,
+  });
+
   return (
     <div className={cn("flex flex-col items-end gap-4", className)}>
       <div
@@ -53,6 +62,8 @@ const CommentComposer = ({
         )}
       >
         <textarea
+          ref={textareaRef}
+          rows={1}
           autoFocus={autoFocus}
           value={value}
           onChange={(event) => onChange(event.target.value)}
@@ -62,7 +73,7 @@ const CommentComposer = ({
           maxLength={COMMENT_MAX_LENGTH}
           placeholder={placeholder}
           className={cn(
-            "focus-ring-none body-5 min-h-9 w-full resize-none bg-transparent text-font-1 outline-none placeholder:text-font-disabled disabled:cursor-default",
+            "focus-ring-none body-5 custom-scrollbar min-h-9 w-full resize-none bg-transparent text-font-1 outline-none placeholder:text-font-disabled disabled:cursor-default",
             textareaClassName,
           )}
         />

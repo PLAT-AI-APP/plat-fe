@@ -137,12 +137,16 @@ const CommentListItem = ({
             >
               {comment.author.nickname}
             </span>
-            <span className="body-7 text-font-2">
-              {getRelativeTime(comment.meta.createdAt)}
-            </span>
-            {comment.meta.edited && (
-              <span className="body-7 text-font-2">{t("commentEdited")}</span>
-            )}
+            <div className="flex items-center gap-1">
+              <span className="body-7 text-font-2">
+                {getRelativeTime(comment.meta.createdAt)}
+              </span>
+              {comment.meta.edited && (
+                <span className="body-7 text-font-2">
+                  {t("commentEdited")}
+                </span>
+              )}
+            </div>
             {comment.meta.pinned && (
               <span className="caption-2 rounded-md bg-brand-opacity px-2 py-1 text-brand">
                 {t("commentPinned")}
