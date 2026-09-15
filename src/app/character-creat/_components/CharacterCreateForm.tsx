@@ -368,7 +368,10 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
 
         {/* lg 미만에서는 폭이 부족해 미리보기를 숨기고 토글 모달로 확인합니다. */}
         <DragDropContext onDragEnd={handleDragEnd}>
-          <div className="flex min-h-0 min-w-0 flex-1 items-start justify-center gap-4">
+          {/* lg 이상에서는 두 패널(폼 491px : 프리뷰 693px 비율)이 gap을 뺀 나머지 폭을
+              끝까지 나눠 갖도록 grid로 전환합니다. flex로는 flex-basis가 auto인 wrapper div의
+              내용 기반 크기 계산과 얽혀 정확히 맞아떨어지지 않았습니다. */}
+          <div className="flex min-h-0 min-w-0 flex-1 items-start justify-center gap-4 lg:grid lg:grid-cols-[491fr_693fr]">
             <CreateTabs
               currentTabId={currentTabId}
               setCurrentTabId={setCurrentTabId}
