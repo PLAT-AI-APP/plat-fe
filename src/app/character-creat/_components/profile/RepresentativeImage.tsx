@@ -119,18 +119,20 @@ const RepresentativeImage = () => {
         >
           {/* 안내 문구가 말하는 대로 1:1.13 이다. aspect-square 는 w/h 에 덮여 아무 일도 하지 않으면서 정사각형처럼 읽혔다. */}
           <div className="relative flex h-[157px] w-[120px] items-center justify-center rounded-xl bg-card">
-            {preview ? (
-              <Image
-                src={preview}
-                alt={t("previewAlt")}
-                width={120}
-                height={157}
-                unoptimized
-                className="h-full w-full object-cover"
-              />
-            ) : (
-              <ImageIcon className="h-7.5 w-7.5 text-font-disabled" />
-            )}
+            <div className="relative flex size-full items-center justify-center overflow-hidden rounded-xl">
+              {preview ? (
+                <Image
+                  src={preview}
+                  alt={t("previewAlt")}
+                  width={120}
+                  height={157}
+                  unoptimized
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <ImageIcon className="h-7.5 w-7.5 text-font-disabled" />
+              )}
+            </div>
 
             <span
               onClick={(e) => {
