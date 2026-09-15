@@ -9,6 +9,7 @@ import ChatLeaveDialog from "./ChatLeaveDialog";
 import ChatRestartDialog from "./ChatRestartDialog";
 import CommentDeleteDialog from "./CommentDeleteDialog";
 import DraftOverwriteDialog from "./DraftOverwriteDialog";
+import DraftSaveOverwriteDialog from "./DraftSaveOverwriteDialog";
 import LoginRequiredDialog from "./LoginRequiredDialog";
 import PersonaDeleteDialog from "./PersonaDeleteDialog";
 import SignupCompleteDialog from "./SignupCompleteDialog";
@@ -28,6 +29,7 @@ const DIALOG_COMPONENTS: {
   CHAT_RESTART: ChatRestartDialog,
   COMMENT_DELETE: CommentDeleteDialog,
   DRAFT_OVERWRITE: DraftOverwriteDialog,
+  DRAFT_SAVE_OVERWRITE: DraftSaveOverwriteDialog,
   LOGIN_REQUIRED: LoginRequiredDialog,
   PERSONA_DELETE: PersonaDeleteDialog,
   SIGNUP_COMPLETE: SignupCompleteDialog,

@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useDialogStore } from "@/store/useDialogStore";
 
-type ModalType = "OVERWRITE" | "RESUME" | "UNSAVED" | null;
+type ModalType = "OVERWRITE" | "RESUME" | "SAVE_OVERWRITE" | "UNSAVED" | null;
 
 interface CreateModalsProps {
   activeModal: ModalType;
@@ -11,6 +11,7 @@ interface CreateModalsProps {
   handleConfirmExit: () => void;
   rejectNavigation: () => void;
   handleLoadDraft: () => void;
+  handleSaveOverwrite: () => void;
 }
 
 const CreateModals = ({
@@ -19,6 +20,7 @@ const CreateModals = ({
   handleConfirmExit,
   rejectNavigation,
   handleLoadDraft,
+  handleSaveOverwrite,
 }: CreateModalsProps) => {
   const openDialog = useDialogStore((state) => state.openDialog);
 
@@ -41,12 +43,21 @@ const CreateModals = ({
         onCancel: closeModal,
         onConfirm: handleLoadDraft,
       });
+      return;
+    }
+
+    if (activeModal === "SAVE_OVERWRITE") {
+      openDialog("DRAFT_SAVE_OVERWRITE", {
+        onCancel: closeModal,
+        onConfirm: handleSaveOverwrite,
+      });
     }
   }, [
     activeModal,
     closeModal,
     handleConfirmExit,
     handleLoadDraft,
+    handleSaveOverwrite,
     openDialog,
     rejectNavigation,
   ]);

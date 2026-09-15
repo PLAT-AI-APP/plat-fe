@@ -16,6 +16,12 @@ export interface DraftOverwriteDialogProps {
   onConfirm?: () => void;
 }
 
+export interface DraftSaveOverwriteDialogProps {
+  onCancel: () => void;
+  onClose: () => void;
+  onConfirm?: () => void;
+}
+
 export interface ChatRestartDialogProps {
   onClose: () => void;
   onConfirm?: () => void;
@@ -94,6 +100,7 @@ export type DialogTypeMap = {
   CHAT_RESTART: DialogWithoutManagerClose<ChatRestartDialogProps>;
   COMMENT_DELETE: DialogWithoutManagerClose<CommentDeleteDialogProps>;
   DRAFT_OVERWRITE: DialogWithoutManagerClose<DraftOverwriteDialogProps>;
+  DRAFT_SAVE_OVERWRITE: DialogWithoutManagerClose<DraftSaveOverwriteDialogProps>;
   LOGIN_REQUIRED: DialogWithoutManagerClose<LoginRequiredDialogProps>;
   PERSONA_DELETE: DialogWithoutManagerClose<PersonaDeleteDialogProps>;
   SIGNUP_COMPLETE: DialogWithoutManagerClose<SignupCompleteDialogProps>;

@@ -134,6 +134,12 @@ const ko = {
       titleAfter: "올까요?",
       description: "저장하지 않은 데이터는 모두 사라집니다.",
     },
+    draftSaveOverwrite: {
+      titleBefore: "이미 저장된 ",
+      titleHighlight: "임시저장 데이터",
+      titleAfter: "가 있어요",
+      description: "지금 저장하면 기존 내용을 덮어씁니다.",
+    },
     unsavedChanges: {
       title: "저장되지 않은 변경사항이 있습니다.",
       description: "지금 나가면 수정한 내용은 저장되지 않습니다.",
@@ -383,6 +389,12 @@ const en: Messages = {
       titleHighlight: "draft",
       titleAfter: "?",
       description: "Any unsaved data will be lost.",
+    },
+    draftSaveOverwrite: {
+      titleBefore: "You already have a ",
+      titleHighlight: "saved draft",
+      titleAfter: "",
+      description: "Saving now will overwrite its content.",
     },
     unsavedChanges: {
       title: "You have unsaved changes.",
@@ -634,6 +646,12 @@ const ja: Messages = {
       titleAfter: "ますか？",
       description: "保存していないデータはすべて失われます。",
     },
+    draftSaveOverwrite: {
+      titleBefore: "すでに保存された",
+      titleHighlight: "下書き",
+      titleAfter: "があります",
+      description: "今保存すると既存の内容が上書きされます。",
+    },
     unsavedChanges: {
       title: "保存されていない変更があります。",
       description: "今移動すると、編集内容は保存されません。",
@@ -875,6 +893,12 @@ const zh: Messages = {
       titleAfter: "已保存的草稿吗？",
       description: "未保存的数据将全部丢失。",
     },
+    draftSaveOverwrite: {
+      titleBefore: "已经有保存的",
+      titleHighlight: "草稿",
+      titleAfter: "",
+      description: "现在保存将覆盖已有内容。",
+    },
     unsavedChanges: {
       title: "你有未保存的更改。",
       description: "如果现在离开，修改内容将不会被保存。",
@@ -1112,6 +1136,12 @@ const th: Messages = {
       titleHighlight: "โหลด",
       titleAfter: "ร่างที่บันทึกไว้หรือไม่?",
       description: "ข้อมูลที่ยังไม่ได้บันทึกทั้งหมดจะหายไป",
+    },
+    draftSaveOverwrite: {
+      titleBefore: "มี",
+      titleHighlight: "ร่างที่บันทึกไว้แล้ว",
+      titleAfter: "",
+      description: "หากบันทึกตอนนี้จะเขียนทับเนื้อหาเดิม",
     },
     unsavedChanges: {
       title: "คุณมีการเปลี่ยนแปลงที่ยังไม่ได้บันทึก",
@@ -1357,6 +1387,12 @@ const vi: Messages = {
       titleHighlight: "tải",
       titleAfter: " bản nháp đã lưu không?",
       description: "Mọi dữ liệu chưa lưu sẽ bị mất.",
+    },
+    draftSaveOverwrite: {
+      titleBefore: "Đã có ",
+      titleHighlight: "bản nháp đã lưu",
+      titleAfter: "",
+      description: "Lưu ngay bây giờ sẽ ghi đè nội dung hiện có.",
     },
     unsavedChanges: {
       title: "Bạn có thay đổi chưa được lưu.",
