@@ -63,7 +63,7 @@ const CommentReportModal = ({ onClose, commentId }: CommentReportModalProps) => 
     <ModalLayout
       onClose={onClose}
       hasBackground
-      className="h-[695px] w-[450px] max-w-[calc(100vw-40px)] rounded-3xl border-0 bg-dark p-5"
+      className="h-[695px] w-[450px] max-w-[calc(100vw-40px)] rounded-3xl bg-dark p-5"
     >
       <form
         onSubmit={handleSubmit(onSubmit, (formErrors) =>
