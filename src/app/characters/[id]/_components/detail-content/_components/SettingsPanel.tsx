@@ -94,6 +94,7 @@ const SettingsPanel = ({
 
   return (
     <section className="flex flex-col gap-8 pb-0">
+      {/* 에셋 이미지 슬라이드 임시 비활성화 — 필요 시 아래 주석을 해제합니다.
       <div className="relative h-[332px] overflow-hidden rounded-2xl bg-darkest">
         <AnimatePresence mode="wait">
           <motion.div
@@ -168,6 +169,7 @@ const SettingsPanel = ({
           />
         </button>
       </div>
+      */}
 
       <section className="flex flex-col gap-4">
         <h2 className="title-3 text-font-1">{t("prologue")}</h2>
