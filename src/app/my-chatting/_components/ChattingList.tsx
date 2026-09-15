@@ -76,6 +76,7 @@ const ChattingList = ({ searchQuery }: ChattingListProps) => {
         emptyMessage={t("empty")}
       >
         <ul className="flex flex-col gap-2">
+          {/* eslint-disable-next-line @typescript-eslint/no-unused-vars -- 아래 구분선 주석과 함께 index도 임시로 미사용 */}
           {filteredItems.map((room, index) => (
             <Fragment key={room.roomId}>
               <ChattingItem
@@ -86,9 +87,10 @@ const ChattingList = ({ searchQuery }: ChattingListProps) => {
                 isPinned={room.isPinned}
               />
 
+              {/* 추후 다시 필요해질 수 있어 삭제 대신 주석 처리합니다.
               {index < filteredItems.length - 1 && (
                 <li className="mx-10 h-px bg-main" aria-hidden="true" />
-              )}
+              )} */}
             </Fragment>
           ))}
         </ul>
