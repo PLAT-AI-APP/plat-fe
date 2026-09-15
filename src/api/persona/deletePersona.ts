@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
+import { personaQueryKeys } from "./queryKeys";
 
 const DeletePersona = async (personaId: string) => {
   await authAxios.delete(`/users/me/personas/${personaId}`);
@@ -13,7 +14,7 @@ export const useDeletePersonaMutation = () => {
   return useMutation<void, AppError, string>({
     mutationFn: DeletePersona,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["me-persona-list"] });
+      queryClient.invalidateQueries({ queryKey: personaQueryKeys.myList() });
     },
   });
 };

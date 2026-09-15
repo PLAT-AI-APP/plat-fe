@@ -8,7 +8,7 @@ import {
   useCategorySearchQuery,
 } from "@/api/search/getCategorySearch";
 import Tag from "@/icons/Tag";
-import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useMediaQuery } from "@/hooks/dom/useMediaQuery";
 import { TABLET_MAX_WIDTH_QUERY } from "@/constants/layout";
 import CharacterCard from "@/components/character/character-card";
 import CardGrid from "@/components/character/character-card/CardGrid";
@@ -112,8 +112,10 @@ const CategoriesTabContents = () => {
                   creatorName={card.creator.nickname}
                   chatCount={card.chatCount}
                   images={card.images}
+                  tagList={card.tags.map((tag) => tag.name)}
                   isNew={card.isNew}
                   isOfficial={card.isOfficial}
+                  href={`/characters/${card.universeId}`}
                 />
               ))}
             </CardGrid>

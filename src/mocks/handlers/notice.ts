@@ -52,19 +52,14 @@ const generateMockData = () => {
 const { list: mockNotices, details: mockNoticeDetails } = generateMockData();
 
 export const noticeHandlers = [
-  // 공지사항 목록 조회 API — 백엔드와 동일하게 PageWith 형태로 응답합니다.
+  // 공지사항 목록 조회 API — 실서버는 page만 받고, 크기(20)와 카테고리 필터는 지원하지 않습니다.
   http.get(endpoint("/notices"), ({ request }) => {
     const url = new URL(request.url);
     const page = parseInt(url.searchParams.get("page") || "0", 10);
-    const size = parseInt(url.searchParams.get("size") || "20", 10);
-    // 서버처럼 분류를 여기서 거릅니다. 값이 없으면 전체입니다.
-    const category = url.searchParams.get("category") as NoticeCategory | null;
-    const filtered = category
-      ? mockNotices.filter((notice) => notice.category === category)
-      : mockNotices;
+    const size = 20;
 
     // 상단 고정(isPinned) 우선, 그 다음 최신순
-    const sorted = [...filtered].sort((a, b) => {
+    const sorted = [...mockNotices].sort((a, b) => {
       if (a.isPinned !== b.isPinned) return a.isPinned ? -1 : 1;
       return Number(b.noticeId) - Number(a.noticeId);
     });

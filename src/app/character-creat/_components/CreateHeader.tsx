@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import ActiveButton from "@/components/ActiveButton";
 import ArrowLineLeft from "@/icons/ArrowLineLeft";
 import { Redo } from "@/icons";
-import { dataUrlToFile } from "@/lib/file";
+import { encodeScenarioContent } from "@/lib/scenarioContent";
 import { showAppToast } from "@/lib/toast";
 import { useLocaleStore } from "@/store/useLocaleStore";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
@@ -18,12 +18,17 @@ import {
   UniverseCreateTendency,
   useUniverseCreateMutation,
 } from "@/api/universe/postUniverseCreate";
-import { useUniverseUpdateMutation } from "@/api/universe/patchUniverseUpdate";
-import { useTranslateText } from "@/hooks/useTranslateText";
+import {
+  UniverseUpdateRequest,
+  useUniverseUpdateMutation,
+} from "@/api/universe/patchUniverseUpdate";
+import { useTranslateText } from "@/hooks/i18n/useTranslateText";
 import { TabId } from "./CreateTabs";
 
 interface CreateHeaderProps {
   universeId?: string;
+  // 이 초안에서 세계관을 만든 경우에만 있습니다. 등록 성공 시 실어 보내면 백엔드가 그 초안을 자동 삭제합니다.
+  draftId: string | null;
   onSave: () => void;
   onDraftClick: () => void;
   setCurrentTabId: (id: TabId) => void;
@@ -44,21 +49,21 @@ interface ValidationJumpTarget {
   message: string;
 }
 
-const UNIVERSE_TENDENCIES: UniverseCreateTendency[] = ["ALL", "MALE", "FEMALE"];
+const UNIVERSE_TENDENCIES: UniverseCreateTendency[] = [
+  "ALL",
+  "MALE_ORIENTED",
+  "FEMALE_ORIENTED",
+];
 
 const UNIVERSE_CATEGORIES: UniverseCreateCategory[] = [
-  "SIMULATION",
   "ROMANCE",
   "FANTASY",
   "DRAMA",
-  "MARTIAL_ARTS_HISTORICAL",
+  "MARTIAL_ARTS",
   "GL",
   "BL",
-  "HORROR_MYSTERY",
-  "ACTION",
-  "COMIC_DAILY",
-  "SPORTS_SCHOOL",
-  "ETC",
+  "HORROR",
+  "MYSTERY",
 ];
 
 const LANGUAGE_BY_LOCALE: Record<string, UniverseCreateLanguage> = {
@@ -69,42 +74,6 @@ const LANGUAGE_BY_LOCALE: Record<string, UniverseCreateLanguage> = {
   th: "TH",
   vi: "VI",
 };
-
-const getDataUrlMimeType = (dataUrl: string) =>
-  dataUrl.match(/^data:(.*?);/)?.[1] || "image/webp";
-
-const isDataUrl = (value: string) => value.startsWith("data:");
-
-const createImageFileFromDataUrl = (
-  dataUrl: string,
-  fileNamePrefix: string,
-) => {
-  const mimeType = getDataUrlMimeType(dataUrl);
-  const extension = mimeType.split("/")[1] || "webp";
-
-  return dataUrlToFile(dataUrl, `${fileNamePrefix}.${extension}`, mimeType);
-};
-
-const createOptionalImageFileFromDataUrl = (
-  imageUrl: string,
-  fileNamePrefix: string,
-) => {
-  if (!isDataUrl(imageUrl)) return undefined;
-
-  return createImageFileFromDataUrl(imageUrl, fileNamePrefix);
-};
-
-const serializeScenarioContent = (
-  scenario: CharacterCreateFormValues["scenarios"][number],
-) =>
-  [
-    scenario.description,
-    scenario.difficulty,
-    ...(scenario.contents ?? []).map((content) => content.value),
-  ]
-    .map((value) => value?.trim())
-    .filter(Boolean)
-    .join("\n\n");
 
 const toUniverseTendency = (tendency: string): UniverseCreateTendency => {
   if (UNIVERSE_TENDENCIES.includes(tendency as UniverseCreateTendency)) {
@@ -121,7 +90,7 @@ const toUniverseCategory = (categories: string[]): UniverseCreateCategory => {
     return category as UniverseCreateCategory;
   }
 
-  return "ETC";
+  return "ROMANCE";
 };
 
 const isApiErrorLike = (error: unknown) =>
@@ -228,6 +197,19 @@ const findFirstValidationTarget = (
       };
     }
 
+    // contents 항목을 합친 뒤(encodeScenarioContent)의 총 길이 초과는 배열 자체에
+    // 에러가 달려 항목별 에러(.contents[j].value)와 모양이 다릅니다.
+    const contentsTotalError = scenarioError?.contents as
+      | { message?: string }
+      | undefined;
+    if (contentsTotalError?.message && !Array.isArray(contentsTotalError)) {
+      return {
+        tabId: "scenario",
+        scenarioIndex: i,
+        message: contentsTotalError.message,
+      };
+    }
+
     const contents = values.scenarios[i].contents ?? [];
     for (let j = 0; j < contents.length; j += 1) {
       if (scenarioError?.contents?.[j]?.value) {
@@ -255,6 +237,7 @@ const findFirstValidationTarget = (
 
 const CreateHeader = ({
   universeId,
+  draftId,
   onSave,
   onDraftClick,
   setCurrentTabId,
@@ -316,52 +299,60 @@ const CreateHeader = ({
     const currentFormData = getValues();
 
     try {
-      const request: UniverseCreateRequest = {
-        commentEnabled: currentFormData.allowComments,
-        scenarios: currentFormData.scenarios.map((scenario, index) => ({
-          name: scenario.name || `Scenario ${index + 1}`,
-          content: serializeScenarioContent(scenario),
-        })),
-        assets:
-          currentFormData.asset
-            ?.filter((asset) => asset.assetImageFileId)
-            .map((asset) => ({
-              assetImageFileId: String(asset.assetImageFileId),
-              assetName: asset.assetName,
-              assetSituation: asset.assetSituation,
-            })) || [],
-        tendency: toUniverseTendency(currentFormData.tendency),
-        name: currentFormData.name,
-        visibility: currentFormData.isPublic ? "PUBLIC" : "PRIVATE",
-        title: currentFormData.title,
-        language: LANGUAGE_BY_LOCALE[locale] ?? "KO",
-        description:
-          currentFormData.characterDescription ||
-          currentFormData.profileSituationDescription,
-        tagIds: currentFormData.tagIds.map((tag) => tag.id),
-        category: toUniverseCategory(currentFormData.category),
-        detailSetting: currentFormData.characterDetailSetting,
-        introduce: currentFormData.characterIntroduce,
-      };
+      const scenarios = currentFormData.scenarios.map((scenario, index) => ({
+        name: scenario.name || `Scenario ${index + 1}`,
+        description: scenario.description ?? "",
+        content: encodeScenarioContent(scenario),
+      }));
+      const assets =
+        currentFormData.asset
+          ?.filter((asset) => asset.assetImageFileId)
+          .map((asset) => ({
+            assetImageFileId: String(asset.assetImageFileId),
+            assetName: asset.assetName,
+            assetSituation: asset.assetSituation,
+          })) || [];
+      const description =
+        currentFormData.characterDescription ||
+        currentFormData.profileSituationDescription;
 
       if (isEditMode && universeId) {
-        const [profileImage, characterProfileImage] = await Promise.all([
-          createOptionalImageFileFromDataUrl(
-            currentFormData.representativeImage,
-            "universe-profile-image",
-          ),
-          createOptionalImageFileFromDataUrl(
-            currentFormData.characterProfileImage,
-            "character-profile-image",
-          ),
-        ]);
+        const request: UniverseUpdateRequest = {
+          language: LANGUAGE_BY_LOCALE[locale] ?? "KO",
+          commentEnabled: currentFormData.allowComments,
+          scenarios,
+          assets,
+          tendency: toUniverseTendency(currentFormData.tendency),
+          visibility: currentFormData.isPublic ? "PUBLIC" : "PRIVATE",
+          title: currentFormData.title,
+          description,
+          tagIds: currentFormData.tagIds.map((tag) => tag.id),
+          category: toUniverseCategory(currentFormData.category),
+          detailSetting: currentFormData.profileSituationDescription,
+          introduce: currentFormData.characterIntroduce,
+          // 이미지를 새로 업로드해 fileId를 발급받은 경우에만 전달합니다. 없으면 기존 이미지를 유지합니다.
+          ...(currentFormData.representativeImageId
+            ? {
+                profileImageFileId: String(
+                  currentFormData.representativeImageId,
+                ),
+              }
+            : {}),
+          character: {
+            name: currentFormData.name,
+            description: currentFormData.characterDescription,
+            detailSetting: currentFormData.characterDetailSetting,
+            ...(currentFormData.characterProfileImageId
+              ? {
+                  profileImageFileId: String(
+                    currentFormData.characterProfileImageId,
+                  ),
+                }
+              : {}),
+          },
+        };
 
-        await updateUniverse({
-          universeId,
-          request,
-          ...(profileImage ? { profileImage } : {}),
-          ...(characterProfileImage ? { characterProfileImage } : {}),
-        });
+        await updateUniverse({ universeId, request });
 
         showAppToast("success", t("updateSuccess"));
         markSubmitSuccess();
@@ -369,22 +360,41 @@ const CreateHeader = ({
         return;
       }
 
-      const [profileImage, characterProfileImage] = await Promise.all([
-        createImageFileFromDataUrl(
-          currentFormData.representativeImage,
-          "universe-profile-image",
-        ),
-        createImageFileFromDataUrl(
-          currentFormData.characterProfileImage,
-          "character-profile-image",
-        ),
-      ]);
+      if (
+        !currentFormData.representativeImageId ||
+        !currentFormData.characterProfileImageId
+      ) {
+        showAppToast("error", t("createFailed"));
+        return;
+      }
 
-      const created = await createUniverse({
-        request,
-        profileImage,
-        characterProfileImage,
-      });
+      const request: UniverseCreateRequest = {
+        commentEnabled: currentFormData.allowComments,
+        scenarios,
+        assets,
+        tendency: toUniverseTendency(currentFormData.tendency),
+        visibility: currentFormData.isPublic ? "PUBLIC" : "PRIVATE",
+        title: currentFormData.title,
+        language: LANGUAGE_BY_LOCALE[locale] ?? "KO",
+        description,
+        tagIds: currentFormData.tagIds.map((tag) => tag.id),
+        category: toUniverseCategory(currentFormData.category),
+        detailSetting: currentFormData.profileSituationDescription,
+        introduce: currentFormData.characterIntroduce,
+        profileImageFileId: String(currentFormData.representativeImageId),
+        character: {
+          profileImageFileId: String(
+            currentFormData.characterProfileImageId,
+          ),
+          name: currentFormData.name,
+          description: currentFormData.characterDescription,
+          detailSetting: currentFormData.characterDetailSetting,
+        },
+        // 이 초안에서 만든 경우에만 실어 보냅니다 — 성공하면 백엔드가 해당 초안을 자동 삭제합니다.
+        ...(draftId ? { draftId } : {}),
+      };
+
+      const created = await createUniverse(request);
 
       showAppToast("success", t("createSuccess"));
       markSubmitSuccess();

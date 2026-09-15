@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { useRef } from "react";
 import { TRANSITION_FAST, popVariants } from "@/constants/motion";
-import { useClickAway } from "@/hooks/useClickAway";
+import { useClickAway } from "@/hooks/dom/useClickAway";
 import { cn } from "@/lib/utils";
 
 interface PopoverLayoutProps {

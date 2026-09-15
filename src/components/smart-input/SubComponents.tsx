@@ -2,7 +2,7 @@
 
 import React from "react";
 import { FieldError } from "react-hook-form";
-import { useTranslateText } from "@/hooks/useTranslateText";
+import { useTranslateText } from "@/hooks/i18n/useTranslateText";
 import { cn } from "@/lib/utils";
 
 export const LabelSection = ({

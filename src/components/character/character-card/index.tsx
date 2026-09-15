@@ -3,8 +3,13 @@
 import { cn } from "@/lib/utils";
 import useEmblaCarousel from "embla-carousel-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { Pen } from "@/icons";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useDialogStore } from "@/store/useDialogStore";
+import { useModalStore } from "@/store/useModalStore";
 import ChatCountBadge from "./ChatCountBadge";
 import {
   FLUID_SIZE_OVERRIDE,
@@ -32,15 +37,20 @@ const CharacterCard = ({
   chatCount,
   images,
   size = "M",
-  currentTag = "학교생활",
+  currentTag,
   tagList,
   isNew = false,
   isOfficial = false,
   selectedTags,
   rank,
   fluid = false,
+  href,
+  editHref,
 }: CharacterCardProps) => {
   const t = useTranslations("characterCard");
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const openDialog = useDialogStore((state) => state.openDialog);
+  const openModal = useModalStore((state) => state.openModal);
   const config = SIZE_CONFIG[size];
   const fluidOverride = FLUID_SIZE_OVERRIDE[size];
   const imageList = useMemo(() => normalizeImages(images), [images]);
@@ -62,6 +72,19 @@ const CharacterCard = ({
   );
   const titleIcon = <TitleStatusIcon isOfficial={isOfficial} isNew={isNew} />;
 
+  // 카드 전체를 덮는 stretched link(href)와 형제로 깔아, 수정 배지를 눌러도
+  // 상세페이지로 이동하는 카드 클릭과 겹치지 않게 합니다.
+  const editBadge = editHref && (
+    <Link
+      href={editHref}
+      aria-label={t("editButtonLabel")}
+      onClick={(event) => event.stopPropagation()}
+      className="absolute right-2 top-2 z-10 flex items-center justify-center rounded-full bg-main p-2 text-font-1 transition-colors hover:bg-btn-hover"
+    >
+      <Pen className="size-4" />
+    </Link>
+  );
+
   const lastImageIndex = imageList.length - 1;
   const hasIndicator = imageList.length > 1;
   const hasChatCount = typeof chatCount === "number";
@@ -70,6 +93,21 @@ const CharacterCard = ({
   const [isLastActionVisible, setIsLastActionVisible] = useState(false);
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
   const isLastImageSlideActive = currentImgIndex === lastImageIndex;
+
+  // 세계관 상세 조회는 백엔드가 로그인 없이는 항상 401을 주므로, 비로그인 상태로
+  // 들어가 날것의 에러 화면을 보기 전에 여기서 먼저 로그인 안내로 막습니다.
+  const handleCardLinkClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (isLoggedIn) return;
+    if (event.button !== 0) return;
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+    event.preventDefault();
+    openDialog("LOGIN_REQUIRED", {
+      label: "dialog.loginRequired.title",
+      description: "dialog.loginRequired.description",
+      onConfirm: () => openModal("LOGIN", { triggerRef: undefined }),
+    });
+  };
 
   const handleIndicatorClick = (event: React.MouseEvent, index: number) => {
     event.preventDefault();
@@ -137,6 +175,17 @@ const CharacterCard = ({
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUp}
       >
+        {/* 나머지 컨트롤(인디케이터, 프로필 보기 CTA)과 형제로 깔리는 stretched link입니다.
+            <a> 안에 <button>을 중첩시키지 않으면서도 카드 전체를 클릭 가능하게 합니다. */}
+        {href && (
+          <Link
+            href={href}
+            aria-label={title}
+            className="absolute inset-0 z-0"
+            onClick={handleCardLinkClick}
+          />
+        )}
+
         {hasChatCount && (
           <ChatCountBadge
             chatCount={chatCount}
@@ -145,9 +194,11 @@ const CharacterCard = ({
           />
         )}
 
+        {editBadge}
+
         {/* Embla viewport: 소수점 너비 카드에서 다음 슬라이드가 1px 보이는 현상을 clip-path로 보정합니다. */}
         <div
-          className="absolute inset-0 overflow-hidden rounded-2xl bg-scrim [clip-path:inset(0_1px_0_0_round_16px)]"
+          className="pointer-events-none absolute inset-0 overflow-hidden rounded-2xl bg-scrim [clip-path:inset(0_1px_0_0_round_16px)]"
           ref={emblaRef}
         >
           <div className="flex h-full w-full">
@@ -171,7 +222,7 @@ const CharacterCard = ({
 
         <LastImageActionOverlay isVisible={isLastActionVisible} />
 
-        <div className="relative z-10 flex h-36 self-stretch flex-col items-start justify-end gap-1 bg-[linear-gradient(180deg,rgba(0,0,0,0)_0%,rgba(0,0,0,0.4)_20%,rgba(0,0,0,0.8)_100%)] px-4 pb-5 pt-6">
+        <div className="pointer-events-none relative z-10 flex h-36 self-stretch flex-col items-start justify-end gap-1 bg-[linear-gradient(180deg,rgba(0,0,0,0)_0%,rgba(0,0,0,0.4)_20%,rgba(0,0,0,0.8)_100%)] px-4 pb-5 pt-6">
           <div className="flex self-stretch flex-col items-start justify-start gap-1">
             <TitleLine
               title={title}
@@ -200,13 +251,26 @@ const CharacterCard = ({
   return (
     <article
       className={cn(
-        "group inline-flex cursor-pointer flex-col items-start justify-start",
+        "group relative inline-flex cursor-pointer flex-col items-start justify-start",
         fluid ? fluidOverride.wrapper : config.wrapper,
       )}
     >
+      {/* 나머지 컨트롤(인디케이터)과 형제로 깔리는 stretched link입니다.
+          <a> 안에 <button>을 중첩시키지 않으면서도 카드 전체를 클릭 가능하게 합니다. */}
+      {href && (
+        <Link
+          href={href}
+          aria-label={title}
+          className="absolute inset-0 z-0"
+          onClick={handleCardLinkClick}
+        />
+      )}
+
+      {editBadge}
+
       <div
         className={cn(
-          "relative overflow-hidden bg-scrim",
+          "pointer-events-none relative overflow-hidden bg-scrim",
           fluid ? fluidOverride.imageArea : config.imageArea,
         )}
       >
@@ -237,7 +301,7 @@ const CharacterCard = ({
 
       <div
         className={cn(
-          "flex w-full flex-col items-start justify-start self-stretch",
+          "pointer-events-none flex w-full flex-col items-start justify-start self-stretch",
           config.infoArea,
           tagList && "gap-0.5",
         )}

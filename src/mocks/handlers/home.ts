@@ -117,7 +117,6 @@ const ASSET_PREVIEW_ITEMS = Array.from({ length: 24 }, (_, index) => {
     description: seed.description,
     isNew: index % 5 === 0,
     isOfficial: index % 7 === 0,
-    // TODO: 백엔드 응답에 chatCount 추가되면 이 목업 값은 실제 스펙에 맞춰 정리
     chatCount: seed.chatCount,
   };
 });
@@ -217,7 +216,7 @@ export const homeHandlers = [
     return HttpResponse.json(sorted.slice(start, start + size));
   }),
 
-  // 실시간(오늘 0시~현재) 대화량 상위 3편. 페이지가 없어 항상 같은 3건입니다.
+  // 상황 에셋이 많은 캐릭터 상위 3편. 페이지가 없어 항상 같은 3건입니다.
   http.get(endpoint("/home/asset-preview"), () =>
     HttpResponse.json(ASSET_PREVIEW_ITEMS.slice(0, 3)),
   ),

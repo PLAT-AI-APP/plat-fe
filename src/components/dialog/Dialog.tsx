@@ -1,7 +1,7 @@
 "use client";
 
 import { ModalLayout } from "@/components/ModalLayout";
-import { useTranslateText } from "@/hooks/useTranslateText";
+import { useTranslateText } from "@/hooks/i18n/useTranslateText";
 import { cn } from "@/lib/utils";
 import type { DialogProps } from "@/type/dialog";
 

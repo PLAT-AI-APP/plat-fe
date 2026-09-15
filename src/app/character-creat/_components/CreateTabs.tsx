@@ -4,7 +4,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { UseFieldArrayReturn } from "react-hook-form";
-import { useTabUnderline } from "@/hooks/useTabUnderline";
+import { useTabUnderline } from "@/hooks/dom/useTabUnderline";
 import { cn } from "@/lib/utils";
 import Asset from "./asset";
 import DetailInfo from "./detail-info";

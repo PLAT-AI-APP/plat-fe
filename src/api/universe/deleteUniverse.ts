@@ -3,6 +3,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
+import { universeQueryKeys } from "./queryKeys";
 
 export const DELETE_UNIVERSE_MUTATION_KEY = ["delete-universe"];
 
@@ -18,7 +19,7 @@ export const useUniverseDeleteMutation = () => {
     mutationFn: deleteUniverse,
     onSuccess: (_, universeId) => {
       queryClient.removeQueries({
-        queryKey: ["get-universe-detail", universeId],
+        queryKey: universeQueryKeys.detail(universeId),
       });
     },
   });

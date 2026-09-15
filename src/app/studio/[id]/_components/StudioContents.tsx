@@ -3,11 +3,12 @@
 import { useTranslations } from "next-intl";
 import React from "react";
 import CharacterShowcase from "@/components/character/CharacterShowcase";
+import SortFilter from "@/components/character/SortFilter";
+import { useChangeQueryString } from "@/hooks/navigation/useChangeQueryString";
 import CharacterCreateBanner from "./CharacterCreateBanner";
 import CharacterList from "./character-list";
 import { DUMMY_CHARACTERS as charArray } from "./dummyData";
 import Header from "./Header";
-import SortFilter from "./SortFilter";
 import StudioStats from "./StudioStats";
 import ViewToggle from "./ViewToggle";
 
@@ -19,6 +20,11 @@ interface StudioContentsProps {
 
 const StudioContents = ({ id, sort, viewMode }: StudioContentsProps) => {
   const t = useTranslations("studio");
+  const changeQueryString = useChangeQueryString();
+
+  const handleSortChange = (nextSort: "latest" | "chats") => {
+    changeQueryString({ updateKey: "sort", updateValue: nextSort });
+  };
 
   return (
     <section className="@container mx-auto w-full max-w-175 pt-6">
@@ -41,7 +47,7 @@ const StudioContents = ({ id, sort, viewMode }: StudioContentsProps) => {
 
             <div className="flex items-center gap-1">
               <ViewToggle viewMode={viewMode} />
-              <SortFilter currentSort={sort} />
+              <SortFilter currentSort={sort} onChange={handleSortChange} />
             </div>
           </header>
 

@@ -28,6 +28,7 @@ import ChattingMemoryView from "./chatting-memory-view";
 import { TRANSITION } from "@/constants/motion";
 
 interface ChattingSidebarProps {
+  roomId: string;
   toggleIsSidebar: () => void;
   isSuggestedReplyOn: boolean;
   onSuggestedReplyToggle: () => void;
@@ -133,6 +134,7 @@ const SidebarToggle = ({ isOn, onClick }: SidebarToggleProps) => {
 };
 
 const ChattingSidebar = ({
+  roomId,
   toggleIsSidebar,
   isSuggestedReplyOn,
   onSuggestedReplyToggle,
@@ -149,10 +151,16 @@ const ChattingSidebar = ({
 
   const isDepthViewOpen = sidebarDepth !== "SETTINGS";
 
-  const handleOpenModal = (modalId: "PERSONA" | "USER_NOTE") => {
+  const handleOpenPersonaModal = () => {
     // 다른 레이어 UI를 열기 전 사이드바 먼저 닫기
     toggleIsSidebar();
-    openModal(modalId);
+    openModal("PERSONA");
+  };
+
+  const handleOpenUserNoteModal = () => {
+    // 다른 레이어 UI를 열기 전 사이드바 먼저 닫기
+    toggleIsSidebar();
+    openModal("USER_NOTE", { roomId });
   };
 
   const handleAssetViewToggle = () => {
@@ -225,7 +233,7 @@ const ChattingSidebar = ({
             className="h-full"
           >
             {sidebarDepth === "MEMORY" ? (
-              <ChattingMemoryView onBack={handleDepthBack} />
+              <ChattingMemoryView roomId={roomId} onBack={handleDepthBack} />
             ) : sidebarDepth === "ASSET_GALLERY" ? (
               <ChattingAssetGalleryView onBack={handleAssetGalleryBack} />
             ) : (
@@ -262,13 +270,10 @@ const ChattingSidebar = ({
                           <SidebarMenuItem
                             icon={Persona}
                             label={t("persona")}
-                            onClick={() => handleOpenModal("PERSONA")}
+                            onClick={handleOpenPersonaModal}
                             trailing={
-                              <span className="title-5 flex items-center gap-0.5 whitespace-nowrap text-font-0">
-                                이름이름이름
-                                <span className="flex size-6 items-center justify-center">
-                                  <ArrowLeft className="size-4 rotate-180 text-font-2" />
-                                </span>
+                              <span className="flex size-6 items-center justify-center">
+                                <ArrowLeft className="size-4 rotate-180 text-font-2" />
                               </span>
                             }
                           />
@@ -277,7 +282,7 @@ const ChattingSidebar = ({
                           <SidebarMenuItem
                             icon={Note}
                             label={t("userNote")}
-                            onClick={() => handleOpenModal("USER_NOTE")}
+                            onClick={handleOpenUserNoteModal}
                           />
                         </li>
                       </menu>

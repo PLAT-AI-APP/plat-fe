@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import ActiveButton from "@/components/ActiveButton";
 import Checkbox from "@/icons/Checkbox";
 import CheckboxEmpty from "@/icons/CheckboxEmpty";
+import useToggle from "@/hooks/common/useToggle";
 import { cn } from "@/lib/utils";
 import { useDeleteUserMutation } from "@/api/user/deleteUser";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -24,7 +24,7 @@ const WithdrawalContents = () => {
   const { mutate: deleteUser, isPending } = useDeleteUserMutation();
   const openDialog = useDialogStore((state) => state.openDialog);
   const closeDialog = useDialogStore((state) => state.closeDialog);
-  const [isConfirmed, setIsConfirmed] = useState(false);
+  const { isOpen: isConfirmed, toggle: toggleConfirmed } = useToggle();
 
   const notices = [
     t("withdrawalPage.notices.dataDeleted"),
@@ -107,7 +107,7 @@ const WithdrawalContents = () => {
             role="checkbox"
             aria-checked={isConfirmed}
             className="body-5 flex items-end gap-1.5 text-font-2 hover:text-font-1"
-            onClick={() => setIsConfirmed((prev) => !prev)}
+            onClick={toggleConfirmed}
           >
             {isConfirmed ? (
               <Checkbox className="size-5 shrink-0 text-font-1" />

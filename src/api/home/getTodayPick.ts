@@ -5,22 +5,11 @@ import { authAxios } from "..";
 import { AppError } from "@/type/api";
 import { useLocaleStore } from "@/store/useLocaleStore";
 import { Tendency, useTendencyStore } from "@/store/useTendencyStore";
+import type { BaseCard, CardCreator } from "@/type/card";
 
-export interface TodayPickCreator {
-  creatorId: string;
-  nickname: string;
-}
+export type TodayPickCreator = CardCreator;
 
-export interface TodayPickItem {
-  universeId: string;
-  images: string[];
-  title: string;
-  description: string;
-  creator: TodayPickCreator;
-  chatCount: number;
-  isNew: boolean;
-  isOfficial: boolean;
-}
+export type TodayPickItem = BaseCard;
 
 interface GetTodayPickParams {
   tendency?: Tendency;

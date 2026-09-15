@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowDown, ArrowRight, ArrowUp } from "@/icons";
-import { useTranslateText } from "@/hooks/useTranslateText";
+import { useTranslateText } from "@/hooks/i18n/useTranslateText";
 import { cn } from "@/lib/utils";
 import React, { forwardRef, useState } from "react";
 import {
@@ -10,7 +10,7 @@ import {
   HelperMessage,
   LabelSection,
 } from "./SubComponents";
-import { useAutoResizeTextarea } from "@/hooks/useAutoResizeTextarea";
+import { useAutoResizeTextarea } from "@/hooks/form/useAutoResizeTextarea";
 import { useLeftPadding } from "./hooks";
 import { SmartInputProps } from "./types";
 
@@ -105,7 +105,9 @@ const SmartInput = forwardRef<
     );
   };
 
-  const LINE_HEIGHT = 20;
+  // body-4(font-size 14px, line-height 1.5)의 실제 렌더링 줄 높이와 맞춰야
+  // maxLine 줄 수만큼 꽉 채워도 스크롤이 생기지 않습니다.
+  const LINE_HEIGHT = 21;
   const currentLength = currentDisplayValue.length;
   const isLengthExceeded =
     typeof maxLength === "number" && currentLength > maxLength;

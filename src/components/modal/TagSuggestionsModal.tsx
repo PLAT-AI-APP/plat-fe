@@ -15,7 +15,7 @@ import {
 } from "@/schema/modal.schema";
 import { TagSuggestionsModalProps } from "@/type/modal";
 import { focusFirstFieldError } from "@/lib/formError";
-import { useTranslateText } from "@/hooks/useTranslateText";
+import { useTranslateText } from "@/hooks/i18n/useTranslateText";
 import IconButton from "@/components/ui/IconButton";
 
 const TagSuggestionsModal = ({ onClose }: TagSuggestionsModalProps) => {
@@ -94,7 +94,6 @@ const TagSuggestionsModal = ({ onClose }: TagSuggestionsModalProps) => {
             placeholder={t("opinionPlaceholder")}
             required
             error={errors.opinion}
-            inputBoxClassName="h-[400px]"
             className="flex-none"
           />
         </div>

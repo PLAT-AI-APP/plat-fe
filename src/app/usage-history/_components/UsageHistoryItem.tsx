@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import dayjs from "@/lib/dayjs";
 import { cn, formatWithCommas } from "@/lib/utils";
@@ -8,6 +8,7 @@ import { useTranslations } from "next-intl";
 import { showAppToast } from "@/lib/toast";
 import { ArrowDown } from "@/icons";
 import Copy from "@/icons/Copy";
+import useToggle from "@/hooks/common/useToggle";
 import { UsageHistoryItemType } from "@/type/note";
 
 /** 만료일 노출이 필요한 지급성 내역인지 확인합니다. */
@@ -27,7 +28,7 @@ const getLedgerDetailText = (item: UsageHistoryItemType) =>
 /** 개별 사용내역 아이템 */
 const UsageHistoryItem = ({ item }: { item: UsageHistoryItemType }) => {
   const t = useTranslations();
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, toggle } = useToggle();
 
   const isPlusNote = item.amount > 0;
   const isExpiryVisible = shouldShowExpiryDate(item.amount);
@@ -45,7 +46,7 @@ const UsageHistoryItem = ({ item }: { item: UsageHistoryItemType }) => {
         "w-full cursor-pointer overflow-hidden rounded-2xl px-5 py-3 transition-colors",
         isOpen ? "bg-btn-hover" : "bg-dark hover:bg-btn-hover",
       )}
-      onClick={() => setIsOpen((prev) => !prev)}
+      onClick={toggle}
     >
       <header className="flex items-center justify-between gap-4">
         <div className="flex w-[117px] shrink-0 flex-col gap-1">

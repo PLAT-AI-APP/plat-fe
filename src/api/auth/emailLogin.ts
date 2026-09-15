@@ -3,6 +3,7 @@ import { axiosInstance } from "..";
 import { AppError } from "@/type/api";
 import { useAuthStore } from "@/store/useAuthStore";
 import type { AppToastType } from "@/lib/toast";
+import { userQueryKeys } from "@/api/user/queryKeys";
 
 export type LoginToastType = AppToastType;
 
@@ -13,7 +14,7 @@ interface PostEmailLoginProps {
 
 interface EmailLoginResponse {
   accessToken?: string;
-  isFirstLogin?: boolean;
+  isNew?: boolean;
   token?: string;
   toastDescription?: string;
   toastMessage?: string;
@@ -65,7 +66,7 @@ const PostEmailLogin = async (props: PostEmailLoginProps) => {
   }
 
   return {
-    isFirstLogin: Boolean(responseData?.isFirstLogin),
+    isNew: Boolean(responseData?.isNew),
     // MSW toast 테스트 계정에서만 내려주는 검수용 필드
     toastDescription: responseData?.toastDescription,
     toastMessage: responseData?.toastMessage,
@@ -81,7 +82,7 @@ export const useEmailLoginMutation = () => {
   const setLoggedIn = useAuthStore((state) => state.setLoggedIn);
   return useMutation<
     {
-      isFirstLogin: boolean;
+      isNew: boolean;
       toastDescription?: string;
       toastMessage?: string;
       toastType?: LoginToastType;
@@ -95,7 +96,7 @@ export const useEmailLoginMutation = () => {
       setAccessToken(data.token);
       setLoggedIn(true);
       // 로그인 성공 UI 흐름을 막지 않도록 내 정보 갱신은 백그라운드로 실행
-      void queryClient.invalidateQueries({ queryKey: ["get-my-info"] });
+      void queryClient.invalidateQueries({ queryKey: userQueryKeys.myInfo() });
     },
   });
 };

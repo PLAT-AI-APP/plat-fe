@@ -12,9 +12,9 @@ import {
   FIELD_FEEDBACK_MESSAGES,
   FIELD_HELPER_MESSAGES,
 } from "@/constants/fieldMessages";
-import { useFieldFeedback } from "@/hooks/useFieldFeedback";
-import { useTranslateText } from "@/hooks/useTranslateText";
-import { useCountdown } from "@/hooks/useCountdown";
+import { useFieldFeedback } from "@/hooks/form/useFieldFeedback";
+import { useTranslateText } from "@/hooks/i18n/useTranslateText";
+import { useCountdown } from "@/hooks/common/useCountdown";
 import { cn } from "@/lib/utils";
 import { AuthFormValues } from "@/schema/auth.schema";
 

@@ -2,6 +2,8 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
 import { WalletLedgerListResponse } from "@/type/note";
+import { getNextPageNumber } from "@/lib/pagination";
+import { useAuthReady } from "@/hooks/data/useAuthReady";
 
 interface GetUsageHistoryListProps {
   page?: number;
@@ -29,13 +31,14 @@ const getUsageHistoryList = async ({
 export const useUsageHistoryListQuery = ({
   size,
 }: GetUsageHistoryListProps) => {
+  const authReady = useAuthReady();
+
   return useInfiniteQuery<WalletLedgerListResponse, AppError>({
     queryKey: ["get-usage-history-list", size],
     initialPageParam: 0,
     queryFn: ({ pageParam = 0 }) =>
       getUsageHistoryList({ page: pageParam as number, size }),
-    getNextPageParam: (lastPage) => {
-      return lastPage.page.hasNext ? lastPage.page.number + 1 : null;
-    },
+    getNextPageParam: getNextPageNumber,
+    enabled: authReady,
   });
 };

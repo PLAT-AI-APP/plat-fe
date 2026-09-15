@@ -5,8 +5,9 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
 import CreatePreviewList from "./create-preview-list";
-import { useAutoResizeTextarea } from "@/hooks/useAutoResizeTextarea";
-import { useScrollTimeout } from "@/hooks/useScrollTiemout";
+import { useAutoResizeTextarea } from "@/hooks/form/useAutoResizeTextarea";
+import { useTextareaSubmitShortcuts } from "@/hooks/form/useTextareaSubmitShortcuts";
+import { useScrollTimeout } from "@/hooks/dom/useScrollTiemout";
 import { ArrowLeft, ArrowRight, Asterisk, User } from "@/icons";
 import { cn } from "@/lib/utils";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
@@ -142,15 +143,9 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
     submitScenarioMessage();
   };
 
-  const handleTextareaKeyDown = (
-    e: React.KeyboardEvent<HTMLTextAreaElement>,
-  ) => {
-    // Shift+Enter는 줄바꿈으로 두고, Enter만으로 바로 전송합니다.
-    if (e.key !== "Enter" || e.shiftKey || e.nativeEvent.isComposing) return;
-
-    e.preventDefault();
-    submitScenarioMessage();
-  };
+  const { handleKeyDown: handleTextareaKeyDown } = useTextareaSubmitShortcuts({
+    onSubmit: submitScenarioMessage,
+  });
 
   const insertComposerText = (text: string) => {
     // 커서 위치에 토큰/이름을 삽입해 사용자가 긴 문장을 다시 작성하지 않게 합니다.
@@ -280,6 +275,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
                   alt={characterChipText}
                   width={16}
                   height={16}
+                  unoptimized
                   className="avatar-img size-4"
                 />
               ) : (
@@ -312,13 +308,6 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
                 className="body-5 flex h-8 items-center rounded-lg px-2 py-1.5 text-font-2 hover:bg-btn-hover hover:text-font-1"
               >
                 {"{{user}}"}
-              </button>
-              <button
-                type="button"
-                onClick={() => insertComposerText("{{img:}}")}
-                className="body-5 flex h-8 items-center rounded-lg px-2 py-1.5 text-font-2 hover:bg-btn-hover hover:text-font-1"
-              >
-                {"{{img:}}"}
               </button>
             </div>
 

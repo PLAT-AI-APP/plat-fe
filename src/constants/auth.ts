@@ -8,6 +8,9 @@ export const PROTECTED_ROUTES = [
   "/token-charge",
   "/withdrawal",
   "/profile",
+  // 유니버스 상세 조회 자체가 백엔드에서 로그인을 요구해, 비로그인 접근 시
+  // 인증 없이 요청했다가 401/refresh 실패로 빈 화면만 남는 문제가 있었습니다.
+  "/characters",
 ];
 
 // 인증 필요 다이얼로그를 한 번 건너뛰는 세션 키

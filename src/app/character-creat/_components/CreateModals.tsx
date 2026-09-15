@@ -10,6 +10,7 @@ interface CreateModalsProps {
   closeModal: () => void;
   handleConfirmExit: () => void;
   rejectNavigation: () => void;
+  handleLoadDraft: () => void;
 }
 
 const CreateModals = ({
@@ -17,6 +18,7 @@ const CreateModals = ({
   closeModal,
   handleConfirmExit,
   rejectNavigation,
+  handleLoadDraft,
 }: CreateModalsProps) => {
   const openDialog = useDialogStore((state) => state.openDialog);
 
@@ -37,12 +39,14 @@ const CreateModals = ({
     if (activeModal === "OVERWRITE") {
       openDialog("DRAFT_OVERWRITE", {
         onCancel: closeModal,
+        onConfirm: handleLoadDraft,
       });
     }
   }, [
     activeModal,
     closeModal,
     handleConfirmExit,
+    handleLoadDraft,
     openDialog,
     rejectNavigation,
   ]);

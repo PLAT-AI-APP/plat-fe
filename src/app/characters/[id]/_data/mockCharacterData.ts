@@ -53,6 +53,7 @@ export const mockCharacterScenarios: CharacterScenario[] = [
 const mockCharacterDetail: CharacterDetail = {
   characterId: "1",
   title: "Archive Room Friend",
+  characterName: "Ari",
   introduce: "A calm character who always notices what others miss.",
   prologue:
     "An ordinary school archive room becomes the start of a strange but gentle story. The character speaks lightly, but remembers details that everyone else forgets.",
@@ -60,7 +61,9 @@ const mockCharacterDetail: CharacterDetail = {
     "This character is direct, observant, and quietly warm. They tend to hide concern behind dry remarks, then show up exactly when the user needs them.",
   chatCount: 235,
   likeCount: 0,
+  commentEnabled: true,
   liked: false,
+  editable: false,
   tags: ["daily", "mystery", "school", "friend"],
   isOfficial: true,
   images: [
@@ -85,7 +88,7 @@ const mockCharacterDetail: CharacterDetail = {
     id: "creator-1",
     nickname: "@plat_creator",
     profileImage: "/p1.png",
-    followingCount: 24,
+    followerCount: 24,
     isFollowing: true,
   },
   scenarios: mockCharacterScenarios,

@@ -7,6 +7,7 @@ import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import { useNavigationGuard } from "next-navigation-guard";
 import { useRouter } from "next/navigation";
+import { decodeScenarioContent } from "@/lib/scenarioContent";
 import { showAppToast } from "@/lib/toast";
 import { ModalLayout } from "@/components/ModalLayout";
 import { Eye } from "@/icons";
@@ -20,8 +21,9 @@ import {
   CharacterCreateFormValues,
 } from "@/schema/character.schema";
 import { useScenarioPreviewHistoryStore } from "@/store/useScenarioPreviewHistoryStore";
-import { useUnsavedChangesFallbackGuard } from "@/hooks/useUnsavedChangesFallbackGuard";
-import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useUnsavedChangesFallbackGuard } from "@/hooks/navigation/useUnsavedChangesFallbackGuard";
+import { useMediaQuery } from "@/hooks/dom/useMediaQuery";
+import { useUniverseDraft } from "@/hooks/draft/useUniverseDraft";
 import { LOGOUT_REDIRECT_IN_PROGRESS_KEY } from "@/constants/auth";
 import {
   UniverseDetailResponse,
@@ -45,7 +47,7 @@ const createCharacterCreateDefaultValues = (
     {
       name: defaultScenarioName,
       description: "",
-      difficulty: "",
+      difficulty: "NORMAL",
       contents: [],
     },
   ],
@@ -57,26 +59,19 @@ const createCharacterCreateDefaultValues = (
   tagIds: [],
 });
 
-const toFormTendency = (tendency: UniverseDetailResponse["tendency"]) => {
-  if (tendency === "MALE_ORIENTED") return "MALE";
-  if (tendency === "FEMALE_ORIENTED") return "FEMALE";
-
-  return tendency;
-};
-
 const createCharacterEditDefaultValues = (
   universe: UniverseDetailResponse,
   defaultScenarioName: string,
 ): CharacterCreateFormValues => ({
   representativeImage: universe.profileImageUrl,
   representativeImageId: null,
-  characterProfileImage: universe.characterProfileUrl,
+  characterProfileImage: universe.character.profileImageUrl,
   characterProfileImageId: null,
   title: universe.title,
-  name: universe.characterName,
+  name: universe.character.name ?? "",
   characterIntroduce: universe.introduce,
-  profileSituationDescription: "",
-  characterDetailSetting: universe.detailSetting,
+  profileSituationDescription: universe.detailSetting,
+  characterDetailSetting: universe.character.detailSetting ?? "",
   asset: universe.assets.map((asset) => ({
     assetFile: null,
     assetImage: asset.originalUrl,
@@ -89,22 +84,21 @@ const createCharacterEditDefaultValues = (
     universe.scenarios.length > 0
       ? universe.scenarios.map((scenario) => ({
           name: scenario.name,
-          description: scenario.content,
-          difficulty: "",
-          contents: [],
+          description: scenario.description,
+          ...decodeScenarioContent(scenario.content),
         }))
       : [
           {
             name: defaultScenarioName,
             description: "",
-            difficulty: "",
+            difficulty: "NORMAL",
             contents: [],
           },
         ],
   isPublic: universe.visibility === "PUBLIC",
   allowComments: universe.commentEnabled,
   characterDescription: universe.description,
-  tendency: toFormTendency(universe.tendency),
+  tendency: universe.tendency,
   category: [universe.category],
   tagIds: universe.hashtags.map((hashtag) => ({
     id: hashtag.hashtagId,
@@ -168,6 +162,13 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
     getValues,
     setValue,
   } = methods;
+  // 초안(임시저장)은 새로 만드는 흐름에만 있고, 이미 만들어진 세계관을 수정할 때는 없습니다.
+  const { draftId, saveDraft, loadDraft } = useUniverseDraft({
+    enabled: !isEditMode,
+    defaultScenarioName,
+    getValues,
+    reset,
+  });
 
   useEffect(() => {
     if (!universeDetail) return;
@@ -239,6 +240,7 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
         id: String(Date.now()),
         type: "asset",
         value: asset.assetImage,
+        assetImageFileId: asset.assetImageFileId,
       });
       updateScenarioContentsFromDrag(nextContents);
     }
@@ -248,31 +250,19 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
     setActiveModal(null);
   };
 
-  const handleSave = async () => {
-    const currentData = getValues();
-    try {
-      reset(currentData);
-      showAppToast("success", t("draftSaved"));
-    } catch (error) {
-      console.error("Draft save failed:", error);
-    }
-  };
-
-  const handleDraftClick = () => {
+  const handleLoadDraftClick = () => {
+    // 편집 중인 내용이 있으면 덮어써도 되는지 먼저 확인부터 받습니다.
     if (isDirty) {
       setActiveModal("OVERWRITE");
       return;
     }
 
-    void loadDraftData();
+    void handleConfirmLoadDraft();
   };
 
-  const loadDraftData = async () => {
-    try {
-      closeModal();
-    } catch {
-      showAppToast("error", t("draftLoadFailed"));
-    }
+  const handleConfirmLoadDraft = async () => {
+    await loadDraft(createCharacterCreateDefaultValues(defaultScenarioName));
+    closeModal();
   };
 
   // next-navigation-guard가 router.push/back으로 가는 이동은 잘 잡지만, Next.js 16에서
@@ -335,13 +325,15 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
         closeModal={closeModal}
         handleConfirmExit={handleConfirmExit}
         rejectNavigation={reject}
+        handleLoadDraft={handleConfirmLoadDraft}
       />
 
       <div className="flex h-full min-h-0 flex-col gap-4">
         <CreateHeader
           universeId={universeId}
-          onSave={handleSave}
-          onDraftClick={handleDraftClick}
+          draftId={draftId}
+          onSave={saveDraft}
+          onDraftClick={handleLoadDraftClick}
           setCurrentTabId={setCurrentTabId}
           setActiveScenarioIndex={setActiveScenarioIndex}
           markSubmitSuccess={markSubmitSuccess}

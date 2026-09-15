@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
+import { personaQueryKeys } from "./queryKeys";
 
 interface PatchEditPersonaProps {
   personaId: string;
@@ -19,7 +20,7 @@ export const useEditPersonaMutation = () => {
   return useMutation<void, AppError, PatchEditPersonaProps>({
     mutationFn: PatchEditPersona,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["me-persona-list"] });
+      queryClient.invalidateQueries({ queryKey: personaQueryKeys.myList() });
     },
   });
 };

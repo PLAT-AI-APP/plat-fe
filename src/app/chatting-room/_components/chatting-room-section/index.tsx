@@ -4,7 +4,7 @@ import React, { useCallback, useState } from "react";
 import { useTranslations } from "next-intl";
 import ChatForm from "@/components/chat/ChatForm";
 import MessageList from "@/components/chat/MessageList";
-import { useScrollTimeout } from "@/hooks/useScrollTiemout";
+import { useScrollTimeout } from "@/hooks/dom/useScrollTiemout";
 import { cn } from "@/lib/utils";
 import { AIModelType, ChatMessageType } from "@/type/chat";
 import ChattingRoomHeader from "./ChattingRoomHeader";
@@ -28,7 +28,11 @@ const INITIAL_MESSAGES: ChatMessageType[] = [
   },
 ];
 
-const ChattingRoomSection = () => {
+interface ChattingRoomSectionProps {
+  roomId: string;
+}
+
+const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
   const t = useTranslations();
   const { isScrolling, onScroll } = useScrollTimeout();
   const [messages, setMessages] = useState<ChatMessageType[]>(INITIAL_MESSAGES);
@@ -89,6 +93,7 @@ const ChattingRoomSection = () => {
           )}
         >
           <ChattingRoomHeader
+            roomId={roomId}
             characterName="캐릭터 이름"
             currentAi={currentAi}
             handleCurrentAi={handleCurrentAi}

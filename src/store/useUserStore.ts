@@ -13,10 +13,6 @@ export interface UserInfo {
   profileImage: string;
   birth: string;
   gender: Gender;
-  phone: {
-    countryCode: string;
-    number: string;
-  };
   provider: Provider;
   email: string;
 }
@@ -31,20 +27,7 @@ interface UserState {
 export const useUserStore = create<UserState>()(
   persist(
     (set) => ({
-      user: {
-        id: "0",
-        nickname: "",
-        bio: "",
-        profileImage: "",
-        birth: "",
-        gender: "MALE",
-        phone: {
-          countryCode: "",
-          number: "",
-        },
-        provider: "EMAIL",
-        email: "",
-      },
+      user: null,
 
       // 전체 유저 정보 저장
       setUser: (user) => set({ user }),

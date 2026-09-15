@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import Header from "@/components/header";
 import Sidebar from "@/components/Sidebar";
 import { usePathname, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useScrollTimeout } from "@/hooks/useScrollTiemout";
-import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useScrollTimeout } from "@/hooks/dom/useScrollTiemout";
+import { useMediaQuery } from "@/hooks/dom/useMediaQuery";
 import { cn } from "@/lib/utils";
 import { useMyInfoQuery } from "@/api/user/getMyInfo";
 import { useWalletBalanceQuery } from "@/api/wallet/getWalletBalance";
@@ -30,12 +31,18 @@ import {
   TABLET_MAX_WIDTH_QUERY,
 } from "@/constants/layout";
 import { useLayoutStore } from "@/store/useLayoutStore";
+import { fadeVariants, SPRING_SOFT, TRANSITION_SLOW } from "@/constants/motion";
 
 // 사이드바 없이 전용 화면을 쓰는 경로
 const HIDE_SIDEBAR_PATHS: string[] = [];
 
 // 헤더 없이 전용 상단 UI를 쓰는 경로
 const HIDE_HEADER_PATHS = ["/chatting-room"];
+
+// tokens.css의 --sidebar-width-expanded/--sidebar-width-folded와 값을 맞춘다.
+// framer-motion으로 CSS 변수를 애니메이션하려면 var() 참조가 아니라 실제 값이 필요하다.
+const SIDEBAR_WIDTH_EXPANDED = "240px";
+const SIDEBAR_WIDTH_FOLDED = "70px";
 
 export default function ClientLayout({
   children,
@@ -119,9 +126,6 @@ export default function ClientLayout({
   const router = useRouter();
   const clearModals = useModalStore((state) => state.clearModals);
   const openModal = useModalStore((state) => state.openModal);
-  const allowNextNavigation = useModalStore(
-    (state) => state.allowNextNavigation,
-  );
   const openDialog = useDialogStore((state) => state.openDialog);
   const isProtectedRoute = isProtectedPath(pathname);
   const [hasHydrated, setHasHydrated] = useState(false);
@@ -209,27 +213,12 @@ export default function ClientLayout({
   ]);
 
   useEffect(() => {
-    // 인증(로그인)이 꼭 필요한 보호 경로 목록 정의
-    const protectedRoutes = [
-      "/my-chatting",
-      "/chatting-room",
-      "/character-creat",
-      "/studio",
-      "/usage-history",
-      "/token-charge",
-      "/withdrawal",
-      "/profile",
-    ];
-
-    // 현재 접속한 pathname이 보호 경로 중 하나로 시작하는지 검사
-    const isProtectedRoute = protectedRoutes.some((route) =>
-      pathname.startsWith(route),
-    );
-
-    // 보호된 경로인데 토큰이 없다면 홈으로 튕겨내기
     if (isAuthChecking) return;
 
     if (isProtectedRoute && !isLoggedIn) {
+      // 로그아웃/회원탈퇴가 미리 남겨 둔 신호일 때만 홈으로 보낸다 — 그 흐름은
+      // 이미 자기 손으로 window.location.replace("/")까지 마쳤으므로 여기서는
+      // 남은 모달만 정리한다.
       const shouldSkipAuthAlert =
         sessionStorage.getItem(SKIP_AUTH_ALERT_ONCE_KEY) === "true";
 
@@ -241,21 +230,18 @@ export default function ClientLayout({
       }
 
       /*
-       * 로그인 창을 먼저 올리고 홈으로 튕겨낸다. 모달이 열려 있으면 ModalNavigationGuard 가 이동을 막으므로,
-       * 이 한 번은 통과시켜 달라고 미리 알린다 — 안 그러면 보호 경로에 그대로 남는다.
+       * 그 외(세션 만료 등 사용자가 직접 로그아웃하지 않은 경우)는 페이지를 벗어나지 않는다.
+       * 로그인 창만 띄워, 다시 로그인하면 있던 페이지를 그대로 이어서 쓸 수 있게 한다.
        */
       clearModals();
       requestLogin();
-      allowNextNavigation();
-      router.replace("/");
     }
   }, [
-    allowNextNavigation,
     clearModals,
     isAuthChecking,
     isLoggedIn,
+    isProtectedRoute,
     requestLogin,
-    pathname,
     router,
   ]);
 
@@ -312,6 +298,10 @@ export default function ClientLayout({
         nickname?: string;
       };
 
+      // 보호 경로에서 뜬 로그인 모달의 "회원가입" 링크로 들어왔다면, 그 모달이 닫히지
+      // 않은 채로 여기까지 남아있다. 완료 다이얼로그가 로그인보다 먼저 보여야 하므로
+      // 먼저 정리한다.
+      clearModals();
       // 회원가입 페이지에서 홈으로 이동한 뒤 완료 Dialog를 열어 라우팅과 레이어 순서를 분리합니다.
       openDialog("SIGNUP_COMPLETE", {
         nickname: parsedDialogData.nickname || "",
@@ -330,7 +320,7 @@ export default function ClientLayout({
     // 홈에 진입한 뒤 한 번만 소비해 로그인 모달이 닫힌 다음 환영 다이얼로그가 뜨도록 맞춥니다.
     sessionStorage.removeItem(PENDING_WELCOME_CREDIT_DIALOG_KEY);
     openDialog("WELCOME_CREDIT", {});
-  }, [openDialog, openModal, pathname]);
+  }, [clearModals, openDialog, openModal, pathname]);
 
   useEffect(() => {
     if (pathname !== "/" || typeof window === "undefined") return;
@@ -338,7 +328,12 @@ export default function ClientLayout({
     sessionStorage.removeItem(LOGOUT_REDIRECT_IN_PROGRESS_KEY);
   }, [pathname]);
 
-  if (isProtectedRoute && (isAuthChecking || !isLoggedIn)) {
+  /*
+   * 로그인 여부가 아직 안 정해졌을 때만 감춘다. 로그인 여부가 정해진 뒤 세션이
+   * 만료돼 isLoggedIn이 false가 돼도 페이지는 그대로 두어야 한다 — 위 effect가
+   * 로그인 창만 띄우고 이동시키지 않으므로, 여기서도 내용을 지우면 안 된다.
+   */
+  if (isProtectedRoute && isAuthChecking) {
     return null;
   }
 
@@ -350,20 +345,23 @@ export default function ClientLayout({
           foldToggleRef={sidebarToggleRef}
         />
       )}
-      <main
+      <motion.main
         id="main-container"
-        style={{
-          // 사이드바가 차지하는 열 폭.
-          // 모바일: 0(콘텐츠가 전체 폭을 쓴다) · 태블릿: 레일 폭 고정(펼쳐도 콘텐츠를 밀지 않음)
-          // 데스크탑: 사용자가 정한 접힘/펼침 폭
+        // 사이드바가 차지하는 열 폭.
+        // 모바일: 0(콘텐츠가 전체 폭을 쓴다) · 태블릿: 레일 폭 고정(펼쳐도 콘텐츠를 밀지 않음)
+        // 데스크탑: 사용자가 정한 접힘/펼침 폭
+        // 폭이 조금씩 늘고 주는 변화라 SPRING_SOFT(면적 변화용 스프링)가 자연스럽다.
+        // 화면을 가로지르는 드로어 슬라이드는 이동 거리가 커 스프링이 통통 튀어 보이므로
+        // 그쪽은 TRANSITION_SLOW(감속 커브)를 따로 쓴다 — Sidebar.tsx 참고.
+        animate={{
           ["--sidebar-width" as string]:
             !isNarrow && isSidebarExpanded
-              ? "var(--sidebar-width-expanded)"
-              : "var(--sidebar-width-folded)",
+              ? SIDEBAR_WIDTH_EXPANDED
+              : SIDEBAR_WIDTH_FOLDED,
         }}
+        transition={SPRING_SOFT}
         className={cn(
           "grid overflow-hidden",
-          "[transition:grid-template-columns_var(--motion-base)_var(--motion-ease-out)]",
           // 사이드바를 렌더하지 않을 때 2열 템플릿을 그대로 두면 콘텐츠가 사이드바 칸(0px)에
           // 들어가 폭이 0이 된다. 렌더 여부에 따라 열 자체를 바꾼다.
           isSidebarInline
@@ -372,14 +370,17 @@ export default function ClientLayout({
           isHeaderHidden ? "h-dvh" : "h-[calc(100dvh-var(--header-height))]",
         )}
       >
-        {isSidebarRendered && (
-          <Sidebar
-            isFolded={!isSidebarExpanded}
-            variant={isSidebarInline ? "inline" : "overlay"}
-            onFoldToggle={isHeaderHidden ? handleFoldToggle : undefined}
-            foldToggleRef={isHeaderHidden ? sidebarToggleRef : undefined}
-          />
-        )}
+        <AnimatePresence>
+          {isSidebarRendered && (
+            <Sidebar
+              key="sidebar"
+              isFolded={!isSidebarExpanded}
+              variant={isSidebarInline ? "inline" : "overlay"}
+              onFoldToggle={isHeaderHidden ? handleFoldToggle : undefined}
+              foldToggleRef={isHeaderHidden ? sidebarToggleRef : undefined}
+            />
+          )}
+        </AnimatePresence>
 
         <div
           id="page-content"
@@ -395,20 +396,24 @@ export default function ClientLayout({
         >
           {/* 좁은 화면에서 사이드바가 콘텐츠 위에 얹힐 때만 스크림을 깐다.
               메인 콘텐츠에 블러는 걸지 않는다 — 메뉴가 콘텐츠를 가리면 안 된다. */}
-          {isDrawerOpen && (
-            <button
-              type="button"
-              aria-label={t("sidebar.close")}
-              onClick={closeDrawer}
-              className="fixed inset-0 z-30 bg-scrim/40"
-            />
-          )}
+          <AnimatePresence>
+            {isDrawerOpen && (
+              <motion.button
+                type="button"
+                aria-label={t("sidebar.close")}
+                onClick={closeDrawer}
+                {...fadeVariants}
+                transition={TRANSITION_SLOW}
+                className="fixed inset-0 z-30 bg-scrim/40"
+              />
+            )}
+          </AnimatePresence>
           {children}
           <ModalManager />
           <DialogManager />
           <ModalNavigationGuard />
         </div>
-      </main>
+      </motion.main>
     </>
   );
 }

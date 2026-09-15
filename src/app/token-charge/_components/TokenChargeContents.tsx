@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useProductsQuery } from "@/api/product/getProducts";
+import { useUsageHistoryListQuery } from "@/api/note/getUsageHistoryList";
 import Token from "@/icons/Token";
 import { formatWithCommas, toMajorAmount } from "@/lib/utils";
 import { useWalletStore } from "@/store/useWalletStore";
@@ -78,6 +79,11 @@ const TokenChargeContents = () => {
     refetch,
   } = useProductsQuery();
 
+  // 전체 개수를 세지 않는 슬라이스 응답이라, 있는지 없는지만 한 건만 물어 확인합니다.
+  const { data: usageHistoryData } = useUsageHistoryListQuery({ size: 1 });
+  const hasUsageHistory =
+    (usageHistoryData?.pages[0]?.content.length ?? 0) > 0;
+
   return (
     <section className="mx-auto w-full max-w-160 pt-5">
       <PageTitle messageKey="tokenCharge.title" />
@@ -90,12 +96,21 @@ const TokenChargeContents = () => {
           </div>
         </div>
 
-        <Link
-          href="/usage-history"
-          className="body-5 shrink-0 rounded-2xl bg-main px-4 py-2 text-font-1 transition-colors hover:bg-btn-hover"
-        >
-          {t("tokenCharge.viewUsageHistory")}
-        </Link>
+        {hasUsageHistory ? (
+          <Link
+            href="/usage-history"
+            className="body-5 shrink-0 rounded-2xl bg-main px-4 py-2 text-font-1 transition-colors hover:bg-btn-hover"
+          >
+            {t("tokenCharge.viewUsageHistory")}
+          </Link>
+        ) : (
+          <span
+            aria-disabled="true"
+            className="body-5 shrink-0 cursor-default rounded-2xl bg-font-disabled px-4 py-2 text-font-1"
+          >
+            {t("tokenCharge.viewUsageHistory")}
+          </span>
+        )}
       </div>
 
       <div className="flex flex-col gap-4">

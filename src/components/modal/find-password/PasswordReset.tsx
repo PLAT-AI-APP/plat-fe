@@ -5,6 +5,7 @@ import { usePasswordResetMutation } from "@/api/auth/postPasswordReset";
 import ActiveButton from "@/components/ActiveButton";
 import PasswordCheckField from "@/components/field/PasswordCheckField";
 import PasswordField from "@/components/field/PasswordField";
+import { showAppToast } from "@/lib/toast";
 import { PasswordResetFormSchemaValues } from "@/schema/auth.schema";
 import { useModalStore } from "@/store/useModalStore";
 
@@ -36,7 +37,9 @@ const PasswordReset = () => {
 
   const closeModal = useModalStore((state) => state.closeModal);
   const onSubmit = (data: PasswordResetFormSchemaValues) => {
-    passwrodReset(data);
+    passwrodReset(data, {
+      onSuccess: () => showAppToast("success", t("successToast")),
+    });
     closeModal();
   };
 

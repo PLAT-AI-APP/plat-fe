@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { PenSparkle, Pin, Trash } from "@/icons";
+import { PenSparkle, Pin, PinFill, Trash } from "@/icons";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { PopoverLayout } from "./layout";
@@ -12,6 +12,7 @@ interface MyChattingMenuPopoverProps {
   onEdit: () => void;
   onPin: () => void;
   onDelete: () => void;
+  isPinned?: boolean;
 }
 
 const MyChattingMenuPopover = ({
@@ -20,6 +21,7 @@ const MyChattingMenuPopover = ({
   onDelete,
   onEdit,
   onPin,
+  isPinned = false,
 }: MyChattingMenuPopoverProps) => {
   const t = useTranslations("popover");
 
@@ -38,8 +40,12 @@ const MyChattingMenuPopover = ({
       textClassName: "text-font-1",
     },
     {
-      icon: <Pin className="size-4 shrink-0" />,
-      label: t("pinChat"),
+      icon: isPinned ? (
+        <PinFill className="size-4 shrink-0" />
+      ) : (
+        <Pin className="size-4 shrink-0" />
+      ),
+      label: isPinned ? t("unpinChat") : t("pinChat"),
       onClick: onPin,
       textClassName: "text-font-1",
     },

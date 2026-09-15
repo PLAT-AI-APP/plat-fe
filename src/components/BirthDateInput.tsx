@@ -8,7 +8,7 @@ import {
   FIELD_FEEDBACK_MESSAGES,
   FIELD_HELPER_MESSAGES,
 } from "@/constants/fieldMessages";
-import { useTranslateText } from "@/hooks/useTranslateText";
+import { useTranslateText } from "@/hooks/i18n/useTranslateText";
 import dayjs from "@/lib/dayjs";
 import { cn } from "@/lib/utils";
 import { ProfileEditFormType } from "@/schema/profile.schema";

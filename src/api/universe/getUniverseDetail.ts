@@ -7,23 +7,21 @@ import type {
   CharacterImageItem,
   CharacterScenario,
 } from "@/type/character";
+import { universeQueryKeys } from "./queryKeys";
+import { useAuthReady } from "@/hooks/data/useAuthReady";
 
 export type UniverseDetailVisibility = "PUBLIC" | "PRIVATE";
 export type UniverseDetailTendency =
   "ALL" | "MALE_ORIENTED" | "FEMALE_ORIENTED";
 export type UniverseDetailCategory =
-  | "SIMULATION"
   | "ROMANCE"
   | "FANTASY"
   | "DRAMA"
-  | "MARTIAL_ARTS_HISTORICAL"
+  | "MARTIAL_ARTS"
   | "GL"
   | "BL"
-  | "HORROR_MYSTERY"
-  | "ACTION"
-  | "COMIC_DAILY"
-  | "SPORTS_SCHOOL"
-  | "ETC";
+  | "HORROR"
+  | "MYSTERY";
 
 export interface UniverseDetailHashtag {
   hashtagId: string;
@@ -38,13 +36,32 @@ export interface UniverseDetailAsset {
 }
 
 export interface UniverseDetailScenario {
+  scenarioId: string;
   episodeNo: number;
+  displayOrder: number;
   name: string;
+  description: string;
   content: string;
+}
+
+export interface UniverseDetailCharacter {
+  universeCharacterId: string;
+  name: string | null;
+  description: string | null;
+  detailSetting: string | null;
+  profileImageUrl: string;
 }
 
 export interface UniverseDetailResponse {
   universeId: string;
+  /** 창작자(Creator) 도메인 식별자. 팔로우 등 유저 기능에는 creatorUserId를 씁니다. */
+  creatorId: string;
+  creatorUserId: string;
+  creatorName: string;
+  creatorFollowerCount: number;
+  editable: boolean;
+  createdAt: string;
+  updatedAt: string;
   visibility: UniverseDetailVisibility;
   commentEnabled: boolean;
   tendency: UniverseDetailTendency;
@@ -58,8 +75,7 @@ export interface UniverseDetailResponse {
   detailSetting: string;
   description: string;
   profileImageUrl: string;
-  characterName: string;
-  characterProfileUrl: string;
+  character: UniverseDetailCharacter;
   hashtags: UniverseDetailHashtag[];
   assets: UniverseDetailAsset[];
   scenarios: UniverseDetailScenario[];
@@ -78,12 +94,12 @@ const createScenarioContents = (
   assets: UniverseDetailAsset[],
 ): CharacterScenario["contents"] => [
   {
-    id: `scenario-${scenario.episodeNo}-content`,
+    id: `scenario-${scenario.scenarioId}-content`,
     type: "action" as const,
     value: scenario.content,
   },
   ...assets.map((asset) => ({
-    id: `scenario-${scenario.episodeNo}-asset-${asset.assetImageFileId}`,
+    id: `scenario-${scenario.scenarioId}-asset-${asset.assetImageFileId}`,
     type: "asset" as const,
     value: asset.originalUrl,
   })),
@@ -97,9 +113,9 @@ export const adaptUniverseDetailToCharacterDetail = (
     url: asset.originalUrl,
   }));
   const scenarios: CharacterScenario[] = universe.scenarios.map((scenario) => ({
-    scenarioId: String(scenario.episodeNo),
+    scenarioId: scenario.scenarioId,
     name: scenario.name,
-    description: scenario.content,
+    description: scenario.description,
     situation: scenario.content,
     firstDialogue: scenario.content,
     lang: "KO",
@@ -110,25 +126,32 @@ export const adaptUniverseDetailToCharacterDetail = (
   return {
     characterId: universe.universeId,
     title: universe.title,
+    characterName: universe.character.name ?? "",
     introduce: universe.introduce,
     prologue: universe.detailSetting,
     characterDescription: universe.description,
     chatCount: universe.chatCount,
     likeCount: universe.likeCount,
+    commentEnabled: universe.commentEnabled,
     liked: universe.liked,
+    editable: universe.editable,
     tags: universe.hashtags.map((hashtag) => hashtag.label),
     isOfficial: false,
     images,
     mainImage: universe.profileImageUrl,
-    profileImage: universe.characterProfileUrl,
-    createdAt: "",
-    updatedAt: "",
+    profileImage: universe.character.profileImageUrl,
+    createdAt: universe.createdAt,
+    updatedAt: universe.updatedAt,
     creator: {
-      // TODO: 세계관 상세 조회 응답에 creatorId가 추가되면 이 값에 연결합니다.
-      id: null,
-      nickname: universe.characterName,
-      profileImage: universe.characterProfileUrl,
-      followingCount: 0,
+      // 팔로우 등 유저 기능은 UserId 기준이라 creatorId(Creator 도메인 식별자)가 아니라
+      // creatorUserId를 씁니다.
+      id: universe.creatorUserId,
+      nickname: universe.creatorName,
+      // 백엔드 세계관 상세 응답에 아직 창작자 프로필 사진은 없어, 임시로 세계관 소속
+      // 캐릭터의 이미지를 대신 표시합니다.
+      profileImage: universe.character.profileImageUrl,
+      followerCount: universe.creatorFollowerCount,
+      // 이 요청을 보낸 사람이 창작자를 팔로우하는지는 아직 상세 응답에 실려 오지 않습니다.
       isFollowing: false,
     },
     scenarios,
@@ -137,8 +160,13 @@ export const adaptUniverseDetailToCharacterDetail = (
 };
 
 export const useUniverseDetailQuery = (universeId?: string) => {
+  // 세계관 상세는 로그인이 필수라, 보고 있던 중 세션이 만료되면 401로 실패한
+  // 채 멈춘다. 쿼리 키에 로그인 상태를 반영해 두면, 로그인 안내 모달에서 다시
+  // 로그인했을 때 키가 바뀌면서 자동으로 재요청된다 — 새로고침 없이도 내용이 채워진다.
+  const authReady = useAuthReady();
+
   return useQuery<UniverseDetailResponse, AppError>({
-    queryKey: ["get-universe-detail", universeId],
+    queryKey: [...universeQueryKeys.detail(universeId), authReady],
     queryFn: () => getUniverseDetail(universeId ?? ""),
     enabled: Boolean(universeId),
   });

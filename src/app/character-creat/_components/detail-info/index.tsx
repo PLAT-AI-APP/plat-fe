@@ -51,7 +51,6 @@ const DetailInfo = () => {
         minLine={4}
         maxLine={4}
         isBorder
-        inputBoxClassName="h-[109px]"
         {...register("characterDescription")}
         value={characterDescriptionValue}
         helperMessage=""
@@ -68,7 +67,6 @@ const DetailInfo = () => {
         minLine={12}
         maxLine={12}
         isBorder
-        inputBoxClassName="h-[277px]"
         {...register("characterDetailSetting")}
         value={characterDetailSetting}
         helperMessage=""

@@ -5,10 +5,17 @@ export const metadata: Metadata = {
   title: "채팅중",
 };
 
-const ChattingRoomPage = () => {
+interface Props {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+const ChattingRoomPage = async ({ searchParams }: Props) => {
+  const sParams = await searchParams;
+  const roomId = typeof sParams.roomId === "string" ? sParams.roomId : "";
+
   return (
     <section className="flex h-full min-h-0">
-      <ChattingRoomSection />
+      <ChattingRoomSection roomId={roomId} />
     </section>
   );
 };

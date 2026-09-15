@@ -17,7 +17,7 @@ const PersonaModal = ({ onClose }: PersonaModalProps) => {
     // 0ms 혹은 10ms 정도의 지연을 주어 동기적 업데이트 흐름을 끊습니다.
     const timer = setTimeout(() => {
       setShouldFetch(true);
-    }, 1000);
+    }, 0);
 
     return () => clearTimeout(timer);
   }, []);

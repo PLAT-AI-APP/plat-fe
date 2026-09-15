@@ -74,6 +74,7 @@ const NewTabContents = () => {
               images={card.images}
               isNew
               isOfficial={card.isOfficial}
+              href={`/characters/${card.universeId}`}
             />
           ))}
         </CardGrid>

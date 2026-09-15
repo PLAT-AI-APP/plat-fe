@@ -8,9 +8,10 @@ import CommentListItem from "./CommentListItem";
 
 interface CommentsPanelProps {
   universeId: string;
+  commentEnabled: boolean;
 }
 
-const CommentsPanel = ({ universeId }: CommentsPanelProps) => {
+const CommentsPanel = ({ universeId, commentEnabled }: CommentsPanelProps) => {
   const t = useTranslations("characterDetail");
   const {
     data,
@@ -33,7 +34,7 @@ const CommentsPanel = ({ universeId }: CommentsPanelProps) => {
         {t("commentsCount", { count: totalCount })}
       </h2>
 
-      <CommentInputBox universeId={universeId} />
+      <CommentInputBox universeId={universeId} commentEnabled={commentEnabled} />
 
       {/*
         예전에는 실패해도 "아직 댓글이 없어요" 가 떴다. 서버가 죽은 것과

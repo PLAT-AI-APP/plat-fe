@@ -34,14 +34,21 @@ export interface CharacterImageItem {
 
 export interface CharacterDetail {
   characterId: string;
+  /** 세계관 제목. 페이지 대표 타이틀(카드/헤더)로 쓰입니다 — 캐릭터 이름과 다를 수 있습니다. */
   title: string;
+  /** 캐릭터 본인의 이름. "캐릭터 소개" 같이 캐릭터 개인을 가리키는 자리에서만 씁니다. */
+  characterName: string;
   introduce: string;
   prologue: string;
   characterDescription: string;
   chatCount: number;
   likeCount: number;
+  /** 창작자가 댓글을 허용했는지. false면 새 댓글 작성을 막습니다. */
+  commentEnabled: boolean;
   /** 이 요청을 보낸 사람이 찜했는지. 비로그인이면 항상 false 입니다. */
   liked: boolean;
+  /** 이 요청을 보낸 사람이 수정 권한이 있는지. 백엔드가 판단해 내려주므로 그대로 씁니다. */
+  editable: boolean;
   tags: string[];
   isOfficial: boolean;
   images: CharacterImageItem[];
@@ -53,7 +60,7 @@ export interface CharacterDetail {
     id: string | null;
     nickname: string;
     profileImage: string;
-    followingCount: number;
+    followerCount: number;
     isFollowing: boolean;
   };
   scenarios: CharacterScenario[];

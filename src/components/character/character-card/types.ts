@@ -8,6 +8,7 @@ export interface CharacterCardProps {
   images: string[] | string;
   size?: CardSize;
   tagList?: string[];
+  /** 강조 표시할 태그. 없으면 강조 없이 태그 목록만 보여준다. */
   currentTag?: string;
   isNew?: boolean;
   isOfficial?: boolean;
@@ -18,6 +19,20 @@ export interface CharacterCardProps {
    * 기대는 캐러셀·한 줄 나열 등 다른 화면에 영향이 없도록 기본값은 false다.
    */
   fluid?: boolean;
+  /**
+   * 카드 클릭 시 이동할 상세페이지 경로(예: `/characters/{id}`).
+   * 카드 내부의 인디케이터·오버레이 버튼과 형제로 깔리는 stretched link라,
+   * <a> 안에 <button>이 중첩되는 유효하지 않은 마크업을 피하면서도
+   * prefetch·새 탭 열기 같은 Link의 이점을 그대로 가져갑니다.
+   * 아직 갈 곳이 없는 자리(더미 데이터 등)는 생략해 카드를 비활성 상태로 둡니다.
+   */
+  href?: string;
+  /**
+   * 넘기면 카드 우상단에 수정 배지가 뜨고, 눌렀을 때 이 경로로 이동한다
+   * (예: `/character-creat?universeId={id}`). 카드 클릭(href)과 겹치지 않도록
+   * 별도 배지로 띄운다 — 없으면 배지 자체가 안 뜬다.
+   */
+  editHref?: string;
 }
 
 export interface SizeConfig {

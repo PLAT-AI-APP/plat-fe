@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import ProfileEditModal from "@/components/modal/ProfileEditModal";
 import { ArrowRight } from "@/icons";
+import useToggle from "@/hooks/common/useToggle";
 import { useUserStore } from "@/store/useUserStore";
 
 interface HeaderProps {
@@ -14,14 +15,13 @@ interface HeaderProps {
 
 const Header = ({ id }: HeaderProps) => {
   const t = useTranslations("studio");
-  const [isProfileEditModal, setIsProfileEditModal] = useState(false);
+  const {
+    isOpen: isProfileEditModal,
+    toggle: toggleProfileEditModal,
+  } = useToggle();
   const profileImage = useUserStore((state) => state.user?.profileImage);
   const nickname = useUserStore((state) => state.user?.nickname);
   const bio = useUserStore((state) => state.user?.bio);
-
-  const toggleProfileEditModal = () => {
-    setIsProfileEditModal((prev) => !prev);
-  };
 
   return (
     <header
@@ -52,7 +52,7 @@ const Header = ({ id }: HeaderProps) => {
 
       <Link
         href={`/profile/${id}`}
-        onClick={toggleProfileEditModal}
+        onClick={() => toggleProfileEditModal()}
         className="inline h-fit w-fit rounded-lg p-1 transition-colors hover:bg-btn-hover"
       >
         <ArrowRight className="h-4 w-4 text-font-2" />

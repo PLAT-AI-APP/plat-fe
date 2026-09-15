@@ -3,7 +3,7 @@ import { AnimatePresence } from "framer-motion";
 import React, { useRef } from "react";
 import ScenarioSelectPopover from "@/components/popover/ScenarioSelectPopover";
 import { ArrowDown, ArrowUp } from "@/icons";
-import useToggle from "@/hooks/useToggle";
+import useToggle from "@/hooks/common/useToggle";
 import { CharacterScenario } from "@/type/character";
 
 interface ScenarioSelectProps {

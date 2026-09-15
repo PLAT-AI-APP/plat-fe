@@ -19,6 +19,10 @@ interface AssetProps {
   >;
 }
 
+// character.schema.ts의 assetName max(15)와 맞춥니다. 넘는 파일명을 그대로
+// 채우면 저장을 누르기도 전에 길이 에러가 떠서 사용자가 이유를 알기 어렵습니다.
+const ASSET_NAME_MAX_LENGTH = 15;
+
 const Asset = ({ assetFieldArray }: AssetProps) => {
   const t = useTranslations("characterCreate.asset");
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -52,7 +56,11 @@ const Asset = ({ assetFieldArray }: AssetProps) => {
       reader.onloadend = () => {
         append({
           assetFile: null,
-          assetName: file.name.split(".").slice(0, -1).join("."),
+          assetName: file.name
+            .split(".")
+            .slice(0, -1)
+            .join(".")
+            .slice(0, ASSET_NAME_MAX_LENGTH),
           assetImage: reader.result as string,
           assetImageFileId: uploadedImage.fileId,
           assetSituation: "",

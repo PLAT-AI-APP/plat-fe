@@ -5,6 +5,8 @@ import { authAxios, axiosInstance } from "..";
 import { AppError, PageWith } from "@/type/api";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useLocaleStore } from "@/store/useLocaleStore";
+import { useAuthReady } from "@/hooks/data/useAuthReady";
+import type { BaseCard, CardCreator } from "@/type/card";
 
 /**
  * 검색어 최소 길이. 서버도 같은 값으로 막습니다(SearchPolicy.MIN_KEYWORD_LENGTH).
@@ -16,22 +18,10 @@ export const SEARCH_MIN_KEYWORD_LENGTH = 2;
 export const isSearchableKeyword = (keyword: string) =>
   keyword.trim().length >= SEARCH_MIN_KEYWORD_LENGTH;
 
-export interface SearchCardCreator {
-  creatorId: string;
-  nickname: string;
-}
+export type SearchCardCreator = CardCreator;
 
 /** 캐릭터·세계관 결과가 같은 모양이라 카드 컴포넌트를 그대로 공유합니다. */
-export interface SearchCardItem {
-  universeId: string;
-  images: string[];
-  title: string;
-  description: string;
-  creator: SearchCardCreator;
-  chatCount: number;
-  isNew: boolean;
-  isOfficial: boolean;
-}
+export type SearchCardItem = BaseCard;
 
 export interface SearchUserItem {
   userId: string;
@@ -76,9 +66,8 @@ const getSearch = async (
  * 같은 검색이 여러 번 집계됩니다. 그래서 탭 전환은 받아 둔 결과를 거르기만 합니다.
  */
 export const useSearchQuery = (params: GetSearchParams) => {
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const isAuthReady = useAuthStore((state) => state.isAuthReady);
-  const authenticated = isAuthReady && isLoggedIn;
+  const authenticated = useAuthReady();
   // 언어가 바뀌면 Accept-Language 헤더로 나가는 응답도 달라지므로 캐시 키에 반영합니다.
   const locale = useLocaleStore((state) => state.locale);
 

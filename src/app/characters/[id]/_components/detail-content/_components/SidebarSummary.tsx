@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import {
@@ -12,9 +13,9 @@ import { ChatFill, Gear, Heart, HeartFill } from "@/icons";
 import { cn, formatStatCount } from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useModalStore } from "@/store/useModalStore";
-import { useUserStore } from "@/store/useUserStore";
 import { CharacterDetail } from "@/type/character";
-import { useFollowToggle } from "@/features/follow/useFollowToggle";
+import { useFollowToggle } from "@/hooks/follow/useFollowToggle";
+import { universeQueryKeys } from "@/api/universe/queryKeys";
 
 interface SidebarSummaryProps {
   character: CharacterDetail;
@@ -29,11 +30,12 @@ const SidebarSummary = ({
 }: SidebarSummaryProps) => {
   const t = useTranslations("characterDetail");
   const router = useRouter();
-  const userId = useUserStore((state) => state.user?.id);
   const creatorId = character.creator.id;
   const canUseCreatorActions = Boolean(creatorId);
-  // TODO: 상세 조회 응답에 creatorId 또는 editable 필드가 추가되면 수정 버튼 노출 조건을 연결합니다.
-  const isCreator = Boolean(userId && creatorId && userId === creatorId);
+  // 본인 소유 여부는 백엔드가 판단해 내려주는 값을 그대로 씁니다(viewerId와 creatorId를
+  // 서버에서 비교) — 클라이언트가 userId를 따로 비교하면 관리자 권한 같은 예외 케이스를
+  // 놓칠 수 있습니다.
+  const isCreator = character.editable;
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const openModal = useModalStore((state) => state.openModal);
   const { mutate: likeUniverse, isPending: isLikeMutating } =
@@ -64,27 +66,36 @@ const SidebarSummary = ({
     userId: creatorId ?? "",
     isFollowing: character.creator.isFollowing,
     // 상세 응답에 creator.isFollowing 이 함께 실려 오므로 같이 다시 받는다.
-    extraInvalidateKeys: [["get-universe-detail", character.characterId]],
+    extraInvalidateKeys: [universeQueryKeys.detail(character.characterId)],
   });
+
+  // 프로필 이동 가능 여부(canUseCreatorActions)에 따라 링크로도, 그냥 div로도
+  // 감싸야 해서 내용만 따로 빼둔다.
+  const creatorInfoContent = (
+    <>
+      <Image
+        src={character.creator.profileImage}
+        alt={t("creatorProfileAlt", {
+          nickname: character.creator.nickname,
+        })}
+        width={48}
+        height={48}
+        className="avatar-img size-12"
+      />
+      <div className="flex min-w-0 flex-col gap-1">
+        <p className="title-4 truncate text-font-1">
+          {character.creator.nickname}
+        </p>
+        <p className="body-6 text-font-2">
+          {t("followerCount", { count: character.creator.followerCount })}
+        </p>
+      </div>
+    </>
+  );
 
   return (
     <aside className="flex w-full shrink-0 flex-col gap-5 self-start min-[900px]:sticky min-[900px]:top-0 min-[900px]:w-[389px]">
       <section className="flex flex-col gap-4">
-        {isCreator && (
-          <button
-            type="button"
-            onClick={() =>
-              router.push(
-                `/character-creat?universeId=${character.characterId}`,
-              )
-            }
-            className="body-5 flex w-fit items-center gap-1 rounded-xl border border-btn-selected bg-darker px-3 py-2 text-font-2 transition-colors hover:bg-card"
-          >
-            <Gear className="size-5 shrink-0" aria-hidden="true" />
-            {t("editCharacter")}
-          </button>
-        )}
-
         {!isCreator && character.isOfficial && (
           <span className="body-7 w-fit rounded-xl bg-brand/10 px-3 py-2 text-brand-dark">
             {t("officialCharacter")}
@@ -161,48 +172,55 @@ const SidebarSummary = ({
           onClick={onStartChat}
           className="h-[52px] flex-1 rounded-2xl bg-brand/20 text-brand-dark hover:bg-brand/25"
         />
-        <button
-          type="button"
-          onClick={handleToggleLike}
-          disabled={isLikePending}
-          aria-pressed={character.liked}
-          aria-label={character.liked ? t("unlike") : t("like")}
-          title={character.liked ? t("unlike") : t("like")}
-          className="flex size-[52px] shrink-0 items-center justify-center rounded-2xl bg-card text-font-2 transition-colors hover:bg-card-hover disabled:opacity-60"
-        >
-          {character.liked ? (
-            <HeartFill className="size-5 text-brand" aria-hidden="true" />
-          ) : (
-            <Heart className="size-5" aria-hidden="true" />
-          )}
-        </button>
+        {isCreator ? (
+          <button
+            type="button"
+            onClick={() =>
+              router.push(
+                `/character-creat?universeId=${character.characterId}`,
+              )
+            }
+            aria-label={t("editCharacter")}
+            title={t("editCharacter")}
+            className="flex size-[52px] shrink-0 items-center justify-center rounded-2xl bg-card text-font-2 transition-colors hover:bg-card-hover"
+          >
+            <Gear className="size-5" aria-hidden="true" />
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={handleToggleLike}
+            disabled={isLikePending}
+            aria-pressed={character.liked}
+            aria-label={character.liked ? t("unlike") : t("like")}
+            title={character.liked ? t("unlike") : t("like")}
+            className="flex size-[52px] shrink-0 items-center justify-center rounded-2xl bg-card text-font-2 transition-colors hover:bg-card-hover disabled:opacity-60"
+          >
+            {character.liked ? (
+              <HeartFill className="size-5 text-brand" aria-hidden="true" />
+            ) : (
+              <Heart className="size-5" aria-hidden="true" />
+            )}
+          </button>
+        )}
       </div>
 
-      <section className="rounded-2xl bg-btn-hover px-5 py-4">
-        <div className="flex flex-col gap-3">
+      {!isCreator && (
+        <section className="rounded-2xl bg-btn-hover px-5 py-4">
           <div className="flex items-center justify-between gap-3">
-            <div className="flex min-w-0 items-center gap-2">
-              <Image
-                src={character.creator.profileImage}
-                alt={t("creatorProfileAlt", {
-                  nickname: character.creator.nickname,
-                })}
-                width={48}
-                height={48}
-                className="avatar-img size-12"
-              />
-              <div className="flex min-w-0 flex-col gap-1">
-                <p className="title-4 truncate text-font-1">
-                  {character.creator.nickname}
-                </p>
-                <p className="body-6 text-font-2">
-                  {t("followingCount", {
-                    count: character.creator.followingCount,
-                  })}
-                </p>
+            {canUseCreatorActions ? (
+              <Link
+                href={`/profile/${creatorId}`}
+                className="flex min-w-0 items-center gap-2 transition-opacity hover:opacity-80"
+              >
+                {creatorInfoContent}
+              </Link>
+            ) : (
+              <div className="flex min-w-0 items-center gap-2">
+                {creatorInfoContent}
               </div>
-            </div>
-            {!isCreator && canUseCreatorActions && (
+            )}
+            {canUseCreatorActions && (
               <button
                 type="button"
                 onClick={handleCreatorFollowToggle}
@@ -219,13 +237,8 @@ const SidebarSummary = ({
               </button>
             )}
           </div>
-
-          <div className="body-6 flex gap-4 text-font-2">
-            <span>{t("createdAt", { date: character.createdAt })}</span>
-            <span>{t("updatedAt", { date: character.updatedAt })}</span>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
     </aside>
   );
 };

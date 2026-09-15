@@ -5,22 +5,11 @@ import { authAxios } from "..";
 import { AppError } from "@/type/api";
 import { useLocaleStore } from "@/store/useLocaleStore";
 import { Tendency, useTendencyStore } from "@/store/useTendencyStore";
+import type { BaseCard, CardCreator } from "@/type/card";
 
-export interface PopularTagCreator {
-  creatorId: string;
-  nickname: string;
-}
+export type PopularTagCreator = CardCreator;
 
-export interface PopularTagItem {
-  universeId: string;
-  images: string[];
-  title: string;
-  description: string;
-  creator: PopularTagCreator;
-  chatCount: number;
-  isNew: boolean;
-  isOfficial: boolean;
-}
+export type PopularTagItem = BaseCard;
 
 interface GetPopularTagParams {
   tendency?: Tendency;

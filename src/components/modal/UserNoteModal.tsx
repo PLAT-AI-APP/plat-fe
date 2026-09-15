@@ -4,6 +4,7 @@ import React from "react";
 import { useTranslations } from "next-intl";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { usePatchRoomUserNoteMutation } from "@/api/room/patchRoomContext";
 import { CloseLine } from "@/icons";
 import Note from "@/icons/Note";
 import { ModalLayout } from "../ModalLayout";
@@ -11,10 +12,11 @@ import ActiveButton from "../ActiveButton";
 import { UserNoteModalProps } from "@/type/modal";
 import { userNoteFormSchema, UserNoteFormValues } from "@/schema/modal.schema";
 import { focusFirstFieldError } from "@/lib/formError";
-import { useTranslateText } from "@/hooks/useTranslateText";
+import { useTranslateText } from "@/hooks/i18n/useTranslateText";
+import { showAppToast } from "@/lib/toast";
 import IconButton from "@/components/ui/IconButton";
 
-const UserNoteModal = ({ onClose }: UserNoteModalProps) => {
+const UserNoteModal = ({ onClose, roomId }: UserNoteModalProps) => {
   const t = useTranslations("modalUi.userNote");
   const commonT = useTranslations("modalUi.common");
   const translateText = useTranslateText();
@@ -32,9 +34,20 @@ const UserNoteModal = ({ onClose }: UserNoteModalProps) => {
   });
 
   const noteValue = useWatch({ control, name: "userNote" });
+  const { mutate: patchUserNote, isPending } = usePatchRoomUserNoteMutation();
 
-  const onSubmit = () => {
-    onClose();
+  const onSubmit = (data: UserNoteFormValues) => {
+    if (isPending) return;
+
+    patchUserNote(
+      { roomId, userNote: data.userNote },
+      {
+        onSuccess: () => {
+          showAppToast("success", t("successToast"));
+          onClose();
+        },
+      },
+    );
   };
 
   return (
@@ -85,7 +98,7 @@ const UserNoteModal = ({ onClose }: UserNoteModalProps) => {
 
         <ActiveButton
           type="submit"
-          isActive={Boolean(noteValue?.trim())}
+          isActive={Boolean(noteValue?.trim()) && !isPending}
           text={commonT("save")}
           className="h-11 w-25 rounded-xl"
         />

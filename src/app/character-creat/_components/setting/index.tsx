@@ -12,21 +12,21 @@ import type {
   UniverseCreateTendency,
 } from "@/api/universe/postUniverseCreate";
 
-const TENDENCY_LIST: UniverseCreateTendency[] = ["ALL", "MALE", "FEMALE"];
+const TENDENCY_LIST: UniverseCreateTendency[] = [
+  "ALL",
+  "MALE_ORIENTED",
+  "FEMALE_ORIENTED",
+];
 
 const CATEGORIES: UniverseCreateCategory[] = [
-  "SIMULATION",
   "ROMANCE",
   "FANTASY",
   "DRAMA",
-  "MARTIAL_ARTS_HISTORICAL",
+  "MARTIAL_ARTS",
   "GL",
   "BL",
-  "HORROR_MYSTERY",
-  "ACTION",
-  "COMIC_DAILY",
-  "SPORTS_SCHOOL",
-  "ETC",
+  "HORROR",
+  "MYSTERY",
 ];
 
 const Setting = () => {
@@ -42,22 +42,18 @@ const Setting = () => {
   const categoryWatch = useWatch({ control, name: "category" });
   const tendencyLabelByValue: Record<UniverseCreateTendency, string> = {
     ALL: selectorT("all"),
-    MALE: selectorT("male"),
-    FEMALE: selectorT("female"),
+    MALE_ORIENTED: selectorT("male"),
+    FEMALE_ORIENTED: selectorT("female"),
   };
   const categoryLabelByValue: Record<UniverseCreateCategory, string> = {
-    SIMULATION: categoryT("simulation"),
     ROMANCE: categoryT("romance"),
     FANTASY: categoryT("fantasySf"),
     DRAMA: categoryT("drama"),
-    MARTIAL_ARTS_HISTORICAL: categoryT("martialArtsHistorical"),
+    MARTIAL_ARTS: categoryT("martialArts"),
     GL: categoryT("gl"),
     BL: categoryT("bl"),
-    HORROR_MYSTERY: categoryT("horrorMystery"),
-    ACTION: categoryT("action"),
-    COMIC_DAILY: categoryT("comicDaily"),
-    SPORTS_SCHOOL: categoryT("sportsSchool"),
-    ETC: categoryT("etc"),
+    HORROR: categoryT("horror"),
+    MYSTERY: categoryT("mystery"),
   };
 
   const handleIsPublic = (isPublic: boolean) => {

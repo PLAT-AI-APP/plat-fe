@@ -29,6 +29,17 @@
   cursor: pointer;
 }
 
+/*
+ * 2-1. 짧은 스크롤 영역(2~5줄 textarea 등) 보정.
+ * 전역 min-height(40px)가 트랙 전체 길이와 같거나 커지면 막대가 트랙을 꽉 채워
+ * 드래그할 여백이 없어진다(휠 스크롤은 되지만 막대는 못 움직이는 증상).
+ * 긴 리스트(사이드바 대화 목록 등)의 최소 두께는 그대로 두고, 이 클래스가 붙은
+ * 짧은 영역만 더 작은 최소값을 쓰도록 스코프한다.
+ */
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  min-height: 8px;
+}
+
 /* 3. 스크롤 할 때만 보이는 모드 (.hide-scrollbar-on-idle 클래스 요소) */
 /* [기본 상태] 스크롤 안 할 때: 완전히 투명하게 숨김 */
 .hide-scrollbar-on-idle::-webkit-scrollbar-thumb {

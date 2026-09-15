@@ -79,6 +79,12 @@ const ko = {
       cancel: "취소하기",
       confirm: "나가기",
     },
+    chatDelete: {
+      title: "정말 채팅방을 삭제할까요?",
+      description: "그 동안의 캐릭터와 진행한 대화는 복구할 수 없어요",
+      cancel: "취소하기",
+      confirm: "삭제",
+    },
     loginRequired: {
       title: "로그인이 필요해요",
       description: "로그인 후 이용할 수 있는 기능입니다.",
@@ -94,6 +100,7 @@ const ko = {
       descriptionLine1: "회원님의 정보 보호와 안전한 서비스 이용을 위해,",
       descriptionLine2: "방금 만든 계정으로 로그인해 주세요.",
       confirm: "로그인하기",
+      skip: "다음에 할게요",
     },
     welcomeCredit: {
       title: "웰컴 크레딧이 도착했어요",
@@ -101,6 +108,12 @@ const ko = {
       descriptionHighlight: "웰컴 노트 크레딧을 선물했어요",
       descriptionAfter: "생생한 대화를 즐길 준비가 되셨나요?",
       confirm: "확인",
+    },
+    commentDelete: {
+      title: "댓글을 삭제할까요?",
+      description: "삭제한 댓글은 복구할 수 없어요.",
+      cancel: "취소하기",
+      confirm: "삭제하기",
     },
     personaDelete: {
       title: "페르소나를 삭제할까요?",
@@ -187,6 +200,10 @@ const ko = {
       tagNameMaxLength: "태그는 최대 10자까지 입력할 수 있어요",
       opinionRequired: "의견을 입력해 주세요",
       opinionMaxLength: "의견은 최대 200자까지 입력할 수 있어요",
+      commentReportTitleRequired: "제목을 입력해 주세요",
+      commentReportTitleMaxLength: "제목은 최대 200자까지 입력할 수 있어요",
+      commentReportContentRequired: "신고 사유를 입력해 주세요",
+      commentReportContentMaxLength: "신고 사유는 최대 2000자까지 입력할 수 있어요",
       personaNameRequired: "이름을 입력해 주세요",
       personaNameMaxLength: "이름은 최대 20자까지 입력할 수 있어요",
       personaInfoMaxLength: "정보는 최대 200자까지 입력할 수 있어요",
@@ -210,10 +227,10 @@ const ko = {
       scenarioNameRequired: "시나리오 이름을 입력해 주세요",
       scenarioDescriptionMaxLength:
         "시나리오 설명은 최대 100자까지 입력할 수 있어요",
-      scenarioDifficultyMaxLength:
-        "시나리오 난이도는 최대 500자까지 입력할 수 있어요",
       scenarioContentRequired: "내용을 입력해 주세요",
-      scenarioContentMaxLength: "내용은 최대 1500자까지 입력할 수 있어요",
+      scenarioContentMaxLength: "내용은 최대 5000자까지 입력할 수 있어요",
+      scenarioContentTotalMaxLength:
+        "시나리오 내용은 합쳐서 최대 5000자까지 입력할 수 있어요",
       scenarioMaxCount: "시나리오는 최대 5개까지 생성할 수 있어요",
       characterDescriptionRequired: "캐릭터 설명을 입력해 주세요",
       characterDescriptionMaxLength:
@@ -311,6 +328,13 @@ const en: Messages = {
       cancel: "Cancel",
       confirm: "Leave",
     },
+    chatDelete: {
+      title: "Delete this chat room?",
+      description:
+        "The conversation you had with this character cannot be restored.",
+      cancel: "Cancel",
+      confirm: "Delete",
+    },
     loginRequired: {
       title: "Login is required",
       description: "This feature is available after logging in.",
@@ -326,6 +350,7 @@ const en: Messages = {
       descriptionLine1: "For your privacy and safe access to the service,",
       descriptionLine2: "please log in with the account you just created.",
       confirm: "Log in",
+      skip: "Maybe later",
     },
     welcomeCredit: {
       title: "Your welcome credit has arrived",
@@ -333,6 +358,12 @@ const en: Messages = {
       descriptionHighlight: "we gifted you welcome note credits",
       descriptionAfter: "Are you ready to enjoy vivid conversations?",
       confirm: "OK",
+    },
+    commentDelete: {
+      title: "Delete this comment?",
+      description: "A deleted comment cannot be restored.",
+      cancel: "Cancel",
+      confirm: "Delete",
     },
     personaDelete: {
       title: "Delete this persona?",
@@ -424,6 +455,10 @@ const en: Messages = {
       tagNameMaxLength: "Tags can be up to 10 characters long",
       opinionRequired: "Please enter your opinion.",
       opinionMaxLength: "Opinions can be up to 200 characters long",
+      commentReportTitleRequired: "Please enter a title.",
+      commentReportTitleMaxLength: "Title can be up to 200 characters long",
+      commentReportContentRequired: "Please enter a reason.",
+      commentReportContentMaxLength: "Reason can be up to 2000 characters long",
       personaNameRequired: "Please enter a name.",
       personaNameMaxLength: "Names can be up to 20 characters long",
       personaInfoMaxLength: "Info can be up to 200 characters long",
@@ -449,10 +484,10 @@ const en: Messages = {
       scenarioNameRequired: "Please enter the scenario name.",
       scenarioDescriptionMaxLength:
         "Scenario descriptions can be up to 100 characters long",
-      scenarioDifficultyMaxLength:
-        "Scenario difficulty can be up to 500 characters long",
       scenarioContentRequired: "Please enter the content.",
-      scenarioContentMaxLength: "Content can be up to 1500 characters long",
+      scenarioContentMaxLength: "Content can be up to 5000 characters long",
+      scenarioContentTotalMaxLength:
+        "The scenario's content can be up to 5000 characters combined",
       scenarioMaxCount: "You can create up to 5 scenarios.",
       characterDescriptionRequired: "Please enter a character description.",
       characterDescriptionMaxLength:
@@ -544,6 +579,12 @@ const ja: Messages = {
       cancel: "キャンセル",
       confirm: "退出",
     },
+    chatDelete: {
+      title: "本当にチャットルームを削除しますか？",
+      description: "このキャラクターとのこれまでの会話は復元できません。",
+      cancel: "キャンセル",
+      confirm: "削除",
+    },
     loginRequired: {
       title: "ログインが必要です",
       description: "ログイン後に利用できる機能です。",
@@ -559,6 +600,7 @@ const ja: Messages = {
       descriptionLine1: "安全なサービス利用と情報保護のため、",
       descriptionLine2: "作成したアカウントでログインしてください。",
       confirm: "ログインする",
+      skip: "後でやる",
     },
     welcomeCredit: {
       title: "ウェルカムクレジットが届きました",
@@ -566,6 +608,12 @@ const ja: Messages = {
       descriptionHighlight: "ウェルカムノートクレジットをプレゼントしました",
       descriptionAfter: "臨場感ある会話を楽しむ準備はできましたか？",
       confirm: "確認",
+    },
+    commentDelete: {
+      title: "コメントを削除しますか？",
+      description: "削除したコメントは復元できません。",
+      cancel: "キャンセル",
+      confirm: "削除",
     },
     personaDelete: {
       title: "ペルソナを削除しますか？",
@@ -655,6 +703,10 @@ const ja: Messages = {
       tagNameMaxLength: "タグは最大10文字まで入力できます",
       opinionRequired: "ご意見を入力してください",
       opinionMaxLength: "ご意見は最大200文字まで入力できます",
+      commentReportTitleRequired: "タイトルを入力してください",
+      commentReportTitleMaxLength: "タイトルは最大200文字まで入力できます",
+      commentReportContentRequired: "通報理由を入力してください",
+      commentReportContentMaxLength: "通報理由は最大2000文字まで入力できます",
       personaNameRequired: "名前を入力してください",
       personaNameMaxLength: "名前は最大20文字まで入力できます",
       personaInfoMaxLength: "情報は最大200文字まで入力できます",
@@ -676,10 +728,10 @@ const ja: Messages = {
       assetMaxCount: "アセットは最大50個まで登録できます",
       scenarioNameRequired: "シナリオ名を入力してください",
       scenarioDescriptionMaxLength: "シナリオ説明は最大100文字まで入力できます",
-      scenarioDifficultyMaxLength:
-        "シナリオ難易度は最大500文字まで入力できます",
       scenarioContentRequired: "内容を入力してください",
-      scenarioContentMaxLength: "内容は最大1500文字まで入力できます",
+      scenarioContentMaxLength: "内容は最大5000文字まで入力できます",
+      scenarioContentTotalMaxLength:
+        "シナリオの内容は合計最大5000文字まで入力できます",
       scenarioMaxCount: "シナリオは最大5個まで作成できます",
       characterDescriptionRequired: "キャラクター説明を入力してください",
       characterDescriptionMaxLength:
@@ -769,6 +821,12 @@ const zh: Messages = {
       cancel: "取消",
       confirm: "退出",
     },
+    chatDelete: {
+      title: "确定要删除聊天室吗？",
+      description: "与该角色进行过的对话将无法恢复。",
+      cancel: "取消",
+      confirm: "删除",
+    },
     loginRequired: {
       title: "需要登录",
       description: "登录后才可以使用此功能。",
@@ -784,6 +842,7 @@ const zh: Messages = {
       descriptionLine1: "为了保护你的信息并安全使用服务，",
       descriptionLine2: "请使用刚创建的账号登录。",
       confirm: "去登录",
+      skip: "以后再说",
     },
     welcomeCredit: {
       title: "欢迎积分已到账",
@@ -791,6 +850,12 @@ const zh: Messages = {
       descriptionHighlight: "我们赠送了欢迎笔记积分",
       descriptionAfter: "准备好享受生动的对话了吗？",
       confirm: "确认",
+    },
+    commentDelete: {
+      title: "要删除这条评论吗？",
+      description: "删除后的评论将无法恢复。",
+      cancel: "取消",
+      confirm: "删除",
     },
     personaDelete: {
       title: "要删除这个人格吗？",
@@ -876,6 +941,10 @@ const zh: Messages = {
       tagNameMaxLength: "标签最多可输入 10 个字符",
       opinionRequired: "请输入意见",
       opinionMaxLength: "意见最多可输入 200 个字符",
+      commentReportTitleRequired: "请输入标题",
+      commentReportTitleMaxLength: "标题最多可输入 200 个字符",
+      commentReportContentRequired: "请输入举报原因",
+      commentReportContentMaxLength: "举报原因最多可输入 2000 个字符",
       personaNameRequired: "请输入名称",
       personaNameMaxLength: "名称最多可输入 20 个字符",
       personaInfoMaxLength: "信息最多可输入 200 个字符",
@@ -896,9 +965,9 @@ const zh: Messages = {
       assetMaxCount: "素材最多可注册 50 个",
       scenarioNameRequired: "请输入场景名称",
       scenarioDescriptionMaxLength: "场景说明最多可输入 100 个字符",
-      scenarioDifficultyMaxLength: "场景难度最多可输入 500 个字符",
       scenarioContentRequired: "请输入内容",
-      scenarioContentMaxLength: "内容最多可输入 1500 个字符",
+      scenarioContentMaxLength: "内容最多可输入 5000 个字符",
+      scenarioContentTotalMaxLength: "场景内容合计最多可输入 5000 个字符",
       scenarioMaxCount: "场景最多可创建 5 个",
       characterDescriptionRequired: "请输入角色说明",
       characterDescriptionMaxLength: "角色说明最多可输入 1000 个字符",
@@ -988,6 +1057,12 @@ const th: Messages = {
       cancel: "ยกเลิก",
       confirm: "ออก",
     },
+    chatDelete: {
+      title: "ต้องการลบห้องแชตนี้จริงหรือไม่?",
+      description: "บทสนทนาที่คุณมีกับตัวละครนี้จะไม่สามารถกู้คืนได้",
+      cancel: "ยกเลิก",
+      confirm: "ลบ",
+    },
     loginRequired: {
       title: "จำเป็นต้องเข้าสู่ระบบ",
       description: "ฟังก์ชันนี้ใช้งานได้หลังจากเข้าสู่ระบบ",
@@ -1004,6 +1079,7 @@ const th: Messages = {
         "เพื่อความปลอดภัยของข้อมูลและการใช้งานบริการอย่างปลอดภัย",
       descriptionLine2: "กรุณาเข้าสู่ระบบด้วยบัญชีที่เพิ่งสร้าง",
       confirm: "เข้าสู่ระบบ",
+      skip: "ไว้คราวหน้า",
     },
     welcomeCredit: {
       title: "เครดิตต้อนรับมาถึงแล้ว",
@@ -1011,6 +1087,12 @@ const th: Messages = {
       descriptionHighlight: "เราได้มอบเครดิตโน้ตต้อนรับให้คุณ",
       descriptionAfter: "พร้อมจะสนุกกับบทสนทนาที่มีชีวิตชีวาหรือยัง?",
       confirm: "ยืนยัน",
+    },
+    commentDelete: {
+      title: "ลบความคิดเห็นนี้หรือไม่?",
+      description: "ความคิดเห็นที่ลบแล้วไม่สามารถกู้คืนได้",
+      cancel: "ยกเลิก",
+      confirm: "ลบ",
     },
     personaDelete: {
       title: "ลบเพอร์โซนานี้หรือไม่?",
@@ -1098,6 +1180,10 @@ const th: Messages = {
       tagNameMaxLength: "แท็กสามารถกรอกได้สูงสุด 10 ตัวอักษร",
       opinionRequired: "กรุณากรอกความคิดเห็น",
       opinionMaxLength: "ความคิดเห็นสามารถกรอกได้สูงสุด 200 ตัวอักษร",
+      commentReportTitleRequired: "กรุณากรอกหัวข้อ",
+      commentReportTitleMaxLength: "หัวข้อสามารถกรอกได้สูงสุด 200 ตัวอักษร",
+      commentReportContentRequired: "กรุณากรอกเหตุผลการรายงาน",
+      commentReportContentMaxLength: "เหตุผลสามารถกรอกได้สูงสุด 2000 ตัวอักษร",
       personaNameRequired: "กรุณากรอกชื่อ",
       personaNameMaxLength: "ชื่อสามารถกรอกได้สูงสุด 20 ตัวอักษร",
       personaInfoMaxLength: "ข้อมูลสามารถกรอกได้สูงสุด 200 ตัวอักษร",
@@ -1122,10 +1208,10 @@ const th: Messages = {
       scenarioNameRequired: "กรุณากรอกชื่อสถานการณ์",
       scenarioDescriptionMaxLength:
         "คำอธิบายสถานการณ์สามารถกรอกได้สูงสุด 100 ตัวอักษร",
-      scenarioDifficultyMaxLength:
-        "ความยากของสถานการณ์สามารถกรอกได้สูงสุด 500 ตัวอักษร",
       scenarioContentRequired: "กรุณากรอกเนื้อหา",
-      scenarioContentMaxLength: "เนื้อหาสามารถกรอกได้สูงสุด 1500 ตัวอักษร",
+      scenarioContentMaxLength: "เนื้อหาสามารถกรอกได้สูงสุด 5000 ตัวอักษร",
+      scenarioContentTotalMaxLength:
+        "เนื้อหาของสถานการณ์รวมกันสามารถกรอกได้สูงสุด 5000 ตัวอักษร",
       scenarioMaxCount: "สามารถสร้างสถานการณ์ได้สูงสุด 5 รายการ",
       characterDescriptionRequired: "กรุณากรอกคำอธิบายตัวละคร",
       characterDescriptionMaxLength:
@@ -1216,6 +1302,12 @@ const vi: Messages = {
       cancel: "Hủy",
       confirm: "Rời đi",
     },
+    chatDelete: {
+      title: "Bạn thật sự muốn xóa phòng chat này?",
+      description: "Cuộc trò chuyện với nhân vật này sẽ không thể khôi phục.",
+      cancel: "Hủy",
+      confirm: "Xóa",
+    },
     loginRequired: {
       title: "Cần đăng nhập",
       description: "Đây là tính năng chỉ dùng được sau khi đăng nhập.",
@@ -1231,6 +1323,7 @@ const vi: Messages = {
       descriptionLine1: "Để bảo vệ thông tin và sử dụng dịch vụ an toàn,",
       descriptionLine2: "vui lòng đăng nhập bằng tài khoản bạn vừa tạo.",
       confirm: "Đăng nhập",
+      skip: "Để sau",
     },
     welcomeCredit: {
       title: "Tín dụng chào mừng đã đến",
@@ -1239,6 +1332,12 @@ const vi: Messages = {
       descriptionAfter:
         "Bạn đã sẵn sàng tận hưởng những cuộc trò chuyện sống động chưa?",
       confirm: "Xác nhận",
+    },
+    commentDelete: {
+      title: "Xóa bình luận này?",
+      description: "Bình luận đã xóa sẽ không thể khôi phục.",
+      cancel: "Hủy",
+      confirm: "Xóa",
     },
     personaDelete: {
       title: "Xóa persona này?",
@@ -1328,6 +1427,10 @@ const vi: Messages = {
       tagNameMaxLength: "Thẻ có thể dài tối đa 10 ký tự",
       opinionRequired: "Vui lòng nhập ý kiến",
       opinionMaxLength: "Ý kiến có thể dài tối đa 200 ký tự",
+      commentReportTitleRequired: "Vui lòng nhập tiêu đề",
+      commentReportTitleMaxLength: "Tiêu đề tối đa 200 ký tự",
+      commentReportContentRequired: "Vui lòng nhập lý do báo cáo",
+      commentReportContentMaxLength: "Lý do báo cáo tối đa 2000 ký tự",
       personaNameRequired: "Vui lòng nhập tên",
       personaNameMaxLength: "Tên có thể dài tối đa 20 ký tự",
       personaInfoMaxLength: "Thông tin có thể dài tối đa 200 ký tự",
@@ -1352,10 +1455,10 @@ const vi: Messages = {
       scenarioNameRequired: "Vui lòng nhập tên kịch bản",
       scenarioDescriptionMaxLength:
         "Mô tả kịch bản có thể dài tối đa 100 ký tự",
-      scenarioDifficultyMaxLength:
-        "Độ khó kịch bản có thể dài tối đa 500 ký tự",
       scenarioContentRequired: "Vui lòng nhập nội dung",
-      scenarioContentMaxLength: "Nội dung có thể dài tối đa 1500 ký tự",
+      scenarioContentMaxLength: "Nội dung có thể dài tối đa 5000 ký tự",
+      scenarioContentTotalMaxLength:
+        "Tổng nội dung kịch bản có thể dài tối đa 5000 ký tự",
       scenarioMaxCount: "Bạn có thể tạo tối đa 5 kịch bản",
       characterDescriptionRequired: "Vui lòng nhập mô tả nhân vật",
       characterDescriptionMaxLength:

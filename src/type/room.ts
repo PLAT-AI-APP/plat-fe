@@ -23,6 +23,7 @@ export interface ThumbnailRoom {
   title: string;
   thumbnailUrl: string | null;
   lastMessage: string;
+  isPinned: boolean;
 }
 
 /** 채팅방 단건 */

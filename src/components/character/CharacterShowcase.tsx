@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowLeft, ArrowRight } from "@/icons";
-import { useCarousel } from "@/hooks/useCarousel";
+import { useCarousel } from "@/hooks/dom/useCarousel";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
@@ -63,6 +63,8 @@ interface CharacterShowcaseProps {
    * 무엇을 먼저 봐야 하는지 알 수 없다. 주력 섹션 하나만 primary 로 올린다.
    */
   emphasis?: "primary" | "default";
+  /** true면 각 카드에 수정 배지가 뜨고, 누르면 그 캐릭터의 수정 페이지로 이동한다. */
+  isEditable?: boolean;
 }
 
 const CharacterShowcase = ({
@@ -83,6 +85,7 @@ const CharacterShowcase = ({
   error,
   onRetry,
   emphasis = "default",
+  isEditable = false,
 }: CharacterShowcaseProps) => {
   const t = useTranslations("characterShowcase");
   const { viewportRef, scrollPrev, scrollNext, canScrollPrev, canScrollNext } =
@@ -128,6 +131,13 @@ const CharacterShowcase = ({
           rank={char.rank}
           selectedTags={selectedTags}
           fluid={isFluid}
+          // id가 아직 없는 자리(더미 데이터 등)는 갈 곳이 없어 href를 생략해 비활성 상태로 둡니다.
+          href={char.id ? `/characters/${char.id}` : undefined}
+          editHref={
+            isEditable && char.id
+              ? `/character-creat?universeId=${char.id}`
+              : undefined
+          }
         />
       ));
 

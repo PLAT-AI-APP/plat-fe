@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
+import { personaQueryKeys } from "./queryKeys";
 
 interface PostAddPersonaProps {
   name: string;
@@ -18,7 +19,7 @@ export const useAddPersonaMutation = () => {
   return useMutation<void, AppError, PostAddPersonaProps>({
     mutationFn: PostAddPersona,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["me-persona-list"] });
+      queryClient.invalidateQueries({ queryKey: personaQueryKeys.myList() });
     },
   });
 };

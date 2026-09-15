@@ -4,6 +4,8 @@ import { AppError } from "@/type/api";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useUserStore } from "@/store/useUserStore";
 import { useWalletStore } from "@/store/useWalletStore";
+import { userQueryKeys } from "@/api/user/queryKeys";
+import { walletQueryKeys } from "@/api/wallet/queryKeys";
 import {
   LOGOUT_REDIRECT_IN_PROGRESS_KEY,
   PENDING_SIGNUP_COMPLETE_DIALOG_KEY,
@@ -47,8 +49,8 @@ export const useLogoutMutation = () => {
       logout();
       clearUser();
       clearBalance();
-      queryClient.removeQueries({ queryKey: ["get-my-info"] });
-      queryClient.removeQueries({ queryKey: ["get-wallet-balance"] });
+      queryClient.removeQueries({ queryKey: userQueryKeys.myInfo() });
+      queryClient.removeQueries({ queryKey: walletQueryKeys.balance() });
       // 보호 화면에서는 홈으로 이동하고, 그 외 화면에서는 기존처럼 새로고침
       redirectAfterLogout();
     },

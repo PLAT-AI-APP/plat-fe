@@ -1,26 +1,25 @@
 "use client";
 
-import React, { useMemo, useRef, useState, useSyncExternalStore } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import React, { useMemo, useState, useSyncExternalStore } from "react";
+import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { useLikedUniversesInfiniteQuery } from "@/api/user/getLikedUniverses";
 import CharacterShowcase from "@/components/character/CharacterShowcase";
-import CharacterSortPopover, {
-  CharacterSortOption,
-} from "@/components/popover/CharacterSortPopover";
-import useToggle from "@/hooks/useToggle";
-import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
-import { useTabUnderline } from "@/hooks/useTabUnderline";
-import { Sort } from "@/icons";
+import SortFilter from "@/components/character/SortFilter";
+import { CharacterSortOption } from "@/components/popover/CharacterSortPopover";
+import { useInfiniteList } from "@/hooks/data/useInfiniteList";
+import { useTabUnderline } from "@/hooks/dom/useTabUnderline";
 import { cn } from "@/lib/utils";
 import { useUserStore } from "@/store/useUserStore";
 import Header from "./Header";
+import WishlistEmptyState from "./WishlistEmptyState";
 import { SPRING_SNAPPY } from "@/constants/motion";
 
 type ProfileTab = "character" | "wish";
 
 const CharArray = [
   {
+    id: "mock-character-1",
     name: "옆자리 불량학생",
     chatCount: 123,
     dec: "매일 학교에서 일어나는 소소한 일상을 함께 이야기해요.",
@@ -28,6 +27,7 @@ const CharArray = [
     img: "https://picsum.photos/200/300",
   },
   {
+    id: "mock-character-2",
     name: "옆자리 불량학생",
     chatCount: 123,
     dec: "장난스럽지만 속은 다정한 캐릭터와 대화를 나눠보세요.",
@@ -35,6 +35,7 @@ const CharArray = [
     img: "https://picsum.photos/201/300",
   },
   {
+    id: "mock-character-3",
     name: "옆자리 불량학생",
     chatCount: 123,
     dec: "무심한 듯 챙겨주는 친구와 이어지는 이야기입니다.",
@@ -42,6 +43,7 @@ const CharArray = [
     img: "https://picsum.photos/202/300",
   },
   {
+    id: "mock-character-4",
     name: "옆자리 불량학생",
     chatCount: 123,
     dec: "매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
@@ -49,6 +51,7 @@ const CharArray = [
     img: "https://picsum.photos/203/300",
   },
   {
+    id: "mock-character-5",
     name: "옆자리 불량학생",
     chatCount: 123,
     dec: "가볍게 대화하기 좋은 캐릭터입니다.",
@@ -56,6 +59,7 @@ const CharArray = [
     img: "https://picsum.photos/204/300",
   },
   {
+    id: "mock-character-6",
     name: "옆자리 불량학생",
     chatCount: 123,
     dec: "친구처럼 편하게 말을 걸어주는 캐릭터입니다.",
@@ -63,6 +67,7 @@ const CharArray = [
     img: "https://picsum.photos/205/300",
   },
   {
+    id: "mock-character-7",
     name: "옆자리 불량학생",
     chatCount: 123,
     dec: "짧은 대화에도 자연스럽게 이어지는 캐릭터입니다.",
@@ -70,6 +75,7 @@ const CharArray = [
     img: "https://picsum.photos/206/300",
   },
   {
+    id: "mock-character-8",
     name: "옆자리 불량학생",
     chatCount: 123,
     dec: "학교생활의 여러 순간을 함께 나누는 캐릭터입니다.",
@@ -87,10 +93,10 @@ const CHARACTER_TAB = {
 const WISH_TAB = { key: "wish" as const, labelKey: "profile.wishTab" };
 
 /**
- * 탭 자리표시자. 폭은 실제 라벨(캐릭터 · 구분자 · 찜)의 글자 수에, 높이(h-6)는 활성 탭의
+ * 탭 자리표시자. 폭은 실제 라벨(캐릭터 · 찜)의 글자 수에, 높이(h-6)는 활성 탭의
  * 글자 높이(title-3, 24px)에 맞춥니다 — 자리표시자가 더 낮으면 탭이 그려지는 순간 줄이 튑니다.
  */
-const TAB_SKELETON_WIDTHS = ["w-12", "w-2", "w-6"];
+const TAB_SKELETON_WIDTHS = ["w-12", "w-6"];
 
 export default function ProfileContent({ id }: { id: string }) {
   const t = useTranslations();
@@ -110,8 +116,6 @@ export default function ProfileContent({ id }: { id: string }) {
   const isOwnProfile = Boolean(myUserId && myUserId === id);
   const [activeTab, setActiveTab] = useState<ProfileTab>("character");
   const [sort, setSort] = useState<CharacterSortOption>("latest");
-  const { isOpen, toggle } = useToggle();
-  const triggerRef = useRef<HTMLButtonElement>(null);
 
   const tabItems = isOwnProfile ? [CHARACTER_TAB, WISH_TAB] : [CHARACTER_TAB];
   // 남의 프로필을 보다가 찜 탭이 사라지면 아무 탭도 선택되지 않은 채로 남습니다.
@@ -136,9 +140,19 @@ export default function ProfileContent({ id }: { id: string }) {
     isFetchingNextPage,
   } = useLikedUniversesInfiniteQuery(isWishTab && isOwnProfile);
 
+  const {
+    items: likedItems,
+    totalCount: likedTotalCount,
+    sentinelRef,
+  } = useInfiniteList(
+    { data: likedData, hasNextPage, isFetchingNextPage, fetchNextPage },
+    { enabled: isWishTab },
+  );
+
   const likedCards = useMemo(
     () =>
-      (likedData?.pages.flatMap((page) => page.content) ?? []).map((card) => ({
+      likedItems.map((card) => ({
+        id: card.universeId,
         name: card.title,
         chatCount: card.chatCount,
         dec: card.description,
@@ -147,21 +161,16 @@ export default function ProfileContent({ id }: { id: string }) {
         isNew: card.isNew,
         isOfficial: card.isOfficial,
       })),
-    [likedData],
+    [likedItems],
   );
-
-  const { targetRef } = useIntersectionObserver({
-    onIntersect: () => {
-      if (hasNextPage && !isFetchingNextPage) fetchNextPage();
-    },
-    enabled: isWishTab,
-  });
 
   const displayArray = isWishTab ? likedCards : CharArray;
   // 찜은 서버가 전체 개수를 세어 주므로 지금 받아 둔 페이지 수가 아니라 그 값을 씁니다.
-  const displayCount = isWishTab
-    ? (likedData?.pages[0]?.page.totalElements ?? 0)
-    : displayArray.length;
+  const displayCount = isWishTab ? (likedTotalCount ?? 0) : displayArray.length;
+  // 불러오지 못한 것과 진짜로 찜한 게 없는 것은 다르다 — 실패는 CharacterShowcase의
+  // 에러 표시에 맡기고, 정말 0개일 때만 태그 탐색을 안내한다.
+  const isWishEmpty =
+    isWishTab && !isLikedLoading && !isLikedError && likedCards.length === 0;
 
   return (
     <article className="mx-auto flex w-full max-w-(--content-max-width) flex-col gap-10 pt-6 pb-10">
@@ -186,30 +195,20 @@ export default function ProfileContent({ id }: { id: string }) {
                   </div>
                 ))
               : tabItems.map(({ key, labelKey }) => (
-                  <React.Fragment key={key}>
-                    <button
-                      type="button"
-                      ref={(el) => setTabRef(key, el)}
-                      onClick={() => setActiveTab(key)}
-                      className={cn(
-                        "flex w-fit items-center justify-center px-5 py-2.5 text-center",
-                        currentTab === key
-                          ? "title-3 text-font-1"
-                          : "body-3 text-font-disabled",
-                      )}
-                    >
-                      {t(labelKey)}
-                    </button>
-                    {key === "character" && (
-                      <button
-                        type="button"
-                        disabled
-                        className="body-3 flex w-fit cursor-default items-center justify-center px-5 py-2.5 text-center text-font-disabled"
-                      >
-                        -
-                      </button>
+                  <button
+                    key={key}
+                    type="button"
+                    ref={(el) => setTabRef(key, el)}
+                    onClick={() => setActiveTab(key)}
+                    className={cn(
+                      "flex w-fit items-center justify-center px-5 py-2.5 text-center",
+                      currentTab === key
+                        ? "title-3 text-font-1"
+                        : "body-3 text-font-disabled",
                     )}
-                  </React.Fragment>
+                  >
+                    {t(labelKey)}
+                  </button>
                 ))}
 
             {/* 활성 표시(motion.span)와 같은 bottom-0/h-0.5 박스를 써서, 서로 다른 두께의
@@ -235,34 +234,8 @@ export default function ProfileContent({ id }: { id: string }) {
 
             {/* 찜 목록은 서버가 찜한 시각 역순 하나만 지원합니다. 고를 수 없는 정렬을
                 띄워 두면 눌러도 아무 일이 없어 고장으로 보입니다. */}
-            <div
-              id="sort-filter-container"
-              className={cn("relative", isWishTab && "hidden")}
-            >
-              <button
-                ref={triggerRef}
-                type="button"
-                onClick={toggle}
-                className="title-5 flex items-center gap-1.5 rounded-lg px-1.5 py-1 text-font-2 transition-colors duration-200 hover:bg-btn-hover hover:text-font-1"
-                aria-haspopup="listbox"
-                aria-expanded={isOpen}
-              >
-                <Sort className="size-4" />
-                {t(`profile.sort.${sort}`)}
-              </button>
-
-              <AnimatePresence>
-                {isOpen && (
-                  <CharacterSortPopover
-                    onChange={setSort}
-                    onClose={toggle}
-                    triggerRef={
-                      triggerRef as React.RefObject<HTMLButtonElement>
-                    }
-                    value={sort}
-                  />
-                )}
-              </AnimatePresence>
+            <div className={cn(isWishTab && "hidden")}>
+              <SortFilter currentSort={sort} onChange={setSort} />
             </div>
           </header>
         </div>
@@ -271,17 +244,23 @@ export default function ProfileContent({ id }: { id: string }) {
           id="character-list-section"
           className="flex h-auto w-full flex-col justify-center gap-4"
         >
-          <CharacterShowcase
-            charArray={displayArray}
-            cardSize="S"
-            isLoading={isWishTab && isLikedLoading}
-            isError={isWishTab && isLikedError}
-            error={likedError}
-            onRetry={refetchLiked}
-          />
+          {isWishEmpty ? (
+            <WishlistEmptyState />
+          ) : (
+            <CharacterShowcase
+              charArray={displayArray}
+              cardSize="S"
+              isLoading={isWishTab && isLikedLoading}
+              isError={isWishTab && isLikedError}
+              error={likedError}
+              onRetry={refetchLiked}
+              // 찜 목록은 남의 캐릭터일 수도 있어 수정 배지를 내 캐릭터 탭에만 띄운다.
+              isEditable={isOwnProfile && !isWishTab}
+            />
+          )}
 
           {isWishTab && hasNextPage && (
-            <div ref={targetRef} aria-hidden="true" className="h-px" />
+            <div ref={sentinelRef} aria-hidden="true" className="h-px" />
           )}
         </section>
       </section>

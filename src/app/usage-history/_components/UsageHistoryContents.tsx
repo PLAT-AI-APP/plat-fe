@@ -3,7 +3,7 @@ import { useUsageHistoryListQuery } from "@/api/note/getUsageHistoryList";
 import React from "react";
 import UsageHistoryItem from "./UsageHistoryItem";
 import SkeletonUsageHistoryItem from "./SkeletonUsageHistoryItem";
-import { useInfiniteList } from "@/hooks/useInfiniteList";
+import { useInfiniteList } from "@/hooks/data/useInfiniteList";
 import PageTitle from "@/components/PageTitle";
 import { InfiniteQueryBoundary } from "@/components/state";
 

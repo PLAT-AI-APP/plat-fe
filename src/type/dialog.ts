@@ -21,7 +21,17 @@ export interface ChatRestartDialogProps {
   onConfirm?: () => void;
 }
 
+export interface CommentDeleteDialogProps {
+  onClose: () => void;
+  onConfirm: () => void;
+}
+
 export interface ChatLeaveDialogProps {
+  onClose: () => void;
+  onConfirm: () => void;
+}
+
+export interface ChatDeleteDialogProps {
   onClose: () => void;
   onConfirm: () => void;
 }
@@ -79,8 +89,10 @@ type DialogWithoutManagerClose<T extends { onClose: () => void }> = Omit<
 >;
 
 export type DialogTypeMap = {
+  CHAT_DELETE: DialogWithoutManagerClose<ChatDeleteDialogProps>;
   CHAT_LEAVE: DialogWithoutManagerClose<ChatLeaveDialogProps>;
   CHAT_RESTART: DialogWithoutManagerClose<ChatRestartDialogProps>;
+  COMMENT_DELETE: DialogWithoutManagerClose<CommentDeleteDialogProps>;
   DRAFT_OVERWRITE: DialogWithoutManagerClose<DraftOverwriteDialogProps>;
   LOGIN_REQUIRED: DialogWithoutManagerClose<LoginRequiredDialogProps>;
   PERSONA_DELETE: DialogWithoutManagerClose<PersonaDeleteDialogProps>;

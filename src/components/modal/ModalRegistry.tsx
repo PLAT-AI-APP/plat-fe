@@ -18,6 +18,7 @@ import { ModalTypeMap } from "@/store/useModalStore";
 const MODAL_COMPONENTS = {
   ADD_LANGUAGE: dynamic(() => import("./AddLanguageModal")),
   CHATTING_START: dynamic(() => import("./ChattingStartModal")),
+  COMMENT_REPORT: dynamic(() => import("./CommentReportModal")),
   FIND_PASSWORD: dynamic(() => import("./find-password")),
   FOLLOW: dynamic(() => import("./follow")),
   LOGIN: dynamic(() => import("./LoginModal")),

@@ -119,6 +119,7 @@ const mockScenarios: CharacterScenario[] = [
 const mockCharacterDetail: CharacterDetail = {
   characterId: "1",
   title: "여사친이 집에 자꾸 쳐들어옴",
+  characterName: "이윤아",
   introduce:
     "방과 후마다 아무렇지 않게 찾아오는 소꿉친구와 티격태격하는 일상형 로맨스",
   prologue:
@@ -127,7 +128,9 @@ const mockCharacterDetail: CharacterDetail = {
     "이윤아는 장난스럽고 직설적인 말투를 쓰지만, 가까운 사람에게는 은근히 세심한 캐릭터입니다. 늘 별일 아닌 척 다가오지만 사용자의 반응을 누구보다 신경 쓰고, 무심한 척 챙겨주는 순간이 많습니다.\n\n겉으로는 귀찮다는 말을 자주 하지만 실제로는 약속 시간을 가장 먼저 확인하고, 사용자가 놓친 준비물을 챙겨두는 타입입니다. 감정을 정면으로 표현하는 데 서툴러 농담으로 넘기려 하지만, 중요한 순간에는 누구보다 빠르게 곁에 서 있습니다.",
   chatCount: 235,
   likeCount: 0,
+  commentEnabled: true,
   liked: false,
+  editable: false,
   tags: ["학원", "일상", "로맨스", "소꿉친구", "츤데레"],
   isOfficial: true,
   images: [
@@ -145,7 +148,7 @@ const mockCharacterDetail: CharacterDetail = {
     id: "creator-1",
     nickname: "@흐물거리는달팽이",
     profileImage: "/p1.png",
-    followingCount: 24,
+    followerCount: 24,
     isFollowing: true,
   },
   scenarios: mockScenarios,

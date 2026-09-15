@@ -4,11 +4,15 @@ import React, { useMemo } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import CharacterChat from "@/components/chat/CharacterChat";
+import InlineEditActions from "@/components/chat/InlineEditActions";
 import Scenario from "@/components/chat/Scenario";
-import { ChatRetry, ChatTrash, Close, Pen, Trash } from "@/icons";
-import { useAutoResizeTextarea } from "@/hooks/useAutoResizeTextarea";
-import Check from "@/icons/Check";
-import { parsePlat } from "@/lib/platParse";
+import UserChatBubble from "@/components/chat/UserChatBubble";
+import { ChatRetry, ChatTrash, Pen, Trash } from "@/icons";
+import { useAutoResizeTextarea } from "@/hooks/form/useAutoResizeTextarea";
+import { useInlineTextEdit } from "@/hooks/form/useInlineTextEdit";
+import { getResourceImageUrl } from "@/lib/file";
+import { parsePlat, segmentsToDisplayText } from "@/lib/platParse";
+import { useUserDisplayName } from "@/hooks/data/useUserDisplayName";
 
 interface ChatContentBlockProps {
   rawData: string;
@@ -30,45 +34,22 @@ const ChatContentBlock = ({
   onRetry,
 }: ChatContentBlockProps) => {
   const t = useTranslations();
-  const [isEditing, setIsEditing] = React.useState(false);
-  const [editedContent, setEditedContent] = React.useState(rawData);
-
-  React.useEffect(() => {
-    setEditedContent(rawData);
-  }, [rawData]);
+  const userDisplayName = useUserDisplayName();
+  const {
+    isEditing,
+    draft: editedContent,
+    setDraft: setEditedContent,
+    startEditing,
+    handleCancel,
+    handleSubmit: handleUpdate,
+    handleKeyDown,
+    handleFocus,
+  } = useInlineTextEdit({ value: rawData, onSubmit: onUpdate });
 
   const { textareaRef } = useAutoResizeTextarea({
     enabled: isEditing,
     value: editedContent,
   });
-
-  const handleUpdate = () => {
-    onUpdate?.(editedContent);
-    setIsEditing(false);
-  };
-
-  const handleCancel = () => {
-    setEditedContent(rawData);
-    setIsEditing(false);
-  };
-
-  // 엔터는 확정, esc는 취소, 쉬프트+엔터는 줄바꿈으로 동작합니다.
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.key === "Escape") {
-      event.preventDefault();
-      handleCancel();
-      return;
-    }
-
-    if (
-      event.key === "Enter" &&
-      !event.shiftKey &&
-      !event.nativeEvent.isComposing
-    ) {
-      event.preventDefault();
-      handleUpdate();
-    }
-  };
 
   /** 대화 원문을 말풍선, 이미지, 서술문 블록으로 분리 */
   const blocks = useMemo(() => parsePlat(rawData), [rawData]);
@@ -84,26 +65,11 @@ const ChatContentBlock = ({
             value={editedContent}
             onChange={(event) => setEditedContent(event.target.value)}
             onKeyDown={handleKeyDown}
-            onFocus={(event) => event.target.select()}
+            onFocus={handleFocus}
           />
         </div>
 
-        <div className="flex h-fit shrink-0 gap-1 text-font-2">
-          <button
-            type="button"
-            onClick={handleCancel}
-            className="flex items-center justify-center rounded-lg p-1.5 hover:bg-btn-hover"
-          >
-            <Close className="size-4" />
-          </button>
-          <button
-            type="button"
-            onClick={handleUpdate}
-            className="flex items-center justify-center rounded-lg p-1.5 hover:bg-btn-hover"
-          >
-            <Check className="size-4" />
-          </button>
-        </div>
+        <InlineEditActions onCancel={handleCancel} onConfirm={handleUpdate} />
       </div>
     );
   }
@@ -116,9 +82,15 @@ const ChatContentBlock = ({
             <CharacterChat
               key={index}
               image={profileImage}
-              chatText={block.content}
+              chatText={segmentsToDisplayText(block.segments, userDisplayName)}
               CharacterName={characterName}
             />
+          );
+        }
+
+        if (block.type === "USER_DIALOGUE") {
+          return (
+            <UserChatBubble key={index} text={segmentsToDisplayText(block.segments, userDisplayName)} />
           );
         }
 
@@ -126,7 +98,8 @@ const ChatContentBlock = ({
           return (
             <Image
               key={index}
-              src={block.code}
+              // block.code는 세계관 에셋 업로드로 받은 fileId이므로, 렌더링용 URL로 변환해야 합니다.
+              src={getResourceImageUrl(block.code, "UNIVERSE_ASSET")}
               alt={t("chatUI.chatAssetAlt")}
               width={171}
               height={250}
@@ -137,14 +110,9 @@ const ChatContentBlock = ({
         }
 
         if (block.type === "NARRATIVE") {
-          // 사용자 치환 토큰을 유지하는 서술문 표시용 문자열
-          const fullText = block.segments
-            .map((segment) =>
-              segment.type === "TEXT" ? segment.value : "{{user}}",
-            )
-            .join("");
-
-          return <Scenario key={index} text={fullText} />;
+          return (
+            <Scenario key={index} text={segmentsToDisplayText(block.segments, userDisplayName)} />
+          );
         }
 
         return null;
@@ -154,7 +122,7 @@ const ChatContentBlock = ({
         <div className="-mt-4 flex gap-1 pl-11">
           <button
             type="button"
-            onClick={() => setIsEditing(true)}
+            onClick={startEditing}
             className="rounded-lg bg-card p-1.5 hover:bg-btn-hover"
           >
             <Pen className="size-4 text-font-2" />

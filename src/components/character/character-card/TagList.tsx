@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 interface TagListProps {
   tags: string[];
   selectedTagSet: Set<string>;
-  currentTag: string;
+  currentTag?: string;
 }
 
 const TagList = ({ tags, selectedTagSet, currentTag }: TagListProps) => {

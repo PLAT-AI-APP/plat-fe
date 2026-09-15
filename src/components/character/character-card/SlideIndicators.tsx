@@ -23,9 +23,11 @@ const SlideIndicators = ({
   const isLarge = variant === "large";
 
   return (
+    // 카드 전체를 덮는 stretched link 위에 이 영역만 걸쳐 있어, wrapper는
+    // pointer-events-none으로 링크 클릭을 통과시키고 각 버튼만 다시 받게 합니다.
     <div
       className={cn(
-        "flex items-center gap-1",
+        "pointer-events-none flex items-center gap-1",
         isLarge
           ? "self-stretch justify-center gap-2"
           : "absolute bottom-3 left-1/2 z-10 -translate-x-1/2 justify-between",
@@ -40,7 +42,7 @@ const SlideIndicators = ({
             type="button"
             onClick={(event) => onImageSelect(event, index)}
             className={cn(
-              "cursor-pointer rounded-full transition hover:brightness-125",
+              "pointer-events-auto cursor-pointer rounded-full transition hover:brightness-125",
               isLarge ? "size-2" : "h-2 w-2",
               isActive
                 ? cn("bg-brand", !isLarge && "scale-110")
@@ -58,7 +60,7 @@ const SlideIndicators = ({
           type="button"
           onClick={onActionSelect}
           className={cn(
-            "size-2 cursor-pointer rounded-full transition-colors",
+            "pointer-events-auto size-2 cursor-pointer rounded-full transition-colors",
             isActionActive ? "bg-brand" : "bg-font-1",
           )}
           aria-label="View profile action"

@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Camera, Chat, Fold, Home, NoteLine } from "@/icons";
 import { cn } from "@/lib/utils";
-import { SPRING_SOFT, TRANSITION } from "@/constants/motion";
+import { SPRING_SOFT, TRANSITION, TRANSITION_SLOW } from "@/constants/motion";
 
 interface SidebarProps {
   isFolded: boolean;
@@ -39,8 +39,16 @@ const Sidebar = ({
   const isOverlay = variant === "overlay";
 
   return (
-    <aside
+    <motion.aside
       id="main-sidebar"
+      // 인라인(데스크탑)은 그리드 열 폭 트랜지션이 이미 움직임을 맡으므로 마운트 애니메이션을 끈다.
+      // 드로어(오버레이)만 좌측에서 밀고 들어오고, 닫힐 때도 밀려 나간다.
+      // 스프링은 화면 전체를 가로지르는 큰 이동에서는 통통 튀는 느낌이 두드러져,
+      // "이동 거리가 큰 변화"용으로 이미 정의된 TRANSITION_SLOW(감속 커브)를 쓴다.
+      initial={isOverlay ? { x: "-100%" } : false}
+      animate={{ x: 0 }}
+      exit={isOverlay ? { x: "-100%" } : undefined}
+      transition={TRANSITION_SLOW}
       className={cn(
         "flex flex-col gap-2 overflow-hidden bg-dark pt-4 pr-2 pl-4",
         isOverlay
@@ -137,7 +145,7 @@ const Sidebar = ({
           })}
         </ul>
       </nav>
-    </aside>
+    </motion.aside>
   );
 };
 

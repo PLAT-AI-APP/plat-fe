@@ -13,11 +13,12 @@ import PasswordField from "@/components/field/PasswordField";
 import { ModalLayout } from "@/components/ModalLayout";
 import SmartInput from "@/components/smart-input";
 import { ChatFill, Google } from "@/icons";
-import useRouteEffect from "@/hooks/useRouteEffect";
-import { useTranslateText } from "@/hooks/useTranslateText";
+import useRouteEffect from "@/hooks/navigation/useRouteEffect";
+import { useTranslateText } from "@/hooks/i18n/useTranslateText";
 import { focusFirstFieldError } from "@/lib/formError";
 import { showAppToast } from "@/lib/toast";
 import { loginFormSchema, LoginFormValues } from "@/schema/auth.schema";
+import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
 import { LoginModalProps } from "@/type/modal";
 import { PENDING_WELCOME_CREDIT_DIALOG_KEY } from "@/constants/auth";
@@ -42,6 +43,7 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
   const allowNextNavigation = useModalStore(
     (state) => state.allowNextNavigation,
   );
+  const openDialog = useDialogStore((state) => state.openDialog);
 
   const methods = useForm<LoginFormValues>({
     resolver: zodResolver(loginFormSchema),
@@ -93,6 +95,17 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
   };
 
   const handleFirstLoginSuccess = () => {
+    onClose();
+
+    // 이미 홈이면 router.replace("/")를 해도 pathname 값이 안 바뀌어, ClientLayout의
+    // "홈 진입 시 웰컴 다이얼로그 확인" effect가 다시 돌지 않는다(회원가입 완료 다이얼로그의
+    // "로그인" 버튼처럼 홈 위에서 로그인 모달을 여는 경우가 그렇다). 그때는 굳이 대기 플래그를
+    // 거치지 않고 여기서 바로 띄운다.
+    if (pathname === "/") {
+      openDialog("WELCOME_CREDIT", {});
+      return;
+    }
+
     if (typeof window !== "undefined") {
       // 홈에 도착한 뒤 웰컴 다이얼로그를 한 번만 열 수 있도록 대기 상태를 저장합니다.
       sessionStorage.setItem(PENDING_WELCOME_CREDIT_DIALOG_KEY, "true");
@@ -100,7 +113,6 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
 
     // 첫 로그인 보상 플로우의 홈 이동도 모달 가드 예외로 통과시킵니다.
     allowNextNavigation();
-    onClose();
     router.replace("/");
   };
 
@@ -122,7 +134,7 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
             data.toastDescription,
           );
 
-          if (data.isFirstLogin) {
+          if (data.isNew) {
             handleFirstLoginSuccess();
             return;
           }

@@ -7,6 +7,8 @@ import { AppError } from "@/type/api";
 import type { WalletBalance } from "@/type/wallet";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useWalletStore } from "@/store/useWalletStore";
+import { useAuthReady } from "@/hooks/data/useAuthReady";
+import { walletQueryKeys } from "./queryKeys";
 
 const GetWalletBalance = async () => {
   const response = await authAxios.get<WalletBalance>("/wallet/balance");
@@ -16,15 +18,14 @@ const GetWalletBalance = async () => {
 
 /** 지갑 잔액 조회 */
 export const useWalletBalanceQuery = () => {
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
-  const isAuthReady = useAuthStore((state) => state.isAuthReady);
+  const authReady = useAuthReady();
   const accessToken = useAuthStore((state) => state.accessToken);
   const setBalance = useWalletStore((state) => state.setBalance);
 
   const query = useQuery<WalletBalance, AppError>({
-    queryKey: ["get-wallet-balance"],
+    queryKey: walletQueryKeys.balance(),
     queryFn: GetWalletBalance,
-    enabled: isAuthReady && isLoggedIn && !!accessToken,
+    enabled: authReady && !!accessToken,
   });
 
   useEffect(() => {

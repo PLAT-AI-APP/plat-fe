@@ -5,18 +5,12 @@ import { authAxios } from "..";
 import { AppError } from "@/type/api";
 import { useLocaleStore } from "@/store/useLocaleStore";
 import { Tendency, useTendencyStore } from "@/store/useTendencyStore";
+import type { BaseCard, CardCreator } from "@/type/card";
 
-export interface NewWorkCreator {
-  creatorId: string;
-  nickname: string;
-}
+export type NewWorkCreator = CardCreator;
 
-export interface NewWorkItem {
-  universeId: string;
-  images: string[];
-  title: string;
-  description: string;
-  creator: NewWorkCreator;
+export interface NewWorkItem
+  extends Omit<BaseCard, "chatCount" | "isNew" | "isOfficial"> {
   // 백엔드 NewWorkCard에는 아직 chatCount가 없어 옵셔널로 선언 (CharacterCard가 값 없으면 뱃지 자체를 숨김)
   chatCount?: number;
 }

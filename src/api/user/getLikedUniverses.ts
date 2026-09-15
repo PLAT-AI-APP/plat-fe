@@ -3,22 +3,11 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError, PageWith } from "@/type/api";
+import { getNextPageNumber } from "@/lib/pagination";
+import type { LikableCard } from "@/type/card";
 
 /** 백엔드 BaseCard. 찜 목록은 전부 내가 찜한 것이라 liked 는 항상 true 로 옵니다. */
-export interface LikedUniverseCard {
-  universeId: string;
-  images: string[];
-  title: string;
-  description: string;
-  creator: {
-    creatorId: string;
-    nickname: string;
-  };
-  chatCount: number;
-  isNew: boolean;
-  isOfficial: boolean;
-  liked: boolean;
-}
+export type LikedUniverseCard = LikableCard;
 
 /** 찜/취소 후 이 목록도 다시 받아야 해서 키를 밖으로 냅니다. */
 export const likedUniversesQueryKey = ["get-liked-universes"];
@@ -46,8 +35,7 @@ export const useLikedUniversesInfiniteQuery = (enabled = true) =>
     queryKey: likedUniversesQueryKey,
     initialPageParam: 0,
     queryFn: ({ pageParam }) => getLikedUniverses(pageParam as number),
-    getNextPageParam: (lastPage) =>
-      lastPage.page.hasNext ? lastPage.page.number + 1 : null,
+    getNextPageParam: getNextPageNumber,
     staleTime: 1000 * 60,
     enabled,
   });
