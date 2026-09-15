@@ -101,7 +101,7 @@ const PersonaItem = ({
                 setIsMenuOpen((prev) => !prev);
               }}
             >
-              <Dots className="size-6 -rotate-90" aria-hidden="true" />
+              <Dots className="size-4 -rotate-90" aria-hidden="true" />
             </button>
 
             <AnimatePresence>
