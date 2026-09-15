@@ -39,7 +39,9 @@ export type TagAddModalProps = GlobalModalProps;
 
 export type TagSuggestionsModalProps = GlobalModalProps;
 
-export type UserNoteModalProps = GlobalModalProps;
+export interface UserNoteModalProps extends GlobalModalProps {
+  roomId: string;
+}
 
 export interface CommentReportModalProps extends GlobalModalProps {
   commentId: string;

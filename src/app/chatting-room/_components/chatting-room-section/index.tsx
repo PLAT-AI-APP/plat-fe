@@ -28,7 +28,11 @@ const INITIAL_MESSAGES: ChatMessageType[] = [
   },
 ];
 
-const ChattingRoomSection = () => {
+interface ChattingRoomSectionProps {
+  roomId: string;
+}
+
+const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
   const t = useTranslations();
   const { isScrolling, onScroll } = useScrollTimeout();
   const [messages, setMessages] = useState<ChatMessageType[]>(INITIAL_MESSAGES);
@@ -89,6 +93,7 @@ const ChattingRoomSection = () => {
           )}
         >
           <ChattingRoomHeader
+            roomId={roomId}
             characterName="캐릭터 이름"
             currentAi={currentAi}
             handleCurrentAi={handleCurrentAi}

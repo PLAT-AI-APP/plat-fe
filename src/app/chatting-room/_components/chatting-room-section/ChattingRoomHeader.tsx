@@ -11,6 +11,7 @@ import { AIModelType } from "@/type/chat";
 import ChattingSidebar from "../ChattingSidebar";
 
 interface ChattingRoomHeaderProps {
+  roomId: string;
   characterName: string;
   currentAi: AIModelType;
   handleCurrentAi: (model: AIModelType) => void;
@@ -19,6 +20,7 @@ interface ChattingRoomHeaderProps {
 }
 
 const ChattingRoomHeader = ({
+  roomId,
   characterName,
   currentAi,
   handleCurrentAi,
@@ -72,6 +74,7 @@ const ChattingRoomHeader = ({
           <AnimatePresence>
             {isSidebar && (
               <ChattingSidebar
+                roomId={roomId}
                 toggleIsSidebar={toggleIsSidebar}
                 isSuggestedReplyOn={isSuggestedReplyOn}
                 onSuggestedReplyToggle={onSuggestedReplyToggle}

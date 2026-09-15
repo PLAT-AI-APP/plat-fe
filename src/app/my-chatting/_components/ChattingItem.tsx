@@ -38,7 +38,7 @@ const ChattingItem = ({
   const isPinPending = isPinning || isUnpinning;
 
   const chattingItemOnClick = () => {
-    router.push("/chatting-room");
+    router.push(`/chatting-room?roomId=${roomId}`);
   };
 
   const handleDeleteClick = () => {

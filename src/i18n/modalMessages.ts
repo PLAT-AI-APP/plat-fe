@@ -39,6 +39,7 @@ const ko = {
       description: "이 채팅방에서 반드시 기억해 줬으면 하는 내용을 적어주세요.",
       placeholder: "잊으면 안되는 중요한 내용, 추가하고 싶은 설정 등",
       submit: "저장",
+      successToast: "유저노트가 저장되었습니다",
     },
     commentReport: {
       title: "댓글 신고",
@@ -145,6 +146,7 @@ const en: typeof ko = {
       placeholder:
         "Important things not to forget, settings you want to add, etc.\n...",
       submit: "Save",
+      successToast: "Your user note has been saved",
     },
     commentReport: {
       title: "Report comment",
@@ -251,6 +253,7 @@ const ja: typeof ko = {
       description: "会話内容が自動で要約され、キャラクターが長く記憶できます。",
       placeholder: "忘れてはいけない大事な内容、追加したい設定など\n...",
       submit: "保存",
+      successToast: "ユーザーノートが保存されました",
     },
     commentReport: {
       title: "コメントを通報",
@@ -355,6 +358,7 @@ const zh: typeof ko = {
       description: "对话内容会自动总结，角色可以记住更久。",
       placeholder: "不要忘记的重要内容、想追加的设定等\n...",
       submit: "保存",
+      successToast: "用户笔记已保存",
     },
     commentReport: {
       title: "举报评论",
@@ -458,6 +462,7 @@ const th: typeof ko = {
       description: "บทสนทนาจะถูกสรุปอัตโนมัติ เพื่อให้ตัวละครจดจำได้ยาวนานขึ้น",
       placeholder: "เรื่องสำคัญที่ห้ามลืม หรือการตั้งค่าที่อยากเพิ่ม\n...",
       submit: "บันทึก",
+      successToast: "บันทึกโน้ตผู้ใช้แล้ว",
     },
     commentReport: {
       title: "รายงานความคิดเห็น",
@@ -566,6 +571,7 @@ const vi: typeof ko = {
       placeholder:
         "Những nội dung quan trọng không được quên, các thiết lập muốn thêm\n...",
       submit: "Lưu",
+      successToast: "Đã lưu ghi chú người dùng",
     },
     commentReport: {
       title: "Báo cáo bình luận",
