@@ -2,11 +2,13 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import type { KeyboardEvent } from "react";
 import { useTranslations } from "next-intl";
-import dayjs from "@/lib/dayjs";
 import { resolveApiImageUrl } from "@/lib/file";
+import { cn } from "@/lib/utils";
 import { Heart, HeartFill } from "@/icons";
 import type { Comment } from "@/type/comment";
+import { useRelativeTimeLabel } from "@/hooks/i18n/useRelativeTimeLabel";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
@@ -27,15 +29,25 @@ const DEFAULT_PROFILE_IMAGE = "/p1.png";
 interface CommentListItemProps {
   comment: Comment;
   universeId: string;
+  /** 이 세계관의 제작자가 보고 있는지. 본인 댓글이 아니어도 자기 상세페이지의 댓글은 지울 수 있다. */
+  isCreatorViewer?: boolean;
+  /** 이 댓글의 작성자가 세계관 제작자 본인인지. 닉네임을 배지 형태로 다르게 보여준다. */
+  isCommentByCreator?: boolean;
 }
 
-const CommentListItem = ({ comment, universeId }: CommentListItemProps) => {
+const CommentListItem = ({
+  comment,
+  universeId,
+  isCreatorViewer,
+  isCommentByCreator = false,
+}: CommentListItemProps) => {
   const t = useTranslations("characterDetail");
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const myUserId = useUserStore((state) => state.user?.id);
   const openDialog = useDialogStore((state) => state.openDialog);
   const closeDialog = useDialogStore((state) => state.closeDialog);
   const openModal = useModalStore((state) => state.openModal);
+  const getRelativeTime = useRelativeTimeLabel();
 
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(comment.content);
@@ -72,11 +84,18 @@ const CommentListItem = ({ comment, universeId }: CommentListItemProps) => {
     setIsEditing(false);
   };
 
-  const { handleKeyDown: handleEditKeyDown, handleFocus: handleEditFocus } =
-    useTextareaSubmitShortcuts({
-      onSubmit: handleSubmitEdit,
-      onCancel: handleCancelEdit,
-    });
+  // 수정 중 Enter로 바로 등록되지 않도록, 취소(Esc)만 남기고 제출 단축키는 쓰지 않습니다.
+  const { handleFocus: handleEditFocus } = useTextareaSubmitShortcuts({
+    onSubmit: handleSubmitEdit,
+    onCancel: handleCancelEdit,
+  });
+
+  const handleEditKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      handleCancelEdit();
+    }
+  };
 
   const handleDeleteComment = () => {
     openDialog("COMMENT_DELETE", {
@@ -109,11 +128,17 @@ const CommentListItem = ({ comment, universeId }: CommentListItemProps) => {
       <article className="flex min-w-0 flex-1 flex-col gap-3">
         <header className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="title-6 text-font-1">
+            <span
+              className={cn(
+                isCommentByCreator
+                  ? "title-5 rounded-[4px] bg-font-1 px-1.5 py-0.5 text-dark"
+                  : "title-6 text-font-1",
+              )}
+            >
               {comment.author.nickname}
             </span>
             <span className="body-7 text-font-2">
-              {dayjs(comment.meta.createdAt).format("YYYY-MM-DD")}
+              {getRelativeTime(comment.meta.createdAt)}
             </span>
             {comment.meta.edited && (
               <span className="body-7 text-font-2">{t("commentEdited")}</span>
@@ -126,6 +151,7 @@ const CommentListItem = ({ comment, universeId }: CommentListItemProps) => {
           </div>
           <CommentMenuButton
             isMine={isMine}
+            isCreatorViewer={isCreatorViewer}
             onEdit={() => {
               setEditedContent(comment.content);
               setIsEditing(true);

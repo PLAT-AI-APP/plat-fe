@@ -9,9 +9,18 @@ import CommentListItem from "./CommentListItem";
 interface CommentsPanelProps {
   universeId: string;
   commentEnabled: boolean;
+  /** 이 세계관의 제작자가 보고 있는지. 목록의 모든 댓글에 삭제 권한을 함께 준다. */
+  isCreatorViewer?: boolean;
+  /** 이 세계관의 제작자 id. 댓글 작성자가 제작자 본인이면 닉네임을 다르게 표시한다. */
+  creatorId?: string;
 }
 
-const CommentsPanel = ({ universeId, commentEnabled }: CommentsPanelProps) => {
+const CommentsPanel = ({
+  universeId,
+  commentEnabled,
+  isCreatorViewer,
+  creatorId,
+}: CommentsPanelProps) => {
   const t = useTranslations("characterDetail");
   const {
     data,
@@ -57,6 +66,10 @@ const CommentsPanel = ({ universeId, commentEnabled }: CommentsPanelProps) => {
               key={comment.commentId}
               comment={comment}
               universeId={universeId}
+              isCreatorViewer={isCreatorViewer}
+              isCommentByCreator={
+                Boolean(creatorId) && comment.author.userId === creatorId
+              }
             />
           ))}
         </ul>

@@ -246,6 +246,8 @@ const CharacterDetailContent = ({
               <CommentsPanel
                 universeId={characterId}
                 commentEnabled={character.commentEnabled}
+                isCreatorViewer={character.editable}
+                creatorId={character.creator.id ?? undefined}
               />
             </section>
           </div>
