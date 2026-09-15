@@ -19,6 +19,7 @@ type ProfileTab = "character" | "wish";
 
 const CharArray = [
   {
+    id: "mock-character-1",
     name: "옆자리 불량학생",
     chatCount: 123,
     dec: "매일 학교에서 일어나는 소소한 일상을 함께 이야기해요.",
@@ -26,6 +27,7 @@ const CharArray = [
     img: "https://picsum.photos/200/300",
   },
   {
+    id: "mock-character-2",
     name: "옆자리 불량학생",
     chatCount: 123,
     dec: "장난스럽지만 속은 다정한 캐릭터와 대화를 나눠보세요.",
@@ -33,6 +35,7 @@ const CharArray = [
     img: "https://picsum.photos/201/300",
   },
   {
+    id: "mock-character-3",
     name: "옆자리 불량학생",
     chatCount: 123,
     dec: "무심한 듯 챙겨주는 친구와 이어지는 이야기입니다.",
@@ -40,6 +43,7 @@ const CharArray = [
     img: "https://picsum.photos/202/300",
   },
   {
+    id: "mock-character-4",
     name: "옆자리 불량학생",
     chatCount: 123,
     dec: "매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
@@ -47,6 +51,7 @@ const CharArray = [
     img: "https://picsum.photos/203/300",
   },
   {
+    id: "mock-character-5",
     name: "옆자리 불량학생",
     chatCount: 123,
     dec: "가볍게 대화하기 좋은 캐릭터입니다.",
@@ -54,6 +59,7 @@ const CharArray = [
     img: "https://picsum.photos/204/300",
   },
   {
+    id: "mock-character-6",
     name: "옆자리 불량학생",
     chatCount: 123,
     dec: "친구처럼 편하게 말을 걸어주는 캐릭터입니다.",
@@ -61,6 +67,7 @@ const CharArray = [
     img: "https://picsum.photos/205/300",
   },
   {
+    id: "mock-character-7",
     name: "옆자리 불량학생",
     chatCount: 123,
     dec: "짧은 대화에도 자연스럽게 이어지는 캐릭터입니다.",
@@ -68,6 +75,7 @@ const CharArray = [
     img: "https://picsum.photos/206/300",
   },
   {
+    id: "mock-character-8",
     name: "옆자리 불량학생",
     chatCount: 123,
     dec: "학교생활의 여러 순간을 함께 나누는 캐릭터입니다.",
@@ -246,6 +254,8 @@ export default function ProfileContent({ id }: { id: string }) {
               isError={isWishTab && isLikedError}
               error={likedError}
               onRetry={refetchLiked}
+              // 찜 목록은 남의 캐릭터일 수도 있어 수정 배지를 내 캐릭터 탭에만 띄운다.
+              isEditable={isOwnProfile && !isWishTab}
             />
           )}
 
