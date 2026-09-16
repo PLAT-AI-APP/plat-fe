@@ -250,6 +250,9 @@ const FollowModal = ({
                 isFollowing={isFollowing}
                 isPending={isFollowPending}
                 onToggleFollow={handleToggleFollow}
+                onNavigateToProfile={(targetUserId) =>
+                  moveWithModalClose(`/profile/${targetUserId}`)
+                }
               />
             );
           })}

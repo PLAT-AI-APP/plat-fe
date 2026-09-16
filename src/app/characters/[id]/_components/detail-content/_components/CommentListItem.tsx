@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import type { KeyboardEvent } from "react";
 import { useTranslations } from "next-intl";
@@ -135,29 +136,33 @@ const CommentListItem = ({
 
   return (
     <li className={cn("flex gap-2", isReply && "pl-11")}>
-      <Image
-        src={
-          resolveApiImageUrl(comment.author.profileImageUrl) ||
-          DEFAULT_PROFILE_IMAGE
-        }
-        alt={t("profileAlt", { name: comment.author.nickname })}
-        width={36}
-        height={36}
-        className="size-9 shrink-0 rounded-full object-cover"
-      />
+      <Link href={`/profile/${comment.author.userId}`} className="shrink-0">
+        <Image
+          src={
+            resolveApiImageUrl(comment.author.profileImageUrl) ||
+            DEFAULT_PROFILE_IMAGE
+          }
+          alt={t("profileAlt", { name: comment.author.nickname })}
+          width={36}
+          height={36}
+          className="size-9 shrink-0 rounded-full object-cover"
+        />
+      </Link>
 
       <article className="flex min-w-0 flex-1 flex-col gap-3">
         <header className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <span
+            <Link
+              href={`/profile/${comment.author.userId}`}
               className={cn(
+                "hover:underline",
                 isCommentByCreator
                   ? "title-5 rounded-[4px] bg-font-1 px-1.5 py-0.5 text-dark"
                   : "title-6 text-font-1",
               )}
             >
               {comment.author.nickname}
-            </span>
+            </Link>
             <div className="flex items-center gap-1">
               <span className="body-7 text-font-2">
                 {getRelativeTime(comment.meta.createdAt)}
