@@ -8,16 +8,25 @@ import { Dots } from "@/icons";
 
 interface CommentMenuButtonProps {
   isMine?: boolean;
+  /** 세계관 제작자가 이 댓글을 고정/해제할 수 있는지 */
+  canPin?: boolean;
+  isPinned?: boolean;
   onEdit?: () => void;
   onDelete?: () => void;
   onReport?: () => void;
+  onPin?: () => void;
+  onUnpin?: () => void;
 }
 
 const CommentMenuButton = ({
   isMine,
+  canPin,
+  isPinned,
   onEdit,
   onDelete,
   onReport,
+  onPin,
+  onUnpin,
 }: CommentMenuButtonProps) => {
   const t = useTranslations("characterDetail");
   // 각 댓글의 Dots 버튼을 팝오버 위치 기준으로 사용하기 위해 버튼 ref를 따로 보관합니다.
@@ -42,11 +51,15 @@ const CommentMenuButton = ({
         {isOpen && (
           <CommentMenuPopover
             isMine={isMine}
+            canPin={canPin}
+            isPinned={isPinned}
             onClose={closePopover}
             triggerRef={triggerRef}
             onDelete={onDelete}
             onEdit={onEdit}
             onReport={onReport}
+            onPin={onPin}
+            onUnpin={onUnpin}
           />
         )}
       </AnimatePresence>

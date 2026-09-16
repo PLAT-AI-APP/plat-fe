@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Edit, Flag, Trash } from "@/icons";
+import { Edit, Flag, Pin, PinFill, Trash } from "@/icons";
 import { useTranslations } from "next-intl";
 import { PopoverLayout } from "./layout";
 import PopoverMenuList from "./PopoverMenuList";
@@ -9,19 +9,28 @@ import PopoverMenuList from "./PopoverMenuList";
 interface CommentMenuPopoverProps {
   /** 댓글 작성자 본인 여부 (본인이면 수정/삭제, 아니면 신고 노출) */
   isMine?: boolean;
+  /** 세계관 제작자가 이 댓글을 고정/해제할 수 있는지. isMine과 별개로 노출된다. */
+  canPin?: boolean;
+  isPinned?: boolean;
   /** 각 액션 발생 시 실행될 콜백 함수들 */
   onEdit?: () => void;
   onDelete?: () => void;
   onReport?: () => void;
+  onPin?: () => void;
+  onUnpin?: () => void;
   /** 팝업 닫기 및 위치 참조 */
   onClose: () => void;
   triggerRef: React.RefObject<HTMLButtonElement | null>;
 }
 const CommentMenuPopover = ({
   isMine,
+  canPin,
+  isPinned,
   onEdit,
   onDelete,
   onReport,
+  onPin,
+  onUnpin,
   onClose,
   triggerRef,
 }: CommentMenuPopoverProps) => {
@@ -33,8 +42,22 @@ const CommentMenuPopover = ({
         onClose={onClose}
         menuClassName="min-w-32"
         itemClassName="whitespace-nowrap rounded-lg p-1.5"
-        items={
-          isMine
+        items={[
+          ...(canPin
+            ? [
+                {
+                  key: "pin",
+                  icon: isPinned ? (
+                    <PinFill className="w-5 h-5 text-brand" />
+                  ) : (
+                    <Pin className="w-5 h-5 text-font-2" />
+                  ),
+                  label: isPinned ? t("unpinComment") : t("pinComment"),
+                  onClick: isPinned ? onUnpin : onPin,
+                },
+              ]
+            : []),
+          ...(isMine
             ? [
                 {
                   key: "edit",
@@ -57,8 +80,8 @@ const CommentMenuPopover = ({
                   label: t("report"),
                   onClick: onReport,
                 },
-              ]
-        }
+              ]),
+        ]}
       />
     </PopoverLayout>
   );
