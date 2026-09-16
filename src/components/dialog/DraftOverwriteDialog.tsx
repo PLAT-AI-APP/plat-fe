@@ -16,6 +16,11 @@ const DraftOverwriteDialog = ({
     onCancel();
   };
 
+  const handleConfirm = () => {
+    onConfirm?.();
+    onClose();
+  };
+
   return (
     <Dialog
       onClose={handleCancel}
@@ -30,7 +35,7 @@ const DraftOverwriteDialog = ({
         </p>
       }
       description="dialog.draftOverwrite.description"
-      confirmFn={onConfirm}
+      confirmFn={handleConfirm}
     />
   );
 };
