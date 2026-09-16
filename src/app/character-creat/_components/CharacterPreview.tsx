@@ -12,7 +12,6 @@ import { ArrowLeft, ArrowRight, Asterisk, User } from "@/icons";
 import { cn } from "@/lib/utils";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
 import { useScenarioPreviewHistoryStore } from "@/store/useScenarioPreviewHistoryStore";
-import { useUserStore } from "@/store/useUserStore";
 import { ScenarioContentItem, ScenarioType } from "@/type/character";
 import Upload from "@/icons/Upload";
 
@@ -38,10 +37,9 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
     control,
     name: "characterProfileImage",
   });
-  const userNickname = useUserStore((state) => state.user?.nickname);
   const characterName = name || t("defaultCharacterName");
   const characterChipText = name?.trim() || t("characterNameChip");
-  const userChipText = userNickname?.trim() || t("userNameChip");
+  const userChipText = t("userNameChip");
   const scenarioName = scenarios?.[activeScenarioIndex]?.name;
   const contents = scenarios?.[activeScenarioIndex]?.contents || [];
   const scenarioHistoryKey = `scenario-${activeScenarioIndex}`;
