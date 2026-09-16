@@ -104,6 +104,7 @@ export const useUniverseDraft = ({
         ...fallbackFormValues,
         ...applyUniverseDraft(latest, defaultScenarioName),
       });
+      showAppToast("success", t("draftLoaded"));
     } catch (error) {
       console.error("Draft load failed:", error);
       showAppToast("error", t("draftLoadFailed"));
