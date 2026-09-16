@@ -7,7 +7,7 @@ import type { KeyboardEvent } from "react";
 import { useTranslations } from "next-intl";
 import { resolveApiImageUrl } from "@/lib/file";
 import { cn } from "@/lib/utils";
-import { Heart, HeartFill } from "@/icons";
+import { Heart, HeartFill, Message } from "@/icons";
 import type { Comment } from "@/type/comment";
 import { useRelativeTimeLabel } from "@/hooks/i18n/useRelativeTimeLabel";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -28,6 +28,8 @@ import CommentExpandableBody from "./CommentExpandableBody";
 import CommentMenuButton from "./CommentMenuButton";
 
 const DEFAULT_PROFILE_IMAGE = "/p1.png";
+/** 답글은 펼치지 않아도 이 개수까지는 바로 보여줍니다. */
+const REPLIES_PREVIEW_COUNT = 2;
 
 interface CommentListItemProps {
   comment: Comment;
@@ -55,12 +57,27 @@ const CommentListItem = ({
 
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(comment.content);
-  const [isReplyOpen, setIsReplyOpen] = useState(false);
+  const [isReplyComposerOpen, setIsReplyComposerOpen] = useState(false);
   const [replyContent, setReplyContent] = useState("");
+  // 답글은 열지 않아도 REPLIES_PREVIEW_COUNT개까지는 바로 보여주고, 더보기를 눌러야 전부 받아옵니다.
+  const [showAllReplies, setShowAllReplies] = useState(false);
 
   const { data: repliesData, fetchNextPage, hasNextPage } =
-    useCommentRepliesInfiniteQuery(comment.commentId, !isReply && isReplyOpen);
+    useCommentRepliesInfiniteQuery(
+      comment.commentId,
+      !isReply && comment.meta.replyCount > 0,
+    );
   const replies = repliesData?.pages.flatMap((page) => page.content) ?? [];
+  const visibleReplies = showAllReplies
+    ? replies
+    : replies.slice(0, REPLIES_PREVIEW_COUNT);
+  const hasMoreRepliesToShow =
+    !showAllReplies && (replies.length > REPLIES_PREVIEW_COUNT || hasNextPage);
+
+  const handleShowMoreReplies = () => {
+    setShowAllReplies(true);
+    if (hasNextPage) fetchNextPage();
+  };
 
   const { mutate: like } = usePostCommentLikeMutation();
   const { mutate: unlike } = useDeleteCommentLikeMutation();
@@ -135,7 +152,7 @@ const CommentListItem = ({
   };
 
   return (
-    <li className={cn("flex gap-2", isReply && "pl-11")}>
+    <li className="flex gap-2">
       <Link href={`/profile/${comment.author.userId}`} className="shrink-0">
         <Image
           src={
@@ -225,22 +242,25 @@ const CommentListItem = ({
             {comment.meta.likeCount}
           </button>
 
+          <span className="body-7 flex items-center gap-1 text-font-2">
+            <Message className="size-4" />
+            {t("commentReplies", { count: comment.meta.replyCount })}
+          </span>
+
           {!isReply && (
             <button
               type="button"
-              onClick={() => setIsReplyOpen((prev) => !prev)}
+              onClick={() => setIsReplyComposerOpen((prev) => !prev)}
               className="body-7 text-font-2 transition-colors hover:text-font-1"
             >
-              {isReplyOpen
-                ? t("commentRepliesCollapse")
-                : t("commentReplies", { count: comment.meta.replyCount })}
+              {t("commentReply")}
             </button>
           )}
         </footer>
 
-        {!isReply && isReplyOpen && (
+        {!isReply && (isReplyComposerOpen || comment.meta.replyCount > 0) && (
           <div className="flex flex-col gap-4">
-            {isLoggedIn && (
+            {isReplyComposerOpen && isLoggedIn && (
               <CommentComposer
                 value={replyContent}
                 onChange={setReplyContent}
@@ -251,25 +271,29 @@ const CommentListItem = ({
               />
             )}
 
-            <ul className="flex flex-col gap-5">
-              {replies.map((reply) => (
-                <CommentListItem
-                  key={reply.commentId}
-                  comment={reply}
-                  universeId={universeId}
-                  parentCommentId={comment.commentId}
-                />
-              ))}
-            </ul>
+            {comment.meta.replyCount > 0 && (
+              <div className="flex flex-col gap-5">
+                <ul className="flex flex-col gap-5">
+                  {visibleReplies.map((reply) => (
+                    <CommentListItem
+                      key={reply.commentId}
+                      comment={reply}
+                      universeId={universeId}
+                      parentCommentId={comment.commentId}
+                    />
+                  ))}
+                </ul>
 
-            {hasNextPage && (
-              <button
-                type="button"
-                onClick={() => fetchNextPage()}
-                className="body-7 w-fit text-font-2 transition-colors hover:text-font-1"
-              >
-                {t("commentLoadMore")}
-              </button>
+                {hasMoreRepliesToShow && (
+                  <button
+                    type="button"
+                    onClick={handleShowMoreReplies}
+                    className="body-7 w-fit text-font-2 transition-colors hover:text-font-1"
+                  >
+                    {t("commentRepliesShowMore")}
+                  </button>
+                )}
+              </div>
             )}
           </div>
         )}
