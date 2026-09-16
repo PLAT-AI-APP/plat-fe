@@ -8,7 +8,6 @@ import { Dots } from "@/icons";
 
 interface CommentMenuButtonProps {
   isMine?: boolean;
-  isCreatorViewer?: boolean;
   onEdit?: () => void;
   onDelete?: () => void;
   onReport?: () => void;
@@ -16,7 +15,6 @@ interface CommentMenuButtonProps {
 
 const CommentMenuButton = ({
   isMine,
-  isCreatorViewer,
   onEdit,
   onDelete,
   onReport,
@@ -44,7 +42,6 @@ const CommentMenuButton = ({
         {isOpen && (
           <CommentMenuPopover
             isMine={isMine}
-            isCreatorViewer={isCreatorViewer}
             onClose={closePopover}
             triggerRef={triggerRef}
             onDelete={onDelete}

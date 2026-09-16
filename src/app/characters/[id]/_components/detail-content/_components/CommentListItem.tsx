@@ -20,6 +20,8 @@ import {
 } from "@/api/comment/postCommentLike";
 import { usePatchCommentMutation } from "@/api/comment/patchComment";
 import { useDeleteCommentMutation } from "@/api/comment/deleteComment";
+import { useCommentRepliesInfiniteQuery } from "@/api/comment/getCommentReplies";
+import { usePostCommentReplyMutation } from "@/api/comment/postCommentReply";
 import CommentComposer from "./CommentComposer";
 import CommentExpandableBody from "./CommentExpandableBody";
 import CommentMenuButton from "./CommentMenuButton";
@@ -29,17 +31,17 @@ const DEFAULT_PROFILE_IMAGE = "/p1.png";
 interface CommentListItemProps {
   comment: Comment;
   universeId: string;
-  /** 이 세계관의 제작자가 보고 있는지. 본인 댓글이 아니어도 자기 상세페이지의 댓글은 지울 수 있다. */
-  isCreatorViewer?: boolean;
   /** 이 댓글의 작성자가 세계관 제작자 본인인지. 닉네임을 배지 형태로 다르게 보여준다. */
   isCommentByCreator?: boolean;
+  /** 답글이면 부모 댓글 id. 루트 댓글이면 비웁니다. */
+  parentCommentId?: string;
 }
 
 const CommentListItem = ({
   comment,
   universeId,
-  isCreatorViewer,
   isCommentByCreator = false,
+  parentCommentId,
 }: CommentListItemProps) => {
   const t = useTranslations("characterDetail");
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
@@ -48,17 +50,26 @@ const CommentListItem = ({
   const closeDialog = useDialogStore((state) => state.closeDialog);
   const openModal = useModalStore((state) => state.openModal);
   const getRelativeTime = useRelativeTimeLabel();
+  const isReply = Boolean(parentCommentId);
 
   const [isEditing, setIsEditing] = useState(false);
   const [editedContent, setEditedContent] = useState(comment.content);
+  const [isReplyOpen, setIsReplyOpen] = useState(false);
+  const [replyContent, setReplyContent] = useState("");
+
+  const { data: repliesData, fetchNextPage, hasNextPage } =
+    useCommentRepliesInfiniteQuery(comment.commentId, !isReply && isReplyOpen);
+  const replies = repliesData?.pages.flatMap((page) => page.content) ?? [];
 
   const { mutate: like } = usePostCommentLikeMutation();
   const { mutate: unlike } = useDeleteCommentLikeMutation();
   const { mutate: patchComment, isPending: isPatching } =
     usePatchCommentMutation();
   const { mutate: deleteComment } = useDeleteCommentMutation();
+  const { mutate: postReply, isPending: isReplying } =
+    usePostCommentReplyMutation();
 
-  const scope = { universeId };
+  const scope = { universeId, parentCommentId };
   const isMine = Boolean(myUserId && myUserId === comment.author.userId);
 
   const handleToggleLike = () => {
@@ -97,6 +108,16 @@ const CommentListItem = ({
     }
   };
 
+  const handleSubmitReply = () => {
+    const content = replyContent.trim();
+    if (!content || isReplying) return;
+
+    postReply(
+      { commentId: comment.commentId, content, universeId },
+      { onSuccess: () => setReplyContent("") },
+    );
+  };
+
   const handleDeleteComment = () => {
     openDialog("COMMENT_DELETE", {
       onConfirm: () => {
@@ -113,7 +134,7 @@ const CommentListItem = ({
   };
 
   return (
-    <li className="flex gap-2">
+    <li className={cn("flex gap-2", isReply && "pl-11")}>
       <Image
         src={
           resolveApiImageUrl(comment.author.profileImageUrl) ||
@@ -155,7 +176,6 @@ const CommentListItem = ({
           </div>
           <CommentMenuButton
             isMine={isMine}
-            isCreatorViewer={isCreatorViewer}
             onEdit={() => {
               setEditedContent(comment.content);
               setIsEditing(true);
@@ -199,7 +219,55 @@ const CommentListItem = ({
             )}
             {comment.meta.likeCount}
           </button>
+
+          {!isReply && (
+            <button
+              type="button"
+              onClick={() => setIsReplyOpen((prev) => !prev)}
+              className="body-7 text-font-2 transition-colors hover:text-font-1"
+            >
+              {isReplyOpen
+                ? t("commentRepliesCollapse")
+                : t("commentReplies", { count: comment.meta.replyCount })}
+            </button>
+          )}
         </footer>
+
+        {!isReply && isReplyOpen && (
+          <div className="flex flex-col gap-4">
+            {isLoggedIn && (
+              <CommentComposer
+                value={replyContent}
+                onChange={setReplyContent}
+                onSubmit={handleSubmitReply}
+                canSubmit={!isReplying && Boolean(replyContent.trim())}
+                placeholder={t("replyPlaceholder")}
+                submitLabel={t("submitComment")}
+              />
+            )}
+
+            <ul className="flex flex-col gap-5">
+              {replies.map((reply) => (
+                <CommentListItem
+                  key={reply.commentId}
+                  comment={reply}
+                  universeId={universeId}
+                  parentCommentId={comment.commentId}
+                />
+              ))}
+            </ul>
+
+            {hasNextPage && (
+              <button
+                type="button"
+                onClick={() => fetchNextPage()}
+                className="body-7 w-fit text-font-2 transition-colors hover:text-font-1"
+              >
+                {t("commentLoadMore")}
+              </button>
+            )}
+          </div>
+        )}
       </article>
     </li>
   );
