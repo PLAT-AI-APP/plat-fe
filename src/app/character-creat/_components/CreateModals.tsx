@@ -38,7 +38,9 @@ const CreateModals = ({
       return;
     }
 
-    if (activeModal === "OVERWRITE") {
+    // OVERWRITE(불러오기 버튼 클릭)와 RESUME(진입 시 초안 존재 자동 감지) 둘 다
+    // 초안을 불러오는 같은 동작이라 같은 다이얼로그를 띄웁니다.
+    if (activeModal === "OVERWRITE" || activeModal === "RESUME") {
       openDialog("DRAFT_OVERWRITE", {
         onCancel: closeModal,
         onConfirm: handleLoadDraft,

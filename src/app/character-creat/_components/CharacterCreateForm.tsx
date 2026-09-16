@@ -190,6 +190,19 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
     showAppToast("error", t("loadFailed"));
   }, [isEditMode, isUniverseDetailError]);
 
+  // 페이지 진입 시 이미 저장해 둔 초안이 있으면(false→true로 바뀌는 그 순간 한 번만)
+  // 이어서 작성할지 물어봅니다. 초안 존재 여부는 비동기로 뒤늦게 확정되므로, 그 변화를
+  // 렌더 중에 바로 반영합니다(effect에서 setState하면 한 프레임 늦게 반영되어 깜빡입니다).
+  const [prevHasExistingDraft, setPrevHasExistingDraft] =
+    useState(hasExistingDraft);
+  if (hasExistingDraft !== prevHasExistingDraft) {
+    setPrevHasExistingDraft(hasExistingDraft);
+
+    if (hasExistingDraft && !isEditMode) {
+      setActiveModal("RESUME");
+    }
+  }
+
   const updateScenarioContentsFromDrag = (
     nextContents: CharacterCreateFormValues["scenarios"][number]["contents"],
   ) => {
