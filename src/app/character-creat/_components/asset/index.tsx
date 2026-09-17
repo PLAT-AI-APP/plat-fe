@@ -96,7 +96,10 @@ const Asset = ({ assetFieldArray }: AssetProps) => {
             <div
               {...provided.droppableProps}
               ref={provided.innerRef}
-              className="flex max-h-125 flex-col gap-2 overflow-y-auto"
+              // 스크롤은 CreateTabs의 탭 콘텐츠 컨테이너가 담당합니다. 여기에 별도로
+              // 고정 높이(overflow-y-auto)를 두면 에셋을 여러 개 펼쳤을 때 그 안에서만
+              // 스크롤이 생겨 내용이 짤려 보입니다.
+              className="flex flex-col gap-2"
             >
               {fields.map((field, i) => (
                 <AssetItem
