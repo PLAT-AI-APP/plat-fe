@@ -1,41 +1,80 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import { useRoomDetailQuery } from "@/api/room/getRoomDetail";
+import { useRoomMessagesInfiniteQuery } from "@/api/room/getRoomMessages";
 import ChatForm from "@/components/chat/ChatForm";
 import MessageList from "@/components/chat/MessageList";
+import { ErrorState } from "@/components/state";
+import { useIntersectionObserver } from "@/hooks/dom/useIntersectionObserver";
 import { useScrollTimeout } from "@/hooks/dom/useScrollTiemout";
 import { cn } from "@/lib/utils";
 import { AIModelType, ChatMessageType } from "@/type/chat";
+import type { RoomMessage } from "@/type/room";
 import ChattingRoomHeader from "./ChattingRoomHeader";
 import ChattingRoomNotice from "./ChattingRoomNotice";
-
-const INITIAL_MESSAGES: ChatMessageType[] = [
-  {
-    id: "assistant-1",
-    role: "assistant",
-    characterName: "캐릭터 이름",
-    profileImage: "/images/sample.png",
-    content:
-      `"어쩌구 저쩌구 ~~~~" {img:/images/sample.png} ` +
-      "신이 문을 열고 들어오는 찰나, 연우는 숨을 멈춘 채로 굳어버렸다. 방 안에는 방금 전까지 아무 일도 없었던 것처럼 고요가 내려앉아 있었다.\n\n" +
-      "잠깐의 정적 끝에, 연우는 천천히 시선을 들어 상대를 바라보았다.",
-  },
-  {
-    id: "user-1",
-    role: "user",
-    content: "가나다라마바사아자차카타파하",
-  },
-];
 
 interface ChattingRoomSectionProps {
   roomId: string;
 }
 
+/**
+ * 방 상세(GET /rooms/{roomId})가 아직 캐릭터 이름/프로필을 내려주지 않아
+ * 빈 값으로 둔다 — ChatContentBlock이 빈 값을 그대로 허용한다.
+ */
+const toChatMessage = (message: RoomMessage): ChatMessageType =>
+  message.type === "AI"
+    ? {
+        id: message.messageId,
+        role: "assistant",
+        characterName: "",
+        profileImage: "",
+        content: message.content,
+      }
+    : {
+        id: message.messageId,
+        role: "user",
+        content: message.content,
+      };
+
 const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
   const t = useTranslations();
   const { isScrolling, onScroll } = useScrollTimeout();
-  const [messages, setMessages] = useState<ChatMessageType[]>(INITIAL_MESSAGES);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const previousScrollHeightRef = useRef<number | null>(null);
+  const hasScrolledToBottomRef = useRef(false);
+
+  const { isError: isRoomError, error: roomError, refetch: refetchRoom } =
+    useRoomDetailQuery(roomId);
+
+  const {
+    data,
+    isPending: isMessagesPending,
+    isError: isMessagesError,
+    error: messagesError,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+    refetch: refetchMessages,
+  } = useRoomMessagesInfiniteQuery(roomId);
+
+  // 과거 방향으로 페이지가 이어지므로, 화면엔 오래된 메시지가 위로 오도록 순서를 뒤집는다.
+  const serverMessages = useMemo<ChatMessageType[]>(
+    () =>
+      (data?.pages.flatMap((page) => page.content) ?? [])
+        .map(toChatMessage)
+        .reverse(),
+    [data],
+  );
+
+  // 전송 API 연결 전까지, 새로 보낸 메시지는 서버 이력과 별개로 화면에만 이어붙인다.
+  const [sentMessages, setSentMessages] = useState<ChatMessageType[]>([]);
+  const messages = useMemo(
+    () => [...serverMessages, ...sentMessages],
+    [serverMessages, sentMessages],
+  );
+
   const [isSuggestedReplyOn, setIsSuggestedReplyOn] = useState(true);
   const [currentAi, setCurrentAi] = useState<AIModelType>({
     id: "Claude Opus 4.6",
@@ -56,7 +95,7 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
     if (!trimmedMessage) return;
 
     // 즉시 말풍선으로 이어지는 사용자 입력 상태
-    setMessages((prevMessages) => [
+    setSentMessages((prevMessages) => [
       ...prevMessages,
       {
         id: `user-${Date.now()}`,
@@ -67,25 +106,66 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
   }, []);
 
   const handleDeleteMessage = useCallback((messageId: string) => {
-    // AI 응답 하단 삭제 액션에서 해당 메시지를 목록에서 제거
-    setMessages((prevMessages) =>
+    // 삭제 API가 아직 없어, 이번 세션에서 보낸 메시지만 화면에서 지울 수 있다.
+    setSentMessages((prevMessages) =>
       prevMessages.filter((message) => message.id !== messageId),
     );
   }, []);
 
   const handleRetryMessage = useCallback((messageId: string) => {
     // 재생성 API 연결 전까지는 같은 응답을 유지하며 다시하기 액션 자리만 보존
-    setMessages((prevMessages) =>
+    setSentMessages((prevMessages) =>
       prevMessages.map((message) =>
         message.id === messageId ? { ...message } : message,
       ),
     );
   }, []);
 
+  // 첫 페이지가 도착하면 최신 메시지가 보이도록 맨 아래로 스크롤한다.
+  useLayoutEffect(() => {
+    if (hasScrolledToBottomRef.current || isMessagesPending) return;
+
+    const el = scrollContainerRef.current;
+    if (!el) return;
+
+    el.scrollTop = el.scrollHeight;
+    hasScrolledToBottomRef.current = true;
+  }, [isMessagesPending, data?.pages.length]);
+
+  // 과거 메시지가 위쪽에 새로 추가된 뒤에도 보던 위치가 밀리지 않게 유지한다.
+  useLayoutEffect(() => {
+    const el = scrollContainerRef.current;
+    if (!el || previousScrollHeightRef.current === null) return;
+
+    el.scrollTop += el.scrollHeight - previousScrollHeightRef.current;
+    previousScrollHeightRef.current = null;
+  }, [serverMessages]);
+
+  const handleLoadOlderMessages = useCallback(() => {
+    if (!hasNextPage || isFetchingNextPage) return;
+
+    previousScrollHeightRef.current = scrollContainerRef.current?.scrollHeight ?? null;
+    fetchNextPage();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  const { targetRef: topSentinelRef } = useIntersectionObserver({
+    onIntersect: handleLoadOlderMessages,
+    enabled: Boolean(hasNextPage) && !isMessagesPending,
+  });
+
+  if (isRoomError) {
+    return (
+      <section className="flex h-full min-h-0 flex-1 items-center justify-center bg-dark">
+        <ErrorState error={roomError} onRetry={refetchRoom} />
+      </section>
+    );
+  }
+
   return (
     <section className="flex h-full min-h-0 flex-1 justify-center bg-dark pt-2">
       <div className="flex h-full w-full max-w-[867px] flex-col">
         <div
+          ref={scrollContainerRef}
           onScroll={onScroll}
           className={cn(
             "relative flex-1 overflow-y-auto hide-scrollbar-on-idle",
@@ -94,7 +174,7 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
         >
           <ChattingRoomHeader
             roomId={roomId}
-            characterName="캐릭터 이름"
+            characterName=""
             currentAi={currentAi}
             handleCurrentAi={handleCurrentAi}
             isSuggestedReplyOn={isSuggestedReplyOn}
@@ -103,12 +183,21 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
             }
           />
           <ChattingRoomNotice />
-          <MessageList
-            messages={messages}
-            isAiSuggestedChat={isSuggestedReplyOn}
-            onDeleteMessage={handleDeleteMessage}
-            onRetryMessage={handleRetryMessage}
-          />
+
+          {hasNextPage && (
+            <div ref={topSentinelRef} aria-hidden="true" className="h-px" />
+          )}
+
+          {isMessagesError && serverMessages.length === 0 ? (
+            <ErrorState error={messagesError} onRetry={refetchMessages} />
+          ) : (
+            <MessageList
+              messages={messages}
+              isAiSuggestedChat={isSuggestedReplyOn}
+              onDeleteMessage={handleDeleteMessage}
+              onRetryMessage={handleRetryMessage}
+            />
+          )}
         </div>
 
         {/* 메시지 목록이 px-4 를 쓰므로 입력창도 같은 여백을 써야 줄이 맞는다. */}

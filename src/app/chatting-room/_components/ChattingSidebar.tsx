@@ -235,7 +235,10 @@ const ChattingSidebar = ({
             {sidebarDepth === "MEMORY" ? (
               <ChattingMemoryView roomId={roomId} onBack={handleDepthBack} />
             ) : sidebarDepth === "ASSET_GALLERY" ? (
-              <ChattingAssetGalleryView onBack={handleAssetGalleryBack} />
+              <ChattingAssetGalleryView
+                roomId={roomId}
+                onBack={handleAssetGalleryBack}
+              />
             ) : (
               <div className="flex h-full flex-col justify-between p-5">
                 <div className="flex flex-col gap-5">

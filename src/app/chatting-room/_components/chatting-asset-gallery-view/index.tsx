@@ -6,17 +6,16 @@ import { ArrowLeft, ImageIcon } from "@/icons";
 import AssetGalleryItem from "./_components/AssetGalleryItem";
 
 interface ChattingAssetGalleryViewProps {
+  roomId: string;
   onBack: () => void;
 }
 
-/** 실제 채팅방 id 연결 전 임시 room id */
-const MOCK_CHAT_ROOM_ID = "mock-room";
-
 const ChattingAssetGalleryView = ({
+  roomId,
   onBack,
 }: ChattingAssetGalleryViewProps) => {
   const t = useTranslations("chatRoom.sidebar");
-  const { data: assetGallery } = useChatAssetGalleryQuery(MOCK_CHAT_ROOM_ID);
+  const { data: assetGallery } = useChatAssetGalleryQuery(roomId);
   const assetItems = assetGallery?.items ?? [];
 
   return (
