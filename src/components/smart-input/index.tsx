@@ -39,6 +39,7 @@ const SmartInput = forwardRef<
     isOpen,
     modalComponents,
     toggleIsOpen,
+    modalActionLabel,
     onChange,
     error = undefined,
     helperMessage,
@@ -244,7 +245,13 @@ const SmartInput = forwardRef<
               <span className={cn(!value && "text-font-disabled")}>
                 {value || translateText(placeholder)}
               </span>
-              {renderRightIcon()}
+              {modalActionLabel ? (
+                <span className="body-7 shrink-0 rounded bg-card px-3 py-1 text-font-2">
+                  {translateText(modalActionLabel)}
+                </span>
+              ) : (
+                renderRightIcon()
+              )}
               {isOpen && modalComponents}
             </div>
           )}

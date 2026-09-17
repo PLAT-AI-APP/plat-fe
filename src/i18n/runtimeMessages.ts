@@ -198,12 +198,13 @@ const en = {
     personaLabel: "My persona",
     personaDescription:
       "Who are you in this conversation? Set your name, job, and defining traits.",
-    change: "Change",
-    personaValue: "Yuna",
+    personaPlaceholder: "Choose a persona",
+    personaChange: "Change",
     scenarioLabel: "Scenario",
     scenarioDescription:
       "What kind of theme would you like to start with? Pick one of the prepared scenarios.",
     submit: "Start",
+    submitting: "Starting...",
   },
   chatUI: {
     modelSelect: "Select AI model",
@@ -450,12 +451,13 @@ const ko: RuntimeMessages = {
     personaLabel: "내 페르소나",
     personaDescription:
       "대화 속에서 당신은 어떤 인물인가요? 당신의 이름, 직업, 특징을 설정해 보세요.",
-    change: "변경",
-    personaValue: "윤아",
+    personaPlaceholder: "페르소나를 선택해주세요",
+    personaChange: "변경",
     scenarioLabel: "시나리오",
     scenarioDescription:
       "어떤 테마로 대화를 시작할까요? 준비된 시나리오 중 하나를 골라보세요.",
     submit: "시작하기",
+    submitting: "시작하는 중...",
   },
   chatUI: {
     modelSelect: "AI 모델 선택",
@@ -694,12 +696,13 @@ const ja: RuntimeMessages = {
     personaLabel: "マイペルソナ",
     personaDescription:
       "会話の中であなたはどんな人物ですか？名前、職業、特徴を設定してみましょう。",
-    change: "変更",
-    personaValue: "ユナ",
+    personaPlaceholder: "ペルソナを選択してください",
+    personaChange: "変更",
     scenarioLabel: "シナリオ",
     scenarioDescription:
       "どんなテーマで会話を始めますか？用意されたシナリオの中から一つ選んでください。",
     submit: "始める",
+    submitting: "開始しています...",
   },
   chatUI: {
     modelSelect: "AIモデル選択",
@@ -932,11 +935,12 @@ const zh: RuntimeMessages = {
     personaLabel: "我的人格",
     personaDescription:
       "在这段对话中你是什么样的人物？请设置你的名字、职业和特点。",
-    change: "更改",
-    personaValue: "允儿",
+    personaPlaceholder: "请选择人格",
+    personaChange: "更改",
     scenarioLabel: "场景",
     scenarioDescription: "你想以什么主题开始对话？请从准备好的场景中选择一个。",
     submit: "开始",
+    submitting: "开始中...",
   },
   chatUI: {
     modelSelect: "选择 AI 模型",
@@ -1177,12 +1181,13 @@ const th: RuntimeMessages = {
     personaLabel: "เพอร์โซนาของฉัน",
     personaDescription:
       "ในบทสนทนานี้คุณเป็นคนแบบไหน? ลองตั้งชื่อ อาชีพ และลักษณะเด่นของคุณดู",
-    change: "เปลี่ยน",
-    personaValue: "ยุนอา",
+    personaPlaceholder: "เลือกเพอร์โซนาของคุณ",
+    personaChange: "เปลี่ยน",
     scenarioLabel: "สถานการณ์",
     scenarioDescription:
       "อยากเริ่มบทสนทนาด้วยธีมแบบไหน? เลือกหนึ่งในสถานการณ์ที่เตรียมไว้ได้เลย",
     submit: "เริ่ม",
+    submitting: "กำลังเริ่ม...",
   },
   chatUI: {
     modelSelect: "เลือกโมเดล AI",
@@ -1430,12 +1435,13 @@ const vi: RuntimeMessages = {
     personaLabel: "Persona của tôi",
     personaDescription:
       "Trong cuộc trò chuyện này, bạn là người như thế nào? Hãy thiết lập tên, nghề nghiệp và đặc điểm của bạn.",
-    change: "Thay đổi",
-    personaValue: "Yuna",
+    personaPlaceholder: "Chọn persona của bạn",
+    personaChange: "Thay đổi",
     scenarioLabel: "Kịch bản",
     scenarioDescription:
       "Bạn muốn bắt đầu cuộc trò chuyện với chủ đề nào? Hãy chọn một trong các kịch bản đã chuẩn bị.",
     submit: "Bắt đầu",
+    submitting: "Đang bắt đầu...",
   },
   chatUI: {
     modelSelect: "Chọn mô hình AI",

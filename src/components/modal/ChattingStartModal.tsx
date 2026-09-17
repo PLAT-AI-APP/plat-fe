@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import ActiveButton from "../ActiveButton";
 import { ModalLayout } from "../ModalLayout";
@@ -8,26 +9,74 @@ import ScenarioSelectPopover from "../popover/ScenarioSelectPopover";
 import SmartInput from "@/components/smart-input";
 import useToggle from "@/hooks/common/useToggle";
 import { Close, Message, User } from "@/icons";
+import { usePostRoomMutation } from "@/api/room/postRoom";
+import { useMePersonasQuery } from "@/api/persona/mePersonas";
+import { useModalStore } from "@/store/useModalStore";
 import { CharacterScenario } from "@/type/character";
 import { ChattingStartModalProps } from "@/type/modal";
+import { Persona } from "@/type/persona";
 import IconButton from "@/components/ui/IconButton";
 
 const ChattingStartModal = ({
   onClose,
+  universeId,
   scenarioList,
   currentScenario,
-  setCurrentScenario,
 }: ChattingStartModalProps) => {
   const t = useTranslations();
   const commonT = useTranslations("modalUi.common");
-  const [localScenario, setLocalScenario] = useState(currentScenario);
-  const { isOpen, close, toggle } = useToggle();
-  const triggerRef = useRef<HTMLElement>(null);
+  const router = useRouter();
+  const openModal = useModalStore((state) => state.openModal);
+  const { data: personas } = useMePersonasQuery();
+  const { mutate: createRoom, isPending } = usePostRoomMutation();
 
-  const handleSelect = (scenario: CharacterScenario) => {
-    // 모달 안의 선택값과 부모 상태를 같이 갱신해 닫힌 뒤에도 선택 결과가 유지되게 합니다.
+  const [localScenario, setLocalScenario] = useState(currentScenario);
+  const [selectedPersona, setSelectedPersona] = useState<Persona | undefined>(
+    undefined,
+  );
+  const {
+    isOpen: isScenarioOpen,
+    close: closeScenario,
+    toggle: toggleScenario,
+  } = useToggle();
+  const scenarioTriggerRef = useRef<HTMLElement>(null);
+
+  // 사용자가 아직 고르지 않았다면 기본 페르소나(없으면 첫 번째)를 보여줍니다.
+  // 리렌더마다 다시 계산되므로, 목록이 나중에 도착해도 useEffect 없이 자연스럽게 반영됩니다.
+  const activePersona =
+    selectedPersona ??
+    personas?.find((persona) => persona.isDefault) ??
+    personas?.[0];
+
+  const handleSelectScenario = (scenario: CharacterScenario) => {
     setLocalScenario(scenario);
-    setCurrentScenario(scenario);
+  };
+
+  const handleChangePersona = () => {
+    openModal("PERSONA", {
+      onSelectPersona: setSelectedPersona,
+      currentPersonaId: activePersona?.personaId,
+    });
+  };
+
+  const canSubmit = Boolean(activePersona && localScenario) && !isPending;
+
+  const handleSubmit = () => {
+    if (!activePersona || !localScenario) return;
+
+    createRoom(
+      {
+        universeId,
+        personaId: activePersona.personaId,
+        scenarioId: localScenario.scenarioId,
+      },
+      {
+        onSuccess: ({ roomId }) => {
+          onClose();
+          router.push(`/chatting-room?roomId=${roomId}`);
+        },
+      },
+    );
   };
 
   return (
@@ -51,16 +100,12 @@ const ChattingStartModal = ({
           label={t("chattingStart.personaLabel")}
           description={t("chattingStart.personaDescription")}
           leftElement={<User className="h-5 w-5 text-font-2" />}
-          rightElement={
-            <button
-              type="button"
-              className="body-7 rounded-sm bg-card px-3 py-1 text-font-2 hover:bg-card-hover"
-            >
-              {t("chattingStart.change")}
-            </button>
-          }
+          type="modal"
+          toggleIsOpen={handleChangePersona}
+          value={activePersona?.name}
+          placeholder={t("chattingStart.personaPlaceholder")}
+          modalActionLabel={t("chattingStart.personaChange")}
           disabled
-          value={t("chattingStart.personaValue")}
           descFontSize="body-5"
         />
 
@@ -68,20 +113,18 @@ const ChattingStartModal = ({
           label={t("chattingStart.scenarioLabel")}
           description={t("chattingStart.scenarioDescription")}
           type="modal"
-          isOpen={isOpen}
-          toggleIsOpen={toggle}
-          // SmartInput은 input ref 타입을 기대하지만, modal 타입에서는 실제 트리거 요소를
-          // 팝오버 기준점으로만 사용하므로 공통 ref 객체를 캐스팅해 재사용합니다.
-          ref={triggerRef as unknown as React.Ref<HTMLInputElement>}
+          isOpen={isScenarioOpen}
+          toggleIsOpen={toggleScenario}
+          ref={scenarioTriggerRef as unknown as React.Ref<HTMLInputElement>}
           value={localScenario?.name}
           disabled
           modalComponents={
             <ScenarioSelectPopover
               scenarioList={scenarioList}
               currentScenario={localScenario}
-              handleCurrentScenario={handleSelect}
-              onClose={close}
-              triggerRef={triggerRef}
+              handleCurrentScenario={handleSelectScenario}
+              onClose={closeScenario}
+              triggerRef={scenarioTriggerRef}
             />
           }
           descFontSize="body-5"
@@ -89,8 +132,9 @@ const ChattingStartModal = ({
       </section>
 
       <ActiveButton
-        text={t("chattingStart.submit")}
-        isActive
+        text={t(isPending ? "chattingStart.submitting" : "chattingStart.submit")}
+        isActive={canSubmit}
+        onClick={handleSubmit}
         className="mt-12"
       />
     </ModalLayout>

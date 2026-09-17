@@ -10,7 +10,11 @@ import { ErrorState } from "@/components/state";
 
 import { PersonaModalProps } from "@/type/modal";
 
-const PersonaModal = ({ onClose }: PersonaModalProps) => {
+const PersonaModal = ({
+  onClose,
+  onSelectPersona,
+  currentPersonaId,
+}: PersonaModalProps) => {
   const [shouldFetch, setShouldFetch] = useState(false);
 
   useEffect(() => {
@@ -35,12 +39,23 @@ const PersonaModal = ({ onClose }: PersonaModalProps) => {
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const hasPersonas = Boolean(personas?.length);
+  const isSelectMode = Boolean(onSelectPersona);
 
-  const handleCurrentPersona = useCallback((personaId: string) => {
-    setSelectedId((prevSelectedId) =>
-      prevSelectedId === personaId ? null : personaId,
-    );
-  }, []);
+  const handleCurrentPersona = useCallback(
+    (personaId: string) => {
+      if (onSelectPersona) {
+        const persona = personas?.find((p) => p.personaId === personaId);
+        if (persona) onSelectPersona(persona);
+        onClose();
+        return;
+      }
+
+      setSelectedId((prevSelectedId) =>
+        prevSelectedId === personaId ? null : personaId,
+      );
+    },
+    [onSelectPersona, onClose, personas],
+  );
 
   // 실제 데이터 대기 상태 판단: 요청을 아직 안 보냈거나(!shouldFetch), 쿼리가 진행 중일 때
   const isDataLoading = !shouldFetch || isLoading;
@@ -68,8 +83,14 @@ const PersonaModal = ({ onClose }: PersonaModalProps) => {
               <PersonaItem
                 key={persona.personaId}
                 persona={persona}
-                isActive={selectedId === persona.personaId}
-                hasSelectedPersona={selectedId !== null}
+                isActive={
+                  isSelectMode
+                    ? currentPersonaId === persona.personaId
+                    : selectedId === persona.personaId
+                }
+                hasSelectedPersona={
+                  isSelectMode ? currentPersonaId != null : selectedId !== null
+                }
                 onSelect={handleCurrentPersona}
               />
             ))}
