@@ -7,9 +7,9 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Pen } from "@/icons";
-import { useAuthStore } from "@/store/useAuthStore";
-import { useDialogStore } from "@/store/useDialogStore";
-import { useModalStore } from "@/store/useModalStore";
+// import { useAuthStore } from "@/store/useAuthStore";
+// import { useDialogStore } from "@/store/useDialogStore";
+// import { useModalStore } from "@/store/useModalStore";
 import ChatCountBadge from "./ChatCountBadge";
 import {
   FLUID_SIZE_OVERRIDE,
@@ -48,9 +48,9 @@ const CharacterCard = ({
   editHref,
 }: CharacterCardProps) => {
   const t = useTranslations("characterCard");
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
-  const openDialog = useDialogStore((state) => state.openDialog);
-  const openModal = useModalStore((state) => state.openModal);
+  // const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  // const openDialog = useDialogStore((state) => state.openDialog);
+  // const openModal = useModalStore((state) => state.openModal);
   const config = SIZE_CONFIG[size];
   const fluidOverride = FLUID_SIZE_OVERRIDE[size];
   const imageList = useMemo(() => normalizeImages(images), [images]);
@@ -95,18 +95,19 @@ const CharacterCard = ({
 
   // 세계관 상세 조회는 백엔드가 로그인 없이는 항상 401을 주므로, 비로그인 상태로
   // 들어가 날것의 에러 화면을 보기 전에 여기서 먼저 로그인 안내로 막습니다.
-  const handleCardLinkClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    if (isLoggedIn) return;
-    if (event.button !== 0) return;
-    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-
-    event.preventDefault();
-    openDialog("LOGIN_REQUIRED", {
-      label: "dialog.loginRequired.title",
-      description: "dialog.loginRequired.description",
-      onConfirm: () => openModal("LOGIN", { triggerRef: undefined }),
-    });
-  };
+  // TODO: 임시 비활성화 — 필요 시 아래 주석을 해제하고 Link의 onClick에 다시 연결합니다.
+  // const handleCardLinkClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+  //   if (isLoggedIn) return;
+  //   if (event.button !== 0) return;
+  //   if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  //
+  //   event.preventDefault();
+  //   openDialog("LOGIN_REQUIRED", {
+  //     label: "dialog.loginRequired.title",
+  //     description: "dialog.loginRequired.description",
+  //     onConfirm: () => openModal("LOGIN", { triggerRef: undefined }),
+  //   });
+  // };
 
   // 이미지 슬라이드는 L 사이즈 카드만 쓴다. 다른 사이즈는 이미지가 여러 장이어도
   // 첫 장만 보여주고 넘기는 인터랙션은 필요 없다.
@@ -177,7 +178,7 @@ const CharacterCard = ({
             href={href}
             aria-label={title}
             className="absolute inset-0 z-0"
-            onClick={handleCardLinkClick}
+            // onClick={handleCardLinkClick}
           />
         )}
 
@@ -257,7 +258,7 @@ const CharacterCard = ({
           href={href}
           aria-label={title}
           className="absolute inset-0 z-0"
-          onClick={handleCardLinkClick}
+          // onClick={handleCardLinkClick}
         />
       )}
 
