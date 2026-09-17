@@ -170,8 +170,8 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
   };
 
   return (
-    <section className="flex h-full max-h-[calc(100dvh-var(--header-height)-5.5rem)] w-full max-w-[693px] flex-col gap-12 rounded-3xl bg-darker p-4 lg:h-[919px]">
-      <header className="flex h-12 shrink-0 items-center justify-between rounded-2xl bg-darkest px-4 py-3">
+    <section className="flex h-full max-h-[calc(100dvh-var(--header-height)-5.5rem)] w-full max-w-[693px] flex-col rounded-3xl bg-darker p-4 lg:h-[919px]">
+      <header className="mb-12 flex h-12 shrink-0 items-center justify-between rounded-2xl bg-darkest px-4 py-3">
         <strong className="title-3 truncate text-font-1">
           {scenarioName ||
             t("scenarioFallback", { index: activeScenarioIndex + 1 })}
