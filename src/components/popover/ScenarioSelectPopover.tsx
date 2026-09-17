@@ -20,7 +20,11 @@ const ScenarioSelectPopover = ({
   currentScenario,
 }: ScenarioSelectPopoverProps) => {
   return (
-    <PopoverLayout triggerRef={triggerRef} onClose={onClose} className="w-full">
+    <PopoverLayout
+      triggerRef={triggerRef}
+      onClose={onClose}
+      matchTriggerWidth
+    >
       <ul className="flex flex-col gap-1">
         {scenarioList.map((scenario) => {
           const isActive = currentScenario?.scenarioId === scenario.scenarioId;
