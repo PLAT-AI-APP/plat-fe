@@ -269,12 +269,16 @@ const TAG_SEEDS: { label: string; category: HashtagCategory }[] =
     labels.map((label) => ({ label, category: category as HashtagCategory })),
   );
 
+// 실서버는 성인 태그도 함께 저장해 두고 isAdult 권한에 따라 응답에서만 걸러 냅니다.
+// SPECIAL 카테고리의 자극적인 라벨 일부를 성인 태그로 지정해 그 필터링을 재현합니다.
+const ADULT_LABELS = new Set(["오메가버스", "세뇌", "최면"]);
+
 const TAGS = TAG_SEEDS.map(({ label, category }, index) => ({
   // 실제 응답의 id는 safe integer 범위를 넘는 문자열이라 목업에서도 문자열로 맞춥니다.
   id: String(TAG_SEED_ID + BigInt(index)),
   category,
   label,
-  isAdult: false,
+  isAdult: ADULT_LABELS.has(label),
 }));
 
 export const hashtagHandlers = [
@@ -284,73 +288,15 @@ export const hashtagHandlers = [
       request.headers.get("accept-language"),
     ).toUpperCase();
 
+    // 실서버는 "로그인 + 성인인증 완료"일 때만 isAdult가 true입니다. 목업에는 인증 상태를
+    // 따로 들고 있지 않아, Authorization 헤더가 실려 있으면 성인인증까지 끝난 사용자로 단순화합니다.
+    const isAdult = Boolean(request.headers.get("authorization"));
+    const tags = isAdult ? TAGS : TAGS.filter((tag) => !tag.isAdult);
+
     return HttpResponse.json({
       lang,
-      isAdult: false,
-      tags: TAGS,
+      isAdult,
+      tags,
     });
-  }),
-
-  http.post(endpoint("/feedback/suggest"), async ({ request }) => {
-    const body = (await request.json()) as {
-      content?: string;
-      title?: string;
-      type?: "HASHTAG";
-    };
-    const name = body.title ?? "";
-
-    if (!name) {
-      return HttpResponse.json(
-        {
-          code: "INVALID_INPUT",
-          message: "태그명을 입력해 주세요.",
-          fields: {
-            name: "태그명을 입력해 주세요.",
-          },
-        },
-        { status: 400 },
-      );
-    }
-
-    // 태그 제안 모달에서 토스트 디자인을 확인할 때 사용하는 케이스입니다.
-    if (name === "toast-alert") {
-      return HttpResponse.json(
-        {
-          code: "TOO_MANY_REQUESTS",
-          message: "태그 제안이 잠시 제한되었어요. 조금 뒤 다시 시도해 주세요.",
-        },
-        { status: 429 },
-      );
-    }
-
-    if (TAGS.some((tag) => tag.label === name)) {
-      return HttpResponse.json(
-        {
-          code: "CONFLICT",
-          message: "이미 존재하는 태그입니다.",
-        },
-        { status: 409 },
-      );
-    }
-
-    return new HttpResponse(null, { status: 204 });
-  }),
-
-  http.post(endpoint("/feedback/report"), async ({ request }) => {
-    const body = (await request.json()) as {
-      type?: string;
-      targetId?: string;
-      title?: string;
-      content?: string;
-    };
-
-    if (!body.title || !body.content || !body.targetId) {
-      return HttpResponse.json(
-        { code: "INVALID_INPUT", message: "신고 내용을 입력해 주세요." },
-        { status: 400 },
-      );
-    }
-
-    return new HttpResponse(null, { status: 204 });
   }),
 ];

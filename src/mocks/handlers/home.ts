@@ -61,6 +61,8 @@ const NEW_WORK_ITEMS = Array.from({ length: 24 }, (_, index) => {
   };
 });
 
+// 실서버 BaseCard는 liked를 항상 싣고, 비로그인이면 전부 false로 나갑니다.
+// /home/all, /home/user-recommend 둘 다 이 배열을 공유하므로 liked를 함께 채워 둡니다.
 const USER_RECOMMEND_ITEMS = Array.from({ length: 24 }, (_, index) => {
   const seed = NEW_WORK_SEEDS[index % NEW_WORK_SEEDS.length];
 
@@ -76,6 +78,7 @@ const USER_RECOMMEND_ITEMS = Array.from({ length: 24 }, (_, index) => {
     chatCount: seed.chatCount,
     isNew: index % 5 === 0,
     isOfficial: index % 7 === 0,
+    liked: false,
   };
 });
 
@@ -95,6 +98,8 @@ const OFFICIAL_PREVIEW_ITEMS = Array.from({ length: 24 }, (_, index) => {
     scenarios: [
       {
         episodeNo: 1,
+        // 실서버 ScenarioPreview는 displayOrder도 함께 내려주지만 프론트 타입엔 없어 화면엔 안 쓰입니다.
+        displayOrder: 1,
         title: "첫 만남",
         content:
           "방과 후 과학실에서 정체를 알 수 없는 캐릭터와 처음 마주치는 장면",
@@ -121,6 +126,7 @@ const ASSET_PREVIEW_ITEMS = Array.from({ length: 24 }, (_, index) => {
   };
 });
 
+// 실서버 BaseCard는 liked를 항상 싣고, 비로그인이면 전부 false로 나갑니다.
 const POPULAR_TAG_ITEMS = Array.from({ length: 24 }, (_, index) => {
   const seed = NEW_WORK_SEEDS[index % NEW_WORK_SEEDS.length];
 
@@ -136,9 +142,11 @@ const POPULAR_TAG_ITEMS = Array.from({ length: 24 }, (_, index) => {
     chatCount: seed.chatCount,
     isNew: index % 5 === 0,
     isOfficial: index % 7 === 0,
+    liked: false,
   };
 });
 
+// 실서버 BaseCard는 liked를 항상 싣고, 비로그인이면 전부 false로 나갑니다.
 const TODAY_PICK_ITEMS = Array.from({ length: 24 }, (_, index) => {
   const seed = NEW_WORK_SEEDS[index % NEW_WORK_SEEDS.length];
 
@@ -154,6 +162,7 @@ const TODAY_PICK_ITEMS = Array.from({ length: 24 }, (_, index) => {
     chatCount: seed.chatCount,
     isNew: index % 5 === 0,
     isOfficial: index % 7 === 0,
+    liked: false,
   };
 });
 
@@ -187,6 +196,7 @@ export const homeHandlers = [
 
   // 실서버는 배열이 아니라 SliceWith({condition, page, content})로 감싸서 내려주고,
   // 선호 태그 근거가 없으면 204 No Content를 내려줍니다. 목업도 같은 계약을 따르게 맞춥니다.
+  // condition은 RecommendCondition(refreshed) — 캐시를 새로 채운 요청인지 여부입니다.
   http.get(endpoint("/home/user-recommend"), ({ request }) => {
     const url = new URL(request.url);
     const page = Number(url.searchParams.get("page") ?? 0);
@@ -198,7 +208,16 @@ export const homeHandlers = [
       return new HttpResponse(null, { status: 204 });
     }
 
-    return HttpResponse.json({ condition: null, page, content });
+    return HttpResponse.json({
+      condition: { refreshed: page === 0 },
+      page: {
+        number: page,
+        size,
+        numberOfElements: content.length,
+        hasNext: start + size < USER_RECOMMEND_ITEMS.length,
+      },
+      content,
+    });
   }),
 
   http.get(endpoint("/home/official-preview"), ({ request }) => {

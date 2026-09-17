@@ -10,6 +10,12 @@ const mockUniverseDetails = new Map<string, UniverseDetailResponse>();
 const isUniverseMissing = (universeId?: string): universeId is undefined =>
   !universeId || universeId === "999" || deletedUniverseIds.has(universeId);
 
+/**
+ * 관례상 이 id는 "내 세계관이 아님"을 재현한다 — 999(존재하지 않음)와 같은 방식의 고정 테스트 id.
+ * 백엔드는 UniverseService.assertOwner에서 제작자 본인이 아니면 UNIVERSE_ACCESS_DENIED(403)를 던진다.
+ */
+const FORBIDDEN_UNIVERSE_ID = "403";
+
 const createMockUniverseDetail = (
   universeId: string,
 ): UniverseDetailResponse => ({
@@ -18,7 +24,7 @@ const createMockUniverseDetail = (
   creatorUserId: "1234567890123456789",
   creatorName: "흐물거리는달팽이",
   creatorFollowerCount: 24,
-  editable: true,
+  editable: universeId !== FORBIDDEN_UNIVERSE_ID,
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
   visibility: "PUBLIC",
@@ -66,7 +72,8 @@ const createMockUniverseDetail = (
   ],
 });
 
-const getMockUniverseDetail = (universeId: string) =>
+/** comment.ts 등 다른 핸들러도 세계관 소유권(editable)·댓글 사용 여부를 참조할 수 있도록 export한다. */
+export const getMockUniverseDetail = (universeId: string) =>
   mockUniverseDetails.get(universeId) ?? createMockUniverseDetail(universeId);
 
 const universeNotFound = () =>
@@ -74,6 +81,52 @@ const universeNotFound = () =>
     { code: "UNIVERSE_NOT_FOUND", message: "Universe does not exist." },
     { status: 404 },
   );
+
+/** UniverseService.assertOwner와 동일 — 제작자가 아니면 수정·삭제할 수 없다. */
+const universeAccessDenied = () =>
+  HttpResponse.json(
+    {
+      code: "UNIVERSE_ACCESS_DENIED",
+      message: "세계관을 수정할 권한이 없습니다.",
+    },
+    { status: 403 },
+  );
+
+const invalidInput = (fields: Record<string, string>) =>
+  HttpResponse.json(
+    {
+      code: "INVALID_INPUT",
+      message: "요청 값이 올바르지 않습니다.",
+      fields,
+    },
+    { status: 400 },
+  );
+
+const assetNameDuplicated = () =>
+  HttpResponse.json(
+    {
+      code: "UNIVERSE_ASSET_NAME_DUPLICATED",
+      message: "에셋 이름이 중복되었습니다.",
+    },
+    { status: 409 },
+  );
+
+const hashtagInvalid = () =>
+  HttpResponse.json(
+    {
+      code: "HASHTAG_INVALID",
+      message: "선택한 해시태그가 올바르지 않습니다.",
+    },
+    { status: 400 },
+  );
+
+/** UniverseService.validateAssetNames와 동일 — 에셋 이름은 같은 요청 안에서 중복될 수 없다. */
+const hasDuplicateAssetNames = (names: string[]) =>
+  new Set(names).size !== names.length;
+
+/** UniverseService.validateTagIds와 동일 — 태그 id가 중복되면 안 된다. */
+const hasDuplicateTagIds = (tagIds: string[]) =>
+  new Set(tagIds).size !== tagIds.length;
 
 /** 서버와 같이 멱등입니다. 이미 그 상태면 카운트를 건드리지 않습니다. */
 const setUniverseLiked = (universeId: string, liked: boolean) => {
@@ -207,6 +260,11 @@ export const universeHandlers = [
       );
     }
 
+    // assertOwner: 제작자 본인이 아니면 삭제할 수 없다.
+    if (!getMockUniverseDetail(universeId).editable) {
+      return universeAccessDenied();
+    }
+
     deletedUniverseIds.add(universeId);
 
     return new HttpResponse(null, { status: 204 });
@@ -225,22 +283,27 @@ export const universeHandlers = [
       );
     }
 
-    const body = (await request.json()) as UniverseUpdateRequest;
-
-    if (!body.language) {
-      return HttpResponse.json(
-        {
-          code: "UNIVERSE_LANGUAGE_REQUIRED",
-          message: "language is required.",
-          fields: {
-            language: "language is required.",
-          },
-        },
-        { status: 400 },
-      );
+    // assertOwner: 제작자 본인이 아니면 수정할 수 없다.
+    const current = getMockUniverseDetail(universeId);
+    if (!current.editable) {
+      return universeAccessDenied();
     }
 
-    const current = getMockUniverseDetail(universeId);
+    const body = (await request.json()) as UniverseUpdateRequest;
+
+    // PatchUniverseRequest는 language만 @NotNull — 나머지는 생략 시 기존 값 유지다.
+    if (!body.language) {
+      return invalidInput({ language: "언어를 선택해 주세요." });
+    }
+
+    if (body.assets && hasDuplicateAssetNames(body.assets.map((a) => a.assetName))) {
+      return assetNameDuplicated();
+    }
+
+    if (body.tagIds && hasDuplicateTagIds(body.tagIds)) {
+      return hashtagInvalid();
+    }
+
     mockUniverseDetails.set(
       universeId,
       createUpdatedUniverseDetail(universeId, current, body),
@@ -252,29 +315,37 @@ export const universeHandlers = [
   http.post(endpoint("/universe"), async ({ request }) => {
     const body = (await request.json()) as UniverseCreateRequest;
 
-    if (
-      !body.title ||
-      !body.character?.name ||
-      !body.detailSetting ||
-      !body.introduce ||
-      !body.profileImageFileId ||
-      !body.character?.profileImageFileId
-    ) {
-      return HttpResponse.json(
-        {
-          code: "UNIVERSE_REQUIRED_FIELD_MISSING",
-          message: "Required universe fields are missing.",
-          fields: {
-            ...(!body.title ? { title: "title is required." } : {}),
-            ...(!body.character?.name ? { name: "name is required." } : {}),
-            ...(!body.detailSetting
-              ? { detailSetting: "detailSetting is required." }
-              : {}),
-            ...(!body.introduce ? { introduce: "introduce is required." } : {}),
-          },
-        },
-        { status: 400 },
-      );
+    // PostUniverseRequest: title/introduce/detailSetting/description/character 필드/profileImageFileId는 @NotBlank·@NotNull,
+    // scenarios·tagIds는 @NotEmpty.
+    const fields: Record<string, string> = {};
+    if (!body.title) fields.title = "제목을 입력해 주세요.";
+    if (!body.introduce) fields.introduce = "한 줄 소개를 입력해 주세요.";
+    if (!body.detailSetting) fields.detailSetting = "상세 설정을 입력해 주세요.";
+    if (!body.description) fields.description = "설명을 입력해 주세요.";
+    if (!body.scenarios || body.scenarios.length === 0)
+      fields.scenarios = "시나리오를 1개 이상 입력해 주세요.";
+    if (!body.tagIds || body.tagIds.length === 0)
+      fields.tagIds = "해시태그를 1개 이상 선택해 주세요.";
+    if (!body.profileImageFileId)
+      fields.profileImageFileId = "대표 이미지를 업로드해 주세요.";
+    if (!body.character?.name) fields["character.name"] = "캐릭터 이름을 입력해 주세요.";
+    if (!body.character?.description)
+      fields["character.description"] = "캐릭터 설명을 입력해 주세요.";
+    if (!body.character?.detailSetting)
+      fields["character.detailSetting"] = "캐릭터 상세 설정을 입력해 주세요.";
+    if (!body.character?.profileImageFileId)
+      fields["character.profileImageFileId"] = "캐릭터 프로필 이미지를 업로드해 주세요.";
+
+    if (Object.keys(fields).length > 0) {
+      return invalidInput(fields);
+    }
+
+    if (hasDuplicateAssetNames((body.assets ?? []).map((a) => a.assetName))) {
+      return assetNameDuplicated();
+    }
+
+    if (hasDuplicateTagIds(body.tagIds)) {
+      return hashtagInvalid();
     }
 
     return HttpResponse.json(
