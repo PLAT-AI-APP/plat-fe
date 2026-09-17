@@ -101,10 +101,10 @@ const PreviewListItem = ({
           <div
             id="view-content-container"
             className={cn(
-              "flex pb-2",
-              item.type === "action" ? "flex-col" : "items-end gap-2",
+              "flex",
+              item.type === "action" ? "flex-col pb-2" : "items-end gap-2",
               item.type === "userChat" && "justify-end",
-              item.type === "asset" && "justify-center",
+              item.type === "asset" && "justify-center pb-2",
             )}
           >
             <div
