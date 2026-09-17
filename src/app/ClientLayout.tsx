@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useQueryClient } from "@tanstack/react-query";
 import Header from "@/components/header";
 import Sidebar from "@/components/Sidebar";
 import { usePathname, useRouter } from "next/navigation";
@@ -51,6 +52,7 @@ export default function ClientLayout({
 }) {
   const pathname = usePathname();
   const t = useTranslations();
+  const queryClient = useQueryClient();
 
   useMyInfoQuery();
   useWalletBalanceQuery();
@@ -211,6 +213,20 @@ export default function ClientLayout({
     setAuthReady,
     setLoggedIn,
   ]);
+
+  /*
+   * 세션이 만료된 동안 열려 있던 화면의 조회들은 401로 실패한 채 멈춰 있다.
+   * 재로그인해도 그 자체로는 아무 것도 다시 불러오지 않으므로, 로그아웃→로그인
+   * 전환 시점에 캐시된 조회를 전부 무효화해 새 토큰으로 다시 불러오게 한다.
+   * 최초 마운트(단순 새로고침으로 인한 하이드레이션)는 전환으로 치지 않는다.
+   */
+  const wasLoggedInRef = useRef(isLoggedIn);
+  useEffect(() => {
+    if (!wasLoggedInRef.current && isLoggedIn) {
+      queryClient.invalidateQueries();
+    }
+    wasLoggedInRef.current = isLoggedIn;
+  }, [isLoggedIn, queryClient]);
 
   useEffect(() => {
     if (isAuthChecking) return;
