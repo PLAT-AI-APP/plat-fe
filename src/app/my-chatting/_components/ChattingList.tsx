@@ -47,13 +47,13 @@ const ChattingList = ({ searchQuery }: ChattingListProps) => {
     fetchNextPage,
   });
 
-  // 검색은 이미 받아 둔 쪽(title/마지막 메시지)만 거른다 — /rooms는 검색어 파라미터를 지원하지 않는다.
+  // 검색은 이미 받아 둔 쪽(title/페르소나 이름/마지막 메시지)만 거른다 — /rooms는 검색어 파라미터를 지원하지 않는다.
   const normalizedSearchQuery = searchQuery.trim().toLowerCase();
   const filteredItems = useMemo(
     () =>
       normalizedSearchQuery
         ? items.filter((room) =>
-            [room.title, room.lastMessage].some((value) =>
+            [room.title, room.personaName, room.lastMessage].some((value) =>
               value.toLowerCase().includes(normalizedSearchQuery),
             ),
           )
@@ -83,7 +83,9 @@ const ChattingList = ({ searchQuery }: ChattingListProps) => {
                 roomId={room.roomId}
                 title={room.title}
                 thumbnailUrl={room.thumbnailUrl}
+                personaName={room.personaName}
                 lastMessage={room.lastMessage}
+                lastUsedAt={room.lastUsedAt}
                 isPinned={room.isPinned}
               />
 

@@ -22,7 +22,9 @@ export interface ThumbnailRoom {
   roomId: string;
   title: string;
   thumbnailUrl: string | null;
+  personaName: string;
   lastMessage: string;
+  lastUsedAt: string | null;
   isPinned: boolean;
 }
 

@@ -118,7 +118,9 @@ const toThumbnail = (room: MockRoom): ThumbnailRoom => ({
   roomId: room.roomId,
   title: room.title,
   thumbnailUrl: room.thumbnailUrl,
+  personaName: room.personaName,
   lastMessage: room.messages.at(-1)?.content ?? "",
+  lastUsedAt: room.lastUsedAt,
   isPinned: room.isPinned,
 });
 
