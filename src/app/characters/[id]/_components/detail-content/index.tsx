@@ -171,9 +171,9 @@ const CharacterDetailContent = ({
 
   const openChatStartModal = () => {
     openModal("CHATTING_START", {
+      universeId: characterId,
       scenarioList: character.scenarios,
       currentScenario,
-      setCurrentScenario: () => undefined,
     });
   };
 
