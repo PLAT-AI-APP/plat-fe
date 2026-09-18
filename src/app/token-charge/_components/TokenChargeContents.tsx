@@ -7,6 +7,7 @@ import { useProductsQuery } from "@/api/product/getProducts";
 import { useUsageHistoryListQuery } from "@/api/note/getUsageHistoryList";
 import Token from "@/icons/Token";
 import { formatWithCommas, toMajorAmount } from "@/lib/utils";
+import { useAuthStore } from "@/store/useAuthStore";
 import { useWalletStore } from "@/store/useWalletStore";
 import type { Product } from "@/type/product";
 import PolicyGuide from "./PolicyGuide";
@@ -67,10 +68,10 @@ const ProductListSkeleton = () => (
 
 const TokenChargeContents = () => {
   const t = useTranslations();
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const availableBalance = useWalletStore(
     (state) => state.balance?.availableBalance ?? 0,
   );
-  // isPending 은 로그인 전 비활성 상태에서도 true 라 스켈레톤이 걷히지 않는다.
   const {
     data: products,
     error,
@@ -88,30 +89,34 @@ const TokenChargeContents = () => {
     <section className="mx-auto w-full max-w-160 pt-5">
       <PageTitle messageKey="tokenCharge.title" />
 
-      <div className="mb-9 flex items-center justify-between gap-4 rounded-3xl border border-main bg-darker px-5 py-4">
-        <div className="flex flex-col gap-2">
-          <span className="body-5 text-font-2">{t("tokenCharge.myNote")}</span>
-          <div className="title-1 flex items-center gap-2">
-            <Token className="h-6 w-6" /> {formatWithCommas(availableBalance)}
+      {isLoggedIn && (
+        <div className="mb-9 flex items-center justify-between gap-4 rounded-3xl border border-main bg-darker px-5 py-4">
+          <div className="flex flex-col gap-2">
+            <span className="body-5 text-font-2">
+              {t("tokenCharge.myNote")}
+            </span>
+            <div className="title-1 flex items-center gap-2">
+              <Token className="h-6 w-6" /> {formatWithCommas(availableBalance)}
+            </div>
           </div>
-        </div>
 
-        {hasUsageHistory ? (
-          <Link
-            href="/usage-history"
-            className="body-5 shrink-0 rounded-2xl bg-main px-4 py-2 text-font-1 transition-colors hover:bg-btn-hover"
-          >
-            {t("tokenCharge.viewUsageHistory")}
-          </Link>
-        ) : (
-          <span
-            aria-disabled="true"
-            className="body-5 shrink-0 cursor-default rounded-2xl bg-font-disabled px-4 py-2 text-font-1"
-          >
-            {t("tokenCharge.viewUsageHistory")}
-          </span>
-        )}
-      </div>
+          {hasUsageHistory ? (
+            <Link
+              href="/usage-history"
+              className="body-5 shrink-0 rounded-2xl bg-main px-4 py-2 text-font-1 transition-colors hover:bg-btn-hover"
+            >
+              {t("tokenCharge.viewUsageHistory")}
+            </Link>
+          ) : (
+            <span
+              aria-disabled="true"
+              className="body-5 shrink-0 cursor-default rounded-2xl bg-font-disabled px-4 py-2 text-font-1"
+            >
+              {t("tokenCharge.viewUsageHistory")}
+            </span>
+          )}
+        </div>
+      )}
 
       <div className="flex flex-col gap-4">
         <h2 className="title-2 text-font-0">{t("tokenCharge.purchase")}</h2>

@@ -5,7 +5,6 @@ export const PROTECTED_ROUTES = [
   "/character-creat",
   "/studio",
   "/usage-history",
-  "/token-charge",
   "/withdrawal",
   "/profile",
   // 유니버스 상세 조회 자체가 백엔드에서 로그인을 요구해, 비로그인 접근 시
