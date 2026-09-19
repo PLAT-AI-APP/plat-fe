@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useChatModelsQuery } from "@/api/chat/getChatModels";
 import { useRoomDetailQuery } from "@/api/room/getRoomDetail";
 import { useRoomMessagesInfiniteQuery } from "@/api/room/getRoomMessages";
 import ChatForm from "@/components/chat/ChatForm";
@@ -9,6 +9,7 @@ import MessageList from "@/components/chat/MessageList";
 import { ErrorState } from "@/components/state";
 import { useIntersectionObserver } from "@/hooks/dom/useIntersectionObserver";
 import { useScrollTimeout } from "@/hooks/dom/useScrollTiemout";
+import { toAiModel } from "@/lib/chatModel";
 import { cn } from "@/lib/utils";
 import { AIModelType, ChatMessageType } from "@/type/chat";
 import type { RoomMessage } from "@/type/room";
@@ -39,7 +40,6 @@ const toChatMessage = (message: RoomMessage): ChatMessageType =>
       };
 
 const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
-  const t = useTranslations();
   const { isScrolling, onScroll } = useScrollTimeout();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const previousScrollHeightRef = useRef<number | null>(null);
@@ -76,17 +76,17 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
   );
 
   const [isSuggestedReplyOn, setIsSuggestedReplyOn] = useState(true);
-  const [currentAi, setCurrentAi] = useState<AIModelType>({
-    id: "Claude Opus 4.6",
-    name: "Opus 4.6",
-    description: t("chatUI.claudeOpus46Description"),
-    price: 1.2,
-    unit: t("chatUI.perChat"),
-    icon: "/ai-logo/claude.png",
-  });
+  const { data: chatCatalog } = useChatModelsQuery();
+  const models = useMemo(
+    () => chatCatalog?.models.map(toAiModel) ?? [],
+    [chatCatalog],
+  );
+  // 서버에 방별 모델 저장이 없어 화면에서만 기억하고, 고르기 전엔 목록 첫 모델을 쓴다.
+  const [selectedModelId, setSelectedModelId] = useState<string | null>(null);
+  const currentAi = models.find((model) => model.id === selectedModelId) ?? models[0];
 
   const handleCurrentAi = useCallback((model: AIModelType) => {
-    setCurrentAi(model);
+    setSelectedModelId(model.id);
   }, []);
 
   const handleSendMessage = useCallback((message: string) => {
@@ -175,6 +175,7 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
           <ChattingRoomHeader
             roomId={roomId}
             characterName=""
+            models={models}
             currentAi={currentAi}
             handleCurrentAi={handleCurrentAi}
             isSuggestedReplyOn={isSuggestedReplyOn}

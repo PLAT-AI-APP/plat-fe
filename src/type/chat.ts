@@ -1,12 +1,19 @@
 export interface AIModelType {
+  /** ChatModelOption.name(enum 이름). 채팅 요청에 이 값을 보냅니다. */
   id: string;
+  /** 선택 버튼에 짧게 보여줄 이름 (예: "Sonnet 4.6") */
   name: string;
-  description: string;
-  price: number; // 현재 가격 (할인가 포함)
+  /** 목록에 보여줄 전체 이름 (예: "Claude Sonnet 4.6") */
+  label: string;
+  provider: ChatModelOption["provider"];
+  icon: string; // 아이콘 경로 또는 이름
+  // 아래 값들은 GET /chat/models가 아직 내려주지 않아, 없으면 화면에서 생략합니다.
+  /** chatUI 번역 키. 백엔드가 설명을 주지 않아 프론트에서 모델별로 붙입니다. */
+  descriptionKey?: string;
+  price?: number; // 현재 가격 (할인가 포함)
   originalPrice?: number; // 원래 가격 (할인이 있을 때만)
   discountRate?: number; // 할인율 (단위: %)
-  unit: string; // 단위 (예: "채팅")
-  icon: string; // 아이콘 경로 또는 이름
+  unit?: string; // 단위 (예: "채팅")
 }
 
 /** 캐릭터 응답 타입 */
