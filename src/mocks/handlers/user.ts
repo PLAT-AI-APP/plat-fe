@@ -258,6 +258,45 @@ export const userHandlers = [
     return HttpResponse.json(userUniversePage(userId, page, size, authenticated));
   }),
 
+  /**
+   * 특정 유저의 공개 프로필. 로그인 없이 조회할 수 있고 비공개 정보(이메일·생년월일 등)는 없습니다.
+   * "/users/me" 핸들러보다 뒤에 두어야 "me" 가 여기로 새지 않습니다.
+   */
+  http.get(/\/users\/[^/]+(?:\?.*)?$/, ({ request }) => {
+    const userId = pathValue(request.url, /\/users\/([^/]+)$/) ?? "";
+
+    // PublicUserProfileService: 없거나 비활성인 유저는 404 로 끊습니다("999" 는 항상 재현 가능한 고정 트리거).
+    if (userId === "999") {
+      return HttpResponse.json(
+        { code: "USER_NOT_FOUND", message: "유저를 찾을 수 없습니다." },
+        { status: 404 },
+      );
+    }
+
+    // 프런트는 "/" 로 시작하는 이미지를 API 호스트 기준으로 바꿔 요청하므로, 목업에서는 로컬 파일 대신
+    // 절대 URL 을 내려준다. 안 그러면 목업 모드에서 이미지가 API 호스트의 없는 파일을 찾아 깨진다.
+    const fallbackImageUrl = `https://picsum.photos/seed/user-profile-${userId}/320/320`;
+
+    // 내 계정은 프로필 수정 결과가 그대로 이어지게 mockUser 를 돌려줍니다.
+    if (userId === mockUser.id) {
+      return HttpResponse.json({
+        id: mockUser.id,
+        nickname: mockUser.nickname,
+        bio: mockUser.bio,
+        profileImageUrl: mockUser.profileImageUrl?.startsWith("http")
+          ? mockUser.profileImageUrl
+          : fallbackImageUrl,
+      });
+    }
+
+    return HttpResponse.json({
+      id: userId,
+      nickname: `유저_${userId}`,
+      bio: `${userId} 님의 자기소개입니다.\n캐릭터를 만들며 이야기를 나누고 있어요.`,
+      profileImageUrl: fallbackImageUrl,
+    });
+  }),
+
   http.delete(endpoint("/users/me"), async () => {
     return new HttpResponse(null, {
       status: 204,

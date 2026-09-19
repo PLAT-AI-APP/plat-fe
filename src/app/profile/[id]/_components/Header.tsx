@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useFollowCountQuery } from "@/api/follow/getFollowCount";
+import type { UserProfile } from "@/api/user/getUserProfile";
 import { useFollowToggle } from "@/hooks/follow/useFollowToggle";
 import useToggle from "@/hooks/common/useToggle";
 import ProfileActionPopover from "@/components/popover/ProfileActionPopover";
@@ -16,6 +17,8 @@ import { useUserStore } from "@/store/useUserStore";
 
 interface HeaderProps {
   userId: string;
+  /** 아직 불러오는 중이면 undefined. 실패는 이 컴포넌트를 그리기 전에 부모가 처리한다. */
+  profile?: UserProfile;
 }
 
 interface StatItemProps {
@@ -66,7 +69,7 @@ const StatDivider = () => (
   </span>
 );
 
-const Header = ({ userId }: HeaderProps) => {
+const Header = ({ userId, profile }: HeaderProps) => {
   const t = useTranslations();
   const { data: followCount } = useFollowCountQuery(userId);
   // 기본값 0 을 주지 않는다. 못 불러온 것과 0 명인 것은 다른 사실이다.
@@ -83,9 +86,10 @@ const Header = ({ userId }: HeaderProps) => {
   const actionTriggerRef = useRef<HTMLButtonElement>(null);
 
   const isOwnProfile = user?.id === userId;
-  const profileImage = user?.profileImage;
-  const nickname = user?.nickname || t("profile.defaultName");
-  const bio = user?.bio || "";
+  // 로그인한 내 정보(user)가 아니라 이 페이지 유저의 프로필을 그린다. 남의 프로필에서 내 닉네임이 뜨던 문제.
+  const isProfileLoading = !profile;
+  const nickname = profile?.nickname || t("profile.defaultName");
+  const bio = profile?.bio ?? "";
   const chatCount = 0;
 
   const {
@@ -138,20 +142,32 @@ const Header = ({ userId }: HeaderProps) => {
       <section id="profile-info-summary" className="flex w-full flex-col gap-3">
         <div className="flex w-full items-center justify-between gap-4">
           <div className="flex min-w-0 items-center gap-4">
-            <Image
-              src={profileImage || "/p1.png"}
-              alt="프로필 이미지"
-              width={68}
-              height={68}
-              className="size-[68px] shrink-0 rounded-full bg-card-hover object-cover"
-            />
+            {isProfileLoading ? (
+              <div className="skeleton size-[68px] shrink-0 rounded-full" />
+            ) : (
+              <Image
+                src={profile.profileImageUrl || "/p1.png"}
+                alt="프로필 이미지"
+                width={68}
+                height={68}
+                // 백엔드 이미지 호스트가 remotePatterns 에 없으면 next/image 가 렌더 단계에서 던진다.
+                unoptimized
+                className="size-[68px] shrink-0 rounded-full bg-card-hover object-cover"
+              />
+            )}
 
             <div className="flex min-w-0 items-center gap-1">
-              <h1 className="title-1 min-w-0 truncate text-font-1">
-                {nickname}
-              </h1>
+              {isProfileLoading ? (
+                // title-1 한 줄 높이(20px × 1.35)에 맞춰 이름이 들어올 때 줄이 튀지 않게 한다.
+                <div className="skeleton h-[27px] w-32 rounded-full" />
+              ) : (
+                <h1 className="title-1 min-w-0 truncate text-font-1">
+                  {nickname}
+                </h1>
+              )}
 
-              {!isOwnProfile && (
+              {/* 차단 확인 다이얼로그가 닉네임을 보여 주므로 불러온 뒤에만 연다. */}
+              {!isOwnProfile && !isProfileLoading && (
                 <div className="relative flex size-6 shrink-0 items-center justify-center">
                   <button
                     ref={actionTriggerRef}

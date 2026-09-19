@@ -4,10 +4,12 @@ import React, { useMemo, useState, useSyncExternalStore } from "react";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { useLikedUniversesInfiniteQuery } from "@/api/user/getLikedUniverses";
+import { useUserProfileQuery } from "@/api/user/getUserProfile";
 import { useUserUniversesInfiniteQuery } from "@/api/user/getUserUniverses";
 import CharacterShowcase from "@/components/character/CharacterShowcase";
 import SortFilter from "@/components/character/SortFilter";
 import { CharacterSortOption } from "@/components/popover/CharacterSortPopover";
+import { ErrorState } from "@/components/state";
 import { useInfiniteList } from "@/hooks/data/useInfiniteList";
 import { useTabUnderline } from "@/hooks/dom/useTabUnderline";
 import { cn } from "@/lib/utils";
@@ -46,6 +48,13 @@ export default function ProfileContent({ id }: { id: string }) {
     () => useUserStore.persist.hasHydrated(),
     () => false,
   );
+
+  const {
+    data: profile,
+    isError: isProfileError,
+    error: profileError,
+    refetch: refetchProfile,
+  } = useUserProfileQuery(id);
 
   const isOwnProfile = Boolean(myUserId && myUserId === id);
   const [activeTab, setActiveTab] = useState<ProfileTab>("character");
@@ -107,7 +116,7 @@ export default function ProfileContent({ id }: { id: string }) {
     fetchNextPage: fetchNextCreatedPage,
     hasNextPage: hasNextCreatedPage,
     isFetchingNextPage: isFetchingNextCreatedPage,
-  } = useUserUniversesInfiniteQuery(id, !isWishTab);
+  } = useUserUniversesInfiniteQuery(id, !isWishTab && !isProfileError);
 
   const {
     items: createdItems,
@@ -152,9 +161,19 @@ export default function ProfileContent({ id }: { id: string }) {
   const isWishEmpty =
     isWishTab && !isLikedLoading && !isLikedError && likedCards.length === 0;
 
+  // 없는 유저(404)의 프로필에 빈 작품 목록만 덩그러니 그리면 "작품이 없는 유저"로 오해한다.
+  // 헤더 자리만이 아니라 페이지 전체를 실패 표시로 바꾼다.
+  if (isProfileError) {
+    return (
+      <article className="mx-auto flex w-full max-w-(--content-max-width) flex-col pt-6 pb-10">
+        <ErrorState error={profileError} onRetry={refetchProfile} />
+      </article>
+    );
+  }
+
   return (
     <article className="mx-auto flex w-full max-w-(--content-max-width) flex-col gap-10 pt-6 pb-10">
-      <Header userId={id} />
+      <Header userId={id} profile={profile} />
 
       <section
         id="profile-content"
