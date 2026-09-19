@@ -21,15 +21,27 @@ const LazyLayerManagers = () => {
   );
 
   useEffect(() => {
-    return useModalStore.subscribe((state) => {
+    const loadWhenNeeded = (state: ReturnType<typeof useModalStore.getState>) => {
       if (state.modals.length > 0) setHasLoadedModalManager(true);
-    });
+    };
+
+    // A sibling effect can open a modal before this subscription is attached.
+    // Check once after subscribing so that update is not missed.
+    const unsubscribe = useModalStore.subscribe(loadWhenNeeded);
+    loadWhenNeeded(useModalStore.getState());
+    return unsubscribe;
   }, []);
 
   useEffect(() => {
-    return useDialogStore.subscribe((state) => {
+    const loadWhenNeeded = (
+      state: ReturnType<typeof useDialogStore.getState>,
+    ) => {
       if (state.currentDialog) setHasLoadedDialogManager(true);
-    });
+    };
+
+    const unsubscribe = useDialogStore.subscribe(loadWhenNeeded);
+    loadWhenNeeded(useDialogStore.getState());
+    return unsubscribe;
   }, []);
 
   return (
