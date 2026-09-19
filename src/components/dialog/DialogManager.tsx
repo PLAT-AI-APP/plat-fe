@@ -1,8 +1,9 @@
 "use client";
 
+import { Suspense } from "react";
+import type { ComponentType } from "react";
 import { AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
-import type { ComponentType } from "react";
 import { useDialogStore } from "@/store/useDialogStore";
 import type { DialogTypeMap } from "@/type/dialog";
 
@@ -45,11 +46,11 @@ const DialogManager = () => {
   return (
     <AnimatePresence>
       {currentDialog && DialogComponent && (
-        <DialogComponent
-          key={currentDialog.type}
-          {...currentDialog.props}
-          onClose={closeDialog}
-        />
+        // 다이얼로그 청크가 처음 로딩될 때 로딩이 루트 Suspense 로 번져
+        // 페이지 전체가 잠깐 사라지지 않도록 다이얼로그 자리에서 멈춘다.
+        <Suspense key={currentDialog.type} fallback={null}>
+          <DialogComponent {...currentDialog.props} onClose={closeDialog} />
+        </Suspense>
       )}
     </AnimatePresence>
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
 
@@ -44,10 +44,21 @@ const LazyLayerManagers = () => {
     return unsubscribe;
   }, []);
 
+  // next/dynamic 은 ssr 기본값에서 자체 Suspense 를 만들지 않는다. 매니저 청크가
+  // 처음 로딩되는 동안 루트 Suspense 까지 번져 ClientLayout 전체가 사라지므로
+  // 여기서 로딩을 멈춘다.
   return (
     <>
-      {hasLoadedModalManager && <ModalManager />}
-      {hasLoadedDialogManager && <DialogManager />}
+      {hasLoadedModalManager && (
+        <Suspense fallback={null}>
+          <ModalManager />
+        </Suspense>
+      )}
+      {hasLoadedDialogManager && (
+        <Suspense fallback={null}>
+          <DialogManager />
+        </Suspense>
+      )}
     </>
   );
 };
