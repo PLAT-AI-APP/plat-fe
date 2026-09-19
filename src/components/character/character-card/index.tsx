@@ -330,4 +330,4 @@ const CharacterCard = ({
   );
 };
 
-export default CharacterCard;
+export default React.memo(CharacterCard);

@@ -2,14 +2,44 @@
 
 import New from "@/icons/New";
 import { useTranslations } from "next-intl";
-import React from "react";
-import CharacterShowcase from "@/components/character/CharacterShowcase";
+import { useMemo } from "react";
+import CharacterShowcase, {
+  type CharacterShowcaseItem,
+} from "@/components/character/CharacterShowcase";
 import CharacterCreateBanner from "../CharacterCreateBanner";
 import { useTodayPickQuery } from "@/api/home/getTodayPick";
 import { useAllCharactersQuery } from "@/api/home/getAllCharacters";
 import { useAssetPreviewQuery } from "@/api/home/getAssetPreview";
 import { usePopularTagQuery } from "@/api/home/getPopularTag";
 import { useNewWorkQuery } from "@/api/home/getNewWork";
+
+interface HomeCardSource {
+  universeId: string;
+  title: string;
+  description: string;
+  images: string[];
+  creator?: { nickname: string };
+  chatCount?: number;
+  isNew?: boolean;
+  isOfficial?: boolean;
+}
+
+const toShowcaseItem = (
+  item: HomeCardSource,
+  overrides: Partial<CharacterShowcaseItem> = {},
+): CharacterShowcaseItem => ({
+  id: item.universeId,
+  name: item.title,
+  chatCount: item.chatCount,
+  dec: item.description,
+  img: item.images,
+  creatorName: item.creator?.nickname,
+  isNew: item.isNew,
+  isOfficial: item.isOfficial,
+  ...overrides,
+});
+
+const NEW_WORK_TITLE_LOGO = <New className="h-4.5 w-4.5" />;
 
 const HomeTabContents = () => {
   // 홈 탭 언어는 설정 변경 직후 바로 반영되어야 하므로 클라이언트 번역 컨텍스트를 사용합니다.
@@ -27,58 +57,31 @@ const HomeTabContents = () => {
   const popularTag = usePopularTagQuery();
   const newWork = useNewWorkQuery();
 
-  const todayPickCharArray = (todayPick.data ?? []).map((item) => ({
-    id: item.universeId,
-    name: item.title,
-    chatCount: item.chatCount,
-    dec: item.description,
-    img: item.images,
-    creatorName: item.creator.nickname,
-    isNew: item.isNew,
-    isOfficial: item.isOfficial,
-  }));
-
-  const allCharacterArray = (allCharacters.data?.content ?? []).map((item) => ({
-    id: item.universeId,
-    name: item.title,
-    chatCount: item.chatCount,
-    dec: item.description,
-    img: item.images,
-    creatorName: item.creator?.nickname,
-    isNew: item.isNew,
-    isOfficial: item.isOfficial,
-  }));
-
-  const assetPreviewCharArray = (assetPreview.data ?? []).map((item) => ({
-    id: item.universeId,
-    name: item.title,
-    chatCount: item.chatCount,
-    dec: item.description,
-    img: item.images,
-    isNew: item.isNew,
-    isOfficial: item.isOfficial,
-  }));
-
-  const popularTagCharArray = (popularTag.data ?? []).map((item) => ({
-    id: item.universeId,
-    name: item.title,
-    chatCount: item.chatCount,
-    dec: item.description,
-    img: item.images,
-    creatorName: item.creator.nickname,
-    isNew: item.isNew,
-    isOfficial: item.isOfficial,
-  }));
-
-  const newWorkCharArray = (newWork.data ?? []).map((item) => ({
-    id: item.universeId,
-    name: item.title,
-    chatCount: item.chatCount,
-    dec: item.description,
-    img: item.images,
-    creatorName: item.creator.nickname,
-    isNew: true,
-  }));
+  // 각 API 응답 참조가 유지되는 동안 카드용 배열도 재사용해 다른 섹션 갱신의 전파 방지
+  const todayPickCharArray = useMemo(
+    () => (todayPick.data ?? []).map((item) => toShowcaseItem(item)),
+    [todayPick.data],
+  );
+  const allCharacterArray = useMemo(
+    () =>
+      (allCharacters.data?.content ?? []).map((item) => toShowcaseItem(item)),
+    [allCharacters.data],
+  );
+  const assetPreviewCharArray = useMemo(
+    () => (assetPreview.data ?? []).map((item) => toShowcaseItem(item)),
+    [assetPreview.data],
+  );
+  const popularTagCharArray = useMemo(
+    () => (popularTag.data ?? []).map((item) => toShowcaseItem(item)),
+    [popularTag.data],
+  );
+  const newWorkCharArray = useMemo(
+    () =>
+      (newWork.data ?? []).map((item) =>
+        toShowcaseItem(item, { isNew: true }),
+      ),
+    [newWork.data],
+  );
 
   return (
     <article className="mt-6 flex flex-col gap-12">
@@ -137,7 +140,7 @@ const HomeTabContents = () => {
         cardSize="M"
         columns={5}
         limit={10}
-        TitleLogo={<New className="h-4.5 w-4.5" />}
+        TitleLogo={NEW_WORK_TITLE_LOGO}
       />
 
       {/* 전체 캐릭터 모음 — 조건 없이 누적 대화량 순. 로그인하지 않아도 보인다. */}
