@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
-import { commentRepliesQueryKey } from "./getCommentReplies";
-import { universeCommentsQueryKey } from "./getUniverseComments";
+import { commentQueryKeys } from "./queryKeys";
 
 interface DeleteCommentProps {
   commentId: string;
@@ -24,16 +23,16 @@ export const useDeleteCommentMutation = () => {
     mutationFn: deleteComment,
     onSuccess: (_, { commentId, universeId, parentCommentId }) => {
       queryClient.removeQueries({
-        queryKey: commentRepliesQueryKey(commentId),
+        queryKey: commentQueryKeys.replies(commentId),
       });
       if (universeId) {
         queryClient.invalidateQueries({
-          queryKey: universeCommentsQueryKey(universeId),
+          queryKey: commentQueryKeys.universeComments(universeId),
         });
       }
       if (parentCommentId) {
         queryClient.invalidateQueries({
-          queryKey: commentRepliesQueryKey(parentCommentId),
+          queryKey: commentQueryKeys.replies(parentCommentId),
         });
       }
     },

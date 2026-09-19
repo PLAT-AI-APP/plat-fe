@@ -3,6 +3,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
+import { rankingQueryKeys } from "@/api/ranking/queryKeys";
+import { userQueryKeys } from "@/api/user/queryKeys";
 import type { UniverseDetailResponse } from "./getUniverseDetail";
 import { universeQueryKeys } from "./queryKeys";
 
@@ -71,8 +73,8 @@ const useUniverseLikeMutation = (
         queryKey: universeQueryKeys.detail(universeId),
       });
       // 찜 수·찜 여부가 실린 목록들도 다시 받습니다.
-      queryClient.invalidateQueries({ queryKey: ["get-ranking"] });
-      queryClient.invalidateQueries({ queryKey: ["get-liked-universes"] });
+      queryClient.invalidateQueries({ queryKey: rankingQueryKeys.all() });
+      queryClient.invalidateQueries({ queryKey: userQueryKeys.likedUniverses() });
     },
   });
 };

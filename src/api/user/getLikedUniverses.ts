@@ -5,12 +5,10 @@ import { authAxios } from "..";
 import { AppError, PageWith } from "@/type/api";
 import { getNextPageNumber } from "@/lib/pagination";
 import type { LikableCard } from "@/type/card";
+import { userQueryKeys } from "./queryKeys";
 
 /** 백엔드 BaseCard. 찜 목록은 전부 내가 찜한 것이라 liked 는 항상 true 로 옵니다. */
 export type LikedUniverseCard = LikableCard;
-
-/** 찜/취소 후 이 목록도 다시 받아야 해서 키를 밖으로 냅니다. */
-export const likedUniversesQueryKey = ["get-liked-universes"];
 
 /** 서버 기본값과 맞춥니다. */
 export const LIKED_UNIVERSE_PAGE_SIZE = 20;
@@ -32,7 +30,7 @@ const getLikedUniverses = async (page: number) => {
  */
 export const useLikedUniversesInfiniteQuery = (enabled = true) =>
   useInfiniteQuery<PageWith<LikedUniverseCard>, AppError>({
-    queryKey: likedUniversesQueryKey,
+    queryKey: userQueryKeys.likedUniverses(),
     initialPageParam: 0,
     queryFn: ({ pageParam }) => getLikedUniverses(pageParam as number),
     getNextPageParam: getNextPageNumber,

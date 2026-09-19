@@ -4,11 +4,7 @@ import { AppError, SliceWith } from "@/type/api";
 import type { Comment } from "@/type/comment";
 import { getNextPageNumber } from "@/lib/pagination";
 import { useAuthReady } from "@/hooks/data/useAuthReady";
-
-export const commentRepliesQueryKey = (commentId?: string) => [
-  "get-comment-replies",
-  commentId,
-];
+import { commentQueryKeys } from "./queryKeys";
 
 const getCommentReplies = async (
   commentId: string,
@@ -32,7 +28,7 @@ export const useCommentRepliesInfiniteQuery = (
   const authenticated = useAuthReady();
 
   return useInfiniteQuery<SliceWith<Comment>, AppError>({
-    queryKey: [...commentRepliesQueryKey(commentId), authenticated],
+    queryKey: [...commentQueryKeys.replies(commentId), authenticated],
     initialPageParam: 0,
     queryFn: ({ pageParam }) =>
       getCommentReplies(commentId ?? "", pageParam as number, authenticated),

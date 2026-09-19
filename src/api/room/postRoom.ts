@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
 import type { CreateRoomRequest } from "@/type/room";
-import { ROOM_LIST_QUERY_KEY } from "./getRoomList";
+import { roomQueryKeys } from "./queryKeys";
 
 interface CreateRoomResponse {
   roomId: string;
@@ -22,7 +22,7 @@ export const usePostRoomMutation = () => {
     mutationKey: ["post-room"],
     mutationFn: postRoom,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ROOM_LIST_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: roomQueryKeys.lists() });
     },
   });
 };

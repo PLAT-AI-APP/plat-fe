@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "..";
 import { AppError } from "@/type/api";
+import { searchQueryKeys } from "./queryKeys";
 
 /** 직전 갱신 대비 순위 등락. 이번에 처음 올라온 검색어는 NEW 입니다. */
 export type SearchTermTrend = "NEW" | "UP" | "DOWN" | "SAME";
@@ -30,7 +31,7 @@ const getPopularSearchTerms = async (size: number) => {
  */
 export const usePopularSearchTermsQuery = (size = 10) => {
   return useQuery<PopularSearchTerm[], AppError>({
-    queryKey: ["get-popular-search-terms", size],
+    queryKey: searchQueryKeys.popularTerms(size),
     queryFn: () => getPopularSearchTerms(size),
     staleTime: 1000 * 60,
   });

@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
-import { universeCommentsQueryKey } from "./getUniverseComments";
+import { commentQueryKeys } from "./queryKeys";
 
 interface PatchCommentPinProps {
   universeId: string;
@@ -23,7 +23,7 @@ export const usePatchCommentPinMutation = () => {
     mutationFn: patchCommentPin,
     onSuccess: (_, { universeId }) => {
       queryClient.invalidateQueries({
-        queryKey: universeCommentsQueryKey(universeId),
+        queryKey: commentQueryKeys.universeComments(universeId),
       });
     },
   });

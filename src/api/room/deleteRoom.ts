@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
-import { ROOM_LIST_QUERY_KEY } from "./getRoomList";
-import { roomDetailQueryKey } from "./getRoomDetail";
+import { roomQueryKeys } from "./queryKeys";
 
 const deleteRoom = async (roomId: string) => {
   await authAxios.delete(`/rooms/${roomId}`);
@@ -16,8 +15,8 @@ export const useDeleteRoomMutation = () => {
     mutationKey: ["delete-room"],
     mutationFn: deleteRoom,
     onSuccess: (_, roomId) => {
-      queryClient.removeQueries({ queryKey: roomDetailQueryKey(roomId) });
-      queryClient.invalidateQueries({ queryKey: ROOM_LIST_QUERY_KEY });
+      queryClient.removeQueries({ queryKey: roomQueryKeys.detail(roomId) });
+      queryClient.invalidateQueries({ queryKey: roomQueryKeys.lists() });
     },
   });
 };

@@ -2,11 +2,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError, SliceWith } from "@/type/api";
 import type { RoomMessage } from "@/type/room";
-
-export const roomMessagesQueryKey = (roomId?: string) => [
-  "get-room-messages",
-  roomId,
-];
+import { roomQueryKeys } from "./queryKeys";
 
 interface GetRoomMessagesParams {
   roomId: string;
@@ -39,10 +35,10 @@ export const useRoomMessagesInfiniteQuery = (roomId?: string, size = 20) => {
     SliceWith<RoomMessage>,
     AppError,
     { pages: SliceWith<RoomMessage>[]; pageParams: unknown[] },
-    ReturnType<typeof roomMessagesQueryKey>,
+    ReturnType<typeof roomQueryKeys.messages>,
     string | undefined
   >({
-    queryKey: roomMessagesQueryKey(roomId),
+    queryKey: roomQueryKeys.messages(roomId),
     initialPageParam: undefined,
     queryFn: ({ pageParam }) =>
       getRoomMessages({

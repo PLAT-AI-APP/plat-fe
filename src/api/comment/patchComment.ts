@@ -1,8 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
-import { commentRepliesQueryKey } from "./getCommentReplies";
-import { universeCommentsQueryKey } from "./getUniverseComments";
+import { commentQueryKeys } from "./queryKeys";
 
 interface PatchCommentProps {
   commentId: string;
@@ -27,12 +26,12 @@ export const usePatchCommentMutation = () => {
     onSuccess: (_, { universeId, parentCommentId }) => {
       if (universeId) {
         queryClient.invalidateQueries({
-          queryKey: universeCommentsQueryKey(universeId),
+          queryKey: commentQueryKeys.universeComments(universeId),
         });
       }
       if (parentCommentId) {
         queryClient.invalidateQueries({
-          queryKey: commentRepliesQueryKey(parentCommentId),
+          queryKey: commentQueryKeys.replies(parentCommentId),
         });
       }
     },

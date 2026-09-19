@@ -3,6 +3,7 @@ import { authAxios } from "..";
 import { AppError } from "@/type/api";
 import type { ChatCatalog } from "@/type/chat";
 import { useAuthReady } from "@/hooks/data/useAuthReady";
+import { chatQueryKeys } from "./queryKeys";
 
 const getChatModels = async () => {
   const response = await authAxios.get<ChatCatalog>("/chat/models");
@@ -15,7 +16,7 @@ export const useChatModelsQuery = () => {
   const authReady = useAuthReady();
 
   return useQuery<ChatCatalog, AppError>({
-    queryKey: ["get-chat-models"],
+    queryKey: chatQueryKeys.models(),
     queryFn: getChatModels,
     staleTime: 1000 * 60 * 30,
     enabled: authReady,

@@ -2,6 +2,7 @@ import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
 import { Persona } from "@/type/persona";
+import { personaQueryKeys } from "./queryKeys";
 
 interface DetailPersonaApiResponse {
   code?: string;
@@ -56,7 +57,7 @@ export const useDetailPersonaQuery = (
   options?: Partial<UseQueryOptions<Persona, AppError>>,
 ) => {
   return useQuery<Persona, AppError>({
-    queryKey: ["get-persona-detail", personaId],
+    queryKey: personaQueryKeys.detail(personaId),
     queryFn: () => GetDetailPersona(personaId),
     ...options,
   });

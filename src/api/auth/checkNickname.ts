@@ -1,6 +1,7 @@
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
+import { authQueryKeys } from "./queryKeys";
 
 interface CheckNicknameResponse {
   available: boolean;
@@ -35,7 +36,7 @@ export const useCheckNicknameQuery = (
   options?: Partial<UseQueryOptions<CheckNicknameResponse, AppError>>,
 ) => {
   return useQuery<CheckNicknameResponse, AppError>({
-    queryKey: ["get-check-nickname", nickname],
+    queryKey: authQueryKeys.checkNickname(nickname),
     queryFn: () => GetCheckNickname(nickname),
     staleTime: 1000 * 60,
     ...options,

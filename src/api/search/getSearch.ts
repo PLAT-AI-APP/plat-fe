@@ -7,6 +7,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useLocaleStore } from "@/store/useLocaleStore";
 import { useAuthReady } from "@/hooks/data/useAuthReady";
 import type { BaseCard, CardCreator } from "@/type/card";
+import { searchQueryKeys } from "./queryKeys";
 
 /**
  * 검색어 최소 길이. 서버도 같은 값으로 막습니다(SearchPolicy.MIN_KEYWORD_LENGTH).
@@ -72,7 +73,13 @@ export const useSearchQuery = (params: GetSearchParams) => {
   const locale = useLocaleStore((state) => state.locale);
 
   return useQuery<SearchResponse, AppError>({
-    queryKey: ["get-search", locale, authenticated, params.q, params.page, params.size],
+    queryKey: searchQueryKeys.results({
+      locale,
+      authenticated,
+      q: params.q,
+      page: params.page,
+      size: params.size,
+    }),
     queryFn: () => getSearch(params, authenticated),
     // 짧은 검색어는 서버가 400 으로 돌려보내므로 아예 보내지 않습니다.
     enabled: isSearchableKeyword(params.q) && isAuthReady,

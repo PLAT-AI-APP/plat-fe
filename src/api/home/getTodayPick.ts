@@ -6,6 +6,7 @@ import { AppError } from "@/type/api";
 import { useLocaleStore } from "@/store/useLocaleStore";
 import { Tendency, useTendencyStore } from "@/store/useTendencyStore";
 import type { BaseCard, CardCreator } from "@/type/card";
+import { homeQueryKeys } from "./queryKeys";
 
 export type TodayPickCreator = CardCreator;
 
@@ -41,7 +42,12 @@ export const useTodayPickQuery = (params: GetTodayPickParams = {}) => {
   const tendency = useTendencyStore((state) => state.tendency);
 
   return useQuery<TodayPickItem[], AppError>({
-    queryKey: ["get-today-pick", locale, tendency, params.page, params.size],
+    queryKey: homeQueryKeys.todayPick({
+      locale,
+      tendency,
+      page: params.page,
+      size: params.size,
+    }),
     queryFn: () => getTodayPick({ ...params, tendency }),
   });
 };

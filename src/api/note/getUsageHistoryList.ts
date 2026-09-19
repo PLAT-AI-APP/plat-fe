@@ -4,6 +4,7 @@ import { AppError } from "@/type/api";
 import { WalletLedgerListResponse } from "@/type/note";
 import { getNextPageNumber } from "@/lib/pagination";
 import { useAuthReady } from "@/hooks/data/useAuthReady";
+import { noteQueryKeys } from "./queryKeys";
 
 interface GetUsageHistoryListProps {
   page?: number;
@@ -34,7 +35,7 @@ export const useUsageHistoryListQuery = ({
   const authReady = useAuthReady();
 
   return useInfiniteQuery<WalletLedgerListResponse, AppError>({
-    queryKey: ["get-usage-history-list", size],
+    queryKey: noteQueryKeys.usageHistoryList(size),
     initialPageParam: 0,
     queryFn: ({ pageParam = 0 }) =>
       getUsageHistoryList({ page: pageParam as number, size }),

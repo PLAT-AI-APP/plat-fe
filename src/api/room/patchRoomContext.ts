@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
 import type { PromptMultiplier, RoomLanguage } from "@/type/room";
-import { roomDetailQueryKey } from "./getRoomDetail";
+import { roomQueryKeys } from "./queryKeys";
 
 interface RoomScopedProps {
   roomId: string;
@@ -76,7 +76,7 @@ export const usePatchRoomMultiplierMutation = () => {
     mutationFn: patchRoomMultiplier,
     onSuccess: (_, { roomId }) => {
       // 배수는 방 단건 응답에 실려 오므로 갱신 후 다시 읽습니다.
-      queryClient.invalidateQueries({ queryKey: roomDetailQueryKey(roomId) });
+      queryClient.invalidateQueries({ queryKey: roomQueryKeys.detail(roomId) });
     },
   });
 };

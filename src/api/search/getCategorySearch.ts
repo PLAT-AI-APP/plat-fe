@@ -8,6 +8,7 @@ import { useLocaleStore } from "@/store/useLocaleStore";
 import { Tendency, useTendencyStore } from "@/store/useTendencyStore";
 import { useAuthReady } from "@/hooks/data/useAuthReady";
 import type { CardCreator, LikableCard } from "@/type/card";
+import { searchQueryKeys } from "./queryKeys";
 
 /** 대화량순=누적 대화 수, 최신순=등록순. 서버 CategorySort 와 같은 값입니다. */
 export type CategorySort = "CHAT" | "LATEST";
@@ -77,20 +78,17 @@ export const useCategorySearchQuery = (
   const locale = useLocaleStore((state) => state.locale);
   // 성향이 바뀌면 목록도 달라지므로 캐시를 분리합니다.
   const tendency = useTendencyStore((state) => state.tendency);
-  const tagIds = params.tagIds ?? [];
 
   return useQuery<PageWith<CategoryCardItem>, AppError>({
-    queryKey: [
-      "get-category-search",
+    queryKey: searchQueryKeys.category({
       locale,
       authenticated,
       tendency,
-      // 고른 순서가 달라도 같은 결과라 정렬해서 키를 맞춥니다.
-      [...tagIds].sort().join(","),
-      params.sort,
-      params.page,
-      params.size,
-    ],
+      tagIds: params.tagIds ?? [],
+      sort: params.sort,
+      page: params.page,
+      size: params.size,
+    }),
     queryFn: () => getCategorySearch({ ...params, tendency }, authenticated),
     // 로그인 여부가 정해지기 전에 부르면 찜 여부 없는 응답이 캐시에 남습니다.
     enabled: isAuthReady,
