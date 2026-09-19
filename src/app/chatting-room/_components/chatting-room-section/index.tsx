@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useLayoutEffect, useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { useChatModelsQuery } from "@/api/chat/getChatModels";
 import { useRoomDetailQuery } from "@/api/room/getRoomDetail";
 import { useRoomMessagesInfiniteQuery } from "@/api/room/getRoomMessages";
@@ -42,8 +42,12 @@ const toChatMessage = (message: RoomMessage): ChatMessageType =>
 const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
   const { isScrolling, onScroll } = useScrollTimeout();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const previousScrollHeightRef = useRef<number | null>(null);
-  const hasScrolledToBottomRef = useRef(false);
+  const [scrollContainer, setScrollContainer] = useState<HTMLDivElement | null>(null);
+
+  const handleScrollContainerRef = useCallback((element: HTMLDivElement | null) => {
+    scrollContainerRef.current = element;
+    setScrollContainer(element);
+  }, []);
 
   const { isError: isRoomError, error: roomError, refetch: refetchRoom } =
     useRoomDetailQuery(roomId);
@@ -121,30 +125,9 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
     );
   }, []);
 
-  // 첫 페이지가 도착하면 최신 메시지가 보이도록 맨 아래로 스크롤한다.
-  useLayoutEffect(() => {
-    if (hasScrolledToBottomRef.current || isMessagesPending) return;
-
-    const el = scrollContainerRef.current;
-    if (!el) return;
-
-    el.scrollTop = el.scrollHeight;
-    hasScrolledToBottomRef.current = true;
-  }, [isMessagesPending, data?.pages.length]);
-
-  // 과거 메시지가 위쪽에 새로 추가된 뒤에도 보던 위치가 밀리지 않게 유지한다.
-  useLayoutEffect(() => {
-    const el = scrollContainerRef.current;
-    if (!el || previousScrollHeightRef.current === null) return;
-
-    el.scrollTop += el.scrollHeight - previousScrollHeightRef.current;
-    previousScrollHeightRef.current = null;
-  }, [serverMessages]);
-
   const handleLoadOlderMessages = useCallback(() => {
     if (!hasNextPage || isFetchingNextPage) return;
 
-    previousScrollHeightRef.current = scrollContainerRef.current?.scrollHeight ?? null;
     fetchNextPage();
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
@@ -165,7 +148,7 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
     <section className="flex h-full min-h-0 flex-1 justify-center bg-dark pt-2">
       <div className="flex h-full w-full max-w-[867px] flex-col">
         <div
-          ref={scrollContainerRef}
+          ref={handleScrollContainerRef}
           onScroll={onScroll}
           className={cn(
             "relative flex-1 overflow-y-auto hide-scrollbar-on-idle",
@@ -194,6 +177,7 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
           ) : (
             <MessageList
               messages={messages}
+              scrollContainer={scrollContainer}
               isAiSuggestedChat={isSuggestedReplyOn}
               onDeleteMessage={handleDeleteMessage}
               onRetryMessage={handleRetryMessage}

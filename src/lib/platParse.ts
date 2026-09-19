@@ -225,3 +225,28 @@ export function parsePlat(source: string): PlatBlock[] {
 
   return blocks;
 }
+
+const PLAT_PARSE_CACHE_LIMIT = 200;
+const platParseCache = new Map<string, PlatBlock[]>();
+
+/** 가상 목록에서 재마운트되는 메시지의 반복 파싱 방지를 위한 제한형 캐시 */
+export function parsePlatCached(source: string): PlatBlock[] {
+  const cachedBlocks = platParseCache.get(source);
+
+  if (cachedBlocks) {
+    // 최근 사용 항목을 뒤로 옮겨 오래 사용하지 않은 결과부터 제거
+    platParseCache.delete(source);
+    platParseCache.set(source, cachedBlocks);
+    return cachedBlocks;
+  }
+
+  const blocks = parsePlat(source);
+  platParseCache.set(source, blocks);
+
+  if (platParseCache.size > PLAT_PARSE_CACHE_LIMIT) {
+    const oldestSource = platParseCache.keys().next().value;
+    if (oldestSource !== undefined) platParseCache.delete(oldestSource);
+  }
+
+  return blocks;
+}

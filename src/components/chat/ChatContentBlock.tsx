@@ -11,7 +11,7 @@ import { ChatRetry, ChatTrash, Pen, Trash } from "@/icons";
 import { useAutoResizeTextarea } from "@/hooks/form/useAutoResizeTextarea";
 import { useInlineTextEdit } from "@/hooks/form/useInlineTextEdit";
 import { getResourceImageUrl } from "@/lib/file";
-import { parsePlat, segmentsToDisplayText } from "@/lib/platParse";
+import { parsePlatCached, segmentsToDisplayText } from "@/lib/platParse";
 import { useUserDisplayName } from "@/hooks/data/useUserDisplayName";
 
 interface ChatContentBlockProps {
@@ -51,8 +51,8 @@ const ChatContentBlock = ({
     value: editedContent,
   });
 
-  /** 대화 원문을 말풍선, 이미지, 서술문 블록으로 분리 */
-  const blocks = useMemo(() => parsePlat(rawData), [rawData]);
+  // 같은 메시지가 가상화로 다시 마운트돼도 이전 파싱 결과를 재사용
+  const blocks = useMemo(() => parsePlatCached(rawData), [rawData]);
 
   if (isEditing) {
     return (
