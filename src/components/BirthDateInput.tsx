@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import Calendar, { OnArgs } from "react-calendar";
+import dynamic from "next/dynamic";
+import type { OnArgs } from "react-calendar";
+import "@/app/styles/react-calendar.css";
 import { ArrowLeft, ArrowRight, Date as DateIcon } from "@/icons";
 import {
   FIELD_ERROR_MESSAGES,
@@ -13,6 +15,8 @@ import dayjs from "@/lib/dayjs";
 import { cn } from "@/lib/utils";
 import { ProfileEditFormType } from "@/schema/profile.schema";
 import { useFormContext } from "react-hook-form";
+
+const Calendar = dynamic(() => import("react-calendar"), { ssr: false });
 
 interface BirthDateInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   error?: boolean;

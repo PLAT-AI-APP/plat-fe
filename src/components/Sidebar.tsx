@@ -1,13 +1,11 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
 import type { RefObject } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Camera, Chat, Fold, Home, NoteLine } from "@/icons";
 import { cn } from "@/lib/utils";
-import { SPRING_SOFT, TRANSITION, TRANSITION_SLOW } from "@/constants/motion";
 
 interface SidebarProps {
   isFolded: boolean;
@@ -16,6 +14,7 @@ interface SidebarProps {
    * overlay: 좁은 화면에서 콘텐츠 위에 얹히는 드로어. 콘텐츠를 밀지 않는다.
    */
   variant?: "inline" | "overlay";
+  isOpen?: boolean;
   onFoldToggle?: () => void;
   foldToggleRef?: RefObject<HTMLButtonElement | null>;
 }
@@ -23,6 +22,7 @@ interface SidebarProps {
 const Sidebar = ({
   isFolded = false,
   variant = "inline",
+  isOpen = true,
   onFoldToggle,
   foldToggleRef,
 }: SidebarProps) => {
@@ -39,22 +39,17 @@ const Sidebar = ({
   const isOverlay = variant === "overlay";
 
   return (
-    <motion.aside
+    <aside
       id="main-sidebar"
-      // 인라인(데스크탑)은 그리드 열 폭 트랜지션이 이미 움직임을 맡으므로 마운트 애니메이션을 끈다.
-      // 드로어(오버레이)만 좌측에서 밀고 들어오고, 닫힐 때도 밀려 나간다.
-      // 스프링은 화면 전체를 가로지르는 큰 이동에서는 통통 튀는 느낌이 두드러져,
-      // "이동 거리가 큰 변화"용으로 이미 정의된 TRANSITION_SLOW(감속 커브)를 쓴다.
-      initial={isOverlay ? { x: "-100%" } : false}
-      animate={{ x: 0 }}
-      exit={isOverlay ? { x: "-100%" } : undefined}
-      transition={TRANSITION_SLOW}
+      aria-hidden={isOverlay && !isOpen}
+      inert={isOverlay && !isOpen}
       className={cn(
-        "flex flex-col gap-2 overflow-hidden bg-dark pt-4 pr-2 pl-4",
+        "flex flex-col gap-2 overflow-hidden bg-dark pt-4 pr-2 pl-4 transition-transform duration-slow ease-out",
         isOverlay
           ? // 드로어는 헤더 아래에서 시작해 콘텐츠 위에 얹힌다. 스크림보다 한 층 위.
             "fixed bottom-0 left-0 top-(--header-height) z-40 w-(--sidebar-width-expanded) shadow-modal"
           : "sticky top-0 h-full w-full",
+        isOverlay && (isOpen ? "translate-x-0" : "-translate-x-full"),
       )}
     >
       <nav
@@ -95,11 +90,8 @@ const Sidebar = ({
                   href={menu.link}
                   aria-current={isActive ? "page" : undefined}
                 >
-                  <motion.div
+                  <div
                     id={`nav-button-${menu.link}`}
-                    layout
-                    initial={false}
-                    transition={SPRING_SOFT}
                     className={cn(
                       "relative flex h-10 cursor-pointer items-center overflow-hidden rounded-lg transition-colors",
                       isActive
@@ -107,10 +99,7 @@ const Sidebar = ({
                         : "bg-transparent hover:bg-btn-hover",
                     )}
                   >
-                    <motion.div
-                      layout="position"
-                      className="flex w-11.5 flex-none items-center justify-center"
-                    >
+                    <div className="flex w-11.5 flex-none items-center justify-center">
                       <Icon
                         id={`icon-${menu.link}`}
                         className={cn(
@@ -118,34 +107,29 @@ const Sidebar = ({
                           isActive ? "text-brand" : "text-font-2",
                         )}
                       />
-                    </motion.div>
+                    </div>
 
-                    <AnimatePresence mode="wait" initial={false}>
-                      {!isFolded && (
-                        <motion.span
-                          id={`text-${menu.link}`}
-                          layout
-                          initial={{ opacity: 0, x: -10 }}
-                          animate={{ opacity: 1, x: 0 }}
-                          exit={{ opacity: 0, x: -10 }}
-                          transition={TRANSITION}
-                          className={cn(
-                            "body-5 ml-1 whitespace-nowrap transition-colors",
-                            isActive ? "text-brand" : "text-font-2",
-                          )}
-                        >
-                          {menu.name}
-                        </motion.span>
+                    <span
+                      id={`text-${menu.link}`}
+                      aria-hidden={isFolded}
+                      className={cn(
+                        "body-5 ml-1 whitespace-nowrap transition-[color,opacity,transform] duration-base ease-out",
+                        isFolded
+                          ? "pointer-events-none -translate-x-2 opacity-0"
+                          : "translate-x-0 opacity-100",
+                        isActive ? "text-brand" : "text-font-2",
                       )}
-                    </AnimatePresence>
-                  </motion.div>
+                    >
+                      {menu.name}
+                    </span>
+                  </div>
                 </Link>
               </li>
             );
           })}
         </ul>
       </nav>
-    </motion.aside>
+    </aside>
   );
 };
 

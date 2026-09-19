@@ -1,3 +1,5 @@
+"use client";
+
 import { Suspense } from "react";
 import { AnimatePresence } from "framer-motion";
 import { useModalStore } from "@/store/useModalStore";

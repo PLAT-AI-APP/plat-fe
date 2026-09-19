@@ -2,15 +2,20 @@
 
 import React, { ChangeEvent, useState } from "react";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
 import { useFileUploadMutation } from "@/api/file/postFileUpload";
 import { Close, ImageIcon, Plus } from "@/icons";
 import { dataUrlToFile } from "@/lib/file";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
-import RepresentativeImageCropModal from "./RepresentativeImageCropModal";
 import { cn } from "@/lib/utils";
 import { showAppToast } from "@/lib/toast";
+
+const RepresentativeImageCropModal = dynamic(
+  () => import("./RepresentativeImageCropModal"),
+  { ssr: false },
+);
 
 const RepresentativeImage = () => {
   const t = useTranslations("characterCreate.representativeImage");

@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Cropper, { type Area, type Point } from "react-easy-crop";
+import "react-easy-crop/react-easy-crop.css";
 import { useTranslations } from "next-intl";
 import { Close } from "@/icons";
 import { ModalLayout } from "@/components/ModalLayout";

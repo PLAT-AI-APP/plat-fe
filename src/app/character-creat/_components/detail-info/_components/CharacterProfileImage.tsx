@@ -2,15 +2,20 @@
 
 import React, { ChangeEvent, useState } from "react";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
 import { useFileUploadMutation } from "@/api/file/postFileUpload";
 import { Close, ImageIcon, Plus } from "@/icons";
 import { dataUrlToFile } from "@/lib/file";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
-import RepresentativeImageCropModal from "../../profile/RepresentativeImageCropModal";
 import { cn } from "@/lib/utils";
 import { showAppToast } from "@/lib/toast";
+
+const RepresentativeImageCropModal = dynamic(
+  () => import("../../profile/RepresentativeImageCropModal"),
+  { ssr: false },
+);
 
 // 상세정보 프로필 이미지는 백엔드 업로드 정책과 동일하게 웹 이미지 포맷만 허용합니다.
 const ALLOWED_PROFILE_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];

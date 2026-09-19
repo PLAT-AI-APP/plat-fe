@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "react-easy-crop/react-easy-crop.css";
 @variant dark (&:where(.dark, .dark *));
 
 /* 전역 스타일을 역할별로 나눠 이 파일은 진입점(import 목록)만 담당한다. */
@@ -8,5 +7,4 @@
 @import "./styles/typography.css"; /* display/heading/title/body/caption 유틸리티 */
 @import "./styles/scrollbar.css"; /* 스크롤바 커스텀 */
 @import "./styles/sonner.css"; /* sonner 토스트 오버라이드 */
-@import "./styles/react-calendar.css"; /* react-calendar 오버라이드 */
 @import "./styles/utilities.css"; /* content-x, skeleton, field-focus 등 커스텀 유틸리티 */
