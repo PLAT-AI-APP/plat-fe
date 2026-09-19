@@ -8,6 +8,10 @@ import { useMyInfoQuery } from "@/api/user/getMyInfo";
 import { useWalletBalanceQuery } from "@/api/wallet/getWalletBalance";
 import { useAuthStore } from "@/store/useAuthStore";
 
+/**
+ * 화면 렌더링 없이 인증 세션의 생명주기만 담당
+ * 인증 상태 변경에 따른 앱 셸과 페이지의 리렌더링 방지를 위해 별도 섬으로 분리
+ */
 const AuthSessionRuntime = () => {
   const queryClient = useQueryClient();
   const accessToken = useAuthStore((state) => state.accessToken);
@@ -19,11 +23,12 @@ const AuthSessionRuntime = () => {
   const [hasHydrated, setHasHydrated] = useState(false);
   const wasLoggedInRef = useRef(isLoggedIn);
 
-  // Query state belongs to this headless island, not the visible app shell.
+  // 사용자·지갑 쿼리 상태를 이 컴포넌트에 격리해 앱 셸의 불필요한 리렌더링 방지
   useMyInfoQuery();
   useWalletBalanceQuery();
 
   useEffect(() => {
+    // 저장소 복원 전 인증 판정으로 기존 로그인 세션을 로그아웃으로 오인하는 상황 방지
     setHasHydrated(useAuthStore.persist.hasHydrated());
 
     return useAuthStore.persist.onFinishHydration(() => {
@@ -42,6 +47,7 @@ const AuthSessionRuntime = () => {
         return;
       }
 
+      // 로그인 상태는 남아 있지만 메모리의 액세스 토큰이 없는 경우 리프레시 토큰으로 세션 복구
       try {
         const refreshedAccessToken = await refreshAccessToken();
         if (!isMounted) return;
@@ -76,6 +82,7 @@ const AuthSessionRuntime = () => {
   ]);
 
   useEffect(() => {
+    // 비로그인 상태에서 실행되지 않았거나 비어 있던 사용자 데이터를 로그인 직후 재요청
     if (!wasLoggedInRef.current && isLoggedIn) {
       void queryClient.invalidateQueries();
     }
