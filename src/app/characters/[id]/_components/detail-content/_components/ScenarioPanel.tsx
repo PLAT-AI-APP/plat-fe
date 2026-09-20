@@ -78,7 +78,7 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
 
   return (
     <section className="flex flex-col gap-4">
-      <h2 className="title-2 text-font-1">{t("tabs.scenario")}</h2>
+      <h2 className="title-3 text-font-1">{t("tabs.scenario")}</h2>
 
       <div className="relative">
         <button
