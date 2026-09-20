@@ -8,12 +8,11 @@ import CreatePreviewList from "./create-preview-list";
 import { useAutoResizeTextarea } from "@/hooks/form/useAutoResizeTextarea";
 import { useTextareaSubmitShortcuts } from "@/hooks/form/useTextareaSubmitShortcuts";
 import { useScrollTimeout } from "@/hooks/dom/useScrollTiemout";
-import { ArrowLeft, ArrowRight, Asterisk, User } from "@/icons";
+import { ArrowLeft, ArrowRight, Asterisk, Message, MoveUp, User } from "@/icons";
 import { cn } from "@/lib/utils";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
 import { useScenarioPreviewHistoryStore } from "@/store/useScenarioPreviewHistoryStore";
 import { ScenarioContentItem, ScenarioType } from "@/type/character";
-import Upload from "@/icons/Upload";
 
 interface CharacterPreviewProps {
   activeScenarioIndex: number;
@@ -21,6 +20,17 @@ interface CharacterPreviewProps {
 
 // 프로필 이미지를 아직 등록하지 않아도 채팅 프리뷰의 Next Image가 깨지지 않도록 표시용 이미지만 둡니다.
 const PREVIEW_PROFILE_FALLBACK_IMAGE = "/images/sample.png";
+
+/** 입력폼 위쪽의 종류 선택 칩. 지금 고른 종류는 브랜드 색 테두리로 표시한다. */
+const getModeChipClassName = (isActive: boolean) =>
+  cn(
+    "body-5 flex h-8 items-center justify-center gap-1.5 rounded-full border border-main bg-dark py-1.5 pl-2.5 pr-3 text-font-2",
+    isActive && "border-brand text-brand",
+  );
+
+/** 오른쪽 아래 보조 버튼({{user}}·행동 표시). 디자인 기준 높이 34px */
+const COMPOSER_TOOL_BUTTON_CLASS_NAME =
+  "flex h-8.5 items-center justify-center rounded-lg px-2 py-1.5 text-font-2 transition-colors hover:bg-btn-hover hover:text-font-1 disabled:pointer-events-none disabled:text-font-disabled";
 
 const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
   const t = useTranslations("characterCreate.preview");
@@ -169,6 +179,29 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
     }, 0);
   };
 
+  const wrapActionText = () => {
+    // 고른 글자를 `**행동**` 으로 감싼다. 고른 게 없으면 빈 표시만 넣고 그 사이에 커서를 둔다.
+    const textarea = textareaRef.current;
+    if (!textarea) {
+      setMsg((prev) => `${prev}****`);
+      return;
+    }
+
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = msg.substring(start, end);
+    const selectionStart = start + 2;
+    const selectionEnd = selectionStart + selectedText.length;
+
+    setMsg(`${msg.substring(0, start)}**${selectedText}**${msg.substring(end)}`);
+
+    window.setTimeout(() => {
+      textarea.focus();
+      textarea.setSelectionRange(selectionStart, selectionEnd);
+      resizeTextarea();
+    }, 0);
+  };
+
   return (
     <section className="flex h-full max-h-[calc(100dvh-var(--header-height)-5.5rem)] w-full max-w-[693px] flex-col rounded-3xl bg-darker p-4 lg:h-[919px]">
       <header className="mb-12 flex h-12 shrink-0 items-center justify-between rounded-2xl bg-darkest px-4 py-3">
@@ -227,85 +260,87 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
 
           textareaRef.current?.focus();
         }}
-        className="flex w-full shrink-0 flex-col gap-4 rounded-3xl border border-transparent bg-darkest px-4 pb-3 pt-4 transition-colors focus-within:field-focus!"
+        className="flex w-full shrink-0 flex-col gap-4 rounded-3xl border border-dark bg-darkest px-4 py-3 transition-colors focus-within:field-focus!"
       >
-        <textarea
-          rows={1}
-          ref={textareaRef}
-          value={msg}
-          onChange={(e) => setMsg(e.target.value)}
-          onKeyDown={handleTextareaKeyDown}
-          placeholder={t("scenarioPlaceholder")}
-          className="focus-ring-none body-5 custom-scrollbar min-h-[42px] w-full resize-none bg-transparent px-2 outline-none placeholder:text-font-disabled"
-        />
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => {
+              setCurrentMode("action");
+              textareaRef.current?.focus();
+            }}
+            className={getModeChipClassName(currentMode === "action")}
+          >
+            <Message className="size-4 shrink-0" />
+            {t("action")}
+          </button>
 
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex min-w-0 shrink-0 gap-2">
-            <button
-              type="button"
-              onClick={() => {
-                setCurrentMode("action");
-                textareaRef.current?.focus();
-              }}
-              className={cn(
-                "body-5 flex h-8 items-center justify-center gap-1.5 rounded-full border border-main bg-dark py-1.5 pl-2.5 pr-3 text-font-2",
-                currentMode === "action" && "border-brand text-brand",
-              )}
-            >
-              <Asterisk className="size-4 shrink-0" />
-              {t("action")}
-            </button>
+          <button
+            type="button"
+            onClick={() => {
+              setCurrentMode("chat");
+              textareaRef.current?.focus();
+            }}
+            className={getModeChipClassName(currentMode === "chat")}
+          >
+            {characterProfileImage ? (
+              <Image
+                src={characterProfileImage}
+                alt={characterChipText}
+                width={18}
+                height={18}
+                unoptimized
+                className="avatar-img size-4.5"
+              />
+            ) : (
+              <span className="size-4.5 rounded-full bg-font-2" aria-hidden />
+            )}
+            {characterChipText}
+          </button>
 
-            <button
-              type="button"
-              onClick={() => {
-                setCurrentMode("chat");
-                textareaRef.current?.focus();
-              }}
-              className={cn(
-                "body-5 flex h-8 items-center justify-center gap-1.5 rounded-full border border-main bg-dark py-1.5 pl-2.5 pr-3 text-font-2",
-                currentMode === "chat" && "border-brand text-brand",
-              )}
-            >
-              {characterProfileImage ? (
-                <Image
-                  src={characterProfileImage}
-                  alt={characterChipText}
-                  width={16}
-                  height={16}
-                  unoptimized
-                  className="avatar-img size-4"
-                />
-              ) : (
-                <span className="size-4 rounded-full bg-font-2" aria-hidden />
-              )}
-              {characterChipText}
-            </button>
+          <button
+            type="button"
+            onClick={() => {
+              setCurrentMode("userChat");
+              textareaRef.current?.focus();
+            }}
+            className={getModeChipClassName(currentMode === "userChat")}
+          >
+            <User className="size-4.5 shrink-0" />
+            {userChipText}
+          </button>
+        </div>
 
-            <button
-              type="button"
-              onClick={() => {
-                setCurrentMode("userChat");
-                textareaRef.current?.focus();
-              }}
-              className={cn(
-                "body-5 flex h-8 items-center justify-center gap-1.5 rounded-full border border-main bg-dark py-1.5 pl-2.5 pr-3 text-font-2",
-                currentMode === "userChat" && "border-brand text-brand",
-              )}
-            >
-              <User className="size-4 shrink-0" />
-              {userChipText}
-            </button>
-          </div>
+        <div className="flex flex-col gap-1">
+          <textarea
+            rows={1}
+            ref={textareaRef}
+            value={msg}
+            onChange={(e) => setMsg(e.target.value)}
+            onKeyDown={handleTextareaKeyDown}
+            placeholder={t("scenarioPlaceholder")}
+            className="focus-ring-none body-5 custom-scrollbar min-h-[42px] w-full resize-none bg-transparent outline-none placeholder:text-font-disabled"
+          />
 
-          <div className="flex shrink-0 items-center gap-3">
+          <div className="flex items-center justify-end gap-2">
             <div className="flex items-center gap-1">
               <button
                 type="button"
                 onClick={() => insertComposerText("{{user}}")}
-                className="body-5 flex h-8 items-center rounded-lg px-2 py-1.5 text-font-2 hover:bg-btn-hover hover:text-font-1"
+                className={cn("body-5", COMPOSER_TOOL_BUTTON_CLASS_NAME)}
               >
                 {"{{user}}"}
+              </button>
+
+              <button
+                type="button"
+                onClick={wrapActionText}
+                // `**행동**` 은 캐릭터 대사에서만 행동으로 구분해 그린다. 내레이터·사용자 입력에서는 그대로 글자로 남는다.
+                disabled={currentMode !== "chat"}
+                aria-label={t("actionMark")}
+                className={COMPOSER_TOOL_BUTTON_CLASS_NAME}
+              >
+                <Asterisk className="size-5" />
               </button>
             </div>
 
@@ -317,7 +352,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
               )}
               aria-label={t("submitScenario")}
             >
-              <Upload className="size-6" />
+              <MoveUp className="size-6" />
             </button>
           </div>
         </div>
