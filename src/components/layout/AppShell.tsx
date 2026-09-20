@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import LazyLayerManagers from "@/components/LazyLayerManagers";
 import ModalNavigationGuard from "@/components/modal/ModalNavigationGuard";
+import DocumentTitle from "./DocumentTitle";
 import PageViewport from "./PageViewport";
 import SidebarFrame from "./SidebarFrame";
 
@@ -32,6 +33,7 @@ const AppShell = ({ children }: { children: ReactNode }) => {
         {children}
         <LazyLayerManagers />
         <ModalNavigationGuard />
+        <DocumentTitle />
       </PageViewport>
     </SidebarFrame>
   );
