@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useSocialTokenMutation } from "@/api/auth/PostSocialToken";
 import { PENDING_WELCOME_CREDIT_DIALOG_KEY } from "@/constants/auth";
 
@@ -10,6 +11,7 @@ interface AuthClientProps {
 }
 
 const AuthClient = ({ code }: AuthClientProps) => {
+  const t = useTranslations("auth.callback");
   const router = useRouter();
   const { mutate } = useSocialTokenMutation();
   const isRequested = useRef(false); // StrictMode에서 API가 두 번 중복 호출되는 것을 방어합니다.
@@ -44,9 +46,7 @@ const AuthClient = ({ code }: AuthClientProps) => {
 
   return (
     <div className="flex min-h-dvh flex-col items-center justify-center bg-dark">
-      <h1 className="title-1 animate-pulse text-font-1">
-        인증을 처리하고 있습니다.
-      </h1>
+      <h1 className="title-1 animate-pulse text-font-1">{t("processing")}</h1>
     </div>
   );
 };

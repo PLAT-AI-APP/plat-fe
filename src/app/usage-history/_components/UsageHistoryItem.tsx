@@ -14,12 +14,9 @@ import { UsageHistoryItemType } from "@/type/note";
 /** 만료일 노출이 필요한 지급성 내역인지 확인합니다. */
 const shouldShowExpiryDate = (amount: number) => amount > 0;
 
-/** 노트 만료일 표기 */
-const getExpiryDateLabel = (createdAt: string) => {
-  const expiryDate = dayjs(createdAt).add(1, "year");
-
-  return `~ ${expiryDate.format("YYYY.MM.DD")} 까지`;
-};
+/** 노트 만료일. 지급일로부터 1년 뒤입니다. */
+const getExpiryDate = (createdAt: string) =>
+  dayjs(createdAt).add(1, "year").format("YYYY.MM.DD");
 
 /** 상세설명에 보여줄 API 참조 정보를 고릅니다. */
 const getLedgerDetailText = (item: UsageHistoryItemType) =>
@@ -51,7 +48,7 @@ const UsageHistoryItem = ({ item }: { item: UsageHistoryItemType }) => {
       <header className="flex items-center justify-between gap-4">
         <div className="flex w-[117px] shrink-0 flex-col gap-1">
           <time className="body-7 text-font-2">
-            {dayjs(item.createdAt).format("M월 D일 HH:mm")}
+            {dayjs(item.createdAt).format(t("usageHistory.dateFormat"))}
           </time>
           <strong className="title-5 text-font-1">{item.description}</strong>
         </div>
@@ -62,12 +59,14 @@ const UsageHistoryItem = ({ item }: { item: UsageHistoryItemType }) => {
               <span className={cn("title-5", isPlusNote && "text-brand-dark")}>
                 {amountText}
               </span>
-              <span className="text-font-2">노트</span>
+              <span className="text-font-2">{t("tokenCharge.noteUnit")}</span>
             </p>
 
             {isExpiryVisible && (
               <time className="body-7 whitespace-nowrap text-font-2">
-                {getExpiryDateLabel(item.createdAt)}
+                {t("usageHistory.expiresUntil", {
+                  date: getExpiryDate(item.createdAt),
+                })}
               </time>
             )}
           </div>
@@ -93,20 +92,24 @@ const UsageHistoryItem = ({ item }: { item: UsageHistoryItemType }) => {
             className="overflow-hidden"
           >
             <div className="mt-3 flex flex-col gap-1 border-t border-main pt-3 body-7 text-font-2">
-              <p>상세설명: {getLedgerDetailText(item)}</p>
+              <p>
+                {t("usageHistory.detailLabel")}: {getLedgerDetailText(item)}
+              </p>
               <p className="flex items-end gap-1">
-                <span className="truncate">거래번호: {item.referenceId}</span>
+                <span className="truncate">
+                  {t("usageHistory.transactionIdLabel")}: {item.referenceId}
+                </span>
                 <button
                   type="button"
                   onClick={handleCopy}
                   className="flex size-4 shrink-0 items-center justify-center rounded p-0.5 transition-colors hover:text-font-1"
-                  aria-label="거래번호 복사"
+                  aria-label={t("usageHistory.copyTransactionId")}
                 >
                   <Copy className="size-3" />
                 </button>
               </p>
               <p>
-                거래일시:{" "}
+                {t("usageHistory.transactionDateLabel")}:{" "}
                 {dayjs(item.createdAt).format("YYYY. MM. DD HH:mm:ss")}
               </p>
             </div>

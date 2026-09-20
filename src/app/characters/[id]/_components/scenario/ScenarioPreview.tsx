@@ -1,11 +1,16 @@
+"use client";
+
 import { Message } from "@/icons";
 import { CharacterScenario } from "@/type/character";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 interface ScenarioPreviewProps {
   currentScenario: CharacterScenario | undefined;
 }
 export const ScenarioPreview = ({ currentScenario }: ScenarioPreviewProps) => {
+  const t = useTranslations("characterDetail");
+
   if (!currentScenario) return null;
   const { firstDialogue, situation } = currentScenario;
   return (
@@ -19,7 +24,7 @@ export const ScenarioPreview = ({ currentScenario }: ScenarioPreviewProps) => {
       {/* 시나리오 이미지(이미지 파일로 내려오지 않을 것 같다) */}
       <Image
         src={"/mainImage"}
-        alt="시나리오 이미지"
+        alt={t("scenarioImageAlt")}
         width={744}
         height={446}
         className="object-cover aspect-744/446.4 rounded-2xl w-full"

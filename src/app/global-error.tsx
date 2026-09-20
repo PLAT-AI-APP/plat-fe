@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
+import { RUNTIME_MESSAGES_BY_LOCALE } from "@/i18n/runtimeMessages";
+import { useLocaleStore } from "@/store/useLocaleStore";
 
 interface GlobalErrorProps {
   error: Error & { digest?: string };
@@ -12,14 +14,19 @@ interface GlobalErrorProps {
  *
  * 이 경계는 자기 <html>/<body>를 직접 그린다 — 레이아웃이 실패한 상황이라
  * 앱의 Provider나 전역 CSS에 기댈 수 없다. 그래서 스타일도 인라인으로 둔다.
+ *
+ * IntlProvider 도 쓸 수 없으므로 번역은 메시지 객체를 직접 읽고, 언어는 스토어에서 가져온다.
  */
 const GlobalError = ({ error, reset }: GlobalErrorProps) => {
+  const locale = useLocaleStore((state) => state.locale);
+  const messages = RUNTIME_MESSAGES_BY_LOCALE[locale].errorPage;
+
   useEffect(() => {
     console.error("[global-error]", error);
   }, [error]);
 
   return (
-    <html lang="ko">
+    <html lang={locale}>
       <body
         style={{
           margin: 0,
@@ -37,11 +44,9 @@ const GlobalError = ({ error, reset }: GlobalErrorProps) => {
         }}
       >
         <h1 style={{ fontSize: "24px", fontWeight: 700, margin: 0 }}>
-          화면을 불러오지 못했습니다
+          {messages.title}
         </h1>
-        <p style={{ color: "#989db8", margin: 0 }}>
-          잠시 후 다시 시도해 주세요.
-        </p>
+        <p style={{ color: "#989db8", margin: 0 }}>{messages.description}</p>
         {error.digest && (
           <code style={{ color: "#5c6180", fontSize: "12px" }}>
             {error.digest}
@@ -61,7 +66,7 @@ const GlobalError = ({ error, reset }: GlobalErrorProps) => {
             cursor: "pointer",
           }}
         >
-          다시 시도
+          {messages.retry}
         </button>
       </body>
     </html>

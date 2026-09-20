@@ -1,5 +1,8 @@
+"use client";
+
 import { cn } from "@/lib/utils";
 import React from "react";
+import { useTranslations } from "next-intl";
 
 interface SlideIndicatorsProps {
   imageCount: number;
@@ -20,6 +23,7 @@ const SlideIndicators = ({
   onActionSelect,
   isActionActive = false,
 }: SlideIndicatorsProps) => {
+  const t = useTranslations("characterCard");
   const isLarge = variant === "large";
 
   return (
@@ -50,7 +54,7 @@ const SlideIndicators = ({
                   ? "bg-font-1"
                   : "bg-scrim",
             )}
-            aria-label={`View image ${index + 1}`}
+            aria-label={t("viewImage", { index: index + 1 })}
           />
         );
       })}
@@ -63,7 +67,7 @@ const SlideIndicators = ({
             "pointer-events-auto size-2 cursor-pointer rounded-full transition-colors",
             isActionActive ? "bg-brand" : "bg-font-1",
           )}
-          aria-label="View profile action"
+          aria-label={t("viewProfile")}
         />
       )}
     </div>

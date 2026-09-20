@@ -147,7 +147,7 @@ const Header = ({ userId, profile }: HeaderProps) => {
             ) : (
               <Image
                 src={profile.profileImageUrl || "/p1.png"}
-                alt="프로필 이미지"
+                alt={t("profilePopover.profileImageAlt")}
                 width={68}
                 height={68}
                 // 백엔드 이미지 호스트가 remotePatterns 에 없으면 next/image 가 렌더 단계에서 던진다.

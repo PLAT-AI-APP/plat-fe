@@ -1,7 +1,12 @@
+"use client";
+
 import Link from "next/link";
 import React from "react";
+import { useTranslations } from "next-intl";
 
 const NotFoundPage = () => {
+  const t = useTranslations("errorPage");
+
   return (
     <section
       id="not-found-container"
@@ -11,14 +16,14 @@ const NotFoundPage = () => {
         404
       </h2>
       <p id="not-found-message" className="body-2 mt-4 text-font-2">
-        요청하신 페이지를 찾을 수 없습니다.
+        {t("notFound")}
       </p>
       <Link
         id="back-to-home-link"
         href="/"
         className="title-5 mt-8 rounded-lg bg-brand px-6 py-3 text-on-brand transition hover:brightness-110"
       >
-        홈으로 돌아가기
+        {t("backHome")}
       </Link>
     </section>
   );

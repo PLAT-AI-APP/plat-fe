@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import AuthClient from "./_components/AuthClient";
+import InvalidAccess from "./_components/InvalidAccess";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +17,7 @@ const AuthPage = async ({ searchParams }: PageProps) => {
   const code = params.code as string;
 
   if (!code) {
-    return <div>유효하지 않은 접근입니다.</div>;
+    return <InvalidAccess />;
   }
 
   return <AuthClient code={code} />;
