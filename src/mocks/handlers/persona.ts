@@ -1,6 +1,7 @@
 import { http, HttpResponse } from "msw";
 import type { Persona } from "@/type/persona";
 import { endpoint, pathValue } from "../utils";
+import { rooms } from "./room";
 
 /** PersonaService.MAX_PERSONA_COUNT와 동일 — 유저당 최대 보유량. */
 const MAX_PERSONA_COUNT = 5;
@@ -141,6 +142,17 @@ export const personaHandlers = [
         {
           code: "PERSONA_DEFAULT_DELETE_DENIED",
           message: "기본 페르소나는 삭제할 수 없습니다.",
+        },
+        { status: 409 },
+      );
+    }
+
+    // PersonaService.deletePersona: 채팅방이 쓰고 있는 페르소나도 지울 수 없다.
+    if ([...rooms.values()].some((room) => room.personaId === personaId)) {
+      return HttpResponse.json(
+        {
+          code: "PERSONA_IN_USE",
+          message: "채팅방에서 사용 중인 페르소나는 삭제할 수 없습니다.",
         },
         { status: 409 },
       );

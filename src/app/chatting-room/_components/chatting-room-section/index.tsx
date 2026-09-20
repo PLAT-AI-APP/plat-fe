@@ -4,6 +4,7 @@ import React, { useCallback, useMemo, useRef, useState } from "react";
 import { useChatModelsQuery } from "@/api/chat/getChatModels";
 import { useRoomDetailQuery } from "@/api/room/getRoomDetail";
 import { useRoomMessagesInfiniteQuery } from "@/api/room/getRoomMessages";
+import { useUniverseDetailQuery } from "@/api/universe/getUniverseDetail";
 import ChatForm from "@/components/chat/ChatForm";
 import MessageList from "@/components/chat/MessageList";
 import { ErrorState } from "@/components/state";
@@ -21,16 +22,20 @@ interface ChattingRoomSectionProps {
 }
 
 /**
- * 방 상세(GET /rooms/{roomId})가 아직 캐릭터 이름/프로필을 내려주지 않아
- * 빈 값으로 둔다 — ChatContentBlock이 빈 값을 그대로 허용한다.
+ * 방 상세는 universeId만 주므로 캐릭터 이름/프로필은 세계관 상세에서 받아 넣는다.
+ * 세계관을 아직 못 받았을 때는 빈 값으로 둔다 — ChatContentBlock이 빈 값을 그대로 허용한다.
  */
-const toChatMessage = (message: RoomMessage): ChatMessageType =>
+const toChatMessage = (
+  message: RoomMessage,
+  characterName: string,
+  profileImage: string,
+): ChatMessageType =>
   message.type === "AI"
     ? {
         id: message.messageId,
         role: "assistant",
-        characterName: "",
-        profileImage: "",
+        characterName,
+        profileImage,
         content: message.content,
       }
     : {
@@ -49,8 +54,15 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
     setScrollContainer(element);
   }, []);
 
-  const { isError: isRoomError, error: roomError, refetch: refetchRoom } =
-    useRoomDetailQuery(roomId);
+  const {
+    data: room,
+    isError: isRoomError,
+    error: roomError,
+    refetch: refetchRoom,
+  } = useRoomDetailQuery(roomId);
+  const { data: universe } = useUniverseDetailQuery(room?.universeId);
+  const characterName = universe?.character.name ?? "";
+  const profileImage = universe?.character.profileImageUrl ?? "";
 
   const {
     data,
@@ -67,9 +79,9 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
   const serverMessages = useMemo<ChatMessageType[]>(
     () =>
       (data?.pages.flatMap((page) => page.content) ?? [])
-        .map(toChatMessage)
+        .map((message) => toChatMessage(message, characterName, profileImage))
         .reverse(),
-    [data],
+    [data, characterName, profileImage],
   );
 
   // 전송 API 연결 전까지, 새로 보낸 메시지는 서버 이력과 별개로 화면에만 이어붙인다.
@@ -157,7 +169,7 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
         >
           <ChattingRoomHeader
             roomId={roomId}
-            characterName=""
+            characterName={characterName}
             models={models}
             currentAi={currentAi}
             handleCurrentAi={handleCurrentAi}

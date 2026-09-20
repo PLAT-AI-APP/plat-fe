@@ -19,6 +19,8 @@ import {
   Token,
 } from "@/icons";
 import Note from "@/icons/Note";
+import { useRoomDetailQuery } from "@/api/room/getRoomDetail";
+import { usePatchRoomPersonaMutation } from "@/api/room/patchRoomContext";
 import { cn, formatWithCommas } from "@/lib/utils";
 import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
@@ -146,6 +148,8 @@ const ChattingSidebar = ({
   const availableBalance = useWalletStore(
     (state) => state.balance?.availableBalance ?? 0,
   );
+  const { data: room } = useRoomDetailQuery(roomId);
+  const { mutate: patchRoomPersona } = usePatchRoomPersonaMutation();
   const [isAssetViewOn, setIsAssetViewOn] = useState(true);
   const [sidebarDepth, setSidebarDepth] = useState<SidebarDepth>("SETTINGS");
 
@@ -154,7 +158,12 @@ const ChattingSidebar = ({
   const handleOpenPersonaModal = () => {
     // 다른 레이어 UI를 열기 전 사이드바 먼저 닫기
     toggleIsSidebar();
-    openModal("PERSONA");
+    openModal("PERSONA", {
+      // 현재 페르소나를 넘기면 모달이 "관리"가 아니라 "선택" 모드로 열린다.
+      currentPersonaId: room?.personaId,
+      onSelectPersona: (persona) =>
+        patchRoomPersona({ roomId, personaId: persona.personaId }),
+    });
   };
 
   const handleOpenUserNoteModal = () => {

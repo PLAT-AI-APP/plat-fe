@@ -8,6 +8,10 @@ import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
 import PersonaMenuPopover from "@/components/popover/PersonaMenuPopover";
 import { useDeletePersonaMutation } from "@/api/persona/deletePersona";
+import { isAppError, resolveErrorMessage } from "@/lib/apiError";
+
+/** 채팅방이 쓰고 있는 페르소나는 지울 수 없습니다(PersonaService.deletePersona). */
+const PERSONA_IN_USE_CODE = "PERSONA_IN_USE";
 
 interface PersonaItemProps {
   persona: Persona;
@@ -24,6 +28,7 @@ const PersonaItem = ({
 }: PersonaItemProps) => {
   const t = useTranslations("modalUi.personaList");
   const commonT = useTranslations("modalUi.common");
+  const deleteDialogT = useTranslations("dialog.personaDelete");
   const { name, description, isDefault } = persona;
   const openModal = useModalStore((state) => state.openModal);
   const openDialog = useDialogStore((state) => state.openDialog);
@@ -42,9 +47,25 @@ const PersonaItem = ({
     });
   };
 
+  /**
+   * 서버 메시지는 한국어 한 벌만 내려오므로(messages_ko.properties), 미리 아는 사유는
+   * 프론트 번역으로 바꿔 말하고 나머지만 서버 문구를 그대로 씁니다.
+   */
+  const resolveDeleteErrorMessage = (error: unknown) =>
+    isAppError(error) && error.code === PERSONA_IN_USE_CODE
+      ? deleteDialogT("inUse")
+      : resolveErrorMessage(error);
+
   const handleDeleteConfirm = () => {
     deletePersona(persona.personaId, {
-      onSettled: closeDialog,
+      onSuccess: closeDialog,
+      // 확인 다이얼로그까지 거친 흐름이라, 실패하면 닫지 않고 그 자리에서 이유를 말합니다.
+      onError: (error) =>
+        openDialog("PERSONA_DELETE", {
+          personaName: name,
+          errorMessage: resolveDeleteErrorMessage(error),
+          onConfirm: handleDeleteConfirm,
+        }),
     });
   };
 

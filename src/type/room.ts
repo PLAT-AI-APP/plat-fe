@@ -31,6 +31,10 @@ export interface ThumbnailRoom {
 /** 채팅방 단건 */
 export interface Room {
   roomId: string;
+  /** 이 방이 붙어 있는 세계관. 캐릭터 이름·프로필은 세계관 상세에서 가져옵니다. */
+  universeId: string;
+  /** 이 방에서 쓰는 페르소나. 페르소나 선택 모달의 현재 선택 상태로 씁니다. */
+  personaId: string;
   multiplier: PromptMultiplier;
 }
 

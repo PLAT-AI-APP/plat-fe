@@ -54,6 +54,8 @@ export interface PersonaDeleteDialogProps {
   onClose: () => void;
   onConfirm: () => void;
   personaName: string;
+  /** 삭제가 실패한 이유. 확인 다이얼로그를 연 흐름이라 사유도 이 안에서 말합니다. */
+  errorMessage?: string;
 }
 
 export interface SignupCompleteDialogProps {

@@ -12,6 +12,8 @@ import { PROMPT_MULTIPLIERS } from "@/type/room";
 
 export interface MockRoom {
   roomId: string;
+  universeId: string;
+  personaId: string;
   title: string;
   thumbnailUrl: string | null;
   personaName: string;
@@ -45,6 +47,8 @@ export const rooms = new Map<string, MockRoom>([
     "room-1",
     {
       roomId: "room-1",
+      universeId: "1",
+      personaId: "2",
       title: "미스터리 탐정 셜록",
       thumbnailUrl: "/images/sample.png",
       personaName: "왓슨",
@@ -64,6 +68,8 @@ export const rooms = new Map<string, MockRoom>([
     "room-2",
     {
       roomId: "room-2",
+      universeId: "2",
+      personaId: "1",
       title: "옆자리 불량학생",
       thumbnailUrl: "/images/sample.png",
       personaName: "학생회장",
@@ -82,6 +88,8 @@ export const rooms = new Map<string, MockRoom>([
     "room-3",
     {
       roomId: "room-3",
+      universeId: "3",
+      personaId: "1",
       title: "밤하늘의 마법사",
       thumbnailUrl: "/images/sample.png",
       personaName: "견습 마법사",
@@ -184,6 +192,8 @@ export const roomHandlers = [
     const roomId = `room-${crypto.randomUUID()}`;
     rooms.set(roomId, {
       roomId,
+      universeId: body.universeId!,
+      personaId: body.personaId!,
       // 실제 제목은 세계관·시나리오 접근 권한 검사 후 서버가 정하지만, 목업은 알 길이 없어 고정 문구로 대체합니다.
       title: "새로 시작한 이야기",
       thumbnailUrl: "/images/sample.png",
@@ -205,7 +215,12 @@ export const roomHandlers = [
     const room = findRoom(request, /\/rooms\/([^/]+)$/);
     if (!room) return roomNotFound();
 
-    const response: Room = { roomId: room.roomId, multiplier: room.multiplier };
+    const response: Room = {
+      roomId: room.roomId,
+      universeId: room.universeId,
+      personaId: room.personaId,
+      multiplier: room.multiplier,
+    };
     return HttpResponse.json(response);
   }),
 
@@ -295,6 +310,20 @@ export const roomHandlers = [
     }
 
     room.userNote = userNote;
+    return new HttpResponse(null, { status: 204 });
+  }),
+
+  // 채팅방 페르소나 변경
+  http.patch(/\/rooms\/([^/]+)\/persona(?:\?.*)?$/, async ({ request }) => {
+    const room = findRoom(request, /\/rooms\/([^/]+)\/persona$/);
+    if (!room) return roomNotFound();
+
+    const { personaId } = (await request.json()) as { personaId?: string };
+    if (!personaId) {
+      return invalidInput({ personaId: "페르소나 정보가 없습니다." });
+    }
+
+    room.personaId = personaId;
     return new HttpResponse(null, { status: 204 });
   }),
 
