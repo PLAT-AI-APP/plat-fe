@@ -2,6 +2,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useLocaleStore } from "@/store/useLocaleStore";
 import { refreshAccessToken } from "@/api/auth/postRefresh";
 import type { AppError } from "@/api";
+import { getApiErrorMessage } from "@/lib/apiError";
 
 export interface ChatStreamHandlers {
   /** 토큰 조각이 도착할 때마다 호출됩니다. 조각을 이어붙이면 전체 응답이 됩니다. */
@@ -73,14 +74,14 @@ const toAppError = (status: number, body: string): AppError => {
     return {
       code: parsed.code || "CHAT_STREAM_ERROR",
       fields: parsed.fields || {},
-      message: parsed.message || "채팅 응답을 받지 못했습니다.",
+      message: parsed.message || getApiErrorMessage("chatNoResponse"),
       status,
     };
   } catch {
     return {
       code: "CHAT_STREAM_ERROR",
       fields: {},
-      message: "채팅 응답을 받지 못했습니다.",
+      message: getApiErrorMessage("chatNoResponse"),
       status,
     };
   }

@@ -2,6 +2,7 @@ import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
 import { Persona } from "@/type/persona";
+import { getApiErrorMessage } from "@/lib/apiError";
 import { personaQueryKeys } from "./queryKeys";
 
 interface DetailPersonaApiResponse {
@@ -39,7 +40,7 @@ const getNormalizedDetailPersona = (
   throw {
     code: "MESSAGE",
     fields: {},
-    message: "페르소나 상세 응답을 확인해 주세요.",
+    message: getApiErrorMessage("personaDetailInvalid"),
   } satisfies AppError;
 };
 

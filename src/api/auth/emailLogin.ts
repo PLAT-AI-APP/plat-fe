@@ -3,6 +3,7 @@ import { axiosInstance } from "..";
 import { AppError } from "@/type/api";
 import { useAuthStore } from "@/store/useAuthStore";
 import type { AppToastType } from "@/lib/toast";
+import { getApiErrorMessage } from "@/lib/apiError";
 import { userQueryKeys } from "@/api/user/queryKeys";
 
 export type LoginToastType = AppToastType;
@@ -61,7 +62,7 @@ const PostEmailLogin = async (props: PostEmailLoginProps) => {
     throw {
       code: "MESSAGE",
       fields: {},
-      message: "로그인 응답에서 토큰을 찾을 수 없습니다.",
+      message: getApiErrorMessage("loginTokenMissing"),
     } satisfies AppError;
   }
 

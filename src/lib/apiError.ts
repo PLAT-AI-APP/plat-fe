@@ -1,4 +1,6 @@
 import type { AppError } from "@/api";
+import { RUNTIME_MESSAGES_BY_LOCALE } from "@/i18n/runtimeMessages";
+import { useLocaleStore } from "@/store/useLocaleStore";
 
 /**
  * 에러 코드 상수의 소유처.
@@ -12,7 +14,16 @@ export const TIMEOUT_ERROR_CODE = "TIMEOUT";
 /** 서버가 code를 주지 않았을 때의 자리표시자입니다. */
 export const UNKNOWN_ERROR_CODE = "UNKNOWN_ERROR";
 
-const FALLBACK_MESSAGE = "요청을 처리하지 못했습니다.";
+export type ApiErrorMessageKey = keyof (typeof RUNTIME_MESSAGES_BY_LOCALE)["ko"]["apiError"];
+
+/**
+ * 서버가 message 를 주지 못한 실패(연결 끊김·타임아웃·예상 밖 응답)에 쓰는 현재 언어 문구.
+ *
+ * 인터셉터와 query 함수는 React 밖이라 useTranslations 를 못 쓴다. Accept-Language 를 정할 때와
+ * 같은 방식으로 스토어에서 현재 언어를 직접 읽는다.
+ */
+export const getApiErrorMessage = (key: ApiErrorMessageKey): string =>
+  RUNTIME_MESSAGES_BY_LOCALE[useLocaleStore.getState().locale].apiError[key];
 
 /** 알 수 없는 값도 AppError 모양인지 판별합니다. react-query error는 unknown으로 흘러옵니다. */
 export const isAppError = (error: unknown): error is AppError =>
@@ -23,9 +34,9 @@ export const isAppError = (error: unknown): error is AppError =>
 
 /** 사용자에게 보여줄 문구. 서버가 i18n 해석까지 마친 message를 이미 주므로 그것을 우선합니다. */
 export const resolveErrorMessage = (error: unknown): string => {
-  if (!isAppError(error)) return FALLBACK_MESSAGE;
+  if (!isAppError(error)) return getApiErrorMessage("default");
 
-  return error.message?.trim() || FALLBACK_MESSAGE;
+  return error.message?.trim() || getApiErrorMessage("default");
 };
 
 /**
