@@ -12,6 +12,7 @@ import ActiveButton from "@/components/ActiveButton";
 import { ChatFill, Gear, Heart, HeartFill } from "@/icons";
 import { cn, formatStatCount } from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useLocaleStore } from "@/store/useLocaleStore";
 import { useModalStore } from "@/store/useModalStore";
 import { CharacterDetail } from "@/type/character";
 import { useFollowToggle } from "@/hooks/follow/useFollowToggle";
@@ -29,6 +30,7 @@ const SidebarSummary = ({
   onStartChat,
 }: SidebarSummaryProps) => {
   const t = useTranslations("characterDetail");
+  const locale = useLocaleStore((state) => state.locale);
   const router = useRouter();
   const creatorId = character.creator.id;
   const canUseCreatorActions = Boolean(creatorId);
@@ -127,11 +129,11 @@ const SidebarSummary = ({
             <div className="body-5 flex items-center gap-3 text-font-2">
               <span className="flex items-center gap-1">
                 <ChatFill className="size-4" aria-hidden="true" />
-                {formatStatCount(character.chatCount)}
+                {formatStatCount(character.chatCount, locale)}
               </span>
               <span className="flex items-center gap-1">
                 <HeartFill className="size-4" aria-hidden="true" />
-                {formatStatCount(character.likeCount)}
+                {formatStatCount(character.likeCount, locale)}
               </span>
             </div>
           </div>

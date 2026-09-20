@@ -10,6 +10,7 @@ import { ArrowLeft, Clock } from "@/icons";
 import PinFill from "@/icons/PinFill";
 import dayjs from "@/lib/dayjs";
 import { cn, formatStatCount } from "@/lib/utils";
+import { useLocaleStore } from "@/store/useLocaleStore";
 import type { NoticeCategory } from "@/type/notice";
 
 const NoticeMarkdown = dynamic(() => import("./NoticeMarkdown"));
@@ -50,6 +51,7 @@ const NotificationDetailPage = ({ params }: PageProps) => {
   // Promise 형태의 params를 unwrapping 합니다.
   const { id } = use(params);
   const t = useTranslations();
+  const locale = useLocaleStore((state) => state.locale);
 
   const {
     data: notice,
@@ -114,7 +116,7 @@ const NotificationDetailPage = ({ params }: PageProps) => {
               </time>
               <span>
                 {t("notification.viewCount", {
-                  count: formatStatCount(notice.viewCount),
+                  count: formatStatCount(notice.viewCount, locale),
                 })}
               </span>
             </div>

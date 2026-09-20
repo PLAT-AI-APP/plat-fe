@@ -16,7 +16,8 @@ export function cn(...inputs: ClassValue[]) {
  */
 export const formatStatCount = (
   count: number,
-  locale: AppLocale = "ko",
+  // 기본값을 두면 넘기는 걸 깜빡한 화면이 조용히 한국어 단위(천/만/억)로 나온다. 필수로 받아 컴파일에서 막는다.
+  locale: AppLocale,
 ): string => {
   if (count < 1_000) return count.toString();
 

@@ -12,6 +12,7 @@ import useToggle from "@/hooks/common/useToggle";
 import { ChatFill, Dots } from "@/icons";
 import { formatStatCount } from "@/lib/utils";
 import { showAppToast } from "@/lib/toast";
+import { useLocaleStore } from "@/store/useLocaleStore";
 
 interface CharacterItemProps {
   chatCount: number;
@@ -35,6 +36,7 @@ const CharacterItem = ({
   onDeleted,
 }: CharacterItemProps) => {
   const t = useTranslations();
+  const locale = useLocaleStore((state) => state.locale);
   const selectorT = useTranslations("selector");
   const profileT = useTranslations("profile");
   const studioT = useTranslations("studio");
@@ -127,9 +129,9 @@ const CharacterItem = ({
           <footer className="body-7 flex gap-1 pb-0.5 pt-1 text-font-2">
             <span className="flex items-center gap-1">
               <ChatFill className="h-3.5 w-3.5" />
-              {formatStatCount(chatCount)}
+              {formatStatCount(chatCount, locale)}
             </span>
-            <span aria-hidden="true">쨌</span>
+            <span aria-hidden="true">·</span>
             <span>{isPublic ? selectorT("public") : selectorT("private")}</span>
           </footer>
         </section>

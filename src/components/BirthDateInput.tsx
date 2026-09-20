@@ -11,9 +11,11 @@ import {
   FIELD_HELPER_MESSAGES,
 } from "@/constants/fieldMessages";
 import { useTranslateText } from "@/hooks/i18n/useTranslateText";
+import { INTL_LOCALE_BY_APP_LOCALE } from "@/i18n/config";
 import dayjs from "@/lib/dayjs";
 import { cn } from "@/lib/utils";
 import { ProfileEditFormType } from "@/schema/profile.schema";
+import { useLocaleStore } from "@/store/useLocaleStore";
 import { useFormContext } from "react-hook-form";
 
 const Calendar = dynamic(() => import("react-calendar"), { ssr: false });
@@ -51,6 +53,10 @@ export const BirthDateInput = React.forwardRef<
   BirthDateInputProps
 >(({ className, error, onChange, isEditMode = false, ...rest }, ref) => {
   const translateText = useTranslateText();
+  // 달력의 요일 표기가 이 값을 따른다. 고정해 두면 언어를 바꿔도 한국어 요일이 나온다.
+  const calendarLocale = useLocaleStore(
+    (state) => INTL_LOCALE_BY_APP_LOCALE[state.locale],
+  );
   const {
     setValue,
     watch,
@@ -164,7 +170,7 @@ export const BirthDateInput = React.forwardRef<
                 formatMonth={(_, date) => dayjs(date).format("M")}
                 formatYear={(_, date) => dayjs(date).format("YYYY")}
                 navigationLabel={({ date }) => dayjs(date).format("YYYY. MM")}
-                locale="ko-KR"
+                locale={calendarLocale}
                 formatDay={(_, date) => dayjs(date).format("D")}
                 calendarType="gregory"
                 next2Label={null}
