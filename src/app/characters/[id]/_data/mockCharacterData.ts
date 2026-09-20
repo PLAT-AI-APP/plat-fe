@@ -87,7 +87,6 @@ const mockCharacterDetail: CharacterDetail = {
   creator: {
     id: "creator-1",
     nickname: "@plat_creator",
-    profileImage: "/p1.png",
     followerCount: 24,
     isFollowing: true,
   },

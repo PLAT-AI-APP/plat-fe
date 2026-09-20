@@ -8,6 +8,7 @@ import {
   useDeleteUniverseLikeMutation,
   usePostUniverseLikeMutation,
 } from "@/api/universe/postUniverseLike";
+import { useUserProfileQuery } from "@/api/user/getUserProfile";
 import ActiveButton from "@/components/ActiveButton";
 import { ChatFill, Gear, Heart, HeartFill } from "@/icons";
 import { cn, formatStatCount } from "@/lib/utils";
@@ -17,6 +18,9 @@ import { useModalStore } from "@/store/useModalStore";
 import { CharacterDetail } from "@/type/character";
 import { useFollowToggle } from "@/hooks/follow/useFollowToggle";
 import { universeQueryKeys } from "@/api/universe/queryKeys";
+
+/** 창작자가 사진을 올리지 않았거나 불러오지 못했을 때 쓰는 기본 프로필 이미지 */
+const DEFAULT_CREATOR_IMAGE = "/p1.png";
 
 interface SidebarSummaryProps {
   character: CharacterDetail;
@@ -71,19 +75,31 @@ const SidebarSummary = ({
     extraInvalidateKeys: [universeQueryKeys.detail(character.characterId)],
   });
 
+  // 세계관 상세 응답에는 창작자 프로필 사진이 없어 공개 프로필 API 로 가져온다.
+  // 프로필 페이지와 같은 캐시 키라 그쪽을 먼저 봤다면 다시 요청하지 않는다.
+  const { data: creatorProfile, isLoading: isCreatorProfileLoading } =
+    useUserProfileQuery(creatorId ?? "");
+
   // 프로필 이동 가능 여부(canUseCreatorActions)에 따라 링크로도, 그냥 div로도
   // 감싸야 해서 내용만 따로 빼둔다.
   const creatorInfoContent = (
     <>
-      <Image
-        src={character.creator.profileImage}
-        alt={t("creatorProfileAlt", {
-          nickname: character.creator.nickname,
-        })}
-        width={48}
-        height={48}
-        className="avatar-img size-12"
-      />
+      {isCreatorProfileLoading ? (
+        // 기본 이미지를 먼저 그렸다가 실제 사진으로 바꾸면 남의 얼굴이 잠깐 보이는 것처럼 깜빡인다.
+        <div aria-hidden="true" className="skeleton size-12 shrink-0 rounded-full" />
+      ) : (
+        <Image
+          src={creatorProfile?.profileImageUrl || DEFAULT_CREATOR_IMAGE}
+          alt={t("creatorProfileAlt", {
+            nickname: character.creator.nickname,
+          })}
+          width={48}
+          height={48}
+          // 백엔드 이미지 호스트가 remotePatterns 에 없으면 next/image 가 렌더 단계에서 던진다.
+          unoptimized
+          className="avatar-img size-12"
+        />
+      )}
       <div className="flex min-w-0 flex-col gap-1">
         <p className="title-4 truncate text-font-1">
           {character.creator.nickname}

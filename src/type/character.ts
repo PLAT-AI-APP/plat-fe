@@ -59,7 +59,6 @@ export interface CharacterDetail {
   creator: {
     id: string | null;
     nickname: string;
-    profileImage: string;
     followerCount: number;
     isFollowing: boolean;
   };
