@@ -112,12 +112,14 @@ const ko = {
     unknownCreator: "알 수 없음",
   },
   characterCard: {
+    viewImage: "이미지 {index} 보기",
     imageAlt: "{title} 이미지 {index}",
     otherLooksPrompt: "캐릭터의 다른 모습을 보고 싶다면?",
     viewProfile: "프로필 보기",
     editButtonLabel: "캐릭터 수정하기",
   },
   characterDetail: {
+    scenarioImageAlt: "시나리오 이미지",
     loadFailed: "캐릭터 정보를 불러오지 못했어요.",
     tabs: {
       settings: "설정",
@@ -219,6 +221,12 @@ const ko = {
     mystery: "추리",
   },
   usageHistory: {
+    expiresUntil: "~ {date} 까지",
+    dateFormat: "M월 D일 HH:mm",
+    detailLabel: "상세설명",
+    transactionIdLabel: "거래번호",
+    transactionDateLabel: "거래일시",
+    copyTransactionId: "거래번호 복사",
     copySuccess: "거래번호가 복사되었습니다.",
   },
 };
@@ -337,12 +345,14 @@ const en = {
     unknownCreator: "Unknown",
   },
   characterCard: {
+    viewImage: "View image {index}",
     imageAlt: "{title} image {index}",
     otherLooksPrompt: "Want to see another side of this character?",
     viewProfile: "View profile",
     editButtonLabel: "Edit character",
   },
   characterDetail: {
+    scenarioImageAlt: "Scenario image",
     loadFailed: "Could not load character information.",
     tabs: {
       settings: "Settings",
@@ -450,6 +460,12 @@ const en = {
     mystery: "Mystery",
   },
   usageHistory: {
+    expiresUntil: "Valid until {date}",
+    dateFormat: "MMM D, HH:mm",
+    detailLabel: "Details",
+    transactionIdLabel: "Transaction ID",
+    transactionDateLabel: "Transaction date",
+    copyTransactionId: "Copy transaction ID",
     copySuccess: "Transaction number copied.",
   },
 };
@@ -568,12 +584,14 @@ const ja = {
     unknownCreator: "不明",
   },
   characterCard: {
+    viewImage: "画像{index}を表示",
     imageAlt: "{title} 画像 {index}",
     otherLooksPrompt: "キャラクターの別の姿を見たいですか？",
     viewProfile: "プロフィールを見る",
     editButtonLabel: "キャラクターを編集",
   },
   characterDetail: {
+    scenarioImageAlt: "シナリオ画像",
     loadFailed: "キャラクター情報を読み込めませんでした。",
     tabs: {
       settings: "設定",
@@ -675,6 +693,12 @@ const ja = {
     mystery: "ミステリー",
   },
   usageHistory: {
+    expiresUntil: "{date}まで",
+    dateFormat: "M月D日 HH:mm",
+    detailLabel: "詳細",
+    transactionIdLabel: "取引番号",
+    transactionDateLabel: "取引日時",
+    copyTransactionId: "取引番号をコピー",
     copySuccess: "取引番号がコピーされました。",
   },
 };
@@ -789,12 +813,14 @@ const zh = {
     unknownCreator: "未知",
   },
   characterCard: {
+    viewImage: "查看图片 {index}",
     imageAlt: "{title} 图片 {index}",
     otherLooksPrompt: "想看看这个角色的另一面吗？",
     viewProfile: "查看资料",
     editButtonLabel: "编辑角色",
   },
   characterDetail: {
+    scenarioImageAlt: "场景图片",
     loadFailed: "无法加载角色信息。",
     tabs: {
       settings: "设置",
@@ -896,6 +922,12 @@ const zh = {
     mystery: "推理",
   },
   usageHistory: {
+    expiresUntil: "有效期至 {date}",
+    dateFormat: "M月D日 HH:mm",
+    detailLabel: "详细说明",
+    transactionIdLabel: "交易编号",
+    transactionDateLabel: "交易时间",
+    copyTransactionId: "复制交易编号",
     copySuccess: "交易编号已复制。",
   },
 };
@@ -1013,12 +1045,14 @@ const th = {
     unknownCreator: "ไม่ทราบ",
   },
   characterCard: {
+    viewImage: "ดูรูปที่ {index}",
     imageAlt: "รูปภาพ {title} {index}",
     otherLooksPrompt: "อยากดูอีกมุมของตัวละครนี้ไหม?",
     viewProfile: "ดูโปรไฟล์",
     editButtonLabel: "แก้ไขตัวละคร",
   },
   characterDetail: {
+    scenarioImageAlt: "รูปภาพสถานการณ์",
     loadFailed: "ไม่สามารถโหลดข้อมูลตัวละครได้",
     tabs: {
       settings: "การตั้งค่า",
@@ -1120,6 +1154,12 @@ const th = {
     mystery: "สืบสวน",
   },
   usageHistory: {
+    expiresUntil: "ใช้ได้ถึง {date}",
+    dateFormat: "D MMM HH:mm",
+    detailLabel: "รายละเอียด",
+    transactionIdLabel: "หมายเลขธุรกรรม",
+    transactionDateLabel: "วันที่ทำธุรกรรม",
+    copyTransactionId: "คัดลอกหมายเลขธุรกรรม",
     copySuccess: "คัดลอกหมายเลขธุรกรรมแล้ว",
   },
 };
@@ -1238,12 +1278,14 @@ const vi = {
     unknownCreator: "Không rõ",
   },
   characterCard: {
+    viewImage: "Xem ảnh {index}",
     imageAlt: "Hình ảnh {title} {index}",
     otherLooksPrompt: "Muốn xem một khía cạnh khác của nhân vật này không?",
     viewProfile: "Xem hồ sơ",
     editButtonLabel: "Chỉnh sửa nhân vật",
   },
   characterDetail: {
+    scenarioImageAlt: "Ảnh kịch bản",
     loadFailed: "Không thể tải thông tin nhân vật.",
     tabs: {
       settings: "Cài đặt",
@@ -1345,6 +1387,12 @@ const vi = {
     mystery: "Suy luận",
   },
   usageHistory: {
+    expiresUntil: "Hiệu lực đến {date}",
+    dateFormat: "D/M HH:mm",
+    detailLabel: "Chi tiết",
+    transactionIdLabel: "Mã giao dịch",
+    transactionDateLabel: "Thời gian giao dịch",
+    copyTransactionId: "Sao chép mã giao dịch",
     copySuccess: "Đã sao chép mã giao dịch.",
   },
 };
