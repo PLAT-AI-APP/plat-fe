@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useFollowCountQuery } from "@/api/follow/getFollowCount";
+import { useIsFollowingQuery } from "@/api/follow/getIsFollowing";
 import type { UserProfile } from "@/api/user/getUserProfile";
 import { useFollowToggle } from "@/hooks/follow/useFollowToggle";
 import useToggle from "@/hooks/common/useToggle";
@@ -92,15 +93,17 @@ const Header = ({ userId, profile }: HeaderProps) => {
   const bio = profile?.bio ?? "";
   const chatCount = 0;
 
+  // 서버가 알려 준 실제 팔로우 여부. 비로그인이면 묻지 않으므로 "팔로우 안 함"으로 본다.
+  const { isFollowing: serverIsFollowing, isLoading: isFollowStatusLoading } =
+    useIsFollowingQuery(userId);
+
   const {
     isFollowing,
     isPending: isFollowPending,
     toggle: handleFollowToggle,
   } = useFollowToggle({
-    // 이 화면은 아직 서버에서 팔로우 여부를 받아오지 않는다. 팔로우 카운트만
-    // 조회하고 있어, 처음에는 "팔로우 안 함"으로 두고 누른 뒤부터 반영한다.
     userId,
-    isFollowing: false,
+    isFollowing: serverIsFollowing ?? false,
   });
 
   const openFollowModal = (tab: "followers" | "following") => {
@@ -208,6 +211,9 @@ const Header = ({ userId, profile }: HeaderProps) => {
             >
               {t("profile.editProfile")}
             </button>
+          ) : isFollowStatusLoading ? (
+            // 조회가 끝나기 전에 "팔로우"로 그렸다가 "팔로잉"으로 뒤집으면 틀린 상태가 잠깐 보인다.
+            <div aria-hidden="true" className="skeleton h-11 w-24 rounded-2xl" />
           ) : (
             <button
               type="button"
@@ -219,7 +225,8 @@ const Header = ({ userId, profile }: HeaderProps) => {
                 isFollowPending && "pending-state",
               )}
             >
-              {isFollowing ? t("profile.following") : t("profile.follow")}
+              {/* 버튼은 지금 상태가 아니라 누르면 일어날 동작을 말한다. 팔로우 중이면 "언팔로우". */}
+              {isFollowing ? t("profile.unfollow") : t("profile.follow")}
             </button>
           )}
         </div>
