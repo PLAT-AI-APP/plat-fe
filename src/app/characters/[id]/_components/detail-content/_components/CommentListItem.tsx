@@ -289,7 +289,9 @@ const CommentListItem = ({
           </footer>
 
           {!isReply && (isReplyComposerOpen || comment.meta.replyCount > 0) && (
-            <div className="flex flex-col gap-4">
+            // article 의 gap-3(12px)에 4px 를 더해 댓글과 답글 사이를 16px 로 둔다.
+            // 본문·푸터 사이(12px)까지 넓어지지 않도록 article 의 gap 자체는 건드리지 않는다.
+            <div className="mt-1 flex flex-col gap-4">
               {isReplyComposerOpen && isLoggedIn && (
                 <CommentComposer
                   value={replyContent}
@@ -303,7 +305,7 @@ const CommentListItem = ({
 
               {comment.meta.replyCount > 0 && (
                 <div className="flex flex-col gap-5">
-                  <ul className="flex flex-col gap-5">
+                  <ul className="flex flex-col gap-3">
                     {visibleReplies.map((reply) => (
                       <CommentListItem
                         key={reply.commentId}
