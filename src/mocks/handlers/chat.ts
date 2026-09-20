@@ -83,10 +83,38 @@ const chatAssetGallery: ChatAssetGalleryResponse = {
 /** 백엔드 ChatModel enum 중 화면 테스트에 필요한 일부만 추립니다. */
 const CHAT_CATALOG: ChatCatalog = {
   models: [
-    { name: "CLAUDE_SONNET_4_6", value: "claude-sonnet-4-6", provider: "ANTHROPIC" },
-    { name: "CLAUDE_HAIKU_4_5", value: "claude-haiku-4-5-20251001", provider: "ANTHROPIC" },
-    { name: "GEMINI_2_5_FLASH", value: "gemini-2.5-flash", provider: "GOOGLE" },
-    { name: "GPT_5_5", value: "gpt-5.5", provider: "OPENAI" },
+    {
+      name: "CLAUDE_SONNET_4_6",
+      value: "claude-sonnet-4-6",
+      provider: "ANTHROPIC",
+      displayName: "Claude Sonnet 4.6",
+      description: "자연스럽고 세심한 대화와 균형 잡힌 창작 응답에 적합한 모델.",
+      creditCost: 10,
+    },
+    {
+      name: "CLAUDE_HAIKU_4_5",
+      value: "claude-haiku-4-5-20251001",
+      provider: "ANTHROPIC",
+      displayName: "Claude Haiku 4.5",
+      description: "빠른 응답이 필요한 가벼운 일상 대화에 적합한 모델.",
+      creditCost: 0,
+    },
+    {
+      name: "GEMINI_2_5_FLASH",
+      value: "gemini-2.5-flash",
+      provider: "GOOGLE",
+      displayName: "Gemini 2.5 Flash",
+      description: "일상적인 역할극과 자연스러운 대화를 빠르게 이어가는 데 적합한 모델.",
+      creditCost: 5,
+    },
+    {
+      name: "GPT_5_5",
+      value: "gpt-5.5",
+      provider: "OPENAI",
+      displayName: "GPT-5.5",
+      description: "복잡한 요청을 이해하고 안정적으로 대화를 이어가는 데 적합한 모델.",
+      creditCost: 15,
+    },
   ],
   multipliers: [
     { name: "X1_0", value: 1 },
@@ -142,8 +170,6 @@ export const chatHandlers = [
 
   /**
    * 턴 시작. 실제 서버 순서(필수값 → 방/캐릭터/페르소나 컨텍스트 → 안전 정책 → 멱등키 중복)를 그대로 흉내 냅니다.
-   * FE의 ChatStartRequest.context.characterId 는 백엔드 ChatRequest.Context.universeCharacterId 와
-   * 이름이 다릅니다 — 목업은 FE가 실제로 보내는 필드명(characterId)을 그대로 읽습니다.
    */
   http.post(endpoint("/chat"), async ({ request }) => {
     const body = (await request.json()) as Partial<ChatStartRequest>;
@@ -154,7 +180,7 @@ export const chatHandlers = [
     if (!body.context?.roomId) {
       return chatStartError("CHAT_ROOM_ID_REQUIRED", "채팅방 정보가 없습니다.", 400);
     }
-    if (!body.context?.characterId) {
+    if (!body.context?.universeCharacterId) {
       return chatStartError(
         "CHAT_UNIVERSE_CHARACTER_ID_REQUIRED",
         "세계관 캐릭터 정보가 없습니다.",

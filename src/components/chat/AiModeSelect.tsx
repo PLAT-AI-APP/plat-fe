@@ -59,17 +59,21 @@ const AiModelListItem = ({ model, onSelect }: AiModelListItemProps) => {
                       ? t("chatUI.free")
                       : t("chatUI.modelPrice", { price: model.price })}
                   </span>
-                  {model.price > 0 && model.unit && (
-                    <span className="body-7 text-font-2">/ {model.unit}</span>
+                  {model.price > 0 && (
+                    <span className="body-7 text-font-2">
+                      / {model.unit ?? t("chatUI.perChat")}
+                    </span>
                   )}
                 </div>
               )}
             </div>
           </header>
 
-          {model.descriptionKey && (
+          {(model.descriptionKey || model.description) && (
             <p className="body-7 w-full text-font-2">
-              {t(`chatUI.${model.descriptionKey}`)}
+              {model.descriptionKey
+                ? t(`chatUI.${model.descriptionKey}`)
+                : model.description}
             </p>
           )}
         </article>

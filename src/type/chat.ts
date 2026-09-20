@@ -7,9 +7,10 @@ export interface AIModelType {
   label: string;
   provider: ChatModelOption["provider"];
   icon: string; // 아이콘 경로 또는 이름
-  // 아래 값들은 GET /chat/models가 아직 내려주지 않아, 없으면 화면에서 생략합니다.
-  /** chatUI 번역 키. 백엔드가 설명을 주지 않아 프론트에서 모델별로 붙입니다. */
+  /** chatUI 번역 키. 있으면 서버 설명보다 우선합니다(서버 설명은 한국어 한 벌뿐이라). */
   descriptionKey?: string;
+  /** 번역 키가 없는 모델을 위한 서버 설명 문구. */
+  description?: string;
   price?: number; // 현재 가격 (할인가 포함)
   originalPrice?: number; // 원래 가격 (할인이 있을 때만)
   discountRate?: number; // 할인율 (단위: %)
@@ -56,6 +57,12 @@ export interface ChatModelOption {
   /** 제공사 모델 식별자 (예: claude-sonnet-4-6). 채팅 요청에 이 값이 아니라 name을 보냅니다. */
   value: string;
   provider: "ANTHROPIC" | "GOOGLE" | "OPENAI";
+  /** 화면에 그대로 쓰는 모델 이름 (예: Claude Sonnet 4.6) */
+  displayName: string;
+  /** 서버가 주는 모델 설명. 한국어 한 벌만 내려옵니다. */
+  description: string;
+  /** 한 턴 기본 크레딧 비용 */
+  creditCost: number;
 }
 
 /** 프롬프트 배수 선택지 */
@@ -78,7 +85,8 @@ export interface ChatStartRequest {
   chatTurnId: string;
   context: {
     roomId: string;
-    characterId: string;
+    /** 세계관 안의 캐릭터 ID. UniverseDetailResponse.character.universeCharacterId 값입니다. */
+    universeCharacterId: string;
     personaId: string;
   };
   generation: {
