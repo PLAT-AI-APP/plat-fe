@@ -9,8 +9,9 @@
   z-index: 200;
 }
 
-/* 너비는 고정, 높이는 105px 를 최소값으로 두되 설명이 길어 줄바꿈되면
-   그만큼 늘어난다. sonner 가 내용을 측정해 --initial-height 로 height 를
+/* 너비는 고정, 설명(subtext)이 있으면 높이는 105px 를 최소값으로 두되 길어 줄바꿈되면
+   그만큼 늘어난다. 설명이 없으면 아래 규칙에서 제목 한 줄에 맞게 줄인다.
+   sonner 가 내용을 측정해 --initial-height 로 height 를
    다시 지정하는 속성 선택자 3개짜리 규칙을 갖고 있지만, height 와
    min-height 는 서로 다른 속성이라 캐스케이드끼리 경합하지 않는다 —
    최종 높이는 항상 두 값 중 큰 쪽(사양대로 min-height 가 바닥값)이 된다. */
@@ -28,6 +29,18 @@
   backdrop-filter: blur(3.25px);
   color: var(--font-1);
   box-shadow: var(--elevation-popover);
+}
+
+/* 설명이 없는 toast 는 제목 한 줄뿐이라 105px 최소 높이가 빈 여백이 된다.
+   아이콘(28px)에 위아래 패딩만 남기고, 내용과 닫기 버튼은 세로 가운데로 맞춘다. */
+[data-sonner-toast].sonner-toast:not(:has([data-description])) {
+  min-height: 0;
+  align-items: center;
+}
+
+[data-sonner-toast].sonner-toast:not(:has([data-description])) [data-close-button] {
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 /*
