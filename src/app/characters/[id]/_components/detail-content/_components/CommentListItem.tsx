@@ -143,7 +143,13 @@ const CommentListItem = ({
 
     postReply(
       { commentId: comment.commentId, content, universeId },
-      { onSuccess: () => setReplyContent("") },
+      {
+        // 등록한 답글은 바로 아래 목록에 보이므로 입력창은 닫는다. 실패하면 고쳐 보낼 수 있게 그대로 둔다.
+        onSuccess: () => {
+          setReplyContent("");
+          setIsReplyComposerOpen(false);
+        },
+      },
     );
   };
 
