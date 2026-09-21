@@ -20,7 +20,7 @@ import {
 } from "@/icons";
 import Note from "@/icons/Note";
 import { useRoomDetailQuery } from "@/api/room/getRoomDetail";
-import { usePatchRoomPersonaMutation } from "@/api/room/patchRoomContext";
+import { usePatchRoomPersonaMutation } from "@/api/room/patchRoomPersona";
 import { cn, formatWithCommas } from "@/lib/utils";
 import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
