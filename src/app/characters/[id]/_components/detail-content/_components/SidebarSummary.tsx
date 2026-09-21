@@ -10,7 +10,9 @@ import {
 } from "@/api/universe/postUniverseLike";
 import { useUserProfileQuery } from "@/api/user/getUserProfile";
 import ActiveButton from "@/components/ActiveButton";
+import ResourceImage from "@/components/ResourceImage";
 import { ChatFill, Gear, Heart, HeartFill } from "@/icons";
+import { toImageVariantUrl } from "@/lib/file";
 import { cn, formatStatCount } from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useLocaleStore } from "@/store/useLocaleStore";
@@ -88,8 +90,12 @@ const SidebarSummary = ({
         // 기본 이미지를 먼저 그렸다가 실제 사진으로 바꾸면 남의 얼굴이 잠깐 보이는 것처럼 깜빡인다.
         <div aria-hidden="true" className="skeleton size-12 shrink-0 rounded-full" />
       ) : (
-        <Image
-          src={creatorProfile?.profileImageUrl || DEFAULT_CREATOR_IMAGE}
+        <ResourceImage
+          // 48px 아바타라 원본 대신 정사각 80px 변형본을 받는다.
+          src={
+            toImageVariantUrl(creatorProfile?.profileImageUrl, "sq80") ||
+            DEFAULT_CREATOR_IMAGE
+          }
           alt={t("creatorProfileAlt", {
             nickname: character.creator.nickname,
           })}

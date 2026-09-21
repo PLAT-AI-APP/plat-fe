@@ -13,6 +13,7 @@ import { useChatTurn } from "@/hooks/chat/useChatTurn";
 import { useIntersectionObserver } from "@/hooks/dom/useIntersectionObserver";
 import { useScrollTimeout } from "@/hooks/dom/useScrollTiemout";
 import { toAiModel } from "@/lib/chatModel";
+import { toImageVariantUrl } from "@/lib/file";
 import { cn } from "@/lib/utils";
 import { AIModelType, ChatMessageType } from "@/type/chat";
 import type { RoomMessage } from "@/type/room";
@@ -68,7 +69,9 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
   // 방을 받기 전에는 세계관 쿼리가 꺼져 있어 isLoading 이 false 이므로, 데이터 유무로 판단한다.
   const isCharacterLoading = !universe && !isUniverseError;
   const characterName = universe?.character.name ?? "";
-  const profileImage = universe?.character.profileImageUrl ?? "";
+  // 말풍선 아바타는 36px 이라 원본 대신 정사각 140px 변형본이면 충분하다(2배 화면 기준 72px 이상).
+  const profileImage =
+    toImageVariantUrl(universe?.character.profileImageUrl, "sq140") ?? "";
 
   const {
     data,

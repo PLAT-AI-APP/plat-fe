@@ -5,6 +5,7 @@ import Image from "next/image";
 import { m } from "framer-motion";
 import { useTranslations } from "next-intl";
 import CharacterChat from "@/components/chat/CharacterChat";
+import ResourceImage from "@/components/ResourceImage";
 import InlineEditActions from "@/components/chat/InlineEditActions";
 import Scenario from "@/components/chat/Scenario";
 import UserChatBubble from "@/components/chat/UserChatBubble";
@@ -56,7 +57,7 @@ const TypingIndicator = ({
     >
       {/* CharacterChat 과 같은 자리·크기를 써야 첫 글자가 오며 말풍선으로 바뀔 때 흔들리지 않는다. */}
       {profileImage ? (
-        <Image
+        <ResourceImage
           src={profileImage}
           alt=""
           width={36}

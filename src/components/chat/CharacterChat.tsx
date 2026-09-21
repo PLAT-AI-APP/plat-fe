@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import React from "react";
 import { useTranslations } from "next-intl";
+import ResourceImage from "@/components/ResourceImage";
 import { splitActionSegments } from "@/lib/chatText";
 import { cn } from "@/lib/utils";
 
@@ -30,7 +30,7 @@ const CharacterChat = ({
 
   return (
     <article className="flex gap-2">
-      <Image
+      <ResourceImage
         src={image}
         alt={t("chatUI.characterProfileAlt", { name: CharacterName })}
         width={imageSize}
