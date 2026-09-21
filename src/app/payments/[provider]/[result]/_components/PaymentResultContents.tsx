@@ -13,6 +13,7 @@ import type { AppError } from "@/api";
 import ButtonLink from "@/components/ui/ButtonLink";
 import Token from "@/icons/Token";
 import PaymentSuccess from "./PaymentSuccess";
+import PaymentFailure from "./PaymentFailure";
 
 type PaymentState =
   | { kind: "confirming" }
@@ -142,9 +143,8 @@ const PaymentResultContents = ({ result }: PaymentResultContentsProps) => {
             })
           : t("tokenCharge.payment.granting");
       case "cancelled":
-        return t("tokenCharge.payment.cancelled");
       case "failed":
-        return view.message ?? t("tokenCharge.payment.failed");
+        return null;
     }
   })();
 
@@ -152,6 +152,17 @@ const PaymentResultContents = ({ result }: PaymentResultContentsProps) => {
     return (
       <section className="mx-auto flex w-full max-w-160 flex-col items-center pt-12 pb-16 text-center">
         <PaymentSuccess credits={view.credits} />
+      </section>
+    );
+  }
+
+  if (view.kind === "failed" || view.kind === "cancelled") {
+    return (
+      <section className="mx-auto flex w-full max-w-160 flex-col items-center pt-12 pb-16 text-center">
+        <PaymentFailure
+          variant={view.kind}
+          reason={view.kind === "failed" ? view.message : undefined}
+        />
       </section>
     );
   }
