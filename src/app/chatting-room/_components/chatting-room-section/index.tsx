@@ -81,12 +81,14 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
     refetch: refetchMessages,
   } = useRoomMessagesInfiniteQuery(roomId);
 
-  // 과거 방향으로 페이지가 이어지므로, 화면엔 오래된 메시지가 위로 오도록 순서를 뒤집는다.
+  // 페이지는 최신 → 과거 순이고 페이지 안은 시간순이다. 페이지 순서만 뒤집어야 전체가 시간순이 된다.
+  // (메시지 단위로 뒤집으면 한 턴 안에서 캐릭터 응답이 내가 보낸 말 위로 올라간다.)
   const serverMessages = useMemo<ChatMessageType[]>(
     () =>
-      (data?.pages.flatMap((page) => page.content) ?? [])
-        .map((message) => toChatMessage(message, characterName, profileImage))
-        .reverse(),
+      [...(data?.pages ?? [])]
+        .reverse()
+        .flatMap((page) => page.content)
+        .map((message) => toChatMessage(message, characterName, profileImage)),
     [data, characterName, profileImage],
   );
 

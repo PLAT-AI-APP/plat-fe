@@ -9,6 +9,7 @@ import { usePostChatStartMutation } from "@/api/chat/postChatStart";
 import { prependLatestRoomMessages } from "@/api/room/getRoomMessages";
 import { roomQueryKeys } from "@/api/room/queryKeys";
 import { getApiErrorMessage } from "@/lib/apiError";
+import { createTextReveal } from "@/lib/textReveal";
 import { showAppToast } from "@/lib/toast";
 import type { ChatMessageType } from "@/type/chat";
 
@@ -88,6 +89,12 @@ export const useChatTurn = ({
     ) => {
       let hasStarted = false;
       let shouldKeepPending = false;
+      // 토큰이 뭉쳐서 와도 응답이 툭 나타나지 않도록 화면에는 조금씩 이어 보여 준다.
+      const reveal = createTextReveal((text) => {
+        setTurn((previous) =>
+          previous ? { ...previous, assistantContent: text } : previous,
+        );
+      });
 
       try {
         // 시작 요청의 실패 토스트는 MutationCache 가 이미 띄웁니다.
@@ -110,21 +117,21 @@ export const useChatTurn = ({
         await consumeChatStream({
           turnId,
           signal: abortController.signal,
-          onToken: (token) => {
-            setTurn((previous) =>
-              previous
-                ? {
-                    ...previous,
-                    assistantContent: previous.assistantContent + token,
-                  }
-                : previous,
-            );
-          },
-          onFailed: () => {
+          onToken: (token) => reveal.push(token),
+          onFailed: (reason) => {
             hasFailed = true;
-            showAppToast("error", getApiErrorMessage("chatNoResponse"));
+            // reason 은 서버가 준 실패 코드(예: AI_PROVIDER_FAILED)다. 사용자에게는 같은 문구를 보이되,
+            // 원인을 알 수 있게 콘솔에 남기고 개발 모드에서는 토스트에도 붙인다.
+            console.error("[chat] 응답 생성 실패:", reason);
+            showAppToast("error", getApiErrorMessage("chatNoResponse"), {
+              description:
+                process.env.NODE_ENV === "production" ? undefined : reason,
+            });
           },
         });
+
+        // 받은 글자를 화면에 다 내보낸 뒤에 임시 말풍선을 서버 이력으로 바꿔야 끝에서 툭 튀지 않는다.
+        await reveal.finish();
 
         // 실패해도 부분 응답이 저장됐을 수 있어, 이력을 한 번 확인한 뒤에 화면의 임시 말풍선을 치웁니다.
         const isSynced = await syncSavedMessages();
@@ -135,6 +142,7 @@ export const useChatTurn = ({
         });
         void queryClient.invalidateQueries({ queryKey: roomQueryKeys.lists() });
       } catch (error) {
+        reveal.cancel();
         if (abortController.signal.aborted) return;
 
         // 스트림 구독 실패(네트워크 등)는 MutationCache 를 거치지 않아 여기서 알립니다.
