@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import dayjs from "@/lib/dayjs";
+import { cn } from "@/lib/utils";
+import { useFadeInAfterLoading } from "@/hooks/common/useFadeInAfterLoading";
 import { useModalStore } from "@/store/useModalStore";
 import { useUniverseCommentsInfiniteQuery } from "@/api/comment/getUniverseComments";
 import {
@@ -10,6 +12,7 @@ import {
   useUniverseDetailQuery,
 } from "@/api/universe/getUniverseDetail";
 import { ErrorState } from "@/components/state";
+import SkeletonCharacterDetail from "@/components/skeleton/SkeletonCharacterDetail";
 import CommentsPanel from "./_components/CommentsPanel";
 import DetailTabs, { CharacterDetailTab } from "./_components/DetailTabs";
 import ScenarioPanel from "./_components/ScenarioPanel";
@@ -30,6 +33,7 @@ const CharacterDetailContent = ({
     isLoading,
     refetch,
   } = useUniverseDetailQuery(characterId);
+  const fadeInClassName = useFadeInAfterLoading(isLoading);
   const character = useMemo(
     () =>
       universe ? adaptUniverseDetailToCharacterDetail(universe) : undefined,
@@ -141,13 +145,7 @@ const CharacterDetailContent = ({
     };
   }, []);
 
-  if (isLoading) {
-    return (
-      <article className="flex w-full justify-center pb-16 pt-5">
-        <div className="h-[720px] w-full max-w-(--content-max-width) animate-pulse rounded-2xl bg-card" />
-      </article>
-    );
-  }
+  if (isLoading) return <SkeletonCharacterDetail />;
 
   // 404(삭제된 캐릭터)와 5xx(서버 오류)를 같은 문구로 뭉개면 사용자가 무엇을 해야 할지 모른다.
   // ErrorState 는 서버가 준 사유를 그대로 보여주고, 재시도해 볼 값이 있을 때만 버튼을 낸다.
@@ -196,7 +194,9 @@ const CharacterDetailContent = ({
   };
 
   return (
-    <article className="flex w-full justify-center pb-16 pt-5">
+    <article
+      className={cn("flex w-full justify-center pb-16 pt-5", fadeInClassName)}
+    >
       {/* 두 열이 되는 기준은 lg(1024px)가 아니라 "두 열이 실제로 들어가는 폭"이다.
           389px 요약 열 + 27px 간격 + 본문 최소 366px = 콘텐츠 782px, 사이드바와 좌우
           여백까지 더하면 900px. lg 로 두면 900~1023px 창에서 자리가 남는데도 한 줄로

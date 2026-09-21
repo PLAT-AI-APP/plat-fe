@@ -10,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { decodeScenarioContent } from "@/lib/scenarioContent";
 import { showAppToast } from "@/lib/toast";
 import { ModalLayout } from "@/components/ModalLayout";
+import SkeletonCharacterCreate from "@/components/skeleton/SkeletonCharacterCreate";
 import { Eye } from "@/icons";
 import CharacterCardPreviewPanel from "./CharacterCardPreviewPanel";
 import CharacterPreview from "./CharacterPreview";
@@ -118,6 +119,10 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
   const isEditMode = Boolean(universeId);
   const { data: universeDetail, isError: isUniverseDetailError } =
     useUniverseDetailQuery(universeId);
+  // 상세가 폼 값으로 옮겨진 뒤에야 수정 화면을 보여 주기 위한 표시. 데이터가 도착한 첫 렌더에는
+  // 아직 빈 폼이라, 이걸 보지 않으면 빈 입력칸이 한 프레임 보였다가 값이 채워지며 튄다.
+  const [appliedUniverse, setAppliedUniverse] =
+    useState<UniverseDetailResponse | null>(null);
   const methods = useForm<CharacterCreateFormValues>({
     mode: "onChange",
     // 검증 실패 시 이동할 탭과 포커스 대상은 CreateHeader 가 화면 순서대로 직접 정한다.
@@ -185,7 +190,16 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
     reset(
       createCharacterEditDefaultValues(universeDetail, defaultScenarioName),
     );
+    // reset 은 외부(RHF) 상태를 바꾸는 일이라 effect 에서 해야 하고, 그 완료를 화면에 알리려면 여기서 state 를 갱신해야 한다.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setAppliedUniverse(universeDetail);
   }, [defaultScenarioName, reset, universeDetail]);
+
+  // 실패하면 스켈레톤이 영원히 남지 않도록 로딩으로 치지 않는다(빈 폼과 실패 토스트로 이어진다).
+  const isEditLoading =
+    isEditMode &&
+    !isUniverseDetailError &&
+    (!universeDetail || appliedUniverse !== universeDetail);
 
   useEffect(() => {
     if (!isEditMode || !isUniverseDetailError) return;
@@ -387,24 +401,30 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
           {/* lg 이상에서는 두 패널(폼 491px : 프리뷰 693px 비율)이 gap을 뺀 나머지 폭을
               끝까지 나눠 갖도록 grid로 전환합니다. flex로는 flex-basis가 auto인 wrapper div의
               내용 기반 크기 계산과 얽혀 정확히 맞아떨어지지 않았습니다. */}
-          <div className="flex min-h-0 min-w-0 flex-1 items-start justify-center gap-4 lg:grid lg:grid-cols-[491fr_693fr]">
-            <CreateTabs
-              currentTabId={currentTabId}
-              setCurrentTabId={setCurrentTabId}
-              activeScenarioIndex={activeScenarioIndex}
-              setActiveScenarioIndex={setActiveScenarioIndex}
-              assetFieldArray={assetFieldArray}
-            />
-            {isDesktop && (
-              <div className="hidden lg:block">
-                {shouldShowCardPreview ? (
-                  <CharacterCardPreviewPanel />
-                ) : (
-                  <CharacterPreview activeScenarioIndex={activeScenarioIndex} />
-                )}
-              </div>
-            )}
-          </div>
+          {isEditLoading ? (
+            <SkeletonCharacterCreate />
+          ) : (
+            <div className="flex min-h-0 min-w-0 flex-1 items-start justify-center gap-4 lg:grid lg:grid-cols-[491fr_693fr]">
+              <CreateTabs
+                currentTabId={currentTabId}
+                setCurrentTabId={setCurrentTabId}
+                activeScenarioIndex={activeScenarioIndex}
+                setActiveScenarioIndex={setActiveScenarioIndex}
+                assetFieldArray={assetFieldArray}
+              />
+              {isDesktop && (
+                <div className="hidden lg:block">
+                  {shouldShowCardPreview ? (
+                    <CharacterCardPreviewPanel />
+                  ) : (
+                    <CharacterPreview
+                      activeScenarioIndex={activeScenarioIndex}
+                    />
+                  )}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* 미리보기 모달의 CharacterPreview도 Droppable을 렌더링하므로
               같은 DragDropContext 안에 있어야 합니다. */}

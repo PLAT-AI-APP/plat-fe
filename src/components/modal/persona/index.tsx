@@ -7,6 +7,8 @@ import { ModalLayout } from "../../ModalLayout";
 import { useMePersonasQuery } from "@/api/persona/mePersonas";
 import SkeletonPersona from "../../skeleton/SkeletonPersona";
 import { ErrorState } from "@/components/state";
+import { useFadeInAfterLoading } from "@/hooks/common/useFadeInAfterLoading";
+import { cn } from "@/lib/utils";
 
 import { PersonaModalProps } from "@/type/modal";
 
@@ -59,6 +61,7 @@ const PersonaModal = ({
 
   // 실제 데이터 대기 상태 판단: 요청을 아직 안 보냈거나(!shouldFetch), 쿼리가 진행 중일 때
   const isDataLoading = !shouldFetch || isLoading;
+  const fadeInClassName = useFadeInAfterLoading(isDataLoading);
 
   return (
     <ModalLayout
@@ -78,7 +81,7 @@ const PersonaModal = ({
         ) : !hasPersonas ? (
           <PersonaEmptyState />
         ) : (
-          <ul className="flex flex-col gap-4">
+          <ul className={cn("flex flex-col gap-4", fadeInClassName)}>
             {personas?.map((persona) => (
               <PersonaItem
                 key={persona.personaId}

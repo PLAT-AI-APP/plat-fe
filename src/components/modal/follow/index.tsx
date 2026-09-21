@@ -16,6 +16,7 @@ import { useFollowerListQuery } from "@/api/follow/getFollowerList";
 import { useFollowingListQuery } from "@/api/follow/getFollowingList";
 import { useFollowMutation } from "@/api/follow/postFollow";
 import { ModalLayout } from "@/components/ModalLayout";
+import { useFadeInAfterLoading } from "@/hooks/common/useFadeInAfterLoading";
 import { useInfiniteList } from "@/hooks/data/useInfiniteList";
 import { useTabUnderline } from "@/hooks/dom/useTabUnderline";
 import { Close } from "@/icons";
@@ -112,6 +113,7 @@ const FollowModal = ({
   const followerQuery = useFollowerListQuery(activeTabs === "followers");
   const activeQuery =
     activeTabs === "following" ? followingQuery : followerQuery;
+  const fadeInClassName = useFadeInAfterLoading(activeQuery.isLoading);
 
   const { items: listData, sentinelRef } = useInfiniteList(
     {
@@ -238,7 +240,10 @@ const FollowModal = ({
       ) : (
         <ul
           ref={ulRef}
-          className="custom-scrollbar flex h-95 flex-col gap-1 overflow-y-auto"
+          className={cn(
+            "custom-scrollbar flex h-95 flex-col gap-1 overflow-y-auto",
+            fadeInClassName,
+          )}
         >
           {listData.map((user) => {
             const isToggled = followChangeIds.includes(user.userId);

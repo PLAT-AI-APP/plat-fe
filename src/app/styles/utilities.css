@@ -21,6 +21,25 @@
   }
 }
 
+/*
+ * 스켈레톤이 걷히고 실제 콘텐츠가 들어오는 순간의 등장.
+ * 자리표시자와 콘텐츠가 같은 자리에서 즉시 바뀌면 딱 끊기는 느낌이라, 콘텐츠 쪽만 투명에서 채워 준다.
+ * 스켈레톤을 함께 페이드아웃하지 않는 이유는 둘이 겹치는 동안 높이가 두 배로 잡히기 때문이다.
+ * 동작 줄이기 설정에서는 base.css 의 prefers-reduced-motion 블록이 애니메이션을 멈춘다.
+ */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@utility fade-in {
+  animation: fade-in var(--motion-base) var(--motion-ease-out) both;
+}
+
 @utility content-x {
   padding-inline: var(--content-margin-x);
 }

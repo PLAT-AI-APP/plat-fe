@@ -22,7 +22,7 @@ const NewTabContents = () => {
   const searchParams = useSearchParams();
   const sort = (searchParams.get("sort") as RankingSortId) ?? "chats";
 
-  const { data, isPending, isError, error, refetch } = useRankingQuery({
+  const { data, isPending, isPlaceholderData, isError, error, refetch } = useRankingQuery({
     period: "WEEKLY",
     sort: SORT_TO_API[sort] ?? "CHAT",
     scope: "NEW",
@@ -61,7 +61,7 @@ const NewTabContents = () => {
           </CardGrid>
         }
       >
-        <CardGrid size="S">
+        <CardGrid size="S" isStale={isPlaceholderData}>
           {items.map(({ card }) => (
             <CharacterCard
               key={card.universeId}

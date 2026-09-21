@@ -4,6 +4,7 @@ import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { useFadeInAfterLoading } from "@/hooks/common/useFadeInAfterLoading";
 import { useCarousel } from "@/hooks/dom/useCarousel";
 import { useHomeBannersQuery } from "@/api/home/getBanners";
 import { ArrowLeft, ArrowRight } from "@/icons";
@@ -20,6 +21,7 @@ export function MainBannerCarousel() {
   const t = useTranslations("home");
   const { data: banners = [], isLoading, isError } = useHomeBannersQuery();
 
+  const fadeInClassName = useFadeInAfterLoading(isLoading);
   const { viewportRef, scrollPrev, scrollNext } = useCarousel({
     options: { loop: true },
     plugins: [Autoplay({ delay: 5000, stopOnInteraction: false })],
@@ -38,7 +40,7 @@ export function MainBannerCarousel() {
   // 배너가 없으면 자리만 차지하는 빈 캐러셀 대신 섹션을 통째로 내린다.
   if (isLoading) {
     return (
-      <section className="aspect-[64/23] max-h-[437px] w-full max-w-full animate-pulse bg-card" />
+      <section className="aspect-[64/23] max-h-[437px] w-full max-w-full skeleton" />
     );
   }
 
@@ -47,7 +49,12 @@ export function MainBannerCarousel() {
   const hasMultiple = banners.length > 1;
 
   return (
-    <section className="relative aspect-[64/23] max-h-[437px] w-full max-w-full overflow-hidden bg-scrim">
+    <section
+      className={cn(
+        "relative aspect-[64/23] max-h-[437px] w-full max-w-full overflow-hidden bg-scrim",
+        fadeInClassName,
+      )}
+    >
       <div
         id="carousel-viewport"
         className="h-full w-full overflow-hidden"

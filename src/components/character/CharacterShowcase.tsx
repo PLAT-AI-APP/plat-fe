@@ -1,6 +1,7 @@
 "use client";
 
 import { ArrowLeft, ArrowRight } from "@/icons";
+import { useFadeInAfterLoading } from "@/hooks/common/useFadeInAfterLoading";
 import { useCarousel } from "@/hooks/dom/useCarousel";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -99,6 +100,8 @@ const CharacterShowcase = ({
       },
     });
   const isCarousel = layout === "carousel";
+  // 스켈레톤 카드와 실제 카드는 같은 컨테이너 안에서 바뀌므로, 컨테이너에 클래스를 붙여 등장시킨다.
+  const fadeInClassName = useFadeInAfterLoading(isLoading);
 
   const displayChars = React.useMemo(
     () => (limit ? charArray.slice(0, limit) : charArray),
@@ -203,7 +206,10 @@ const CharacterShowcase = ({
         // 줄바꿈 없이 한 줄만 쓰고, 넘치는 카드는 좌우 버튼과 드래그로 밀어서 본다.
         <div className="relative">
           <div className="overflow-hidden" ref={viewportRef}>
-            <div className="flex" style={{ gap: columnGap ?? 16 }}>
+            <div
+              className={cn("flex", fadeInClassName)}
+              style={{ gap: columnGap ?? 16 }}
+            >
               {cardItems.map((item) => (
                 <div
                   key={item.key}
@@ -244,6 +250,7 @@ const CharacterShowcase = ({
         <CardGrid
           size={cardSize}
           columns={columns}
+          className={fadeInClassName}
           style={{ columnGap, rowGap }}
         >
           {cardItems}

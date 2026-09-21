@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { authAxios, axiosInstance } from "..";
 import { AppError, PageWith } from "@/type/api";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -93,5 +93,7 @@ export const useCategorySearchQuery = (
     // 로그인 여부가 정해지기 전에 부르면 찜 여부 없는 응답이 캐시에 남습니다.
     enabled: isAuthReady,
     staleTime: 1000 * 60,
+    // 정렬·태그를 바꿀 때 목록이 통째로 스켈레톤으로 돌아가지 않고, 새 목록이 올 때까지 이전 목록을 둔다.
+    placeholderData: keepPreviousData,
   });
 };

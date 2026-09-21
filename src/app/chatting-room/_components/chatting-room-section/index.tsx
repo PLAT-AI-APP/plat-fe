@@ -7,6 +7,7 @@ import { useRoomMessagesInfiniteQuery } from "@/api/room/getRoomMessages";
 import { useUniverseDetailQuery } from "@/api/universe/getUniverseDetail";
 import ChatForm from "@/components/chat/ChatForm";
 import MessageList from "@/components/chat/MessageList";
+import SkeletonChatMessages from "@/components/skeleton/SkeletonChatMessages";
 import { ErrorState } from "@/components/state";
 import { useChatTurn } from "@/hooks/chat/useChatTurn";
 import { useIntersectionObserver } from "@/hooks/dom/useIntersectionObserver";
@@ -61,7 +62,11 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
     error: roomError,
     refetch: refetchRoom,
   } = useRoomDetailQuery(roomId);
-  const { data: universe } = useUniverseDetailQuery(room?.universeId);
+  const { data: universe, isError: isUniverseError } = useUniverseDetailQuery(
+    room?.universeId,
+  );
+  // 방을 받기 전에는 세계관 쿼리가 꺼져 있어 isLoading 이 false 이므로, 데이터 유무로 판단한다.
+  const isCharacterLoading = !universe && !isUniverseError;
   const characterName = universe?.character.name ?? "";
   const profileImage = universe?.character.profileImageUrl ?? "";
 
@@ -86,7 +91,7 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
   );
 
   const [isSuggestedReplyOn, setIsSuggestedReplyOn] = useState(true);
-  const { data: chatCatalog } = useChatModelsQuery();
+  const { data: chatCatalog, isPending: isModelsPending } = useChatModelsQuery();
   const models = useMemo(
     () => chatCatalog?.models.map(toAiModel) ?? [],
     [chatCatalog],
@@ -157,6 +162,8 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
             characterName={characterName}
             models={models}
             currentAi={currentAi}
+            isCharacterLoading={isCharacterLoading}
+            isModelsLoading={isModelsPending}
             handleCurrentAi={handleCurrentAi}
             isSuggestedReplyOn={isSuggestedReplyOn}
             onSuggestedReplyToggle={() =>
@@ -169,7 +176,9 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
             <div ref={topSentinelRef} aria-hidden="true" className="h-px" />
           )}
 
-          {isMessagesError && serverMessages.length === 0 ? (
+          {isMessagesPending ? (
+            <SkeletonChatMessages />
+          ) : isMessagesError && serverMessages.length === 0 ? (
             <ErrorState error={messagesError} onRetry={refetchMessages} />
           ) : (
             <MessageList

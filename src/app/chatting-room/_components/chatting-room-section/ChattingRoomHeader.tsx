@@ -15,6 +15,10 @@ interface ChattingRoomHeaderProps {
   characterName: string;
   models: AIModelType[];
   currentAi?: AIModelType;
+  /** 세계관 상세를 아직 받는 중이라 캐릭터 이름을 모를 때. */
+  isCharacterLoading?: boolean;
+  /** 모델 목록을 아직 받는 중일 때. */
+  isModelsLoading?: boolean;
   handleCurrentAi: (model: AIModelType) => void;
   isSuggestedReplyOn: boolean;
   onSuggestedReplyToggle: () => void;
@@ -25,6 +29,8 @@ const ChattingRoomHeader = ({
   characterName,
   models,
   currentAi,
+  isCharacterLoading = false,
+  isModelsLoading = false,
   handleCurrentAi,
   isSuggestedReplyOn,
   onSuggestedReplyToggle,
@@ -50,18 +56,30 @@ const ChattingRoomHeader = ({
           <ArrowDown className="size-6 rotate-90" />
         </button>
 
-        <h1 className="title-1 min-w-0 truncate text-font-1">
-          {characterName}
-        </h1>
+        {isCharacterLoading ? (
+          <div aria-hidden="true" className="skeleton h-6 w-32 rounded-full" />
+        ) : (
+          <h1 className="title-1 min-w-0 truncate text-font-1">
+            {characterName}
+          </h1>
+        )}
       </div>
 
       <div className="ml-auto flex shrink-0 items-center gap-3">
-        {currentAi && (
+        {currentAi ? (
           <AiModelSelect
             models={models}
             currentAi={currentAi}
             handleCurrentAi={handleCurrentAi}
           />
+        ) : (
+          isModelsLoading && (
+            // AiModelSelect 트리거(h-[34px] min-w-[108px] rounded-full)와 같은 크기.
+            <div
+              aria-hidden="true"
+              className="skeleton h-[34px] w-[108px] rounded-full"
+            />
+          )
         )}
 
         <button

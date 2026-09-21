@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { useFadeInAfterLoading } from "@/hooks/common/useFadeInAfterLoading";
 import EmptyState from "./EmptyState";
 import ErrorState from "./ErrorState";
 import ListErrorRow from "./ListErrorRow";
@@ -50,6 +51,10 @@ const InfiniteQueryBoundary = ({
   emptyFallback,
   children,
 }: InfiniteQueryBoundaryProps) => {
+  const isLoadingFirstPage = isPending && !hasItems;
+  // 스켈레톤을 거쳐 들어온 목록만 부드럽게 나타나게 한다.
+  const fadeInClassName = useFadeInAfterLoading(isLoadingFirstPage);
+
   if (isPending && !hasItems) return <>{pendingFallback}</>;
 
   if (isError && !hasItems) {
@@ -62,7 +67,7 @@ const InfiniteQueryBoundary = ({
     return null;
   }
 
-  return (
+  const content = (
     <>
       {children}
       {isError && onRetryNextPage && (
@@ -74,6 +79,17 @@ const InfiniteQueryBoundary = ({
       )}
     </>
   );
+
+  // key 는 스켈레톤과 같은 종류의 요소(div)일 때 DOM 이 재사용돼 애니메이션이 재생되지 않는 것을 막는다.
+  if (fadeInClassName) {
+    return (
+      <div key="content" className={fadeInClassName}>
+        {content}
+      </div>
+    );
+  }
+
+  return content;
 };
 
 export default InfiniteQueryBoundary;

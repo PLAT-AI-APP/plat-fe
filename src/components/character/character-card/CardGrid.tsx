@@ -12,6 +12,11 @@ interface CardGridProps {
   size?: CardSize;
   /** 기본 열 수를 덮어써야 하는 섹션만 지정한다. */
   columns?: CardColumnCount;
+  /**
+   * 정렬·필터를 바꿔 새 목록을 기다리는 동안 이전 목록을 그대로 보여 주는 중인지.
+   * 스켈레톤으로 되돌리지 않는 대신, 낡은 목록이라는 걸 흐림으로 알린다.
+   */
+  isStale?: boolean;
   className?: string;
   style?: React.CSSProperties;
 }
@@ -32,16 +37,19 @@ export const CardGrid = ({
   children,
   size = "S",
   columns,
+  isStale = false,
   className,
   style,
 }: CardGridProps) => (
   <div className="@container w-full">
     <div
       className={cn(
-        "grid gap-x-4 gap-y-7",
+        "grid gap-x-4 gap-y-7 transition-opacity",
         CARD_COLUMNS_CLASS[columns ?? DEFAULT_CARD_COLUMNS[size]],
+        isStale && "opacity-60",
         className,
       )}
+      aria-busy={isStale || undefined}
       style={style}
     >
       {children}

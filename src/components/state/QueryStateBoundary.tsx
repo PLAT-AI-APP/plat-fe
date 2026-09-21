@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { useFadeInAfterLoading } from "@/hooks/common/useFadeInAfterLoading";
 import ErrorState from "./ErrorState";
 import EmptyState from "./EmptyState";
 
@@ -38,6 +39,9 @@ const QueryStateBoundary = ({
   errorClassName,
   children,
 }: QueryStateBoundaryProps) => {
+  // 스켈레톤을 거쳐 들어온 콘텐츠만 부드럽게 나타나게 한다.
+  const fadeInClassName = useFadeInAfterLoading(isPending);
+
   if (isPending) return <>{pendingFallback}</>;
 
   if (isError) {
@@ -50,6 +54,15 @@ const QueryStateBoundary = ({
     if (emptyFallback) return <>{emptyFallback}</>;
     if (emptyMessage) return <EmptyState message={emptyMessage} />;
     return null;
+  }
+
+  // key 는 스켈레톤과 같은 종류의 요소(div)일 때 DOM 이 재사용돼 애니메이션이 재생되지 않는 것을 막는다.
+  if (fadeInClassName) {
+    return (
+      <div key="content" className={fadeInClassName}>
+        {children}
+      </div>
+    );
   }
 
   return <>{children}</>;

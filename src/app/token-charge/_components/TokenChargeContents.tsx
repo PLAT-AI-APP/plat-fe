@@ -4,12 +4,13 @@ import React from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useProductsQuery } from "@/api/product/getProducts";
+import { useFadeInAfterLoading } from "@/hooks/common/useFadeInAfterLoading";
 import { usePostPaymentOrderMutation } from "@/api/payment/postPaymentOrder";
 import { useModalStore } from "@/store/useModalStore";
 import { showAppToast } from "@/lib/toast";
 import { useUsageHistoryListQuery } from "@/api/note/getUsageHistoryList";
 import Token from "@/icons/Token";
-import { formatWithCommas, toMajorAmount } from "@/lib/utils";
+import { cn, formatWithCommas, toMajorAmount } from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useWalletStore } from "@/store/useWalletStore";
 import type { Product } from "@/type/product";
@@ -100,6 +101,7 @@ const TokenChargeContents = () => {
     isError,
     refetch,
   } = useProductsQuery();
+  const fadeInClassName = useFadeInAfterLoading(isLoading);
   const openModal = useModalStore((state) => state.openModal);
   const { mutate: createPaymentOrder, isPending: isCreatingOrder } =
     usePostPaymentOrderMutation();
@@ -179,7 +181,7 @@ const TokenChargeContents = () => {
         )}
 
         {products && products.length > 0 && (
-          <ul className="flex flex-col gap-3">
+          <ul className={cn("flex flex-col gap-3", fadeInClassName)}>
             {products.map((product) => (
               <ProductListItem
                 key={product.productId}
