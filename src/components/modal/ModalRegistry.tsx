@@ -24,6 +24,7 @@ const MODAL_COMPONENTS = {
   LOGIN: dynamic(() => import("./LoginModal")),
   PERSONA_ADD: dynamic(() => import("./PersonaAddModal")),
   PROFILE_EDIT: dynamic(() => import("./ProfileEditModal")),
+  REFUND_REQUEST: dynamic(() => import("./RefundRequestModal")),
   TAG_ADD: dynamic(() => import("./TagAddModal")),
   TAG_SUGGESTIONS: dynamic(() => import("./TagSuggestionsModal")),
   USER_NOTE: dynamic(() => import("./UserNoteModal")),
