@@ -5,6 +5,9 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useProductsQuery } from "@/api/product/getProducts";
 import { useFadeInAfterLoading } from "@/hooks/common/useFadeInAfterLoading";
+import { usePostPaymentOrderMutation } from "@/api/payment/postPaymentOrder";
+import { useModalStore } from "@/store/useModalStore";
+import { showAppToast } from "@/lib/toast";
 import { useUsageHistoryListQuery } from "@/api/note/getUsageHistoryList";
 import Token from "@/icons/Token";
 import { cn, formatWithCommas, toMajorAmount } from "@/lib/utils";
@@ -17,15 +20,33 @@ import { ErrorState } from "@/components/state";
 
 interface ProductListItemProps {
   product: Product;
+  disabled: boolean;
+  onPurchase: (product: Product) => void;
 }
 
-const ProductListItem = ({ product }: ProductListItemProps) => {
+const ProductListItem = ({
+  product,
+  disabled,
+  onPurchase,
+}: ProductListItemProps) => {
   const t = useTranslations();
   const { credits, price } = product;
   const displayPrice = toMajorAmount(price.amountMinor, price.currency);
 
   return (
-    <li className="relative cursor-pointer rounded-2xl border border-main px-5 py-4 transition-colors hover:bg-btn-hover">
+    <li
+      role="button"
+      tabIndex={0}
+      aria-disabled={disabled}
+      onClick={() => !disabled && onPurchase(product)}
+      onKeyDown={(event) => {
+        if (!disabled && (event.key === "Enter" || event.key === " ")) {
+          event.preventDefault();
+          onPurchase(product);
+        }
+      }}
+      className="relative cursor-pointer rounded-2xl border border-main px-5 py-4 transition-colors hover:bg-btn-hover aria-disabled:cursor-wait aria-disabled:opacity-60"
+    >
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <Token className="h-8 w-8" />
@@ -81,6 +102,31 @@ const TokenChargeContents = () => {
     refetch,
   } = useProductsQuery();
   const fadeInClassName = useFadeInAfterLoading(isLoading);
+  const openModal = useModalStore((state) => state.openModal);
+  const { mutate: createPaymentOrder, isPending: isCreatingOrder } =
+    usePostPaymentOrderMutation();
+
+  // 주문을 만들면 서버가 PG 결제 준비까지 마치고 결제창 주소를 준다. 접속 환경에 맞는 주소로 이동합니다.
+  const handlePurchase = (product: Product) => {
+    if (!isLoggedIn) {
+      openModal("LOGIN", { triggerRef: undefined });
+      return;
+    }
+    createPaymentOrder(product.productId, {
+      onSuccess: (order) => {
+        const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+        const redirectUrl = isMobile
+          ? (order.redirectMobileUrl ?? order.redirectPcUrl)
+          : (order.redirectPcUrl ?? order.redirectMobileUrl);
+        if (!redirectUrl) {
+          showAppToast("error", t("tokenCharge.payment.failed"));
+          return;
+        }
+        showAppToast("info", t("tokenCharge.payment.redirecting"));
+        window.location.href = redirectUrl;
+      },
+    });
+  };
 
   // 전체 개수를 세지 않는 슬라이스 응답이라, 있는지 없는지만 한 건만 물어 확인합니다.
   const { data: usageHistoryData } = useUsageHistoryListQuery({ size: 1 });
@@ -137,7 +183,12 @@ const TokenChargeContents = () => {
         {products && products.length > 0 && (
           <ul className={cn("flex flex-col gap-3", fadeInClassName)}>
             {products.map((product) => (
-              <ProductListItem key={product.productId} product={product} />
+              <ProductListItem
+                key={product.productId}
+                product={product}
+                disabled={isCreatingOrder}
+                onPurchase={handlePurchase}
+              />
             ))}
           </ul>
         )}
