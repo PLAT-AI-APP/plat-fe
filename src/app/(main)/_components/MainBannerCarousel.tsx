@@ -88,6 +88,12 @@ export function MainBannerCarousel() {
                     src={banner.imageUrl}
                   />
                 </div>
+
+                {/* 하단 그라데이션 어둡게 처리. 위쪽이 띠처럼 보이지 않도록 중간 단계를 두어 서서히 옅어지게 한다. 링크 클릭을 가로채지 않도록 pointer-events 를 끈다. */}
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-32 bg-linear-to-t from-scrim/70 via-scrim/20 via-60% to-transparent"
+                />
               </>
             );
 
