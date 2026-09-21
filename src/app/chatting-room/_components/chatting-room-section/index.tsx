@@ -83,14 +83,21 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
 
   // 페이지는 최신 → 과거 순이고 페이지 안은 시간순이다. 페이지 순서만 뒤집어야 전체가 시간순이 된다.
   // (메시지 단위로 뒤집으면 한 턴 안에서 캐릭터 응답이 내가 보낸 말 위로 올라간다.)
-  const serverMessages = useMemo<ChatMessageType[]>(
-    () =>
-      [...(data?.pages ?? [])]
-        .reverse()
-        .flatMap((page) => page.content)
-        .map((message) => toChatMessage(message, characterName, profileImage)),
-    [data, characterName, profileImage],
-  );
+  const serverMessages = useMemo<ChatMessageType[]>(() => {
+    const messages = [...(data?.pages ?? [])]
+      .reverse()
+      .flatMap((page) => page.content)
+      .map((message) => toChatMessage(message, characterName, profileImage));
+
+    // 방을 만들면 서버가 시나리오 내용을 첫 AI 메시지로 저장한다. 사용자는 늘 먼저 말을 거므로
+    // 이력 맨 앞(더 불러올 과거가 없을 때)의 AI 메시지는 시나리오다.
+    const [firstMessage] = messages;
+    if (!hasNextPage && firstMessage?.role === "assistant") {
+      messages[0] = { ...firstMessage, isScenario: true };
+    }
+
+    return messages;
+  }, [data, hasNextPage, characterName, profileImage]);
 
   const [isSuggestedReplyOn, setIsSuggestedReplyOn] = useState(true);
   const { data: chatCatalog, isPending: isModelsPending } = useChatModelsQuery();
