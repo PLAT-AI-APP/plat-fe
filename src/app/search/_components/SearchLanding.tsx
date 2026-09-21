@@ -190,7 +190,7 @@ const SearchLanding = () => {
               {Array.from({ length: LIVE_SEARCH_SIZE }).map((_, index) => (
                 <div
                   key={`term-skeleton-${index}`}
-                  className="h-[58px] w-full animate-pulse rounded-xl bg-darkest"
+                  className="skeleton-motion h-[58px] w-full rounded-xl bg-darkest"
                 />
               ))}
             </div>
