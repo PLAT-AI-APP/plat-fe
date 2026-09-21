@@ -180,20 +180,20 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
   };
 
   const wrapActionText = () => {
-    // 고른 글자를 `**행동**` 으로 감싼다. 고른 게 없으면 빈 표시만 넣고 그 사이에 커서를 둔다.
+    // 고른 글자를 `*행동*` 으로 감싼다. 고른 게 없으면 별표 두 개만 넣고 그 사이에 커서를 둔다.
     const textarea = textareaRef.current;
     if (!textarea) {
-      setMsg((prev) => `${prev}****`);
+      setMsg((prev) => `${prev}**`);
       return;
     }
 
     const start = textarea.selectionStart;
     const end = textarea.selectionEnd;
     const selectedText = msg.substring(start, end);
-    const selectionStart = start + 2;
+    const selectionStart = start + 1;
     const selectionEnd = selectionStart + selectedText.length;
 
-    setMsg(`${msg.substring(0, start)}**${selectedText}**${msg.substring(end)}`);
+    setMsg(`${msg.substring(0, start)}*${selectedText}*${msg.substring(end)}`);
 
     window.setTimeout(() => {
       textarea.focus();
@@ -335,7 +335,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
               <button
                 type="button"
                 onClick={wrapActionText}
-                // `**행동**` 은 캐릭터 대사에서만 행동으로 구분해 그린다. 내레이터·사용자 입력에서는 그대로 글자로 남는다.
+                // `*행동*` 은 캐릭터 대사에서만 행동으로 구분해 그린다. 내레이터·사용자 입력에서는 그대로 글자로 남는다.
                 disabled={currentMode !== "chat"}
                 aria-label={t("actionMark")}
                 className={COMPOSER_TOOL_BUTTON_CLASS_NAME}
@@ -347,8 +347,9 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
             <button
               type="submit"
               className={cn(
-                "flex size-8.5 items-center justify-center rounded-full text-on-brand transition-colors",
-                msg.trim() ? "bg-brand" : "bg-font-disabled",
+                "flex size-8.5 items-center justify-center rounded-full transition-colors",
+                // 비활성일 때는 배경이 어두운 회색이라 브랜드 위 글자색(on-brand) 대신 font-1 로 화살표를 또렷하게 둔다.
+                msg.trim() ? "bg-brand text-on-brand" : "bg-font-disabled text-font-1",
               )}
               aria-label={t("submitScenario")}
             >
