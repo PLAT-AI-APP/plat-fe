@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod";
 import { FIELD_ERROR_MESSAGES } from "@/constants/fieldMessages";
 import { encodeScenarioContent } from "@/lib/scenarioContent";
 
