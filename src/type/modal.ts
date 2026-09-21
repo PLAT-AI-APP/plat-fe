@@ -46,6 +46,8 @@ export interface UserNoteModalProps extends GlobalModalProps {
 
 export interface CommentReportModalProps extends GlobalModalProps {
   commentId: string;
+  /** 신고 대상 댓글 작성자의 닉네임. 제목에 "OOO님의 댓글"로 보여 준다. */
+  nickname: string;
 }
 
 export interface PersonaModalProps extends GlobalModalProps {

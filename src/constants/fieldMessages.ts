@@ -48,8 +48,6 @@ export const FIELD_ERROR_MESSAGES = {
   tagNameMaxLength: "field.error.tagNameMaxLength",
   opinionRequired: "field.error.opinionRequired",
   opinionMaxLength: "field.error.opinionMaxLength",
-  commentReportTitleRequired: "field.error.commentReportTitleRequired",
-  commentReportTitleMaxLength: "field.error.commentReportTitleMaxLength",
   commentReportContentRequired: "field.error.commentReportContentRequired",
   commentReportContentMaxLength: "field.error.commentReportContentMaxLength",
   personaNameRequired: "field.error.personaNameRequired",

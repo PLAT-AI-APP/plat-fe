@@ -26,17 +26,18 @@ export const tagSuggestionFormSchema = z.object({
 
 export type TagSuggestionFormValues = z.input<typeof tagSuggestionFormSchema>;
 
+/** 신고 사유 입력 상한. 서버 상한(2000자)보다 작게, 디자인의 글자 수 표시(0/500)에 맞춘다. */
+export const COMMENT_REPORT_CONTENT_MAX_LENGTH = 500;
+
 export const commentReportFormSchema = z.object({
-  title: z
-    .string()
-    .trim()
-    .min(1, FIELD_ERROR_MESSAGES.commentReportTitleRequired)
-    .max(200, FIELD_ERROR_MESSAGES.commentReportTitleMaxLength),
   content: z
     .string()
     .trim()
     .min(1, FIELD_ERROR_MESSAGES.commentReportContentRequired)
-    .max(2000, FIELD_ERROR_MESSAGES.commentReportContentMaxLength),
+    .max(
+      COMMENT_REPORT_CONTENT_MAX_LENGTH,
+      FIELD_ERROR_MESSAGES.commentReportContentMaxLength,
+    ),
 });
 
 export type CommentReportFormValues = z.input<typeof commentReportFormSchema>;
