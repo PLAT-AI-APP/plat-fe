@@ -6,7 +6,8 @@ import ReactQueryProvider from "@/providers/ReactQueryProvider";
 import ThemeProvider from "@/providers/ThemeProvider";
 import SonnerProvider from "@/providers/SonnerProvider";
 import ClientLayout from "./ClientLayout";
-import "pretendard/dist/web/static/pretendard.css";
+// 글자 범위별로 잘린 버전. 화면에 나온 글자가 든 조각만 받아, 굵기마다 약 750KB 전체 파일을 받지 않는다.
+import "pretendard/dist/web/static/pretendard-dynamic-subset.css";
 import { NavigationGuardProvider } from "next-navigation-guard";
 import MSWProvider from "@/providers/MSWProvider";
 import MotionProvider from "@/providers/MotionProvider";
