@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
@@ -11,6 +10,9 @@ import { walletQueryKeys } from "@/api/wallet/queryKeys";
 import { useAuthStore } from "@/store/useAuthStore";
 import { formatWithCommas } from "@/lib/utils";
 import type { AppError } from "@/api";
+import ButtonLink from "@/components/ui/ButtonLink";
+import Token from "@/icons/Token";
+import PaymentSuccess from "./PaymentSuccess";
 
 type PaymentState =
   | { kind: "confirming" }
@@ -146,17 +148,34 @@ const PaymentResultContents = ({ result }: PaymentResultContentsProps) => {
     }
   })();
 
+  if (view.kind === "success" && view.granted) {
+    return (
+      <section className="mx-auto flex w-full max-w-160 flex-col items-center pt-12 pb-16 text-center">
+        <PaymentSuccess credits={view.credits} />
+      </section>
+    );
+  }
+
   return (
     <section className="mx-auto flex w-full max-w-160 flex-col items-center gap-6 pt-20 text-center">
-      <p className="title-2 text-font-0">{message}</p>
+      {(view.kind === "confirming" ||
+        view.kind === "checking" ||
+        view.kind === "success") && (
+        <Token
+          className={
+            view.kind === "success" ? "size-16" : "size-16 animate-pulse"
+          }
+        />
+      )}
+
+      <p role="status" className="title-2 text-font-0">
+        {message}
+      </p>
 
       {view.kind !== "confirming" && view.kind !== "checking" && (
-        <Link
-          href="/token-charge"
-          className="body-5 rounded-2xl bg-main px-5 py-2.5 text-font-1 transition-colors hover:bg-btn-hover"
-        >
+        <ButtonLink href="/token-charge" variant="secondary" size="lg">
           {t("tokenCharge.payment.backToCharge")}
-        </Link>
+        </ButtonLink>
       )}
     </section>
   );
