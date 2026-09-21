@@ -53,8 +53,7 @@ const { list: mockNotices, details: mockNoticeDetails } = generateMockData();
 
 export const noticeHandlers = [
   // 공지사항 목록 조회 API — 실서버는 크기(20)를 고정으로 두고 page만 프론트에서 씁니다.
-  // category 쿼리파라미터도 실서버는 받지만(NoticeController) 지금 프론트는 보내지 않아
-  // 목업에서도 안 보내면 필터 없이 전체가 내려가도록 동작만 맞춰 둡니다.
+  // category 쿼리파라미터도 실서버(NoticeController)처럼 받아, 있으면 그 분류만 내려줍니다.
   http.get(endpoint("/notices"), ({ request }) => {
     const url = new URL(request.url);
     const page = parseInt(url.searchParams.get("page") || "0", 10);

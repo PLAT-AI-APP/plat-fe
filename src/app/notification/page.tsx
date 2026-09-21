@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import React from "react";
-import type { NoticeCategory } from "@/type/notice";
+import { parseNoticeCategory } from "@/constants/notice";
 import NotificationContents from "./_components/NotificationContents";
 
 export const metadata: Metadata = {
@@ -13,7 +13,8 @@ interface NotificationPageProps {
 
 const NotificationPage = async ({ searchParams }: NotificationPageProps) => {
   const sParams = await searchParams;
-  const currentFilter = sParams.filter as NoticeCategory | null | undefined;
+  // 서버로 보내는 값이라 알 수 없는 filter 는 전체로 본다.
+  const currentFilter = parseNoticeCategory(sParams.filter);
 
   return <NotificationContents currentFilter={currentFilter} />;
 };
