@@ -64,19 +64,6 @@ export function MainBannerCarousel() {
           {banners.map((banner, index) => {
             const image = (
               <>
-                {/* 배경을 채워줄 흐린 블러 이미지 */}
-                <div className="absolute inset-0 z-0 scale-110 opacity-40 blur-[50px]">
-                  <Image
-                    alt=""
-                    aria-hidden
-                    fill
-                    priority={index === 0}
-                    sizes="100vw"
-                    className="object-cover"
-                    src={banner.imageUrl}
-                  />
-                </div>
-
                 <div className="relative z-10 mx-auto h-full w-full max-w-(--content-max-width)">
                   <Image
                     alt={t("bannerAlt", { index: index + 1 })}
