@@ -19,6 +19,16 @@ export interface PaymentOrder {
   creditAmount: number;
   paymentStatus: string;
   fulfillmentStatus: string;
+  paidAt: string | null;
+  /** 환불을 신청할 수 있는 마지막 시각. 승인 전이면 비어 있습니다. */
+  refundableUntil: string | null;
+}
+
+/** POST /payments/orders/{orderUid}/cancel 응답. 접수만 되고 관리자가 승인해야 환불됩니다. */
+export interface RefundRequested {
+  refundId: string;
+  refundUid: string;
+  status: string;
 }
 
 /** POST /payments/orders/{orderUid}/confirm 응답 */

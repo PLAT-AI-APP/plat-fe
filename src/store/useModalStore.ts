@@ -9,6 +9,7 @@ import {
   PersonaAddModalProps,
   PersonaModalProps,
   ProfileEditModalProps,
+  RefundRequestModalProps,
   TagAddModalProps,
   TagSuggestionsModalProps,
   UserNoteModalProps,
@@ -24,6 +25,7 @@ export type ModalTypeMap = {
   LOGIN: LoginModalProps;
   PERSONA_ADD: PersonaAddModalProps;
   PROFILE_EDIT: ProfileEditModalProps;
+  REFUND_REQUEST: RefundRequestModalProps;
   TAG_ADD: TagAddModalProps;
   TAG_SUGGESTIONS: TagSuggestionsModalProps;
   USER_NOTE: UserNoteModalProps;
@@ -67,6 +69,7 @@ const requiresAuthModalTypes: (keyof ModalTypeMap)[] = [
   "TAG_SUGGESTIONS",
   "COMMENT_REPORT",
   "CHATTING_START",
+  "REFUND_REQUEST",
 ];
 
 export const useModalStore = create<ModalState>((set, get) => ({
