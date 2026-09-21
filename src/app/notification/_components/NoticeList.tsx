@@ -73,7 +73,7 @@ const NoticeList = ({ currentFilter }: NoticeListProps) => {
     isError,
     error,
     refetch,
-  } = useNoticeListInfiniteQuery();
+  } = useNoticeListInfiniteQuery(currentFilter);
 
   const {
     items,
@@ -86,18 +86,14 @@ const NoticeList = ({ currentFilter }: NoticeListProps) => {
     fetchNextPage,
   });
 
-  // 실서버 GET /notices는 카테고리 필터 쿼리를 지원하지 않아, 불러온 목록을 클라이언트에서 걸러냅니다.
-  const noticeList = items.filter(
-    (notice) => !currentFilter || notice.category === currentFilter,
-  );
-
   return (
     <InfiniteQueryBoundary
       isPending={isPending}
       isError={isError}
       error={error}
       hasItems={hasItems}
-      isEmpty={noticeList.length === 0}
+      // 분류별 걸러내기는 서버가 하므로 받은 목록이 곧 이 탭의 목록이다.
+      isEmpty={items.length === 0}
       isFetchingNextPage={isFetchingNextPage}
       onRetry={refetch}
       onRetryNextPage={fetchNextPage}
@@ -107,7 +103,7 @@ const NoticeList = ({ currentFilter }: NoticeListProps) => {
       )}
     >
       <ul>
-        {noticeList.map(({ category, createdAt, isPinned, noticeId, title }) => {
+        {items.map(({ category, createdAt, isPinned, noticeId, title }) => {
           const colorStyle = NOTICE_CATEGORY_STYLE[category];
 
           return (

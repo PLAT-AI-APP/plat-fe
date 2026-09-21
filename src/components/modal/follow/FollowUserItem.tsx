@@ -12,6 +12,7 @@ interface FollowUserItemProps {
   isFollowing: boolean;
   isPending?: boolean;
   onToggleFollow: (userId: string, isFollowing: boolean) => void;
+  onNavigateToProfile: (userId: string) => void;
 }
 
 const FollowUserItem = ({
@@ -19,13 +20,18 @@ const FollowUserItem = ({
   isFollowing,
   isPending = false,
   onToggleFollow,
+  onNavigateToProfile,
 }: FollowUserItemProps) => {
   const t = useTranslations("modalUi.follow");
   const commonT = useTranslations("modalUi.common");
 
   return (
     <li className="flex w-full items-center gap-3 rounded-2xl bg-dark p-3 transition-colors hover:bg-btn-hover">
-      <div className="flex min-w-0 flex-1 items-center gap-3">
+      <button
+        type="button"
+        onClick={() => onNavigateToProfile(user.userId)}
+        className="flex min-w-0 flex-1 items-center gap-3 text-left"
+      >
         <Image
           src={user.profileImage || "/p1.png"}
           alt={t("profileImageAlt", { nickname: user.nickname })}
@@ -37,7 +43,7 @@ const FollowUserItem = ({
         <div className="flex min-w-0 flex-1 flex-col justify-center gap-0.5 whitespace-nowrap">
           <span className="title-5 truncate text-font-1">{user.nickname}</span>
         </div>
-      </div>
+      </button>
 
       <button
         type="button"

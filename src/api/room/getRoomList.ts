@@ -4,8 +4,7 @@ import { AppError, PageWith } from "@/type/api";
 import type { ThumbnailRoom } from "@/type/room";
 import { getNextPageNumber } from "@/lib/pagination";
 import { useAuthReady } from "@/hooks/data/useAuthReady";
-
-export const ROOM_LIST_QUERY_KEY = ["get-room-list"];
+import { roomQueryKeys } from "./queryKeys";
 
 interface GetRoomListParams {
   page?: number;
@@ -25,7 +24,7 @@ export const useRoomListInfiniteQuery = (size = 10) => {
   const authReady = useAuthReady();
 
   return useInfiniteQuery<PageWith<ThumbnailRoom>, AppError>({
-    queryKey: [...ROOM_LIST_QUERY_KEY, size],
+    queryKey: roomQueryKeys.list(size),
     initialPageParam: 0,
     queryFn: ({ pageParam }) =>
       getRoomList({ page: pageParam as number, size }),

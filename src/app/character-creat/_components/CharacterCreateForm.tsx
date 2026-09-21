@@ -135,8 +135,12 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
   const [currentTabId, setCurrentTabId] = useState<TabId>("profile");
   const [activeScenarioIndex, setActiveScenarioIndex] = useState(0);
   const [activeModal, setActiveModal] = useState<
-    "OVERWRITE" | "RESUME" | "UNSAVED" | null
+    "OVERWRITE" | "RESUME" | "SAVE_OVERWRITE" | "UNSAVED" | null
   >(null);
+  // 이번 세션에서 이미 한 번 물어봤거나(임시저장 덮어쓰기 확인), 불러오기로 그 초안을
+  // 직접 확인한 뒤라면 저장할 때마다 또 물어볼 필요가 없습니다.
+  const [hasAcknowledgedDraftSave, setHasAcknowledgedDraftSave] =
+    useState(false);
   const [pendingPath, setPendingPath] = useState<string | null>(null);
   // 등록/수정 성공 후의 router.push는 폼이 dirty해도 이탈 경고 없이 바로 이동해야 하므로,
   // 성공 시점에 이 플래그를 켜서 아래 useNavigationGuard의 enabled에서 건너뜁니다.
@@ -163,12 +167,14 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
     setValue,
   } = methods;
   // 초안(임시저장)은 새로 만드는 흐름에만 있고, 이미 만들어진 세계관을 수정할 때는 없습니다.
-  const { draftId, saveDraft, loadDraft } = useUniverseDraft({
-    enabled: !isEditMode,
-    defaultScenarioName,
-    getValues,
-    reset,
-  });
+  const { draftId, saveDraft, loadDraft, hasExistingDraft } = useUniverseDraft(
+    {
+      enabled: !isEditMode,
+      defaultScenarioName,
+      getValues,
+      reset,
+    },
+  );
 
   useEffect(() => {
     if (!universeDetail) return;
@@ -183,6 +189,19 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
 
     showAppToast("error", t("loadFailed"));
   }, [isEditMode, isUniverseDetailError]);
+
+  // 페이지 진입 시 이미 저장해 둔 초안이 있으면(false→true로 바뀌는 그 순간 한 번만)
+  // 이어서 작성할지 물어봅니다. 초안 존재 여부는 비동기로 뒤늦게 확정되므로, 그 변화를
+  // 렌더 중에 바로 반영합니다(effect에서 setState하면 한 프레임 늦게 반영되어 깜빡입니다).
+  const [prevHasExistingDraft, setPrevHasExistingDraft] =
+    useState(hasExistingDraft);
+  if (hasExistingDraft !== prevHasExistingDraft) {
+    setPrevHasExistingDraft(hasExistingDraft);
+
+    if (hasExistingDraft && !isEditMode) {
+      setActiveModal("RESUME");
+    }
+  }
 
   const updateScenarioContentsFromDrag = (
     nextContents: CharacterCreateFormValues["scenarios"][number]["contents"],
@@ -262,7 +281,27 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
 
   const handleConfirmLoadDraft = async () => {
     await loadDraft(createCharacterCreateDefaultValues(defaultScenarioName));
+    // 초안 내용을 직접 확인했으니, 이제부터 저장해도 "이미 저장된 데이터가 있어요"를
+    // 다시 물어볼 필요가 없습니다.
+    setHasAcknowledgedDraftSave(true);
     closeModal();
+  };
+
+  const handleSaveClick = () => {
+    // 이번 세션에서 처음 저장하는 거고, 들어오기 전부터 있던 초안을 아직 안 봤다면
+    // 그 초안을 덮어쓴다는 걸 먼저 알려줍니다.
+    if (hasExistingDraft && !hasAcknowledgedDraftSave) {
+      setActiveModal("SAVE_OVERWRITE");
+      return;
+    }
+
+    void saveDraft();
+  };
+
+  const handleConfirmSaveOverwrite = () => {
+    setHasAcknowledgedDraftSave(true);
+    closeModal();
+    void saveDraft();
   };
 
   // next-navigation-guard가 router.push/back으로 가는 이동은 잘 잡지만, Next.js 16에서
@@ -326,13 +365,14 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
         handleConfirmExit={handleConfirmExit}
         rejectNavigation={reject}
         handleLoadDraft={handleConfirmLoadDraft}
+        handleSaveOverwrite={handleConfirmSaveOverwrite}
       />
 
       <div className="flex h-full min-h-0 flex-col gap-4">
         <CreateHeader
           universeId={universeId}
           draftId={draftId}
-          onSave={saveDraft}
+          onSave={handleSaveClick}
           onDraftClick={handleLoadDraftClick}
           setCurrentTabId={setCurrentTabId}
           setActiveScenarioIndex={setActiveScenarioIndex}
@@ -341,7 +381,10 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
 
         {/* lg 미만에서는 폭이 부족해 미리보기를 숨기고 토글 모달로 확인합니다. */}
         <DragDropContext onDragEnd={handleDragEnd}>
-          <div className="flex min-h-0 min-w-0 flex-1 items-start justify-center gap-4">
+          {/* lg 이상에서는 두 패널(폼 491px : 프리뷰 693px 비율)이 gap을 뺀 나머지 폭을
+              끝까지 나눠 갖도록 grid로 전환합니다. flex로는 flex-basis가 auto인 wrapper div의
+              내용 기반 크기 계산과 얽혀 정확히 맞아떨어지지 않았습니다. */}
+          <div className="flex min-h-0 min-w-0 flex-1 items-start justify-center gap-4 lg:grid lg:grid-cols-[491fr_693fr]">
             <CreateTabs
               currentTabId={currentTabId}
               setCurrentTabId={setCurrentTabId}

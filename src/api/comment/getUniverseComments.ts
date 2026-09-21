@@ -4,11 +4,7 @@ import { AppError, PageWith } from "@/type/api";
 import type { Comment } from "@/type/comment";
 import { getNextPageNumber } from "@/lib/pagination";
 import { useAuthReady } from "@/hooks/data/useAuthReady";
-
-export const universeCommentsQueryKey = (universeId?: string) => [
-  "get-universe-comments",
-  universeId,
-];
+import { commentQueryKeys } from "./queryKeys";
 
 /** 페이지 크기는 서버가 20으로 고정합니다. */
 export const COMMENT_PAGE_SIZE = 20;
@@ -33,7 +29,7 @@ export const useUniverseCommentsInfiniteQuery = (universeId?: string) => {
   const authenticated = useAuthReady();
 
   return useInfiniteQuery<PageWith<Comment>, AppError>({
-    queryKey: [...universeCommentsQueryKey(universeId), authenticated],
+    queryKey: [...commentQueryKeys.universeComments(universeId), authenticated],
     initialPageParam: 0,
     queryFn: ({ pageParam }) =>
       getUniverseComments(universeId ?? "", pageParam as number, authenticated),

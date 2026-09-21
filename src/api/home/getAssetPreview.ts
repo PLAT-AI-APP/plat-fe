@@ -5,6 +5,7 @@ import { authAxios } from "..";
 import { AppError } from "@/type/api";
 import { useLocaleStore } from "@/store/useLocaleStore";
 import { Tendency, useTendencyStore } from "@/store/useTendencyStore";
+import { homeQueryKeys } from "./queryKeys";
 
 export interface AssetPreviewItem {
   universeId: string;
@@ -39,7 +40,7 @@ export const useAssetPreviewQuery = (params: GetAssetPreviewParams = {}) => {
   const tendency = useTendencyStore((state) => state.tendency);
 
   return useQuery<AssetPreviewItem[], AppError>({
-    queryKey: ["get-asset-preview", locale, tendency],
+    queryKey: homeQueryKeys.assetPreview(locale, tendency),
     // 자주 바뀌는 목록이 아니므로 1분보다 짧게 잡을 이유가 없습니다.
     staleTime: 1000 * 60,
     queryFn: () => getAssetPreview({ ...params, tendency }),

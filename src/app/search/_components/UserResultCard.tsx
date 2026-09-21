@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import DefaultAvatar from "./DefaultAvatar";
@@ -36,7 +37,10 @@ const UserResultCard = ({ user }: UserResultCardProps) => {
   return (
     <div className="flex w-full max-w-[389px] flex-col items-start rounded-2xl bg-btn-hover px-5 py-4">
       <div className="flex w-full items-center justify-between">
-        <div className="flex items-center gap-2">
+        <Link
+          href={`/profile/${user.userId}`}
+          className="flex min-w-0 items-center gap-2"
+        >
           {user.profileImageUrl && !imageFailed ? (
             // next/image 의 remotePatterns 를 타지 않는 경로도 들어올 수 있어 img 를 씁니다.
             // eslint-disable-next-line @next/next/no-img-element
@@ -50,8 +54,10 @@ const UserResultCard = ({ user }: UserResultCardProps) => {
             <DefaultAvatar className="relative size-12 shrink-0 overflow-hidden rounded-full" />
           )}
 
-          <div className="flex flex-col items-start justify-center gap-1">
-            <span className="title-4 text-font-1">@{user.nickname}</span>
+          <div className="flex min-w-0 flex-col items-start justify-center gap-1">
+            <span className="title-4 truncate text-font-1">
+              @{user.nickname}
+            </span>
             <div className="body-6 flex items-start gap-1 text-font-disabled">
               <span>
                 {t("searchResults.followerCount", {
@@ -64,7 +70,7 @@ const UserResultCard = ({ user }: UserResultCardProps) => {
               </span>
             </div>
           </div>
-        </div>
+        </Link>
 
         <button
           type="button"

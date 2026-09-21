@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Cropper, { type Area, type Point } from "react-easy-crop";
+import "react-easy-crop/react-easy-crop.css";
 import { useTranslations } from "next-intl";
 import { Close } from "@/icons";
 import { ModalLayout } from "@/components/ModalLayout";
@@ -72,7 +73,7 @@ const RepresentativeImageCropModal = ({
     <ModalLayout
       onClose={onClose}
       hasBackground
-      className="w-screen max-w-[513px] rounded-3xl border border-main bg-dark px-6 pb-6 pt-8"
+      className="w-screen max-w-[513px] rounded-3xl bg-dark px-6 pb-6 pt-8"
     >
       <div className="flex flex-col gap-8">
         <header className="flex items-start justify-between gap-4">

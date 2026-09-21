@@ -58,6 +58,8 @@ export const useUpdateMyInfoMutation = () => {
     mutationFn: PatchMyInfo,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: userQueryKeys.myInfo() });
+      // 내 프로필 페이지도 공개 프로필 API 로 그리므로, 무효화하지 않으면 수정 결과가 캐시 시간만큼 안 보인다.
+      queryClient.invalidateQueries({ queryKey: userQueryKeys.profiles() });
     },
   });
 };

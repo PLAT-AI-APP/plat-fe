@@ -1,33 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { useLocale, useTranslations } from "next-intl";
-import type { AppLocale } from "@/i18n/config";
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { Close, Search } from "@/icons";
 import ChattingList from "./ChattingList";
 
-const SEARCH_PLACEHOLDER: Record<AppLocale, string> = {
-  ko: "채팅 내용, 캐릭터, 페르소나 이름으로 찾아보세요",
-  en: "Search by chat, character, or persona name",
-  ja: "チャット内容、キャラクター、ペルソナ名で検索",
-  zh: "按聊天内容、角色或人设名称搜索",
-  th: "ค้นหาด้วยเนื้อหาแชต ตัวละคร หรือชื่อเพอร์โซนา",
-  vi: "Tìm theo nội dung chat, nhân vật hoặc tên persona",
-};
-
-const CLEAR_SEARCH_LABEL: Record<AppLocale, string> = {
-  ko: "검색어 지우기",
-  en: "Clear search",
-  ja: "検索語を消去",
-  zh: "清除搜索词",
-  th: "ล้างคำค้นหา",
-  vi: "Xoa tu khoa tim kiem",
-};
-
 const MyChattingContents = () => {
   const t = useTranslations();
-  const locale = useLocale() as AppLocale;
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearchFocused, setIsSearchFocused] = useState(false);
 
@@ -52,14 +32,14 @@ const MyChattingContents = () => {
             onChange={(event) => setSearchQuery(event.target.value)}
             onFocus={() => setIsSearchFocused(true)}
             onBlur={() => setIsSearchFocused(false)}
-            placeholder={isSearchFocused ? "" : SEARCH_PLACEHOLDER[locale]}
+            placeholder={isSearchFocused ? "" : t("myChatting.searchPlaceholder")}
             className="focus-ring-none body-5 min-w-0 flex-1 appearance-none bg-transparent text-font-1 outline-none placeholder:text-font-disabled [&::-webkit-search-cancel-button]:appearance-none"
           />
           <button
             type="button"
             onMouseDown={(event) => event.preventDefault()}
             onClick={() => setSearchQuery("")}
-            aria-label={CLEAR_SEARCH_LABEL[locale]}
+            aria-label={t("myChatting.clearSearch")}
             className={cn(
               "flex size-4 shrink-0 items-center justify-center text-font-2 transition hover:text-font-1",
               searchQuery ? "opacity-100" : "pointer-events-none opacity-0",

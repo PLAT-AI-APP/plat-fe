@@ -39,20 +39,15 @@ const FilterTab = ({ currentFilter }: FilterTabProps) => {
             currentFilter === id || (id === "ALL" && !currentFilter);
 
           return (
-            <li
-              key={id}
-              className={cn(
-                "cursor-pointer rounded-full bg-card px-3 py-1.5 hover:bg-card-hover",
-                isActive && "bg-card-selected",
-              )}
-            >
+            <li key={id}>
               <Link
-                href={{
-                  query: id === "ALL" ? {} : { filter: id },
-                }}
+                // 전체는 빈 query 객체로 주면 href 가 "" 가 되어 브라우저가 현재 주소(필터 포함)로 해석한다.
+                // 그러면 다른 탭에서 전체로 돌아올 수 없으므로 경로를 명시한다.
+                href={id === "ALL" ? "/notification" : { query: { filter: id } }}
+                // 배경·여백을 링크에 둔다. li 에 두면 글자 부분만 눌려 알약의 여백을 눌러도 반응이 없다.
                 className={cn(
-                  "body-5 text-font-2 transition-colors",
-                  isActive && "text-font-1",
+                  "body-5 block rounded-full bg-card px-3 py-1.5 text-font-2 transition-colors hover:bg-card-hover",
+                  isActive && "bg-card-selected text-font-1",
                 )}
               >
                 {filterLabelMap[id]}

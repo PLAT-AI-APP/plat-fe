@@ -78,6 +78,7 @@ export { default as Moon } from "./Moon";
 export { default as Sun } from "./Sun";
 export { default as Pin } from "./Pin";
 export { default as PinFill } from "./PinFill";
+export { default as PinLine } from "./PinLine";
 export { default as Storage } from "./Storage";
 export { default as StorageFill } from "./StorageFill";
 export { default as NoteLine } from "./NoteLine";

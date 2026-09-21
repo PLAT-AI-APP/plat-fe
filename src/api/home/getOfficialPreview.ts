@@ -5,6 +5,7 @@ import { authAxios } from "..";
 import { AppError } from "@/type/api";
 import { useLocaleStore } from "@/store/useLocaleStore";
 import { Tendency, useTendencyStore } from "@/store/useTendencyStore";
+import { homeQueryKeys } from "./queryKeys";
 
 export interface OfficialPreviewScenario {
   episodeNo: number;
@@ -68,14 +69,13 @@ export const useOfficialPreviewQuery = (
   const tendency = useTendencyStore((state) => state.tendency);
 
   return useQuery<OfficialPreviewItem[], AppError>({
-    queryKey: [
-      "get-official-preview",
+    queryKey: homeQueryKeys.officialPreview({
       locale,
       tendency,
-      params.sort,
-      params.page,
-      params.size,
-    ],
+      sort: params.sort,
+      page: params.page,
+      size: params.size,
+    }),
     queryFn: () => getOfficialPreview({ ...params, tendency }),
   });
 };

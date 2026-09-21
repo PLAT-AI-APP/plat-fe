@@ -1,4 +1,5 @@
 import { CharacterScenario } from "./character";
+import { Persona } from "./persona";
 
 export interface GlobalModalProps {
   onClose: () => void;
@@ -8,8 +9,8 @@ export interface GlobalModalProps {
 export type AddLanguageModalProps = GlobalModalProps;
 
 export interface ChattingStartModalProps extends GlobalModalProps {
+  universeId: string;
   scenarioList: CharacterScenario[];
-  setCurrentScenario: (scenario: CharacterScenario) => void;
   currentScenario: CharacterScenario | undefined;
 }
 
@@ -47,4 +48,9 @@ export interface CommentReportModalProps extends GlobalModalProps {
   commentId: string;
 }
 
-export type PersonaModalProps = GlobalModalProps;
+export interface PersonaModalProps extends GlobalModalProps {
+  /** 있으면 "관리" 대신 "선택" 모드로 동작합니다 — 항목 클릭 시 이 콜백을 부르고 모달을 닫습니다. */
+  onSelectPersona?: (persona: Persona) => void;
+  /** 선택 모드에서 현재 골라져 있는 페르소나. 목록에서 체크 표시로 보여줍니다. */
+  currentPersonaId?: string;
+}

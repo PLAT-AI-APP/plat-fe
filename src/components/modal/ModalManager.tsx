@@ -1,3 +1,6 @@
+"use client";
+
+import { Suspense } from "react";
 import { AnimatePresence } from "framer-motion";
 import { useModalStore } from "@/store/useModalStore";
 import { MODAL_COMPONENTS } from "./ModalRegistry";
@@ -18,12 +21,15 @@ export const ModalManager = () => {
         >;
 
         return (
-          <ModalComponent
-            key={`${modal.type}-${index}`}
-            {...modal.props}
-            onClose={closeModal}
-            stackIndex={index}
-          />
+          // 로컬 경계가 없으면 처음 여는 모달의 청크 로딩이 더 위의 Suspense로
+          // 번져, 그 아래 있던 페이지 전체가 잠깐 사라지고 배경색만 보인다.
+          <Suspense key={`${modal.type}-${index}`} fallback={null}>
+            <ModalComponent
+              {...modal.props}
+              onClose={closeModal}
+              stackIndex={index}
+            />
+          </Suspense>
         );
       })}
     </AnimatePresence>

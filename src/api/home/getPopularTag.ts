@@ -6,6 +6,7 @@ import { AppError } from "@/type/api";
 import { useLocaleStore } from "@/store/useLocaleStore";
 import { Tendency, useTendencyStore } from "@/store/useTendencyStore";
 import type { BaseCard, CardCreator } from "@/type/card";
+import { homeQueryKeys } from "./queryKeys";
 
 export type PopularTagCreator = CardCreator;
 
@@ -41,7 +42,12 @@ export const usePopularTagQuery = (params: GetPopularTagParams = {}) => {
   const tendency = useTendencyStore((state) => state.tendency);
 
   return useQuery<PopularTagItem[], AppError>({
-    queryKey: ["get-popular-tag", locale, tendency, params.page, params.size],
+    queryKey: homeQueryKeys.popularTag({
+      locale,
+      tendency,
+      page: params.page,
+      size: params.size,
+    }),
     queryFn: () => getPopularTag({ ...params, tendency }),
   });
 };

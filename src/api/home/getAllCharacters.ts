@@ -8,6 +8,7 @@ import { useLocaleStore } from "@/store/useLocaleStore";
 import { Tendency, useTendencyStore } from "@/store/useTendencyStore";
 import { useAuthReady } from "@/hooks/data/useAuthReady";
 import type { CardCreator, LikableCard } from "@/type/card";
+import { homeQueryKeys } from "./queryKeys";
 
 /** 백엔드 BaseCard. 랭킹·카테고리 검색과 같은 모양입니다. */
 export type AllCharacterCreator = CardCreator;
@@ -44,14 +45,13 @@ export const useAllCharactersQuery = (params: GetAllCharactersParams = {}) => {
   const tendency = useTendencyStore((state) => state.tendency);
 
   return useQuery<SliceWith<AllCharacterItem>, AppError>({
-    queryKey: [
-      "get-all-characters",
+    queryKey: homeQueryKeys.allCharacters({
       locale,
       authenticated,
       tendency,
-      params.page,
-      params.size,
-    ],
+      page: params.page,
+      size: params.size,
+    }),
     queryFn: () => getAllCharacters({ ...params, tendency }, authenticated),
     // 로그인 여부가 정해지기 전에 부르면 찜 여부 없는 응답이 캐시에 남습니다.
     enabled: isAuthReady,

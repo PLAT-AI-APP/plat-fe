@@ -1,5 +1,6 @@
 import { Fold, LogoWordmark, User } from "@/icons";
-import React, { useRef } from "react";
+import React, { Suspense, useRef } from "react";
+import dynamic from "next/dynamic";
 import type { RefObject } from "react";
 import { SearchBar } from "./SearchBar";
 import Profile from "./Profile";
@@ -9,10 +10,11 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useLayoutStore } from "@/store/useLayoutStore";
 import { useUserStore } from "@/store/useUserStore";
 import { useWalletStore } from "@/store/useWalletStore";
-import ProfilePopover from "../popover/ProfilePopover";
 import useToggle from "@/hooks/common/useToggle";
 import Token from "@/icons/Token";
 import { formatWithCommas } from "@/lib/utils";
+
+const ProfilePopover = dynamic(() => import("../popover/ProfilePopover"));
 
 interface HeaderProps {
   handleFoldToggle: () => void;
@@ -144,15 +146,19 @@ const Header = ({ handleFoldToggle, foldToggleRef }: HeaderProps) => {
             </button>
           )}
 
+          {/* 팝오버 청크가 처음 로딩될 때 루트 Suspense 까지 번지면 페이지 전체가
+              잠깐 사라지므로 이 자리에서 멈춘다. */}
           {profileModal.isOpen && (
-            <ProfilePopover
-              onClose={profileModal.toggle}
-              triggerRef={
-                isLoggedIn
-                  ? (triggerRef as React.RefObject<HTMLElement | null>)
-                  : loginTriggerRef
-              }
-            />
+            <Suspense fallback={null}>
+              <ProfilePopover
+                onClose={profileModal.toggle}
+                triggerRef={
+                  isLoggedIn
+                    ? (triggerRef as React.RefObject<HTMLElement | null>)
+                    : loginTriggerRef
+                }
+              />
+            </Suspense>
           )}
         </div>
       </div>

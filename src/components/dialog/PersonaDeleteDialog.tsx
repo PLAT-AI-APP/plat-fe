@@ -6,6 +6,7 @@ import Dialog from "./Dialog";
 
 const PersonaDeleteDialog = ({
   personaName,
+  errorMessage,
   onClose,
   onConfirm,
 }: PersonaDeleteDialogProps) => {
@@ -20,9 +21,14 @@ const PersonaDeleteDialog = ({
       label="dialog.personaDelete.title"
       description={
         // 페르소나 이름은 사용자 입력값이므로 번역하지 않고, 뒤에 붙는 고정 안내 문구만 i18n으로 처리합니다.
-        <span>
-          {personaName}
-          {t("dialog.personaDelete.description")}
+        <span className="flex flex-col gap-2">
+          <span className="body-5 text-font-2">
+            {personaName}
+            {t("dialog.personaDelete.description")}
+          </span>
+          {errorMessage && (
+            <span className="body-5 text-font-error">{errorMessage}</span>
+          )}
         </span>
       }
       confirmFn={onConfirm}

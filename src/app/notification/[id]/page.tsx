@@ -2,9 +2,7 @@
 
 import React, { use } from "react";
 import Link from "next/link";
-import ReactMarkdown, { Components } from "react-markdown";
-import remarkGfm from "remark-gfm";
-import remarkBreaks from "remark-breaks";
+import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import { useNoticeDetailContentsQuery } from "@/api/notice/getNoticeDetailContents";
 import { ErrorState } from "@/components/state";
@@ -12,7 +10,10 @@ import { ArrowLeft, Clock } from "@/icons";
 import PinFill from "@/icons/PinFill";
 import dayjs from "@/lib/dayjs";
 import { cn, formatStatCount } from "@/lib/utils";
+import { useLocaleStore } from "@/store/useLocaleStore";
 import type { NoticeCategory } from "@/type/notice";
+
+const NoticeMarkdown = dynamic(() => import("./NoticeMarkdown"));
 
 /** 목록의 배지와 같은 색을 씁니다 — 같은 분류가 화면마다 달라 보이면 안 됩니다. */
 const NOTICE_CATEGORY_STYLE: Record<
@@ -24,24 +25,6 @@ const NOTICE_CATEGORY_STYLE: Record<
   EVENT: { bg: "bg-warning-bg", color: "text-warning", labelKey: "notification.filters.event" },
   MAINTENANCE: { bg: "bg-warning-bg", color: "text-warning", labelKey: "notification.filters.maintenance" },
   POLICY: { bg: "bg-info-bg", color: "text-info", labelKey: "notification.filters.policy" },
-};
-
-/* 공지 본문은 마크다운으로 들어옵니다. 기본 마진을 걷어내고 본문 리듬에 맞춥니다. */
-const markdownComponents: Partial<Components> = {
-  h1: ({ ...props }) => <h2 className="title-1 mt-6 first:mt-0" {...props} />,
-  h2: ({ ...props }) => <h3 className="title-2 mt-6 first:mt-0" {...props} />,
-  h3: ({ ...props }) => <h4 className="title-3 mt-5 first:mt-0" {...props} />,
-  p: ({ ...props }) => <p className="leading-relaxed" {...props} />,
-  ul: ({ ...props }) => <ul className="list-disc pl-5 leading-relaxed" {...props} />,
-  ol: ({ ...props }) => <ol className="list-decimal pl-5 leading-relaxed" {...props} />,
-  a: ({ ...props }) => (
-    <a className="text-brand underline underline-offset-2" target="_blank" rel="noreferrer" {...props} />
-  ),
-  code: ({ ...props }) => <code className="rounded bg-card px-1.5 py-0.5" {...props} />,
-  blockquote: ({ ...props }) => (
-    <blockquote className="border-l-2 border-brand pl-4 text-font-2" {...props} />
-  ),
-  hr: () => <hr className="border-main" />,
 };
 
 const DetailSkeleton = () => (
@@ -68,6 +51,7 @@ const NotificationDetailPage = ({ params }: PageProps) => {
   // Promise 형태의 params를 unwrapping 합니다.
   const { id } = use(params);
   const t = useTranslations();
+  const locale = useLocaleStore((state) => state.locale);
 
   const {
     data: notice,
@@ -132,19 +116,14 @@ const NotificationDetailPage = ({ params }: PageProps) => {
               </time>
               <span>
                 {t("notification.viewCount", {
-                  count: formatStatCount(notice.viewCount),
+                  count: formatStatCount(notice.viewCount, locale),
                 })}
               </span>
             </div>
           </header>
 
           <section className="body-3 flex flex-col gap-3 border-t border-main pt-6 text-font-1">
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm, remarkBreaks]}
-              components={markdownComponents}
-            >
-              {notice.content}
-            </ReactMarkdown>
+            <NoticeMarkdown content={notice.content} />
           </section>
         </>
       )}

@@ -52,17 +52,23 @@ const generateMockData = () => {
 const { list: mockNotices, details: mockNoticeDetails } = generateMockData();
 
 export const noticeHandlers = [
-  // 공지사항 목록 조회 API — 실서버는 page만 받고, 크기(20)와 카테고리 필터는 지원하지 않습니다.
+  // 공지사항 목록 조회 API — 실서버는 크기(20)를 고정으로 두고 page만 프론트에서 씁니다.
+  // category 쿼리파라미터도 실서버(NoticeController)처럼 받아, 있으면 그 분류만 내려줍니다.
   http.get(endpoint("/notices"), ({ request }) => {
     const url = new URL(request.url);
     const page = parseInt(url.searchParams.get("page") || "0", 10);
+    const category = url.searchParams.get(
+      "category",
+    ) as NoticeCategory | null;
     const size = 20;
 
     // 상단 고정(isPinned) 우선, 그 다음 최신순
-    const sorted = [...mockNotices].sort((a, b) => {
-      if (a.isPinned !== b.isPinned) return a.isPinned ? -1 : 1;
-      return Number(b.noticeId) - Number(a.noticeId);
-    });
+    const sorted = [...mockNotices]
+      .filter((notice) => !category || notice.category === category)
+      .sort((a, b) => {
+        if (a.isPinned !== b.isPinned) return a.isPinned ? -1 : 1;
+        return Number(b.noticeId) - Number(a.noticeId);
+      });
 
     const totalElements = sorted.length;
     const totalPages = Math.ceil(totalElements / size);
@@ -87,10 +93,11 @@ export const noticeHandlers = [
     const notice = noticeId ? mockNoticeDetails[noticeId] : undefined;
 
     if (!notice) {
-      return new HttpResponse(null, {
-        status: 404,
-        statusText: "NoSuchElementException",
-      });
+      // 실서버 DomainErrorCode.NOTICE_NOT_FOUND 응답 형태(ApiErrorResponse)와 맞춥니다.
+      return HttpResponse.json(
+        { code: "NOTICE_NOT_FOUND", message: "공지사항을 찾을 수 없습니다." },
+        { status: 404 },
+      );
     }
 
     return HttpResponse.json(notice);

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
+import dayjs from "@/lib/dayjs";
 import { useModalStore } from "@/store/useModalStore";
 import { useUniverseCommentsInfiniteQuery } from "@/api/comment/getUniverseComments";
 import {
@@ -170,9 +171,9 @@ const CharacterDetailContent = ({
 
   const openChatStartModal = () => {
     openModal("CHATTING_START", {
+      universeId: characterId,
       scenarioList: character.scenarios,
       currentScenario,
-      setCurrentScenario: () => undefined,
     });
   };
 
@@ -238,6 +239,18 @@ const CharacterDetailContent = ({
             >
               <ScenarioPanel character={character} />
             </section>
+            <div className="flex justify-end gap-4">
+              <span className="body-6 text-font-2">
+                {t("createdAt", {
+                  date: dayjs(character.createdAt).format("YY.MM.DD"),
+                })}
+              </span>
+              <span className="body-6 text-font-2">
+                {t("updatedAt", {
+                  date: dayjs(character.updatedAt).format("YY.MM.DD"),
+                })}
+              </span>
+            </div>
             <section
               ref={commentsRef}
               id="character-detail-comments"
@@ -246,6 +259,7 @@ const CharacterDetailContent = ({
               <CommentsPanel
                 universeId={characterId}
                 commentEnabled={character.commentEnabled}
+                creatorId={character.creator.id ?? undefined}
               />
             </section>
           </div>

@@ -65,6 +65,8 @@ export const useFollowToggle = ({
       queryKey: followQueryKeys.followingList(),
     });
     queryClient.invalidateQueries({ queryKey: followQueryKeys.followerList() });
+    // 프로필 페이지의 팔로우 버튼이 읽는 "내가 팔로우 중인지" 캐시. 다른 화면에서 바꾼 것도 반영돼야 한다.
+    queryClient.invalidateQueries({ queryKey: followQueryKeys.statuses() });
 
     extraInvalidateKeys?.forEach((queryKey) => {
       queryClient.invalidateQueries({ queryKey: [...queryKey] });

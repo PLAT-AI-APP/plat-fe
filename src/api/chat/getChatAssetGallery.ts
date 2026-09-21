@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
 import type { ChatAssetGalleryResponse } from "@/type/chat";
+import { chatQueryKeys } from "./queryKeys";
 
 /** 채팅방 에셋 갤러리 데이터 조회 */
 export const getChatAssetGallery = async (chatRoomId: string) => {
@@ -15,7 +16,7 @@ export const getChatAssetGallery = async (chatRoomId: string) => {
 /** 채팅방 에셋 갤러리 데이터 조회 hook */
 export const useChatAssetGalleryQuery = (chatRoomId: string) => {
   return useQuery<ChatAssetGalleryResponse, AppError>({
-    queryKey: ["get-chat-asset-gallery", chatRoomId],
+    queryKey: chatQueryKeys.assetGallery(chatRoomId),
     queryFn: () => getChatAssetGallery(chatRoomId),
   });
 };

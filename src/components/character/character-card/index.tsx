@@ -7,9 +7,9 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Pen } from "@/icons";
-import { useAuthStore } from "@/store/useAuthStore";
-import { useDialogStore } from "@/store/useDialogStore";
-import { useModalStore } from "@/store/useModalStore";
+// import { useAuthStore } from "@/store/useAuthStore";
+// import { useDialogStore } from "@/store/useDialogStore";
+// import { useModalStore } from "@/store/useModalStore";
 import ChatCountBadge from "./ChatCountBadge";
 import {
   FLUID_SIZE_OVERRIDE,
@@ -48,9 +48,9 @@ const CharacterCard = ({
   editHref,
 }: CharacterCardProps) => {
   const t = useTranslations("characterCard");
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
-  const openDialog = useDialogStore((state) => state.openDialog);
-  const openModal = useModalStore((state) => state.openModal);
+  // const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  // const openDialog = useDialogStore((state) => state.openDialog);
+  // const openModal = useModalStore((state) => state.openModal);
   const config = SIZE_CONFIG[size];
   const fluidOverride = FLUID_SIZE_OVERRIDE[size];
   const imageList = useMemo(() => normalizeImages(images), [images]);
@@ -86,7 +86,6 @@ const CharacterCard = ({
   );
 
   const lastImageIndex = imageList.length - 1;
-  const hasIndicator = imageList.length > 1;
   const hasChatCount = typeof chatCount === "number";
   const [currentImgIndex, setCurrentImgIndex] = useState(0);
   const [pointerStartX, setPointerStartX] = useState<number | null>(null);
@@ -96,30 +95,27 @@ const CharacterCard = ({
 
   // 세계관 상세 조회는 백엔드가 로그인 없이는 항상 401을 주므로, 비로그인 상태로
   // 들어가 날것의 에러 화면을 보기 전에 여기서 먼저 로그인 안내로 막습니다.
-  const handleCardLinkClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    if (isLoggedIn) return;
-    if (event.button !== 0) return;
-    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  // TODO: 임시 비활성화 — 필요 시 아래 주석을 해제하고 Link의 onClick에 다시 연결합니다.
+  // const handleCardLinkClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+  //   if (isLoggedIn) return;
+  //   if (event.button !== 0) return;
+  //   if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+  //
+  //   event.preventDefault();
+  //   openDialog("LOGIN_REQUIRED", {
+  //     label: "dialog.loginRequired.title",
+  //     description: "dialog.loginRequired.description",
+  //     onConfirm: () => openModal("LOGIN", { triggerRef: undefined }),
+  //   });
+  // };
 
-    event.preventDefault();
-    openDialog("LOGIN_REQUIRED", {
-      label: "dialog.loginRequired.title",
-      description: "dialog.loginRequired.description",
-      onConfirm: () => openModal("LOGIN", { triggerRef: undefined }),
-    });
-  };
-
+  // 이미지 슬라이드는 L 사이즈 카드만 쓴다. 다른 사이즈는 이미지가 여러 장이어도
+  // 첫 장만 보여주고 넘기는 인터랙션은 필요 없다.
   const handleIndicatorClick = (event: React.MouseEvent, index: number) => {
     event.preventDefault();
     event.stopPropagation();
-
-    if (size === "L") {
-      setIsLastActionVisible(false);
-      emblaApi?.scrollTo(index);
-      return;
-    }
-
-    setCurrentImgIndex(index);
+    setIsLastActionVisible(false);
+    emblaApi?.scrollTo(index);
   };
 
   const handleActionIndicatorClick = (event: React.MouseEvent) => {
@@ -182,7 +178,7 @@ const CharacterCard = ({
             href={href}
             aria-label={title}
             className="absolute inset-0 z-0"
-            onClick={handleCardLinkClick}
+            // onClick={handleCardLinkClick}
           />
         )}
 
@@ -262,7 +258,7 @@ const CharacterCard = ({
           href={href}
           aria-label={title}
           className="absolute inset-0 z-0"
-          onClick={handleCardLinkClick}
+          // onClick={handleCardLinkClick}
         />
       )}
 
@@ -276,8 +272,8 @@ const CharacterCard = ({
       >
         <Image
           className="object-cover transition-transform group-hover:scale-110"
-          src={imageList[currentImgIndex]}
-          alt={t("imageAlt", { title, index: currentImgIndex + 1 })}
+          src={imageList[0]}
+          alt={t("imageAlt", { title, index: 1 })}
           fill
           // 6열 기준 1200px에서 187px. 예전 33vw는 실제 표시 폭의 두 배가 넘는 이미지를 받아왔다.
           sizes="(max-width: 447px) 45vw, (max-width: 895px) 30vw, (max-width: 1279px) 20vw, 240px"
@@ -287,15 +283,6 @@ const CharacterCard = ({
           <span className="display-1 pointer-events-none absolute bottom-3 left-3 leading-none text-overlay-font [text-shadow:0px_4px_6.7px_rgba(0,0,0,0.4)]">
             {rank}
           </span>
-        )}
-
-        {hasIndicator && (
-          <SlideIndicators
-            imageCount={imageList.length}
-            currentIndex={currentImgIndex}
-            variant="standard"
-            onImageSelect={handleIndicatorClick}
-          />
         )}
       </div>
 
@@ -343,4 +330,4 @@ const CharacterCard = ({
   );
 };
 
-export default CharacterCard;
+export default React.memo(CharacterCard);

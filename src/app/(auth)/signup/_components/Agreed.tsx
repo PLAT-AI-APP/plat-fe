@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
 import { AuthFormValues } from "@/schema/auth.schema";
 
@@ -14,22 +15,23 @@ import { ArrowRight } from "@/icons";
 const AGREEMENT_ITEMS = [
   {
     id: "isTermsAgreed",
-    title: "서비스이용약관 동의 (필수)",
+    titleKey: "termsOfService",
     link: "https://bloom-shawl-3f7.notion.site/PLAT-36f1c900ce3e8073805de6e7e8e6cfbf?source=copy_link",
   },
   {
     id: "isPrivacyAgreed",
-    title: "개인정보 처리방침 (필수)",
+    titleKey: "privacyPolicy",
     link: "https://bloom-shawl-3f7.notion.site/PLAT-3721c900ce3e800bac34c38d68e1a682?source=copy_link",
   },
   {
     id: "isAgeAgreed",
-    title: "만 14세 이상입니다. (필수)",
+    titleKey: "ageOver14",
     link: "https://bloom-shawl-3f7.notion.site/PLAT-3721c900ce3e80c3bb36c3e32a0f08b1?source=copy_link",
   },
 ] as const;
 
 const Agreed = () => {
+  const t = useTranslations("auth.signup");
   const { control, setValue } = useFormContext<AuthFormValues>();
 
   const isTermsAgreed = useWatch({ control, name: "isTermsAgreed" });
@@ -70,13 +72,13 @@ const Agreed = () => {
             <CheckboxEmpty />
           )}
         </div>
-        <span className="text-font-1 body-3">약관 전체 동의</span>
+        <span className="text-font-1 body-3">{t("agreeAll")}</span>
       </article>
 
       <hr className="border-main" />
 
       <ul id="agreement-list" className="flex flex-col gap-4">
-        {AGREEMENT_ITEMS.map(({ id, title, link }) => {
+        {AGREEMENT_ITEMS.map(({ id, titleKey, link }) => {
           const checked = {
             isTermsAgreed,
             isPrivacyAgreed,
@@ -93,7 +95,7 @@ const Agreed = () => {
                 <div className="flex items-center justify-center h-6 w-6">
                   {checked ? <Checkbox /> : <CheckboxEmpty />}
                 </div>
-                <span className="body-5">{title}</span>
+                <span className="body-5">{t(titleKey)}</span>
               </div>
 
               <Link

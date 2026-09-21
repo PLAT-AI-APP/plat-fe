@@ -11,7 +11,7 @@ import { ChatRetry, ChatTrash, Pen, Trash } from "@/icons";
 import { useAutoResizeTextarea } from "@/hooks/form/useAutoResizeTextarea";
 import { useInlineTextEdit } from "@/hooks/form/useInlineTextEdit";
 import { getResourceImageUrl } from "@/lib/file";
-import { parsePlat, segmentsToDisplayText } from "@/lib/platParse";
+import { parsePlatCached, segmentsToDisplayText } from "@/lib/platParse";
 import { useUserDisplayName } from "@/hooks/data/useUserDisplayName";
 
 interface ChatContentBlockProps {
@@ -51,8 +51,8 @@ const ChatContentBlock = ({
     value: editedContent,
   });
 
-  /** 대화 원문을 말풍선, 이미지, 서술문 블록으로 분리 */
-  const blocks = useMemo(() => parsePlat(rawData), [rawData]);
+  // 같은 메시지가 가상화로 다시 마운트돼도 이전 파싱 결과를 재사용
+  const blocks = useMemo(() => parsePlatCached(rawData), [rawData]);
 
   if (isEditing) {
     return (
@@ -104,7 +104,10 @@ const ChatContentBlock = ({
               width={171}
               height={250}
               unoptimized
-              className="mx-auto h-[250px] w-[171px] rounded-2xl object-cover"
+              // 171x250 고정 상자에 object-cover 로 채우면 세로형이 아닌 에셋은 잘린다. 원본 비율을 그대로 두고
+              // 250x250 안에 맞춘다 — 디자인이 전제한 세로형(171:250)은 예전과 같은 크기로 나온다.
+              // width/height 는 로드 전 자리 힌트일 뿐이다.
+              className="mx-auto h-auto w-auto max-h-[250px] max-w-[250px] rounded-2xl"
             />
           );
         }

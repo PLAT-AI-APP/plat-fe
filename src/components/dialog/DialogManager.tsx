@@ -1,41 +1,31 @@
 "use client";
 
-import { AnimatePresence } from "framer-motion";
+import { Suspense } from "react";
 import type { ComponentType } from "react";
+import { AnimatePresence } from "framer-motion";
+import dynamic from "next/dynamic";
 import { useDialogStore } from "@/store/useDialogStore";
 import type { DialogTypeMap } from "@/type/dialog";
-import ChatDeleteDialog from "./ChatDeleteDialog";
-import ChatLeaveDialog from "./ChatLeaveDialog";
-import ChatRestartDialog from "./ChatRestartDialog";
-import CommentDeleteDialog from "./CommentDeleteDialog";
-import DraftOverwriteDialog from "./DraftOverwriteDialog";
-import LoginRequiredDialog from "./LoginRequiredDialog";
-import PersonaDeleteDialog from "./PersonaDeleteDialog";
-import SignupCompleteDialog from "./SignupCompleteDialog";
-import UnsavedChangesDialog from "./UnsavedChangesDialog";
-import UserBlockDialog from "./UserBlockDialog";
-import WelcomeCreditDialog from "./WelcomeCreditDialog";
-import WithdrawalCompleteDialog from "./WithdrawalCompleteDialog";
-import WithdrawalConfirmDialog from "./WithdrawalConfirmDialog";
 
 const DIALOG_COMPONENTS: {
   [K in keyof DialogTypeMap]: ComponentType<
     DialogTypeMap[K] & { onClose: () => void }
   >;
 } = {
-  CHAT_DELETE: ChatDeleteDialog,
-  CHAT_LEAVE: ChatLeaveDialog,
-  CHAT_RESTART: ChatRestartDialog,
-  COMMENT_DELETE: CommentDeleteDialog,
-  DRAFT_OVERWRITE: DraftOverwriteDialog,
-  LOGIN_REQUIRED: LoginRequiredDialog,
-  PERSONA_DELETE: PersonaDeleteDialog,
-  SIGNUP_COMPLETE: SignupCompleteDialog,
-  UNSAVED_CHANGES: UnsavedChangesDialog,
-  USER_BLOCK: UserBlockDialog,
-  WELCOME_CREDIT: WelcomeCreditDialog,
-  WITHDRAWAL_COMPLETE: WithdrawalCompleteDialog,
-  WITHDRAWAL_CONFIRM: WithdrawalConfirmDialog,
+  CHAT_DELETE: dynamic(() => import("./ChatDeleteDialog")),
+  CHAT_LEAVE: dynamic(() => import("./ChatLeaveDialog")),
+  CHAT_RESTART: dynamic(() => import("./ChatRestartDialog")),
+  COMMENT_DELETE: dynamic(() => import("./CommentDeleteDialog")),
+  DRAFT_OVERWRITE: dynamic(() => import("./DraftOverwriteDialog")),
+  DRAFT_SAVE_OVERWRITE: dynamic(() => import("./DraftSaveOverwriteDialog")),
+  LOGIN_REQUIRED: dynamic(() => import("./LoginRequiredDialog")),
+  PERSONA_DELETE: dynamic(() => import("./PersonaDeleteDialog")),
+  SIGNUP_COMPLETE: dynamic(() => import("./SignupCompleteDialog")),
+  UNSAVED_CHANGES: dynamic(() => import("./UnsavedChangesDialog")),
+  USER_BLOCK: dynamic(() => import("./UserBlockDialog")),
+  WELCOME_CREDIT: dynamic(() => import("./WelcomeCreditDialog")),
+  WITHDRAWAL_COMPLETE: dynamic(() => import("./WithdrawalCompleteDialog")),
+  WITHDRAWAL_CONFIRM: dynamic(() => import("./WithdrawalConfirmDialog")),
 };
 
 const DialogManager = () => {
@@ -56,11 +46,11 @@ const DialogManager = () => {
   return (
     <AnimatePresence>
       {currentDialog && DialogComponent && (
-        <DialogComponent
-          key={currentDialog.type}
-          {...currentDialog.props}
-          onClose={closeDialog}
-        />
+        // 다이얼로그 청크가 처음 로딩될 때 로딩이 루트 Suspense 로 번져
+        // 페이지 전체가 잠깐 사라지지 않도록 다이얼로그 자리에서 멈춘다.
+        <Suspense key={currentDialog.type} fallback={null}>
+          <DialogComponent {...currentDialog.props} onClose={closeDialog} />
+        </Suspense>
       )}
     </AnimatePresence>
   );

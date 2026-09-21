@@ -75,6 +75,8 @@ const FollowModal = ({
         queryKey: followQueryKeys.followerList(),
       });
       queryClient.invalidateQueries({ queryKey: followQueryKeys.count(userId) });
+      // 이 모달에서 팔로우·언팔로우한 사용자의 프로필 버튼도 같은 상태여야 한다.
+      queryClient.invalidateQueries({ queryKey: followQueryKeys.statuses() });
 
       if (!targetUserId) return;
 
@@ -250,6 +252,9 @@ const FollowModal = ({
                 isFollowing={isFollowing}
                 isPending={isFollowPending}
                 onToggleFollow={handleToggleFollow}
+                onNavigateToProfile={(targetUserId) =>
+                  moveWithModalClose(`/profile/${targetUserId}`)
+                }
               />
             );
           })}

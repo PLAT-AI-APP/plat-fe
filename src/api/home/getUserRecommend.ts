@@ -7,6 +7,7 @@ import { useLocaleStore } from "@/store/useLocaleStore";
 import { Tendency, useTendencyStore } from "@/store/useTendencyStore";
 import { useAuthReady } from "@/hooks/data/useAuthReady";
 import type { BaseCard, CardCreator } from "@/type/card";
+import { homeQueryKeys } from "./queryKeys";
 
 export type UserRecommendCreator = CardCreator;
 
@@ -68,13 +69,12 @@ export const useUserRecommendQuery = (params: GetUserRecommendParams = {}) => {
   const authReady = useAuthReady();
 
   return useQuery<UserRecommendItem[], AppError>({
-    queryKey: [
-      "get-user-recommend",
+    queryKey: homeQueryKeys.userRecommend({
       locale,
       tendency,
-      params.page,
-      params.size,
-    ],
+      page: params.page,
+      size: params.size,
+    }),
     queryFn: () => getUserRecommend({ ...params, tendency }),
     enabled: authReady,
   });

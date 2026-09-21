@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "..";
 import { AppError } from "@/type/api";
 import { useLocaleStore } from "@/store/useLocaleStore";
+import { homeQueryKeys } from "./queryKeys";
 
 /** 메인 최상단 캐러셀 한 장. 문구는 없고 이미지와 이동 링크만 내려옵니다. */
 export interface HomeBanner {
@@ -24,7 +25,7 @@ export const useHomeBannersQuery = () => {
   const locale = useLocaleStore((state) => state.locale);
 
   return useQuery<HomeBanner[], AppError>({
-    queryKey: ["get-home-banners", locale],
+    queryKey: homeQueryKeys.banners(locale),
     queryFn: getBanners,
   });
 };

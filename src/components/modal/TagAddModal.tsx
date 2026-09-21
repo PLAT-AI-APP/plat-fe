@@ -157,7 +157,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
     <ModalLayout
       onClose={onClose}
       hasBackground
-      className="w-[430px] max-w-[calc(100vw-40px)] rounded-3xl border-0 bg-dark p-5"
+      className="w-[430px] max-w-[calc(100vw-40px)] rounded-3xl bg-dark p-5"
     >
       <div id="tag-manager-root" className="flex flex-col">
         <header className="flex items-center justify-between pb-5">

@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
-import { ROOM_LIST_QUERY_KEY } from "./getRoomList";
+import { roomQueryKeys } from "./queryKeys";
 
 const putRoomPin = async (roomId: string) => {
   await authAxios.put(`/rooms/${roomId}/pin`);
@@ -19,7 +19,7 @@ export const usePinRoomMutation = () => {
     mutationKey: ["put-room-pin"],
     mutationFn: putRoomPin,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ROOM_LIST_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: roomQueryKeys.lists() });
     },
   });
 };
@@ -32,7 +32,7 @@ export const useUnpinRoomMutation = () => {
     mutationKey: ["delete-room-pin"],
     mutationFn: deleteRoomPin,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ROOM_LIST_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: roomQueryKeys.lists() });
     },
   });
 };

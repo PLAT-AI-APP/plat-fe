@@ -66,6 +66,7 @@ const requiresAuthModalTypes: (keyof ModalTypeMap)[] = [
   "TAG_ADD",
   "TAG_SUGGESTIONS",
   "COMMENT_REPORT",
+  "CHATTING_START",
 ];
 
 export const useModalStore = create<ModalState>((set, get) => ({

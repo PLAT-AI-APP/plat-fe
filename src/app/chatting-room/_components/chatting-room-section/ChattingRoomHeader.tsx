@@ -13,7 +13,8 @@ import ChattingSidebar from "../ChattingSidebar";
 interface ChattingRoomHeaderProps {
   roomId: string;
   characterName: string;
-  currentAi: AIModelType;
+  models: AIModelType[];
+  currentAi?: AIModelType;
   handleCurrentAi: (model: AIModelType) => void;
   isSuggestedReplyOn: boolean;
   onSuggestedReplyToggle: () => void;
@@ -22,6 +23,7 @@ interface ChattingRoomHeaderProps {
 const ChattingRoomHeader = ({
   roomId,
   characterName,
+  models,
   currentAi,
   handleCurrentAi,
   isSuggestedReplyOn,
@@ -54,10 +56,13 @@ const ChattingRoomHeader = ({
       </div>
 
       <div className="ml-auto flex shrink-0 items-center gap-3">
-        <AiModelSelect
-          currentAi={currentAi}
-          handleCurrentAi={handleCurrentAi}
-        />
+        {currentAi && (
+          <AiModelSelect
+            models={models}
+            currentAi={currentAi}
+            handleCurrentAi={handleCurrentAi}
+          />
+        )}
 
         <button
           type="button"

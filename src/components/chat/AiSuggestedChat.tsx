@@ -2,23 +2,24 @@ import React from "react";
 import { useTranslations } from "next-intl";
 import { Pen } from "@/icons";
 
+/** 추천 답변 API 연동 전 임시 문구. 문장은 언어별 메시지(chatUI.sampleReply*)에서 가져온다. */
 const MOCK_AI_RESPONSES = [
   {
     id: "resp-01",
-    quote: "응, 바로 닫을게. 괜찮아, 아무도 못 봐.",
-    narration: "나는 재빨리 문을 닫고 잠금장치를 다시 걸었다.",
+    quoteKey: "chatUI.sampleReply1Quote",
+    narrationKey: "chatUI.sampleReply1Narration",
   },
   {
     id: "resp-02",
-    quote: "잠깐만, 지금은 여기 있는 게 더 안전해.",
-    narration: "작게 숨을 고른 뒤 상대의 팔목을 조심스럽게 잡았다.",
+    quoteKey: "chatUI.sampleReply2Quote",
+    narrationKey: "chatUI.sampleReply2Narration",
   },
   {
     id: "resp-03",
-    quote: "미안해. 이런 식으로 마주치게 될 줄은 몰랐어.",
-    narration: "시선을 피한 채 낮은 목소리로 말을 이었다.",
+    quoteKey: "chatUI.sampleReply3Quote",
+    narrationKey: "chatUI.sampleReply3Narration",
   },
-];
+] as const;
 
 const AiSuggestedChat = () => {
   const t = useTranslations();
@@ -33,8 +34,8 @@ const AiSuggestedChat = () => {
             key={res.id}
             className="body-5 cursor-pointer rounded-2xl bg-btn-hover px-3 py-4 text-font-1 transition-colors hover:bg-btn-selected"
           >
-            <span>{`"${res.quote}"`}</span>{" "}
-            <span className="text-font-2">{res.narration}</span>
+            <span>{`"${t(res.quoteKey)}"`}</span>{" "}
+            <span className="text-font-2">{t(res.narrationKey)}</span>
             {index === 0 && (
               <span className="sr-only">
                 {t("chatUI.selectedSuggestedReply")}

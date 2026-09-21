@@ -13,6 +13,11 @@ import { productHandlers } from "./handlers/product";
 import { homeHandlers } from "./handlers/home";
 import { universeHandlers } from "./handlers/universe";
 import { commentHandlers } from "./handlers/comment";
+import { draftHandlers } from "./handlers/draft";
+import { feedbackHandlers } from "./handlers/feedback";
+import { rankingHandlers } from "./handlers/ranking";
+import { roomHandlers } from "./handlers/room";
+import { searchHandlers } from "./handlers/search";
 
 /**
  * 모든 핸들러를 하나의 배열로 통합합니다.
@@ -36,4 +41,9 @@ export const handlers = [
   // 앞 세그먼트를 제한하지 않아 /comment/universe/:id 까지 잡아먹기 때문입니다.
   ...commentHandlers,
   ...universeHandlers,
+  ...draftHandlers,
+  ...feedbackHandlers,
+  ...rankingHandlers,
+  ...roomHandlers,
+  ...searchHandlers,
 ];

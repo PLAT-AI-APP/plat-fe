@@ -147,9 +147,8 @@ export const adaptUniverseDetailToCharacterDetail = (
       // creatorUserId를 씁니다.
       id: universe.creatorUserId,
       nickname: universe.creatorName,
-      // 백엔드 세계관 상세 응답에 아직 창작자 프로필 사진은 없어, 임시로 세계관 소속
-      // 캐릭터의 이미지를 대신 표시합니다.
-      profileImage: universe.character.profileImageUrl,
+      // 세계관 상세 응답에는 창작자 프로필 사진이 없다. 캐릭터 이미지로 대신 채우면 다른 사람의
+      // 사진이 창작자인 것처럼 보이므로 여기 두지 않고, 화면이 공개 프로필 API 로 따로 가져온다.
       followerCount: universe.creatorFollowerCount,
       // 이 요청을 보낸 사람이 창작자를 팔로우하는지는 아직 상세 응답에 실려 오지 않습니다.
       isFollowing: false,

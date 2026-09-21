@@ -15,25 +15,26 @@ import {
 import { QueryStateBoundary } from "@/components/state";
 import { CharacterCardSkeleton } from "./character-card/CharacterCardSkeleton";
 
+export interface CharacterShowcaseItem {
+  /**
+   * 목록에서의 신원. CharacterCard가 내부 이미지 상태를 보존할 수 있도록
+   * 정렬이나 필터 변경 뒤에도 유지되는 값을 사용
+   */
+  id?: string;
+  name: string;
+  chatCount?: number;
+  dec: string;
+  tag?: string[];
+  img: string[] | string;
+  creatorName?: string;
+  isNew?: boolean;
+  isOfficial?: boolean;
+  rank?: number;
+}
+
 interface CharacterShowcaseProps {
   title?: string;
-  charArray: {
-    /**
-     * 목록에서의 신원. CharacterCard 가 현재 이미지 인덱스 등을 자체 state 로
-     * 들고 있어서, 정렬이나 필터가 바뀔 때 배열 위치로 키를 잡으면 React 가
-     * 다른 카드의 인스턴스를 재사용해 이미지가 뒤섞인다.
-     */
-    id?: string;
-    name: string;
-    chatCount?: number;
-    dec: string;
-    tag?: string[];
-    img: string[] | string;
-    creatorName?: string;
-    isNew?: boolean;
-    isOfficial?: boolean;
-    rank?: number;
-  }[];
+  charArray: CharacterShowcaseItem[];
   cardSize?: "S" | "M" | "L" | "XL";
   limit?: number;
   allViewLink?: string;
@@ -99,7 +100,10 @@ const CharacterShowcase = ({
     });
   const isCarousel = layout === "carousel";
 
-  const displayChars = limit ? charArray.slice(0, limit) : charArray;
+  const displayChars = React.useMemo(
+    () => (limit ? charArray.slice(0, limit) : charArray),
+    [charArray, limit],
+  );
   const skeletonCount =
     limit || (displayChars.length > 0 ? displayChars.length : 4);
 
@@ -107,39 +111,54 @@ const CharacterShowcase = ({
   // 카드는 그 폭을 채우기만 한다 — 그래야 카드가 어느 배치에서든 같은 비율로 그려진다.
   const isFluid = true;
 
-  const cardItems = isLoading
-    ? Array.from({ length: skeletonCount }).map((_, index) => (
-        <CharacterCardSkeleton
-          key={`skeleton-${index}`}
-          size={cardSize}
-          fluid={isFluid}
-        />
-      ))
-    : displayChars.map((char, index) => (
-        <CharacterCard
-          key={char.id ?? `card-${index}`}
-          size={cardSize}
-          title={char.name}
-          description={char.dec}
-          creatorName={char.creatorName || t("unknownCreator")}
-          chatCount={char.chatCount}
-          images={char.img}
-          tagList={char.tag}
-          currentTag={currentTag}
-          isNew={char.isNew}
-          isOfficial={char.isOfficial}
-          rank={char.rank}
-          selectedTags={selectedTags}
-          fluid={isFluid}
-          // id가 아직 없는 자리(더미 데이터 등)는 갈 곳이 없어 href를 생략해 비활성 상태로 둡니다.
-          href={char.id ? `/characters/${char.id}` : undefined}
-          editHref={
-            isEditable && char.id
-              ? `/character-creat?universeId=${char.id}`
-              : undefined
-          }
-        />
-      ));
+  const unknownCreator = t("unknownCreator");
+  const cardItems = React.useMemo(
+    () =>
+      isLoading
+        ? Array.from({ length: skeletonCount }).map((_, index) => (
+            <CharacterCardSkeleton
+              key={`skeleton-${index}`}
+              size={cardSize}
+              fluid={isFluid}
+            />
+          ))
+        : displayChars.map((char, index) => (
+            <CharacterCard
+              key={char.id ?? `card-${index}`}
+              size={cardSize}
+              title={char.name}
+              description={char.dec}
+              creatorName={char.creatorName || unknownCreator}
+              chatCount={char.chatCount}
+              images={char.img}
+              tagList={char.tag}
+              currentTag={currentTag}
+              isNew={char.isNew}
+              isOfficial={char.isOfficial}
+              rank={char.rank}
+              selectedTags={selectedTags}
+              fluid={isFluid}
+              // id가 없는 더미 데이터는 이동 경로 없이 비활성 카드로 표시
+              href={char.id ? `/characters/${char.id}` : undefined}
+              editHref={
+                isEditable && char.id
+                  ? `/character-creat?universeId=${char.id}`
+                  : undefined
+              }
+            />
+          )),
+    [
+      cardSize,
+      currentTag,
+      displayChars,
+      isEditable,
+      isFluid,
+      isLoading,
+      selectedTags,
+      skeletonCount,
+      unknownCreator,
+    ],
+  );
 
   const isEmpty = !isLoading && !isError && displayChars.length === 0;
 
@@ -235,4 +254,4 @@ const CharacterShowcase = ({
   );
 };
 
-export default CharacterShowcase;
+export default React.memo(CharacterShowcase);

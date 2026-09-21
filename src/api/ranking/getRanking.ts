@@ -6,6 +6,7 @@ import { AppError, PageWith } from "@/type/api";
 import { useLocaleStore } from "@/store/useLocaleStore";
 import { Tendency, useTendencyStore } from "@/store/useTendencyStore";
 import type { BaseCard, CardCreator } from "@/type/card";
+import { rankingQueryKeys } from "./queryKeys";
 
 /** 백엔드 StatPeriod. 실시간은 오늘 0시부터 지금까지고 1분마다 갱신됩니다. */
 export type RankingPeriod =
@@ -63,16 +64,15 @@ export const useRankingQuery = (params: GetRankingParams = {}) => {
   const tendency = useTendencyStore((state) => state.tendency);
 
   return useQuery<PageWith<RankedCardItem>, AppError>({
-    queryKey: [
-      "get-ranking",
+    queryKey: rankingQueryKeys.list({
       locale,
       tendency,
-      params.period,
-      params.sort,
-      params.scope,
-      params.page,
-      params.size,
-    ],
+      period: params.period,
+      sort: params.sort,
+      scope: params.scope,
+      page: params.page,
+      size: params.size,
+    }),
     queryFn: () => getRanking({ ...params, tendency }),
     // 실시간 랭킹이 1분마다 갱신되므로 그보다 짧게 잡을 이유가 없습니다.
     staleTime: 1000 * 60,

@@ -8,6 +8,7 @@ import {
   TIMEOUT_ERROR_CODE,
   UNKNOWN_ERROR_CODE,
   formatErrorDetail,
+  getApiErrorMessage,
 } from "@/lib/apiError";
 import axios, {
   InternalAxiosRequestConfig,
@@ -47,9 +48,6 @@ export interface AppError {
 }
 
 
-const DEFAULT_API_ERROR_MESSAGE = "요청을 처리하지 못했습니다.";
-const NETWORK_ERROR_MESSAGE = "네트워크 연결을 확인해 주세요.";
-const TIMEOUT_ERROR_MESSAGE = "서버 응답이 너무 늦어 요청을 중단했습니다.";
 /** 응답 없는 실패를 하염없이 기다리지 않도록 상한을 둡니다. */
 const REQUEST_TIMEOUT_MS = 20_000;
 const API_ERROR_TOAST_COOLDOWN_MS = 1_000;
@@ -261,7 +259,7 @@ const buildAppError = (err: AxiosError<ApiErrorResponse>): AppError => {
     return {
       code: isTimeout ? TIMEOUT_ERROR_CODE : NETWORK_ERROR_CODE,
       fields: {},
-      message: isTimeout ? TIMEOUT_ERROR_MESSAGE : NETWORK_ERROR_MESSAGE,
+      message: getApiErrorMessage(isTimeout ? "timeout" : "network"),
       ...request,
     };
   }
@@ -271,7 +269,7 @@ const buildAppError = (err: AxiosError<ApiErrorResponse>): AppError => {
   return {
     code: code || UNKNOWN_ERROR_CODE,
     fields: fields || {},
-    message: message || DEFAULT_API_ERROR_MESSAGE,
+    message: message || getApiErrorMessage("default"),
     status: err.response.status,
     ...request,
   };

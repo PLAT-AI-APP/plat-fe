@@ -104,11 +104,16 @@ export const useUniverseDraft = ({
         ...fallbackFormValues,
         ...applyUniverseDraft(latest, defaultScenarioName),
       });
+      showAppToast("success", t("draftLoaded"));
     } catch (error) {
       console.error("Draft load failed:", error);
       showAppToast("error", t("draftLoadFailed"));
     }
   };
 
-  return { draftId, saveDraft, loadDraft };
+  // 이번 세션에서 새로 만든 초안이 아니라, 들어오기 전부터 서버에 있던 초안인지.
+  // "임시저장" 클릭 시 그걸 덮어써도 되는지 미리 물어볼 근거로 씁니다.
+  const hasExistingDraft = !createdDraftId && Boolean(currentDraft?.draftId);
+
+  return { draftId, saveDraft, loadDraft, hasExistingDraft };
 };

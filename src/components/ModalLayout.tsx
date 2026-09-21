@@ -136,7 +136,10 @@ export const ModalLayout = ({
         onMouseDown={(event) => event.stopPropagation()}
         className={cn(
           "z-101 rounded-xl bg-dark",
-          hasBackground ? "shadow-card-heavy" : "shadow-popover",
+          // 배경 있는 모달은 테두리로 경계를 준다. 팝오버는 그림자만으로 충분해 겹치지 않게 뺀다.
+          hasBackground
+            ? "border border-main shadow-card-heavy"
+            : "shadow-popover",
           !hasBackground && "px-2 py-3",
           modalPositionClass,
           className,

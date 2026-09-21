@@ -3,6 +3,7 @@
 import Image from "next/image";
 import React from "react";
 import { useTranslations } from "next-intl";
+import { splitActionSegments } from "@/lib/chatText";
 import { cn } from "@/lib/utils";
 
 interface CharacterChatProps {
@@ -23,6 +24,9 @@ const CharacterChat = ({
   bubbleClassName = "rounded-[0px_16px_16px_16px]",
 }: CharacterChatProps) => {
   const t = useTranslations();
+  const segments = splitActionSegments(chatText);
+  // `**행동**` 이 있을 때만 줄을 나눠 그린다. 없으면 예전과 똑같이 문자열 하나로 둬 다른 대사의 모양이 바뀌지 않는다.
+  const hasAction = segments.some((segment) => segment.type === "action");
 
   return (
     <article className="flex gap-2">
@@ -40,10 +44,21 @@ const CharacterChat = ({
         <div
           className={cn(
             "w-fit bg-card px-3 py-2 text-font-1",
+            hasAction && "flex flex-col gap-2",
             bubbleClassName,
           )}
         >
-          {chatText}
+          {hasAction
+            ? segments.map((segment, index) => (
+                <p
+                  key={index}
+                  // 행동은 대사보다 한 단계 흐린 색으로 구분한다.
+                  className={cn(segment.type === "action" && "text-font-2")}
+                >
+                  {segment.value}
+                </p>
+              ))
+            : chatText}
         </div>
       </div>
     </article>

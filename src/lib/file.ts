@@ -15,8 +15,10 @@ export const dataUrlToFile = async (
 };
 
 /**
- * 업로드 API가 돌려준 fileId를 실제 이미지를 서빙하는 GET /images/{fileId} URL로 변환합니다.
+ * 업로드 API가 돌려준 fileId를 실제 이미지를 서빙하는
+ * GET /images/{type}/{fileId}/{variant} URL로 변환합니다.
  * 이 엔드포인트는 확정(confirm) 전 TEMP 상태에서도 바로 동작합니다.
+ * type/variant 세그먼트는 소문자만 받으므로 그대로 소문자로 바꿔 보냅니다.
  */
 export const getResourceImageUrl = (
   fileId: string,
@@ -24,7 +26,7 @@ export const getResourceImageUrl = (
 ) => {
   const baseUrl = (process.env.NEXT_PUBLIC_BASE_URI ?? "").replace(/\/$/, "");
 
-  return `${baseUrl}/images/${fileId}?type=${fileType}`;
+  return `${baseUrl}/images/${fileType.toLowerCase()}/${fileId}/origin`;
 };
 
 /**

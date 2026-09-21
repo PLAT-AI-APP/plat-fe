@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "..";
 import { AppError } from "@/type/api";
 import type { NoticeDetail } from "@/type/notice";
+import { noticeQueryKeys } from "./queryKeys";
 
 export interface GetNoticeDetailContentsProps {
   noticeId: string;
@@ -22,7 +23,7 @@ export const useNoticeDetailContentsQuery = ({
   noticeId,
 }: GetNoticeDetailContentsProps) => {
   return useQuery<NoticeDetail, AppError>({
-    queryKey: ["get-notice-detail-contents", noticeId],
+    queryKey: noticeQueryKeys.detail(noticeId),
     queryFn: () => getNoticeDetailContents({ noticeId }),
     enabled: Boolean(noticeId),
   });

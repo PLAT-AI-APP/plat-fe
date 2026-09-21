@@ -1,53 +1,108 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
-import { useTranslations } from "next-intl";
+import React, { useCallback, useMemo, useRef, useState } from "react";
+import { useChatModelsQuery } from "@/api/chat/getChatModels";
+import { useRoomDetailQuery } from "@/api/room/getRoomDetail";
+import { useRoomMessagesInfiniteQuery } from "@/api/room/getRoomMessages";
+import { useUniverseDetailQuery } from "@/api/universe/getUniverseDetail";
 import ChatForm from "@/components/chat/ChatForm";
 import MessageList from "@/components/chat/MessageList";
+import { ErrorState } from "@/components/state";
+import { useIntersectionObserver } from "@/hooks/dom/useIntersectionObserver";
 import { useScrollTimeout } from "@/hooks/dom/useScrollTiemout";
+import { toAiModel } from "@/lib/chatModel";
 import { cn } from "@/lib/utils";
 import { AIModelType, ChatMessageType } from "@/type/chat";
+import type { RoomMessage } from "@/type/room";
 import ChattingRoomHeader from "./ChattingRoomHeader";
 import ChattingRoomNotice from "./ChattingRoomNotice";
-
-const INITIAL_MESSAGES: ChatMessageType[] = [
-  {
-    id: "assistant-1",
-    role: "assistant",
-    characterName: "캐릭터 이름",
-    profileImage: "/images/sample.png",
-    content:
-      `"어쩌구 저쩌구 ~~~~" {img:/images/sample.png} ` +
-      "신이 문을 열고 들어오는 찰나, 연우는 숨을 멈춘 채로 굳어버렸다. 방 안에는 방금 전까지 아무 일도 없었던 것처럼 고요가 내려앉아 있었다.\n\n" +
-      "잠깐의 정적 끝에, 연우는 천천히 시선을 들어 상대를 바라보았다.",
-  },
-  {
-    id: "user-1",
-    role: "user",
-    content: "가나다라마바사아자차카타파하",
-  },
-];
 
 interface ChattingRoomSectionProps {
   roomId: string;
 }
 
+/**
+ * 방 상세는 universeId만 주므로 캐릭터 이름/프로필은 세계관 상세에서 받아 넣는다.
+ * 세계관을 아직 못 받았을 때는 빈 값으로 둔다 — ChatContentBlock이 빈 값을 그대로 허용한다.
+ */
+const toChatMessage = (
+  message: RoomMessage,
+  characterName: string,
+  profileImage: string,
+): ChatMessageType =>
+  message.type === "AI"
+    ? {
+        id: message.messageId,
+        role: "assistant",
+        characterName,
+        profileImage,
+        content: message.content,
+      }
+    : {
+        id: message.messageId,
+        role: "user",
+        content: message.content,
+      };
+
 const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
-  const t = useTranslations();
   const { isScrolling, onScroll } = useScrollTimeout();
-  const [messages, setMessages] = useState<ChatMessageType[]>(INITIAL_MESSAGES);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [scrollContainer, setScrollContainer] = useState<HTMLDivElement | null>(null);
+
+  const handleScrollContainerRef = useCallback((element: HTMLDivElement | null) => {
+    scrollContainerRef.current = element;
+    setScrollContainer(element);
+  }, []);
+
+  const {
+    data: room,
+    isError: isRoomError,
+    error: roomError,
+    refetch: refetchRoom,
+  } = useRoomDetailQuery(roomId);
+  const { data: universe } = useUniverseDetailQuery(room?.universeId);
+  const characterName = universe?.character.name ?? "";
+  const profileImage = universe?.character.profileImageUrl ?? "";
+
+  const {
+    data,
+    isPending: isMessagesPending,
+    isError: isMessagesError,
+    error: messagesError,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+    refetch: refetchMessages,
+  } = useRoomMessagesInfiniteQuery(roomId);
+
+  // 과거 방향으로 페이지가 이어지므로, 화면엔 오래된 메시지가 위로 오도록 순서를 뒤집는다.
+  const serverMessages = useMemo<ChatMessageType[]>(
+    () =>
+      (data?.pages.flatMap((page) => page.content) ?? [])
+        .map((message) => toChatMessage(message, characterName, profileImage))
+        .reverse(),
+    [data, characterName, profileImage],
+  );
+
+  // 전송 API 연결 전까지, 새로 보낸 메시지는 서버 이력과 별개로 화면에만 이어붙인다.
+  const [sentMessages, setSentMessages] = useState<ChatMessageType[]>([]);
+  const messages = useMemo(
+    () => [...serverMessages, ...sentMessages],
+    [serverMessages, sentMessages],
+  );
+
   const [isSuggestedReplyOn, setIsSuggestedReplyOn] = useState(true);
-  const [currentAi, setCurrentAi] = useState<AIModelType>({
-    id: "Claude Opus 4.6",
-    name: "Opus 4.6",
-    description: t("chatUI.claudeOpus46Description"),
-    price: 1.2,
-    unit: t("chatUI.perChat"),
-    icon: "/ai-logo/claude.png",
-  });
+  const { data: chatCatalog } = useChatModelsQuery();
+  const models = useMemo(
+    () => chatCatalog?.models.map(toAiModel) ?? [],
+    [chatCatalog],
+  );
+  // 서버에 방별 모델 저장이 없어 화면에서만 기억하고, 고르기 전엔 목록 첫 모델을 쓴다.
+  const [selectedModelId, setSelectedModelId] = useState<string | null>(null);
+  const currentAi = models.find((model) => model.id === selectedModelId) ?? models[0];
 
   const handleCurrentAi = useCallback((model: AIModelType) => {
-    setCurrentAi(model);
+    setSelectedModelId(model.id);
   }, []);
 
   const handleSendMessage = useCallback((message: string) => {
@@ -56,7 +111,7 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
     if (!trimmedMessage) return;
 
     // 즉시 말풍선으로 이어지는 사용자 입력 상태
-    setMessages((prevMessages) => [
+    setSentMessages((prevMessages) => [
       ...prevMessages,
       {
         id: `user-${Date.now()}`,
@@ -67,25 +122,45 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
   }, []);
 
   const handleDeleteMessage = useCallback((messageId: string) => {
-    // AI 응답 하단 삭제 액션에서 해당 메시지를 목록에서 제거
-    setMessages((prevMessages) =>
+    // 삭제 API가 아직 없어, 이번 세션에서 보낸 메시지만 화면에서 지울 수 있다.
+    setSentMessages((prevMessages) =>
       prevMessages.filter((message) => message.id !== messageId),
     );
   }, []);
 
   const handleRetryMessage = useCallback((messageId: string) => {
     // 재생성 API 연결 전까지는 같은 응답을 유지하며 다시하기 액션 자리만 보존
-    setMessages((prevMessages) =>
+    setSentMessages((prevMessages) =>
       prevMessages.map((message) =>
         message.id === messageId ? { ...message } : message,
       ),
     );
   }, []);
 
+  const handleLoadOlderMessages = useCallback(() => {
+    if (!hasNextPage || isFetchingNextPage) return;
+
+    fetchNextPage();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  const { targetRef: topSentinelRef } = useIntersectionObserver({
+    onIntersect: handleLoadOlderMessages,
+    enabled: Boolean(hasNextPage) && !isMessagesPending,
+  });
+
+  if (isRoomError) {
+    return (
+      <section className="flex h-full min-h-0 flex-1 items-center justify-center bg-dark">
+        <ErrorState error={roomError} onRetry={refetchRoom} />
+      </section>
+    );
+  }
+
   return (
     <section className="flex h-full min-h-0 flex-1 justify-center bg-dark pt-2">
       <div className="flex h-full w-full max-w-[867px] flex-col">
         <div
+          ref={handleScrollContainerRef}
           onScroll={onScroll}
           className={cn(
             "relative flex-1 overflow-y-auto hide-scrollbar-on-idle",
@@ -94,7 +169,8 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
         >
           <ChattingRoomHeader
             roomId={roomId}
-            characterName="캐릭터 이름"
+            characterName={characterName}
+            models={models}
             currentAi={currentAi}
             handleCurrentAi={handleCurrentAi}
             isSuggestedReplyOn={isSuggestedReplyOn}
@@ -103,12 +179,22 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
             }
           />
           <ChattingRoomNotice />
-          <MessageList
-            messages={messages}
-            isAiSuggestedChat={isSuggestedReplyOn}
-            onDeleteMessage={handleDeleteMessage}
-            onRetryMessage={handleRetryMessage}
-          />
+
+          {hasNextPage && (
+            <div ref={topSentinelRef} aria-hidden="true" className="h-px" />
+          )}
+
+          {isMessagesError && serverMessages.length === 0 ? (
+            <ErrorState error={messagesError} onRetry={refetchMessages} />
+          ) : (
+            <MessageList
+              messages={messages}
+              scrollContainer={scrollContainer}
+              isAiSuggestedChat={isSuggestedReplyOn}
+              onDeleteMessage={handleDeleteMessage}
+              onRetryMessage={handleRetryMessage}
+            />
+          )}
         </div>
 
         {/* 메시지 목록이 px-4 를 쓰므로 입력창도 같은 여백을 써야 줄이 맞는다. */}

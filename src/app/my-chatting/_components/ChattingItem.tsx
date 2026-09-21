@@ -8,7 +8,8 @@ import { useDeleteRoomMutation } from "@/api/room/deleteRoom";
 import { usePinRoomMutation, useUnpinRoomMutation } from "@/api/room/patchRoomPin";
 import MyChattingMenuPopover from "@/components/popover/MyChattingMenuPopover";
 import useToggle from "@/hooks/common/useToggle";
-import { Dots, Pin } from "@/icons";
+import { useRelativeTimeLabel } from "@/hooks/i18n/useRelativeTimeLabel";
+import { Dots, PinLine, User } from "@/icons";
 import { useDialogStore } from "@/store/useDialogStore";
 
 const DEFAULT_THUMBNAIL = "/images/sample.png";
@@ -17,7 +18,9 @@ interface ChattingItemProps {
   roomId: string;
   title: string;
   thumbnailUrl: string | null;
+  personaName: string;
   lastMessage: string;
+  lastUsedAt: string | null;
   isPinned: boolean;
 }
 
@@ -25,10 +28,13 @@ const ChattingItem = ({
   roomId,
   title,
   thumbnailUrl,
+  personaName,
   lastMessage,
+  lastUsedAt,
   isPinned,
 }: ChattingItemProps) => {
   const router = useRouter();
+  const getRelativeTime = useRelativeTimeLabel();
   const { close, isOpen, toggle } = useToggle();
   const triggerRef = useRef<HTMLSpanElement>(null);
   const openDialog = useDialogStore((state) => state.openDialog);
@@ -73,13 +79,16 @@ const ChattingItem = ({
         id="chat-item-content"
         className="flex min-w-0 flex-1 items-center"
       >
-        <div className="flex h-full min-w-0 flex-1 flex-col gap-1.5 justify-center">
+        <div className="flex h-full min-w-0 flex-1 flex-col justify-center gap-3">
           <div className="flex min-h-0 flex-1 items-start justify-between gap-3">
             <div className="flex h-full min-w-0 flex-1 flex-col gap-1.5 overflow-hidden">
               <div className="flex items-center gap-1.5">
                 <h3 className="title-3 truncate text-font-1">{title}</h3>
                 {isPinned && (
-                  <Pin className="size-4 shrink-0 text-font-2" aria-hidden />
+                  <PinLine
+                    className="size-4 shrink-0 text-font-1"
+                    aria-hidden
+                  />
                 )}
               </div>
 
@@ -113,6 +122,19 @@ const ChattingItem = ({
                 )}
               </AnimatePresence>
             </span>
+          </div>
+
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex min-w-0 items-center gap-1.5">
+              <User className="size-4 shrink-0 text-font-2" />
+              <p className="body-5 truncate text-font-2">{personaName}</p>
+            </div>
+
+            {lastUsedAt && (
+              <p className="body-6 shrink-0 text-font-disabled">
+                {getRelativeTime(lastUsedAt)}
+              </p>
+            )}
           </div>
         </div>
       </article>

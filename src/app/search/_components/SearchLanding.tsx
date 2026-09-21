@@ -128,7 +128,10 @@ const SearchLanding = () => {
   });
   const characterItems = popularCharacters?.content ?? [];
 
-  const updatedAt = `${dayjs().format("YY.MM.DD HH")}시 ${t("ranking.liveSuffix")}`;
+  // "시"·"기준" 의 위치와 표기가 언어마다 달라 접미사를 이어 붙이지 않고 문장 하나로 번역한다.
+  const updatedAt = t("ranking.updatedAt", {
+    datetime: dayjs().format("YY.MM.DD HH"),
+  });
 
   // 실시간 검색어·최근 검색어 클릭과 직접 입력이 모두 이 문을 지납니다.
   const handleSearch = (keyword: string) => {

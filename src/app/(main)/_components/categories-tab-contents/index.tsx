@@ -1,9 +1,10 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import {
+  type CategoryCardItem,
   CategorySort,
   useCategorySearchQuery,
 } from "@/api/search/getCategorySearch";
@@ -19,6 +20,29 @@ import TagSidebar from "./_components/tag-sidebar";
 import CharacterCreatePrompt from "./_components/CharacterCreatePrompt";
 
 const PAGE_SIZE = 24;
+
+const CategoryCharacterCard = memo(({ card }: { card: CategoryCardItem }) => {
+  // 카드 데이터가 유지되는 동안 태그 이름 배열도 재사용해 CharacterCard 메모화 보존
+  const tagList = useMemo(() => card.tags.map((tag) => tag.name), [card.tags]);
+
+  return (
+    <CharacterCard
+      size="S"
+      fluid
+      title={card.title}
+      description={card.description}
+      creatorName={card.creator.nickname}
+      chatCount={card.chatCount}
+      images={card.images}
+      tagList={tagList}
+      isNew={card.isNew}
+      isOfficial={card.isOfficial}
+      href={`/characters/${card.universeId}`}
+    />
+  );
+});
+
+CategoryCharacterCard.displayName = "CategoryCharacterCard";
 
 const CategoriesTabContents = () => {
   const t = useTranslations("categoriesPage");
@@ -103,19 +127,9 @@ const CategoriesTabContents = () => {
           >
             <CardGrid size="S">
               {items.map((card) => (
-                <CharacterCard
+                <CategoryCharacterCard
                   key={card.universeId}
-                  size="S"
-                  fluid
-                  title={card.title}
-                  description={card.description}
-                  creatorName={card.creator.nickname}
-                  chatCount={card.chatCount}
-                  images={card.images}
-                  tagList={card.tags.map((tag) => tag.name)}
-                  isNew={card.isNew}
-                  isOfficial={card.isOfficial}
-                  href={`/characters/${card.universeId}`}
+                  card={card}
                 />
               ))}
             </CardGrid>

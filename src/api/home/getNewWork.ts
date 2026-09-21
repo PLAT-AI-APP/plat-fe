@@ -6,6 +6,7 @@ import { AppError } from "@/type/api";
 import { useLocaleStore } from "@/store/useLocaleStore";
 import { Tendency, useTendencyStore } from "@/store/useTendencyStore";
 import type { BaseCard, CardCreator } from "@/type/card";
+import { homeQueryKeys } from "./queryKeys";
 
 export type NewWorkCreator = CardCreator;
 
@@ -45,7 +46,12 @@ export const useNewWorkQuery = (params: GetNewWorkParams = {}) => {
   const tendency = useTendencyStore((state) => state.tendency);
 
   return useQuery<NewWorkItem[], AppError>({
-    queryKey: ["get-new-work", locale, tendency, params.page, params.size],
+    queryKey: homeQueryKeys.newWork({
+      locale,
+      tendency,
+      page: params.page,
+      size: params.size,
+    }),
     queryFn: () => getNewWork({ ...params, tendency }),
   });
 };

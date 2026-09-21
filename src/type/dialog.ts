@@ -16,6 +16,12 @@ export interface DraftOverwriteDialogProps {
   onConfirm?: () => void;
 }
 
+export interface DraftSaveOverwriteDialogProps {
+  onCancel: () => void;
+  onClose: () => void;
+  onConfirm?: () => void;
+}
+
 export interface ChatRestartDialogProps {
   onClose: () => void;
   onConfirm?: () => void;
@@ -48,6 +54,8 @@ export interface PersonaDeleteDialogProps {
   onClose: () => void;
   onConfirm: () => void;
   personaName: string;
+  /** 삭제가 실패한 이유. 확인 다이얼로그를 연 흐름이라 사유도 이 안에서 말합니다. */
+  errorMessage?: string;
 }
 
 export interface SignupCompleteDialogProps {
@@ -94,6 +102,7 @@ export type DialogTypeMap = {
   CHAT_RESTART: DialogWithoutManagerClose<ChatRestartDialogProps>;
   COMMENT_DELETE: DialogWithoutManagerClose<CommentDeleteDialogProps>;
   DRAFT_OVERWRITE: DialogWithoutManagerClose<DraftOverwriteDialogProps>;
+  DRAFT_SAVE_OVERWRITE: DialogWithoutManagerClose<DraftSaveOverwriteDialogProps>;
   LOGIN_REQUIRED: DialogWithoutManagerClose<LoginRequiredDialogProps>;
   PERSONA_DELETE: DialogWithoutManagerClose<PersonaDeleteDialogProps>;
   SIGNUP_COMPLETE: DialogWithoutManagerClose<SignupCompleteDialogProps>;

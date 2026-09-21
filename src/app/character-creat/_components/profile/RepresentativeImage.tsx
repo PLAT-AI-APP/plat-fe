@@ -2,15 +2,20 @@
 
 import React, { ChangeEvent, useState } from "react";
 import Image from "next/image";
+import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
 import { useFileUploadMutation } from "@/api/file/postFileUpload";
 import { Close, ImageIcon, Plus } from "@/icons";
 import { dataUrlToFile } from "@/lib/file";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
-import RepresentativeImageCropModal from "./RepresentativeImageCropModal";
 import { cn } from "@/lib/utils";
 import { showAppToast } from "@/lib/toast";
+
+const RepresentativeImageCropModal = dynamic(
+  () => import("./RepresentativeImageCropModal"),
+  { ssr: false },
+);
 
 const RepresentativeImage = () => {
   const t = useTranslations("characterCreate.representativeImage");
@@ -119,18 +124,20 @@ const RepresentativeImage = () => {
         >
           {/* 안내 문구가 말하는 대로 1:1.13 이다. aspect-square 는 w/h 에 덮여 아무 일도 하지 않으면서 정사각형처럼 읽혔다. */}
           <div className="relative flex h-[157px] w-[120px] items-center justify-center rounded-xl bg-card">
-            {preview ? (
-              <Image
-                src={preview}
-                alt={t("previewAlt")}
-                width={120}
-                height={157}
-                unoptimized
-                className="h-full w-full object-cover"
-              />
-            ) : (
-              <ImageIcon className="h-7.5 w-7.5 text-font-disabled" />
-            )}
+            <div className="relative flex size-full items-center justify-center overflow-hidden rounded-xl">
+              {preview ? (
+                <Image
+                  src={preview}
+                  alt={t("previewAlt")}
+                  width={120}
+                  height={157}
+                  unoptimized
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <ImageIcon className="h-7.5 w-7.5 text-font-disabled" />
+              )}
+            </div>
 
             <span
               onClick={(e) => {

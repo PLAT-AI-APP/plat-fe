@@ -62,7 +62,7 @@ const ProfileImageField = ({ name = "profileImg" }: ProfileImageFieldProps) => {
       <label htmlFor="profile-image-select" className="cursor-pointer">
         <Image
           src={(profileImg as string) || "/p1.png"}
-          alt="프로필 이미지"
+          alt={t("profilePopover.profileImageAlt")}
           width={80}
           height={80}
           className="avatar-img w-20 h-20"

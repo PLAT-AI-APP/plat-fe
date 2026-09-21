@@ -4,9 +4,12 @@ import React, { useMemo, useState, useSyncExternalStore } from "react";
 import { motion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { useLikedUniversesInfiniteQuery } from "@/api/user/getLikedUniverses";
+import { useUserProfileQuery } from "@/api/user/getUserProfile";
+import { useUserUniversesInfiniteQuery } from "@/api/user/getUserUniverses";
 import CharacterShowcase from "@/components/character/CharacterShowcase";
 import SortFilter from "@/components/character/SortFilter";
 import { CharacterSortOption } from "@/components/popover/CharacterSortPopover";
+import { ErrorState } from "@/components/state";
 import { useInfiniteList } from "@/hooks/data/useInfiniteList";
 import { useTabUnderline } from "@/hooks/dom/useTabUnderline";
 import { cn } from "@/lib/utils";
@@ -16,73 +19,6 @@ import WishlistEmptyState from "./WishlistEmptyState";
 import { SPRING_SNAPPY } from "@/constants/motion";
 
 type ProfileTab = "character" | "wish";
-
-const CharArray = [
-  {
-    id: "mock-character-1",
-    name: "옆자리 불량학생",
-    chatCount: 123,
-    dec: "매일 학교에서 일어나는 소소한 일상을 함께 이야기해요.",
-    tag: ["학교", "일상", "친구"],
-    img: "https://picsum.photos/200/300",
-  },
-  {
-    id: "mock-character-2",
-    name: "옆자리 불량학생",
-    chatCount: 123,
-    dec: "장난스럽지만 속은 다정한 캐릭터와 대화를 나눠보세요.",
-    tag: ["학교", "일상", "친구", "로맨스"],
-    img: "https://picsum.photos/201/300",
-  },
-  {
-    id: "mock-character-3",
-    name: "옆자리 불량학생",
-    chatCount: 123,
-    dec: "무심한 듯 챙겨주는 친구와 이어지는 이야기입니다.",
-    tag: ["학교", "일상", "친구", "청춘"],
-    img: "https://picsum.photos/202/300",
-  },
-  {
-    id: "mock-character-4",
-    name: "옆자리 불량학생",
-    chatCount: 123,
-    dec: "매일 학교에서 일어나는 일들을 이야기해주는 채팅입니다.",
-    tag: ["학교", "일상"],
-    img: "https://picsum.photos/203/300",
-  },
-  {
-    id: "mock-character-5",
-    name: "옆자리 불량학생",
-    chatCount: 123,
-    dec: "가볍게 대화하기 좋은 캐릭터입니다.",
-    tag: ["학교", "일상", "친구"],
-    img: "https://picsum.photos/204/300",
-  },
-  {
-    id: "mock-character-6",
-    name: "옆자리 불량학생",
-    chatCount: 123,
-    dec: "친구처럼 편하게 말을 걸어주는 캐릭터입니다.",
-    tag: ["학교", "일상", "친구"],
-    img: "https://picsum.photos/205/300",
-  },
-  {
-    id: "mock-character-7",
-    name: "옆자리 불량학생",
-    chatCount: 123,
-    dec: "짧은 대화에도 자연스럽게 이어지는 캐릭터입니다.",
-    tag: ["학교", "일상", "친구"],
-    img: "https://picsum.photos/206/300",
-  },
-  {
-    id: "mock-character-8",
-    name: "옆자리 불량학생",
-    chatCount: 123,
-    dec: "학교생활의 여러 순간을 함께 나누는 캐릭터입니다.",
-    tag: ["학교", "일상"],
-    img: "https://picsum.photos/207/300",
-  },
-];
 
 const CHARACTER_TAB = {
   key: "character" as const,
@@ -112,6 +48,13 @@ export default function ProfileContent({ id }: { id: string }) {
     () => useUserStore.persist.hasHydrated(),
     () => false,
   );
+
+  const {
+    data: profile,
+    isError: isProfileError,
+    error: profileError,
+    refetch: refetchProfile,
+  } = useUserProfileQuery(id);
 
   const isOwnProfile = Boolean(myUserId && myUserId === id);
   const [activeTab, setActiveTab] = useState<ProfileTab>("character");
@@ -143,7 +86,7 @@ export default function ProfileContent({ id }: { id: string }) {
   const {
     items: likedItems,
     totalCount: likedTotalCount,
-    sentinelRef,
+    sentinelRef: likedSentinelRef,
   } = useInfiniteList(
     { data: likedData, hasNextPage, isFetchingNextPage, fetchNextPage },
     { enabled: isWishTab },
@@ -164,17 +107,73 @@ export default function ProfileContent({ id }: { id: string }) {
     [likedItems],
   );
 
-  const displayArray = isWishTab ? likedCards : CharArray;
-  // 찜은 서버가 전체 개수를 세어 주므로 지금 받아 둔 페이지 수가 아니라 그 값을 씁니다.
-  const displayCount = isWishTab ? (likedTotalCount ?? 0) : displayArray.length;
+  const {
+    data: createdData,
+    isLoading: isCreatedLoading,
+    isError: isCreatedError,
+    error: createdError,
+    refetch: refetchCreated,
+    fetchNextPage: fetchNextCreatedPage,
+    hasNextPage: hasNextCreatedPage,
+    isFetchingNextPage: isFetchingNextCreatedPage,
+  } = useUserUniversesInfiniteQuery(id, !isWishTab && !isProfileError);
+
+  const {
+    items: createdItems,
+    totalCount: createdTotalCount,
+    sentinelRef: createdSentinelRef,
+  } = useInfiniteList(
+    {
+      data: createdData,
+      hasNextPage: hasNextCreatedPage,
+      isFetchingNextPage: isFetchingNextCreatedPage,
+      fetchNextPage: fetchNextCreatedPage,
+    },
+    { enabled: !isWishTab },
+  );
+
+  const createdCards = useMemo(
+    () =>
+      createdItems.map((card) => ({
+        id: card.universeId,
+        name: card.title,
+        chatCount: card.chatCount,
+        dec: card.description,
+        img: card.images,
+        creatorName: card.creator.nickname,
+        isNew: card.isNew,
+        isOfficial: card.isOfficial,
+      })),
+    [createdItems],
+  );
+
+  const displayArray = isWishTab ? likedCards : createdCards;
+  // 둘 다 서버가 전체 개수를 세어 주므로 지금 받아 둔 페이지 수가 아니라 그 값을 씁니다.
+  const displayCount = isWishTab ? (likedTotalCount ?? 0) : (createdTotalCount ?? 0);
+  const isLoading = isWishTab ? isLikedLoading : isCreatedLoading;
+  const isError = isWishTab ? isLikedError : isCreatedError;
+  const error = isWishTab ? likedError : createdError;
+  const onRetry = isWishTab ? refetchLiked : refetchCreated;
+  const sentinelRef = isWishTab ? likedSentinelRef : createdSentinelRef;
+  const hasNextPageForTab = isWishTab ? hasNextPage : hasNextCreatedPage;
   // 불러오지 못한 것과 진짜로 찜한 게 없는 것은 다르다 — 실패는 CharacterShowcase의
   // 에러 표시에 맡기고, 정말 0개일 때만 태그 탐색을 안내한다.
   const isWishEmpty =
     isWishTab && !isLikedLoading && !isLikedError && likedCards.length === 0;
 
+  // 없는 유저(404)의 프로필에 빈 작품 목록만 덩그러니 그리면 "작품이 없는 유저"로 오해한다.
+  // 헤더 자리만이 아니라 페이지 전체를 실패 표시로 바꾼다.
+  if (isProfileError) {
+    return (
+      <article className="mx-auto flex w-full max-w-(--content-max-width) flex-col pt-6 pb-10">
+        <ErrorState error={profileError} onRetry={refetchProfile} />
+      </article>
+    );
+  }
+
   return (
     <article className="mx-auto flex w-full max-w-(--content-max-width) flex-col gap-10 pt-6 pb-10">
-      <Header userId={id} />
+      <Header userId={id} profile={profile} />
 
       <section
         id="profile-content"
@@ -250,16 +249,16 @@ export default function ProfileContent({ id }: { id: string }) {
             <CharacterShowcase
               charArray={displayArray}
               cardSize="S"
-              isLoading={isWishTab && isLikedLoading}
-              isError={isWishTab && isLikedError}
-              error={likedError}
-              onRetry={refetchLiked}
+              isLoading={isLoading}
+              isError={isError}
+              error={error}
+              onRetry={onRetry}
               // 찜 목록은 남의 캐릭터일 수도 있어 수정 배지를 내 캐릭터 탭에만 띄운다.
               isEditable={isOwnProfile && !isWishTab}
             />
           )}
 
-          {isWishTab && hasNextPage && (
+          {hasNextPageForTab && (
             <div ref={sentinelRef} aria-hidden="true" className="h-px" />
           )}
         </section>

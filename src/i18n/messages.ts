@@ -44,7 +44,15 @@ const ko = {
       socialKakao: "카카오톡으로 시작하기",
       socialGoogle: "구글로 시작하기",
     },
+    callback: {
+      invalidAccess: "유효하지 않은 접근입니다.",
+      processing: "인증을 처리하고 있습니다.",
+    },
     signup: {
+      agreeAll: "약관 전체 동의",
+      termsOfService: "서비스이용약관 동의 (필수)",
+      privacyPolicy: "개인정보 처리방침 (필수)",
+      ageOver14: "만 14세 이상입니다. (필수)",
       title: "회원가입",
       subtitle: "다양한 매력의 캐릭터들이 당신을 기다리고 있어요",
       submit: "다음",
@@ -118,6 +126,7 @@ const ko = {
     personaDelete: {
       title: "페르소나를 삭제할까요?",
       description: "는 삭제 후 복구할 수 없어요.",
+      inUse: "채팅방에서 사용 중인 페르소나는 삭제할 수 없어요.",
       cancel: "취소하기",
       confirm: "확인하기",
     },
@@ -133,6 +142,12 @@ const ko = {
       titleHighlight: "불러",
       titleAfter: "올까요?",
       description: "저장하지 않은 데이터는 모두 사라집니다.",
+    },
+    draftSaveOverwrite: {
+      titleBefore: "이미 저장된 ",
+      titleHighlight: "임시저장 데이터",
+      titleAfter: "가 있어요",
+      description: "지금 저장하면 기존 내용을 덮어씁니다.",
     },
     unsavedChanges: {
       title: "저장되지 않은 변경사항이 있습니다.",
@@ -292,7 +307,15 @@ const en: Messages = {
       socialKakao: "Continue with KakaoTalk",
       socialGoogle: "Continue with Google",
     },
+    callback: {
+      invalidAccess: "This is not a valid request.",
+      processing: "Processing your sign-in...",
+    },
     signup: {
+      agreeAll: "Agree to all terms",
+      termsOfService: "Agree to Terms of Service (required)",
+      privacyPolicy: "Privacy Policy (required)",
+      ageOver14: "I am 14 years old or older. (required)",
       title: "Sign up",
       subtitle: "A lineup of charming characters is waiting for you",
       submit: "Next",
@@ -368,6 +391,7 @@ const en: Messages = {
     personaDelete: {
       title: "Delete this persona?",
       description: " cannot be restored after deletion.",
+      inUse: "A persona in use by a chat room cannot be deleted.",
       cancel: "Cancel",
       confirm: "Confirm",
     },
@@ -383,6 +407,12 @@ const en: Messages = {
       titleHighlight: "draft",
       titleAfter: "?",
       description: "Any unsaved data will be lost.",
+    },
+    draftSaveOverwrite: {
+      titleBefore: "You already have a ",
+      titleHighlight: "saved draft",
+      titleAfter: "",
+      description: "Saving now will overwrite its content.",
     },
     unsavedChanges: {
       title: "You have unsaved changes.",
@@ -544,7 +574,15 @@ const ja: Messages = {
       socialKakao: "KakaoTalkで始める",
       socialGoogle: "Googleで始める",
     },
+    callback: {
+      invalidAccess: "無効なアクセスです。",
+      processing: "認証を処理しています。",
+    },
     signup: {
+      agreeAll: "すべての規約に同意",
+      termsOfService: "利用規約に同意（必須）",
+      privacyPolicy: "プライバシーポリシー（必須）",
+      ageOver14: "満14歳以上です。（必須）",
       title: "会員登録",
       subtitle: "魅力的なキャラクターたちがあなたを待っています",
       submit: "次へ",
@@ -618,6 +656,7 @@ const ja: Messages = {
     personaDelete: {
       title: "ペルソナを削除しますか？",
       description: "は削除後に復元できません。",
+      inUse: "チャットルームで使用中のペルソナは削除できません。",
       cancel: "キャンセル",
       confirm: "確認",
     },
@@ -633,6 +672,12 @@ const ja: Messages = {
       titleHighlight: "読み込み",
       titleAfter: "ますか？",
       description: "保存していないデータはすべて失われます。",
+    },
+    draftSaveOverwrite: {
+      titleBefore: "すでに保存された",
+      titleHighlight: "下書き",
+      titleAfter: "があります",
+      description: "今保存すると既存の内容が上書きされます。",
     },
     unsavedChanges: {
       title: "保存されていない変更があります。",
@@ -787,7 +832,15 @@ const zh: Messages = {
       socialKakao: "使用 KakaoTalk 开始",
       socialGoogle: "使用 Google 开始",
     },
+    callback: {
+      invalidAccess: "无效的访问。",
+      processing: "正在处理验证。",
+    },
     signup: {
+      agreeAll: "同意全部条款",
+      termsOfService: "同意使用条款（必填）",
+      privacyPolicy: "隐私政策（必填）",
+      ageOver14: "我已年满 14 周岁。（必填）",
       title: "注册",
       subtitle: "各种有魅力的角色正在等你",
       submit: "下一步",
@@ -860,6 +913,7 @@ const zh: Messages = {
     personaDelete: {
       title: "要删除这个人格吗？",
       description: "删除后将无法恢复。",
+      inUse: "正在聊天室中使用的人格无法删除。",
       cancel: "取消",
       confirm: "确认",
     },
@@ -874,6 +928,12 @@ const zh: Messages = {
       titleHighlight: "读取",
       titleAfter: "已保存的草稿吗？",
       description: "未保存的数据将全部丢失。",
+    },
+    draftSaveOverwrite: {
+      titleBefore: "已经有保存的",
+      titleHighlight: "草稿",
+      titleAfter: "",
+      description: "现在保存将覆盖已有内容。",
     },
     unsavedChanges: {
       title: "你有未保存的更改。",
@@ -1022,7 +1082,15 @@ const th: Messages = {
       socialKakao: "เริ่มด้วย KakaoTalk",
       socialGoogle: "เริ่มด้วย Google",
     },
+    callback: {
+      invalidAccess: "การเข้าถึงไม่ถูกต้อง",
+      processing: "กำลังดำเนินการยืนยันตัวตน",
+    },
     signup: {
+      agreeAll: "ยอมรับข้อกำหนดทั้งหมด",
+      termsOfService: "ยอมรับข้อกำหนดการใช้งาน (จำเป็น)",
+      privacyPolicy: "นโยบายความเป็นส่วนตัว (จำเป็น)",
+      ageOver14: "ฉันมีอายุ 14 ปีขึ้นไป (จำเป็น)",
       title: "สมัครสมาชิก",
       subtitle: "ตัวละครที่มีเสน่ห์มากมายกำลังรอคุณอยู่",
       submit: "ถัดไป",
@@ -1097,6 +1165,7 @@ const th: Messages = {
     personaDelete: {
       title: "ลบเพอร์โซนานี้หรือไม่?",
       description: " จะไม่สามารถกู้คืนได้หลังจากลบ",
+      inUse: "ไม่สามารถลบเพอร์โซนาที่กำลังใช้งานในห้องแชทได้",
       cancel: "ยกเลิก",
       confirm: "ยืนยัน",
     },
@@ -1112,6 +1181,12 @@ const th: Messages = {
       titleHighlight: "โหลด",
       titleAfter: "ร่างที่บันทึกไว้หรือไม่?",
       description: "ข้อมูลที่ยังไม่ได้บันทึกทั้งหมดจะหายไป",
+    },
+    draftSaveOverwrite: {
+      titleBefore: "มี",
+      titleHighlight: "ร่างที่บันทึกไว้แล้ว",
+      titleAfter: "",
+      description: "หากบันทึกตอนนี้จะเขียนทับเนื้อหาเดิม",
     },
     unsavedChanges: {
       title: "คุณมีการเปลี่ยนแปลงที่ยังไม่ได้บันทึก",
@@ -1267,7 +1342,15 @@ const vi: Messages = {
       socialKakao: "Bắt đầu với KakaoTalk",
       socialGoogle: "Bắt đầu với Google",
     },
+    callback: {
+      invalidAccess: "Truy cập không hợp lệ.",
+      processing: "Đang xử lý xác thực.",
+    },
     signup: {
+      agreeAll: "Đồng ý tất cả điều khoản",
+      termsOfService: "Đồng ý Điều khoản sử dụng (bắt buộc)",
+      privacyPolicy: "Chính sách quyền riêng tư (bắt buộc)",
+      ageOver14: "Tôi từ 14 tuổi trở lên. (bắt buộc)",
       title: "Đăng ký",
       subtitle: "Những nhân vật đầy sức hút đang chờ bạn",
       submit: "Tiếp theo",
@@ -1342,6 +1425,7 @@ const vi: Messages = {
     personaDelete: {
       title: "Xóa persona này?",
       description: " sẽ không thể khôi phục sau khi xóa.",
+      inUse: "Không thể xóa persona đang được sử dụng trong phòng chat.",
       cancel: "Hủy",
       confirm: "Xác nhận",
     },
@@ -1357,6 +1441,12 @@ const vi: Messages = {
       titleHighlight: "tải",
       titleAfter: " bản nháp đã lưu không?",
       description: "Mọi dữ liệu chưa lưu sẽ bị mất.",
+    },
+    draftSaveOverwrite: {
+      titleBefore: "Đã có ",
+      titleHighlight: "bản nháp đã lưu",
+      titleAfter: "",
+      description: "Lưu ngay bây giờ sẽ ghi đè nội dung hiện có.",
     },
     unsavedChanges: {
       title: "Bạn có thay đổi chưa được lưu.",

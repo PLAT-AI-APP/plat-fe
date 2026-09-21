@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
 import { useLocaleStore } from "@/store/useLocaleStore";
+import { hashtagQueryKeys } from "./queryKeys";
 
 export type HashtagCategory =
   | "GENRE"
@@ -41,7 +42,7 @@ export const useHashtagListQuery = (enabled = true) => {
   const locale = useLocaleStore((state) => state.locale);
 
   return useQuery<GetHashtagListResponse, AppError>({
-    queryKey: ["get-hashtag-list", locale],
+    queryKey: hashtagQueryKeys.list(locale),
     queryFn: getHashtagList,
     enabled,
   });

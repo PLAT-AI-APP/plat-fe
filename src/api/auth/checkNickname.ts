@@ -1,6 +1,8 @@
 import { useQuery, UseQueryOptions } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
+import { getApiErrorMessage } from "@/lib/apiError";
+import { authQueryKeys } from "./queryKeys";
 
 interface CheckNicknameResponse {
   available: boolean;
@@ -17,7 +19,7 @@ const getNormalizedCheckNickname = (
   throw {
     code: "MESSAGE",
     fields: {},
-    message: "닉네임 중복 확인 응답을 확인해 주세요.",
+    message: getApiErrorMessage("nicknameCheckInvalid"),
   } satisfies AppError;
 };
 
@@ -35,7 +37,7 @@ export const useCheckNicknameQuery = (
   options?: Partial<UseQueryOptions<CheckNicknameResponse, AppError>>,
 ) => {
   return useQuery<CheckNicknameResponse, AppError>({
-    queryKey: ["get-check-nickname", nickname],
+    queryKey: authQueryKeys.checkNickname(nickname),
     queryFn: () => GetCheckNickname(nickname),
     staleTime: 1000 * 60,
     ...options,
