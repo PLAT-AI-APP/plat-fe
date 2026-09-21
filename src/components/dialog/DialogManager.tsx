@@ -4,7 +4,9 @@ import { Suspense } from "react";
 import type { ComponentType } from "react";
 import { AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
+import { ModalStackContext } from "@/components/ModalLayout";
 import { useDialogStore } from "@/store/useDialogStore";
+import { useModalStore } from "@/store/useModalStore";
 import type { DialogTypeMap } from "@/type/dialog";
 
 const DIALOG_COMPONENTS: {
@@ -31,6 +33,8 @@ const DIALOG_COMPONENTS: {
 const DialogManager = () => {
   const currentDialog = useDialogStore((state) => state.currentDialog);
   const closeDialog = useDialogStore((state) => state.closeDialog);
+  // 다이얼로그는 떠 있는 모달이 몇 겹이든 그 위에 올라가야 한다.
+  const modalCount = useModalStore((state) => state.modals.length);
 
   const DialogComponent = currentDialog
     ? (DIALOG_COMPONENTS[currentDialog.type] as ComponentType<
@@ -49,7 +53,9 @@ const DialogManager = () => {
         // 다이얼로그 청크가 처음 로딩될 때 로딩이 루트 Suspense 로 번져
         // 페이지 전체가 잠깐 사라지지 않도록 다이얼로그 자리에서 멈춘다.
         <Suspense key={currentDialog.type} fallback={null}>
-          <DialogComponent {...currentDialog.props} onClose={closeDialog} />
+          <ModalStackContext.Provider value={modalCount}>
+            <DialogComponent {...currentDialog.props} onClose={closeDialog} />
+          </ModalStackContext.Provider>
         </Suspense>
       )}
     </AnimatePresence>
