@@ -228,6 +228,7 @@ const vi = {
     detailLabel: "Chi tiết",
     transactionIdLabel: "Mã giao dịch",
     transactionDateLabel: "Thời gian giao dịch",
+    refundRequest: "Yêu cầu hoàn tiền",
     copyTransactionId: "Sao chép mã giao dịch",
     copySuccess: "Đã sao chép mã giao dịch.",
   },

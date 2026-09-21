@@ -45,6 +45,18 @@ const vi: typeof ko = {
       submit: "Lưu",
       successToast: "Đã lưu ghi chú người dùng",
     },
+    refundRequest: {
+      title: "Yêu cầu hoàn tiền",
+      productLabel: "Sản phẩm",
+      amountLabel: "Số tiền thanh toán",
+      creditLabel: "Ghi chú nhận được",
+      refundableUntilLabel: "Hạn hoàn tiền",
+      notice: "Chỉ các thanh toán chưa sử dụng ghi chú nào mới được hoàn toàn bộ trong vòng 7 ngày. Yêu cầu sẽ được xử lý sau khi đội ngũ xem xét.",
+      reasonLabel: "Lý do (không bắt buộc)",
+      reasonPlaceholder: "Cho chúng tôi biết lý do để cải thiện dịch vụ",
+      submit: "Yêu cầu hoàn tiền",
+      successToast: "Đã gửi yêu cầu hoàn tiền",
+    },
     commentReport: {
       title: "Bình luận của {nickname} có vấn đề gì?",
       placeholder: "Vui lòng nêu rõ lý do, chúng tôi sẽ xem xét và xử lý.",

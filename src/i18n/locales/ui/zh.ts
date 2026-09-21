@@ -224,6 +224,7 @@ const zh = {
     detailLabel: "详细说明",
     transactionIdLabel: "交易编号",
     transactionDateLabel: "交易时间",
+    refundRequest: "申请退款",
     copyTransactionId: "复制交易编号",
     copySuccess: "交易编号已复制。",
   },

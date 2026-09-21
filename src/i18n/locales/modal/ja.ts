@@ -42,6 +42,18 @@ const ja: typeof ko = {
       submit: "保存",
       successToast: "ユーザーノートが保存されました",
     },
+    refundRequest: {
+      title: "返金リクエスト",
+      productLabel: "決済商品",
+      amountLabel: "決済金額",
+      creditLabel: "付与ノート",
+      refundableUntilLabel: "返金期限",
+      notice: "ノートを一切使用していない決済のみ、決済後7日以内に全額返金できます。リクエストは運営チームの確認後に処理されます。",
+      reasonLabel: "返金理由（任意）",
+      reasonPlaceholder: "理由を教えていただけるとサービス改善に役立てます",
+      submit: "返金をリクエスト",
+      successToast: "返金リクエストを受け付けました",
+    },
     commentReport: {
       title: "{nickname}さんのコメントにどんな問題がありますか？",
       placeholder: "通報理由を具体的にお書きください。確認のうえ対応します。",

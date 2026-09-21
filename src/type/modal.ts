@@ -50,6 +50,10 @@ export interface CommentReportModalProps extends GlobalModalProps {
   nickname: string;
 }
 
+export interface RefundRequestModalProps extends GlobalModalProps {
+  orderUid: string;
+}
+
 export interface PersonaModalProps extends GlobalModalProps {
   /** 있으면 "관리" 대신 "선택" 모드로 동작합니다 — 항목 클릭 시 이 콜백을 부르고 모달을 닫습니다. */
   onSelectPersona?: (persona: Persona) => void;

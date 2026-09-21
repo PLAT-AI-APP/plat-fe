@@ -41,6 +41,18 @@ const zh: typeof ko = {
       submit: "保存",
       successToast: "用户笔记已保存",
     },
+    refundRequest: {
+      title: "申请退款",
+      productLabel: "购买商品",
+      amountLabel: "支付金额",
+      creditLabel: "获得笔记",
+      refundableUntilLabel: "退款截止",
+      notice: "仅完全未使用笔记的订单可在支付后7天内全额退款。申请将在运营团队确认后处理。",
+      reasonLabel: "退款原因（选填）",
+      reasonPlaceholder: "告诉我们原因，帮助我们改进服务",
+      submit: "申请退款",
+      successToast: "已提交退款申请",
+    },
     commentReport: {
       title: "{nickname}的评论存在什么问题？",
       placeholder: "请具体说明举报原因，我们会审核后处理。",

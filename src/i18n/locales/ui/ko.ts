@@ -224,6 +224,7 @@ const ko = {
     detailLabel: "상세설명",
     transactionIdLabel: "거래번호",
     transactionDateLabel: "거래일시",
+    refundRequest: "환불 요청",
     copyTransactionId: "거래번호 복사",
     copySuccess: "거래번호가 복사되었습니다.",
   },

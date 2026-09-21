@@ -228,6 +228,7 @@ const ja = {
     detailLabel: "詳細",
     transactionIdLabel: "取引番号",
     transactionDateLabel: "取引日時",
+    refundRequest: "返金リクエスト",
     copyTransactionId: "取引番号をコピー",
     copySuccess: "取引番号がコピーされました。",
   },

@@ -3,16 +3,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
-import { useTranslations } from "next-intl";
 import { postPaymentConfirm } from "@/api/payment/postPaymentConfirm";
 import { getPaymentOrder } from "@/api/payment/getPaymentOrder";
 import { walletQueryKeys } from "@/api/wallet/queryKeys";
 import { useAuthStore } from "@/store/useAuthStore";
-import { formatWithCommas } from "@/lib/utils";
 import type { AppError } from "@/api";
-import ButtonLink from "@/components/ui/ButtonLink";
-import Token from "@/icons/Token";
 import PaymentSuccess from "./PaymentSuccess";
+import PaymentFailure from "./PaymentFailure";
+import PaymentPending, { type PendingPhase } from "./PaymentPending";
 
 type PaymentState =
   | { kind: "confirming" }
@@ -40,7 +38,6 @@ interface PaymentResultContentsProps {
 }
 
 const PaymentResultContents = ({ result }: PaymentResultContentsProps) => {
-  const t = useTranslations();
   const searchParams = useSearchParams();
   const queryClient = useQueryClient();
   const isAuthReady = useAuthStore((state) => state.isAuthReady);
@@ -128,26 +125,6 @@ const PaymentResultContents = ({ result }: PaymentResultContentsProps) => {
       ? { kind: "failed" }
       : state;
 
-  const message = (() => {
-    switch (view.kind) {
-      case "confirming":
-      case "checking":
-        return t("tokenCharge.payment.confirming");
-      case "delayed":
-        return t("tokenCharge.payment.delayed");
-      case "success":
-        return view.granted
-          ? t("tokenCharge.payment.success", {
-              credits: formatWithCommas(view.credits),
-            })
-          : t("tokenCharge.payment.granting");
-      case "cancelled":
-        return t("tokenCharge.payment.cancelled");
-      case "failed":
-        return view.message ?? t("tokenCharge.payment.failed");
-    }
-  })();
-
   if (view.kind === "success" && view.granted) {
     return (
       <section className="mx-auto flex w-full max-w-160 flex-col items-center pt-12 pb-16 text-center">
@@ -156,27 +133,24 @@ const PaymentResultContents = ({ result }: PaymentResultContentsProps) => {
     );
   }
 
-  return (
-    <section className="mx-auto flex w-full max-w-160 flex-col items-center gap-6 pt-20 text-center">
-      {(view.kind === "confirming" ||
-        view.kind === "checking" ||
-        view.kind === "success") && (
-        <Token
-          className={
-            view.kind === "success" ? "size-16" : "size-16 animate-pulse"
-          }
+  if (view.kind === "failed" || view.kind === "cancelled") {
+    return (
+      <section className="mx-auto flex w-full max-w-160 flex-col items-center pt-12 pb-16 text-center">
+        <PaymentFailure
+          variant={view.kind}
+          reason={view.kind === "failed" ? view.message : undefined}
         />
-      )}
+      </section>
+    );
+  }
 
-      <p role="status" className="title-2 text-font-0">
-        {message}
-      </p>
+  // 남은 상태는 모두 결과를 기다리는 중이다. 지급 대기(success·미지급)도 여기로 온다.
+  const phase: PendingPhase =
+    view.kind === "success" ? "granting" : view.kind;
 
-      {view.kind !== "confirming" && view.kind !== "checking" && (
-        <ButtonLink href="/token-charge" variant="secondary" size="lg">
-          {t("tokenCharge.payment.backToCharge")}
-        </ButtonLink>
-      )}
+  return (
+    <section className="mx-auto flex w-full max-w-160 flex-col items-center pt-12 pb-16 text-center">
+      <PaymentPending phase={phase} />
     </section>
   );
 };

@@ -234,6 +234,7 @@ const en = {
     detailLabel: "Details",
     transactionIdLabel: "Transaction ID",
     transactionDateLabel: "Transaction date",
+    refundRequest: "Request refund",
     copyTransactionId: "Copy transaction ID",
     copySuccess: "Transaction number copied.",
   },

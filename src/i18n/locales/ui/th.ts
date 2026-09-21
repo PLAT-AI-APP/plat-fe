@@ -227,6 +227,7 @@ const th = {
     detailLabel: "รายละเอียด",
     transactionIdLabel: "หมายเลขธุรกรรม",
     transactionDateLabel: "วันที่ทำธุรกรรม",
+    refundRequest: "ขอคืนเงิน",
     copyTransactionId: "คัดลอกหมายเลขธุรกรรม",
     copySuccess: "คัดลอกหมายเลขธุรกรรมแล้ว",
   },
