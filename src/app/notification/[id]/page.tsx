@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import { useNoticeDetailContentsQuery } from "@/api/notice/getNoticeDetailContents";
 import { ErrorState } from "@/components/state";
+import { useFadeInAfterLoading } from "@/hooks/common/useFadeInAfterLoading";
 import { ArrowLeft, Clock } from "@/icons";
 import PinFill from "@/icons/PinFill";
 import dayjs from "@/lib/dayjs";
@@ -61,6 +62,8 @@ const NotificationDetailPage = ({ params }: PageProps) => {
     refetch,
   } = useNoticeDetailContentsQuery({ noticeId: id });
 
+  const fadeInClassName = useFadeInAfterLoading(isPending);
+
   const backToList = (
     <Link
       href="/notification"
@@ -84,7 +87,7 @@ const NotificationDetailPage = ({ params }: PageProps) => {
       {isError && <ErrorState error={error} onRetry={refetch} />}
 
       {notice && (
-        <>
+        <div className={cn("flex flex-col gap-6", fadeInClassName)}>
           <header className="flex flex-col gap-2">
             <div className="flex items-center gap-1.5">
               {notice.isPinned && (
@@ -125,7 +128,7 @@ const NotificationDetailPage = ({ params }: PageProps) => {
           <section className="body-3 flex flex-col gap-3 border-t border-main pt-6 text-font-1">
             <NoticeMarkdown content={notice.content} />
           </section>
-        </>
+        </div>
       )}
     </article>
   );

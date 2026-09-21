@@ -4,9 +4,10 @@ import React from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useProductsQuery } from "@/api/product/getProducts";
+import { useFadeInAfterLoading } from "@/hooks/common/useFadeInAfterLoading";
 import { useUsageHistoryListQuery } from "@/api/note/getUsageHistoryList";
 import Token from "@/icons/Token";
-import { formatWithCommas, toMajorAmount } from "@/lib/utils";
+import { cn, formatWithCommas, toMajorAmount } from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useWalletStore } from "@/store/useWalletStore";
 import type { Product } from "@/type/product";
@@ -79,6 +80,7 @@ const TokenChargeContents = () => {
     isError,
     refetch,
   } = useProductsQuery();
+  const fadeInClassName = useFadeInAfterLoading(isLoading);
 
   // 전체 개수를 세지 않는 슬라이스 응답이라, 있는지 없는지만 한 건만 물어 확인합니다.
   const { data: usageHistoryData } = useUsageHistoryListQuery({ size: 1 });
@@ -133,7 +135,7 @@ const TokenChargeContents = () => {
         )}
 
         {products && products.length > 0 && (
-          <ul className="flex flex-col gap-3">
+          <ul className={cn("flex flex-col gap-3", fadeInClassName)}>
             {products.map((product) => (
               <ProductListItem key={product.productId} product={product} />
             ))}

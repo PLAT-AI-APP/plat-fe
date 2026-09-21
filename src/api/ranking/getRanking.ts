@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { axiosInstance } from "..";
 import { AppError, PageWith } from "@/type/api";
 import { useLocaleStore } from "@/store/useLocaleStore";
@@ -76,5 +76,7 @@ export const useRankingQuery = (params: GetRankingParams = {}) => {
     queryFn: () => getRanking({ ...params, tendency }),
     // 실시간 랭킹이 1분마다 갱신되므로 그보다 짧게 잡을 이유가 없습니다.
     staleTime: 1000 * 60,
+    // 정렬·기간을 바꿀 때 목록이 통째로 스켈레톤으로 돌아가지 않고, 새 목록이 올 때까지 이전 목록을 둔다.
+    placeholderData: keepPreviousData,
   });
 };

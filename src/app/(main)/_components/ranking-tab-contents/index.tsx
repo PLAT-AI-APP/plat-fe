@@ -25,7 +25,7 @@ const RankingTabContents = () => {
   const period = toPeriod(searchParams.get("period"));
   const sort = (searchParams.get("sort") as RankingSortId) ?? "chats";
 
-  const { data, isPending, isError, error, refetch } = useRankingQuery({
+  const { data, isPending, isPlaceholderData, isError, error, refetch } = useRankingQuery({
     period,
     sort: SORT_TO_API[sort] ?? "CHAT",
     scope: "ALL",
@@ -64,7 +64,7 @@ const RankingTabContents = () => {
           </CardGrid>
         }
       >
-        <CardGrid size="S">
+        <CardGrid size="S" isStale={isPlaceholderData}>
           {items.map(({ rank, card }) => (
             <CharacterCard
               key={card.universeId}

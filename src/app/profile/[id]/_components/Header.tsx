@@ -7,6 +7,7 @@ import { useTranslations } from "next-intl";
 import { useFollowCountQuery } from "@/api/follow/getFollowCount";
 import { useIsFollowingQuery } from "@/api/follow/getIsFollowing";
 import type { UserProfile } from "@/api/user/getUserProfile";
+import { useFadeInAfterLoading } from "@/hooks/common/useFadeInAfterLoading";
 import { useFollowToggle } from "@/hooks/follow/useFollowToggle";
 import useToggle from "@/hooks/common/useToggle";
 import ProfileActionPopover from "@/components/popover/ProfileActionPopover";
@@ -89,6 +90,7 @@ const Header = ({ userId, profile }: HeaderProps) => {
   const isOwnProfile = user?.id === userId;
   // 로그인한 내 정보(user)가 아니라 이 페이지 유저의 프로필을 그린다. 남의 프로필에서 내 닉네임이 뜨던 문제.
   const isProfileLoading = !profile;
+  const fadeInClassName = useFadeInAfterLoading(isProfileLoading);
   const nickname = profile?.nickname || t("profile.defaultName");
   const bio = profile?.bio ?? "";
   const chatCount = 0;
@@ -155,7 +157,10 @@ const Header = ({ userId, profile }: HeaderProps) => {
                 height={68}
                 // 백엔드 이미지 호스트가 remotePatterns 에 없으면 next/image 가 렌더 단계에서 던진다.
                 unoptimized
-                className="size-[68px] shrink-0 rounded-full bg-card-hover object-cover"
+                className={cn(
+                  "size-[68px] shrink-0 rounded-full bg-card-hover object-cover",
+                  fadeInClassName,
+                )}
               />
             )}
 
@@ -164,7 +169,12 @@ const Header = ({ userId, profile }: HeaderProps) => {
                 // title-1 한 줄 높이(20px × 1.35)에 맞춰 이름이 들어올 때 줄이 튀지 않게 한다.
                 <div className="skeleton h-[27px] w-32 rounded-full" />
               ) : (
-                <h1 className="title-1 min-w-0 truncate text-font-1">
+                <h1
+                  className={cn(
+                    "title-1 min-w-0 truncate text-font-1",
+                    fadeInClassName,
+                  )}
+                >
                   {nickname}
                 </h1>
               )}

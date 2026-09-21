@@ -56,7 +56,7 @@ const CategoriesTabContents = () => {
   const [isTagSidebarOpen, setIsTagSidebarOpen] = useState(false);
 
   // 고른 태그를 전부 가진 세계관만 내려옵니다. 태그를 하나도 안 고르면 전체가 내려옵니다.
-  const { data, isPending, isError, error, refetch } = useCategorySearchQuery({
+  const { data, isPending, isPlaceholderData, isError, error, refetch } = useCategorySearchQuery({
     tagIds: selectedTagIds,
     sort,
     size: PAGE_SIZE,
@@ -125,7 +125,7 @@ const CategoriesTabContents = () => {
               </CardGrid>
             }
           >
-            <CardGrid size="S">
+            <CardGrid size="S" isStale={isPlaceholderData}>
               {items.map((card) => (
                 <CategoryCharacterCard
                   key={card.universeId}

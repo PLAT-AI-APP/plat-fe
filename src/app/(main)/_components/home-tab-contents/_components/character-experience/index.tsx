@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useOfficialPreviewQuery } from "@/api/home/getOfficialPreview";
 import { ErrorState } from "@/components/state";
+import { useFadeInAfterLoading } from "@/hooks/common/useFadeInAfterLoading";
 import SkeletonCharacterExperience from "@/components/skeleton/SkeletonCharacterExperience";
 import ExperienceHeader from "./ExperienceHeader";
 import ExperienceCarousel from "./ExperienceCarousel";
@@ -20,6 +21,7 @@ const CharacterExperience = () => {
     useOfficialPreviewQuery();
 
   const items = (data ?? []).slice(0, MAX_SLIDES);
+  const fadeInClassName = useFadeInAfterLoading(isLoading);
 
   const handleSelectedIndex = (index: number) => {
     setSelectedIndex(index);
@@ -60,11 +62,13 @@ const CharacterExperience = () => {
     <section className="flex flex-col gap-4">
       {header}
 
-      <ExperienceCarousel
-        items={items}
-        selectedIndex={selectedIndex}
-        handleSelectedIndex={handleSelectedIndex}
-      />
+      <div className={fadeInClassName}>
+        <ExperienceCarousel
+          items={items}
+          selectedIndex={selectedIndex}
+          handleSelectedIndex={handleSelectedIndex}
+        />
+      </div>
     </section>
   );
 };

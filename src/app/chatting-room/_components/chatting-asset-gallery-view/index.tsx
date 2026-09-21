@@ -3,6 +3,8 @@
 import { useTranslations } from "next-intl";
 import { useChatAssetGalleryQuery } from "@/api/chat/getChatAssetGallery";
 import SkeletonAssetGallery from "@/components/skeleton/SkeletonAssetGallery";
+import { useFadeInAfterLoading } from "@/hooks/common/useFadeInAfterLoading";
+import { cn } from "@/lib/utils";
 import { ArrowLeft, ImageIcon } from "@/icons";
 import AssetGalleryItem from "./_components/AssetGalleryItem";
 
@@ -18,6 +20,7 @@ const ChattingAssetGalleryView = ({
   const t = useTranslations("chatRoom.sidebar");
   const { data: assetGallery, isPending } = useChatAssetGalleryQuery(roomId);
   const assetItems = assetGallery?.items ?? [];
+  const fadeInClassName = useFadeInAfterLoading(isPending);
 
   return (
     <div className="flex h-full flex-col gap-5 overflow-hidden bg-dark p-5">
@@ -45,7 +48,12 @@ const ChattingAssetGalleryView = ({
         )}
       </header>
 
-      <div className="grid min-h-0 flex-1 auto-rows-max grid-cols-[repeat(2,minmax(0,1fr))] content-start gap-2 overflow-y-auto">
+      <div
+        className={cn(
+          "grid min-h-0 flex-1 auto-rows-max grid-cols-[repeat(2,minmax(0,1fr))] content-start gap-2 overflow-y-auto",
+          fadeInClassName,
+        )}
+      >
         {isPending ? (
           <SkeletonAssetGallery />
         ) : (
