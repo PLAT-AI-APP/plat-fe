@@ -62,12 +62,14 @@ const MessageRow = memo(
             rawData={message.content}
             characterName={message.characterName || ""}
             profileImage={message.profileImage || ""}
+            isStreaming={message.isStreaming}
             isEditMode={isEditable}
             onUpdate={handleUpdate}
             onDelete={handleDelete}
             onRetry={handleRetry}
           />
-          {showSuggestedChat && <AiSuggestedChat />}
+          {/* 추천 답변은 응답을 다 받은 뒤에 붙인다. 받는 동안 붙이면 입력 중 표시 밑에 먼저 떠 버린다. */}
+          {showSuggestedChat && !message.isStreaming && <AiSuggestedChat />}
         </div>
       );
     }
@@ -89,7 +91,8 @@ const MessageRow = memo(
       (previous.message.role !== "assistant" ||
         (next.message.role === "assistant" &&
           previous.message.characterName === next.message.characterName &&
-          previous.message.profileImage === next.message.profileImage));
+          previous.message.profileImage === next.message.profileImage &&
+          previous.message.isStreaming === next.message.isStreaming));
 
     return (
       isSameMessage &&

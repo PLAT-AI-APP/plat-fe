@@ -36,6 +36,8 @@ interface ChatTurnState {
   chatTurnId: string;
   userContent: string;
   assistantContent: string;
+  /** 응답 글자를 아직 받거나 화면에 내보내는 중인지 */
+  isStreaming: boolean;
 }
 
 /**
@@ -132,6 +134,9 @@ export const useChatTurn = ({
 
         // 받은 글자를 화면에 다 내보낸 뒤에 임시 말풍선을 서버 이력으로 바꿔야 끝에서 툭 튀지 않는다.
         await reveal.finish();
+        setTurn((previous) =>
+          previous ? { ...previous, isStreaming: false } : previous,
+        );
 
         // 실패해도 부분 응답이 저장됐을 수 있어, 이력을 한 번 확인한 뒤에 화면의 임시 말풍선을 치웁니다.
         const isSynced = await syncSavedMessages();
@@ -179,7 +184,12 @@ export const useChatTurn = ({
       abortControllerRef.current = abortController;
       isBusyRef.current = true;
       setIsBusy(true);
-      setTurn({ chatTurnId, userContent: message, assistantContent: "" });
+      setTurn({
+        chatTurnId,
+        userContent: message,
+        assistantContent: "",
+        isStreaming: true,
+      });
 
       void runTurn(message, chatTurnId, abortController, {
         universeCharacterId,
@@ -203,14 +213,16 @@ export const useChatTurn = ({
       },
     ];
 
-    // 첫 토큰이 오기 전에는 빈 말풍선을 그리지 않습니다.
-    if (turn.assistantContent) {
+    // 첫 토큰이 오기 전에도 자리를 잡아 두면 ChatContentBlock 이 입력 중 표시를 그린다.
+    // 전송 후 몇 초간 아무것도 없다가 응답이 툭 나타나지 않게 하려는 것이다.
+    if (turn.isStreaming || turn.assistantContent) {
       messages.push({
         id: `pending-assistant-${turn.chatTurnId}`,
         role: "assistant",
         characterName,
         profileImage,
         content: turn.assistantContent,
+        isStreaming: turn.isStreaming,
       });
     }
 

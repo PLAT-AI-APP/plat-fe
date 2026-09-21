@@ -24,6 +24,8 @@ interface AssistantMessageType {
   characterName: string;
   profileImage: string;
   content: string; // "대사" {img:...} 지문 형태
+  /** 아직 스트림으로 받는 중인 응답. 반쯤 온 원문을 그리는 방식과 버튼 노출이 달라집니다. */
+  isStreaming?: boolean;
 }
 
 /** 유저 응답 타입 */
