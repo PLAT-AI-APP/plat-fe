@@ -149,6 +149,7 @@ const CommentListItem = ({
 
   const handleDeleteComment = () => {
     openDialog("COMMENT_DELETE", {
+      isReply,
       onConfirm: () => {
         deleteComment(
           { commentId: comment.commentId, ...scope },

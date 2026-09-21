@@ -118,10 +118,10 @@ const ko = {
       confirm: "확인",
     },
     commentDelete: {
-      title: "댓글을 삭제할까요?",
-      description: "삭제한 댓글은 복구할 수 없어요.",
-      cancel: "취소하기",
-      confirm: "삭제하기",
+      title: "작성 댓글을 삭제할까요?",
+      description: "댓글을 삭제하면 대댓글도 함께 삭제돼요.",
+      replyTitle: "작성 답글을 삭제할까요?",
+      replyDescription: "삭제한 답글은 복구할 수 없어요.",
     },
     personaDelete: {
       title: "페르소나를 삭제할까요?",
@@ -383,10 +383,10 @@ const en: Messages = {
       confirm: "OK",
     },
     commentDelete: {
-      title: "Delete this comment?",
-      description: "A deleted comment cannot be restored.",
-      cancel: "Cancel",
-      confirm: "Delete",
+      title: "Delete your comment?",
+      description: "Deleting a comment also deletes its replies.",
+      replyTitle: "Delete your reply?",
+      replyDescription: "A deleted reply cannot be restored.",
     },
     personaDelete: {
       title: "Delete this persona?",
@@ -648,10 +648,10 @@ const ja: Messages = {
       confirm: "確認",
     },
     commentDelete: {
-      title: "コメントを削除しますか？",
-      description: "削除したコメントは復元できません。",
-      cancel: "キャンセル",
-      confirm: "削除",
+      title: "作成したコメントを削除しますか？",
+      description: "コメントを削除すると、返信も一緒に削除されます。",
+      replyTitle: "作成した返信を削除しますか？",
+      replyDescription: "削除した返信は復元できません。",
     },
     personaDelete: {
       title: "ペルソナを削除しますか？",
@@ -905,10 +905,10 @@ const zh: Messages = {
       confirm: "确认",
     },
     commentDelete: {
-      title: "要删除这条评论吗？",
-      description: "删除后的评论将无法恢复。",
-      cancel: "取消",
-      confirm: "删除",
+      title: "要删除您发表的评论吗？",
+      description: "删除评论后，其回复也会一起删除。",
+      replyTitle: "要删除您发表的回复吗？",
+      replyDescription: "删除后的回复将无法恢复。",
     },
     personaDelete: {
       title: "要删除这个人格吗？",
@@ -1157,10 +1157,10 @@ const th: Messages = {
       confirm: "ยืนยัน",
     },
     commentDelete: {
-      title: "ลบความคิดเห็นนี้หรือไม่?",
-      description: "ความคิดเห็นที่ลบแล้วไม่สามารถกู้คืนได้",
-      cancel: "ยกเลิก",
-      confirm: "ลบ",
+      title: "ลบความคิดเห็นที่คุณเขียนหรือไม่?",
+      description: "เมื่อลบความคิดเห็น การตอบกลับจะถูกลบไปด้วย",
+      replyTitle: "ลบการตอบกลับที่คุณเขียนหรือไม่?",
+      replyDescription: "การตอบกลับที่ลบแล้วไม่สามารถกู้คืนได้",
     },
     personaDelete: {
       title: "ลบเพอร์โซนานี้หรือไม่?",
@@ -1417,10 +1417,10 @@ const vi: Messages = {
       confirm: "Xác nhận",
     },
     commentDelete: {
-      title: "Xóa bình luận này?",
-      description: "Bình luận đã xóa sẽ không thể khôi phục.",
-      cancel: "Hủy",
-      confirm: "Xóa",
+      title: "Xóa bình luận bạn đã viết?",
+      description: "Xóa bình luận sẽ xóa luôn các phản hồi của nó.",
+      replyTitle: "Xóa phản hồi bạn đã viết?",
+      replyDescription: "Phản hồi đã xóa sẽ không thể khôi phục.",
     },
     personaDelete: {
       title: "Xóa persona này?",
