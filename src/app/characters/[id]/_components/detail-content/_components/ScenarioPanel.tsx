@@ -142,9 +142,10 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
                     alt={t("assetAlt", { name: selectedScenario.name })}
                     width={482}
                     height={289}
-                    // 고정 폭은 flex 안에서 그대로 줄어드는데 높이는 289px 로 남아,
-                    // 폭에 따라 482:289 가 308:289 로 달라지며 잘리는 부분이 바뀌었다.
-                    className="aspect-[482/289] w-full max-w-[482px] rounded-2xl object-cover"
+                    // 업로드한 에셋은 비율이 제각각이라 가로형(482:289) 상자에 object-cover 로 채우면
+                    // 세로형·정사각형이 잘려 원본과 다르게 보였다. 원본 비율 그대로 두되, 세로로 너무
+                    // 길어지지 않게 482x482 안에 맞춘다. width/height 는 로드 전 자리 힌트일 뿐이다.
+                    className="h-auto w-auto max-h-[482px] max-w-[min(100%,482px)] rounded-2xl"
                   />
                 );
               }

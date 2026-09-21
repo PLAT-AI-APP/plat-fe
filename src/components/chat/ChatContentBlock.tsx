@@ -104,7 +104,10 @@ const ChatContentBlock = ({
               width={171}
               height={250}
               unoptimized
-              className="mx-auto h-[250px] w-[171px] rounded-2xl object-cover"
+              // 171x250 고정 상자에 object-cover 로 채우면 세로형이 아닌 에셋은 잘린다. 원본 비율을 그대로 두고
+              // 250x250 안에 맞춘다 — 디자인이 전제한 세로형(171:250)은 예전과 같은 크기로 나온다.
+              // width/height 는 로드 전 자리 힌트일 뿐이다.
+              className="mx-auto h-auto w-auto max-h-[250px] max-w-[250px] rounded-2xl"
             />
           );
         }
