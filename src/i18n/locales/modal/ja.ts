@@ -1,0 +1,106 @@
+import type ko from "./ko";
+
+const ja: typeof ko = {
+  modalUi: {
+    common: {
+      close: "閉じる",
+      save: "保存",
+      add: "追加",
+      loading: "読み込み中..",
+      loadingMore: "一覧を読み込み中..",
+      follow: "フォロー",
+      following: "フォロー中",
+      defaultBadge: "基本",
+    },
+    addLanguage: {
+      title: "言語を追加",
+      confirm: "追加",
+    },
+    personaAdd: {
+      titleAdd: "ペルソナを追加",
+      titleEdit: "ペルソナを修正",
+      description:
+        "ペルソナに設定した役割に合わせてキャラクターと会話できます。",
+      nameLabel: "名前",
+      namePlaceholder: "名前を入力してください",
+      infoLabel: "情報",
+      infoPlaceholder: "年齢や性格などを自由に入力してください\n...",
+      submitAdd: "追加する",
+      submitEdit: "保存する",
+    },
+    profileEdit: {
+      title: "プロフィール修正",
+      changePassword: "パスワード変更",
+      submit: "保存",
+      invalidType: "jpg、png、webp画像ファイルのみ使用できます。",
+      invalidSize: "ファイル容量は最大5MBまで可能です。",
+    },
+    userNote: {
+      title: "ユーザーノート",
+      description: "会話内容が自動で要約され、キャラクターが長く記憶できます。",
+      placeholder: "忘れてはいけない大事な内容、追加したい設定など\n...",
+      submit: "保存",
+      successToast: "ユーザーノートが保存されました",
+    },
+    commentReport: {
+      title: "{nickname}さんのコメントにどんな問題がありますか？",
+      placeholder: "通報理由を具体的にお書きください。確認のうえ対応します。",
+      submit: "通報する",
+      successToast: "通報を受け付けました",
+    },
+    passwordReset: {
+      title: "パスワード再設定",
+      description: "メール認証を通してパスワードを再設定できます。",
+      next: "次へ",
+      submit: "パスワード変更",
+      successToast: "パスワードが変更されました",
+    },
+    imageCrop: {
+      title: "画像を編集",
+      description: "代表画像に見える領域を正方形に合わせてください。",
+      dragGuide: "画像はドラッグして位置だけ調整できます。",
+      zoom: "拡大",
+      cancel: "キャンセル",
+      apply: "切り抜く",
+      ratios: {
+        original: "元の比率",
+        square: "1:1",
+        landscape: "4:3",
+        portrait: "3:4",
+        widescreen: "16:9",
+      },
+    },
+    personaList: {
+      title: "ペルソナ",
+      description:
+        "ペルソナに設定した役割に合わせてキャラクターと会話できます。",
+      helper: "ペルソナは最大5個まで作成できます。",
+      add: "ペルソナ追加",
+      emptyTitle: "ペルソナはまだありません",
+      emptyDescription: "新しいペルソナを追加して役割を設定してみましょう。",
+      menuAria: "{name} ペルソナメニューを開く",
+    },
+    follow: {
+      followers: "フォロワー",
+      following: "フォロー中",
+      fallbackNickname: "ユーザー",
+      ownFollowersLine1: "たくさんのユーザーに",
+      ownFollowersHighlight: "魅力的なキャラクターを制作して",
+      ownFollowersSuffix: "みよう",
+      ownFollowersAction: "キャラクターを制作する",
+      ownFollowingLine1: "気になるクリエイター・キャラクターを",
+      ownFollowingHighlight: "探してフォローして",
+      ownFollowingSuffix: "みよう",
+      ownFollowingAction: "キャラクターを探す",
+      otherFollowersLine1: "まだ {nickname} には",
+      otherFollowersLine2: "フォロワーがいません",
+      otherFollowingLine1: "まだ {nickname} さんは",
+      otherFollowingLine2: "誰もフォローしていません",
+      otherTitle: "先にフォローしてみますか？",
+      otherAction: "フォロー",
+      profileImageAlt: "{nickname} のプロフィール画像",
+    },
+  },
+};
+
+export default ja;
