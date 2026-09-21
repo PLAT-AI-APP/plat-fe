@@ -2,7 +2,7 @@
 
 import React, { useMemo } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useTranslations } from "next-intl";
 import CharacterChat from "@/components/chat/CharacterChat";
 import InlineEditActions from "@/components/chat/InlineEditActions";
@@ -47,7 +47,7 @@ const TypingIndicator = ({
   const t = useTranslations();
 
   return (
-    <motion.article
+    <m.article
       {...slideUpVariants}
       transition={TRANSITION_FAST}
       role="status"
@@ -72,7 +72,7 @@ const TypingIndicator = ({
         <span className="body-6 mb-1.5 block text-font-1">{characterName}</span>
         <div className="flex h-9 w-fit items-center gap-1 rounded-[0px_16px_16px_16px] bg-card px-3">
           {TYPING_DOTS.map((dot) => (
-            <motion.span
+            <m.span
               key={dot}
               aria-hidden
               className="size-1.5 rounded-full bg-font-2"
@@ -82,7 +82,7 @@ const TypingIndicator = ({
           ))}
         </div>
       </div>
-    </motion.article>
+    </m.article>
   );
 };
 

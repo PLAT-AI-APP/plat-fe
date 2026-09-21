@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
@@ -218,7 +218,7 @@ const ChattingSidebar = ({
   };
 
   return (
-    <motion.aside
+    <m.aside
       onClick={handleOverlayClick}
       {...sidebarOverlayMotion}
       transition={sidebarTransition}
@@ -227,7 +227,7 @@ const ChattingSidebar = ({
         isDepthViewOpen ? "bg-scrim/70" : "bg-scrim/50",
       )}
     >
-      <motion.div
+      <m.div
         id="sidebar-container"
         onClick={(event) => event.stopPropagation()}
         {...sidebarPanelMotion}
@@ -235,7 +235,7 @@ const ChattingSidebar = ({
         className="h-dvh w-[336px] overflow-hidden border border-main bg-dark"
       >
         <AnimatePresence mode="wait" initial={false}>
-          <motion.div
+          <m.div
             key={sidebarDepth}
             {...sidebarDepthMotion}
             transition={sidebarTransition}
@@ -371,10 +371,10 @@ const ChattingSidebar = ({
                 </button>
               </div>
             )}
-          </motion.div>
+          </m.div>
         </AnimatePresence>
-      </motion.div>
-    </motion.aside>
+      </m.div>
+    </m.aside>
   );
 };
 

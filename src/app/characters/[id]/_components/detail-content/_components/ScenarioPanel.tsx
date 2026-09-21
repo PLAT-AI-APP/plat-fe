@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { useTranslations } from "next-intl";
 import ScenarioSelectPopover from "@/components/popover/ScenarioSelectPopover";
 import CharacterChat from "@/components/chat/CharacterChat";
@@ -119,7 +119,7 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
       </div>
 
       <div className="flex flex-col gap-5 rounded-2xl bg-darkest px-5 py-7">
-        <motion.div
+        <m.div
           initial={false}
           animate={{
             height: shouldShowMoreButton
@@ -196,7 +196,7 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
               return null;
             })}
           </div>
-        </motion.div>
+        </m.div>
 
         {shouldShowMoreButton && (
           <button

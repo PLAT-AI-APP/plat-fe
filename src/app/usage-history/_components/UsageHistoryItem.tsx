@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import dayjs from "@/lib/dayjs";
 import { cn, formatWithCommas } from "@/lib/utils";
 import { useTranslations } from "next-intl";
@@ -71,19 +71,19 @@ const UsageHistoryItem = ({ item }: { item: UsageHistoryItemType }) => {
             )}
           </div>
 
-          <motion.div
+          <m.div
             animate={{ rotate: isOpen ? 180 : 0 }}
             transition={{ duration: 0.2, ease: "easeInOut" }}
             className="flex w-3.5 shrink-0 items-center justify-center rounded-md p-0.5"
           >
             <ArrowDown className="size-2.5 text-font-2" />
-          </motion.div>
+          </m.div>
         </div>
       </header>
 
       <AnimatePresence initial={false}>
         {isOpen && (
-          <motion.div
+          <m.div
             key="content"
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
@@ -113,7 +113,7 @@ const UsageHistoryItem = ({ item }: { item: UsageHistoryItemType }) => {
                 {dayjs(item.createdAt).format("YYYY. MM. DD HH:mm:ss")}
               </p>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </li>

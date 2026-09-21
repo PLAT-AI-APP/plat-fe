@@ -1,7 +1,7 @@
 "use client";
 
 import { useQueryClient } from "@tanstack/react-query";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import React, {
@@ -191,7 +191,7 @@ const FollowModal = ({
             </button>
           ))}
 
-          <motion.span
+          <m.span
             className="absolute bottom-0 h-0.5 bg-brand"
             initial={false}
             animate={{ x: underlineRect.left, width: underlineRect.width }}

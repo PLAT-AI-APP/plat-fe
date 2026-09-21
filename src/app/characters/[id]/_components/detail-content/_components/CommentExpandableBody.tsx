@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { useLayoutEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 
@@ -42,7 +42,7 @@ const CommentExpandableBody = ({ content }: CommentExpandableBodyProps) => {
 
   return (
     <div className="flex w-full flex-col gap-2">
-      <motion.div
+      <m.div
         initial={false}
         animate={{
           height: shouldShowMoreButton
@@ -60,7 +60,7 @@ const CommentExpandableBody = ({ content }: CommentExpandableBodyProps) => {
 
         <AnimatePresence>
           {shouldShowMoreButton && !isExpanded && (
-            <motion.span
+            <m.span
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -70,7 +70,7 @@ const CommentExpandableBody = ({ content }: CommentExpandableBodyProps) => {
             />
           )}
         </AnimatePresence>
-      </motion.div>
+      </m.div>
 
       {shouldShowMoreButton && (
         <button

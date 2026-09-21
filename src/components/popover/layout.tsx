@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { TRANSITION_FAST, popVariants } from "@/constants/motion";
@@ -54,7 +54,7 @@ export const PopoverLayout = ({
   }, [matchTriggerWidth, triggerRef]);
 
   const content = (
-    <motion.div
+    <m.div
       ref={popoverRef}
       role="menu"
       /*
@@ -94,7 +94,7 @@ export const PopoverLayout = ({
       )}
     >
       {children}
-    </motion.div>
+    </m.div>
   );
 
   if (matchTriggerWidth) {
