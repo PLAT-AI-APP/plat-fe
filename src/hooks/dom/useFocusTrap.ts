@@ -17,6 +17,16 @@ const getFocusable = (container: HTMLElement) =>
     container.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR),
   ).filter((element) => element.offsetParent !== null || element === document.activeElement);
 
+/**
+ * 지금 트랩이 걸린 컨테이너들. 나중에 열린 레이어가 뒤에 쌓인다.
+ *
+ * 트랩마다 document 에 키 리스너를 걸기 때문에, 모달이 겹치면 아래 모달의 트랩도
+ * 같이 깨어난다. 그 트랩은 포커스가 자기 밖(위 모달)에 있는 걸 보고 Shift+Tab 때
+ * 포커스를 자기 쪽으로 끌어와, 가려져 있어야 할 뒤 모달이 조작되어 버린다.
+ * 그래서 맨 위 트랩만 키보드를 다룬다.
+ */
+const activeTrapContainers: HTMLElement[] = [];
+
 interface UseFocusTrapOptions {
   /** 트랩을 걸 컨테이너. */
   containerRef: RefObject<HTMLElement | null>;
@@ -57,7 +67,11 @@ export const useFocusTrap = ({
       container.focus();
     }
 
+    activeTrapContainers.push(container);
+
     const handleKeyDown = (event: KeyboardEvent) => {
+      if (activeTrapContainers.at(-1) !== container) return;
+
       if (event.key === "Escape" && onEscape) {
         event.stopPropagation();
         onEscape();
@@ -93,6 +107,7 @@ export const useFocusTrap = ({
 
     return () => {
       document.removeEventListener("keydown", handleKeyDown, true);
+      activeTrapContainers.splice(activeTrapContainers.indexOf(container), 1);
       // 레이어가 사라진 뒤 포커스가 <body> 로 떨어지면 키보드 사용자는 위치를 잃는다.
       previouslyFocused?.focus?.();
     };

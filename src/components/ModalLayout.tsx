@@ -1,7 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useEffect, useRef, useSyncExternalStore } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useSyncExternalStore,
+} from "react";
 import { createPortal } from "react-dom";
 import { useClickAway } from "@/hooks/dom/useClickAway";
 import { useFocusTrap } from "@/hooks/dom/useFocusTrap";
@@ -14,6 +20,15 @@ import { TRANSITION_FAST, popVariants } from "@/constants/motion";
  * 것만 esc에 반응하도록 공유 레지스트리로 추적합니다.
  */
 const mountedStackIndexes: number[] = [];
+
+/**
+ * ModalManager·DialogManager가 자기가 그리는 레이어의 층 번호를 내려준다.
+ *
+ * 모달마다 stackIndex prop을 ModalLayout까지 손으로 넘기게 두면, 빠뜨린 모달은 전부
+ * 0층이 된다. 그러면 위 모달의 오버레이(z 100)가 아래 모달 본문(z 101)을 덮지 못해
+ * 뒤에 있는 모달이 그대로 눌리고, esc 한 번에 겹친 모달이 전부 닫힌다.
+ */
+export const ModalStackContext = createContext<number | null>(null);
 
 interface ModalProps {
   children: React.ReactNode;
@@ -47,8 +62,13 @@ export const ModalLayout = ({
   className,
   triggerRef,
   hasBackground = false,
-  stackIndex = 0,
+  stackIndex: stackIndexProp,
 }: ModalProps) => {
+  const contextStackIndex = useContext(ModalStackContext);
+  // 층 번호는 화면 전체를 가리는 레이어에만 준다. 모달 안의 팝오버는 그 모달의
+  // 쌓임 맥락 안에서 그려지므로, 같은 층 번호를 받으면 esc에 모달과 함께 닫혀 버린다.
+  const stackIndex =
+    stackIndexProp ?? (hasBackground ? (contextStackIndex ?? 0) : 0);
   const modalRef = useRef<HTMLDivElement>(null);
   const overlayZIndex = 100 + stackIndex * 2;
   const modalZIndex = overlayZIndex + 1;

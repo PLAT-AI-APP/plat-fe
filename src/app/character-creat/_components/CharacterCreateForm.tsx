@@ -120,6 +120,9 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
     useUniverseDetailQuery(universeId);
   const methods = useForm<CharacterCreateFormValues>({
     mode: "onChange",
+    // 검증 실패 시 이동할 탭과 포커스 대상은 CreateHeader 가 화면 순서대로 직접 정한다.
+    // RHF 기본 동작은 등록된 input 중 첫 오류(예: 대표 이미지가 아닌 제목)로 포커스를 덮어쓴다.
+    shouldFocusError: false,
     resolver: zodResolver(characterCreateSchema),
     // 첫 시나리오 탭은 기본으로 노출되므로 input 값도 같은 이름으로 시작합니다.
     defaultValues: createCharacterCreateDefaultValues(defaultScenarioName),

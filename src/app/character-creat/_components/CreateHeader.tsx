@@ -248,12 +248,8 @@ const CreateHeader = ({
   const translateText = useTranslateText();
   const router = useRouter();
   const locale = useLocaleStore((state) => state.locale);
-  const {
-    getValues,
-    trigger,
-    setFocus,
-    formState: { errors },
-  } = useFormContext<CharacterCreateFormValues>();
+  const { getValues, handleSubmit, setFocus } =
+    useFormContext<CharacterCreateFormValues>();
   const { mutateAsync: createUniverse, isPending: isCreatePending } =
     useUniverseCreateMutation();
   const { mutateAsync: updateUniverse, isPending: isUpdatePending } =
@@ -270,32 +266,36 @@ const CreateHeader = ({
     router.push(fallbackPath);
   };
 
-  const handleRegisterClick = async () => {
-    if (isPending) return;
+  // 검증에 실패했을 때: 첫 오류가 있는 탭으로 옮기고 이유를 알린다.
+  const handleInvalid = (errors: FieldErrors<CharacterCreateFormValues>) => {
+    const target = findFirstValidationTarget(errors, getValues());
 
-    const isFormValid = await trigger();
-    if (!isFormValid) {
-      const target = findFirstValidationTarget(errors, getValues());
-      if (!target) return;
+    // 안내는 이동/포커스보다 먼저, 그리고 어떤 경우에도 띄운다. 이동 대상이나 문구를 못 찾아도
+    // 검증에 걸렸다는 사실은 알려야 사용자가 "눌러도 반응이 없다"고 느끼지 않는다.
+    showAppToast(
+      "warning",
+      (target?.message && translateText(target.message)) ||
+        target?.message ||
+        t("validationFailed"),
+    );
+    if (!target) return;
 
-      setCurrentTabId(target.tabId);
-      if (target.scenarioIndex !== undefined) {
-        setActiveScenarioIndex(target.scenarioIndex);
-      }
-      if (target.message) {
-        showAppToast("warning", translateText(target.message) ?? target.message);
-      }
-      if (target.fieldPath) {
-        // 탭 전환으로 해당 input이 마운트된 다음 포커스해야 합니다.
-        requestAnimationFrame(() => setFocus(target.fieldPath!));
-      } else if (target.focusElementId) {
-        requestAnimationFrame(() => {
-          document.getElementById(target.focusElementId!)?.focus();
-        });
-      }
-      return;
+    setCurrentTabId(target.tabId);
+    if (target.scenarioIndex !== undefined) {
+      setActiveScenarioIndex(target.scenarioIndex);
     }
+    if (target.fieldPath) {
+      // 탭 전환으로 해당 input이 마운트된 다음 포커스해야 합니다.
+      requestAnimationFrame(() => setFocus(target.fieldPath!));
+    } else if (target.focusElementId) {
+      requestAnimationFrame(() => {
+        document.getElementById(target.focusElementId!)?.focus();
+      });
+    }
+  };
 
+  // 검증을 통과했을 때: 등록(수정) 요청을 보낸다.
+  const submitValidForm = async () => {
     const currentFormData = getValues();
 
     try {
@@ -404,6 +404,21 @@ const CreateHeader = ({
         showAppToast("error", t(isEditMode ? "updateFailed" : "createFailed"));
       }
       console.error("Universe create failed:", error);
+    }
+  };
+
+  const handleRegisterClick = async () => {
+    if (isPending) return;
+
+    // trigger() 로 검증한 뒤 렌더링 때 잡아 둔 errors 를 읽으면, 폼이 mode:"onChange" 라 페이지에 들어와
+    // 아직 아무것도 검증되지 않은 첫 클릭에서는 errors 가 비어 있어 아무 안내 없이 끝났다.
+    // handleSubmit 은 방금 검증한 결과를 onInvalid 로 넘겨 주므로 그 값을 쓴다.
+    try {
+      await handleSubmit(submitValidForm, handleInvalid)();
+    } catch (error) {
+      // 검증 자체가 예외로 끊기면 promise rejection 으로만 남아 화면에는 아무 반응이 없었다.
+      showAppToast("error", t(isEditMode ? "updateFailed" : "createFailed"));
+      console.error("Universe form validation failed:", error);
     }
   };
 

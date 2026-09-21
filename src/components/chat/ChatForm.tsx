@@ -8,10 +8,13 @@ import { useTextareaSubmitShortcuts } from "@/hooks/form/useTextareaSubmitShortc
 import ActiveButton from "../ActiveButton";
 
 interface ChatFormProps {
-  onSendMessage: (message: string) => void;
+  /** 전송을 받아들이지 않으면(false) 입력한 글을 지우지 않고 그대로 둡니다. */
+  onSendMessage: (message: string) => boolean | void;
+  /** 응답을 받는 중처럼 지금은 보낼 수 없을 때. 글은 계속 쓸 수 있습니다. */
+  disabled?: boolean;
 }
 
-const ChatForm = ({ onSendMessage }: ChatFormProps) => {
+const ChatForm = ({ onSendMessage, disabled = false }: ChatFormProps) => {
   const t = useTranslations();
   const [msg, setMsg] = useState("");
   const hasMessage = msg.trim().length > 0;
@@ -21,12 +24,13 @@ const ChatForm = ({ onSendMessage }: ChatFormProps) => {
   });
 
   const submitMessage = useCallback(() => {
-    if (!hasMessage) return;
+    if (!hasMessage || disabled) return;
 
-    onSendMessage(msg);
+    if (onSendMessage(msg) === false) return;
+
     setMsg("");
     requestAnimationFrame(resizeTextarea);
-  }, [hasMessage, msg, onSendMessage, resizeTextarea]);
+  }, [hasMessage, disabled, msg, onSendMessage, resizeTextarea]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -91,7 +95,7 @@ const ChatForm = ({ onSendMessage }: ChatFormProps) => {
           </button>
 
           <ActiveButton
-            isActive
+            isActive={!disabled}
             text=""
             type="submit"
             className="flex size-8.5 items-center justify-center rounded-full p-0"

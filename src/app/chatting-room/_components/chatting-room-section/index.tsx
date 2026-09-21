@@ -8,6 +8,7 @@ import { useUniverseDetailQuery } from "@/api/universe/getUniverseDetail";
 import ChatForm from "@/components/chat/ChatForm";
 import MessageList from "@/components/chat/MessageList";
 import { ErrorState } from "@/components/state";
+import { useChatTurn } from "@/hooks/chat/useChatTurn";
 import { useIntersectionObserver } from "@/hooks/dom/useIntersectionObserver";
 import { useScrollTimeout } from "@/hooks/dom/useScrollTiemout";
 import { toAiModel } from "@/lib/chatModel";
@@ -84,13 +85,6 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
     [data, characterName, profileImage],
   );
 
-  // 전송 API 연결 전까지, 새로 보낸 메시지는 서버 이력과 별개로 화면에만 이어붙인다.
-  const [sentMessages, setSentMessages] = useState<ChatMessageType[]>([]);
-  const messages = useMemo(
-    () => [...serverMessages, ...sentMessages],
-    [serverMessages, sentMessages],
-  );
-
   const [isSuggestedReplyOn, setIsSuggestedReplyOn] = useState(true);
   const { data: chatCatalog } = useChatModelsQuery();
   const models = useMemo(
@@ -105,36 +99,27 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
     setSelectedModelId(model.id);
   }, []);
 
-  const handleSendMessage = useCallback((message: string) => {
-    const trimmedMessage = message.trim();
+  // 진행 중인 턴의 말풍선은 서버 이력과 별개로 이어붙이고, 저장이 끝나 이력에 들어오면 훅이 치운다.
+  const { pendingMessages, isBusy, sendMessage } = useChatTurn({
+    roomId,
+    universeCharacterId: universe?.character.universeCharacterId,
+    personaId: room?.personaId,
+    modelId: currentAi?.id,
+    multiplier: room?.multiplier,
+    characterName,
+    profileImage,
+  });
+  const messages = useMemo(
+    () => [...serverMessages, ...pendingMessages],
+    [serverMessages, pendingMessages],
+  );
 
-    if (!trimmedMessage) return;
-
-    // 즉시 말풍선으로 이어지는 사용자 입력 상태
-    setSentMessages((prevMessages) => [
-      ...prevMessages,
-      {
-        id: `user-${Date.now()}`,
-        role: "user",
-        content: trimmedMessage,
-      },
-    ]);
+  const handleDeleteMessage = useCallback(() => {
+    // 메시지 삭제 API가 아직 없어 동작하지 않는다. 버튼 자리만 보존한다.
   }, []);
 
-  const handleDeleteMessage = useCallback((messageId: string) => {
-    // 삭제 API가 아직 없어, 이번 세션에서 보낸 메시지만 화면에서 지울 수 있다.
-    setSentMessages((prevMessages) =>
-      prevMessages.filter((message) => message.id !== messageId),
-    );
-  }, []);
-
-  const handleRetryMessage = useCallback((messageId: string) => {
-    // 재생성 API 연결 전까지는 같은 응답을 유지하며 다시하기 액션 자리만 보존
-    setSentMessages((prevMessages) =>
-      prevMessages.map((message) =>
-        message.id === messageId ? { ...message } : message,
-      ),
-    );
+  const handleRetryMessage = useCallback(() => {
+    // 재생성 API가 아직 없어 동작하지 않는다. 버튼 자리만 보존한다.
   }, []);
 
   const handleLoadOlderMessages = useCallback(() => {
@@ -199,7 +184,7 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
 
         {/* 메시지 목록이 px-4 를 쓰므로 입력창도 같은 여백을 써야 줄이 맞는다. */}
         <div className="shrink-0 bg-dark px-4 py-4">
-          <ChatForm onSendMessage={handleSendMessage} />
+          <ChatForm onSendMessage={sendMessage} disabled={isBusy} />
         </div>
       </div>
     </section>
