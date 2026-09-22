@@ -102,13 +102,38 @@ export const isAuthExpiredError = (error: unknown) => {
 let isSessionExpiredHandled = false;
 
 /**
- * 클라이언트는 로그인 상태인데 서버가 401을 준 경우의 공통 처리.
- * 저장된 인증 상태를 비우고 다시 로그인하도록 안내합니다.
+ * 화면을 채우려는 조회(GET)인지.
+ *
+ * 조회가 만료로 실패했다고 사용자를 막아설 이유는 없다. 캐릭터 상세처럼 로그인 없이 볼 수 있는 화면은
+ * 로그아웃된 채로 계속 보여 주면 되고, 로그인이 필요한 화면은 인증 가드가 로그인 창을 띄운다.
+ * 반대로 사용자가 직접 누른 동작(댓글 등록·찜 등)이 실패하면 아무 반응이 없는 것처럼 보이므로 알린다.
  */
-const handleSessionExpired = () => {
+const isReadRequest = (config?: InternalAxiosRequestConfig) =>
+  (config?.method ?? "get").toLowerCase() === "get";
+
+/**
+ * 만료된 토큰으로 보낸 조회를 비로그인 요청으로 다시 보낸다.
+ * 요청 인터셉터는 토큰이 있을 때 헤더를 "붙이기만" 해서, 이미 실린 만료 토큰은 직접 지워야 한다.
+ * 로그인이 필요한 API 라면 다시 401 이 오고, 그때는 이미 로그아웃된 뒤라 안내 없이 실패로 끝난다.
+ */
+const retryAsGuest = (
+  config: InternalAxiosRequestConfig,
+  instance: AxiosInstance,
+) => {
+  delete config.headers.Authorization;
+  return instance(config);
+};
+
+/**
+ * 클라이언트는 로그인 상태인데 서버가 401을 준 경우의 공통 처리.
+ * 저장된 인증 상태를 비우고, 사용자가 누른 동작이 실패한 경우에만 다시 로그인하도록 안내합니다.
+ */
+const handleSessionExpired = ({ notify }: { notify: boolean }) => {
   const { isLoggedIn, logout } = useAuthStore.getState();
 
   logout();
+
+  if (!notify) return;
 
   if (typeof window === "undefined" || isSessionExpiredHandled) return;
 
@@ -344,7 +369,9 @@ const onResponseError = async (
       const newAccessToken = await refreshAccessToken();
 
       if (!newAccessToken) {
-        handleSessionExpired();
+        const isRead = isReadRequest(originalRequest);
+        handleSessionExpired({ notify: !isRead });
+        if (isRead) return retryAsGuest(originalRequest, instance);
         return Promise.reject(err);
       }
 
@@ -361,7 +388,9 @@ const onResponseError = async (
     } catch (refreshError) {
       // 재발급까지 실패하면 서버 세션이 끊긴 상태이므로 클라이언트 인증 상태도 비웁니다.
       if (isAuthExpiredError(refreshError)) {
-        handleSessionExpired();
+        const isRead = isReadRequest(originalRequest);
+        handleSessionExpired({ notify: !isRead });
+        if (isRead) return retryAsGuest(originalRequest, instance);
       }
       return Promise.reject(refreshError);
     }
@@ -369,7 +398,7 @@ const onResponseError = async (
 
   // [A-1] 재시도 후에도 남은 401은 더 이상 복구할 수 없는 만료 상태입니다.
   if (err.response?.status === 401 && !isAuthEndpoint) {
-    handleSessionExpired();
+    handleSessionExpired({ notify: !isReadRequest(originalRequest) });
   }
 
   // [B] 에러 포맷팅
