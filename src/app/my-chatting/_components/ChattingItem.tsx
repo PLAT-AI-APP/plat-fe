@@ -6,6 +6,7 @@ import Link from "next/link";
 import React, { useRef } from "react";
 import { useDeleteRoomMutation } from "@/api/room/deleteRoom";
 import { usePinRoomMutation, useUnpinRoomMutation } from "@/api/room/patchRoomPin";
+import { usePrefetchRoom } from "@/api/room/usePrefetchRoom";
 import MyChattingMenuPopover from "@/components/popover/MyChattingMenuPopover";
 import useToggle from "@/hooks/common/useToggle";
 import { useRelativeTimeLabel } from "@/hooks/i18n/useRelativeTimeLabel";
@@ -41,6 +42,7 @@ const ChattingItem = ({
   const { mutate: pinRoom, isPending: isPinning } = usePinRoomMutation();
   const { mutate: unpinRoom, isPending: isUnpinning } = useUnpinRoomMutation();
   const isPinPending = isPinning || isUnpinning;
+  const prefetchRoom = usePrefetchRoom();
 
   const handleDeleteClick = () => {
     // 채팅 기록은 복구할 수 없으므로 삭제 전 확인을 거친다.
@@ -69,6 +71,8 @@ const ChattingItem = ({
       <Link
         href={`/chatting-room?roomId=${roomId}`}
         aria-label={title}
+        onPointerEnter={() => prefetchRoom(roomId)}
+        onFocus={() => prefetchRoom(roomId)}
         className="absolute inset-0 rounded-lg"
       />
       <Image
