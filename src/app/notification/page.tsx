@@ -1,22 +1,17 @@
 import type { Metadata } from "next";
+import { connection } from "next/server";
 import React from "react";
-import { parseNoticeCategory } from "@/constants/notice";
 import NotificationContents from "./_components/NotificationContents";
 
 export const metadata: Metadata = {
   title: "Notice",
 };
 
-interface NotificationPageProps {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
-}
+// 필터는 NotificationContents 가 주소에서 직접 읽는다. 요청마다 렌더해 첫 HTML 에 목록 틀이 들어가게 한다.
+const NotificationPage = async () => {
+  await connection();
 
-const NotificationPage = async ({ searchParams }: NotificationPageProps) => {
-  const sParams = await searchParams;
-  // 서버로 보내는 값이라 알 수 없는 filter 는 전체로 본다.
-  const currentFilter = parseNoticeCategory(sParams.filter);
-
-  return <NotificationContents currentFilter={currentFilter} />;
+  return <NotificationContents />;
 };
 
 export default NotificationPage;

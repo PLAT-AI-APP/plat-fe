@@ -1,6 +1,7 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { buildSearchHref, navigateShallow } from "@/lib/shallowUrl";
 import { useTranslations } from "next-intl";
 import { useRankingQuery } from "@/api/ranking/getRanking";
 import { CharacterCardSkeleton } from "@/components/character/character-card/CharacterCardSkeleton";
@@ -18,7 +19,6 @@ const PAGE_SIZE = 24;
 
 const RankingTabContents = () => {
   const t = useTranslations();
-  const router = useRouter();
   const searchParams = useSearchParams();
 
   // 기간·정렬 둘 다 URL 에 둔다 — 새로고침해도, 링크를 넘겨도 같은 화면이 나와야 한다.
@@ -32,11 +32,12 @@ const RankingTabContents = () => {
     size: PAGE_SIZE,
   });
 
+  // 주소만 바꾼다(서버 렌더 왕복 없음). 화면은 useSearchParams 로 따라간다.
   const handleSortChange = (next: RankingSortId) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("tab", "ranking");
-    params.set("sort", next);
-    router.replace(`?${params.toString()}`, { scroll: false });
+    navigateShallow(
+      buildSearchHref({ tab: "ranking", sort: next }, searchParams.toString()),
+      "replace",
+    );
   };
 
   const items = data?.content ?? [];

@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import ShallowLink from "@/components/navigation/ShallowLink";
 import React from "react";
 import { useTranslations } from "next-intl";
 import Logo from "@/icons/Logo";
@@ -26,10 +26,11 @@ const MenuTab = ({ currentTab }: { currentTab: string }) => {
         const isActive = currentTab === id;
 
         return (
-          <Link
+          // 탭은 같은 페이지 안의 전환이라 서버에 다시 묻지 않는다(ShallowLink).
+          <ShallowLink
             key={name}
             id={`category-link-${id}`}
-            href={{ pathname: "/", query: { tab: id } }}
+            href={`/?tab=${id}`}
             className={`title-3 relative flex items-center justify-center gap-1 px-3 py-2.5 transition-colors ${
               isActive ? "text-font-0" : "text-font-2 hover:text-font-1"
             }`}
@@ -40,7 +41,7 @@ const MenuTab = ({ currentTab }: { currentTab: string }) => {
             {isActive && (
               <div className="absolute bottom-0 left-0 h-0.5 w-full bg-brand" />
             )}
-          </Link>
+          </ShallowLink>
         );
       })}
     </nav>
