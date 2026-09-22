@@ -51,7 +51,8 @@ const SidebarSummary = ({
     useDeleteUniverseLikeMutation();
   const isLikePending = isLikeMutating || isUnlikeMutating;
 
-  /* 찜은 로그인이 있어야 합니다. 조용히 무시하면 눌러도 아무 일이 없어 보이므로 로그인 창을 바로 엽니다. */
+  /* 찜은 로그인이 있어야 합니다. 조용히 무시하면 눌러도 아무 일이 없어 보이므로 로그인 창을 바로 엽니다.
+   * 하트는 낙관적으로 먼저 칠해지므로 요청 중에도 버튼을 흐리게 하지 않고, 연타만 여기서 막습니다. */
   const handleToggleLike = () => {
     if (isLikePending) return;
 
@@ -211,11 +212,11 @@ const SidebarSummary = ({
             <button
               type="button"
               onClick={handleToggleLike}
-              disabled={isLikePending}
+              aria-busy={isLikePending}
               aria-pressed={character.liked}
               aria-label={character.liked ? t("unlike") : t("like")}
               title={character.liked ? t("unlike") : t("like")}
-              className="flex size-[52px] shrink-0 items-center justify-center rounded-2xl bg-card text-font-2 transition-colors hover:bg-card-hover disabled:opacity-60"
+              className="flex size-[52px] shrink-0 items-center justify-center rounded-2xl bg-card text-font-2 transition-colors hover:bg-card-hover"
             >
               {character.liked ? (
                 <HeartFill className="size-5 text-brand" aria-hidden="true" />
