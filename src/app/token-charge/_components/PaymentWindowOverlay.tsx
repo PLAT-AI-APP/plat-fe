@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useTranslations } from "next-intl";
 import Button from "@/components/ui/Button";
 import PaymentPending from "@/app/payments/[provider]/[result]/_components/PaymentPending";
@@ -141,7 +141,7 @@ const PaymentWindowOverlay = ({
   };
 
   return createPortal(
-    <motion.div
+    <m.div
       role="dialog"
       aria-modal="true"
       aria-label={t(phase === "popup" ? "popupTitle" : "popupClosedTitle")}
@@ -170,7 +170,7 @@ const PaymentWindowOverlay = ({
           }
         />
       </div>
-    </motion.div>,
+    </m.div>,
     document.body,
   );
 };

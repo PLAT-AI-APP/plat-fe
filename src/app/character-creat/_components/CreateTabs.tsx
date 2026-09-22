@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { UseFieldArrayReturn } from "react-hook-form";
 import { useTabUnderline } from "@/hooks/dom/useTabUnderline";
@@ -111,7 +111,7 @@ const CreateTabs = ({
             border가 겹쳐 어긋나 보이지 않게 기준선도 같은 방식으로 그립니다. */}
         <div className="absolute inset-x-0 bottom-0 h-0.5 bg-card-selected" />
 
-        <motion.span
+        <m.span
           className="absolute bottom-0 h-0.5 bg-brand"
           initial={false}
           animate={{ x: underlineRect.left, width: underlineRect.width }}

@@ -97,7 +97,7 @@ const ProductListItem = ({
 
 /** 상품 목록을 불러오는 동안 목록 자리를 유지하는 스켈레톤 */
 const ProductListSkeleton = () => (
-  <ul className="flex animate-pulse flex-col gap-3">
+  <ul className="skeleton-motion flex flex-col gap-3">
     {Array.from({ length: 5 }).map((_, index) => (
       <li
         key={index}

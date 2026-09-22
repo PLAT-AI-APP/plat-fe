@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useSyncExternalStore } from "react";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
-import { ArrowDown } from "@/icons";
+// import { ArrowDown } from "@/icons"; // [차단 관리] 후순위로 보류
 import { useAuthStore } from "@/store/useAuthStore";
 import SettingLanguageSelect from "./SettingLanguageSelect";
 import SettingRow from "./SettingRow";
@@ -62,6 +62,7 @@ const SettingsContents = () => {
           {/* 비회원 설정 화면은 피그마 기준으로 환경설정만 노출하고, 계정 전용 항목은 숨깁니다. */}
           {isLoggedIn && (
             <>
+              {/* [차단 관리] 후순위로 보류: 이 섹션에는 차단 관리 한 줄뿐이라 섹션째 뺀다.
               <hr className="w-full border-main" />
 
               <SettingSection title={t("settings.sections.notifications")}>
@@ -75,6 +76,7 @@ const SettingsContents = () => {
                   </button>
                 </SettingRow>
               </SettingSection>
+              */}
 
               <hr className="w-full border-main" />
 

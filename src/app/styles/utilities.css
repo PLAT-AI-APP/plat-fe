@@ -59,9 +59,40 @@
   padding-inline: var(--content-margin-x);
 }
 
+/*
+ * 스켈레톤은 로딩이 --skeleton-delay(300ms) 보다 길어질 때만 보인다.
+ *
+ * 대부분의 요청은 수백 ms 안에 끝나는데, 그 사이 스켈레톤을 바로 그렸다 지우면 회색 상자가
+ * 번쩍였다 사라지는 것처럼 보인다. 그래서 처음엔 투명하게 자리만 잡아 두고(레이아웃은 그대로라
+ * 콘텐츠가 들어와도 밀리지 않는다), 지연이 지나면 옅게 나타난 뒤 맥박을 시작한다.
+ *
+ * 두 애니메이션이 모두 opacity 를 다루는데, 목록 뒤쪽이 이긴다. appear 는 끝난 뒤에도 불투명을
+ * 유지하고(both), pulse 는 appear 가 끝나는 시점부터 돌며 그 위를 덮는다. 동작 줄이기 설정에서도
+ * 지연(delay)은 그대로 남아 번쩍임 없이 정적인 상자로 나타난다.
+ */
+@keyframes skeleton-appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/** 색은 두고 "늦게 나타나 맥박" 동작만 입힌다. 자체 배경색을 쓰는 자리표시자용 */
+@utility skeleton-motion {
+  --skeleton-delay: 300ms;
+  --skeleton-appear-duration: var(--motion-base);
+  animation:
+    skeleton-appear var(--skeleton-appear-duration) var(--motion-ease-out)
+      var(--skeleton-delay) both,
+    skeleton-pulse 1.4s var(--motion-ease-in-out)
+      calc(var(--skeleton-delay) + var(--skeleton-appear-duration)) infinite;
+}
+
 @utility skeleton {
+  @apply skeleton-motion;
   background-color: var(--bg-card-hover);
-  animation: skeleton-pulse 1.4s var(--motion-ease-in-out) infinite;
 }
 
 /*

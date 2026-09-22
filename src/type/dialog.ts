@@ -28,6 +28,8 @@ export interface ChatRestartDialogProps {
 }
 
 export interface CommentDeleteDialogProps {
+  /** 답글 삭제인지. 댓글과 달리 하위 답글이 없어 안내 문구가 다르다. */
+  isReply?: boolean;
   onClose: () => void;
   onConfirm: () => void;
 }

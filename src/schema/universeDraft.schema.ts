@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod";
 import { getResourceImageUrl } from "@/lib/file";
 import { createSchemaMigrator, SchemaMigrationStep } from "@/lib/schemaMigration";
 import { CharacterCreateFormValues } from "@/schema/character.schema";

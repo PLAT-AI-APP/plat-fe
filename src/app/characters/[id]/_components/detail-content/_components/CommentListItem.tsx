@@ -149,6 +149,7 @@ const CommentListItem = ({
 
   const handleDeleteComment = () => {
     openDialog("COMMENT_DELETE", {
+      isReply,
       onConfirm: () => {
         deleteComment(
           { commentId: comment.commentId, ...scope },
@@ -159,7 +160,11 @@ const CommentListItem = ({
   };
 
   const handleReportComment = () => {
-    openModal("COMMENT_REPORT", { commentId: comment.commentId });
+    openModal("REPORT", {
+      targetType: "COMMENT",
+      targetId: comment.commentId,
+      targetName: comment.author.nickname,
+    });
   };
 
   const handlePinComment = () => {

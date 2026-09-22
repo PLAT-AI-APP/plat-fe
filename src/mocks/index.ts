@@ -15,6 +15,7 @@ import { universeHandlers } from "./handlers/universe";
 import { commentHandlers } from "./handlers/comment";
 import { draftHandlers } from "./handlers/draft";
 import { feedbackHandlers } from "./handlers/feedback";
+import { reportHandlers } from "./handlers/report";
 import { rankingHandlers } from "./handlers/ranking";
 import { roomHandlers } from "./handlers/room";
 import { searchHandlers } from "./handlers/search";
@@ -43,6 +44,7 @@ export const handlers = [
   ...universeHandlers,
   ...draftHandlers,
   ...feedbackHandlers,
+  ...reportHandlers,
   ...rankingHandlers,
   ...roomHandlers,
   ...searchHandlers,

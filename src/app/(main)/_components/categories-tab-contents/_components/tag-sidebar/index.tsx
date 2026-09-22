@@ -9,7 +9,7 @@ import {
 import { Close, Search } from "@/icons";
 import { showAppToast } from "@/lib/toast";
 import { SPRING_SOFT, TRANSITION } from "@/constants/motion";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { useTranslations } from "next-intl";
 import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { TagFolder, TagOption, TagPill } from "./TagFolder";
@@ -199,7 +199,7 @@ const TagSidebar = ({
       <AnimatePresence>
         {isOpen && (
           <>
-            <motion.div
+            <m.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -208,7 +208,7 @@ const TagSidebar = ({
               className="fixed inset-0 z-20 bg-scrim/50"
               aria-hidden
             />
-            <motion.aside
+            <m.aside
               initial={{ x: 300 }}
               animate={{ x: 0 }}
               exit={{ x: 300 }}
@@ -216,7 +216,7 @@ const TagSidebar = ({
               className="fixed right-0 top-0 z-30 h-full w-[min(300px,85vw)] shrink-0 overflow-y-auto bg-dark shadow-2xl no-scrollbar"
             >
               {sidebarBody}
-            </motion.aside>
+            </m.aside>
           </>
         )}
       </AnimatePresence>

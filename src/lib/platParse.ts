@@ -168,15 +168,17 @@ function parseBlock(raw: string): PlatBlock | null {
   return { type: "NARRATIVE", segments: [{ type: "TEXT", value: trimmed }] };
 }
 
+type BlockDelimiter = (typeof BLOCK_DELIMITERS)[number];
+
 /**
  * source에서 index가 가리키는 블록이 여는 기호부터 닫는 기호까지 몇 글자인지
- * 찾아 그 끝 위치를 반환합니다. 닫는 기호가 없으면(잘못 작성된 블록) 문자열
- * 끝까지를 그 블록으로 봅니다.
+ * 찾아 그 끝 위치를 반환합니다. 닫는 기호가 없으면(잘못 작성됐거나 아직 도착
+ * 중인 블록) 문자열 끝까지를 그 블록으로 보고 closed를 false로 둡니다.
  */
 const findBlockEnd = (
   source: string,
   index: number,
-  { open, close }: { open: string; close: string },
+  { open, close }: BlockDelimiter,
 ) => {
   let i = index + open.length;
   while (i < source.length && !startsWithAt(source, i, close)) {
@@ -184,9 +186,11 @@ const findBlockEnd = (
     // 한 쌍(역슬래시+다음 한 글자)을 통째로 건너뜁니다.
     i += source[i] === "\\" ? 2 : 1;
   }
-  if (i < source.length) i += close.length; // 닫는 기호까지 포함
 
-  return i;
+  const closed = i < source.length;
+  if (closed) i += close.length; // 닫는 기호까지 포함
+
+  return { end: i, closed };
 };
 
 /**
@@ -208,7 +212,7 @@ export function parsePlat(source: string): PlatBlock[] {
     );
 
     if (delimiter) {
-      i = findBlockEnd(source, i, delimiter);
+      i = findBlockEnd(source, i, delimiter).end;
     } else {
       // 다음 블록의 시작 기호를 만날 때까지 일반 텍스트로 취급합니다.
       while (
@@ -224,6 +228,79 @@ export function parsePlat(source: string): PlatBlock[] {
   }
 
   return blocks;
+}
+
+/** 끝에 반쯤 걸린 인라인 토큰(`{{us`, `{{img:ab}`)과 토큰·이스케이프의 첫 글자. */
+const PARTIAL_INLINE_TOKEN_REGEX = /\{\{[^}]*\}?$/;
+const PARTIAL_TAIL_CHAR_REGEX = /[{[\\]$/;
+
+/**
+ * 아직 도착 중인 원문의 마지막 블록을 미리 닫아 둡니다.
+ *
+ * 닫는 기호가 오기 전의 블록을 parsePlat에 그대로 넘기면 `"안녕` 처럼 여는 따옴표만 있는
+ * 대사가 따옴표째 지문으로 그려졌다가, 닫는 따옴표가 오는 순간 말풍선으로 바뀌어 화면이 튄다.
+ * 여는 기호를 보고 어떤 블록인지 먼저 정해 두고, 반쯤 온 `{{...}}` 는 완성될 때까지 숨깁니다.
+ */
+const closePendingBlock = (source: string) => {
+  let i = 0;
+  let lastStart = -1;
+  let lastDelimiter: BlockDelimiter | null = null;
+  let isLastClosed = true;
+
+  while (i < source.length) {
+    while (i < source.length && /\s/.test(source[i])) i++;
+    if (i >= source.length) break;
+
+    lastStart = i;
+    const delimiter = BLOCK_DELIMITERS.find((rule) =>
+      startsWithAt(source, i, rule.open),
+    );
+
+    if (delimiter) {
+      const { end, closed } = findBlockEnd(source, i, delimiter);
+      i = end;
+      lastDelimiter = delimiter;
+      isLastClosed = closed;
+    } else {
+      while (
+        i < source.length &&
+        !BLOCK_DELIMITERS.some((rule) => startsWithAt(source, i, rule.open))
+      ) {
+        i++;
+      }
+      lastDelimiter = null;
+      isLastClosed = false;
+    }
+  }
+
+  if (lastStart === -1 || isLastClosed) return source;
+
+  const head = source.slice(0, lastStart);
+
+  // 이미지·메타 블록은 닫히기 전에는 그릴 수 있는 게 없다.
+  if (lastDelimiter && (lastDelimiter.open === "{{" || lastDelimiter.open === "[[")) {
+    return head;
+  }
+
+  const tail = source
+    .slice(lastStart)
+    .replace(PARTIAL_INLINE_TOKEN_REGEX, "")
+    .replace(PARTIAL_TAIL_CHAR_REGEX, "");
+
+  if (!lastDelimiter) return head + tail;
+
+  // 여는 기호만 온 상태라면 빈 말풍선을 그리지 않는다.
+  if (tail.length <= lastDelimiter.open.length) return head;
+
+  return head + tail + lastDelimiter.close;
+};
+
+/**
+ * 스트리밍으로 받는 중인 원문을 파싱합니다. 글자가 올 때마다 원문이 바뀌므로
+ * parsePlatCached의 캐시를 쓰지 않습니다(한 응답이 캐시를 전부 밀어낸다).
+ */
+export function parsePlatStreaming(source: string): PlatBlock[] {
+  return parsePlat(closePendingBlock(source));
 }
 
 const PLAT_PARSE_CACHE_LIMIT = 200;

@@ -1,5 +1,6 @@
 import { CharacterScenario } from "./character";
 import { Persona } from "./persona";
+import type { ReportTargetType } from "./report";
 
 export interface GlobalModalProps {
   onClose: () => void;
@@ -44,8 +45,11 @@ export interface UserNoteModalProps extends GlobalModalProps {
   roomId: string;
 }
 
-export interface CommentReportModalProps extends GlobalModalProps {
-  commentId: string;
+export interface ReportModalProps extends GlobalModalProps {
+  targetType: ReportTargetType;
+  targetId: string;
+  /** 제목에 보일 대상 이름. 댓글이면 작성자 닉네임, 캐릭터면 캐릭터 이름이다. */
+  targetName: string;
 }
 
 export interface RefundRequestModalProps extends GlobalModalProps {

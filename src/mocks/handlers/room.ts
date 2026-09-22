@@ -266,7 +266,8 @@ export const roomHandlers = [
       ? descending.findIndex((message) => message.messageId === beforeMessageId) + 1
       : 0;
     const remaining = startIndex === 0 && beforeMessageId ? [] : descending.slice(startIndex);
-    const content = remaining.slice(0, size);
+    // 실서버와 같게 페이지 안은 오래된 것부터(시간순)로 내려준다. 커서는 그 페이지의 첫 항목이다.
+    const content = remaining.slice(0, size).reverse();
 
     return HttpResponse.json({
       page: {

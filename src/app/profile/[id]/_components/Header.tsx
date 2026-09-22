@@ -1,19 +1,20 @@
 "use client";
 
-import { AnimatePresence } from "framer-motion";
+// 공유하기·차단 기능은 후순위로 미뤄 화면에서 뺐다. 다시 켤 때 아래 [공유·차단] 주석을 되살린다.
+// import { AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { useRef } from "react";
+// import { useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useFollowCountQuery } from "@/api/follow/getFollowCount";
 import { useIsFollowingQuery } from "@/api/follow/getIsFollowing";
 import type { UserProfile } from "@/api/user/getUserProfile";
 import { useFadeInAfterLoading } from "@/hooks/common/useFadeInAfterLoading";
 import { useFollowToggle } from "@/hooks/follow/useFollowToggle";
-import useToggle from "@/hooks/common/useToggle";
-import ProfileActionPopover from "@/components/popover/ProfileActionPopover";
-import { Dots } from "@/icons";
+// import useToggle from "@/hooks/common/useToggle";
+// import ProfileActionPopover from "@/components/popover/ProfileActionPopover";
+// import { Dots } from "@/icons";
 import { cn, formatWithCommas } from "@/lib/utils";
-import { useDialogStore } from "@/store/useDialogStore";
+// import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
 import { useUserStore } from "@/store/useUserStore";
 
@@ -78,14 +79,15 @@ const Header = ({ userId, profile }: HeaderProps) => {
   const { followerCount, followingCount } = followCount ?? {};
   const openModal = useModalStore((state) => state.openModal);
   const user = useUserStore((state) => state.user);
-  const openDialog = useDialogStore((state) => state.openDialog);
-  const closeDialog = useDialogStore((state) => state.closeDialog);
-  const {
-    isOpen: isActionPopoverOpen,
-    toggle: toggleActionPopover,
-    close: closeActionPopover,
-  } = useToggle();
-  const actionTriggerRef = useRef<HTMLButtonElement>(null);
+  // [공유·차단] 후순위로 보류
+  // const openDialog = useDialogStore((state) => state.openDialog);
+  // const closeDialog = useDialogStore((state) => state.closeDialog);
+  // const {
+  //   isOpen: isActionPopoverOpen,
+  //   toggle: toggleActionPopover,
+  //   close: closeActionPopover,
+  // } = useToggle();
+  // const actionTriggerRef = useRef<HTMLButtonElement>(null);
 
   const isOwnProfile = user?.id === userId;
   // 로그인한 내 정보(user)가 아니라 이 페이지 유저의 프로필을 그린다. 남의 프로필에서 내 닉네임이 뜨던 문제.
@@ -126,18 +128,19 @@ const Header = ({ userId, profile }: HeaderProps) => {
     openModal("PROFILE_EDIT");
   };
 
-  const handleShareProfile = () => {
-    if (typeof window === "undefined") {
-      return;
-    }
-
-    // 공유 API가 아직 없어서 현재 프로필 주소를 복사하는 최소 동작으로 유지합니다.
-    void navigator.clipboard?.writeText(window.location.href);
-  };
-
-  const handleBlockConfirm = () => {
-    closeDialog();
-  };
+  // [공유·차단] 후순위로 보류
+  // const handleShareProfile = () => {
+  //   if (typeof window === "undefined") {
+  //     return;
+  //   }
+  //
+  //   // 공유 API가 아직 없어서 현재 프로필 주소를 복사하는 최소 동작으로 유지합니다.
+  //   void navigator.clipboard?.writeText(window.location.href);
+  // };
+  //
+  // const handleBlockConfirm = () => {
+  //   closeDialog();
+  // };
 
   return (
     <header
@@ -179,7 +182,7 @@ const Header = ({ userId, profile }: HeaderProps) => {
                 </h1>
               )}
 
-              {/* 차단 확인 다이얼로그가 닉네임을 보여 주므로 불러온 뒤에만 연다. */}
+              {/* [공유·차단] 후순위로 보류: 더보기 메뉴(공유하기·차단하기)는 두 항목뿐이라 메뉴째 뺀다.
               {!isOwnProfile && !isProfileLoading && (
                 <div className="relative flex size-6 shrink-0 items-center justify-center">
                   <button
@@ -210,6 +213,7 @@ const Header = ({ userId, profile }: HeaderProps) => {
                   </AnimatePresence>
                 </div>
               )}
+              */}
             </div>
           </div>
 

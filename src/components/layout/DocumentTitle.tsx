@@ -12,6 +12,7 @@ const ROUTE_TITLE_KEYS: ReadonlyArray<readonly [RegExp, string]> = [
   [/^\/characters\/[^/]+$/, "pageTitles.characterDetail"],
   [/^\/chatting-room$/, "pageTitles.chattingRoom"],
   [/^\/my-chatting$/, "myChatting.title"],
+  [/^\/my-reports$/, "pageTitles.myReports"],
   [/^\/notification$/, "notification.title"],
   [/^\/profile\/[^/]+$/, "pageTitles.profile"],
   [/^\/search$/, "pageTitles.search"],

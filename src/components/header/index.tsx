@@ -23,7 +23,11 @@ interface HeaderProps {
 }
 const Header = ({ handleFoldToggle, foldToggleRef }: HeaderProps) => {
   const t = useTranslations();
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const isAuthReady = useAuthStore((state) => state.isAuthReady);
+  // isLoggedIn 은 localStorage 에서 복원돼 서버 HTML(항상 false)과 첫 화면이 어긋나고, 새로고침 직후에는
+  // 아직 세션 복구 중이다. 판정이 끝나기 전에는 로그인/비로그인 어느 쪽 디자인도 그리지 않고 자리만 잡는다.
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn) && isAuthReady;
+  const isLoggedOut = isAuthReady && !isLoggedIn;
   const isSidebarExpanded = useLayoutStore((state) => state.isSidebarExpanded);
 
   const profileModal = useToggle();
@@ -126,8 +130,13 @@ const Header = ({ handleFoldToggle, foldToggleRef }: HeaderProps) => {
             </div>
           )}
 
+          {/* 판정 전 자리표시자. 프로필/로그인 버튼과 같은 size-10 이라 판정이 끝나도 밀리지 않는다. */}
+          {!isAuthReady && (
+            <div aria-hidden="true" className="skeleton size-10 rounded-xl" />
+          )}
+
           {/* 비로그인 프로필 */}
-          {!isLoggedIn && (
+          {isLoggedOut && (
             <button
               ref={loginTriggerRef}
               type="button"

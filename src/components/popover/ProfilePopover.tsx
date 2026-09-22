@@ -6,6 +6,7 @@ import Link from "next/link";
 import { cn, formatWithCommas } from "@/lib/utils";
 import {
   ArrowRight,
+  Flag,
   Gear,
   Google,
   Headphone,
@@ -19,7 +20,7 @@ import { useLogoutMutation } from "@/api/auth/logout";
 import { useAuthStore } from "@/store/useAuthStore";
 import Check from "@/icons/Check";
 import { useUserStore } from "@/store/useUserStore";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { PopoverLayout } from "./layout";
 import { useRouter } from "next/navigation";
 import useToggle from "@/hooks/common/useToggle";
@@ -64,6 +65,10 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
       link: "/customer-service",
       icon: Headphone,
     },
+    // 내 신고의 처리 결과를 보는 곳이라 로그인했을 때만 보인다.
+    ...(isLoggedIn
+      ? [{ name: t("myReports"), link: "/my-reports", icon: Flag }]
+      : []),
     {
       name: rootT("characterDetail.tabs.settings"),
       link: "/settings",
@@ -271,7 +276,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
 
                 <AnimatePresence>
                   {tab.hasTendencyOptions && tendency.isOpen && (
-                    <motion.div
+                    <m.div
                       onClick={(e) => e.stopPropagation()}
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
@@ -300,7 +305,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
                           </li>
                         ))}
                       </ul>
-                    </motion.div>
+                    </m.div>
                   )}
                 </AnimatePresence>
               </div>
