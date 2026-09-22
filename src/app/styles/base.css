@@ -9,10 +9,17 @@ input:-webkit-autofill:active {
   transition: background-color 5000s ease-in-out 0s;
 }
 
-html,
-body {
-  height: 100%;
-  overflow: hidden;
+/*
+ * 페이지는 문서(창)가 스크롤한다.
+ *
+ * 예전에는 html·body 를 overflow:hidden 으로 막고 안쪽 #page-content 가 스크롤했다. 그러면
+ * 브라우저의 뒤로가기 스크롤 복원이 동작하지 않고(목록에서 상세로 갔다 오면 맨 위로 돌아갔다),
+ * iOS 에서는 주소창이 접히지 않고 상태바를 눌러 맨 위로 가는 기능도 먹지 않았다.
+ *
+ * 스크롤바가 생겼다 사라질 때 화면이 옆으로 흔들리지 않게 자리를 늘 잡아 둔다.
+ */
+html {
+  scrollbar-gutter: stable;
 }
 
 body {

@@ -20,11 +20,11 @@ const PageViewport = ({
     <div
       id="page-content"
       className={cn(
-        // scroll-smooth 를 두면 라우트 이동 때 Next 가 부르는 scrollIntoView 까지 부드럽게 굴러가
-        // 새 페이지가 뜬 뒤 스크롤이 천천히 올라간다. 부드러운 이동이 필요한 곳은 behavior 로 넘긴다.
-        "relative flex-1 overflow-x-hidden",
-        "min-h-0 w-full mx-auto",
-        isHeaderHidden ? "overflow-hidden" : "overflow-y-auto",
+        // 이 요소는 스크롤하지 않는다(문서가 스크롤한다, base.css 참고). 가로 넘침만 자른다.
+        // overflow-x:hidden 이면 스크롤 컨테이너가 되어 안쪽 sticky 가 이 요소에 붙어 버리므로
+        // 스크롤 컨테이너를 만들지 않는 clip 을 쓴다.
+        "relative min-w-0 w-full mx-auto",
+        isHeaderHidden ? "min-h-0 overflow-hidden" : "overflow-x-clip",
         !isHomePath && !isChattingRoomPath && "content-x",
       )}
     >

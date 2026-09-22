@@ -115,7 +115,7 @@ const SidebarSummary = ({
   );
 
   return (
-    <aside className="flex w-full shrink-0 flex-col gap-5 self-start min-[900px]:sticky min-[900px]:top-0 min-[900px]:w-[389px]">
+    <aside className="flex w-full shrink-0 flex-col gap-5 self-start min-[900px]:sticky min-[900px]:top-(--header-height) min-[900px]:w-[389px]">
       <section className="flex flex-col gap-4">
         {!isCreator && character.isOfficial && (
           <span className="body-7 w-fit rounded-xl bg-brand/10 px-3 py-2 text-brand-dark">

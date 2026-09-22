@@ -107,13 +107,17 @@ const SidebarFrame = ({
           // 열 폭은 애니메이션하지 않는다. 폭을 300ms 동안 매 프레임 바꾸면 오른쪽 콘텐츠 전체(카드
           // 그리드 등)가 매 프레임 레이아웃을 다시 해 무거운 화면에서 끊겼다. 접힘의 움직임은
           // 사이드바 라벨의 opacity/transform 전환(Sidebar.tsx)이 맡는다.
-          "grid overflow-hidden",
+          "grid",
           isSidebarInline
             ? "[grid-template-columns:var(--sidebar-width)_minmax(0,1fr)]"
             : "[grid-template-columns:minmax(0,1fr)]",
           hideInlineOnSmallBeforeMount &&
             "max-sm:[grid-template-columns:minmax(0,1fr)]",
-          isHeaderHidden ? "h-dvh" : "h-[calc(100dvh-var(--header-height))]",
+          // 헤더 없는 화면(채팅방)은 화면 높이에 고정하고 안에서 스크롤한다. 나머지는 문서가
+          // 스크롤하므로 높이를 가두지 않는다(최소 높이만 둔다).
+          isHeaderHidden
+            ? "h-dvh overflow-hidden"
+            : "min-h-[calc(100dvh-var(--header-height))]",
         )}
       >
         {isSidebarRendered && (
@@ -123,7 +127,12 @@ const SidebarFrame = ({
             variant={isSidebarInline ? "inline" : "overlay"}
             onFoldToggle={isHeaderHidden ? handleFoldToggle : undefined}
             foldToggleRef={isHeaderHidden ? sidebarToggleRef : undefined}
-            className={hideInlineOnSmallBeforeMount ? "max-sm:hidden" : undefined}
+            className={cn(
+              // 문서가 스크롤하므로 사이드바는 헤더 아래에 붙어 화면 높이만큼만 차지한다.
+              !isHeaderHidden &&
+                "top-(--header-height) h-[calc(100dvh-var(--header-height))] self-start",
+              hideInlineOnSmallBeforeMount && "max-sm:hidden",
+            )}
           />
         )}
 
