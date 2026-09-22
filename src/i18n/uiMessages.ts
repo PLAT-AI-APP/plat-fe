@@ -149,6 +149,7 @@ const ko = {
     collapse: "접기",
     assetAlt: "{name} 에셋",
     commentMenu: "댓글 메뉴",
+    universeMenu: "캐릭터 메뉴",
     commentsCount: "댓글 {count}개",
     myProfileAlt: "내 프로필",
     loggedInCommentPlaceholder: "타인에게 부적절한 댓글은 삭제될 수 있어요",
@@ -200,6 +201,7 @@ const ko = {
   profilePopover: {
     notice: "공지사항",
     customerService: "고객센터",
+    myReports: "신고 내역",
     persona: "내 페르소나",
     contentSettings: "콘텐츠 설정",
     loginWithKakao: "카카오 계정으로 시작하기",
@@ -219,6 +221,38 @@ const ko = {
     bl: "BL",
     horror: "공포",
     mystery: "추리",
+  },
+  report: {
+    targetTypes: {
+      COMMENT: "댓글",
+      UNIVERSE: "캐릭터",
+    },
+    reasons: {
+      SEXUAL: "선정성",
+      VIOLENCE: "폭력성",
+      HATE: "혐오 표현",
+      COPYRIGHT: "저작권 침해",
+      SPAM: "스팸·광고",
+      ETC: "기타",
+    },
+    statuses: {
+      PENDING: "접수됨",
+      ACTIONED: "조치 완료",
+      DISMISSED: "위반 없음",
+    },
+    statusGuides: {
+      PENDING: "운영팀이 확인하고 있어요. 처리되면 알려드릴게요",
+      ACTIONED: "신고해 주신 내용을 검토해 운영정책에 따라 조치했어요. 함께 지켜 주셔서 고마워요",
+      DISMISSED: "검토 결과 운영정책 위반 사항이 확인되지 않았어요",
+    },
+  },
+  myReports: {
+    empty: "아직 신고한 내역이 없어요",
+    reportedAt: "{date} 신고",
+    detailLabel: "내가 작성한 내용",
+    noDetail: "작성한 내용이 없어요",
+    resultLabel: "처리 결과",
+    handledAt: "처리일 {date}",
   },
   usageHistory: {
     expiresUntil: "~ {date} 까지",
@@ -383,6 +417,7 @@ const en = {
     collapse: "Collapse",
     assetAlt: "{name} asset",
     commentMenu: "Comment menu",
+    universeMenu: "Character menu",
     commentsCount: "{count} comments",
     myProfileAlt: "My profile",
     loggedInCommentPlaceholder: "Inappropriate comments may be removed.",
@@ -440,6 +475,7 @@ const en = {
   profilePopover: {
     notice: "Notice",
     customerService: "Customer service",
+    myReports: "My reports",
     persona: "My persona",
     contentSettings: "Content settings",
     loginWithKakao: "Continue with Kakao",
@@ -459,6 +495,38 @@ const en = {
     bl: "BL",
     horror: "Horror",
     mystery: "Mystery",
+  },
+  report: {
+    targetTypes: {
+      COMMENT: "Comment",
+      UNIVERSE: "Character",
+    },
+    reasons: {
+      SEXUAL: "Sexual content",
+      VIOLENCE: "Violence",
+      HATE: "Hate speech",
+      COPYRIGHT: "Copyright infringement",
+      SPAM: "Spam or ads",
+      ETC: "Other",
+    },
+    statuses: {
+      PENDING: "Received",
+      ACTIONED: "Action taken",
+      DISMISSED: "No violation",
+    },
+    statusGuides: {
+      PENDING: "Our team is reviewing your report. We'll let you know once it's handled.",
+      ACTIONED: "We reviewed your report and took action under our policies. Thank you for helping keep the community safe.",
+      DISMISSED: "After review, we didn't find a violation of our policies.",
+    },
+  },
+  myReports: {
+    empty: "You haven't reported anything yet.",
+    reportedAt: "Reported {date}",
+    detailLabel: "What you wrote",
+    noDetail: "No details provided",
+    resultLabel: "Result",
+    handledAt: "Handled {date}",
   },
   usageHistory: {
     expiresUntil: "Valid until {date}",
@@ -623,6 +691,7 @@ const ja = {
     collapse: "閉じる",
     assetAlt: "{name} アセット",
     commentMenu: "コメントメニュー",
+    universeMenu: "キャラクターメニュー",
     commentsCount: "コメント {count}件",
     myProfileAlt: "自分のプロフィール",
     loggedInCommentPlaceholder: "不適切なコメントは削除される場合があります",
@@ -674,6 +743,7 @@ const ja = {
   profilePopover: {
     notice: "お知らせ",
     customerService: "カスタマーセンター",
+    myReports: "通報履歴",
     persona: "マイペルソナ",
     contentSettings: "コンテンツ設定",
     loginWithKakao: "Kakaoアカウントで始める",
@@ -693,6 +763,38 @@ const ja = {
     bl: "BL",
     horror: "ホラー",
     mystery: "ミステリー",
+  },
+  report: {
+    targetTypes: {
+      COMMENT: "コメント",
+      UNIVERSE: "キャラクター",
+    },
+    reasons: {
+      SEXUAL: "性的なコンテンツ",
+      VIOLENCE: "暴力的なコンテンツ",
+      HATE: "ヘイトスピーチ",
+      COPYRIGHT: "著作権侵害",
+      SPAM: "スパム・広告",
+      ETC: "その他",
+    },
+    statuses: {
+      PENDING: "受付済み",
+      ACTIONED: "対応済み",
+      DISMISSED: "違反なし",
+    },
+    statusGuides: {
+      PENDING: "運営チームが確認中です。対応が完了したらお知らせします",
+      ACTIONED: "通報内容を確認し、運営ポリシーに基づいて対応しました。ご協力ありがとうございます",
+      DISMISSED: "確認の結果、運営ポリシーへの違反は見つかりませんでした",
+    },
+  },
+  myReports: {
+    empty: "まだ通報履歴はありません",
+    reportedAt: "{date} 通報",
+    detailLabel: "入力した内容",
+    noDetail: "入力した内容はありません",
+    resultLabel: "処理結果",
+    handledAt: "処理日 {date}",
   },
   usageHistory: {
     expiresUntil: "{date}まで",
@@ -853,6 +955,7 @@ const zh = {
     collapse: "收起",
     assetAlt: "{name} 素材",
     commentMenu: "评论菜单",
+    universeMenu: "角色菜单",
     commentsCount: "{count} 条评论",
     myProfileAlt: "我的头像",
     loggedInCommentPlaceholder: "不适当的评论可能会被删除",
@@ -904,6 +1007,7 @@ const zh = {
   profilePopover: {
     notice: "公告",
     customerService: "客服中心",
+    myReports: "举报记录",
     persona: "我的人格设定",
     contentSettings: "内容设置",
     loginWithKakao: "使用 Kakao 账号开始",
@@ -923,6 +1027,38 @@ const zh = {
     bl: "BL",
     horror: "恐怖",
     mystery: "推理",
+  },
+  report: {
+    targetTypes: {
+      COMMENT: "评论",
+      UNIVERSE: "角色",
+    },
+    reasons: {
+      SEXUAL: "色情内容",
+      VIOLENCE: "暴力内容",
+      HATE: "仇恨言论",
+      COPYRIGHT: "侵犯版权",
+      SPAM: "垃圾信息·广告",
+      ETC: "其他",
+    },
+    statuses: {
+      PENDING: "已受理",
+      ACTIONED: "已处理",
+      DISMISSED: "未违规",
+    },
+    statusGuides: {
+      PENDING: "运营团队正在审核，处理完成后会通知你",
+      ACTIONED: "我们已审核你的举报，并根据运营政策进行了处理。感谢你的协助",
+      DISMISSED: "经审核，未发现违反运营政策的情况",
+    },
+  },
+  myReports: {
+    empty: "还没有举报记录",
+    reportedAt: "{date} 举报",
+    detailLabel: "我填写的内容",
+    noDetail: "未填写内容",
+    resultLabel: "处理结果",
+    handledAt: "处理时间 {date}",
   },
   usageHistory: {
     expiresUntil: "有效期至 {date}",
@@ -1086,6 +1222,7 @@ const th = {
     collapse: "ย่อ",
     assetAlt: "แอสเซ็ต {name}",
     commentMenu: "เมนูความคิดเห็น",
+    universeMenu: "เมนูตัวละคร",
     commentsCount: "{count} ความคิดเห็น",
     myProfileAlt: "โปรไฟล์ของฉัน",
     loggedInCommentPlaceholder: "ความคิดเห็นที่ไม่เหมาะสมอาจถูกลบได้",
@@ -1137,6 +1274,7 @@ const th = {
   profilePopover: {
     notice: "ประกาศ",
     customerService: "ศูนย์ลูกค้า",
+    myReports: "ประวัติการรายงาน",
     persona: "เพอร์โซนาของฉัน",
     contentSettings: "ตั้งค่าเนื้อหา",
     loginWithKakao: "เริ่มด้วยบัญชี Kakao",
@@ -1156,6 +1294,38 @@ const th = {
     bl: "BL",
     horror: "สยองขวัญ",
     mystery: "สืบสวน",
+  },
+  report: {
+    targetTypes: {
+      COMMENT: "ความคิดเห็น",
+      UNIVERSE: "ตัวละคร",
+    },
+    reasons: {
+      SEXUAL: "เนื้อหาทางเพศ",
+      VIOLENCE: "ความรุนแรง",
+      HATE: "ถ้อยคำแสดงความเกลียดชัง",
+      COPYRIGHT: "ละเมิดลิขสิทธิ์",
+      SPAM: "สแปม·โฆษณา",
+      ETC: "อื่นๆ",
+    },
+    statuses: {
+      PENDING: "ได้รับแล้ว",
+      ACTIONED: "ดำเนินการแล้ว",
+      DISMISSED: "ไม่พบการละเมิด",
+    },
+    statusGuides: {
+      PENDING: "ทีมงานกำลังตรวจสอบ เราจะแจ้งให้ทราบเมื่อดำเนินการเสร็จ",
+      ACTIONED: "เราได้ตรวจสอบรายงานของคุณและดำเนินการตามนโยบายแล้ว ขอบคุณที่ช่วยกันดูแลชุมชน",
+      DISMISSED: "จากการตรวจสอบ ไม่พบการละเมิดนโยบาย",
+    },
+  },
+  myReports: {
+    empty: "ยังไม่มีประวัติการรายงาน",
+    reportedAt: "รายงานเมื่อ {date}",
+    detailLabel: "สิ่งที่คุณเขียน",
+    noDetail: "ไม่ได้กรอกรายละเอียด",
+    resultLabel: "ผลการดำเนินการ",
+    handledAt: "ดำเนินการเมื่อ {date}",
   },
   usageHistory: {
     expiresUntil: "ใช้ได้ถึง {date}",
@@ -1320,6 +1490,7 @@ const vi = {
     collapse: "Thu gọn",
     assetAlt: "Asset {name}",
     commentMenu: "Menu bình luận",
+    universeMenu: "Menu nhân vật",
     commentsCount: "{count} bình luận",
     myProfileAlt: "Hồ sơ của tôi",
     loggedInCommentPlaceholder: "Bình luận không phù hợp có thể bị xóa",
@@ -1371,6 +1542,7 @@ const vi = {
   profilePopover: {
     notice: "Thông báo",
     customerService: "Trung tâm khách hàng",
+    myReports: "Lịch sử báo cáo",
     persona: "Persona của tôi",
     contentSettings: "Cài đặt nội dung",
     loginWithKakao: "Bắt đầu với tài khoản Kakao",
@@ -1390,6 +1562,38 @@ const vi = {
     bl: "BL",
     horror: "Kinh dị",
     mystery: "Suy luận",
+  },
+  report: {
+    targetTypes: {
+      COMMENT: "Bình luận",
+      UNIVERSE: "Nhân vật",
+    },
+    reasons: {
+      SEXUAL: "Nội dung khiêu dâm",
+      VIOLENCE: "Bạo lực",
+      HATE: "Ngôn từ thù ghét",
+      COPYRIGHT: "Vi phạm bản quyền",
+      SPAM: "Spam·Quảng cáo",
+      ETC: "Khác",
+    },
+    statuses: {
+      PENDING: "Đã tiếp nhận",
+      ACTIONED: "Đã xử lý",
+      DISMISSED: "Không vi phạm",
+    },
+    statusGuides: {
+      PENDING: "Đội ngũ quản trị đang xem xét. Chúng tôi sẽ thông báo khi xử lý xong",
+      ACTIONED: "Chúng tôi đã xem xét báo cáo và xử lý theo chính sách. Cảm ơn bạn đã chung tay giữ gìn cộng đồng",
+      DISMISSED: "Sau khi xem xét, chúng tôi không phát hiện vi phạm chính sách",
+    },
+  },
+  myReports: {
+    empty: "Bạn chưa báo cáo nội dung nào",
+    reportedAt: "Báo cáo ngày {date}",
+    detailLabel: "Nội dung bạn đã viết",
+    noDetail: "Không có nội dung",
+    resultLabel: "Kết quả xử lý",
+    handledAt: "Xử lý ngày {date}",
   },
   usageHistory: {
     expiresUntil: "Hiệu lực đến {date}",

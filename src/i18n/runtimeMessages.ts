@@ -17,6 +17,7 @@ const en = {
     home: "Explore characters",
     search: "Search",
     usageHistory: "Usage history",
+    myReports: "My reports",
   },
   errorPage: {
     notFound: "We couldn't find the page you requested.",
@@ -327,6 +328,7 @@ const ko: RuntimeMessages = {
     home: "캐릭터 둘러보기",
     search: "검색",
     usageHistory: "사용 내역",
+    myReports: "신고 내역",
   },
   errorPage: {
     notFound: "요청하신 페이지를 찾을 수 없습니다.",
@@ -618,6 +620,7 @@ const ja: RuntimeMessages = {
     home: "キャラクターを探す",
     search: "検索",
     usageHistory: "利用履歴",
+    myReports: "通報履歴",
   },
   errorPage: {
     notFound: "お探しのページが見つかりません。",
@@ -912,6 +915,7 @@ const zh: RuntimeMessages = {
     home: "探索角色",
     search: "搜索",
     usageHistory: "使用记录",
+    myReports: "举报记录",
   },
   errorPage: {
     notFound: "找不到您请求的页面。",
@@ -1197,6 +1201,7 @@ const th: RuntimeMessages = {
     home: "สำรวจตัวละคร",
     search: "ค้นหา",
     usageHistory: "ประวัติการใช้งาน",
+    myReports: "ประวัติการรายงาน",
   },
   errorPage: {
     notFound: "ไม่พบหน้าที่คุณต้องการ",
@@ -1494,6 +1499,7 @@ const vi: RuntimeMessages = {
     home: "Khám phá nhân vật",
     search: "Tìm kiếm",
     usageHistory: "Lịch sử sử dụng",
+    myReports: "Lịch sử báo cáo",
   },
   errorPage: {
     notFound: "Không tìm thấy trang bạn yêu cầu.",
