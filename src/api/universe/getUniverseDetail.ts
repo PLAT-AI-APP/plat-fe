@@ -9,6 +9,7 @@ import type {
 } from "@/type/character";
 import { universeQueryKeys } from "./queryKeys";
 import { useAuthReady } from "@/hooks/data/useAuthReady";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export type UniverseDetailVisibility = "PUBLIC" | "PRIVATE";
 export type UniverseDetailTendency =
@@ -163,10 +164,12 @@ export const useUniverseDetailQuery = (universeId?: string) => {
   // 채 멈춘다. 쿼리 키에 로그인 상태를 반영해 두면, 로그인 안내 모달에서 다시
   // 로그인했을 때 키가 바뀌면서 자동으로 재요청된다 — 새로고침 없이도 내용이 채워진다.
   const authReady = useAuthReady();
+  const isAuthChecked = useAuthStore((state) => state.isAuthReady);
 
   return useQuery<UniverseDetailResponse, AppError>({
     queryKey: [...universeQueryKeys.detail(universeId), authReady],
     queryFn: () => getUniverseDetail(universeId ?? ""),
-    enabled: Boolean(universeId),
+    // 인증 확인 전에 먼저 받으면, 확인이 끝나 키가 바뀔 때 처음부터 다시 로딩한다.
+    enabled: Boolean(universeId) && isAuthChecked,
   });
 };

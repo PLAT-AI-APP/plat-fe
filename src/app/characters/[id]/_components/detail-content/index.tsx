@@ -30,9 +30,11 @@ const CharacterDetailContent = ({
     data: universe,
     error,
     isError,
-    isLoading,
+    isPending,
     refetch,
   } = useUniverseDetailQuery(characterId);
+  // 인증 확인 전에는 쿼리가 꺼져 있어 isLoading 이 false 다. 데이터가 없으면 로딩으로 본다.
+  const isLoading = isPending && !isError;
   const fadeInClassName = useFadeInAfterLoading(isLoading);
   const character = useMemo(
     () =>
