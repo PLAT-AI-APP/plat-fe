@@ -27,7 +27,6 @@ const MODAL_COMPONENTS = {
   REPORT: dynamic(() => import("./ReportModal")),
   TAG_ADD: dynamic(() => import("./TagAddModal")),
   TAG_SUGGESTIONS: dynamic(() => import("./TagSuggestionsModal")),
-  USER_NOTE: dynamic(() => import("./UserNoteModal")),
   PERSONA: dynamic(() => import("./persona")),
 } as {
   [K in keyof ModalTypeMap]: ComponentType<ModalTypeMap[K]>;

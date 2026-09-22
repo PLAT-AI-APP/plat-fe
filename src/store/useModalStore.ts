@@ -12,7 +12,6 @@ import {
   ReportModalProps,
   TagAddModalProps,
   TagSuggestionsModalProps,
-  UserNoteModalProps,
 } from "@/type/modal";
 import { useAuthStore } from "./useAuthStore";
 
@@ -28,7 +27,6 @@ export type ModalTypeMap = {
   REPORT: ReportModalProps;
   TAG_ADD: TagAddModalProps;
   TAG_SUGGESTIONS: TagSuggestionsModalProps;
-  USER_NOTE: UserNoteModalProps;
   PERSONA: PersonaModalProps;
 };
 
@@ -64,7 +62,6 @@ const requiresAuthModalTypes: (keyof ModalTypeMap)[] = [
   "PERSONA_ADD",
   "PROFILE_EDIT",
   "FOLLOW",
-  "USER_NOTE",
   "TAG_ADD",
   "TAG_SUGGESTIONS",
   "REPORT",

@@ -27,6 +27,7 @@ import { useModalStore } from "@/store/useModalStore";
 import { useWalletStore } from "@/store/useWalletStore";
 import ChattingAssetGalleryView from "./chatting-asset-gallery-view";
 import ChattingMemoryView from "./chatting-memory-view";
+import ChattingUserNoteView from "./chatting-user-note-view";
 import { TRANSITION } from "@/constants/motion";
 
 interface ChattingSidebarProps {
@@ -48,7 +49,7 @@ interface SidebarToggleProps {
   onClick: () => void;
 }
 
-type SidebarDepth = "SETTINGS" | "MEMORY" | "ASSET_GALLERY";
+type SidebarDepth = "SETTINGS" | "MEMORY" | "ASSET_GALLERY" | "USER_NOTE";
 
 /** 사이드바 오버레이 페이드 애니메이션 */
 const sidebarOverlayMotion = {
@@ -166,12 +167,6 @@ const ChattingSidebar = ({
     });
   };
 
-  const handleOpenUserNoteModal = () => {
-    // 다른 레이어 UI를 열기 전 사이드바 먼저 닫기
-    toggleIsSidebar();
-    openModal("USER_NOTE", { roomId });
-  };
-
   const handleAssetViewToggle = () => {
     // 채팅 화면 안의 에셋 표시 여부만 변경
     setIsAssetViewOn((prevState) => !prevState);
@@ -243,6 +238,8 @@ const ChattingSidebar = ({
           >
             {sidebarDepth === "MEMORY" ? (
               <ChattingMemoryView roomId={roomId} onBack={handleDepthBack} />
+            ) : sidebarDepth === "USER_NOTE" ? (
+              <ChattingUserNoteView roomId={roomId} onBack={handleDepthBack} />
             ) : sidebarDepth === "ASSET_GALLERY" ? (
               <ChattingAssetGalleryView
                 roomId={roomId}
@@ -294,7 +291,7 @@ const ChattingSidebar = ({
                           <SidebarMenuItem
                             icon={Note}
                             label={t("userNote")}
-                            onClick={handleOpenUserNoteModal}
+                            onClick={() => setSidebarDepth("USER_NOTE")}
                           />
                         </li>
                       </menu>
