@@ -147,6 +147,7 @@ const ko = {
     collapse: "접기",
     assetAlt: "{name} 에셋",
     commentMenu: "댓글 메뉴",
+    universeMenu: "캐릭터 메뉴",
     commentsCount: "댓글 {count}개",
     myProfileAlt: "내 프로필",
     loggedInCommentPlaceholder: "타인에게 부적절한 댓글은 삭제될 수 있어요",
@@ -198,6 +199,7 @@ const ko = {
   profilePopover: {
     notice: "공지사항",
     customerService: "고객센터",
+    myReports: "신고 내역",
     persona: "내 페르소나",
     contentSettings: "콘텐츠 설정",
     loginWithKakao: "카카오 계정으로 시작하기",
@@ -217,6 +219,38 @@ const ko = {
     bl: "BL",
     horror: "공포",
     mystery: "추리",
+  },
+  report: {
+    targetTypes: {
+      COMMENT: "댓글",
+      UNIVERSE: "캐릭터",
+    },
+    reasons: {
+      SEXUAL: "선정성",
+      VIOLENCE: "폭력성",
+      HATE: "혐오 표현",
+      COPYRIGHT: "저작권 침해",
+      SPAM: "스팸·광고",
+      ETC: "기타",
+    },
+    statuses: {
+      PENDING: "접수됨",
+      ACTIONED: "조치 완료",
+      DISMISSED: "위반 없음",
+    },
+    statusGuides: {
+      PENDING: "운영팀이 확인하고 있어요. 처리되면 알려드릴게요",
+      ACTIONED: "신고해 주신 내용을 검토해 운영정책에 따라 조치했어요. 함께 지켜 주셔서 고마워요",
+      DISMISSED: "검토 결과 운영정책 위반 사항이 확인되지 않았어요",
+    },
+  },
+  myReports: {
+    empty: "아직 신고한 내역이 없어요",
+    reportedAt: "{date} 신고",
+    detailLabel: "내가 작성한 내용",
+    noDetail: "작성한 내용이 없어요",
+    resultLabel: "처리 결과",
+    handledAt: "처리일 {date}",
   },
   usageHistory: {
     expiresUntil: "~ {date} 까지",

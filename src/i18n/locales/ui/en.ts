@@ -151,6 +151,7 @@ const en = {
     collapse: "Collapse",
     assetAlt: "{name} asset",
     commentMenu: "Comment menu",
+    universeMenu: "Character menu",
     commentsCount: "{count} comments",
     myProfileAlt: "My profile",
     loggedInCommentPlaceholder: "Inappropriate comments may be removed.",
@@ -208,6 +209,7 @@ const en = {
   profilePopover: {
     notice: "Notice",
     customerService: "Customer service",
+    myReports: "My reports",
     persona: "My persona",
     contentSettings: "Content settings",
     loginWithKakao: "Continue with Kakao",
@@ -227,6 +229,38 @@ const en = {
     bl: "BL",
     horror: "Horror",
     mystery: "Mystery",
+  },
+  report: {
+    targetTypes: {
+      COMMENT: "Comment",
+      UNIVERSE: "Character",
+    },
+    reasons: {
+      SEXUAL: "Sexual content",
+      VIOLENCE: "Violence",
+      HATE: "Hate speech",
+      COPYRIGHT: "Copyright infringement",
+      SPAM: "Spam or ads",
+      ETC: "Other",
+    },
+    statuses: {
+      PENDING: "Received",
+      ACTIONED: "Action taken",
+      DISMISSED: "No violation",
+    },
+    statusGuides: {
+      PENDING: "Our team is reviewing your report. We'll let you know once it's handled.",
+      ACTIONED: "We reviewed your report and took action under our policies. Thank you for helping keep the community safe.",
+      DISMISSED: "After review, we didn't find a violation of our policies.",
+    },
+  },
+  myReports: {
+    empty: "You haven't reported anything yet.",
+    reportedAt: "Reported {date}",
+    detailLabel: "What you wrote",
+    noDetail: "No details provided",
+    resultLabel: "Result",
+    handledAt: "Handled {date}",
   },
   usageHistory: {
     expiresUntil: "Valid until {date}",

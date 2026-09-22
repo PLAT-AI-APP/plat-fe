@@ -15,6 +15,7 @@ const en = {
     home: "Explore characters",
     search: "Search",
     usageHistory: "Usage history",
+    myReports: "My reports",
   },
   errorPage: {
     notFound: "We couldn't find the page you requested.",

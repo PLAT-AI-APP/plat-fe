@@ -54,11 +54,19 @@ const ja: typeof ko = {
       submit: "返金をリクエスト",
       successToast: "返金リクエストを受け付けました",
     },
-    commentReport: {
-      title: "{nickname}さんのコメントにどんな問題がありますか？",
-      placeholder: "通報理由を具体的にお書きください。確認のうえ対応します。",
+    report: {
+      titleComment: "{nickname}さんのコメントにどんな問題がありますか？",
+      titleUniverse: "キャラクター「{name}」にどのような問題がありますか？",
+      reasonLabel: "通報理由",
+      detailPlaceholder: "通報理由を具体的にお書きください。確認のうえ対応します。",
+      detailPlaceholderRequired: "どのような問題があるか教えてください",
       submit: "通報する",
       successToast: "通報を受け付けました",
+      successDescription: "処理結果は通報履歴で確認できます",
+      viewHistory: "通報履歴",
+      alreadySubmitted: "すでに通報済みです。処理結果は通報履歴で確認できます",
+      selfTarget: "自分が作成したコンテンツは通報できません",
+      targetNotFound: "削除されたか、表示できなくなったコンテンツです",
     },
     passwordReset: {
       title: "パスワード再設定",

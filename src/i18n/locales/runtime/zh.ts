@@ -13,6 +13,7 @@ const zh: typeof en = {
     home: "探索角色",
     search: "搜索",
     usageHistory: "使用记录",
+    myReports: "举报记录",
   },
   errorPage: {
     notFound: "找不到您请求的页面。",

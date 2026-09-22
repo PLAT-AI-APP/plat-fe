@@ -53,11 +53,19 @@ const th: typeof ko = {
       submit: "ขอคืนเงิน",
       successToast: "ส่งคำขอคืนเงินแล้ว",
     },
-    commentReport: {
-      title: "ความคิดเห็นของ {nickname} มีปัญหาอะไร?",
-      placeholder: "โปรดระบุเหตุผลอย่างละเอียด เราจะตรวจสอบและดำเนินการ",
+    report: {
+      titleComment: "ความคิดเห็นของ {nickname} มีปัญหาอะไร?",
+      titleUniverse: "ตัวละคร {name} มีปัญหาอะไร?",
+      reasonLabel: "เหตุผลการรายงาน",
+      detailPlaceholder: "โปรดระบุเหตุผลอย่างละเอียด เราจะตรวจสอบและดำเนินการ",
+      detailPlaceholderRequired: "บอกเราว่ามีปัญหาอะไร",
       submit: "รายงาน",
-      successToast: "ส่งรายงานเรียบร้อยแล้ว",
+      successToast: "ส่งรายงานแล้ว",
+      successDescription: "ตรวจสอบผลได้ที่ประวัติการรายงาน",
+      viewHistory: "ประวัติการรายงาน",
+      alreadySubmitted: "คุณรายงานเนื้อหานี้ไปแล้ว ตรวจสอบผลได้ที่ประวัติการรายงาน",
+      selfTarget: "ไม่สามารถรายงานเนื้อหาของตัวเองได้",
+      targetNotFound: "เนื้อหานี้ถูกลบหรือไม่สามารถดูได้แล้ว",
     },
     passwordReset: {
       title: "รีเซ็ตรหัสผ่าน",

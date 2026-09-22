@@ -151,6 +151,7 @@ const vi = {
     collapse: "Thu gọn",
     assetAlt: "Asset {name}",
     commentMenu: "Menu bình luận",
+    universeMenu: "Menu nhân vật",
     commentsCount: "{count} bình luận",
     myProfileAlt: "Hồ sơ của tôi",
     loggedInCommentPlaceholder: "Bình luận không phù hợp có thể bị xóa",
@@ -202,6 +203,7 @@ const vi = {
   profilePopover: {
     notice: "Thông báo",
     customerService: "Trung tâm khách hàng",
+    myReports: "Lịch sử báo cáo",
     persona: "Persona của tôi",
     contentSettings: "Cài đặt nội dung",
     loginWithKakao: "Bắt đầu với tài khoản Kakao",
@@ -221,6 +223,38 @@ const vi = {
     bl: "BL",
     horror: "Kinh dị",
     mystery: "Suy luận",
+  },
+  report: {
+    targetTypes: {
+      COMMENT: "Bình luận",
+      UNIVERSE: "Nhân vật",
+    },
+    reasons: {
+      SEXUAL: "Nội dung khiêu dâm",
+      VIOLENCE: "Bạo lực",
+      HATE: "Ngôn từ thù ghét",
+      COPYRIGHT: "Vi phạm bản quyền",
+      SPAM: "Spam·Quảng cáo",
+      ETC: "Khác",
+    },
+    statuses: {
+      PENDING: "Đã tiếp nhận",
+      ACTIONED: "Đã xử lý",
+      DISMISSED: "Không vi phạm",
+    },
+    statusGuides: {
+      PENDING: "Đội ngũ quản trị đang xem xét. Chúng tôi sẽ thông báo khi xử lý xong",
+      ACTIONED: "Chúng tôi đã xem xét báo cáo và xử lý theo chính sách. Cảm ơn bạn đã chung tay giữ gìn cộng đồng",
+      DISMISSED: "Sau khi xem xét, chúng tôi không phát hiện vi phạm chính sách",
+    },
+  },
+  myReports: {
+    empty: "Bạn chưa báo cáo nội dung nào",
+    reportedAt: "Báo cáo ngày {date}",
+    detailLabel: "Nội dung bạn đã viết",
+    noDetail: "Không có nội dung",
+    resultLabel: "Kết quả xử lý",
+    handledAt: "Xử lý ngày {date}",
   },
   usageHistory: {
     expiresUntil: "Hiệu lực đến {date}",

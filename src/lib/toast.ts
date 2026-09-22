@@ -4,6 +4,11 @@ export type AppToastType = "success" | "info" | "warning" | "error";
 
 interface ShowAppToastOptions {
   description?: string;
+  /** 토스트 안의 바로가기 버튼. 결과를 확인할 화면으로 이어 줄 때 쓴다. */
+  action?: {
+    label: string;
+    onClick: () => void;
+  };
 }
 
 /** 모든 toast 노출 시간 */
@@ -21,10 +26,11 @@ export const showAppToast = (
   message: string,
   options: ShowAppToastOptions = {},
 ) => {
-  const { description } = options;
+  const { description, action } = options;
 
   toast[type](message, {
     description,
+    action,
     duration: APP_TOAST_DURATION,
   });
 };

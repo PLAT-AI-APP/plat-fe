@@ -57,11 +57,19 @@ const vi: typeof ko = {
       submit: "Yêu cầu hoàn tiền",
       successToast: "Đã gửi yêu cầu hoàn tiền",
     },
-    commentReport: {
-      title: "Bình luận của {nickname} có vấn đề gì?",
-      placeholder: "Vui lòng nêu rõ lý do, chúng tôi sẽ xem xét và xử lý.",
+    report: {
+      titleComment: "Bình luận của {nickname} có vấn đề gì?",
+      titleUniverse: "Nhân vật {name} có vấn đề gì?",
+      reasonLabel: "Lý do báo cáo",
+      detailPlaceholder: "Vui lòng nêu rõ lý do, chúng tôi sẽ xem xét và xử lý.",
+      detailPlaceholderRequired: "Hãy cho chúng tôi biết vấn đề là gì",
       submit: "Báo cáo",
-      successToast: "Đã gửi báo cáo của bạn",
+      successToast: "Đã gửi báo cáo",
+      successDescription: "Bạn có thể xem kết quả trong Lịch sử báo cáo",
+      viewHistory: "Lịch sử báo cáo",
+      alreadySubmitted: "Bạn đã báo cáo nội dung này. Có thể xem kết quả trong Lịch sử báo cáo",
+      selfTarget: "Không thể báo cáo nội dung của chính bạn",
+      targetNotFound: "Nội dung này đã bị xóa hoặc không còn khả dụng",
     },
     passwordReset: {
       title: "Đặt lại mật khẩu",

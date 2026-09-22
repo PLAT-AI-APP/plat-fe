@@ -160,9 +160,10 @@ const CommentListItem = ({
   };
 
   const handleReportComment = () => {
-    openModal("COMMENT_REPORT", {
-      commentId: comment.commentId,
-      nickname: comment.author.nickname,
+    openModal("REPORT", {
+      targetType: "COMMENT",
+      targetId: comment.commentId,
+      targetName: comment.author.nickname,
     });
   };
 

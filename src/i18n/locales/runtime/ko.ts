@@ -13,6 +13,7 @@ const ko: typeof en = {
     home: "캐릭터 둘러보기",
     search: "검색",
     usageHistory: "사용 내역",
+    myReports: "신고 내역",
   },
   errorPage: {
     notFound: "요청하신 페이지를 찾을 수 없습니다.",

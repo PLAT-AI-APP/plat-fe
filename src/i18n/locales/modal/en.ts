@@ -56,11 +56,19 @@ const en: typeof ko = {
       submit: "Request refund",
       successToast: "Your refund request has been submitted",
     },
-    commentReport: {
-      title: "What's wrong with {nickname}'s comment?",
-      placeholder: "Please describe the reason in detail and we'll review it and take action.",
+    report: {
+      titleComment: "What's wrong with {nickname}'s comment?",
+      titleUniverse: "What's wrong with the character {name}?",
+      reasonLabel: "Reason",
+      detailPlaceholder: "Please describe the reason in detail and we'll review it and take action.",
+      detailPlaceholderRequired: "Tell us what the problem is.",
       submit: "Report",
-      successToast: "Your report has been submitted",
+      successToast: "Report submitted",
+      successDescription: "You can check the result in My reports.",
+      viewHistory: "My reports",
+      alreadySubmitted: "You've already reported this. You can check the result in My reports.",
+      selfTarget: "You can't report your own content.",
+      targetNotFound: "This content was deleted or is no longer available.",
     },
     passwordReset: {
       title: "Reset password",
