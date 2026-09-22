@@ -8,6 +8,11 @@ interface ActiveButtonProps extends ComponentPropsWithoutRef<"button"> {
   id?: string;
   children?: ReactNode;
   textClassName?: string;
+  /**
+   * 요청 진행 중. 입력이 모자라 못 누르는 상태(isActive=false)와 구분되도록 브랜드색은 그대로 두고
+   * 스피너와 pending-state 로 "처리 중" 임을 보인다. 이 동안은 눌리지 않는다.
+   */
+  isPending?: boolean;
 }
 
 /**
@@ -30,26 +35,39 @@ const ActiveButton = ({
   children,
   textClassName,
   disabled,
+  isPending = false,
   ...props
 }: ActiveButtonProps) => {
-  const isDisabled = disabled ?? !isActive;
+  const isDisabled = isPending || (disabled ?? !isActive);
 
   return (
     <button
       id={id}
       type={type}
       disabled={isDisabled}
+      aria-busy={isPending || undefined}
       className={cn(
         "title-5 inline-flex h-11 w-full items-center justify-center gap-1.5 rounded-lg transition",
         "hover:brightness-110 active:scale-[0.99] active:brightness-95",
-        "disabled:pointer-events-none disabled:bg-card disabled:text-font-disabled",
-        isActive ? "bg-brand text-on-brand" : "bg-card text-font-disabled",
+        "disabled:pointer-events-none",
+        isPending
+          ? "pending-state"
+          : "disabled:bg-card disabled:text-font-disabled",
+        isActive || isPending
+          ? "bg-brand text-on-brand"
+          : "bg-card text-font-disabled",
         className,
       )}
       {...props}
     >
+      {isPending && (
+        <span
+          aria-hidden="true"
+          className="size-4 shrink-0 animate-spin rounded-full border-2 border-on-brand/40 border-t-on-brand"
+        />
+      )}
       {text && <span className={textClassName}>{text}</span>}
-      {children}
+      {!(isPending && !text) && children}
     </button>
   );
 };
