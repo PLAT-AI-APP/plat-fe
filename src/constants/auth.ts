@@ -6,6 +6,7 @@ export const PROTECTED_ROUTES = [
   "/studio",
   "/usage-history",
   "/my-reports",
+  "/customer-service/qna",
   "/withdrawal",
   "/profile",
 ];

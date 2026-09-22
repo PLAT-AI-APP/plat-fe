@@ -41,18 +41,6 @@ const th: typeof ko = {
       submit: "บันทึก",
       successToast: "บันทึกโน้ตผู้ใช้แล้ว",
     },
-    refundRequest: {
-      title: "ขอคืนเงิน",
-      productLabel: "สินค้าที่ชำระ",
-      amountLabel: "ยอดชำระ",
-      creditLabel: "โน้ตที่ได้รับ",
-      refundableUntilLabel: "กำหนดขอคืนเงิน",
-      notice: "คืนเงินเต็มจำนวนได้เฉพาะการชำระที่ยังไม่ได้ใช้โน้ตเลย ภายใน 7 วันหลังชำระเงิน คำขอจะดำเนินการหลังทีมงานตรวจสอบ",
-      reasonLabel: "เหตุผล (ไม่บังคับ)",
-      reasonPlaceholder: "บอกเหตุผลเพื่อช่วยเราปรับปรุงบริการ",
-      submit: "ขอคืนเงิน",
-      successToast: "ส่งคำขอคืนเงินแล้ว",
-    },
     report: {
       titleComment: "ความคิดเห็นของ {nickname} มีปัญหาอะไร?",
       titleUniverse: "ตัวละคร {name} มีปัญหาอะไร?",
