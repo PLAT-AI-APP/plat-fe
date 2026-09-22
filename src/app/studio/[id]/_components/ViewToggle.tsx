@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { ViewGrid, ViewList } from "@/icons";
@@ -29,7 +29,7 @@ const ViewToggle = ({ viewMode }: ViewToggleProps) => {
       className="relative flex h-8.5 w-16.5 cursor-pointer items-center overflow-hidden rounded-full border border-main bg-darkest p-1"
       aria-label={viewMode === "list" ? t("switchToGrid") : t("switchToList")}
     >
-      <motion.div
+      <m.div
         className="absolute h-6.5 w-6.5 rounded-full bg-card-selected"
         initial={false}
         animate={{ x: viewMode === "list" ? 0 : 29 }}

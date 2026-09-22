@@ -2,6 +2,7 @@
 
 import React, { useMemo } from "react";
 import Image from "next/image";
+import { m } from "framer-motion";
 import { useTranslations } from "next-intl";
 import CharacterChat from "@/components/chat/CharacterChat";
 import InlineEditActions from "@/components/chat/InlineEditActions";
@@ -11,23 +12,85 @@ import { ChatRetry, ChatTrash, Pen, Trash } from "@/icons";
 import { useAutoResizeTextarea } from "@/hooks/form/useAutoResizeTextarea";
 import { useInlineTextEdit } from "@/hooks/form/useInlineTextEdit";
 import { getResourceImageUrl } from "@/lib/file";
-import { parsePlatCached, segmentsToDisplayText } from "@/lib/platParse";
+import {
+  parsePlatCached,
+  parsePlatStreaming,
+  segmentsToDisplayText,
+} from "@/lib/platParse";
 import { useUserDisplayName } from "@/hooks/data/useUserDisplayName";
+import { TRANSITION_FAST, slideUpVariants } from "@/constants/motion";
 
 interface ChatContentBlockProps {
   rawData: string;
   characterName: string;
   profileImage: string;
+  /** 스트림으로 받는 중인 응답. 반쯤 온 블록을 미리 닫아 그리고, 삭제·다시하기 버튼은 숨긴다. */
+  isStreaming?: boolean;
   isEditMode?: boolean;
   onUpdate?: (newContent: string) => void;
   onDelete?: () => void;
   onRetry?: () => void;
 }
 
+interface TypingIndicatorProps {
+  characterName: string;
+  profileImage: string;
+}
+
+const TYPING_DOTS = [0, 1, 2] as const;
+
+/** 첫 글자가 오기 전, 캐릭터가 답장을 쓰고 있다는 표시. 전송 후 빈 화면이다가 응답이 툭 나타나지 않게 한다. */
+const TypingIndicator = ({
+  characterName,
+  profileImage,
+}: TypingIndicatorProps) => {
+  const t = useTranslations();
+
+  return (
+    <m.article
+      {...slideUpVariants}
+      transition={TRANSITION_FAST}
+      role="status"
+      aria-label={t("chatUI.characterTyping", { name: characterName })}
+      className="flex gap-2"
+    >
+      {/* CharacterChat 과 같은 자리·크기를 써야 첫 글자가 오며 말풍선으로 바뀔 때 흔들리지 않는다. */}
+      {profileImage ? (
+        <Image
+          src={profileImage}
+          alt=""
+          width={36}
+          height={36}
+          unoptimized
+          className="avatar-img size-9"
+        />
+      ) : (
+        <span className="size-9 shrink-0 rounded-full bg-card" aria-hidden />
+      )}
+
+      <div className="body-5">
+        <span className="body-6 mb-1.5 block text-font-1">{characterName}</span>
+        <div className="flex h-9 w-fit items-center gap-1 rounded-[0px_16px_16px_16px] bg-card px-3">
+          {TYPING_DOTS.map((dot) => (
+            <m.span
+              key={dot}
+              aria-hidden
+              className="size-1.5 rounded-full bg-font-2"
+              animate={{ opacity: [0.3, 1, 0.3] }}
+              transition={{ duration: 1.2, repeat: Infinity, delay: dot * 0.2 }}
+            />
+          ))}
+        </div>
+      </div>
+    </m.article>
+  );
+};
+
 const ChatContentBlock = ({
   rawData,
   characterName,
   profileImage,
+  isStreaming = false,
   isEditMode = false,
   onUpdate,
   onDelete,
@@ -51,8 +114,22 @@ const ChatContentBlock = ({
     value: editedContent,
   });
 
-  // 같은 메시지가 가상화로 다시 마운트돼도 이전 파싱 결과를 재사용
-  const blocks = useMemo(() => parsePlatCached(rawData), [rawData]);
+  // 같은 메시지가 가상화로 다시 마운트돼도 이전 파싱 결과를 재사용한다.
+  // 받는 중인 응답은 글자마다 원문이 바뀌어 캐시 대신 마지막 블록을 미리 닫아 파싱한다.
+  const blocks = useMemo(
+    () => (isStreaming ? parsePlatStreaming(rawData) : parsePlatCached(rawData)),
+    [rawData, isStreaming],
+  );
+
+  // 버튼은 캐릭터 응답 맨 아래 왼쪽에 붙는다. 사용자 대사로 끝나면 오른쪽 사용자 말풍선 밑에 걸려
+  // 사용자 말에 딸린 버튼처럼 보이므로 그리지 않는다.
+  const endsWithUserDialogue = blocks.at(-1)?.type === "USER_DIALOGUE";
+
+  if (isStreaming && blocks.length === 0) {
+    return (
+      <TypingIndicator characterName={characterName} profileImage={profileImage} />
+    );
+  }
 
   if (isEditing) {
     return (
@@ -121,7 +198,7 @@ const ChatContentBlock = ({
         return null;
       })}
 
-      {isEditMode && (
+      {isEditMode && !isStreaming && (
         <div className="-mt-4 flex gap-1 pl-11">
           <button
             type="button"
@@ -140,7 +217,8 @@ const ChatContentBlock = ({
         </div>
       )}
 
-      {!isEditMode && (onDelete || onRetry) && (
+      {/* 받는 중인 응답은 아직 서버에 없어 지우거나 다시 만들 대상이 없다. */}
+      {!isEditMode && !isStreaming && !endsWithUserDialogue && (onDelete || onRetry) && (
         <div className="-mt-4 flex gap-1 pl-11">
           <button
             type="button"

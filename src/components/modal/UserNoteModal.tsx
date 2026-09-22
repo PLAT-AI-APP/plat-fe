@@ -4,7 +4,7 @@ import React from "react";
 import { useTranslations } from "next-intl";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { usePatchRoomUserNoteMutation } from "@/api/room/patchRoomContext";
+import { usePatchRoomUserNoteMutation } from "@/api/room/patchRoomUserNote";
 import { CloseLine } from "@/icons";
 import Note from "@/icons/Note";
 import { ModalLayout } from "../ModalLayout";

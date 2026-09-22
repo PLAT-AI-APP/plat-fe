@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { m, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import Token from "@/icons/Token";
 import ButtonLink from "@/components/ui/ButtonLink";
@@ -81,7 +81,7 @@ const PaymentFailure = ({ variant, reason }: PaymentFailureProps) => {
       {/* 토큰 히어로 */}
       <div className="relative flex size-52 items-center justify-center">
         {/* 끊긴 궤도 — 연결이 끊겼다는 은유 */}
-        <motion.div
+        <m.div
           aria-hidden
           className={cn(
             "absolute inset-5 rounded-full border-2 border-dashed",
@@ -104,7 +104,7 @@ const PaymentFailure = ({ variant, reason }: PaymentFailureProps) => {
         {failed &&
           !reduceMotion &&
           SHARDS.map((shard, index) => (
-            <motion.span
+            <m.span
               key={index}
               aria-hidden
               className="absolute rounded-[2px] bg-danger"
@@ -121,7 +121,7 @@ const PaymentFailure = ({ variant, reason }: PaymentFailureProps) => {
           ))}
 
         {/* 토큰: 떨어져 내려앉으며 색을 잃는다. 실패면 한 번 흔들린다. */}
-        <motion.div
+        <m.div
           className="relative"
           initial={reduceMotion ? false : { y: -36, opacity: 0, scale: 0.9 }}
           animate={
@@ -138,7 +138,7 @@ const PaymentFailure = ({ variant, reason }: PaymentFailureProps) => {
             x: { delay: 0.45, duration: 0.5, ease: "easeInOut" },
           }}
         >
-          <motion.div
+          <m.div
             initial={reduceMotion ? false : { filter: "grayscale(0)" }}
             animate={{
               filter: failed ? "grayscale(0.85)" : "grayscale(1)",
@@ -147,10 +147,10 @@ const PaymentFailure = ({ variant, reason }: PaymentFailureProps) => {
             transition={{ delay: 0.4, duration: 0.6 }}
           >
             <Token className="size-24" />
-          </motion.div>
+          </m.div>
 
           {/* 상태 뱃지 */}
-          <motion.span
+          <m.span
             aria-hidden
             className={cn(
               "absolute -right-2 -bottom-1 flex size-9 items-center justify-center rounded-full ring-4 ring-dark",
@@ -166,11 +166,11 @@ const PaymentFailure = ({ variant, reason }: PaymentFailureProps) => {
             }}
           >
             {failed ? <AlertIcon /> : <CloseIcon />}
-          </motion.span>
+          </m.span>
 
           {/* 뱃지에서 한 번 번지는 경고 파동 */}
           {failed && !reduceMotion && (
-            <motion.span
+            <m.span
               aria-hidden
               className="absolute -right-2 -bottom-1 size-9 rounded-full bg-danger"
               initial={{ scale: 1, opacity: 0 }}
@@ -184,20 +184,20 @@ const PaymentFailure = ({ variant, reason }: PaymentFailureProps) => {
               }}
             />
           )}
-        </motion.div>
+        </m.div>
       </div>
 
       {/* 문구 */}
       <div role="status" className="flex flex-col items-center">
-        <motion.h2 {...rise(0.35)} className="heading-2 text-font-0">
+        <m.h2 {...rise(0.35)} className="heading-2 text-font-0">
           {t(
             failed
               ? "tokenCharge.payment.failedTitle"
               : "tokenCharge.payment.cancelledTitle",
           )}
-        </motion.h2>
+        </m.h2>
 
-        <motion.p
+        <m.p
           {...rise(0.45)}
           className="body-4 mt-3 max-w-80 text-font-2 break-keep"
         >
@@ -206,19 +206,19 @@ const PaymentFailure = ({ variant, reason }: PaymentFailureProps) => {
               ? "tokenCharge.payment.failedDescription"
               : "tokenCharge.payment.cancelledDescription",
           )}
-        </motion.p>
+        </m.p>
       </div>
 
       {failed && reason && (
-        <motion.p
+        <m.p
           {...rise(0.55)}
           className="body-6 mt-5 max-w-80 rounded-xl bg-danger-bg px-4 py-2.5 text-danger break-keep"
         >
           {reason}
-        </motion.p>
+        </m.p>
       )}
 
-      <motion.div
+      <m.div
         {...rise(0.7)}
         className="mt-10 flex w-full max-w-80 flex-col gap-2.5"
       >
@@ -228,7 +228,7 @@ const PaymentFailure = ({ variant, reason }: PaymentFailureProps) => {
         <ButtonLink href="/" variant="secondary" size="lg" fullWidth>
           {t("tokenCharge.payment.goHome")}
         </ButtonLink>
-      </motion.div>
+      </m.div>
     </div>
   );
 };

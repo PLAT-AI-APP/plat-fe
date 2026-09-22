@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import {
   createContext,
   useContext,
@@ -131,7 +131,7 @@ export const ModalLayout = ({
   const modalContent = (
     <>
       {hasBackground && (
-        <motion.div
+        <m.div
           {...modalOverlayMotion}
           transition={modalTransition}
           className="fixed inset-0 bg-scrim/50 z-100"
@@ -145,7 +145,7 @@ export const ModalLayout = ({
         />
       )}
 
-      <motion.div
+      <m.div
         ref={modalRef}
         role="dialog"
         aria-modal="true"
@@ -166,7 +166,7 @@ export const ModalLayout = ({
         )}
       >
         {children}
-      </motion.div>
+      </m.div>
     </>
   );
 

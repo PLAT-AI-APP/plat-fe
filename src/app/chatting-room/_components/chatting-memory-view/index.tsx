@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { usePatchRoomMemoryMutation } from "@/api/room/patchRoomContext";
+import { usePatchRoomMemoryMutation } from "@/api/room/patchRoomMemory";
 import { ArrowLeft, Storage } from "@/icons";
 import { showAppToast } from "@/lib/toast";
 

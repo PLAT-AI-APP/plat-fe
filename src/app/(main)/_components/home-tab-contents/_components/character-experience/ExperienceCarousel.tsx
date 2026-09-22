@@ -3,7 +3,7 @@
 import { useCarousel } from "@/hooks/dom/useCarousel";
 import { ArrowLeft, ArrowRight } from "@/icons";
 import Fade from "embla-carousel-fade";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useTranslations } from "next-intl";
 import React, { useCallback, useEffect, useMemo } from "react";
 import type { OfficialPreviewItem } from "@/api/home/getOfficialPreview";
@@ -69,7 +69,7 @@ const ExperienceCarousel = ({
           "확실히 한 번 어두워졌다가 바뀌는" 느낌을 위해, 인덱스가 바뀔 때마다 새로 마운트되는
           검은 오버레이를 덮어 크로스페이드 구간을 가린다. */}
       {hasMultipleSlides && (
-        <motion.div
+        <m.div
           key={selectedIndex}
           className="pointer-events-none absolute inset-0 z-20 rounded-2xl bg-black"
           initial={{ opacity: 0.7 }}

@@ -222,7 +222,7 @@ const SidebarSummary = ({
                 <Heart className="size-5" aria-hidden="true" />
               )}
             </button>
-            <UniverseMenuButton universeId={character.characterId} />
+            <UniverseMenuButton universeId={character.characterId} universeName={character.title} />
           </>
         )}
       </div>

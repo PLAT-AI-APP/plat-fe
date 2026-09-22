@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
 import { useEmailVerifyMutation } from "@/api/auth/emailVerify";
@@ -217,7 +217,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
 
       <AnimatePresence>
         {isOtpSent && !isEmailVerified && (
-          <motion.article
+          <m.article
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
@@ -263,7 +263,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
                 />
               </div>
             </div>
-          </motion.article>
+          </m.article>
         )}
       </AnimatePresence>
 

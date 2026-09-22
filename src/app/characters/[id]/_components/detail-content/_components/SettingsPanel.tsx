@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { ArrowDown } from "@/icons";
 import { CharacterDetail, CharacterImageItem } from "@/type/character";
@@ -97,7 +97,7 @@ const SettingsPanel = ({
       {/* 에셋 이미지 슬라이드 임시 비활성화 — 필요 시 아래 주석을 해제합니다.
       <div className="relative h-[332px] overflow-hidden rounded-2xl bg-darkest">
         <AnimatePresence mode="wait">
-          <motion.div
+          <m.div
             key={currentImageKey}
             // framer-motion으로 이미지 교체 시 흐릿한 상태에서 선명해지는 전환을 만듭니다.
             initial={{ opacity: 0, filter: "blur(18px)", scale: 1.02 }}
@@ -125,7 +125,7 @@ const SettingsPanel = ({
               className="absolute left-1/2 top-0 h-full w-[333px] max-w-full -translate-x-1/2 rounded-none object-contain"
             />
             {isImageCtaVisible && (
-              <motion.div
+              <m.div
                 // CTA는 마지막 이미지 위에 천천히 떠오르게 해 이미지 전환과 별도 리듬을 둡니다.
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -142,9 +142,9 @@ const SettingsPanel = ({
                 >
                   {t("chatStart")}
                 </button>
-              </motion.div>
+              </m.div>
             )}
-          </motion.div>
+          </m.div>
         </AnimatePresence>
         <button
           type="button"

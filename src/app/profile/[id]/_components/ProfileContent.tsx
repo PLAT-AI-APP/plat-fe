@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo, useState, useSyncExternalStore } from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { useLikedUniversesInfiniteQuery } from "@/api/user/getLikedUniverses";
 import { useUserProfileQuery } from "@/api/user/getUserProfile";
@@ -216,7 +216,7 @@ export default function ProfileContent({ id }: { id: string }) {
 
             {/* 탭이 아직 없으면 밑줄이 0 폭에서 미끄러져 들어옵니다. 잴 대상이 생긴 뒤에 그립니다. */}
             {hasHydrated && (
-              <motion.span
+              <m.span
                 className="absolute bottom-0 h-0.5 bg-brand"
                 initial={false}
                 animate={{ x: underlineRect.left, width: underlineRect.width }}

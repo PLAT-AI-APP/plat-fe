@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod";
 import { FIELD_ERROR_MESSAGES } from "@/constants/fieldMessages";
 import { REPORT_REASONS } from "@/type/report";
 
@@ -27,8 +27,8 @@ export const tagSuggestionFormSchema = z.object({
 
 export type TagSuggestionFormValues = z.input<typeof tagSuggestionFormSchema>;
 
-/** 신고 상세 입력 상한. 서버 계약(docs/19)과 같은 값이다. */
-export const REPORT_DETAIL_MAX_LENGTH = 1000;
+/** 신고 상세 입력 상한. 디자인의 글자 수 표시(0/500)에 맞춘다. 서버 상한(1000자)보다 작다. */
+export const REPORT_DETAIL_MAX_LENGTH = 500;
 
 export const reportFormSchema = z
   .object({

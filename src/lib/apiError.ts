@@ -1,5 +1,6 @@
 import type { AppError } from "@/api";
-import { RUNTIME_MESSAGES_BY_LOCALE } from "@/i18n/runtimeMessages";
+import { defaultMessages, getLoadedMessages } from "@/i18n/loadMessages";
+import type runtimeMessages from "@/i18n/locales/runtime/en";
 import { useLocaleStore } from "@/store/useLocaleStore";
 
 /**
@@ -14,16 +15,20 @@ export const TIMEOUT_ERROR_CODE = "TIMEOUT";
 /** 서버가 code를 주지 않았을 때의 자리표시자입니다. */
 export const UNKNOWN_ERROR_CODE = "UNKNOWN_ERROR";
 
-export type ApiErrorMessageKey = keyof (typeof RUNTIME_MESSAGES_BY_LOCALE)["ko"]["apiError"];
+export type ApiErrorMessageKey = keyof (typeof runtimeMessages)["apiError"];
 
 /**
  * 서버가 message 를 주지 못한 실패(연결 끊김·타임아웃·예상 밖 응답)에 쓰는 현재 언어 문구.
  *
  * 인터셉터와 query 함수는 React 밖이라 useTranslations 를 못 쓴다. Accept-Language 를 정할 때와
- * 같은 방식으로 스토어에서 현재 언어를 직접 읽는다.
+ * 같은 방식으로 스토어에서 현재 언어를 직접 읽는다. 그 언어 번역을 아직 받는 중이면 기본 언어로 말한다.
  */
-export const getApiErrorMessage = (key: ApiErrorMessageKey): string =>
-  RUNTIME_MESSAGES_BY_LOCALE[useLocaleStore.getState().locale].apiError[key];
+export const getApiErrorMessage = (key: ApiErrorMessageKey): string => {
+  const messages = (getLoadedMessages(useLocaleStore.getState().locale) ??
+    defaultMessages) as Pick<typeof runtimeMessages, "apiError">;
+
+  return messages.apiError[key];
+};
 
 /** 알 수 없는 값도 AppError 모양인지 판별합니다. react-query error는 unknown으로 흘러옵니다. */
 export const isAppError = (error: unknown): error is AppError =>

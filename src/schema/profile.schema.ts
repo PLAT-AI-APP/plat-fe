@@ -1,4 +1,4 @@
-import { z } from "zod";
+import * as z from "zod";
 import { EMAIL_REGEX, NICKNAME_REGEX } from "@/lib/regex";
 import { FIELD_ERROR_MESSAGES } from "@/constants/fieldMessages";
 

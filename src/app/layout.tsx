@@ -9,6 +9,7 @@ import ClientLayout from "./ClientLayout";
 import "pretendard/dist/web/static/pretendard.css";
 import { NavigationGuardProvider } from "next-navigation-guard";
 import MSWProvider from "@/providers/MSWProvider";
+import MotionProvider from "@/providers/MotionProvider";
 
 export const metadata: Metadata = {
   // 1. 기본 메타데이터 및 타이틀 템플릿
@@ -95,10 +96,12 @@ export default function RootLayout({
             <ReactQueryProvider>
               <IntlProvider>
                 <NavigationGuardProvider>
-                  <Suspense fallback={null}>
-                    <ClientLayout>{children}</ClientLayout>
-                    <SonnerProvider />
-                  </Suspense>
+                  <MotionProvider>
+                    <Suspense fallback={null}>
+                      <ClientLayout>{children}</ClientLayout>
+                      <SonnerProvider />
+                    </Suspense>
+                  </MotionProvider>
                 </NavigationGuardProvider>
               </IntlProvider>
             </ReactQueryProvider>

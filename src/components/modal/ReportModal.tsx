@@ -5,12 +5,9 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import ActiveButton from "../ActiveButton";
-import SmartInput from "@/components/smart-input";
 import ChoiceChipField from "@/components/field/ChoiceChipField";
 import { ModalLayout } from "../ModalLayout";
-import { Close, Flag } from "@/icons";
-import IconButton from "@/components/ui/IconButton";
+import { cn } from "@/lib/utils";
 import { notifyApiError } from "@/api";
 import { useReportMutation } from "@/api/report/postReport";
 import {
@@ -43,10 +40,10 @@ type RejectionCode = keyof typeof REJECTION_MESSAGE_KEYS;
 const isRejectionCode = (code: string): code is RejectionCode =>
   code in REJECTION_MESSAGE_KEYS;
 
-/** 댓글·세계관 공용 신고. 사유 하나는 필수, 상세는 기타(ETC)일 때만 필수다. */
-const ReportModal = ({ onClose, targetType, targetId }: ReportModalProps) => {
+/** 댓글·캐릭터 공용 신고. 사유 하나는 필수, 상세는 기타(ETC)일 때만 필수다. 모양은 댓글 신고 디자인을 따른다. */
+const ReportModal = ({ onClose, targetType, targetId, targetName }: ReportModalProps) => {
   const t = useTranslations("modalUi.report");
-  const commonT = useTranslations("modalUi.common");
+  const commonT = useTranslations("common");
   const reasonT = useTranslations("report.reasons");
   const router = useRouter();
   const translateText = useTranslateText();
@@ -137,32 +134,26 @@ const ReportModal = ({ onClose, targetType, targetId }: ReportModalProps) => {
     (!isDetailRequired || Boolean(detail.trim())) &&
     !isPending;
 
+  const title =
+    targetType === "COMMENT"
+      ? t("titleComment", { nickname: targetName })
+      : t("titleUniverse", { name: targetName });
+
   return (
     <ModalLayout
       onClose={onClose}
       hasBackground
-      className="w-[450px] max-w-[calc(100vw-40px)] rounded-3xl bg-dark p-5"
+      className="w-[473px] max-w-[calc(100vw-40px)] overflow-hidden rounded-3xl bg-dark px-6 pb-6 pt-8"
     >
       <form
         onSubmit={handleSubmit(onSubmit, (formErrors) =>
           focusFirstFieldError(formErrors, setFocus, translateText),
         )}
-        className="flex flex-col"
+        className="flex w-full flex-col gap-9"
       >
-        <header className="flex items-center justify-between pb-2">
-          <div className="flex items-center gap-3">
-            <Flag className="size-6 text-font-1" aria-hidden="true" />
-            <h2 className="title-1">
-              {targetType === "COMMENT" ? t("titleComment") : t("titleUniverse")}
-            </h2>
-          </div>
-          <IconButton size="xs" onClick={onClose} aria-label={commonT("close")}>
-            <Close className="size-3.5" />
-          </IconButton>
-        </header>
-        <p className="body-6 pb-6 text-font-2">{t("description")}</p>
+        <div className="flex w-full flex-col gap-5">
+          <h2 className="title-2 w-full text-font-1">{title}</h2>
 
-        <div className="flex flex-col gap-7">
           <Controller
             control={control}
             name="reason"
@@ -178,32 +169,53 @@ const ReportModal = ({ onClose, targetType, targetId }: ReportModalProps) => {
               />
             )}
           />
-          <SmartInput
-            {...register("detail")}
-            type="textarea"
-            value={detail}
-            label={t("detailLabel")}
-            required={isDetailRequired}
-            showOptionalLabel={!isDetailRequired}
-            maxLength={REPORT_DETAIL_MAX_LENGTH}
-            minLine={5}
-            maxLine={8}
-            placeholder={
-              isDetailRequired
-                ? t("detailPlaceholderRequired")
-                : t("detailPlaceholder")
-            }
-            error={errors.detail}
-            className="flex-none"
-          />
+
+          <div className="flex flex-col gap-1.5">
+            <div
+              className={cn(
+                "flex flex-col gap-1 rounded-xl border border-main bg-darkest px-4 py-3 transition-colors focus-within:field-focus!",
+                errors.detail && "border-font-error",
+              )}
+            >
+              <textarea
+                {...register("detail")}
+                rows={4}
+                maxLength={REPORT_DETAIL_MAX_LENGTH}
+                placeholder={isDetailRequired ? t("detailPlaceholderRequired") : t("detailPlaceholder")}
+                aria-label={title}
+                aria-invalid={Boolean(errors.detail)}
+                className="focus-ring-none body-5 custom-scrollbar w-full resize-none bg-transparent text-font-1 outline-none placeholder:text-font-2"
+              />
+              <p className="body-6 text-right text-font-disabled">
+                {detail.length}/{REPORT_DETAIL_MAX_LENGTH}
+              </p>
+            </div>
+
+            {errors.detail?.message && (
+              <p role="alert" className="body-6 text-font-error">
+                {translateText(errors.detail.message)}
+              </p>
+            )}
+          </div>
         </div>
 
-        <ActiveButton
-          type="submit"
-          isActive={canSubmit}
-          text={t("submit")}
-          className="mt-7 h-[42px] rounded-xl"
-        />
+        <div className="title-5 flex w-full items-end gap-3">
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex h-[42px] flex-1 items-center justify-center rounded-xl bg-card px-6 text-font-1 transition-colors hover:bg-card-hover"
+          >
+            {commonT("cancel")}
+          </button>
+
+          <button
+            type="submit"
+            disabled={!canSubmit}
+            className="flex h-[42px] flex-1 items-center justify-center rounded-xl bg-brand px-6 text-on-brand transition-opacity hover:opacity-90 disabled:pointer-events-none disabled:bg-card disabled:text-font-disabled"
+          >
+            {t("submit")}
+          </button>
+        </div>
       </form>
     </ModalLayout>
   );

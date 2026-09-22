@@ -1,5 +1,5 @@
 import type { RefObject } from "react";
-import { motion } from "framer-motion";
+import { m } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { useTabUnderline } from "@/hooks/dom/useTabUnderline";
 import { SPRING_SNAPPY } from "@/constants/motion";
@@ -82,7 +82,7 @@ const DetailTabs = ({
           마지막 탭 뒤 여백에서 기준선이 끊겨 보이지 않게 전체 폭에 한 번만 그립니다. */}
       <div className="absolute inset-x-0 bottom-0 h-0.5 bg-main" />
 
-      <motion.span
+      <m.span
         className="absolute bottom-0 h-0.5 bg-brand"
         initial={false}
         animate={{ x: underlineRect.left, width: underlineRect.width }}

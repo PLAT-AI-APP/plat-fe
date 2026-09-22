@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, m, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import Token from "@/icons/Token";
 import ButtonLink from "@/components/ui/ButtonLink";
@@ -66,7 +66,7 @@ const ClockIcon = () => (
 const BouncingDots = () => (
   <span aria-hidden className="ml-1 inline-flex gap-1 align-middle">
     {[0, 1, 2].map((index) => (
-      <motion.span
+      <m.span
         key={index}
         className="size-1.5 rounded-full bg-brand"
         animate={{ y: [0, -5, 0], opacity: [0.4, 1, 0.4] }}
@@ -95,7 +95,7 @@ const PaymentPending = ({ phase }: PaymentPendingProps) => {
   return (
     <div className="relative flex w-full flex-col items-center">
       {/* 숨 쉬듯 커졌다 작아지는 배경 빛 */}
-      <motion.div
+      <m.div
         aria-hidden
         className="pointer-events-none absolute -top-24 left-1/2 size-[480px] max-w-[100vw] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,var(--brand-opacity-2)_0%,var(--brand-opacity)_35%,transparent_66%)] blur-2xl"
         initial={{ opacity: 0 }}
@@ -114,7 +114,7 @@ const PaymentPending = ({ phase }: PaymentPendingProps) => {
       {/* 토큰 무대 */}
       <div className="relative flex size-52 items-center justify-center">
         {/* 바깥 점선 궤도 — 반대 방향으로 천천히 */}
-        <motion.div
+        <m.div
           aria-hidden
           className="absolute -inset-1 rounded-full border border-dashed border-main"
           animate={moving ? { rotate: -360 } : undefined}
@@ -128,7 +128,7 @@ const PaymentPending = ({ phase }: PaymentPendingProps) => {
         />
 
         {/* 꼬리가 옅어지는 빛줄기 + 앞머리 빛점 */}
-        <motion.div
+        <m.div
           aria-hidden
           className="absolute inset-4"
           animate={moving ? { rotate: 360 } : undefined}
@@ -149,12 +149,12 @@ const PaymentPending = ({ phase }: PaymentPendingProps) => {
           {working && (
             <span className="absolute top-0 left-1/2 size-2.5 -translate-x-1/2 -translate-y-[3px] rounded-full bg-[#ffd27a] shadow-[0_0_12px_4px_rgba(255,122,0,0.7)]" />
           )}
-        </motion.div>
+        </m.div>
 
         {/* 둘레를 도는 빛 알갱이 */}
         {moving &&
           ORBITERS.map((orbiter, index) => (
-            <motion.div
+            <m.div
               key={index}
               aria-hidden
               className={cn("absolute", orbiter.inset)}
@@ -170,21 +170,21 @@ const PaymentPending = ({ phase }: PaymentPendingProps) => {
                 className="absolute top-0 left-1/2 -translate-x-1/2 rounded-full bg-brand-dark opacity-70"
                 style={{ width: orbiter.size, height: orbiter.size }}
               />
-            </motion.div>
+            </m.div>
           ))}
 
         {/* 토큰: 확인 중에는 동전처럼 뒤집히며 둥실 뜬다 */}
-        <motion.div
+        <m.div
           className="relative [perspective:600px]"
           initial={reduceMotion ? false : { scale: 0.6, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ type: "spring", stiffness: 260, damping: 18 }}
         >
-          <motion.div
+          <m.div
             animate={moving ? { y: [0, -6, 0] } : { y: 0 }}
             transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
           >
-            <motion.div
+            <m.div
               className={cn(
                 "drop-shadow-[0_10px_24px_rgba(255,122,0,0.35)] transition-[filter,opacity] duration-slow",
                 phase === "delayed" && "opacity-70 grayscale-[0.6]",
@@ -198,13 +198,13 @@ const PaymentPending = ({ phase }: PaymentPendingProps) => {
               }}
             >
               <Token className="size-24" />
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </m.div>
 
           {/* 멈춘 상태에서는 시계 뱃지로 "기다리는 중"을 알린다 */}
           <AnimatePresence>
             {!working && (
-              <motion.span
+              <m.span
                 aria-hidden
                 className={cn(
                   "absolute -right-2 -bottom-1 flex size-9 items-center justify-center rounded-full ring-4 ring-dark",
@@ -222,10 +222,10 @@ const PaymentPending = ({ phase }: PaymentPendingProps) => {
                 }}
               >
                 <ClockIcon />
-              </motion.span>
+              </m.span>
             )}
           </AnimatePresence>
-        </motion.div>
+        </m.div>
       </div>
 
       {/* 문구 */}
@@ -236,7 +236,7 @@ const PaymentPending = ({ phase }: PaymentPendingProps) => {
         </h2>
 
         <AnimatePresence mode="wait" initial={false}>
-          <motion.p
+          <m.p
             key={phase}
             className="body-4 mt-3 max-w-80 text-font-2 break-keep"
             initial={{ opacity: 0, y: 6 }}
@@ -245,7 +245,7 @@ const PaymentPending = ({ phase }: PaymentPendingProps) => {
             transition={{ duration: 0.3, ease: EASE_OUT }}
           >
             {t(copy.hint)}
-          </motion.p>
+          </m.p>
         </AnimatePresence>
       </div>
 
@@ -255,7 +255,7 @@ const PaymentPending = ({ phase }: PaymentPendingProps) => {
           aria-hidden
           className="relative mt-8 h-1 w-48 overflow-hidden rounded-full bg-card"
         >
-          <motion.span
+          <m.span
             className="absolute inset-y-0 left-0 w-1/3 rounded-full bg-gradient-to-r from-transparent via-brand to-transparent"
             animate={reduceMotion ? { x: "100%" } : { x: ["-100%", "300%"] }}
             transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
@@ -264,7 +264,7 @@ const PaymentPending = ({ phase }: PaymentPendingProps) => {
       )}
 
       {!working && (
-        <motion.div
+        <m.div
           className="mt-10 flex w-full max-w-80 flex-col gap-2.5"
           initial={reduceMotion ? false : { opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
@@ -276,7 +276,7 @@ const PaymentPending = ({ phase }: PaymentPendingProps) => {
           <ButtonLink href="/" variant="secondary" size="lg" fullWidth>
             {t("tokenCharge.payment.goHome")}
           </ButtonLink>
-        </motion.div>
+        </m.div>
       )}
     </div>
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
 import { useTranslations } from "next-intl";
 import dayjs from "@/lib/dayjs";
 import { cn } from "@/lib/utils";
@@ -68,13 +68,13 @@ const MyReportItem = ({ item, defaultOpen = false }: MyReportItemProps) => {
             >
               {reportT(`statuses.${item.status}`)}
             </span>
-            <motion.span
+            <m.span
               animate={{ rotate: isOpen ? 180 : 0 }}
               transition={{ duration: 0.2, ease: "easeInOut" }}
               className="flex w-3.5 items-center justify-center p-0.5"
             >
               <ArrowDown className="size-2.5 text-font-2" aria-hidden="true" />
-            </motion.span>
+            </m.span>
           </div>
         </div>
 
@@ -96,7 +96,7 @@ const MyReportItem = ({ item, defaultOpen = false }: MyReportItemProps) => {
 
       <AnimatePresence initial={false}>
         {isOpen && (
-          <motion.div
+          <m.div
             key="content"
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
@@ -132,7 +132,7 @@ const MyReportItem = ({ item, defaultOpen = false }: MyReportItemProps) => {
                 )}
               </section>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
     </li>

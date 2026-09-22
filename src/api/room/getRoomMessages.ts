@@ -33,7 +33,12 @@ const getRoomMessages = async ({
   return response.data;
 };
 
-/** 채팅방 메시지 커서 기반 무한스크롤 조회. 과거 방향으로 이어집니다. */
+/**
+ * 채팅방 메시지 커서 기반 무한스크롤 조회. 과거 방향으로 이어집니다.
+ *
+ * 서버는 페이지 안의 메시지를 오래된 것부터(시간순) 내려주고, 페이지끼리는 최신 → 과거 순으로 이어집니다.
+ * 즉 pages[0] 이 가장 최근 페이지이고 각 페이지의 content[0] 이 그 페이지에서 가장 오래된 메시지입니다.
+ */
 export const useRoomMessagesInfiniteQuery = (roomId?: string, size = 20) => {
   return useInfiniteQuery<
     SliceWith<RoomMessage>,
@@ -50,11 +55,9 @@ export const useRoomMessagesInfiniteQuery = (roomId?: string, size = 20) => {
         beforeMessageId: pageParam,
         size,
       }),
-    // 커서는 지금 페이지에서 가장 과거인 메시지 id입니다.
+    // 커서는 지금 페이지에서 가장 과거인 메시지 id, 즉 시간순으로 내려오는 페이지의 첫 항목입니다.
     getNextPageParam: (lastPage) =>
-      lastPage.page.hasNext
-        ? lastPage.content.at(-1)?.messageId
-        : undefined,
+      lastPage.page.hasNext ? lastPage.content[0]?.messageId : undefined,
     staleTime: 1000 * 30,
     enabled: Boolean(roomId),
   });
@@ -90,11 +93,12 @@ export const prependLatestRoomMessages = async (
     addedCount = fresh.length;
     if (fresh.length === 0) return previous;
 
+    // 페이지 안이 시간순이라 새 메시지는 맨 뒤에 붙는다.
     const [firstPage, ...restPages] = previous.pages;
     return {
       ...previous,
       pages: [
-        { ...firstPage, content: [...fresh, ...firstPage.content] },
+        { ...firstPage, content: [...firstPage.content, ...fresh] },
         ...restPages,
       ],
     };

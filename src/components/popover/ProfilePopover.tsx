@@ -20,7 +20,7 @@ import { useLogoutMutation } from "@/api/auth/logout";
 import { useAuthStore } from "@/store/useAuthStore";
 import Check from "@/icons/Check";
 import { useUserStore } from "@/store/useUserStore";
-import { motion, AnimatePresence } from "framer-motion";
+import { m, AnimatePresence } from "framer-motion";
 import { PopoverLayout } from "./layout";
 import { useRouter } from "next/navigation";
 import useToggle from "@/hooks/common/useToggle";
@@ -276,7 +276,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
 
                 <AnimatePresence>
                   {tab.hasTendencyOptions && tendency.isOpen && (
-                    <motion.div
+                    <m.div
                       onClick={(e) => e.stopPropagation()}
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
@@ -305,7 +305,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
                           </li>
                         ))}
                       </ul>
-                    </motion.div>
+                    </m.div>
                   )}
                 </AnimatePresence>
               </div>

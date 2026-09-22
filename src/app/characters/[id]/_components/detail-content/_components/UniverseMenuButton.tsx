@@ -9,10 +9,12 @@ import { useModalStore } from "@/store/useModalStore";
 
 interface UniverseMenuButtonProps {
   universeId: string;
+  /** 신고 모달 제목에 보일 캐릭터 이름 */
+  universeName: string;
 }
 
 /** 찜 버튼 옆 더보기(⋯). 지금은 신고 하나뿐이지만 공유 등 세계관 단위 동작이 여기에 붙는다. */
-const UniverseMenuButton = ({ universeId }: UniverseMenuButtonProps) => {
+const UniverseMenuButton = ({ universeId, universeName }: UniverseMenuButtonProps) => {
   const t = useTranslations("characterDetail");
   const triggerRef = useRef<HTMLButtonElement>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -22,7 +24,7 @@ const UniverseMenuButton = ({ universeId }: UniverseMenuButtonProps) => {
 
   // 비로그인이면 모달 스토어가 신고 대신 로그인 창을 연다.
   const handleReport = () => {
-    openModal("REPORT", { targetType: "UNIVERSE", targetId: universeId });
+    openModal("REPORT", { targetType: "UNIVERSE", targetId: universeId, targetName: universeName });
   };
 
   return (

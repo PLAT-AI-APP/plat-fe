@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { animate, motion, useReducedMotion } from "framer-motion";
+import { animate, m, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import Token from "@/icons/Token";
 import ButtonLink from "@/components/ui/ButtonLink";
@@ -74,7 +74,7 @@ const ConfettiBurst = () => (
     className="pointer-events-none absolute top-1/2 left-1/2 z-10"
   >
     {CONFETTI.map((piece, index) => (
-      <motion.span
+      <m.span
         key={index}
         className="absolute block"
         style={{
@@ -178,7 +178,7 @@ const PaymentSuccess = ({ credits }: PaymentSuccessProps) => {
       {/* 토큰 히어로 */}
       <div className="relative flex size-56 items-center justify-center">
         {/* 천천히 도는 빛줄기 */}
-        <motion.div
+        <m.div
           aria-hidden
           className="absolute inset-0 rounded-full [mask-image:radial-gradient(circle,black_20%,transparent_70%)]"
           style={{
@@ -201,7 +201,7 @@ const PaymentSuccess = ({ credits }: PaymentSuccessProps) => {
         {/* 퍼져 나가는 충격파 링 */}
         {!reduceMotion &&
           [0, 0.35].map((delay) => (
-            <motion.span
+            <m.span
               key={delay}
               aria-hidden
               className="absolute size-28 rounded-full border-2 border-brand"
@@ -213,7 +213,7 @@ const PaymentSuccess = ({ credits }: PaymentSuccessProps) => {
 
         {/* 반짝이 */}
         {SPARKLES.map((sparkle, index) => (
-          <motion.span
+          <m.span
             key={index}
             aria-hidden
             className="absolute text-brand-dark"
@@ -233,11 +233,11 @@ const PaymentSuccess = ({ credits }: PaymentSuccessProps) => {
             }}
           >
             <Sparkle size={sparkle.size} />
-          </motion.span>
+          </m.span>
         ))}
 
         {/* 토큰: 튀어나온 뒤 둥실 떠 있는다 */}
-        <motion.div
+        <m.div
           className="relative drop-shadow-[0_12px_32px_rgba(255,122,0,0.45)]"
           initial={
             reduceMotion ? false : { scale: 0, rotate: -35, opacity: 0 }
@@ -250,7 +250,7 @@ const PaymentSuccess = ({ credits }: PaymentSuccessProps) => {
             delay: 0.1,
           }}
         >
-          <motion.div
+          <m.div
             animate={reduceMotion ? undefined : { y: [0, -10, 0] }}
             transition={{
               delay: 1,
@@ -260,18 +260,18 @@ const PaymentSuccess = ({ credits }: PaymentSuccessProps) => {
             }}
           >
             <Token className="size-28" />
-          </motion.div>
-        </motion.div>
+          </m.div>
+        </m.div>
 
         {!reduceMotion && <ConfettiBurst />}
       </div>
 
       {/* 문구 */}
-      <motion.p {...rise(0.35)} className="title-3 mt-2 text-brand-dark">
+      <m.p {...rise(0.35)} className="title-3 mt-2 text-brand-dark">
         {t("tokenCharge.payment.successTitle")}
-      </motion.p>
+      </m.p>
 
-      <motion.p
+      <m.p
         {...rise(0.45)}
         className="mt-2 flex items-baseline gap-2"
         aria-hidden
@@ -282,7 +282,7 @@ const PaymentSuccess = ({ credits }: PaymentSuccessProps) => {
         <span className="heading-3 text-font-0">
           {t("tokenCharge.noteUnit")}
         </span>
-      </motion.p>
+      </m.p>
 
       {/* 카운트업 중인 숫자 대신 최종 문장을 읽어 준다 */}
       <p role="status" className="sr-only">
@@ -292,7 +292,7 @@ const PaymentSuccess = ({ credits }: PaymentSuccessProps) => {
       </p>
 
       {balance !== undefined && (
-        <motion.div
+        <m.div
           {...rise(0.65)}
           className="mt-6 flex items-center gap-2 rounded-full border border-main bg-card py-2 pr-4 pl-2.5"
         >
@@ -303,10 +303,10 @@ const PaymentSuccess = ({ credits }: PaymentSuccessProps) => {
           <span className="title-5 text-font-0 tabular-nums">
             {formatWithCommas(balance)}
           </span>
-        </motion.div>
+        </m.div>
       )}
 
-      <motion.div
+      <m.div
         {...rise(0.8)}
         className="mt-10 flex w-full max-w-80 flex-col gap-2.5"
       >
@@ -316,7 +316,7 @@ const PaymentSuccess = ({ credits }: PaymentSuccessProps) => {
         <ButtonLink href="/token-charge" variant="secondary" size="lg" fullWidth>
           {t("tokenCharge.payment.backToCharge")}
         </ButtonLink>
-      </motion.div>
+      </m.div>
     </div>
   );
 };
