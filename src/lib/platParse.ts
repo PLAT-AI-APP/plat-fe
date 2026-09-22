@@ -69,15 +69,16 @@ const splitAssetToken = (
  * 실제로 보고 있는 사람의 이름으로 치환합니다 — 시나리오를 편집하는 폼처럼
  * 토큰을 그대로 남겨야 하는 자리에는 쓰지 말고, 채팅방/미리보기처럼 "누군가에게
  * 보여주는" 자리에서만 사용하세요.
+ * userDisplayName 이 없으면(비로그인) 이름을 임의로 채우지 않고 {{user}} 원문을 그대로 남깁니다.
  */
 export const segmentsToDisplayText = (
   segments: PlatSegment[],
-  userDisplayName: string,
+  userDisplayName?: string,
 ) =>
   segments
     .map((segment) => {
       if (segment.type === "TEXT") return segment.value;
-      if (segment.type === "ASSET_USER") return userDisplayName;
+      if (segment.type === "ASSET_USER") return userDisplayName ?? "{{user}}";
       return `{{${segment.assetType}:${segment.code}}}`;
     })
     .join("");
