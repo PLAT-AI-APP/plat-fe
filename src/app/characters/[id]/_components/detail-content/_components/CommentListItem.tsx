@@ -101,8 +101,16 @@ const CommentListItem = ({
     myUserId && creatorId && myUserId === creatorId && !isReply,
   );
 
+  // 좋아요·답글은 로그인이 있어야 한다. 조용히 막으면 눌러도 아무 일이 없어 보이므로 로그인 창을 바로 연다.
+  const requestLogin = () => {
+    openModal("LOGIN", { triggerRef: undefined });
+  };
+
   const handleToggleLike = () => {
-    if (!isLoggedIn) return;
+    if (!isLoggedIn) {
+      requestLogin();
+      return;
+    }
 
     const variables = { commentId: comment.commentId, ...scope };
     if (comment.meta.liked) unlike(variables);
@@ -135,6 +143,15 @@ const CommentListItem = ({
       event.preventDefault();
       handleCancelEdit();
     }
+  };
+
+  const handleToggleReplyComposer = () => {
+    if (!isLoggedIn) {
+      requestLogin();
+      return;
+    }
+
+    setIsReplyComposerOpen((prev) => !prev);
   };
 
   const handleSubmitReply = () => {
@@ -267,11 +284,10 @@ const CommentListItem = ({
             <button
               type="button"
               onClick={handleToggleLike}
-              disabled={!isLoggedIn}
               aria-label={
                 comment.meta.liked ? t("commentUnlike") : t("commentLike")
               }
-              className="body-7 flex items-center gap-1 text-font-2 transition-colors hover:text-font-1 disabled:cursor-default"
+              className="body-7 flex items-center gap-1 text-font-2 transition-colors hover:text-font-1"
             >
               {comment.meta.liked ? (
                 <HeartFill className="size-4 text-brand" />
@@ -290,7 +306,7 @@ const CommentListItem = ({
 
                 <button
                   type="button"
-                  onClick={() => setIsReplyComposerOpen((prev) => !prev)}
+                  onClick={handleToggleReplyComposer}
                   className="body-7 text-font-2 transition-colors hover:text-font-1"
                 >
                   {t("commentReply")}
