@@ -266,6 +266,7 @@ const en = {
     perChat: "chat",
     messageForm: "Message input form",
     messagePlaceholder: "Send a message",
+    send: "Send",
     situation: "Situation",
     suggestedReply: "Suggested reply",
     deleteResponse: "Delete response",

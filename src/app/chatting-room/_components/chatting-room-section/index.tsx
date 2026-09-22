@@ -5,7 +5,7 @@ import { useChatModelsQuery } from "@/api/chat/getChatModels";
 import { useRoomDetailQuery } from "@/api/room/getRoomDetail";
 import { useRoomMessagesInfiniteQuery } from "@/api/room/getRoomMessages";
 import { useUniverseDetailQuery } from "@/api/universe/getUniverseDetail";
-import ChatForm from "@/components/chat/ChatForm";
+import ChatForm, { type ChatFormHandle } from "@/components/chat/ChatForm";
 import MessageList from "@/components/chat/MessageList";
 import SkeletonChatMessages from "@/components/skeleton/SkeletonChatMessages";
 import { ErrorState } from "@/components/state";
@@ -14,7 +14,6 @@ import { useIntersectionObserver } from "@/hooks/dom/useIntersectionObserver";
 import { useScrollTimeout } from "@/hooks/dom/useScrollTiemout";
 import { toAiModel } from "@/lib/chatModel";
 import { toImageVariantUrl } from "@/lib/file";
-import { cn } from "@/lib/utils";
 import { AIModelType, ChatMessageType } from "@/type/chat";
 import type { RoomMessage } from "@/type/room";
 import ChattingRoomHeader from "./ChattingRoomHeader";
@@ -48,7 +47,7 @@ const toChatMessage = (
       };
 
 const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
-  const { isScrolling, onScroll } = useScrollTimeout();
+  const { onScroll } = useScrollTimeout();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [scrollContainer, setScrollContainer] = useState<HTMLDivElement | null>(null);
 
@@ -103,6 +102,9 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
   }, [data, hasNextPage, characterName, profileImage]);
 
   const [isSuggestedReplyOn, setIsSuggestedReplyOn] = useState(true);
+  const handleSuggestedReplyToggle = useCallback(() => {
+    setIsSuggestedReplyOn((prevState) => !prevState);
+  }, []);
   const { data: chatCatalog, isPending: isModelsPending } = useChatModelsQuery();
   const models = useMemo(
     () => chatCatalog?.models.map(toAiModel) ?? [],
@@ -116,8 +118,13 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
     setSelectedModelId(model.id);
   }, []);
 
+  const chatFormRef = useRef<ChatFormHandle>(null);
+  const handleTurnFailed = useCallback((message: string) => {
+    chatFormRef.current?.restore(message);
+  }, []);
+
   // 진행 중인 턴의 말풍선은 서버 이력과 별개로 이어붙이고, 저장이 끝나 이력에 들어오면 훅이 치운다.
-  const { pendingMessages, isBusy, sendMessage } = useChatTurn({
+  const { pendingMessages, isBusy, canSend, sendMessage } = useChatTurn({
     roomId,
     universeCharacterId: universe?.character.universeCharacterId,
     personaId: room?.personaId,
@@ -125,6 +132,7 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
     multiplier: room?.multiplier,
     characterName,
     profileImage,
+    onTurnFailed: handleTurnFailed,
   });
   const messages = useMemo(
     () => [...serverMessages, ...pendingMessages],
@@ -164,10 +172,7 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
         <div
           ref={handleScrollContainerRef}
           onScroll={onScroll}
-          className={cn(
-            "relative flex-1 overflow-y-auto hide-scrollbar-on-idle",
-            isScrolling && "is-scrolling",
-          )}
+          className="relative flex-1 overflow-y-auto hide-scrollbar-on-idle"
         >
           <ChattingRoomHeader
             roomId={roomId}
@@ -178,9 +183,7 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
             isModelsLoading={isModelsPending}
             handleCurrentAi={handleCurrentAi}
             isSuggestedReplyOn={isSuggestedReplyOn}
-            onSuggestedReplyToggle={() =>
-              setIsSuggestedReplyOn((prevState) => !prevState)
-            }
+            onSuggestedReplyToggle={handleSuggestedReplyToggle}
           />
           <ChattingRoomNotice />
 
@@ -205,7 +208,12 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
 
         {/* 메시지 목록이 px-4 를 쓰므로 입력창도 같은 여백을 써야 줄이 맞는다. */}
         <div className="shrink-0 bg-dark px-4 py-4">
-          <ChatForm onSendMessage={sendMessage} disabled={isBusy} />
+          <ChatForm
+            ref={chatFormRef}
+            onSendMessage={sendMessage}
+            disabled={isBusy}
+            isPreparing={!canSend && !isRoomError && !isUniverseError}
+          />
         </div>
       </div>
     </section>

@@ -259,6 +259,7 @@ const th: typeof en = {
     perChat: "แชต",
     messageForm: "แบบฟอร์มป้อนข้อความ",
     messagePlaceholder: "ส่งข้อความ",
+    send: "ส่ง",
     situation: "สถานการณ์",
     suggestedReply: "คำตอบแนะนำ",
     deleteResponse: "ลบคำตอบ",

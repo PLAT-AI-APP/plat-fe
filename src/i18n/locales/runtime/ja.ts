@@ -256,6 +256,7 @@ const ja: typeof en = {
     perChat: "チャット",
     messageForm: "メッセージ入力フォーム",
     messagePlaceholder: "メッセージを送信",
+    send: "送信",
     situation: "状況",
     suggestedReply: "おすすめ返信",
     deleteResponse: "返信を削除",

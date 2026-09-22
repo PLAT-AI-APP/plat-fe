@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { notifyManager, useQueryClient } from "@tanstack/react-query";
 import { notifyApiError } from "@/api";
 import { walletQueryKeys } from "@/api/wallet/queryKeys";
 import { noteQueryKeys } from "@/api/note/queryKeys";
@@ -9,7 +9,7 @@ import { consumeChatStream } from "@/api/chat/chatStream";
 import { usePostChatStartMutation } from "@/api/chat/postChatStart";
 import { prependLatestRoomMessages } from "@/api/room/getRoomMessages";
 import { roomQueryKeys } from "@/api/room/queryKeys";
-import { getApiErrorMessage } from "@/lib/apiError";
+import { getApiErrorMessage, isAppError } from "@/lib/apiError";
 import { createTextReveal } from "@/lib/textReveal";
 import { showAppToast } from "@/lib/toast";
 import type { ChatMessageType } from "@/type/chat";
@@ -31,6 +31,8 @@ interface UseChatTurnParams {
   multiplier?: number;
   characterName: string;
   profileImage: string;
+  /** 응답을 하나도 받지 못하고 실패한 턴의 원문. 입력창에 되돌려 글을 잃지 않게 한다. */
+  onTurnFailed?: (message: string) => void;
 }
 
 interface ChatTurnState {
@@ -46,6 +48,9 @@ interface ChatTurnState {
  *
  * 턴이 진행되는 동안의 사용자 말풍선과 응답은 서버 이력과 별개로 pendingMessages 에 담기고,
  * 서버가 저장을 마쳐 이력에 들어오면 그때 지웁니다.
+ *
+ * 응답 글자를 다 내보내면 곧바로 다음 전송을 받습니다. 저장 확인(최대 몇 초)은 뒤에서 이어지므로,
+ * 확인을 기다리는 턴과 새 턴이 잠시 함께 있을 수 있어 턴을 배열로 들고 있습니다.
  */
 export const useChatTurn = ({
   roomId,
@@ -55,14 +60,20 @@ export const useChatTurn = ({
   multiplier,
   characterName,
   profileImage,
+  onTurnFailed,
 }: UseChatTurnParams) => {
   const queryClient = useQueryClient();
   const { mutateAsync: startChat } = usePostChatStartMutation();
-  const [turn, setTurn] = useState<ChatTurnState | null>(null);
+  const [turns, setTurns] = useState<ChatTurnState[]>([]);
   const [isBusy, setIsBusy] = useState(false);
   // state 는 다음 렌더에야 반영돼, 연달아 눌린 전송을 막으려면 즉시 읽히는 ref 가 필요합니다.
   const isBusyRef = useRef(false);
   const abortControllerRef = useRef<AbortController | null>(null);
+  // 실패 콜백은 부모가 매 렌더 새로 만들 수 있어, runTurn 을 다시 만들지 않도록 ref 로 읽는다.
+  const onTurnFailedRef = useRef(onTurnFailed);
+  useEffect(() => {
+    onTurnFailedRef.current = onTurnFailed;
+  }, [onTurnFailed]);
 
   // 화면을 떠나면 스트림 구독만 끊습니다. 생성은 서버에서 끝까지 이어지고 결과는 이력에 저장됩니다.
   useEffect(
@@ -72,16 +83,60 @@ export const useChatTurn = ({
     [],
   );
 
+  const updateTurn = useCallback(
+    (chatTurnId: string, patch: Partial<ChatTurnState>) => {
+      setTurns((previous) =>
+        previous.map((turn) =>
+          turn.chatTurnId === chatTurnId ? { ...turn, ...patch } : turn,
+        ),
+      );
+    },
+    [],
+  );
+
+  const removeTurn = useCallback((chatTurnId: string) => {
+    setTurns((previous) =>
+      previous.filter((turn) => turn.chatTurnId !== chatTurnId),
+    );
+  }, []);
+
+  const releaseBusy = useCallback(() => {
+    isBusyRef.current = false;
+    setIsBusy(false);
+  }, []);
+
   const syncSavedMessages = useCallback(async () => {
     for (let attempt = 0; attempt < SYNC_RETRY_COUNT; attempt += 1) {
+      // 첫 시도는 바로, 그 뒤로는 저장될 시간을 조금씩 준다. 마지막 시도 뒤에는 기다릴 이유가 없다.
+      if (attempt > 0) await wait(SYNC_RETRY_DELAY_MS);
+
       const addedCount = await prependLatestRoomMessages(queryClient, roomId);
       if (addedCount > 0) return true;
-
-      await wait(SYNC_RETRY_DELAY_MS);
     }
 
     return false;
   }, [queryClient, roomId]);
+
+  /**
+   * 저장된 이력을 확인한 뒤 임시 말풍선을 치웁니다.
+   *
+   * 이력 반영(setQueryData)의 화면 알림은 notifyManager 가 다음 틱에 모아 보낸다. 여기서 바로
+   * setTurns 를 부르면 임시 말풍선이 먼저 사라지고 서버 메시지는 한 틱 뒤에 나타나 깜빡인다.
+   * 같은 큐에 넣어 두 변경이 한 번에 그려지게 한다.
+   */
+  const settleTurn = useCallback(
+    async (chatTurnId: string, keepIfUnsynced: boolean) => {
+      const isSynced = await syncSavedMessages().catch(() => false);
+
+      // 저장 확인이 끝내 안 된 정상 응답은 사라지지 않게 남겨 둡니다.
+      if (isSynced || !keepIfUnsynced) {
+        notifyManager.schedule(() => removeTurn(chatTurnId));
+      }
+
+      void queryClient.invalidateQueries({ queryKey: roomQueryKeys.lists() });
+    },
+    [queryClient, removeTurn, syncSavedMessages],
+  );
 
   const runTurn = useCallback(
     async (
@@ -91,12 +146,10 @@ export const useChatTurn = ({
       request: { universeCharacterId: string; personaId: string; modelId: string },
     ) => {
       let hasStarted = false;
-      let shouldKeepPending = false;
+      let receivedText = "";
       // 토큰이 뭉쳐서 와도 응답이 툭 나타나지 않도록 화면에는 조금씩 이어 보여 준다.
       const reveal = createTextReveal((text) => {
-        setTurn((previous) =>
-          previous ? { ...previous, assistantContent: text } : previous,
-        );
+        updateTurn(chatTurnId, { assistantContent: text });
       });
 
       try {
@@ -120,7 +173,10 @@ export const useChatTurn = ({
         await consumeChatStream({
           turnId,
           signal: abortController.signal,
-          onToken: (token) => reveal.push(token),
+          onToken: (token) => {
+            receivedText += token;
+            reveal.push(token);
+          },
           onFailed: (reason) => {
             hasFailed = true;
             // reason 은 서버가 준 실패 코드(예: AI_PROVIDER_FAILED)다. 사용자에게는 같은 문구를 보이되,
@@ -135,13 +191,11 @@ export const useChatTurn = ({
 
         // 받은 글자를 화면에 다 내보낸 뒤에 임시 말풍선을 서버 이력으로 바꿔야 끝에서 툭 튀지 않는다.
         await reveal.finish();
-        setTurn((previous) =>
-          previous ? { ...previous, isStreaming: false } : previous,
-        );
+        if (abortController.signal.aborted) return;
 
-        // 실패해도 부분 응답이 저장됐을 수 있어, 이력을 한 번 확인한 뒤에 화면의 임시 말풍선을 치웁니다.
-        const isSynced = await syncSavedMessages();
-        shouldKeepPending = !isSynced && !hasFailed;
+        updateTurn(chatTurnId, { isStreaming: false });
+        // 응답이 다 보였으니 바로 다음 말을 받는다. 저장 확인은 뒤에서 이어진다.
+        releaseBusy();
 
         void queryClient.invalidateQueries({
           queryKey: walletQueryKeys.balance(),
@@ -150,23 +204,45 @@ export const useChatTurn = ({
         void queryClient.invalidateQueries({
           queryKey: noteQueryKeys.usageHistoryLists(),
         });
-        void queryClient.invalidateQueries({ queryKey: roomQueryKeys.lists() });
+
+        // 실패해도 부분 응답이 저장됐을 수 있어, 이력을 한 번 확인한 뒤에 화면의 임시 말풍선을 치웁니다.
+        void settleTurn(chatTurnId, !hasFailed);
       } catch (error) {
         reveal.cancel();
         if (abortController.signal.aborted) return;
 
-        // 스트림 구독 실패(네트워크 등)는 MutationCache 를 거치지 않아 여기서 알립니다.
-        if (hasStarted) notifyApiError(error);
-      } finally {
-        if (!abortController.signal.aborted) {
-          isBusyRef.current = false;
-          setIsBusy(false);
-          // 저장 확인이 끝내 안 된 정상 응답은 사라지지 않게 남겨 둡니다.
-          if (!shouldKeepPending) setTurn(null);
+        releaseBusy();
+
+        // 스트림 구독 실패(네트워크 끊김 등)는 MutationCache 를 거치지 않아 여기서 알립니다.
+        // fetch 가 던지는 TypeError 는 AppError 가 아니라 notifyApiError 가 무시하므로 직접 띄운다.
+        if (hasStarted) {
+          if (isAppError(error)) notifyApiError(error);
+          else showAppToast("error", getApiErrorMessage("chatNoResponse"));
         }
+
+        if (hasStarted && receivedText) {
+          // 받다 만 응답이 서버에 저장됐을 수 있다. 확인되면 이력으로 바꾸고, 아니면 보이던 대로 둔다.
+          updateTurn(chatTurnId, { isStreaming: false });
+          void settleTurn(chatTurnId, true);
+          return;
+        }
+
+        // 아무 응답도 못 받았다면 보낸 말이 조용히 사라지지 않게, 말풍선을 거두고 입력창에 되돌린다.
+        removeTurn(chatTurnId);
+        onTurnFailedRef.current?.(message);
+        if (hasStarted) void settleTurn(chatTurnId, false);
       }
     },
-    [multiplier, roomId, startChat, syncSavedMessages, queryClient],
+    [
+      multiplier,
+      roomId,
+      startChat,
+      queryClient,
+      updateTurn,
+      removeTurn,
+      releaseBusy,
+      settleTurn,
+    ],
   );
 
   /** 전송을 받아들였는지 바로 돌려줍니다. 받지 못했으면 입력창이 글을 지우지 않도록 false 입니다. */
@@ -189,12 +265,15 @@ export const useChatTurn = ({
       abortControllerRef.current = abortController;
       isBusyRef.current = true;
       setIsBusy(true);
-      setTurn({
-        chatTurnId,
-        userContent: message,
-        assistantContent: "",
-        isStreaming: true,
-      });
+      setTurns((previous) => [
+        ...previous,
+        {
+          chatTurnId,
+          userContent: message,
+          assistantContent: "",
+          isStreaming: true,
+        },
+      ]);
 
       void runTurn(message, chatTurnId, abortController, {
         universeCharacterId,
@@ -207,37 +286,43 @@ export const useChatTurn = ({
     [universeCharacterId, personaId, modelId, runTurn],
   );
 
-  const pendingMessages = useMemo<ChatMessageType[]>(() => {
-    if (!turn) return [];
+  /** 세계관·페르소나·모델을 모두 받아 지금 보낼 수 있는지 */
+  const canSend = Boolean(universeCharacterId && personaId && modelId);
 
-    const messages: ChatMessageType[] = [
-      {
-        id: `pending-user-${turn.chatTurnId}`,
-        role: "user",
-        content: turn.userContent,
-      },
-    ];
+  const pendingMessages = useMemo<ChatMessageType[]>(
+    () =>
+      turns.flatMap((turn) => {
+        const messages: ChatMessageType[] = [
+          {
+            id: `pending-user-${turn.chatTurnId}`,
+            role: "user",
+            content: turn.userContent,
+          },
+        ];
 
-    // 첫 토큰이 오기 전에도 자리를 잡아 두면 ChatContentBlock 이 입력 중 표시를 그린다.
-    // 전송 후 몇 초간 아무것도 없다가 응답이 툭 나타나지 않게 하려는 것이다.
-    if (turn.isStreaming || turn.assistantContent) {
-      messages.push({
-        id: `pending-assistant-${turn.chatTurnId}`,
-        role: "assistant",
-        characterName,
-        profileImage,
-        content: turn.assistantContent,
-        isStreaming: turn.isStreaming,
-      });
-    }
+        // 첫 토큰이 오기 전에도 자리를 잡아 두면 ChatContentBlock 이 입력 중 표시를 그린다.
+        // 전송 후 몇 초간 아무것도 없다가 응답이 툭 나타나지 않게 하려는 것이다.
+        if (turn.isStreaming || turn.assistantContent) {
+          messages.push({
+            id: `pending-assistant-${turn.chatTurnId}`,
+            role: "assistant",
+            characterName,
+            profileImage,
+            content: turn.assistantContent,
+            isStreaming: turn.isStreaming,
+          });
+        }
 
-    return messages;
-  }, [turn, characterName, profileImage]);
+        return messages;
+      }),
+    [turns, characterName, profileImage],
+  );
 
   return {
     pendingMessages,
     /** 응답을 기다리거나 받는 중인지. 이 동안은 다음 전송을 받지 않습니다. */
     isBusy,
+    canSend,
     sendMessage,
   };
 };
