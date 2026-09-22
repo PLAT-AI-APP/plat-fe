@@ -28,6 +28,9 @@ export const useLayoutStore = create<LayoutState>()(
     {
       name: "layout-storage",
       partialize: (state) => ({ isSidebarExpanded: state.isSidebarExpanded }),
+      // 저장값은 SidebarFrame 이 마운트된 뒤 불러온다. 스토어를 만들 때 바로 불러오면 첫 렌더가
+      // 서버 HTML(기본값: 접힘)과 달라져, 하이드레이션이 사이드바 폭을 틀린 채로 남긴다.
+      skipHydration: true,
     },
   ),
 );
