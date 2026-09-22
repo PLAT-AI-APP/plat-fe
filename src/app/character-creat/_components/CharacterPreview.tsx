@@ -232,11 +232,14 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
         </div>
       </header>
 
+      {/* 드롭 영역(CreatePreviewList)이 flex-1 로 이 스크롤 영역을 꽉 채우도록 flex 컨테이너로 둔다.
+          예전에는 flex-1 이 먹지 않아 내용이 없을 때 드롭 영역 높이가 0 이 되었고, 에셋을 끌어다 놓을
+          자리가 없어 첫 에셋이 등록되지 않았다. */}
       <div
         onScroll={onScroll}
         ref={scrollContainerRef}
         className={cn(
-          "custom-scrollbar hide-scrollbar-on-idle min-h-0 flex-1 overflow-y-auto px-2",
+          "custom-scrollbar hide-scrollbar-on-idle flex min-h-0 flex-1 flex-col overflow-y-auto px-2",
           isScrolling && "is-scrolling",
         )}
       >
