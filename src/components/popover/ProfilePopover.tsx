@@ -6,6 +6,7 @@ import Link from "next/link";
 import { cn, formatWithCommas } from "@/lib/utils";
 import {
   ArrowRight,
+  Flag,
   Gear,
   Google,
   Headphone,
@@ -64,6 +65,10 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
       link: "/customer-service",
       icon: Headphone,
     },
+    // 내 신고의 처리 결과를 보는 곳이라 로그인했을 때만 보인다.
+    ...(isLoggedIn
+      ? [{ name: t("myReports"), link: "/my-reports", icon: Flag }]
+      : []),
     {
       name: rootT("characterDetail.tabs.settings"),
       link: "/settings",

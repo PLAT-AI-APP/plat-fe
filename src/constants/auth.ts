@@ -5,6 +5,7 @@ export const PROTECTED_ROUTES = [
   "/character-creat",
   "/studio",
   "/usage-history",
+  "/my-reports",
   "/withdrawal",
   "/profile",
 ];
