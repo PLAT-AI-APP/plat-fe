@@ -253,6 +253,7 @@ const zh = {
     handledAt: "处理时间 {date}",
   },
   usageHistory: {
+    empty: "暂无使用记录",
     expiresUntil: "有效期至 {date}",
     dateFormat: "M月D日 HH:mm",
     detailLabel: "详细说明",

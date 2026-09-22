@@ -257,6 +257,7 @@ const vi = {
     handledAt: "Xử lý ngày {date}",
   },
   usageHistory: {
+    empty: "Chưa có lịch sử sử dụng",
     expiresUntil: "Hiệu lực đến {date}",
     dateFormat: "D/M HH:mm",
     detailLabel: "Chi tiết",

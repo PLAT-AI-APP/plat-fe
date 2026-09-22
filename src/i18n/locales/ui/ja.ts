@@ -257,6 +257,7 @@ const ja = {
     handledAt: "処理日 {date}",
   },
   usageHistory: {
+    empty: "まだ利用履歴がありません",
     expiresUntil: "{date}まで",
     dateFormat: "M月D日 HH:mm",
     detailLabel: "詳細",

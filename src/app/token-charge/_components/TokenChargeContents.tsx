@@ -8,7 +8,6 @@ import { useFadeInAfterLoading } from "@/hooks/common/useFadeInAfterLoading";
 import { usePostPaymentOrderMutation } from "@/api/payment/postPaymentOrder";
 import { useModalStore } from "@/store/useModalStore";
 import { showAppToast } from "@/lib/toast";
-import { useUsageHistoryListQuery } from "@/api/note/getUsageHistoryList";
 import Token from "@/icons/Token";
 import { cn, formatWithCommas, toMajorAmount } from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -167,11 +166,6 @@ const TokenChargeContents = () => {
     });
   };
 
-  // 전체 개수를 세지 않는 슬라이스 응답이라, 있는지 없는지만 한 건만 물어 확인합니다.
-  const { data: usageHistoryData } = useUsageHistoryListQuery({ size: 1 });
-  const hasUsageHistory =
-    (usageHistoryData?.pages[0]?.content.length ?? 0) > 0;
-
   return (
     <section className="mx-auto w-full max-w-160 pt-5">
       <PageTitle messageKey="tokenCharge.title" />
@@ -187,21 +181,13 @@ const TokenChargeContents = () => {
             </div>
           </div>
 
-          {hasUsageHistory ? (
-            <Link
-              href="/usage-history"
-              className="body-5 shrink-0 rounded-2xl bg-main px-4 py-2 text-font-1 transition-colors hover:bg-btn-hover"
-            >
-              {t("tokenCharge.viewUsageHistory")}
-            </Link>
-          ) : (
-            <span
-              aria-disabled="true"
-              className="body-5 shrink-0 cursor-default rounded-2xl bg-font-disabled px-4 py-2 text-font-1"
-            >
-              {t("tokenCharge.viewUsageHistory")}
-            </span>
-          )}
+          {/* 내역이 없으면 내역 페이지가 빈 상태를 안내하므로, 미리 조회해 버튼을 막지 않는다. */}
+          <Link
+            href="/usage-history"
+            className="body-5 shrink-0 rounded-2xl bg-main px-4 py-2 text-font-1 transition-colors hover:bg-btn-hover"
+          >
+            {t("tokenCharge.viewUsageHistory")}
+          </Link>
         </div>
       )}
 

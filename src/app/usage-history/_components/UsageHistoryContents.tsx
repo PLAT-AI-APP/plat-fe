@@ -1,6 +1,7 @@
 "use client";
-import { useUsageHistoryListQuery } from "@/api/note/getUsageHistoryList";
 import React from "react";
+import { useTranslations } from "next-intl";
+import { useUsageHistoryListQuery } from "@/api/note/getUsageHistoryList";
 import UsageHistoryItem from "./UsageHistoryItem";
 import SkeletonUsageHistoryItem from "./SkeletonUsageHistoryItem";
 import { useInfiniteList } from "@/hooks/data/useInfiniteList";
@@ -10,6 +11,7 @@ import { InfiniteQueryBoundary } from "@/components/state";
 const SKELETON_ITEM_COUNT = 6;
 
 const UsageHistoryContents = () => {
+  const t = useTranslations("usageHistory");
   // 상태 및 데이터
   const {
     data: usageHistoryListData,
@@ -48,6 +50,10 @@ const UsageHistoryContents = () => {
         isError={isError}
         error={error}
         hasItems={hasItems}
+        // 충전 페이지의 내역 버튼을 항상 열어 두므로, 내역이 없는 계정도 이 화면에 온다.
+        isEmpty={usageHistoryList.length === 0}
+        emptyMood="peek"
+        emptyMessage={t("empty")}
         isFetchingNextPage={isFetchingNextPage}
         onRetry={refetch}
         onRetryNextPage={fetchNextPage}

@@ -256,6 +256,7 @@ const th = {
     handledAt: "ดำเนินการเมื่อ {date}",
   },
   usageHistory: {
+    empty: "ยังไม่มีประวัติการใช้งาน",
     expiresUntil: "ใช้ได้ถึง {date}",
     dateFormat: "D MMM HH:mm",
     detailLabel: "รายละเอียด",

@@ -253,6 +253,7 @@ const ko = {
     handledAt: "처리일 {date}",
   },
   usageHistory: {
+    empty: "아직 이용 내역이 없어요",
     expiresUntil: "~ {date} 까지",
     dateFormat: "M월 D일 HH:mm",
     detailLabel: "상세설명",

@@ -263,6 +263,7 @@ const en = {
     handledAt: "Handled {date}",
   },
   usageHistory: {
+    empty: "No usage history yet",
     expiresUntil: "Valid until {date}",
     dateFormat: "MMM D, HH:mm",
     detailLabel: "Details",
