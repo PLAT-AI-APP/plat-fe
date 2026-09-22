@@ -13,6 +13,7 @@ const Dialog = ({
   confirmFn,
   confirmText = "common.confirm",
   cancelText = "common.cancel",
+  isConfirmPending = false,
 }: DialogProps) => {
   const translateText = useTranslateText();
   const hasCancelButton = Boolean(cancelFn);
@@ -27,6 +28,8 @@ const Dialog = ({
   };
 
   const handleConfirm = () => {
+    // 창이 그대로인 채 버튼도 그대로면 한 번 더 누르게 되고, 같은 요청이 두 번 나갔다.
+    if (isConfirmPending) return;
     confirmFn?.();
   };
 
@@ -70,11 +73,20 @@ const Dialog = ({
           <button
             type="button"
             onClick={handleConfirm}
+            disabled={isConfirmPending}
+            aria-busy={isConfirmPending || undefined}
             className={cn(
-              "flex h-10 items-center justify-center rounded-xl bg-brand px-6 text-on-brand transition-opacity hover:opacity-90",
+              "flex h-10 items-center justify-center gap-1.5 rounded-xl bg-brand px-6 text-on-brand transition-opacity hover:opacity-90",
               hasCancelButton ? "flex-1" : "w-full",
+              isConfirmPending && "pending-state",
             )}
           >
+            {isConfirmPending && (
+              <span
+                aria-hidden="true"
+                className="size-4 shrink-0 animate-spin rounded-full border-2 border-on-brand/40 border-t-on-brand"
+              />
+            )}
             {translateText(confirmText)}
           </button>
         </div>
