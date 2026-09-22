@@ -52,11 +52,26 @@ const FollowModal = ({
     setTabRef,
     rect: underlineRect,
   } = useTabUnderline(activeTabs);
-  const { mutate: follow, isPending: isFollowMutating } = useFollowMutation();
-  const { mutate: unFollow, isPending: isUnFollowMutating } =
-    useUnFollowMutation();
+  const {
+    mutate: follow,
+    mutateAsync: followAsync,
+    isPending: isFollowMutating,
+  } = useFollowMutation();
+  const { mutateAsync: unFollowAsync } = useUnFollowMutation();
   const displayNickname = nickname || t("fallbackNickname");
-  const isFollowPending = isFollowMutating || isUnFollowMutating;
+  // 요청 중인 사람만 잠근다. 예전에는 한 명을 누르면 응답이 올 때까지 목록의 모든 버튼이
+  // 흐려져, 여러 명을 연달아 팔로우할 수 없었다. 버튼 글자는 이미 낙관적으로 바뀐다.
+  const [pendingUserIds, setPendingUserIds] = useState<ReadonlySet<string>>(
+    () => new Set(),
+  );
+  const setUserPending = useCallback((targetUserId: string, pending: boolean) => {
+    setPendingUserIds((previous) => {
+      const next = new Set(previous);
+      if (pending) next.add(targetUserId);
+      else next.delete(targetUserId);
+      return next;
+    });
+  }, []);
 
   /*
    * 이 화면만 useFollowToggle 을 쓰지 않는다. 그 훅은 대상이 하나인 화면을
@@ -126,25 +141,23 @@ const FollowModal = ({
   );
 
   const handleToggleFollow = (targetUserId: string, isFollowing: boolean) => {
-    if (isFollowPending) return;
+    if (pendingUserIds.has(targetUserId)) return;
 
     toggleFollowChangeId(targetUserId);
+    setUserPending(targetUserId, true);
 
-    const mutationOptions = {
-      onSuccess: () => invalidateFollowQueries(targetUserId),
-      onError: () => toggleFollowChangeId(targetUserId),
-    };
-
-    if (isFollowing) {
-      unFollow({ userId: targetUserId }, mutationOptions);
-      return;
-    }
-
-    follow({ userId: targetUserId }, mutationOptions);
+    // 여러 명을 동시에 누를 수 있어 mutate 의 호출별 콜백 대신 promise 를 쓴다. mutate 에 넘긴
+    // 콜백은 마지막 호출의 것만 불려, 앞서 누른 사람이 실패해도 되돌려지지 않는다.
+    // (실패 안내 토스트는 MutationCache 가 띄운다.)
+    const request = isFollowing ? unFollowAsync : followAsync;
+    request({ userId: targetUserId })
+      .then(() => invalidateFollowQueries(targetUserId))
+      .catch(() => toggleFollowChangeId(targetUserId))
+      .finally(() => setUserPending(targetUserId, false));
   };
 
   const handleFollowEmptyProfile = () => {
-    if (isFollowPending) return;
+    if (isFollowMutating) return;
 
     follow(
       { userId },
@@ -255,7 +268,7 @@ const FollowModal = ({
                 key={user.userId}
                 user={user}
                 isFollowing={isFollowing}
-                isPending={isFollowPending}
+                isPending={pendingUserIds.has(user.userId)}
                 onToggleFollow={handleToggleFollow}
                 onNavigateToProfile={(targetUserId) =>
                   moveWithModalClose(`/profile/${targetUserId}`)
