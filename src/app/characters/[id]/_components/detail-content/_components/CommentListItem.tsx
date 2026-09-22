@@ -159,7 +159,10 @@ const CommentListItem = ({
   };
 
   const handleReportComment = () => {
-    openModal("COMMENT_REPORT", { commentId: comment.commentId });
+    openModal("REPORT", {
+      targetType: "COMMENT",
+      targetId: comment.commentId,
+    });
   };
 
   const handlePinComment = () => {

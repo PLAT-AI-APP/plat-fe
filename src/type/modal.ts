@@ -1,5 +1,6 @@
 import { CharacterScenario } from "./character";
 import { Persona } from "./persona";
+import type { ReportTargetType } from "./report";
 
 export interface GlobalModalProps {
   onClose: () => void;
@@ -44,8 +45,9 @@ export interface UserNoteModalProps extends GlobalModalProps {
   roomId: string;
 }
 
-export interface CommentReportModalProps extends GlobalModalProps {
-  commentId: string;
+export interface ReportModalProps extends GlobalModalProps {
+  targetType: ReportTargetType;
+  targetId: string;
 }
 
 export interface RefundRequestModalProps extends GlobalModalProps {

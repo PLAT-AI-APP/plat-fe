@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { FIELD_ERROR_MESSAGES } from "@/constants/fieldMessages";
+import { REPORT_REASONS } from "@/type/report";
 
 export const userNoteFormSchema = z.object({
   userNote: z
@@ -26,20 +27,27 @@ export const tagSuggestionFormSchema = z.object({
 
 export type TagSuggestionFormValues = z.input<typeof tagSuggestionFormSchema>;
 
-export const commentReportFormSchema = z.object({
-  title: z
-    .string()
-    .trim()
-    .min(1, FIELD_ERROR_MESSAGES.commentReportTitleRequired)
-    .max(200, FIELD_ERROR_MESSAGES.commentReportTitleMaxLength),
-  content: z
-    .string()
-    .trim()
-    .min(1, FIELD_ERROR_MESSAGES.commentReportContentRequired)
-    .max(2000, FIELD_ERROR_MESSAGES.commentReportContentMaxLength),
-});
+/** 신고 상세 입력 상한. 서버 계약(docs/19)과 같은 값이다. */
+export const REPORT_DETAIL_MAX_LENGTH = 1000;
 
-export type CommentReportFormValues = z.input<typeof commentReportFormSchema>;
+export const reportFormSchema = z
+  .object({
+    // 칩을 아직 고르지 않은 상태를 빈 문자열로 두고, 고르지 않으면 선택을 요구한다.
+    reason: z
+      .union([z.enum(REPORT_REASONS), z.literal("")])
+      .refine((value) => value !== "", FIELD_ERROR_MESSAGES.reportReasonRequired),
+    detail: z
+      .string()
+      .trim()
+      .max(REPORT_DETAIL_MAX_LENGTH, FIELD_ERROR_MESSAGES.reportDetailMaxLength),
+  })
+  // 기타는 사유 칩만으로 무엇이 문제인지 알 수 없어 서버도 detail 을 필수로 받는다.
+  .refine((values) => values.reason !== "ETC" || values.detail.length > 0, {
+    path: ["detail"],
+    message: FIELD_ERROR_MESSAGES.reportDetailRequired,
+  });
+
+export type ReportFormValues = z.input<typeof reportFormSchema>;
 
 export const personaFormSchema = z.object({
   name: z
