@@ -53,7 +53,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
   const rootT = useTranslations();
   const selectorT = useTranslations("selector");
   const router = useRouter();
-  const { mutate: logout } = useLogoutMutation();
+  const { mutate: logout, isPending: isLoggingOut } = useLogoutMutation();
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const openModal = useModalStore((state) => state.openModal);
   const tendency = useToggle();
@@ -375,13 +375,22 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
           <div className="py-2.5">
             <div className="h-px w-full bg-main" />
           </div>
-          <div
+          {/* 응답이 올 때까지 팝오버가 그대로라 다시 누르게 되고 POST 가 두 번 나갔다.
+              요청 중에는 대기 표시를 하고 더 받지 않는다. 서버 요청에 토큰이 실려야 해서
+              로컬 로그인 상태를 먼저 지우지는 않는다. */}
+          <button
+            type="button"
             onClick={() => logout()}
-            className="menu-item body-5 cursor-pointer gap-2 text-font-1 ease-in-out"
+            disabled={isLoggingOut}
+            aria-busy={isLoggingOut || undefined}
+            className={cn(
+              "menu-item body-5 w-full cursor-pointer gap-2 text-font-1 ease-in-out",
+              isLoggingOut && "pending-state",
+            )}
           >
             <Logout size={18} className="size-[18px] shrink-0 text-font-2" />
             {t("logout")}
-          </div>
+          </button>
         </>
       )}
     </PopoverLayout>
