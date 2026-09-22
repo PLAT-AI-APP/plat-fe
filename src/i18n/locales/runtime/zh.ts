@@ -130,6 +130,11 @@ const zh: typeof en = {
       title: "去探索最适合你的角色吧",
       searchTag: "按标签搜索",
     },
+    createdEmpty: {
+      title: "还没有公开的角色",
+      mineDescription: "创建并公开角色后，就会显示在个人主页上",
+      create: "创建角色",
+    },
     sort: {
       latest: "最新顺",
       chats: "聊天顺",

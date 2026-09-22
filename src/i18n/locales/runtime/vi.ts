@@ -138,6 +138,11 @@ const vi: typeof en = {
       title: "Khám phá để tìm nhân vật phù hợp với bạn",
       searchTag: "Tìm theo thẻ",
     },
+    createdEmpty: {
+      title: "Chưa có nhân vật công khai nào",
+      mineDescription: "Tạo và công khai nhân vật để hiển thị trên hồ sơ của bạn",
+      create: "Tạo nhân vật",
+    },
     sort: {
       latest: "Mới nhất",
       chats: "Theo lượt chat",

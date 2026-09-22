@@ -133,6 +133,11 @@ const ko: typeof en = {
       title: "꼭 맞는 캐릭터를 탐색해 볼 수 있어요",
       searchTag: "태그 검색하기",
     },
+    createdEmpty: {
+      title: "아직 공개한 캐릭터가 없어요",
+      mineDescription: "캐릭터를 만들어 공개하면 프로필에 보여요",
+      create: "캐릭터 만들기",
+    },
     sort: {
       latest: "최신순",
       chats: "채팅순",

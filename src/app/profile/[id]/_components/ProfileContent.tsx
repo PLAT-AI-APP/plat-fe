@@ -14,6 +14,7 @@ import { useInfiniteList } from "@/hooks/data/useInfiniteList";
 import { useTabUnderline } from "@/hooks/dom/useTabUnderline";
 import { cn } from "@/lib/utils";
 import { useUserStore } from "@/store/useUserStore";
+import CreatedEmptyState from "./CreatedEmptyState";
 import Header from "./Header";
 import WishlistEmptyState from "./WishlistEmptyState";
 import { SPRING_SNAPPY } from "@/constants/motion";
@@ -160,6 +161,13 @@ export default function ProfileContent({ id }: { id: string }) {
   // 에러 표시에 맡기고, 정말 0개일 때만 태그 탐색을 안내한다.
   const isWishEmpty =
     isWishTab && !isLikedLoading && !isLikedError && likedCards.length === 0;
+  // 캐릭터 탭도 마찬가지로 정말 0개일 때만. CharacterShowcase 는 빈 목록이면 아무것도 그리지 않아
+  // 작품이 없는 프로필이 제목과 개수(0)만 남은 채 비어 보였다.
+  const isCreatedEmpty =
+    !isWishTab &&
+    !isCreatedLoading &&
+    !isCreatedError &&
+    createdCards.length === 0;
 
   // 없는 유저(404)의 프로필에 빈 작품 목록만 덩그러니 그리면 "작품이 없는 유저"로 오해한다.
   // 헤더 자리만이 아니라 페이지 전체를 실패 표시로 바꾼다.
@@ -245,6 +253,10 @@ export default function ProfileContent({ id }: { id: string }) {
         >
           {isWishEmpty ? (
             <WishlistEmptyState />
+          ) : isCreatedEmpty ? (
+            // 본인인지는 persist 스토어가 복원된 뒤에야 알 수 있다. 그 전에 그리면
+            // 본인 프로필에 "남의 프로필" 안내가 잠깐 보였다가 바뀐다.
+            hasHydrated && <CreatedEmptyState isOwnProfile={isOwnProfile} />
           ) : (
             <CharacterShowcase
               charArray={displayArray}
