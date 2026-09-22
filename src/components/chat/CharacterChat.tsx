@@ -65,4 +65,5 @@ const CharacterChat = ({
   );
 };
 
-export default CharacterChat;
+// 스트리밍 중에는 응답 블록 전체가 프레임마다 다시 그려진다. 글이 그대로인 앞 블록은 건너뛴다.
+export default React.memo(CharacterChat);
