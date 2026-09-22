@@ -22,7 +22,14 @@ const ProtectedNavigationInterceptor = () => {
   }, [openModal]);
 
   useEffect(() => {
-    if (!isAuthReady || !isProtectedPath(pathname) || isLoggedIn) return;
+    if (!isAuthReady || isLoggedIn) return;
+    // 보호 경로인지는 usePathname 이 아니라 브라우저의 실제 주소로 판단한다(pathname 은 다시 확인할 시점을 알리는 용도).
+    // 뒤로가기 직후에는 주소가 먼저 바뀌고 usePathname 은 새 화면을 그린 뒤에야 바뀐다. 그 사이 세션이 만료되면
+    // api 인터셉터(handleSessionExpired)는 새 주소를 보고 "세션 만료" 안내를, 여기서는 이전 보호 경로를 보고
+    // 로그인 창을 각각 띄워 둘이 겹쳤다. 두 쪽이 같은 기준(window.location)을 쓰면 한쪽만 반응한다.
+    if (!isProtectedPath(pathname) || !isProtectedPath(window.location.pathname)) {
+      return;
+    }
 
     const shouldSkipAuthAlert =
       sessionStorage.getItem(SKIP_AUTH_ALERT_ONCE_KEY) === "true";
