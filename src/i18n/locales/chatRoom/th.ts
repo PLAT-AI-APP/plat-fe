@@ -24,6 +24,7 @@ const th: typeof ko = {
       persona: "Persona",
       userNote: "โน้ตผู้ใช้",
       assetGallery: "แกลเลอรีแอสเซ็ต",
+      assetGalleryEmpty: "ยังไม่มีแอสเซ็ต",
       assetTotal: "ทั้งหมด  {count} รายการ",
       suggestedReply: "คำตอบแนะนำ",
       assetView: "แสดงแอสเซ็ต",

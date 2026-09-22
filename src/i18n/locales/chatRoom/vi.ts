@@ -25,6 +25,7 @@ const vi: typeof ko = {
       persona: "Persona",
       userNote: "Ghi chú người dùng",
       assetGallery: "Thư viện asset",
+      assetGalleryEmpty: "Chưa có asset nào",
       assetTotal: "Tổng  {count}",
       suggestedReply: "Trả lời gợi ý",
       assetView: "Hiển thị asset",

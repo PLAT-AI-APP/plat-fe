@@ -25,6 +25,7 @@ const en: typeof ko = {
       persona: "Persona",
       userNote: "User note",
       assetGallery: "Asset gallery",
+      assetGalleryEmpty: "No assets yet",
       assetTotal: "Total  {count}",
       suggestedReply: "Suggested replies",
       assetView: "Show assets",

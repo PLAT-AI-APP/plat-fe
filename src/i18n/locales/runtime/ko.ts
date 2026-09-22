@@ -1,7 +1,8 @@
-import en from "./en";
+import type en from "./en";
 
+// 예전에는 ...en 으로 영어 문구를 먼저 펼쳤지만, ko 가 최상위 키를 모두 직접 가져 전부 덮어써졌다.
+// 쓰이지 않는 영어 문구가 이 한 줄 때문에 모든 페이지 번들에 실려 뺐다. 빠진 키는 타입 검사가 잡는다.
 const ko: typeof en = {
-  ...en,
   pageTitles: {
     siteDefault: "PLAT | 나만의 AI 페르소나 플랫폼",
     characterCreate: "캐릭터 만들기",
@@ -131,6 +132,11 @@ const ko: typeof en = {
       caption: "마음에 드는 캐릭터가 없나요?",
       title: "꼭 맞는 캐릭터를 탐색해 볼 수 있어요",
       searchTag: "태그 검색하기",
+    },
+    createdEmpty: {
+      title: "아직 공개한 캐릭터가 없어요",
+      mineDescription: "캐릭터를 만들어 공개하면 프로필에 보여요",
+      create: "캐릭터 만들기",
     },
     sort: {
       latest: "최신순",

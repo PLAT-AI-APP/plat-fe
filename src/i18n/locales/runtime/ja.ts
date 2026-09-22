@@ -132,6 +132,11 @@ const ja: typeof en = {
       title: "ぴったりのキャラクターを探してみましょう",
       searchTag: "タグで検索する",
     },
+    createdEmpty: {
+      title: "まだ公開しているキャラクターがありません",
+      mineDescription: "キャラクターを作って公開すると、プロフィールに表示されます",
+      create: "キャラクターを作る",
+    },
     sort: {
       latest: "最新順",
       chats: "チャット順",

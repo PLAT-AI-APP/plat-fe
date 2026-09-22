@@ -22,6 +22,7 @@ const zh: typeof ko = {
       persona: "Persona",
       userNote: "用户笔记",
       assetGallery: "素材图库",
+      assetGalleryEmpty: "暂无素材",
       assetTotal: "共  {count}个",
       suggestedReply: "推荐回复",
       assetView: "显示素材",

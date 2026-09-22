@@ -143,6 +143,11 @@ const en = {
       title: "Explore to find the perfect character for you",
       searchTag: "Search by tag",
     },
+    createdEmpty: {
+      title: "No public characters yet",
+      mineDescription: "Characters you create and make public will appear on your profile.",
+      create: "Create a character",
+    },
   },
   notification: {
     title: "Notice",
