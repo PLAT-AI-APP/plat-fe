@@ -102,7 +102,22 @@ export const useUniverseDraft = ({
    * 기본 폼 값으로, 호출부(CharacterCreateForm)가 defaultScenarioName 기준으로 매번
    * 새로 만들어 넘겨줍니다 — 이 훅이 폼 기본값 생성 로직까지 알 필요는 없어서입니다.
    */
+  // 불러오는 동안(요청 1~2번) 폼을 가리는 데 쓴다. 표시 없이 두면 확인 창이 닫힌 뒤 아무 일도
+  // 없어 보이고, 그 사이 입력한 내용은 도착한 초안으로 덮여 사라졌다.
+  const [isLoadingDraft, setIsLoadingDraft] = useState(false);
+
   const loadDraft = async (fallbackFormValues: CharacterCreateFormValues) => {
+    setIsLoadingDraft(true);
+    try {
+      await loadDraftValues(fallbackFormValues);
+    } finally {
+      setIsLoadingDraft(false);
+    }
+  };
+
+  const loadDraftValues = async (
+    fallbackFormValues: CharacterCreateFormValues,
+  ) => {
     // 페이지에 막 들어와 GET /drafts/current 응답이 아직 안 돌아온 시점에 눌렀을 수 있어,
     // 이미 아는 값이 없을 때만 그 자리에서 한 번 더 확인합니다.
     const targetDraftId =
@@ -134,5 +149,12 @@ export const useUniverseDraft = ({
   // "임시저장" 클릭 시 그걸 덮어써도 되는지 미리 물어볼 근거로 씁니다.
   const hasExistingDraft = !createdDraftId && Boolean(currentDraft?.draftId);
 
-  return { draftId, saveDraft, isSaving, loadDraft, hasExistingDraft };
+  return {
+    draftId,
+    saveDraft,
+    isSaving,
+    loadDraft,
+    isLoadingDraft,
+    hasExistingDraft,
+  };
 };

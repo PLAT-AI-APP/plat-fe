@@ -175,13 +175,19 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
     setValue,
   } = methods;
   // 초안(임시저장)은 새로 만드는 흐름에만 있고, 이미 만들어진 세계관을 수정할 때는 없습니다.
-  const { draftId, saveDraft, isSaving, loadDraft, hasExistingDraft } =
-    useUniverseDraft({
-      enabled: !isEditMode,
-      defaultScenarioName,
-      getValues,
-      reset,
-    });
+  const {
+    draftId,
+    saveDraft,
+    isSaving,
+    loadDraft,
+    isLoadingDraft,
+    hasExistingDraft,
+  } = useUniverseDraft({
+    enabled: !isEditMode,
+    defaultScenarioName,
+    getValues,
+    reset,
+  });
 
   useEffect(() => {
     if (!universeDetail) return;
@@ -401,7 +407,7 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
           {/* lg 이상에서는 두 패널(폼 491px : 프리뷰 693px 비율)이 gap을 뺀 나머지 폭을
               끝까지 나눠 갖도록 grid로 전환합니다. flex로는 flex-basis가 auto인 wrapper div의
               내용 기반 크기 계산과 얽혀 정확히 맞아떨어지지 않았습니다. */}
-          {isEditLoading ? (
+          {isEditLoading || isLoadingDraft ? (
             <SkeletonCharacterCreate />
           ) : (
             <div className="flex min-h-0 min-w-0 flex-1 items-start justify-center gap-4 lg:grid lg:grid-cols-[491fr_693fr]">
