@@ -22,6 +22,7 @@ const ko = {
       persona: "페르소나",
       userNote: "유저노트",
       assetGallery: "에셋 갤러리",
+      assetGalleryEmpty: "아직 에셋이 없어요",
       assetTotal: "총  {count}개",
       suggestedReply: "추천 답변",
       assetView: "에셋 보기",

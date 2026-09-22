@@ -25,6 +25,7 @@ const ja: typeof ko = {
       persona: "ペルソナ",
       userNote: "ユーザーノート",
       assetGallery: "アセットギャラリー",
+      assetGalleryEmpty: "まだアセットがありません",
       assetTotal: "合計  {count}件",
       suggestedReply: "おすすめ返信",
       assetView: "アセット表示",
