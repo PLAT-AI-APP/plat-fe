@@ -6,11 +6,11 @@ import { useTranslations } from "next-intl";
 import { useProductsQuery } from "@/api/product/getProducts";
 import { useFadeInAfterLoading } from "@/hooks/common/useFadeInAfterLoading";
 import { usePostPaymentOrderMutation } from "@/api/payment/postPaymentOrder";
-import { useModalStore } from "@/store/useModalStore";
 import { showAppToast } from "@/lib/toast";
 import Token from "@/icons/Token";
 import { cn, formatWithCommas, toMajorAmount } from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useRequireLogin } from "@/hooks/common/useRequireLogin";
 import { useWalletStore } from "@/store/useWalletStore";
 import type { Product } from "@/type/product";
 import PolicyGuide from "./PolicyGuide";
@@ -120,7 +120,7 @@ const TokenChargeContents = () => {
     refetch,
   } = useProductsQuery();
   const fadeInClassName = useFadeInAfterLoading(isLoading);
-  const openModal = useModalStore((state) => state.openModal);
+  const requireLogin = useRequireLogin();
   const { mutate: createPaymentOrder, isPending: isCreatingOrder } =
     usePostPaymentOrderMutation();
 
@@ -130,10 +130,8 @@ const TokenChargeContents = () => {
   // 주문을 만들면 서버가 PG 결제 준비까지 마치고 결제창 주소를 준다.
   // PC 는 결제창을 새 창으로 띄우고 이 화면에서 결과를 기다리며, 휴대폰은 지금 창에서 이동한다.
   const handlePurchase = (product: Product) => {
-    if (!isLoggedIn) {
-      openModal("LOGIN", { triggerRef: undefined });
-      return;
-    }
+    if (!requireLogin()) return;
+
     // 새 창은 클릭 순간에 열어야 팝업 차단에 걸리지 않는다. 막혔으면 null 이고, 지금 창에서 이동한다.
     const popup = canUsePaymentWindow()
       ? openBlankPaymentWindow(t("tokenCharge.payment.popupOpening"))

@@ -5,8 +5,7 @@ import { useState } from "react";
 import { useFollowMutation } from "@/api/follow/postFollow";
 import { useUnFollowMutation } from "@/api/follow/deleteFollow";
 import { followQueryKeys } from "@/api/follow/queryKeys";
-import { useAuthStore } from "@/store/useAuthStore";
-import { useModalStore } from "@/store/useModalStore";
+import { useRequireLogin } from "@/hooks/common/useRequireLogin";
 
 interface UseFollowToggleOptions {
   /** 팔로우 대상. */
@@ -44,8 +43,7 @@ export const useFollowToggle = ({
   extraInvalidateKeys,
 }: UseFollowToggleOptions) => {
   const queryClient = useQueryClient();
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
-  const openModal = useModalStore((state) => state.openModal);
+  const requireLogin = useRequireLogin();
   const [optimisticIsFollowing, setOptimisticIsFollowing] = useState<
     boolean | null
   >(null);
@@ -82,10 +80,7 @@ export const useFollowToggle = ({
 
     // 팔로우는 로그인이 있어야 한다. 그대로 보내면 버튼이 잠깐 "팔로잉"으로 바뀌었다가
     // 401 로 되돌아가, 눌러도 아무 일이 없는 것처럼 보이므로 로그인 창을 먼저 연다.
-    if (!isLoggedIn) {
-      openModal("LOGIN", { triggerRef: undefined });
-      return;
-    }
+    if (!requireLogin()) return;
 
     const next = !isFollowing;
     setOptimisticIsFollowing(next);

@@ -14,10 +14,9 @@ import ResourceImage from "@/components/ResourceImage";
 import { ChatFill, Gear, Heart, HeartFill } from "@/icons";
 import { toImageVariantUrl } from "@/lib/file";
 import { cn, formatStatCount } from "@/lib/utils";
-import { useAuthStore } from "@/store/useAuthStore";
 import { useLocaleStore } from "@/store/useLocaleStore";
-import { useModalStore } from "@/store/useModalStore";
 import { CharacterDetail } from "@/type/character";
+import { useRequireLogin } from "@/hooks/common/useRequireLogin";
 import { useFollowToggle } from "@/hooks/follow/useFollowToggle";
 import { universeQueryKeys } from "@/api/universe/queryKeys";
 import UniverseMenuButton from "./UniverseMenuButton";
@@ -45,8 +44,7 @@ const SidebarSummary = ({
   // 서버에서 비교) — 클라이언트가 userId를 따로 비교하면 관리자 권한 같은 예외 케이스를
   // 놓칠 수 있습니다.
   const isCreator = character.editable;
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
-  const openModal = useModalStore((state) => state.openModal);
+  const requireLogin = useRequireLogin();
   const { mutate: likeUniverse, isPending: isLikeMutating } =
     usePostUniverseLikeMutation();
   const { mutate: unlikeUniverse, isPending: isUnlikeMutating } =
@@ -57,10 +55,7 @@ const SidebarSummary = ({
   const handleToggleLike = () => {
     if (isLikePending) return;
 
-    if (!isLoggedIn) {
-      openModal("LOGIN", { triggerRef: undefined });
-      return;
-    }
+    if (!requireLogin()) return;
 
     const variables = { universeId: character.characterId };
     if (character.liked) unlikeUniverse(variables);
