@@ -18,6 +18,7 @@ import { useModalStore } from "@/store/useModalStore";
 import { CharacterDetail } from "@/type/character";
 import { useFollowToggle } from "@/hooks/follow/useFollowToggle";
 import { universeQueryKeys } from "@/api/universe/queryKeys";
+import UniverseMenuButton from "./UniverseMenuButton";
 
 /** 창작자가 사진을 올리지 않았거나 불러오지 못했을 때 쓰는 기본 프로필 이미지 */
 const DEFAULT_CREATOR_IMAGE = "/p1.png";
@@ -205,21 +206,24 @@ const SidebarSummary = ({
             <Gear className="size-5" aria-hidden="true" />
           </button>
         ) : (
-          <button
-            type="button"
-            onClick={handleToggleLike}
-            disabled={isLikePending}
-            aria-pressed={character.liked}
-            aria-label={character.liked ? t("unlike") : t("like")}
-            title={character.liked ? t("unlike") : t("like")}
-            className="flex size-[52px] shrink-0 items-center justify-center rounded-2xl bg-card text-font-2 transition-colors hover:bg-card-hover disabled:opacity-60"
-          >
-            {character.liked ? (
-              <HeartFill className="size-5 text-brand" aria-hidden="true" />
-            ) : (
-              <Heart className="size-5" aria-hidden="true" />
-            )}
-          </button>
+          <>
+            <button
+              type="button"
+              onClick={handleToggleLike}
+              disabled={isLikePending}
+              aria-pressed={character.liked}
+              aria-label={character.liked ? t("unlike") : t("like")}
+              title={character.liked ? t("unlike") : t("like")}
+              className="flex size-[52px] shrink-0 items-center justify-center rounded-2xl bg-card text-font-2 transition-colors hover:bg-card-hover disabled:opacity-60"
+            >
+              {character.liked ? (
+                <HeartFill className="size-5 text-brand" aria-hidden="true" />
+              ) : (
+                <Heart className="size-5" aria-hidden="true" />
+              )}
+            </button>
+            <UniverseMenuButton universeId={character.characterId} />
+          </>
         )}
       </div>
 
