@@ -7,4 +7,6 @@
 @import "./styles/typography.css"; /* display/heading/title/body/caption 유틸리티 */
 @import "./styles/scrollbar.css"; /* 스크롤바 커스텀 */
 @import "./styles/sonner.css"; /* sonner 토스트 오버라이드 */
+@import "./styles/mascot.css"; /* 빈 화면 마스코트 애니메이션 */
+@import "./styles/scenes.css"; /* 로그인 처리 중 · 404 등 화면 단위 연출 */
 @import "./styles/utilities.css"; /* content-x, skeleton, field-focus 등 커스텀 유틸리티 */

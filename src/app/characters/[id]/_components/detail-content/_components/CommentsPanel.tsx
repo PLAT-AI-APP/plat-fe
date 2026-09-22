@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useUniverseCommentsInfiniteQuery } from "@/api/comment/getUniverseComments";
-import { InfiniteQueryBoundary } from "@/components/state";
+import { EmptyState, InfiniteQueryBoundary } from "@/components/state";
 import CommentInputBox from "./CommentInputBox";
 import CommentListItem from "./CommentListItem";
 
@@ -55,7 +55,9 @@ const CommentsPanel = ({
         isFetchingNextPage={isFetchingNextPage}
         onRetry={refetch}
         onRetryNextPage={fetchNextPage}
-        emptyFallback={<p className="body-5 text-font-2">{t("commentEmpty")}</p>}
+        emptyFallback={
+          <EmptyState size="sm" mood="chat" message={t("commentEmpty")} />
+        }
       >
         <ul className="flex flex-col gap-5">
           {comments.map((comment) => (

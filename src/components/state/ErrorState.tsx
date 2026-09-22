@@ -2,6 +2,8 @@
 
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
+import EmptyMascot from "./EmptyMascot";
+import Button from "@/components/ui/Button";
 import {
   formatErrorDetail,
   isRetryableError,
@@ -18,6 +20,11 @@ interface ErrorStateProps {
    * inline 한 줄만 쓴다. 입력칸 아래·업로더 타일처럼 자리가 좁을 때.
    */
   variant?: "block" | "inline";
+  /**
+   * block 에서 어질어질한 캐릭터를 함께 보여준다(기본). 태그 목록처럼 좁은
+   * 자리에서는 false 로 끄고 예전 카드 모양을 쓴다.
+   */
+  withMascot?: boolean;
   className?: string;
 }
 
@@ -32,6 +39,7 @@ const ErrorState = ({
   error,
   onRetry,
   variant = "block",
+  withMascot = true,
   className,
 }: ErrorStateProps) => {
   const t = useTranslations("state");
@@ -70,10 +78,19 @@ const ErrorState = ({
     <div
       role="alert"
       className={cn(
-        "flex w-full flex-col items-center justify-center gap-3 rounded-2xl bg-card px-6 py-10 text-center",
+        "flex w-full flex-col items-center justify-center gap-3 px-6 py-10 text-center",
+        // 캐릭터를 쓸 때는 빈 화면처럼 면 없이 배경 위에 둔다. 카드 면 위에서는 캐릭터가 묻힌다.
+        !withMascot && "rounded-2xl bg-card",
         className,
       )}
     >
+      {withMascot && (
+        <EmptyMascot
+          mood="dizzy"
+          className="w-44 [mask-image:linear-gradient(to_bottom,#000_72%,transparent)]"
+        />
+      )}
+
       <p className="body-4 text-font-1">{resolveErrorMessage(error)}</p>
 
       {detail && (
@@ -83,13 +100,14 @@ const ErrorState = ({
       )}
 
       {canRetry && (
-        <button
-          type="button"
+        <Button
+          variant="secondary"
           onClick={onRetry}
-          className="title-5 mt-1 rounded-lg bg-btn-hover px-4 py-2 text-font-1 transition-colors hover:bg-btn-selected"
+          // 카드 면 위에서는 secondary 면(bg-card)이 묻히므로 한 단계 밝은 면을 쓴다.
+          className={cn("mt-1", !withMascot && "bg-btn-hover hover:bg-btn-selected")}
         >
           {t("retry")}
-        </button>
+        </Button>
       )}
     </div>
   );

@@ -1,0 +1,146 @@
+/* =========================================================================
+ * 화면 단위 연출 (로그인 처리 중 · 404 등)
+ *
+ * 모든 요소의 기본 상태가 곧 "멈춘 모습"이 되도록 움직임은 keyframes 에만 둔다.
+ * 모션 최소화 설정에서는 base.css 의 전역 규칙이 애니메이션을 끈다.
+ * ========================================================================= */
+
+/* 두 점 사이를 흐르는 연결 점 */
+.scene-flow {
+  animation: scene-flow 1.5s ease-in-out infinite both;
+}
+@keyframes scene-flow {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(0.7);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+/* 도착한 쪽이 한 번씩 빛을 받는다 */
+.scene-glow {
+  animation: scene-glow 1.5s ease-out infinite;
+}
+@keyframes scene-glow {
+  0%,
+  55% {
+    box-shadow: 0 0 0 0 rgba(255, 122, 0, 0.45);
+  }
+  100% {
+    box-shadow: 0 0 0 16px rgba(255, 122, 0, 0);
+  }
+}
+
+.scene-spin {
+  animation: scene-spin 1.4s linear infinite;
+}
+.scene-spin-slow {
+  animation: scene-spin 9s linear infinite;
+}
+@keyframes scene-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+/* 궤도를 도는 뱃지가 늘 똑바로 서 있도록 반대로 돈다 */
+.scene-spin-slow-reverse {
+  animation: scene-spin 9s linear infinite reverse;
+}
+
+.scene-float {
+  animation: scene-float 3s ease-in-out infinite;
+}
+@keyframes scene-float {
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.scene-dot {
+  animation: scene-dot 0.9s ease-in-out infinite;
+}
+@keyframes scene-dot {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  50% {
+    transform: translateY(-5px);
+    opacity: 1;
+  }
+}
+
+.scene-rise {
+  animation: scene-rise 0.5s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+@keyframes scene-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+
+/* 404 의 동그란 얼굴 — 몸은 둥실, 눈은 두리번 */
+.scene-bob {
+  animation: scene-bob 3.2s ease-in-out infinite;
+}
+@keyframes scene-bob {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0);
+  }
+  50% {
+    transform: translateY(-10px) rotate(-6deg);
+  }
+}
+.scene-peer {
+  animation: scene-peer 4s ease-in-out infinite;
+}
+@keyframes scene-peer {
+  0%,
+  12%,
+  100% {
+    transform: translate(0, 0);
+  }
+  25%,
+  42% {
+    transform: translate(-6px, 1px);
+  }
+  58%,
+  78% {
+    transform: translate(6px, -2px);
+  }
+}
+.scene-blink {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: scene-blink 4.2s ease-in-out infinite;
+}
+@keyframes scene-blink {
+  0%,
+  90%,
+  100% {
+    transform: scaleY(1);
+  }
+  93% {
+    transform: scaleY(0.1);
+  }
+  96% {
+    transform: scaleY(1);
+  }
+}
+/* 바닥 그림자 — 떠오르면 작아진다 */
+.scene-shadow {
+  animation: scene-shadow 3.2s ease-in-out infinite;
+}
+@keyframes scene-shadow {
+  50% {
+    transform: scaleX(0.75);
+    opacity: 0.5;
+  }
+}

@@ -47,6 +47,7 @@ const NewTabContents = () => {
         isError={isError}
         error={error}
         isEmpty={items.length === 0}
+        emptyMood="peek"
         emptyMessage={t("newPage.empty")}
         onRetry={refetch}
         pendingFallback={

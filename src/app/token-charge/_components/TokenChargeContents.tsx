@@ -25,7 +25,7 @@ import {
   providerSegment,
 } from "@/lib/paymentWindow";
 import PageTitle from "@/components/PageTitle";
-import { ErrorState } from "@/components/state";
+import { EmptyState, ErrorState } from "@/components/state";
 
 /** 서버가 준 결제창 주소는 http(s) 일 때만 따른다. javascript: 같은 주소로는 이동하지 않는다. */
 const isHttpUrl = (value: string) => {
@@ -214,9 +214,7 @@ const TokenChargeContents = () => {
         {isError && <ErrorState error={error} onRetry={refetch} />}
 
         {products && products.length === 0 && (
-          <p className="body-5 py-10 text-center text-font-2">
-            {t("tokenCharge.empty")}
-          </p>
+          <EmptyState mood="peek" message={t("tokenCharge.empty")} />
         )}
 
         {products && products.length > 0 && (

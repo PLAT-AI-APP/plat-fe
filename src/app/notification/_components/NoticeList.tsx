@@ -98,6 +98,7 @@ const NoticeList = ({ currentFilter }: NoticeListProps) => {
       onRetry={refetch}
       onRetryNextPage={fetchNextPage}
       pendingFallback={<NoticeListSkeleton />}
+      emptyMood="sleep"
       emptyMessage={t(
         currentFilter ? "notification.emptyFiltered" : "notification.empty",
       )}

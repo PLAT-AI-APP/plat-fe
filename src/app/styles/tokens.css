@@ -53,6 +53,12 @@
   --info: #2563eb;
   --info-bg: rgba(37, 99, 235, 0.1);
 
+  /* 빈 화면 마스코트(반원 캐릭터). 카드 면(--bg-card) 위에 놓인다. */
+  --mascot-body: #dde1ea;
+  --mascot-halo: #e9ecf2;
+  --mascot-face: #3a3f52;
+  --mascot-line: #b4bacb;
+
   /* --- 테마 불변 토큰: .dark 에서 재정의하지 않는다 --- */
 
   /* 브랜드 오렌지(#ff7a00)는 두 테마 모두 밝은 면이라, 그 위 글자는 항상 어둡다.
@@ -181,6 +187,11 @@
   --info: #60a5fa;
   --info-bg: rgba(96, 165, 250, 0.16);
 
+  --mascot-body: #2a2f45;
+  --mascot-halo: #1e2335;
+  --mascot-face: #11141f;
+  --mascot-line: #4a5070;
+
   --elevation-card: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
   --elevation-popover: 0 8px 24px 0 rgba(0, 0, 0, 0.2);
   --elevation-modal: 0 24px 48px -12px rgba(0, 0, 0, 0.55);
@@ -230,6 +241,8 @@
   --color-brand-opacity-2: var(--brand-opacity-2);
   --color-brand-opacity-3: var(--brand-opacity-3);
   --color-font-accents: var(--font-accents);
+  --color-mascot-halo: var(--mascot-halo);
+  --color-mascot-body: var(--mascot-body);
 
   /* 상태색: text-success / bg-success-bg … */
   --color-success: var(--success);

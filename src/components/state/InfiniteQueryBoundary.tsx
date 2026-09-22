@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import { useFadeInAfterLoading } from "@/hooks/common/useFadeInAfterLoading";
 import EmptyState from "./EmptyState";
+import type { MascotMood } from "./EmptyMascot";
 import ErrorState from "./ErrorState";
 import ListErrorRow from "./ListErrorRow";
 
@@ -22,6 +23,8 @@ interface InfiniteQueryBoundaryProps {
   onRetryNextPage?: () => void;
   pendingFallback?: ReactNode;
   emptyMessage?: string;
+  /** 빈 결과에 띄울 캐릭터 표정. 넘기지 않으면 문구만 보인다. */
+  emptyMood?: MascotMood;
   emptyFallback?: ReactNode;
   children: ReactNode;
 }
@@ -48,6 +51,7 @@ const InfiniteQueryBoundary = ({
   onRetryNextPage,
   pendingFallback = null,
   emptyMessage,
+  emptyMood,
   emptyFallback,
   children,
 }: InfiniteQueryBoundaryProps) => {
@@ -63,7 +67,8 @@ const InfiniteQueryBoundary = ({
 
   if (!hasItems && isEmpty) {
     if (emptyFallback) return <>{emptyFallback}</>;
-    if (emptyMessage) return <EmptyState message={emptyMessage} />;
+    if (emptyMessage)
+      return <EmptyState message={emptyMessage} mood={emptyMood} />;
     return null;
   }
 

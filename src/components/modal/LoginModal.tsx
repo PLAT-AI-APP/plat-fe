@@ -21,7 +21,10 @@ import { loginFormSchema, LoginFormValues } from "@/schema/auth.schema";
 import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
 import { LoginModalProps } from "@/type/modal";
-import { PENDING_WELCOME_CREDIT_DIALOG_KEY } from "@/constants/auth";
+import {
+  PENDING_WELCOME_CREDIT_DIALOG_KEY,
+  SOCIAL_LOGIN_PROVIDER_KEY,
+} from "@/constants/auth";
 
 const showLoginToast = (
   toastType: LoginToastType | undefined,
@@ -171,6 +174,11 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
 
   const handleSocialLoginClick = (provider: "kakao" | "google") => {
     allowNextNavigation();
+    try {
+      sessionStorage.setItem(SOCIAL_LOGIN_PROVIDER_KEY, provider);
+    } catch {
+      // 저장할 수 없어도 로그인은 그대로 진행한다. 콜백 화면이 수단 없이 안내할 뿐이다.
+    }
     window.location.href = `${process.env.NEXT_PUBLIC_BASE_URI}/oauth2/authorization/${provider}`;
   };
 

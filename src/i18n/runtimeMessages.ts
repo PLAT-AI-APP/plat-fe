@@ -20,6 +20,8 @@ const en = {
   },
   errorPage: {
     notFound: "We couldn't find the page you requested.",
+    notFoundTitle: "Page not found",
+    notFoundHint: "The address may have changed, or the page was removed.",
     backHome: "Back to home",
     title: "Something went wrong",
     description: "Please try again in a moment. If it keeps happening, refresh the page.",
@@ -341,6 +343,8 @@ const ko: RuntimeMessages = {
   },
   errorPage: {
     notFound: "요청하신 페이지를 찾을 수 없습니다.",
+    notFoundTitle: "페이지를 찾을 수 없어요",
+    notFoundHint: "주소가 바뀌었거나 삭제된 페이지일 수 있어요.",
     backHome: "홈으로 돌아가기",
     title: "일시적인 오류가 발생했습니다",
     description: "잠시 후 다시 시도해 주세요. 문제가 계속되면 새로고침 해주세요.",
@@ -643,6 +647,8 @@ const ja: RuntimeMessages = {
   },
   errorPage: {
     notFound: "お探しのページが見つかりません。",
+    notFoundTitle: "ページが見つかりません",
+    notFoundHint: "アドレスが変わったか、ページが削除された可能性があります。",
     backHome: "ホームに戻る",
     title: "問題が発生しました",
     description: "しばらくしてからもう一度お試しください。続く場合は再読み込みしてください。",
@@ -948,6 +954,8 @@ const zh: RuntimeMessages = {
   },
   errorPage: {
     notFound: "找不到您请求的页面。",
+    notFoundTitle: "找不到页面",
+    notFoundHint: "地址可能已更改，或页面已被删除。",
     backHome: "返回首页",
     title: "发生了临时错误",
     description: "请稍后重试。如果问题持续，请刷新页面。",
@@ -1244,6 +1252,8 @@ const th: RuntimeMessages = {
   },
   errorPage: {
     notFound: "ไม่พบหน้าที่คุณต้องการ",
+    notFoundTitle: "ไม่พบหน้านี้",
+    notFoundHint: "ที่อยู่อาจเปลี่ยนไป หรือหน้านี้ถูกลบแล้ว",
     backHome: "กลับสู่หน้าแรก",
     title: "เกิดข้อผิดพลาดชั่วคราว",
     description: "โปรดลองอีกครั้งในภายหลัง หากยังเกิดขึ้นให้รีเฟรชหน้า",
@@ -1552,6 +1562,8 @@ const vi: RuntimeMessages = {
   },
   errorPage: {
     notFound: "Không tìm thấy trang bạn yêu cầu.",
+    notFoundTitle: "Không tìm thấy trang",
+    notFoundHint: "Địa chỉ có thể đã thay đổi hoặc trang đã bị xóa.",
     backHome: "Về trang chủ",
     title: "Đã xảy ra lỗi tạm thời",
     description: "Vui lòng thử lại sau. Nếu vẫn tiếp diễn, hãy tải lại trang.",
