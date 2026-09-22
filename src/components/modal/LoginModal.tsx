@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { LoginToastType, useEmailLoginMutation } from "@/api/auth/emailLogin";
 import ActiveButton from "@/components/ActiveButton";
@@ -73,6 +73,19 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
 
   const { mutate: emailLogin, isPending: isEmailLoginPending } =
     useEmailLoginMutation();
+  // 외부 인증 페이지로 넘어가는 중인 소셜 로그인.
+  const [redirectingProvider, setRedirectingProvider] = useState<
+    "kakao" | "google" | null
+  >(null);
+  // 인증 페이지에서 뒤로 오면 브라우저가 떠나기 직전 화면(bfcache)을 그대로 되살려 버튼이
+  // 대기 상태로 굳어 있다. 되살아난 경우에만 풀어 준다.
+  useEffect(() => {
+    const handlePageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) setRedirectingProvider(null);
+    };
+    window.addEventListener("pageshow", handlePageShow);
+    return () => window.removeEventListener("pageshow", handlePageShow);
+  }, []);
 
   useEffect(() => {
     const frameId = window.requestAnimationFrame(() => {
@@ -173,6 +186,8 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
   };
 
   const handleSocialLoginClick = (provider: "kakao" | "google") => {
+    if (redirectingProvider) return;
+    setRedirectingProvider(provider);
     allowNextNavigation();
     try {
       sessionStorage.setItem(SOCIAL_LOGIN_PROVIDER_KEY, provider);
@@ -253,9 +268,9 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
               id="btn-login-submit"
               text={t("auth.login.submit")}
               type="submit"
-              isActive={
-                email.length > 0 && pw.length > 0 && !isEmailLoginPending
-              }
+              // 요청 중을 isActive=false 로만 나타내면 입력이 틀린 것과 똑같은 회색이 된다.
+              isActive={email.length > 0 && pw.length > 0}
+              isPending={isEmailLoginPending}
               className="mt-2 h-12 rounded-lg"
             />
           </form>
@@ -270,12 +285,14 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
               icon={<ChatFill />}
               label={t("auth.login.socialKakao")}
               onClick={() => handleSocialLoginClick("kakao")}
+              isPending={redirectingProvider === "kakao"}
             />
             <SocialLoginButton
               id="link-google-login"
               icon={<Google />}
               label={t("auth.login.socialGoogle")}
               onClick={() => handleSocialLoginClick("google")}
+              isPending={redirectingProvider === "google"}
             />
           </nav>
         </section>

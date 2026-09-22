@@ -46,7 +46,8 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
 
   const { mutate: emailVerify, isPending: isEmailVerifyPending } =
     useEmailVerifyMutation();
-  const { mutate: emailVerifyConfirm } = useEmailVerifyConfirmMutation();
+  const { mutate: emailVerifyConfirm, isPending: isEmailVerifyConfirmPending } =
+    useEmailVerifyConfirmMutation();
   const { timeLeft, startTimer, formatTime, stopTimer } = useCountdown(300);
 
   useEffect(() => {
@@ -79,6 +80,8 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
   };
 
   const handleVerifyOtp = () => {
+    // 응답 전까지 버튼이 그대로라 다시 누르면 confirm 이 중복으로 나갔다.
+    if (isEmailVerifyConfirmPending) return;
     if (timeLeft <= 0) {
       setError("code", {
         type: "manual",
@@ -257,6 +260,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
                 <ActiveButton
                   type="button"
                   isActive={(code?.length ?? 0) >= 6 && timeLeft > 0}
+                  isPending={isEmailVerifyConfirmPending}
                   text={t("auth.emailVerification.confirm")}
                   onClick={handleVerifyOtp}
                   className="body-5 mt-[29px] max-h-11 w-fit text-nowrap px-4 py-3"

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { cn, formatWithCommas } from "@/lib/utils";
@@ -133,6 +133,18 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
   const loginModalBtnRef = useRef(null);
   const loginModal = useToggle();
 
+  const [redirectingProvider, setRedirectingProvider] = useState<
+    "KAKAO" | "GOOGLE" | null
+  >(null);
+  // 인증 페이지에서 뒤로 오면 bfcache 로 되살아난 화면에서 버튼이 대기 상태로 굳어 있다.
+  useEffect(() => {
+    const handlePageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) setRedirectingProvider(null);
+    };
+    window.addEventListener("pageshow", handlePageShow);
+    return () => window.removeEventListener("pageshow", handlePageShow);
+  }, []);
+
   const handleLoginBtn = (name: "KAKAO" | "GOOGLE" | "LOGIN") => {
     if (name === "LOGIN") {
       openModal("LOGIN", {
@@ -140,6 +152,9 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
       });
       return;
     }
+
+    // 인증 페이지가 뜰 때까지 버튼에 변화가 없으면 여러 번 누르게 된다.
+    setRedirectingProvider(name);
 
     if (typeof window !== "undefined") {
       const currentPath = window.location.pathname + window.location.search;
@@ -208,27 +223,40 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
         </Link>
       ) : (
         <div className="body-5 flex flex-col gap-3 p-2">
-          <div
+          <button
+            type="button"
             onClick={() => handleLoginBtn("KAKAO")}
-            className="flex cursor-pointer items-center justify-center relative body-5 text-center h-11 rounded-lg bg-[#FEE500] w-full py-2 text-scrim"
+            disabled={redirectingProvider !== null}
+            aria-busy={redirectingProvider === "KAKAO" || undefined}
+            className={cn(
+              "flex cursor-pointer items-center justify-center relative body-5 text-center h-11 rounded-lg bg-[#FEE500] w-full py-2 text-scrim",
+              redirectingProvider === "KAKAO" && "pending-state",
+            )}
           >
             <Kakao className="absolute w-5.5 h-5.5 top-1/2 left-7.5 -translate-y-1/2" />
             {t("loginWithKakao")}
-          </div>
-          <div
+          </button>
+          <button
+            type="button"
             onClick={() => handleLoginBtn("GOOGLE")}
-            className="flex cursor-pointer items-center justify-center relative body-5 text-center h-11 rounded-lg bg-font-1 w-full py-2 text-font-4"
+            disabled={redirectingProvider !== null}
+            aria-busy={redirectingProvider === "GOOGLE" || undefined}
+            className={cn(
+              "flex cursor-pointer items-center justify-center relative body-5 text-center h-11 rounded-lg bg-font-1 w-full py-2 text-font-4",
+              redirectingProvider === "GOOGLE" && "pending-state",
+            )}
           >
             <Google className="absolute w-5.5 h-5.5 top-1/2 left-7.5 -translate-y-1/2" />
             {t("loginWithGoogle")}
-          </div>
-          <div
+          </button>
+          <button
+            type="button"
             ref={loginModalBtnRef}
             onClick={() => handleLoginBtn("LOGIN")}
             className="flex cursor-pointer items-center justify-center relative body-5 text-center h-11 rounded-lg bg-card w-full py-2 text-font-2"
           >
             {t("loginWithOther")}
-          </div>
+          </button>
         </div>
       )}
 
