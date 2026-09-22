@@ -175,14 +175,13 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
     setValue,
   } = methods;
   // 초안(임시저장)은 새로 만드는 흐름에만 있고, 이미 만들어진 세계관을 수정할 때는 없습니다.
-  const { draftId, saveDraft, loadDraft, hasExistingDraft } = useUniverseDraft(
-    {
+  const { draftId, saveDraft, isSaving, loadDraft, hasExistingDraft } =
+    useUniverseDraft({
       enabled: !isEditMode,
       defaultScenarioName,
       getValues,
       reset,
-    },
-  );
+    });
 
   useEffect(() => {
     if (!universeDetail) return;
@@ -390,6 +389,7 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
           universeId={universeId}
           draftId={draftId}
           onSave={handleSaveClick}
+          isSaving={isSaving}
           onDraftClick={handleLoadDraftClick}
           setCurrentTabId={setCurrentTabId}
           setActiveScenarioIndex={setActiveScenarioIndex}

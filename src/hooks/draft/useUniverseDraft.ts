@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { UseFormReset } from "react-hook-form";
 import { showAppToast } from "@/lib/toast";
@@ -47,8 +47,17 @@ export const useUniverseDraft = ({
   const { mutateAsync: updateDraft } = useDraftUpdateMutation();
   const { mutateAsync: fetchDraft } = useDraftMutation();
 
+  // 첫 저장은 draftId 가 없어 POST 로 나간다. 응답 전에 한 번 더 누르면 POST 가 두 번 나가
+  // 두 번째가 409 로 실패하고, 저장은 됐는데 "저장 실패" 토스트가 떴다. ref 로 바로 막는다.
+  const isSavingRef = useRef(false);
+  const [isSaving, setIsSaving] = useState(false);
+
   /** "임시저장" 버튼 클릭 시 호출합니다. 기존 초안이 있으면 갱신, 없으면 새로 만듭니다. */
   const saveDraft = async () => {
+    if (isSavingRef.current) return;
+    isSavingRef.current = true;
+    setIsSaving(true);
+
     const currentValues = getValues();
     const draft = buildUniverseDraft(currentValues);
     const fileIds = collectUniverseDraftFileIds(draft);
@@ -70,11 +79,21 @@ export const useUniverseDraft = ({
         });
         setCreatedDraftId(created.draftId);
       }
-      reset(currentValues);
+      // 저장한 시점의 값을 "저장된 기준"으로만 삼고 입력값은 건드리지 않는다. 예전처럼
+      // reset(currentValues) 하면 요청이 오가는 동안 새로 친 글자가 저장 완료 순간 되돌아갔다.
+      // 그 사이 고친 칸은 기준과 달라 계속 "저장 안 된 변경"으로 남는다.
+      reset(currentValues, {
+        keepValues: true,
+        keepErrors: true,
+        keepTouched: true,
+      });
       showAppToast("success", t("draftSaved"));
     } catch (error) {
       console.error("Draft save failed:", error);
       showAppToast("error", t("draftSaveFailed"));
+    } finally {
+      isSavingRef.current = false;
+      setIsSaving(false);
     }
   };
 
@@ -115,5 +134,5 @@ export const useUniverseDraft = ({
   // "임시저장" 클릭 시 그걸 덮어써도 되는지 미리 물어볼 근거로 씁니다.
   const hasExistingDraft = !createdDraftId && Boolean(currentDraft?.draftId);
 
-  return { draftId, saveDraft, loadDraft, hasExistingDraft };
+  return { draftId, saveDraft, isSaving, loadDraft, hasExistingDraft };
 };

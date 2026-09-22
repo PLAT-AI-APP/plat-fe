@@ -1,6 +1,7 @@
 "use client";
 
-import React from "react";
+import React, { useRef, useState } from "react";
+import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
 import { FieldErrors, FieldPath, useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
@@ -30,6 +31,8 @@ interface CreateHeaderProps {
   // 이 초안에서 세계관을 만든 경우에만 있습니다. 등록 성공 시 실어 보내면 백엔드가 그 초안을 자동 삭제합니다.
   draftId: string | null;
   onSave: () => void;
+  /** 임시저장 요청 중. 버튼에 대기 표시를 하고 다시 누를 수 없게 한다. */
+  isSaving: boolean;
   onDraftClick: () => void;
   setCurrentTabId: (id: TabId) => void;
   setActiveScenarioIndex: (index: number) => void;
@@ -239,6 +242,7 @@ const CreateHeader = ({
   universeId,
   draftId,
   onSave,
+  isSaving,
   onDraftClick,
   setCurrentTabId,
   setActiveScenarioIndex,
@@ -255,7 +259,18 @@ const CreateHeader = ({
   const { mutateAsync: updateUniverse, isPending: isUpdatePending } =
     useUniverseUpdateMutation();
   const isEditMode = Boolean(universeId);
-  const isPending = isCreatePending || isUpdatePending;
+  const isMutationPending = isCreatePending || isUpdatePending;
+  // 검증(zod parseAsync)은 비동기라, 그동안에는 아직 요청이 시작되지 않아 isPending 이 false 다.
+  // 그 틈에 들어온 두 번째 클릭이 그대로 통과해 세계관이 둘 만들어질 수 있었다.
+  // 성공한 뒤에도 풀지 않는다 — router.push 가 끝나기 전에 다시 눌리면 마찬가지다.
+  const isSubmitLockedRef = useRef(false);
+  const hasSubmittedRef = useRef(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const markSubmitted = () => {
+    hasSubmittedRef.current = true;
+    markSubmitSuccess();
+  };
+  const isPending = isMutationPending || isSubmitting;
 
   const handleSafeBack = (fallbackPath = "/") => {
     if (window.history.state.__next_navigation_guard_stack_index > 0) {
@@ -355,7 +370,7 @@ const CreateHeader = ({
         await updateUniverse({ universeId, request });
 
         showAppToast("success", t("updateSuccess"));
-        markSubmitSuccess();
+        markSubmitted();
         router.push(`/characters/${universeId}`);
         return;
       }
@@ -397,7 +412,7 @@ const CreateHeader = ({
       const created = await createUniverse(request);
 
       showAppToast("success", t("createSuccess"));
-      markSubmitSuccess();
+      markSubmitted();
       router.push(`/characters/${created.universeId}`);
     } catch (error) {
       if (!isApiErrorLike(error)) {
@@ -408,7 +423,10 @@ const CreateHeader = ({
   };
 
   const handleRegisterClick = async () => {
-    if (isPending) return;
+    if (isSubmitLockedRef.current) return;
+
+    isSubmitLockedRef.current = true;
+    setIsSubmitting(true);
 
     // trigger() 로 검증한 뒤 렌더링 때 잡아 둔 errors 를 읽으면, 폼이 mode:"onChange" 라 페이지에 들어와
     // 아직 아무것도 검증되지 않은 첫 클릭에서는 errors 가 비어 있어 아무 안내 없이 끝났다.
@@ -419,6 +437,12 @@ const CreateHeader = ({
       // 검증 자체가 예외로 끊기면 promise rejection 으로만 남아 화면에는 아무 반응이 없었다.
       showAppToast("error", t(isEditMode ? "updateFailed" : "createFailed"));
       console.error("Universe form validation failed:", error);
+    } finally {
+      // 성공하면 화면이 넘어가므로 잠근 채로 둔다. 실패·검증 탈락일 때만 다시 누를 수 있게 한다.
+      if (!hasSubmittedRef.current) {
+        isSubmitLockedRef.current = false;
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -438,7 +462,12 @@ const CreateHeader = ({
             <button
               type="button"
               onClick={onSave}
-              className="rounded-xl border border-main bg-card px-5 py-2 hover:bg-card-hover"
+              disabled={isSaving}
+              aria-busy={isSaving || undefined}
+              className={cn(
+                "rounded-xl border border-main bg-card px-5 py-2 hover:bg-card-hover",
+                isSaving && "pending-state",
+              )}
             >
               {t("temporarySave")}
             </button>
@@ -463,6 +492,7 @@ const CreateHeader = ({
                 ? t("submitting")
                 : t("submit")
           }
+          isPending={isPending}
           className="h-9 rounded-xl px-4 py-2"
           onClick={handleRegisterClick}
         />
