@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useProductsQuery } from "@/api/product/getProducts";
@@ -15,8 +15,27 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useWalletStore } from "@/store/useWalletStore";
 import type { Product } from "@/type/product";
 import PolicyGuide from "./PolicyGuide";
+import PaymentWindowOverlay, {
+  type PendingPaymentWindow,
+} from "./PaymentWindowOverlay";
+import {
+  canUsePaymentWindow,
+  isMobileDevice,
+  openBlankPaymentWindow,
+  providerSegment,
+} from "@/lib/paymentWindow";
 import PageTitle from "@/components/PageTitle";
 import { ErrorState } from "@/components/state";
+
+/** 서버가 준 결제창 주소는 http(s) 일 때만 따른다. javascript: 같은 주소로는 이동하지 않는다. */
+const isHttpUrl = (value: string) => {
+  try {
+    const { protocol } = new URL(value);
+    return protocol === "https:" || protocol === "http:";
+  } catch {
+    return false;
+  }
+};
 
 interface ProductListItemProps {
   product: Product;
@@ -106,25 +125,45 @@ const TokenChargeContents = () => {
   const { mutate: createPaymentOrder, isPending: isCreatingOrder } =
     usePostPaymentOrderMutation();
 
-  // 주문을 만들면 서버가 PG 결제 준비까지 마치고 결제창 주소를 준다. 접속 환경에 맞는 주소로 이동합니다.
+  const [pendingWindow, setPendingWindow] =
+    useState<PendingPaymentWindow | null>(null);
+
+  // 주문을 만들면 서버가 PG 결제 준비까지 마치고 결제창 주소를 준다.
+  // PC 는 결제창을 새 창으로 띄우고 이 화면에서 결과를 기다리며, 휴대폰은 지금 창에서 이동한다.
   const handlePurchase = (product: Product) => {
     if (!isLoggedIn) {
       openModal("LOGIN", { triggerRef: undefined });
       return;
     }
+    // 새 창은 클릭 순간에 열어야 팝업 차단에 걸리지 않는다. 막혔으면 null 이고, 지금 창에서 이동한다.
+    const popup = canUsePaymentWindow()
+      ? openBlankPaymentWindow(t("tokenCharge.payment.popupOpening"))
+      : null;
+
     createPaymentOrder(product.productId, {
       onSuccess: (order) => {
-        const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-        const redirectUrl = isMobile
+        const redirectUrl = isMobileDevice()
           ? (order.redirectMobileUrl ?? order.redirectPcUrl)
           : (order.redirectPcUrl ?? order.redirectMobileUrl);
-        if (!redirectUrl) {
+        if (!redirectUrl || !isHttpUrl(redirectUrl)) {
+          popup?.close();
           showAppToast("error", t("tokenCharge.payment.failed"));
+          return;
+        }
+        if (popup && !popup.closed) {
+          popup.location.href = redirectUrl;
+          setPendingWindow({
+            orderUid: order.orderUid,
+            provider: providerSegment(order.pgProvider),
+            redirectUrl,
+            popup,
+          });
           return;
         }
         showAppToast("info", t("tokenCharge.payment.redirecting"));
         window.location.href = redirectUrl;
       },
+      onError: () => popup?.close(),
     });
   };
 
@@ -195,6 +234,13 @@ const TokenChargeContents = () => {
       </div>
 
       <PolicyGuide />
+
+      {pendingWindow && (
+        <PaymentWindowOverlay
+          pending={pendingWindow}
+          onClose={() => setPendingWindow(null)}
+        />
+      )}
     </section>
   );
 };
