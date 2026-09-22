@@ -16,7 +16,7 @@ import dayjs from "@/lib/dayjs";
 import { cn } from "@/lib/utils";
 import { ProfileEditFormType } from "@/schema/profile.schema";
 import { useLocaleStore } from "@/store/useLocaleStore";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, useFormState, useWatch } from "react-hook-form";
 
 const Calendar = dynamic(() => import("react-calendar"), { ssr: false });
 
@@ -57,12 +57,11 @@ export const BirthDateInput = React.forwardRef<
   const calendarLocale = useLocaleStore(
     (state) => INTL_LOCALE_BY_APP_LOCALE[state.locale],
   );
-  const {
-    setValue,
-    watch,
-    formState: { errors },
-  } = useFormContext<ProfileEditFormType>();
-  const birth = watch("birth");
+  const { setValue, control } = useFormContext<ProfileEditFormType>();
+  // watch() 와 formState.errors 는 루트 폼을 구독해 입력할 때마다 모달 전체가 다시 그려졌다.
+  // 이 칸의 값과 오류만 구독한다.
+  const birth = useWatch({ control, name: "birth" });
+  const { errors } = useFormState({ control, name: "birth" });
   const birthError = errors.birth;
   const birthErrorMessage = birthError?.message;
   const shouldHideBirthErrorMessage =

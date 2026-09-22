@@ -4,7 +4,7 @@ import React, { ChangeEvent, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Draggable } from "@hello-pangea/dnd";
-import { useFormContext, useWatch } from "react-hook-form";
+import { useFormContext, useFormState, useWatch } from "react-hook-form";
 import SmartInput from "@/components/smart-input";
 import { useUniverseAssetImageUploadMutation } from "@/api/universe/postUniverseAssetImage";
 import {
@@ -26,12 +26,11 @@ interface AssetItemProps {
 
 const AssetItem = ({ id, index, remove }: AssetItemProps) => {
   const t = useTranslations("characterCreate.asset");
-  const {
-    register,
-    setValue,
-    control,
-    formState: { errors },
-  } = useFormContext<CharacterCreateFormValues>();
+  const { register, setValue, control } =
+    useFormContext<CharacterCreateFormValues>();
+  // 이 에셋의 오류만 구독한다. useFormContext().formState.errors 를 읽으면 루트 폼 전체가 오류
+  // 구독자가 되어, 이 탭을 한 번 연 뒤로는 어느 칸이든 유효↔무효가 바뀔 때마다 폼 전체가 다시 그려졌다.
+  const { errors } = useFormState({ control, name: `asset.${index}` });
   const [isActive, setIsActive] = useState(false);
   const { mutateAsync: uploadAssetImage } =
     useUniverseAssetImageUploadMutation();
