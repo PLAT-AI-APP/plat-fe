@@ -73,7 +73,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
     maxRows: 5,
     value: msg,
   });
-  const { isScrolling, onScroll } = useScrollTimeout();
+  const { onScroll } = useScrollTimeout();
   const previewProfileImage =
     representativeImage || PREVIEW_PROFILE_FALLBACK_IMAGE;
 
@@ -235,10 +235,7 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
       <div
         onScroll={onScroll}
         ref={scrollContainerRef}
-        className={cn(
-          "custom-scrollbar hide-scrollbar-on-idle min-h-0 flex-1 overflow-y-auto px-2",
-          isScrolling && "is-scrolling",
-        )}
+        className="custom-scrollbar hide-scrollbar-on-idle min-h-0 flex-1 overflow-y-auto px-2"
       >
         <CreatePreviewList
           contents={contents}
