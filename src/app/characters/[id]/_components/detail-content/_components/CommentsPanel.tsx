@@ -66,9 +66,6 @@ const CommentsPanel = ({
               comment={comment}
               universeId={universeId}
               creatorId={creatorId}
-              isCommentByCreator={
-                Boolean(creatorId) && comment.author.userId === creatorId
-              }
             />
           ))}
         </ul>

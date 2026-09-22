@@ -5,197 +5,84 @@ import Link from "next/link";
 import { useState } from "react";
 import type { KeyboardEvent } from "react";
 import { useTranslations } from "next-intl";
+import { Heart, HeartFill, Message, Pin } from "@/icons";
 import { resolveApiImageUrl } from "@/lib/file";
 import { cn } from "@/lib/utils";
-import { Heart, HeartFill, Message, Pin } from "@/icons";
-import type { Comment } from "@/type/comment";
-import { useRelativeTimeLabel } from "@/hooks/i18n/useRelativeTimeLabel";
-import { useAuthStore } from "@/store/useAuthStore";
-import { useDialogStore } from "@/store/useDialogStore";
-import { useModalStore } from "@/store/useModalStore";
 import { useUserStore } from "@/store/useUserStore";
+import { useCommentActions } from "@/hooks/comment/useCommentActions";
+import { useRequireLogin } from "@/hooks/common/useRequireLogin";
 import { useTextareaSubmitShortcuts } from "@/hooks/form/useTextareaSubmitShortcuts";
-import {
-  useDeleteCommentLikeMutation,
-  usePostCommentLikeMutation,
-} from "@/api/comment/postCommentLike";
-import { usePatchCommentMutation } from "@/api/comment/patchComment";
-import { useDeleteCommentMutation } from "@/api/comment/deleteComment";
-import { useCommentRepliesInfiniteQuery } from "@/api/comment/getCommentReplies";
-import { usePostCommentReplyMutation } from "@/api/comment/postCommentReply";
-import { usePatchCommentPinMutation } from "@/api/comment/patchCommentPin";
-import { useDeleteCommentPinMutation } from "@/api/comment/deleteCommentPin";
+import { useRelativeTimeLabel } from "@/hooks/i18n/useRelativeTimeLabel";
+import type { Comment } from "@/type/comment";
 import CommentComposer from "./CommentComposer";
 import CommentExpandableBody from "./CommentExpandableBody";
 import CommentMenuButton from "./CommentMenuButton";
+import CommentReplyThread from "./CommentReplyThread";
 
 const DEFAULT_PROFILE_IMAGE = "/p1.png";
-/** 답글은 펼치지 않아도 이 개수까지는 바로 보여줍니다. */
-const REPLIES_PREVIEW_COUNT = 2;
 
 interface CommentListItemProps {
   comment: Comment;
   universeId: string;
-  /** 이 세계관의 제작자 id. 댓글 고정 권한 판단에 씁니다. */
+  /** 이 세계관의 제작자 id. 제작자 닉네임 배지와 댓글 고정 권한 판단에 씁니다. */
   creatorId?: string;
-  /** 이 댓글의 작성자가 세계관 제작자 본인인지. 닉네임을 배지 형태로 다르게 보여준다. */
-  isCommentByCreator?: boolean;
   /** 답글이면 부모 댓글 id. 루트 댓글이면 비웁니다. */
   parentCommentId?: string;
 }
 
+/**
+ * 댓글(또는 답글) 한 줄. 작성자·본문·좋아요·메뉴를 그린다.
+ *
+ * 동작은 useCommentActions 가, 답글 영역은 CommentReplyThread 가 맡고 여기서는 화면만 조합한다.
+ */
 const CommentListItem = ({
   comment,
   universeId,
   creatorId,
-  isCommentByCreator = false,
   parentCommentId,
 }: CommentListItemProps) => {
   const t = useTranslations("characterDetail");
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const myUserId = useUserStore((state) => state.user?.id);
-  const openDialog = useDialogStore((state) => state.openDialog);
-  const closeDialog = useDialogStore((state) => state.closeDialog);
-  const openModal = useModalStore((state) => state.openModal);
   const getRelativeTime = useRelativeTimeLabel();
-  const isReply = Boolean(parentCommentId);
-
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedContent, setEditedContent] = useState(comment.content);
+  const requireLogin = useRequireLogin();
   const [isReplyComposerOpen, setIsReplyComposerOpen] = useState(false);
-  const [replyContent, setReplyContent] = useState("");
-  // 답글은 열지 않아도 REPLIES_PREVIEW_COUNT개까지는 바로 보여주고, 더보기를 눌러야 전부 받아옵니다.
-  const [showAllReplies, setShowAllReplies] = useState(false);
 
-  const { data: repliesData, fetchNextPage, hasNextPage } =
-    useCommentRepliesInfiniteQuery(
-      comment.commentId,
-      !isReply && comment.meta.replyCount > 0,
-    );
-  const replies = repliesData?.pages.flatMap((page) => page.content) ?? [];
-  const visibleReplies = showAllReplies
-    ? replies
-    : replies.slice(0, REPLIES_PREVIEW_COUNT);
-  const hasMoreRepliesToShow =
-    !showAllReplies && (replies.length > REPLIES_PREVIEW_COUNT || hasNextPage);
+  const { toggleLike, edit, remove, report, pin, unpin } = useCommentActions({
+    comment,
+    universeId,
+    parentCommentId,
+  });
 
-  const handleShowMoreReplies = () => {
-    setShowAllReplies(true);
-    if (hasNextPage) fetchNextPage();
-  };
-
-  const { mutate: like } = usePostCommentLikeMutation();
-  const { mutate: unlike } = useDeleteCommentLikeMutation();
-  const { mutate: patchComment, isPending: isPatching } =
-    usePatchCommentMutation();
-  const { mutate: deleteComment } = useDeleteCommentMutation();
-  const { mutate: postReply, isPending: isReplying } =
-    usePostCommentReplyMutation();
-  const { mutate: pinComment } = usePatchCommentPinMutation();
-  const { mutate: unpinComment } = useDeleteCommentPinMutation();
-
-  const scope = { universeId, parentCommentId };
+  const isReply = Boolean(parentCommentId);
   const isMine = Boolean(myUserId && myUserId === comment.author.userId);
+  // 배지 여부를 부모가 계산해 넘기면 답글처럼 한 단계 건너 그릴 때 빠뜨리기 쉽다. 각 줄이 직접 판단한다.
+  const isByCreator = Boolean(creatorId) && comment.author.userId === creatorId;
   // 답글은 백엔드 규칙상 고정할 수 없어, 루트 댓글일 때만 제작자에게 고정 메뉴를 보여준다.
   const canManagePin = Boolean(
     myUserId && creatorId && myUserId === creatorId && !isReply,
   );
 
-  // 좋아요·답글은 로그인이 있어야 한다. 조용히 막으면 눌러도 아무 일이 없어 보이므로 로그인 창을 바로 연다.
-  const requestLogin = () => {
-    openModal("LOGIN", { triggerRef: undefined });
-  };
-
-  const handleToggleLike = () => {
-    if (!isLoggedIn) {
-      requestLogin();
-      return;
-    }
-
-    const variables = { commentId: comment.commentId, ...scope };
-    if (comment.meta.liked) unlike(variables);
-    else like(variables);
-  };
-
-  const handleSubmitEdit = () => {
-    const content = editedContent.trim();
-    if (!content || isPatching) return;
-
-    patchComment(
-      { commentId: comment.commentId, content, ...scope },
-      { onSuccess: () => setIsEditing(false) },
-    );
-  };
-
-  const handleCancelEdit = () => {
-    setEditedContent(comment.content);
-    setIsEditing(false);
-  };
-
-  // 수정 중 Enter로 바로 등록되지 않도록, 취소(Esc)만 남기고 제출 단축키는 쓰지 않습니다.
+  // 입력창에 들어가면 기존 내용을 전체 선택해 바로 고쳐 쓰기 쉽게 한다.
+  // 수정 중에는 Enter 로 바로 등록되지 않도록 제출 단축키(handleKeyDown)는 쓰지 않는다.
   const { handleFocus: handleEditFocus } = useTextareaSubmitShortcuts({
-    onSubmit: handleSubmitEdit,
-    onCancel: handleCancelEdit,
+    onSubmit: edit.submit,
   });
 
   const handleEditKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === "Escape") {
       event.preventDefault();
-      handleCancelEdit();
+      edit.cancel();
     }
   };
 
   const handleToggleReplyComposer = () => {
-    if (!isLoggedIn) {
-      requestLogin();
-      return;
-    }
+    if (!requireLogin()) return;
 
     setIsReplyComposerOpen((prev) => !prev);
   };
 
-  const handleSubmitReply = () => {
-    const content = replyContent.trim();
-    if (!content || isReplying) return;
-
-    postReply(
-      { commentId: comment.commentId, content, universeId },
-      {
-        // 등록한 답글은 바로 아래 목록에 보이므로 입력창은 닫는다. 실패하면 고쳐 보낼 수 있게 그대로 둔다.
-        onSuccess: () => {
-          setReplyContent("");
-          setIsReplyComposerOpen(false);
-        },
-      },
-    );
-  };
-
-  const handleDeleteComment = () => {
-    openDialog("COMMENT_DELETE", {
-      isReply,
-      onConfirm: () => {
-        deleteComment(
-          { commentId: comment.commentId, ...scope },
-          { onSettled: closeDialog },
-        );
-      },
-    });
-  };
-
-  const handleReportComment = () => {
-    openModal("REPORT", {
-      targetType: "COMMENT",
-      targetId: comment.commentId,
-      targetName: comment.author.nickname,
-    });
-  };
-
-  const handlePinComment = () => {
-    pinComment({ universeId, commentId: comment.commentId });
-  };
-
-  const handleUnpinComment = () => {
-    unpinComment({ universeId });
+  const handleCloseReplyComposer = () => {
+    setIsReplyComposerOpen(false);
   };
 
   return (
@@ -230,7 +117,7 @@ const CommentListItem = ({
                 href={`/profile/${comment.author.userId}`}
                 className={cn(
                   "hover:underline",
-                  isCommentByCreator
+                  isByCreator
                     ? "title-5 rounded-[4px] bg-font-1 px-1.5 py-0.5 text-dark"
                     : "title-6 text-font-1",
                 )}
@@ -252,27 +139,24 @@ const CommentListItem = ({
               isMine={isMine}
               canPin={canManagePin}
               isPinned={comment.meta.pinned}
-              onEdit={() => {
-                setEditedContent(comment.content);
-                setIsEditing(true);
-              }}
-              onDelete={handleDeleteComment}
-              onReport={handleReportComment}
-              onPin={handlePinComment}
-              onUnpin={handleUnpinComment}
+              onEdit={edit.start}
+              onDelete={remove}
+              onReport={report}
+              onPin={pin}
+              onUnpin={unpin}
             />
           </header>
 
-          {isEditing ? (
+          {edit.isEditing ? (
             <CommentComposer
               autoFocus
-              value={editedContent}
-              onChange={setEditedContent}
+              value={edit.content}
+              onChange={edit.setContent}
               onKeyDown={handleEditKeyDown}
               onFocus={handleEditFocus}
-              onSubmit={handleSubmitEdit}
-              onCancel={handleCancelEdit}
-              canSubmit={!isPatching && Boolean(editedContent.trim())}
+              onSubmit={edit.submit}
+              onCancel={edit.cancel}
+              canSubmit={edit.canSubmit}
               submitLabel={t("commentEditSave")}
               cancelLabel={t("commentEditCancel")}
             />
@@ -283,7 +167,7 @@ const CommentListItem = ({
           <footer className="flex items-center gap-4">
             <button
               type="button"
-              onClick={handleToggleLike}
+              onClick={toggleLike}
               aria-label={
                 comment.meta.liked ? t("commentUnlike") : t("commentLike")
               }
@@ -315,46 +199,15 @@ const CommentListItem = ({
             )}
           </footer>
 
-          {!isReply && (isReplyComposerOpen || comment.meta.replyCount > 0) && (
-            // article 의 gap-3(12px)에 4px 를 더해 댓글과 답글 사이를 16px 로 둔다.
-            // 본문·푸터 사이(12px)까지 넓어지지 않도록 article 의 gap 자체는 건드리지 않는다.
-            <div className="mt-1 flex flex-col gap-4">
-              {isReplyComposerOpen && isLoggedIn && (
-                <CommentComposer
-                  value={replyContent}
-                  onChange={setReplyContent}
-                  onSubmit={handleSubmitReply}
-                  canSubmit={!isReplying && Boolean(replyContent.trim())}
-                  placeholder={t("replyPlaceholder")}
-                  submitLabel={t("submitComment")}
-                />
-              )}
-
-              {comment.meta.replyCount > 0 && (
-                <div className="flex flex-col gap-5">
-                  <ul className="flex flex-col gap-3">
-                    {visibleReplies.map((reply) => (
-                      <CommentListItem
-                        key={reply.commentId}
-                        comment={reply}
-                        universeId={universeId}
-                        parentCommentId={comment.commentId}
-                      />
-                    ))}
-                  </ul>
-
-                  {hasMoreRepliesToShow && (
-                    <button
-                      type="button"
-                      onClick={handleShowMoreReplies}
-                      className="body-7 w-fit text-font-2 transition-colors hover:text-font-1"
-                    >
-                      {t("commentRepliesShowMore")}
-                    </button>
-                  )}
-                </div>
-              )}
-            </div>
+          {/* 답글에는 다시 답글을 달 수 없어 최상위 댓글에만 붙인다. */}
+          {!isReply && (
+            <CommentReplyThread
+              parentComment={comment}
+              universeId={universeId}
+              creatorId={creatorId}
+              isComposerOpen={isReplyComposerOpen}
+              onComposerClose={handleCloseReplyComposer}
+            />
           )}
         </article>
       </div>
