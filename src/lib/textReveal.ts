@@ -13,6 +13,15 @@ const MAX_LAG_SECONDS = 3;
 /** 탭 전환 등으로 프레임이 오래 멈췄다 돌아와도 밀린 시간만큼 한꺼번에 쏟아내지 않도록 묶는 상한. */
 const MAX_FRAME_SECONDS = 0.1;
 
+/**
+ * 화면에 글자를 내보내는 최소 간격(약 초당 30번).
+ *
+ * 내보낼 때마다 채팅방이 다시 그려지므로, 매 프레임(초당 60번) 내보내면 렌더도 그만큼 돈다.
+ * 글자가 써지는 모습은 초당 30번이면 충분히 부드럽고 렌더는 절반이 된다. 받은 글자를 다 따라잡은
+ * 순간에는 간격과 상관없이 바로 내보내 마지막 글자가 늦게 나오지 않게 한다.
+ */
+const MIN_REVEAL_INTERVAL_MS = 32;
+
 /** 이모지 같은 서로게이트 쌍의 앞 절반에서 자르면 깨진 글자가 잠깐 보이므로 그 앞에서 멈춘다. */
 const toSafeCutIndex = (text: string, index: number) => {
   const code = text.charCodeAt(index - 1);
@@ -31,6 +40,7 @@ export const createTextReveal = (onReveal: (text: string) => void) => {
   let revealed = 0;
   let shownLength = 0;
   let lastFrameTime: number | null = null;
+  let lastRevealTime = -Infinity;
   let isFinished = false;
   let frameId: number | null = null;
   let resolveDrained: (() => void) | null = null;
@@ -63,8 +73,11 @@ export const createTextReveal = (onReveal: (text: string) => void) => {
       revealed = Math.min(target.length, revealed + charsPerSecond * elapsedSeconds);
 
       const nextLength = toSafeCutIndex(target, Math.floor(revealed));
-      if (nextLength > shownLength) {
+      const isCaughtUp = nextLength >= target.length;
+      const isDue = now - lastRevealTime >= MIN_REVEAL_INTERVAL_MS;
+      if (nextLength > shownLength && (isDue || isCaughtUp)) {
         shownLength = nextLength;
+        lastRevealTime = now;
         onReveal(target.slice(0, shownLength));
       }
     }
