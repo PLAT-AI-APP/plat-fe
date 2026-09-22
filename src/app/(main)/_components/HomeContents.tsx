@@ -120,7 +120,18 @@ const HomeContents = () => {
 
       {/* 사이드바 영역: CategoriesTabContents가 선택 태그 상태를 소유하고 이 위치로 렌더링합니다. */}
       {isCategories && (
-        <div id="categories-tag-sidebar-root" className="contents" />
+        <>
+          <div id="categories-tag-sidebar-root" className="contents" />
+          {/*
+            태그 사이드바는 하이드레이션이 끝난 뒤 위 자리로 포털된다. 그 전까지 자리가 비어 있으면
+            카드 그리드가 전체 폭으로 그려졌다가 300px 줄어들며 튀었다. 같은 폭을 미리 잡아 두고,
+            사이드바가 들어오면(자리가 비어 있지 않으면) CSS 로 숨긴다.
+          */}
+          <div
+            aria-hidden="true"
+            className="hidden w-[300px] shrink-0 lg:block [#categories-tag-sidebar-root:not(:empty)~&]:hidden"
+          />
+        </>
       )}
     </article>
   );
