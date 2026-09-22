@@ -40,7 +40,11 @@ const CharacterChat = ({
       />
 
       <div id="chat-bubble-container" className="body-5">
-        <span className="body-6 mb-1.5 block text-font-1">{CharacterName}</span>
+        {/* 이름은 세계관 상세가 도착해야 채워진다. 비어 있어도 한 줄 높이를 잡아 두어, 나중에 채워질 때
+            말풍선이 아래로 밀리지 않게 한다. */}
+        <span className="body-6 mb-1.5 block min-h-[1lh] text-font-1">
+          {CharacterName}
+        </span>
         <div
           className={cn(
             "w-fit bg-card px-3 py-2 text-font-1",
