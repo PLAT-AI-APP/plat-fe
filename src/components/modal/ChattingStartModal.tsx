@@ -69,8 +69,13 @@ const ChattingStartModal = ({
 
   const canSubmit = Boolean(activePersona && localScenario) && !isPending;
 
+  // 같은 설정으로 방이 두 개 만들어지면 되돌릴 방법이 없다. isPending 은 다음 렌더에야 반영되므로
+  // 연달아 들어온 클릭까지 막으려고 즉시 읽히는 ref 로 잠근다. 성공하면 화면이 넘어가 잠근 채로 둔다.
+  const isCreatingRef = useRef(false);
+
   const handleSubmit = () => {
-    if (!activePersona || !localScenario) return;
+    if (!activePersona || !localScenario || isCreatingRef.current) return;
+    isCreatingRef.current = true;
 
     createRoom(
       {
@@ -84,6 +89,10 @@ const ChattingStartModal = ({
           allowNextNavigation();
           onClose();
           router.push(`/chatting-room?roomId=${roomId}`);
+        },
+        // 실패하면(토스트는 전역) 다시 누를 수 있게 푼다.
+        onError: () => {
+          isCreatingRef.current = false;
         },
       },
     );

@@ -106,11 +106,17 @@ export const useUniverseDraft = ({
   // 없어 보이고, 그 사이 입력한 내용은 도착한 초안으로 덮여 사라졌다.
   const [isLoadingDraft, setIsLoadingDraft] = useState(false);
 
+  // 불러오는 중에 불러오기를 또 누르면 같은 초안을 두 번 받는다. 즉시 읽히는 ref 로 막는다.
+  const isLoadingDraftRef = useRef(false);
+
   const loadDraft = async (fallbackFormValues: CharacterCreateFormValues) => {
+    if (isLoadingDraftRef.current) return;
+    isLoadingDraftRef.current = true;
     setIsLoadingDraft(true);
     try {
       await loadDraftValues(fallbackFormValues);
     } finally {
+      isLoadingDraftRef.current = false;
       setIsLoadingDraft(false);
     }
   };
