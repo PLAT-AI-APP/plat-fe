@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import ActiveButton from "../ActiveButton";
@@ -26,6 +26,11 @@ const ChattingStartModal = ({
   const t = useTranslations();
   const commonT = useTranslations("modalUi.common");
   const router = useRouter();
+  // 방을 만든 뒤 router.push 로 넘어간다(주소가 응답에 달려 있어 Link 를 쓸 수 없다).
+  // 모달이 열린 동안 채팅방 화면의 틀(loading.tsx)을 미리 받아 두면 이동하는 순간 바로 뜬다.
+  useEffect(() => {
+    router.prefetch("/chatting-room");
+  }, [router]);
   const openModal = useModalStore((state) => state.openModal);
   const allowNextNavigation = useModalStore(
     (state) => state.allowNextNavigation,

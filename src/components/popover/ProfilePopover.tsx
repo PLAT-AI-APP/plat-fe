@@ -22,7 +22,6 @@ import Check from "@/icons/Check";
 import { useUserStore } from "@/store/useUserStore";
 import { m, AnimatePresence } from "framer-motion";
 import { PopoverLayout } from "./layout";
-import { useRouter } from "next/navigation";
 import useToggle from "@/hooks/common/useToggle";
 import { useModalStore } from "@/store/useModalStore";
 import useRouteEffect from "@/hooks/navigation/useRouteEffect";
@@ -52,7 +51,6 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
   const t = useTranslations("profilePopover");
   const rootT = useTranslations();
   const selectorT = useTranslations("selector");
-  const router = useRouter();
   const { mutate: logout, isPending: isLoggingOut } = useLogoutMutation();
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const openModal = useModalStore((state) => state.openModal);
@@ -183,10 +181,6 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
     (state) => state.balance?.availableBalance ?? 0,
   );
 
-  const handleRouterPush = () => {
-    router.push(`/profile/${userId}`);
-    onClose();
-  };
 
   useRouteEffect(onClose);
 
@@ -202,8 +196,9 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
       )}
     >
       {isLoggedIn ? (
+        // Link 가 이동을 맡는다. 예전에는 onClick 에서 router.push 를 한 번 더 불러 같은 이동이 두 번 나갔다.
         <Link
-          onClick={handleRouterPush}
+          onClick={onClose}
           href={`/profile/${userId}`}
           className="flex items-center justify-between rounded-lg p-2 transition-colors hover:bg-btn-hover"
         >
