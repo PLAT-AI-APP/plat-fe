@@ -73,6 +73,7 @@ const ChattingList = ({ searchQuery }: ChattingListProps) => {
         onRetry={refetch}
         onRetryNextPage={fetchNextPage}
         pendingFallback={<ChattingListSkeleton />}
+        emptyMood="chat"
         emptyMessage={t("empty")}
       >
         <ul className="flex flex-col gap-2">

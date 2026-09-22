@@ -18,7 +18,7 @@ import { CharacterCreateFormValues } from "@/schema/character.schema";
 import { useModalStore } from "@/store/useModalStore";
 import { TagAddModalProps } from "@/type/modal";
 import IconButton from "@/components/ui/IconButton";
-import { ErrorState } from "@/components/state";
+import { EmptyState, ErrorState } from "@/components/state";
 
 type TagOption = { id: string; label: string };
 
@@ -207,6 +207,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
             <ErrorState
               error={hashtagError}
               onRetry={refetchHashtags}
+              withMascot={false}
               className="bg-transparent"
             />
           )}
@@ -302,9 +303,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
           })}
 
           {!hasTags && (
-            <p className="body-7 w-full py-10 text-center text-font-disabled">
-              {t("empty")}
-            </p>
+            <EmptyState size="sm" mood="search" message={t("empty")} />
           )}
         </nav>
 

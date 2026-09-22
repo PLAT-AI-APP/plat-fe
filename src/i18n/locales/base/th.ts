@@ -43,8 +43,14 @@ const th: typeof ko = {
       socialGoogle: "เริ่มด้วย Google",
     },
     callback: {
-      invalidAccess: "การเข้าถึงไม่ถูกต้อง",
-      processing: "กำลังดำเนินการยืนยันตัวตน",
+      title: "กำลังเข้าสู่ระบบ",
+      titleWith: "กำลังเข้าสู่ระบบด้วยบัญชี {provider}",
+      hint: "รอสักครู่ เมื่อเสร็จแล้วเราจะพากลับไปยังหน้าเดิม",
+      kakao: "Kakao",
+      google: "Google",
+      invalidTitle: "การเข้าถึงไม่ถูกต้อง",
+      invalidHint: "ลิงก์เข้าสู่ระบบหมดอายุหรือที่อยู่ไม่ถูกต้อง โปรดเข้าสู่ระบบอีกครั้ง",
+      goHome: "กลับหน้าแรก",
     },
     signup: {
       agreeAll: "ยอมรับข้อกำหนดทั้งหมด",

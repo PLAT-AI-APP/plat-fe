@@ -1,7 +1,7 @@
 "use client";
 
 import { useHashtagListQuery } from "@/api/hashtag/getHashtagList";
-import { ErrorState } from "@/components/state";
+import { EmptyState, ErrorState } from "@/components/state";
 import {
   HASHTAG_CATEGORY_FOLDER_TITLE_KEYS,
   HASHTAG_CATEGORY_ORDER,
@@ -169,11 +169,14 @@ const TagSidebar = ({
       >
         {isError ? (
           // 해시태그를 못 불러온 것을 "태그가 없다"로 보여주면 사용자가 필터가 사라진 줄 안다.
-          <ErrorState error={error} onRetry={refetch} className="my-4" />
+          <ErrorState
+            error={error}
+            onRetry={refetch}
+            withMascot={false}
+            className="my-4"
+          />
         ) : !isLoading && tagFolders.length === 0 ? (
-          <p className="body-6 py-10 text-center text-font-disabled">
-            {t("emptyHashtags")}
-          </p>
+          <EmptyState size="sm" mood="peek" message={t("emptyHashtags")} />
         ) : (
           filteredFolders.map((folder) => (
             <TagFolder

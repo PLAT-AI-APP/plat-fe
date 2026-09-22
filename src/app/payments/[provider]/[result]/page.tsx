@@ -12,11 +12,11 @@ interface PaymentResultPageProps {
 
 /** PG 결제창이 끝난 뒤 돌아오는 자리. /payments/{PG}/{success|cancel|fail}?orderUid=... */
 const PaymentResultPage = async ({ params }: PaymentResultPageProps) => {
-  const { result } = await params;
+  const { provider, result } = await params;
 
   return (
     <Suspense>
-      <PaymentResultContents result={result} />
+      <PaymentResultContents provider={provider} result={result} />
     </Suspense>
   );
 };

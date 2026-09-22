@@ -1,0 +1,328 @@
+/* =========================================================================
+ * 빈 화면 마스코트 (src/components/state/EmptyMascot.tsx)
+ *
+ * SVG 안의 요소를 움직이므로 transform-box 로 기준 상자를 정한다.
+ *  - fill-box : 요소 자기 크기 기준(눈 깜빡임처럼 제자리에서 변하는 것)
+ *  - view-box : SVG 좌표 기준(몸통이 바닥 중심을 축으로 흔들리는 것)
+ * 모션 최소화 설정은 base.css 의 전역 규칙이 애니메이션을 끈다. 모든 요소의
+ * 기본 상태가 곧 "멈춘 모습"이 되도록 from 쪽에만 움직임을 둔다.
+ * ========================================================================= */
+
+.mascot-rise {
+  animation: mascot-rise 0.8s cubic-bezier(0.34, 1.4, 0.64, 1) both;
+}
+@keyframes mascot-rise {
+  from {
+    transform: translateY(70px);
+  }
+}
+
+/* 바닥 중심(170, 235)을 축으로 좌우로 살랑 */
+.mascot-sway {
+  transform-box: view-box;
+  transform-origin: 170px 235px;
+  animation: mascot-sway 5s ease-in-out 0.8s infinite;
+}
+@keyframes mascot-sway {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  30% {
+    transform: rotate(-2.5deg);
+  }
+  70% {
+    transform: rotate(2deg);
+  }
+}
+
+/* 숨 쉬듯 부풀었다 가라앉는 몸통 */
+.mascot-breathe {
+  transform-box: view-box;
+  transform-origin: 170px 235px;
+  animation: mascot-breathe 3.6s ease-in-out infinite;
+}
+@keyframes mascot-breathe {
+  50% {
+    transform: scale(1.03, 1.05);
+  }
+}
+
+.mascot-float {
+  animation: mascot-float 3.2s ease-in-out infinite;
+}
+@keyframes mascot-float {
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.mascot-blink {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: mascot-blink 4.2s ease-in-out infinite;
+}
+@keyframes mascot-blink {
+  0%,
+  90%,
+  100% {
+    transform: scaleY(1);
+  }
+  93% {
+    transform: scaleY(0.1);
+  }
+  96% {
+    transform: scaleY(1);
+  }
+}
+
+/* 두리번 — 얼굴 전체가 좌우를 살핀다 */
+.mascot-look {
+  animation: mascot-look 4s ease-in-out infinite;
+}
+@keyframes mascot-look {
+  0%,
+  12%,
+  100% {
+    transform: translateX(0);
+  }
+  25%,
+  42% {
+    transform: translateX(-14px);
+  }
+  58%,
+  78% {
+    transform: translateX(12px) translateY(-3px);
+  }
+}
+
+/* 돋보기가 이리저리 훑는다 */
+.mascot-scan {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: mascot-scan 4s ease-in-out infinite;
+}
+@keyframes mascot-scan {
+  0%,
+  100% {
+    transform: translate(0, 0) rotate(0);
+  }
+  33% {
+    transform: translate(-10px, 6px) rotate(-12deg);
+  }
+  66% {
+    transform: translate(6px, -6px) rotate(10deg);
+  }
+}
+
+/* 쿨쿨 — z 가 떠오르며 사라진다 */
+.mascot-z {
+  animation: mascot-z 2.7s ease-out infinite both;
+}
+.mascot-z:nth-of-type(2) {
+  animation-delay: 0.9s;
+}
+.mascot-z:nth-of-type(3) {
+  animation-delay: 1.8s;
+}
+@keyframes mascot-z {
+  0% {
+    opacity: 0;
+    transform: translate(0, 10px);
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(10px, -18px);
+  }
+}
+
+/* 말풍선 안에서 차례로 튀는 점 */
+.mascot-dot {
+  animation: mascot-dot 1.2s ease-in-out infinite;
+}
+.mascot-dot:nth-of-type(2) {
+  animation-delay: 0.15s;
+}
+.mascot-dot:nth-of-type(3) {
+  animation-delay: 0.3s;
+}
+@keyframes mascot-dot {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  30% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+.mascot-bubble {
+  transform-box: fill-box;
+  transform-origin: 0% 100%;
+  animation: mascot-pop 0.5s cubic-bezier(0.34, 1.8, 0.64, 1) 0.6s both;
+}
+@keyframes mascot-pop {
+  from {
+    transform: scale(0);
+  }
+}
+
+/* 점선이 천천히 흐른다 */
+.mascot-march {
+  animation: mascot-march 1.6s linear infinite;
+}
+@keyframes mascot-march {
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+
+/* 어질어질 — 머리 위를 도는 별, 흔들리는 몸 */
+.mascot-orbit {
+  transform-box: view-box;
+  transform-origin: 172px 60px;
+  animation: mascot-orbit 2.4s linear infinite;
+}
+@keyframes mascot-orbit {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.mascot-wobble {
+  transform-box: view-box;
+  transform-origin: 170px 235px;
+  animation: mascot-wobble 1.8s ease-in-out infinite;
+}
+@keyframes mascot-wobble {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  25% {
+    transform: rotate(-3deg);
+  }
+  75% {
+    transform: rotate(3deg);
+  }
+}
+.mascot-drip {
+  animation: mascot-drip 2.2s ease-in infinite both;
+}
+@keyframes mascot-drip {
+  0%,
+  40% {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  55% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+/* 인사 — 팔을 흔든다 */
+.mascot-wave {
+  transform-box: view-box;
+  transform-origin: 286px 132px;
+  animation: mascot-wave 1.4s ease-in-out infinite;
+}
+@keyframes mascot-wave {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  25% {
+    transform: rotate(-22deg);
+  }
+  50% {
+    transform: rotate(6deg);
+  }
+  75% {
+    transform: rotate(-16deg);
+  }
+}
+
+/* 갸웃 — 물음표가 번갈아 떠오른다 */
+.mascot-q {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: mascot-q 2.4s ease-out infinite both;
+}
+.mascot-q:nth-of-type(2) {
+  animation-delay: 1.2s;
+}
+@keyframes mascot-q {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.6);
+  }
+  20%,
+  60% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-8px) scale(1);
+  }
+}
+.mascot-tilt {
+  transform-box: view-box;
+  transform-origin: 170px 235px;
+  animation: mascot-tilt 4.8s ease-in-out infinite;
+}
+@keyframes mascot-tilt {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  20%,
+  45% {
+    transform: rotate(-5deg);
+  }
+  65%,
+  85% {
+    transform: rotate(4deg);
+  }
+}
+
+/* 통통 — 눌렸다 튀어 오른다(불러오는 중) */
+.mascot-hop {
+  transform-box: view-box;
+  transform-origin: 170px 170px;
+  animation: mascot-hop 0.9s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+@keyframes mascot-hop {
+  0%,
+  100% {
+    transform: translateY(0) scale(1, 1);
+  }
+  18% {
+    transform: translateY(0) scale(1.08, 0.88);
+  }
+  50% {
+    transform: translateY(-18px) scale(0.95, 1.06);
+  }
+  80% {
+    transform: translateY(0) scale(1.04, 0.94);
+  }
+}
+
+/* 404 의 동그란 얼굴 — 눈동자가 두리번, 몸은 둥실 */
+.mascot-bob {
+  animation: mascot-bob 3s ease-in-out infinite;
+}
+@keyframes mascot-bob {
+  50% {
+    transform: translateY(-8px) rotate(-4deg);
+  }
+}

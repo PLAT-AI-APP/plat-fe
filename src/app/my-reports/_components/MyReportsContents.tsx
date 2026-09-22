@@ -62,6 +62,7 @@ const MyReportsContents = () => {
         isFetchingNextPage={isFetchingNextPage}
         onRetry={refetch}
         onRetryNextPage={fetchNextPage}
+        emptyMood="peek"
         emptyMessage={t("empty")}
         pendingFallback={
           <ul className="flex flex-col gap-2">

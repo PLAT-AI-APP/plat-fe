@@ -45,8 +45,14 @@ const en: typeof ko = {
       socialGoogle: "Continue with Google",
     },
     callback: {
-      invalidAccess: "This is not a valid request.",
-      processing: "Processing your sign-in...",
+      title: "Signing you in",
+      titleWith: "Signing in with {provider}",
+      hint: "Hang tight. We'll take you back to where you were.",
+      kakao: "Kakao",
+      google: "Google",
+      invalidTitle: "This link doesn't work",
+      invalidHint: "The sign-in link expired or the address is wrong. Please sign in again.",
+      goHome: "Go home",
     },
     signup: {
       agreeAll: "Agree to all terms",

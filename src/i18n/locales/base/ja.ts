@@ -43,8 +43,14 @@ const ja: typeof ko = {
       socialGoogle: "Googleで始める",
     },
     callback: {
-      invalidAccess: "無効なアクセスです。",
-      processing: "認証を処理しています。",
+      title: "ログインしています",
+      titleWith: "{provider}アカウントでログインしています",
+      hint: "少々お待ちください。完了すると元の画面に戻ります。",
+      kakao: "カカオ",
+      google: "Google",
+      invalidTitle: "無効なアクセスです",
+      invalidHint: "ログインリンクの有効期限が切れているか、アドレスが正しくありません。もう一度ログインしてください。",
+      goHome: "ホームへ",
     },
     signup: {
       agreeAll: "すべての規約に同意",

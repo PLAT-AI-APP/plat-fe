@@ -43,8 +43,14 @@ const ko = {
       socialGoogle: "구글로 시작하기",
     },
     callback: {
-      invalidAccess: "유효하지 않은 접근입니다.",
-      processing: "인증을 처리하고 있습니다.",
+      title: "로그인하고 있어요",
+      titleWith: "{provider} 계정으로 로그인하고 있어요",
+      hint: "잠시만 기다려 주세요. 끝나면 보던 화면으로 돌려보내 드릴게요.",
+      kakao: "카카오",
+      google: "구글",
+      invalidTitle: "잘못된 접근이에요",
+      invalidHint: "로그인 링크가 만료됐거나 주소가 올바르지 않아요. 다시 로그인해 주세요.",
+      goHome: "홈으로",
     },
     signup: {
       agreeAll: "약관 전체 동의",

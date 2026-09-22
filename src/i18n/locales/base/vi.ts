@@ -43,8 +43,14 @@ const vi: typeof ko = {
       socialGoogle: "Bắt đầu với Google",
     },
     callback: {
-      invalidAccess: "Truy cập không hợp lệ.",
-      processing: "Đang xử lý xác thực.",
+      title: "Đang đăng nhập",
+      titleWith: "Đang đăng nhập bằng tài khoản {provider}",
+      hint: "Vui lòng chờ. Xong sẽ đưa bạn về trang trước đó.",
+      kakao: "Kakao",
+      google: "Google",
+      invalidTitle: "Truy cập không hợp lệ",
+      invalidHint: "Liên kết đăng nhập đã hết hạn hoặc địa chỉ không đúng. Vui lòng đăng nhập lại.",
+      goHome: "Về trang chủ",
     },
     signup: {
       agreeAll: "Đồng ý tất cả điều khoản",

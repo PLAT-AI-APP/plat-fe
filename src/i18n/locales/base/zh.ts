@@ -43,8 +43,14 @@ const zh: typeof ko = {
       socialGoogle: "使用 Google 开始",
     },
     callback: {
-      invalidAccess: "无效的访问。",
-      processing: "正在处理验证。",
+      title: "正在登录",
+      titleWith: "正在使用{provider}账号登录",
+      hint: "请稍候，完成后将返回原来的页面。",
+      kakao: "Kakao",
+      google: "Google",
+      invalidTitle: "访问无效",
+      invalidHint: "登录链接已过期或地址不正确，请重新登录。",
+      goHome: "返回首页",
     },
     signup: {
       agreeAll: "同意全部条款",

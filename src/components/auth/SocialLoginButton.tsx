@@ -6,20 +6,20 @@ interface SocialButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement
   onClick?: () => void;
 }
 
-const SocialLoginButton = ({ icon, label, onClick }: SocialButtonProps) => (
+// id 를 고정값으로 박아 두면 카카오·구글 버튼이 같은 id 를 갖게 된다. 넘겨받은 id 를 쓴다.
+const SocialLoginButton = ({ icon, label, onClick, ...props }: SocialButtonProps) => (
   <button
     type="button"
-    id="social-login-button"
+    {...props}
     onClick={onClick}
     className="relative flex h-11 w-full items-center justify-center rounded-lg border border-main bg-card hover:bg-card-hover"
   >
     <span
-      id="social-icon-wrapper"
       className="absolute left-7.5 top-1/2 -translate-y-1/2"
     >
       {icon}
     </span>
-    <span id="social-label" className="title-5 text-font-1">
+    <span className="title-5 text-font-1">
       {label}
     </span>
   </button>
