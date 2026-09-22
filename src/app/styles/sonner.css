@@ -44,6 +44,38 @@
 }
 
 /*
+ * 바로가기(action) 버튼은 내용 아래 줄로 내린다.
+ *
+ * sonner 는 버튼을 [아이콘][내용][버튼] 한 줄 끝에 붙이는데, 그 자리가 오른쪽 위에 띄워 둔
+ * 닫기 버튼과 겹친다. 줄바꿈을 허용하고 내용이 첫 줄의 남은 폭(아이콘 28px + 간격 8px 을 뺀 전부)을
+ * 차지하게 하면 버튼이 다음 줄로 밀려나고, 버튼 왼쪽은 제목 글자와 같은 선에 맞춘다.
+ */
+[data-sonner-toast].sonner-toast:has([data-button]) {
+  flex-wrap: wrap;
+  row-gap: 12px;
+}
+
+[data-sonner-toast].sonner-toast:has([data-button]) [data-content] {
+  flex-basis: calc(100% - 36px);
+}
+
+[data-sonner-toast].sonner-toast [data-button] {
+  margin-left: 36px;
+}
+
+/* 설명 없는 toast 는 닫기 버튼을 세로 가운데에 두는데, 버튼 줄이 생기면 두 줄 사이에 떠 보인다.
+   이때는 설명 있는 toast 처럼 위쪽에 맞춘다. */
+[data-sonner-toast].sonner-toast:not(:has([data-description])):has([data-button]) {
+  align-items: flex-start;
+}
+
+[data-sonner-toast].sonner-toast:not(:has([data-description])):has([data-button])
+  [data-close-button] {
+  top: 16px;
+  transform: none;
+}
+
+/*
  * unstyled: true 를 주면 sonner 가 data-styled="false" 를 붙이는데,
  * 뒤쪽 toast 의 내용을 숨기는 sonner 기본 규칙이 data-styled="true" 에만
  * 걸려 있다. 그래서 접힌 상태에서 뒤 toast 의 글자가 앞 toast 를 뚫고
