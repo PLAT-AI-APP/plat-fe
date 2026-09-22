@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { notifyApiError } from "@/api";
 import { walletQueryKeys } from "@/api/wallet/queryKeys";
+import { noteQueryKeys } from "@/api/note/queryKeys";
 import { consumeChatStream } from "@/api/chat/chatStream";
 import { usePostChatStartMutation } from "@/api/chat/postChatStart";
 import { prependLatestRoomMessages } from "@/api/room/getRoomMessages";
@@ -144,6 +145,10 @@ export const useChatTurn = ({
 
         void queryClient.invalidateQueries({
           queryKey: walletQueryKeys.balance(),
+        });
+        // 노트를 썼으니 사용 내역도 달라졌다.
+        void queryClient.invalidateQueries({
+          queryKey: noteQueryKeys.usageHistoryLists(),
         });
         void queryClient.invalidateQueries({ queryKey: roomQueryKeys.lists() });
       } catch (error) {
