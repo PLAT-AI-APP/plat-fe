@@ -79,6 +79,15 @@
   }
 }
 
+/**
+ * 스켈레톤과 같은 300ms 뒤에 서서히 나타난다(맥박은 없다). 금방 끝나는 로딩에서 자리표시자가
+ * 한 번 번쩍이지 않게 하는 용도 — 라우트 로딩 마스코트처럼 스켈레톤이 아닌 자리표시자에 쓴다.
+ */
+@utility delayed-appear {
+  animation: skeleton-appear var(--motion-base) var(--motion-ease-out) 300ms
+    both;
+}
+
 /** 색은 두고 "늦게 나타나 맥박" 동작만 입힌다. 자체 배경색을 쓰는 자리표시자용 */
 @utility skeleton-motion {
   --skeleton-delay: 300ms;

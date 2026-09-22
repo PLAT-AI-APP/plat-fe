@@ -108,9 +108,10 @@ const SearchResultsContents = ({
 
   // 검색어가 바뀔 때만 다시 부릅니다. 탭 전환은 받아 둔 결과를 거르기만 하므로
   // 같은 검색이 여러 번 집계되지 않습니다.
-  const { data, isPending, isError, error, refetch } = useSearchQuery({
-    q: initialQuery,
-  });
+  const { data, isPending, isPlaceholderData, isError, error, refetch } =
+    useSearchQuery({
+      q: initialQuery,
+    });
 
   // 주소창에 직접 짧은 검색어를 넣고 들어올 수 있습니다. 그때는 요청이 나가지 않으므로
   // 로딩 스켈레톤에 갇히지 않도록 여기서 따로 안내합니다.
@@ -212,7 +213,14 @@ const SearchResultsContents = ({
         </button>
       </div>
 
-      <div className="flex w-full flex-col gap-12 pb-20">
+      <div
+        // 앞 검색의 결과를 보여 주는 동안은 흐리게 해 새 결과를 받는 중임을 알린다.
+        aria-busy={isPlaceholderData || undefined}
+        className={cn(
+          "flex w-full flex-col gap-12 pb-20 transition-opacity",
+          isPlaceholderData && "opacity-50",
+        )}
+      >
         <QueryStateBoundary
           isPending={false}
           isEmpty={isTooShort || isEmpty}

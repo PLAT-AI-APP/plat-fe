@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
@@ -110,4 +110,5 @@ const ChattingRoomHeader = ({
   );
 };
 
-export default ChattingRoomHeader;
+// 스트리밍 중 방 화면은 프레임마다 다시 그려진다. 헤더는 props 가 같으면 건너뛴다.
+export default memo(ChattingRoomHeader);

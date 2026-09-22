@@ -1,6 +1,7 @@
 import {
   InfiniteData,
   QueryClient,
+  infiniteQueryOptions,
   useInfiniteQuery,
 } from "@tanstack/react-query";
 import { authAxios } from "..";
@@ -39,11 +40,11 @@ const getRoomMessages = async ({
  * 서버는 페이지 안의 메시지를 오래된 것부터(시간순) 내려주고, 페이지끼리는 최신 → 과거 순으로 이어집니다.
  * 즉 pages[0] 이 가장 최근 페이지이고 각 페이지의 content[0] 이 그 페이지에서 가장 오래된 메시지입니다.
  */
-export const useRoomMessagesInfiniteQuery = (roomId?: string, size = 20) => {
-  return useInfiniteQuery<
+export const roomMessagesQueryOptions = (roomId?: string, size = 20) =>
+  infiniteQueryOptions<
     SliceWith<RoomMessage>,
     AppError,
-    { pages: SliceWith<RoomMessage>[]; pageParams: unknown[] },
+    InfiniteData<SliceWith<RoomMessage>, string | undefined>,
     ReturnType<typeof roomQueryKeys.messages>,
     string | undefined
   >({
@@ -61,7 +62,9 @@ export const useRoomMessagesInfiniteQuery = (roomId?: string, size = 20) => {
     staleTime: 1000 * 30,
     enabled: Boolean(roomId),
   });
-};
+
+export const useRoomMessagesInfiniteQuery = (roomId?: string, size = 20) =>
+  useInfiniteQuery(roomMessagesQueryOptions(roomId, size));
 
 /**
  * 방금 끝난 턴의 새 메시지를 캐시 맨 앞 페이지에 붙입니다.

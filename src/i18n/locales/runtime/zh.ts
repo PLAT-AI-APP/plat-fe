@@ -254,6 +254,7 @@ const zh: typeof en = {
     perChat: "聊天",
     messageForm: "消息输入表单",
     messagePlaceholder: "发送消息",
+    send: "发送",
     situation: "情境",
     suggestedReply: "推荐回复",
     deleteResponse: "删除回复",

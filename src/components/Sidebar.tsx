@@ -17,6 +17,7 @@ interface SidebarProps {
   isOpen?: boolean;
   onFoldToggle?: () => void;
   foldToggleRef?: RefObject<HTMLButtonElement | null>;
+  className?: string;
 }
 
 const Sidebar = ({
@@ -25,6 +26,7 @@ const Sidebar = ({
   isOpen = true,
   onFoldToggle,
   foldToggleRef,
+  className,
 }: SidebarProps) => {
   const pathname = usePathname();
   const t = useTranslations();
@@ -50,6 +52,7 @@ const Sidebar = ({
             "fixed bottom-0 left-0 top-(--header-height) z-40 w-(--sidebar-width-expanded) shadow-modal"
           : "sticky top-0 h-full w-full",
         isOverlay && (isOpen ? "translate-x-0" : "-translate-x-full"),
+        className,
       )}
     >
       <nav

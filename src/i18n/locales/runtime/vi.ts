@@ -269,6 +269,7 @@ const vi: typeof en = {
     perChat: "chat",
     messageForm: "Biểu mẫu nhập tin nhắn",
     messagePlaceholder: "Gửi tin nhắn",
+    send: "Gửi",
     situation: "Tình huống",
     suggestedReply: "Trả lời gợi ý",
     deleteResponse: "Xóa phản hồi",

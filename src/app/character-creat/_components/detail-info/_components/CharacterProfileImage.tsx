@@ -1,110 +1,43 @@
 "use client";
 
-import React, { ChangeEvent, useState } from "react";
+import React from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
-import { useFileUploadMutation } from "@/api/file/postFileUpload";
 import { Close, ImageIcon, Plus } from "@/icons";
-import { dataUrlToFile } from "@/lib/file";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
 import { cn } from "@/lib/utils";
-import { showAppToast } from "@/lib/toast";
+import { useCroppedImageUpload } from "../../profile/useCroppedImageUpload";
 
 const RepresentativeImageCropModal = dynamic(
   () => import("../../profile/RepresentativeImageCropModal"),
   { ssr: false },
 );
 
-// 상세정보 프로필 이미지는 백엔드 업로드 정책과 동일하게 웹 이미지 포맷만 허용합니다.
-const ALLOWED_PROFILE_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
-// 피그마 안내와 업로드 API 제한에 맞춰 5MB 이하 파일만 크롭 단계로 넘깁니다.
-const MAX_PROFILE_IMAGE_SIZE = 5 * 1024 * 1024;
-
 const CharacterProfileImage = () => {
   const t = useTranslations("characterCreate.details");
   const representativeT = useTranslations(
     "characterCreate.representativeImage",
   );
-  const { setValue, control } = useFormContext<CharacterCreateFormValues>();
+  const { control } = useFormContext<CharacterCreateFormValues>();
   const preview = useWatch({ control, name: "characterProfileImage" });
-  const { mutateAsync: uploadFile } = useFileUploadMutation();
-  const [cropTarget, setCropTarget] = useState<{
-    src: string;
-    type: string;
-  } | null>(null);
-
-  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (!ALLOWED_PROFILE_IMAGE_TYPES.includes(file.type)) {
-      showAppToast("warning", representativeT("invalidType"));
-      e.target.value = "";
-      return;
-    }
-
-    if (file.size > MAX_PROFILE_IMAGE_SIZE) {
-      showAppToast("warning", representativeT("invalidSize"));
-      e.target.value = "";
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      if (typeof reader.result !== "string") return;
-
-      // 선택한 이미지는 크롭 모달에서 확정한 뒤 RHF 값으로 반영합니다.
-      setCropTarget({
-        src: reader.result,
-        type: file.type,
-      });
-    };
-    reader.readAsDataURL(file);
-    e.target.value = "";
-  };
-
-  // 크롭 결과 확정 즉시 업로드해 fileId를 받아 둡니다. 제출 시점에는 폼 값만 그대로 전송합니다.
-  const handleCropApply = async (croppedImage: string) => {
-    if (!cropTarget) return;
-
-    try {
-      const croppedFile = await dataUrlToFile(
-        croppedImage,
-        `character-profile-image.${cropTarget.type.split("/")[1] || "webp"}`,
-        cropTarget.type,
-      );
-      const uploadedImage = await uploadFile({
-        fileType: "CHARACTER_PROFILE",
-        file: croppedFile,
-      });
-
-      setValue("characterProfileImage", croppedImage, {
-        shouldDirty: true,
-        shouldValidate: true,
-      });
-      setValue("characterProfileImageId", uploadedImage.fileId, {
-        shouldDirty: true,
-        shouldValidate: true,
-      });
-      setCropTarget(null);
-    } catch (error) {
-      // 실패 토스트는 axios 인터셉터 → MutationCache의 전역 에러 처리에서 이미 띄우므로 여기서 중복으로 띄우지 않습니다.
-      console.error("Character profile image upload failed:", error);
-    }
-  };
-
-  const handlePreviewDelete = () => {
-    setValue("characterProfileImage", "", {
-      shouldDirty: true,
-      shouldValidate: true,
-    });
-    setValue("characterProfileImageId", null, {
-      shouldDirty: true,
-      shouldValidate: true,
-    });
-  };
+  const uploadingLabel = representativeT("uploading");
+  const {
+    cropTarget,
+    isUploading,
+    handleImageChange,
+    handleCropApply,
+    closeCrop,
+    handleDelete: handlePreviewDelete,
+  } = useCroppedImageUpload({
+    imageField: "characterProfileImage",
+    idField: "characterProfileImageId",
+    fileType: "CHARACTER_PROFILE",
+    fileBaseName: "character-profile-image",
+    invalidTypeMessage: representativeT("invalidType"),
+    invalidSizeMessage: representativeT("invalidSize"),
+  });
 
   return (
     <section className="flex flex-col gap-3">
@@ -140,6 +73,19 @@ const CharacterProfileImage = () => {
           ) : (
             <ImageIcon className="h-7.5 w-7.5 text-font-disabled" />
           )}
+          {isUploading && (
+            // 미리보기는 이미 바뀌었고 업로드만 뒤에서 이어진다. 끝날 때까지 등록은 막힌다.
+            <span
+              role="status"
+              aria-label={uploadingLabel}
+              className="absolute inset-0 flex items-center justify-center bg-scrim/40"
+            >
+              <span
+                aria-hidden="true"
+                className="size-6 animate-spin rounded-full border-2 border-white/40 border-t-white"
+              />
+            </span>
+          )}
         </div>
 
         <span
@@ -165,7 +111,7 @@ const CharacterProfileImage = () => {
           imageSrc={cropTarget.src}
           imageType={cropTarget.type}
           onApply={handleCropApply}
-          onClose={() => setCropTarget(null)}
+          onClose={closeCrop}
         />
       )}
     </section>

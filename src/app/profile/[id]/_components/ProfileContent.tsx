@@ -110,7 +110,8 @@ export default function ProfileContent({ id }: { id: string }) {
 
   const {
     data: createdData,
-    isLoading: isCreatedLoading,
+    // 인증 확인 전에는 쿼리가 꺼져 있어 isLoading 이 false 다. 데이터가 없으면 로딩으로 본다.
+    isPending: isCreatedLoading,
     isError: isCreatedError,
     error: createdError,
     refetch: refetchCreated,

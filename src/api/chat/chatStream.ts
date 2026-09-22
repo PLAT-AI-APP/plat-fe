@@ -25,6 +25,18 @@ export interface ChatStreamOptions extends ChatStreamHandlers {
 
 const SSE_ENDPOINT = (turnId: string) => `/chat/${turnId}/stream`;
 
+/** 종료 이벤트 없이 연결이 끊겼을 때 마지막 지점부터 다시 붙어 보는 횟수 */
+const MAX_RESUME_ATTEMPTS = 2;
+const RESUME_DELAY_MS = 500;
+
+/** 끝(done/failed)을 받기 전에 연결이 닫혔다. 이어 받기까지 실패하면 이 오류로 끝난다. */
+export class ChatStreamInterruptedError extends Error {
+  constructor() {
+    super("chat stream closed before completion");
+    this.name = "ChatStreamInterruptedError";
+  }
+}
+
 /** SSE 한 블록(빈 줄로 구분)을 필드 단위로 파싱합니다. */
 const parseEventBlock = (block: string) => {
   let id = "";
@@ -92,6 +104,9 @@ const toAppError = (status: number, body: string): AppError => {
  *
  * EventSource는 Authorization 헤더를 실을 수 없어 fetch로 직접 읽습니다.
  * 토큰이 만료된 401은 한 번 재발급한 뒤 같은 지점부터 다시 붙습니다.
+ *
+ * 프록시 타임아웃 등으로 done/failed 없이 연결이 닫히면, 잘린 응답이 완료된 것처럼 남지 않도록
+ * 마지막으로 받은 이벤트 id 부터 몇 번 이어 받고, 그래도 안 되면 ChatStreamInterruptedError 를 던집니다.
  */
 export const consumeChatStream = async ({
   turnId,
@@ -104,7 +119,8 @@ export const consumeChatStream = async ({
   // 끊겨서 다시 붙을 때 이어 받을 지점. 마지막으로 처리한 이벤트 id를 계속 갱신합니다.
   let cursor = lastEventId;
 
-  const connect = async (allowRetry: boolean): Promise<void> => {
+  /** 종료 이벤트까지 받았으면 true, 그 전에 연결이 닫혔으면 false */
+  const connect = async (allowRetry: boolean): Promise<boolean> => {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URI ?? ""}${SSE_ENDPOINT(turnId)}`,
       {
@@ -150,11 +166,11 @@ export const consumeChatStream = async ({
 
           if (event === "done") {
             onDone?.(id);
-            return;
+            return true;
           }
           if (event === "failed") {
             onFailed?.(data, id);
-            return;
+            return true;
           }
           onToken?.(data, id);
         }
@@ -162,7 +178,22 @@ export const consumeChatStream = async ({
     } finally {
       reader.cancel().catch(() => undefined);
     }
+
+    return false;
   };
 
-  await connect(true);
+  for (let attempt = 0; ; attempt += 1) {
+    try {
+      if (await connect(true)) return;
+    } catch (error) {
+      // 서버가 거절한 응답(AppError)이나 사용자가 끊은 경우는 다시 붙어도 소용이 없다.
+      // fetch/reader 가 던지는 네트워크 오류(TypeError)만 이어 받기를 시도한다.
+      if (signal?.aborted || !(error instanceof TypeError)) throw error;
+      if (attempt >= MAX_RESUME_ATTEMPTS) throw error;
+    }
+
+    if (attempt >= MAX_RESUME_ATTEMPTS) throw new ChatStreamInterruptedError();
+    await new Promise((resolve) => setTimeout(resolve, RESUME_DELAY_MS));
+    if (signal?.aborted) return;
+  }
 };

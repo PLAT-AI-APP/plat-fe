@@ -28,6 +28,7 @@ const WithdrawalConfirmDialog = ({
       label="dialog.withdrawalConfirm.title"
       description={`${t("dialog.withdrawalConfirm.descriptionLine1")}\n${t("dialog.withdrawalConfirm.descriptionLine2")}`}
       confirmFn={onConfirm}
+      isConfirmPending={isPending}
     />
   );
 };

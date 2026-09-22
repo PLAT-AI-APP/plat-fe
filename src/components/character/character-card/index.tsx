@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import useEmblaCarousel from "embla-carousel-react";
 import Image from "next/image";
 import Link from "next/link";
+import { usePrefetchUniverseDetail } from "@/api/universe/getUniverseDetail";
 import { useTranslations } from "next-intl";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Pen } from "@/icons";
@@ -48,6 +49,12 @@ const CharacterCard = ({
   editHref,
 }: CharacterCardProps) => {
   const t = useTranslations("characterCard");
+  // 상세로 가는 카드면 포인터를 올릴 때 상세를 미리 받는다(누를 때 스켈레톤 없이 바로 뜬다).
+  const prefetchUniverseDetail = usePrefetchUniverseDetail();
+  const detailUniverseId = href?.match(/^\/characters\/([^/?#]+)/)?.[1];
+  const handleLinkIntent = detailUniverseId
+    ? () => prefetchUniverseDetail(detailUniverseId)
+    : undefined;
   // const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   // const openDialog = useDialogStore((state) => state.openDialog);
   // const openModal = useModalStore((state) => state.openModal);
@@ -177,6 +184,8 @@ const CharacterCard = ({
           <Link
             href={href}
             aria-label={title}
+            onPointerEnter={handleLinkIntent}
+            onFocus={handleLinkIntent}
             className="absolute inset-0 z-0"
             // onClick={handleCardLinkClick}
           />
@@ -257,6 +266,8 @@ const CharacterCard = ({
         <Link
           href={href}
           aria-label={title}
+          onPointerEnter={handleLinkIntent}
+          onFocus={handleLinkIntent}
           className="absolute inset-0 z-0"
           // onClick={handleCardLinkClick}
         />

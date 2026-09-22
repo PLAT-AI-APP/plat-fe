@@ -1,6 +1,7 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { buildSearchHref, navigateShallow } from "@/lib/shallowUrl";
 import { useTranslations } from "next-intl";
 import { useRankingQuery } from "@/api/ranking/getRanking";
 import QueryStateBoundary from "@/components/state/QueryStateBoundary";
@@ -18,7 +19,6 @@ const PAGE_SIZE = 24;
 /** 신작도 결국 신작들 사이의 랭킹이라 랭킹 API 를 scope=NEW 로 부른다. 등락 표시는 없다. */
 const NewTabContents = () => {
   const t = useTranslations();
-  const router = useRouter();
   const searchParams = useSearchParams();
   const sort = (searchParams.get("sort") as RankingSortId) ?? "chats";
 
@@ -29,11 +29,12 @@ const NewTabContents = () => {
     size: PAGE_SIZE,
   });
 
+  // 주소만 바꾼다(서버 렌더 왕복 없음). 화면은 useSearchParams 로 따라간다.
   const handleSortChange = (next: RankingSortId) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("tab", "new");
-    params.set("sort", next);
-    router.replace(`?${params.toString()}`, { scroll: false });
+    navigateShallow(
+      buildSearchHref({ tab: "new", sort: next }, searchParams.toString()),
+      "replace",
+    );
   };
 
   const items = data?.content ?? [];

@@ -17,7 +17,6 @@ const CreatePreviewList = ({
 }: CreatePreviewListProps) => {
   const t = useTranslations("characterCreate.preview");
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editedValue, setEditedValue] = useState("");
 
   const labels: PreviewEditLabels = {
     editContent: t("editContent"),
@@ -28,11 +27,10 @@ const CreatePreviewList = ({
 
   const startEditing = (item: ScenarioContentItem) => {
     setEditingId(item.id);
-    setEditedValue(item.value);
   };
 
-  const handleUpdate = (id: string) => {
-    onUpdate?.(id, editedValue);
+  const handleUpdate = (id: string, value: string) => {
+    onUpdate?.(id, value);
     setEditingId(null);
   };
 
@@ -63,7 +61,6 @@ const CreatePreviewList = ({
                     item={item}
                     isDragging={snapshot.isDragging}
                     isEditing={editingId === item.id}
-                    editedValue={editedValue}
                     characterName={characterName}
                     profileImage={profileImage}
                     profileAlt={t("profileAlt", { name: characterName })}
@@ -72,9 +69,8 @@ const CreatePreviewList = ({
                     labels={labels}
                     dragHandleProps={dragProvided.dragHandleProps}
                     onEdit={() => startEditing(item)}
-                    onEditValueChange={setEditedValue}
                     onCancelEdit={handleCancel}
-                    onConfirmEdit={() => handleUpdate(item.id)}
+                    onConfirmEdit={(value) => handleUpdate(item.id, value)}
                     onDelete={() => onDelete?.(item.id)}
                   />
                 </div>

@@ -261,6 +261,7 @@ const ko: typeof en = {
     perChat: "채팅",
     messageForm: "메시지 입력 양식",
     messagePlaceholder: "메시지 보내기",
+    send: "보내기",
     situation: "상황",
     suggestedReply: "추천답변",
     deleteResponse: "응답 삭제",

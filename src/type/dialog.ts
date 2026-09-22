@@ -8,6 +8,8 @@ export interface DialogProps {
   cancelFn?: () => void;
   confirmFn?: () => void;
   confirmText?: string;
+  /** 확인을 누른 뒤 요청이 오가는 중. 확인 버튼에 대기 표시를 하고 다시 눌리지 않게 한다. */
+  isConfirmPending?: boolean;
 }
 
 export interface DraftOverwriteDialogProps {

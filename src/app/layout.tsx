@@ -6,8 +6,9 @@ import ReactQueryProvider from "@/providers/ReactQueryProvider";
 import ThemeProvider from "@/providers/ThemeProvider";
 import SonnerProvider from "@/providers/SonnerProvider";
 import ClientLayout from "./ClientLayout";
-// 글자 범위별로 잘린 버전. 화면에 나온 글자가 든 조각만 받아, 굵기마다 약 750KB 전체 파일을 받지 않는다.
-import "pretendard/dist/web/static/pretendard-dynamic-subset.css";
+// 가변(variable) 폰트의 글자 범위별 조각. 굵기마다 따로 선언하는 정적 버전은 @font-face 가
+// 828개(CSS 473KB)라 첫 화면을 막았다. 가변 버전은 한 파일로 모든 굵기를 내 92개로 충분하다.
+import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 import { NavigationGuardProvider } from "next-navigation-guard";
 import MSWProvider from "@/providers/MSWProvider";
 import MotionProvider from "@/providers/MotionProvider";

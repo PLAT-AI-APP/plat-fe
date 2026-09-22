@@ -70,6 +70,7 @@ const NoticeList = ({ currentFilter }: NoticeListProps) => {
     hasNextPage, // 다음 페이지 존재 여부
     isFetchingNextPage, // 추가 데이터 요청 진행 상태
     isPending,
+    isPlaceholderData,
     isError,
     error,
     refetch,
@@ -103,7 +104,14 @@ const NoticeList = ({ currentFilter }: NoticeListProps) => {
         currentFilter ? "notification.emptyFiltered" : "notification.empty",
       )}
     >
-      <ul>
+      {/* 앞 탭의 목록을 보여 주는 동안은 흐리게 해 새 목록을 받는 중임을 알린다. */}
+      <ul
+        aria-busy={isPlaceholderData || undefined}
+        className={cn(
+          "transition-opacity",
+          isPlaceholderData && "opacity-50",
+        )}
+      >
         {items.map(({ category, createdAt, isPinned, noticeId, title }) => {
           const colorStyle = NOTICE_CATEGORY_STYLE[category];
 

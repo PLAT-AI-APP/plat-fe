@@ -8,17 +8,14 @@ export const metadata: Metadata = {
 
 interface Props {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
-const StudioPage = async ({ params, searchParams }: Props) => {
+// 보기·정렬은 StudioContents 가 주소에서 직접 읽는다. 여기서 searchParams 를 읽으면 전환할
+// 때마다 서버 렌더를 다시 받아, 토글 손잡이가 서버 응답만큼 늦게 움직였다.
+const StudioPage = async ({ params }: Props) => {
   const { id } = await params;
-  const sParams = await searchParams;
 
-  const viewMode = (sParams.view as "list" | "grid") || "list";
-  const sort = (sParams.sort as "latest" | "chats") || "latest";
-
-  return <StudioContents id={id} sort={sort} viewMode={viewMode} />;
+  return <StudioContents id={id} />;
 };
 
 export default StudioPage;

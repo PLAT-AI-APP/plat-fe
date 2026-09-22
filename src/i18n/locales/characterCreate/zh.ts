@@ -48,6 +48,7 @@ const zh: typeof ko = {
       upload: "上传",
       invalidType: "仅支持 jpg、png、webp 图片文件。",
       invalidSize: "文件大小最多为 5MB。",
+      uploading: "正在上传图片",
       uploadFailed: "图片上传失败。请重试。",
     },
     details: {
@@ -100,6 +101,7 @@ const zh: typeof ko = {
       closeGuide: "关闭素材指南",
       invalidType: "仅支持 jpg、png、webp 图片文件。",
       invalidSize: "文件大小最多为 5MB。",
+      uploading: "正在上传图片",
       uploadFailed: "素材图片上传失败。请重试。",
     },
     scenario: {

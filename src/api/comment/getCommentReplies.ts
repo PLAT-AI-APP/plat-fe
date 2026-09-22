@@ -4,6 +4,7 @@ import { AppError, SliceWith } from "@/type/api";
 import type { Comment } from "@/type/comment";
 import { getNextPageNumber } from "@/lib/pagination";
 import { useAuthReady } from "@/hooks/data/useAuthReady";
+import { useAuthStore } from "@/store/useAuthStore";
 import { commentQueryKeys } from "./queryKeys";
 
 const getCommentReplies = async (
@@ -26,6 +27,7 @@ export const useCommentRepliesInfiniteQuery = (
   enabled = true,
 ) => {
   const authenticated = useAuthReady();
+  const isAuthChecked = useAuthStore((state) => state.isAuthReady);
 
   return useInfiniteQuery<SliceWith<Comment>, AppError>({
     queryKey: [...commentQueryKeys.replies(commentId), authenticated],
@@ -34,6 +36,7 @@ export const useCommentRepliesInfiniteQuery = (
       getCommentReplies(commentId ?? "", pageParam as number, authenticated),
     getNextPageParam: getNextPageNumber,
     staleTime: 1000 * 60,
-    enabled: Boolean(commentId) && enabled,
+    // 인증 확인 전에 먼저 받으면, 확인이 끝나 키가 바뀔 때 처음부터 다시 로딩한다.
+    enabled: Boolean(commentId) && enabled && isAuthChecked,
   });
 };

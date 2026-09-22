@@ -49,6 +49,7 @@ const vi: typeof ko = {
       upload: "Tải lên",
       invalidType: "Chỉ cho phép tệp ảnh jpg, png, webp.",
       invalidSize: "Dung lượng tệp tối đa là 5MB.",
+      uploading: "Đang tải ảnh lên",
       uploadFailed: "Tải ảnh lên thất bại. Vui lòng thử lại.",
     },
     details: {
@@ -105,6 +106,7 @@ const vi: typeof ko = {
       closeGuide: "Đóng hướng dẫn tài sản",
       invalidType: "Chỉ cho phép tệp ảnh jpg, png, webp.",
       invalidSize: "Dung lượng tệp tối đa là 5MB.",
+      uploading: "Đang tải ảnh lên",
       uploadFailed: "Tải ảnh asset lên thất bại. Vui lòng thử lại.",
     },
     scenario: {

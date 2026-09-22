@@ -25,4 +25,5 @@ const Scenario = ({
   );
 };
 
-export default Scenario;
+// 스트리밍 중 글이 그대로인 앞 블록은 다시 그리지 않는다(CharacterChat 과 같은 이유).
+export default React.memo(Scenario);

@@ -120,7 +120,11 @@ const CreateTabs = ({
       </nav>
 
       {/* 탭 내용이 뷰포트를 넘으면 nav는 고정한 채 내부만 스크롤 */}
-      <div className="min-h-0 flex-1 overflow-y-auto">{renderActiveTab()}</div>
+      {/* 탭마다 새 스크롤 영역으로 시작한다. 같은 영역을 두고 내용만 바꾸면 새 탭이 앞 탭의
+          스크롤 중간에서 열렸다. */}
+      <div key={currentTabId} className="min-h-0 flex-1 overflow-y-auto">
+        {renderActiveTab()}
+      </div>
     </section>
   );
 };

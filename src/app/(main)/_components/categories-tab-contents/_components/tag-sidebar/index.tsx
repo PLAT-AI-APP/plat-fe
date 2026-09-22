@@ -226,7 +226,7 @@ const TagSidebar = ({
   // 인라인 배치는 데스크톱 전용이다. JS(useMediaQuery)가 오버레이로 바꿔 주지만,
   // 그 판단이 늦거나 어긋나도 폭 300px 를 뺏기지 않도록 CSS 로도 같은 규칙을 걸어 둔다.
   return (
-    <aside className="sticky top-0 hidden h-[calc(100dvh-var(--header-height))] w-[300px] shrink-0 overflow-y-auto bg-dark no-scrollbar lg:block">
+    <aside className="sticky top-(--header-height) hidden h-[calc(100dvh-var(--header-height))] self-start w-[300px] shrink-0 overflow-y-auto bg-dark no-scrollbar lg:block">
       {sidebarBody}
     </aside>
   );

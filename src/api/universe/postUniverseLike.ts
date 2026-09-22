@@ -1,6 +1,10 @@
 "use client";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  type QueryKey,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
 import { rankingQueryKeys } from "@/api/ranking/queryKeys";
@@ -22,12 +26,16 @@ const deleteUniverseLike = async ({ universeId }: UniverseLikeProps) => {
 };
 
 interface LikeSnapshot {
-  previous?: UniverseDetailResponse;
+  previous: [QueryKey, UniverseDetailResponse | undefined][];
 }
 
 /**
  * 하트는 누른 즉시 반응해야 해서 응답을 기다리지 않고 먼저 칠합니다.
  * 실패하면 onError가 찍어 둔 값으로 되돌리고, 성공·실패 모두 마지막에 서버 값을 다시 받아 맞춥니다.
+ *
+ * 상세 쿼리 키는 `[...detail(id), authReady]` 처럼 뒤에 로그인 여부가 붙는다. 그래서
+ * 정확히 일치해야 찾는 getQueryData/setQueryData 로는 캐시를 못 찾아 낙관적 값이 들어가지
+ * 않았다 — 앞부분 일치로 찾는 getQueriesData/setQueriesData 를 쓴다.
  */
 const useUniverseLikeMutation = (
   mutationKey: string,
@@ -44,29 +52,29 @@ const useUniverseLikeMutation = (
       // 진행 중인 조회가 끝나면서 낙관적 값을 덮어쓰지 않도록 먼저 멈춥니다.
       await queryClient.cancelQueries({ queryKey });
 
-      const previous =
-        queryClient.getQueryData<UniverseDetailResponse>(queryKey);
-      if (previous) {
-        queryClient.setQueryData<UniverseDetailResponse>(queryKey, {
-          ...previous,
-          liked,
-          // 이미 그 상태면 서버도 카운트를 건드리지 않으므로 여기서도 그대로 둡니다.
-          likeCount:
-            previous.liked === liked
-              ? previous.likeCount
-              : Math.max(previous.likeCount + (liked ? 1 : -1), 0),
-        });
-      }
+      const previous = queryClient.getQueriesData<UniverseDetailResponse>({
+        queryKey,
+      });
+      queryClient.setQueriesData<UniverseDetailResponse>(
+        { queryKey },
+        (current) =>
+          current && {
+            ...current,
+            liked,
+            // 이미 그 상태면 서버도 카운트를 건드리지 않으므로 여기서도 그대로 둡니다.
+            likeCount:
+              current.liked === liked
+                ? current.likeCount
+                : Math.max(current.likeCount + (liked ? 1 : -1), 0),
+          },
+      );
 
       return { previous };
     },
-    onError: (_error, { universeId }, context) => {
-      if (context?.previous) {
-        queryClient.setQueryData(
-          universeQueryKeys.detail(universeId),
-          context.previous,
-        );
-      }
+    onError: (_error, _variables, context) => {
+      context?.previous.forEach(([queryKey, data]) => {
+        queryClient.setQueryData(queryKey, data);
+      });
     },
     onSettled: (_data, _error, { universeId }) => {
       queryClient.invalidateQueries({

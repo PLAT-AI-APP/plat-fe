@@ -9,10 +9,17 @@ input:-webkit-autofill:active {
   transition: background-color 5000s ease-in-out 0s;
 }
 
-html,
-body {
-  height: 100%;
-  overflow: hidden;
+/*
+ * 페이지는 문서(창)가 스크롤한다.
+ *
+ * 예전에는 html·body 를 overflow:hidden 으로 막고 안쪽 #page-content 가 스크롤했다. 그러면
+ * 브라우저의 뒤로가기 스크롤 복원이 동작하지 않고(목록에서 상세로 갔다 오면 맨 위로 돌아갔다),
+ * iOS 에서는 주소창이 접히지 않고 상태바를 눌러 맨 위로 가는 기능도 먹지 않았다.
+ *
+ * 스크롤바가 생겼다 사라질 때 화면이 옆으로 흔들리지 않게 자리를 늘 잡아 둔다.
+ */
+html {
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -22,6 +29,7 @@ body {
   letter-spacing: -0.025em;
   line-height: 1.4;
   font-family:
+    "Pretendard Variable",
     "Pretendard",
     -apple-system,
     BlinkMacSystemFont,
@@ -92,6 +100,24 @@ button {
     transform, filter;
   transition-duration: var(--motion-base);
   transition-timing-function: var(--motion-ease-out);
+}
+
+/*
+ * 누름 반응.
+ *
+ * 터치 기기에는 hover 가 없고(Tailwind v4 의 hover: 는 hover 가능한 기기에서만 걸린다),
+ * :active 스타일은 몇 군데에만 있어 대부분의 버튼·링크가 눌러도 아무 변화가 없었다.
+ * 눌린 순간 살짝 어두워지게 하고, 누를 때만 전환 시간을 0 으로 둬 즉시 반응하게 한다
+ * (뗄 때는 원래 전환으로 돌아온다). 레이어 밖 규칙이라 개별 active: 유틸리티보다 우선한다.
+ */
+:where(button, a, [role="button"]):not(:disabled, [aria-disabled="true"]):active {
+  filter: brightness(0.9);
+  transition-duration: 0ms;
+}
+
+/* 모바일 브라우저가 누른 요소에 덧씌우는 회색 상자 대신 위 누름 반응을 쓴다. */
+html {
+  -webkit-tap-highlight-color: transparent;
 }
 
 /*

@@ -125,7 +125,8 @@ const SignupForm = () => {
         text={t("auth.signup.submit")}
         type="submit"
         isActive={isFormValid}
-        disabled={!isFormValid || isRegistering}
+        // 요청 중을 비활성(회색)으로만 나타내면 입력이 모자란 것과 구분되지 않는다.
+        isPending={isRegistering}
       />
     </form>
   );

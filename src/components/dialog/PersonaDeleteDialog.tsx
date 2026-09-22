@@ -1,6 +1,8 @@
 "use client";
 
+import { useIsMutating } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
+import { DELETE_PERSONA_MUTATION_KEY } from "@/api/persona/deletePersona";
 import type { PersonaDeleteDialogProps } from "@/type/dialog";
 import Dialog from "./Dialog";
 
@@ -11,6 +13,9 @@ const PersonaDeleteDialog = ({
   onConfirm,
 }: PersonaDeleteDialogProps) => {
   const t = useTranslations();
+  // Dialog는 열릴 때 props가 고정되므로 진행 상태는 뮤테이션에서 직접 구독합니다.
+  const isPending =
+    useIsMutating({ mutationKey: DELETE_PERSONA_MUTATION_KEY }) > 0;
 
   return (
     <Dialog
@@ -32,6 +37,7 @@ const PersonaDeleteDialog = ({
         </span>
       }
       confirmFn={onConfirm}
+      isConfirmPending={isPending}
     />
   );
 };

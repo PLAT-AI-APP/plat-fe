@@ -49,7 +49,7 @@ export interface AppError {
 
 
 /** 응답 없는 실패를 하염없이 기다리지 않도록 상한을 둡니다. */
-const REQUEST_TIMEOUT_MS = 20_000;
+const REQUEST_TIMEOUT_MS = 10_000;
 const API_ERROR_TOAST_COOLDOWN_MS = 1_000;
 /**
  * 연결 실패만 창을 길게 잡는다.

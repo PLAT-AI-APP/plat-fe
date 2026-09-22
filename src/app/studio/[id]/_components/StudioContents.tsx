@@ -1,5 +1,6 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import React from "react";
 import CharacterShowcase from "@/components/character/CharacterShowcase";
@@ -14,12 +15,15 @@ import ViewToggle from "./ViewToggle";
 
 interface StudioContentsProps {
   id: string;
-  sort: "latest" | "chats";
-  viewMode: "list" | "grid";
 }
 
-const StudioContents = ({ id, sort, viewMode }: StudioContentsProps) => {
+const StudioContents = ({ id }: StudioContentsProps) => {
   const t = useTranslations("studio");
+  const searchParams = useSearchParams();
+  const viewMode: "list" | "grid" =
+    searchParams.get("view") === "grid" ? "grid" : "list";
+  const sort: "latest" | "chats" =
+    searchParams.get("sort") === "chats" ? "chats" : "latest";
   const changeQueryString = useChangeQueryString();
 
   const handleSortChange = (nextSort: "latest" | "chats") => {

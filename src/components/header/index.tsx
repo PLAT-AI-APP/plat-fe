@@ -14,7 +14,13 @@ import useToggle from "@/hooks/common/useToggle";
 import Token from "@/icons/Token";
 import { formatWithCommas } from "@/lib/utils";
 
-const ProfilePopover = dynamic(() => import("../popover/ProfilePopover"));
+const loadProfilePopover = () => import("../popover/ProfilePopover");
+const ProfilePopover = dynamic(loadProfilePopover);
+// 모든 페이지에서 가장 자주 여는 메뉴라, 여는 버튼에 포인터가 올라오면 코드를 미리 받는다.
+// 같은 모듈은 한 번만 받는다.
+const preloadProfilePopover = () => {
+  void loadProfilePopover().catch(() => undefined);
+};
 
 interface HeaderProps {
   handleFoldToggle: () => void;
@@ -32,7 +38,7 @@ const Header = ({ handleFoldToggle, foldToggleRef }: HeaderProps) => {
 
   const profileModal = useToggle();
 
-  const triggerRef = useRef<HTMLImageElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const loginTriggerRef = useRef<HTMLButtonElement>(null);
 
   const profileImage = useUserStore((state) => state.user?.profileImage);
@@ -125,6 +131,8 @@ const Header = ({ handleFoldToggle, foldToggleRef }: HeaderProps) => {
               <Profile
                 profileImg={profileImage || "/p1.png"}
                 handleToggle={profileModal.toggle}
+                onIntent={preloadProfilePopover}
+                isOpen={profileModal.isOpen}
                 triggerRef={triggerRef}
               />
             </div>
@@ -140,6 +148,8 @@ const Header = ({ handleFoldToggle, foldToggleRef }: HeaderProps) => {
             <button
               ref={loginTriggerRef}
               type="button"
+              onPointerEnter={preloadProfilePopover}
+              onFocus={preloadProfilePopover}
               aria-label={t("headerAccount.label")}
               aria-haspopup="menu"
               aria-expanded={profileModal.isOpen}
