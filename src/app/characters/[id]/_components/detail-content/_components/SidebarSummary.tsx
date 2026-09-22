@@ -70,7 +70,7 @@ const SidebarSummary = ({
   } = useFollowToggle({
     userId: creatorId ?? "",
     isFollowing: character.creator.isFollowing,
-    // 상세 응답에 creator.isFollowing 이 함께 실려 오므로 같이 다시 받는다.
+    // 상세 응답에 창작자 팔로워 수가 실려 오므로 같이 다시 받는다(뒤에서 교체돼 화면은 그대로다).
     extraInvalidateKeys: [universeQueryKeys.detail(character.characterId)],
   });
 
@@ -248,13 +248,14 @@ const SidebarSummary = ({
               <button
                 type="button"
                 onClick={handleCreatorFollowToggle}
-                disabled={isFollowPending}
+                // 버튼 글자는 낙관적으로 바로 바뀐다. 요청 중에 흐리게 하면 오히려 기다리는 것처럼
+                // 보여서, 연타는 훅이 막고 모양은 그대로 둔다.
+                aria-busy={isFollowPending}
                 className={cn(
                   "title-6 rounded-full px-3 py-1 transition-colors",
                   isFollowingCreator
                     ? "bg-main text-font-1"
                     : "bg-font-1 text-dark",
-                  isFollowPending && "pending-state",
                 )}
               >
                 {isFollowingCreator ? t("following") : t("follow")}

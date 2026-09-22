@@ -4,6 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { useFollowMutation } from "@/api/follow/postFollow";
 import { useUnFollowMutation } from "@/api/follow/deleteFollow";
+import type { GetFollowCountResponse } from "@/api/follow/getFollowCount";
 import { followQueryKeys } from "@/api/follow/queryKeys";
 import { useRequireLogin } from "@/hooks/common/useRequireLogin";
 
@@ -55,11 +56,38 @@ export const useFollowToggle = ({
   const isPending = isFollowMutating || isUnFollowMutating;
   const isFollowing = optimisticIsFollowing ?? serverIsFollowing;
 
+  /**
+   * 버튼과 함께 대상의 팔로워 수와 "내가 팔로우 중인지" 캐시도 먼저 고친다. 예전에는 버튼만 바로
+   * 바뀌고 숫자는 요청과 재조회가 끝나야 따라와 둘이 잠깐 어긋나 보였다.
+   *
+   * "팔로우 중인지" 는 이미 답을 알고 있으므로 무효화하지 않고 값을 넣는다. 무효화하면 팔로잉
+   * 목록을 100명씩 끝까지 차례로 훑는 조회(getIsFollowing)가 다시 돌았다.
+   */
+  const applyOptimistic = (next: boolean) => {
+    queryClient.setQueryData<GetFollowCountResponse>(
+      followQueryKeys.count(userId),
+      (current) =>
+        current && {
+          ...current,
+          followerCount: Math.max(current.followerCount + (next ? 1 : -1), 0),
+        },
+    );
+    // status 키는 [루트, 보는 사람, 대상] 이다. 보는 사람은 나 하나뿐이라 대상만 맞춰 찾는다.
+    queryClient.setQueriesData<boolean>(
+      {
+        queryKey: followQueryKeys.statuses(),
+        predicate: (query) => query.queryKey[2] === userId,
+      },
+      next,
+    );
+  };
+
   const invalidate = () => {
     const userIds = [userId, ...(alsoInvalidateUserIds ?? [])].filter(
       (id): id is string => Boolean(id),
     );
 
+    // 숫자는 먼저 고쳐 두었지만, 그 사이 다른 사람이 팔로우했을 수 있어 뒤에서 맞춘다.
     userIds.forEach((id) => {
       queryClient.invalidateQueries({ queryKey: followQueryKeys.count(id) });
     });
@@ -67,8 +95,6 @@ export const useFollowToggle = ({
       queryKey: followQueryKeys.followingList(),
     });
     queryClient.invalidateQueries({ queryKey: followQueryKeys.followerList() });
-    // 프로필 페이지의 팔로우 버튼이 읽는 "내가 팔로우 중인지" 캐시. 다른 화면에서 바꾼 것도 반영돼야 한다.
-    queryClient.invalidateQueries({ queryKey: followQueryKeys.statuses() });
 
     extraInvalidateKeys?.forEach((queryKey) => {
       queryClient.invalidateQueries({ queryKey: [...queryKey] });
@@ -84,6 +110,7 @@ export const useFollowToggle = ({
 
     const next = !isFollowing;
     setOptimisticIsFollowing(next);
+    applyOptimistic(next);
 
     const mutation = next ? follow : unFollow;
     mutation(
@@ -91,7 +118,10 @@ export const useFollowToggle = ({
       {
         onSuccess: invalidate,
         // 되돌릴 때 !next 가 아니라 이전 값을 그대로 쓴다.
-        onError: () => setOptimisticIsFollowing(isFollowing),
+        onError: () => {
+          setOptimisticIsFollowing(isFollowing);
+          applyOptimistic(isFollowing);
+        },
       },
     );
   };
