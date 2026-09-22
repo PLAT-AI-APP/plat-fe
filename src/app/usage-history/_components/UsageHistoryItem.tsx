@@ -10,8 +10,6 @@ import { ArrowDown } from "@/icons";
 import Copy from "@/icons/Copy";
 import useToggle from "@/hooks/common/useToggle";
 import { UsageHistoryItemType } from "@/type/note";
-import { useModalStore } from "@/store/useModalStore";
-import Button from "@/components/ui/Button";
 
 /** 만료일 노출이 필요한 지급성 내역인지 확인합니다. */
 const shouldShowExpiryDate = (amount: number) => amount > 0;
@@ -24,24 +22,14 @@ const getExpiryDate = (createdAt: string) =>
 const getLedgerDetailText = (item: UsageHistoryItemType) =>
   item.referenceType || item.description;
 
-/** 결제로 충전된 줄인지. 이 줄의 참조 ID 가 곧 주문번호라 환불 신청에 그대로 씁니다. */
-const isPaymentCharge = (item: UsageHistoryItemType) =>
-  item.type === "CHARGE" && item.referenceType === "PAYMENT";
-
 /** 개별 사용내역 아이템 */
 const UsageHistoryItem = ({ item }: { item: UsageHistoryItemType }) => {
   const t = useTranslations();
   const { isOpen, toggle } = useToggle();
-  const openModal = useModalStore((state) => state.openModal);
 
   const isPlusNote = item.amount > 0;
   const isExpiryVisible = shouldShowExpiryDate(item.amount);
   const amountText = `${isPlusNote ? "+" : ""}${formatWithCommas(item.amount)}`;
-
-  const handleRefundRequest = (event: React.MouseEvent) => {
-    event.stopPropagation();
-    openModal("REFUND_REQUEST", { orderUid: item.referenceId });
-  };
 
   const handleCopy = (event: React.MouseEvent) => {
     event.stopPropagation();
@@ -124,16 +112,6 @@ const UsageHistoryItem = ({ item }: { item: UsageHistoryItemType }) => {
                 {t("usageHistory.transactionDateLabel")}:{" "}
                 {dayjs(item.createdAt).format("YYYY. MM. DD HH:mm:ss")}
               </p>
-              {isPaymentCharge(item) && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleRefundRequest}
-                  className="mt-2 self-end"
-                >
-                  {t("usageHistory.refundRequest")}
-                </Button>
-              )}
             </div>
           </m.div>
         )}

@@ -2,11 +2,12 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQueryClient, type QueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { postPaymentConfirm } from "@/api/payment/postPaymentConfirm";
 import { getPaymentOrder } from "@/api/payment/getPaymentOrder";
 import { walletQueryKeys } from "@/api/wallet/queryKeys";
+import { noteQueryKeys } from "@/api/note/queryKeys";
 import { useAuthStore } from "@/store/useAuthStore";
 import { handOffToOpener, isMobileDevice } from "@/lib/paymentWindow";
 import type { AppError } from "@/api";
@@ -44,6 +45,17 @@ const POLL_SLOW_MS = 30_000;
 const FAST_WINDOW_MS = 7 * 60_000;
 /** 승인 요청이 이만큼 걸리면 "평소보다 오래 걸린다"는 안내로 바꾼다. */
 const SLOW_CONFIRM_MS = 8_000;
+
+/**
+ * 노트가 들어왔으니 잔액과 사용 내역을 다시 받는다. 사용 내역을 빼먹으면 충전 페이지의
+ * "내역" 버튼이 캐시된 "내역 없음" 결과로 계속 비활성화돼 있다.
+ */
+const refreshNotes = (queryClient: QueryClient) => {
+  queryClient.invalidateQueries({ queryKey: walletQueryKeys.balance() });
+  queryClient.invalidateQueries({
+    queryKey: noteQueryKeys.usageHistoryLists(),
+  });
+};
 
 interface PaymentResultContentsProps {
   provider: string;
@@ -119,7 +131,7 @@ const PaymentResultContents = ({
           credits: confirmed.creditAmount,
           granted: confirmed.fulfillmentStatus === "GRANTED",
         });
-        queryClient.invalidateQueries({ queryKey: walletQueryKeys.balance() });
+        refreshNotes(queryClient);
       })
       .catch((error: AppError) => {
         // 응답이 없었거나(네트워크) 결과를 모르는 오류면 주문 상태를 되짚습니다.
@@ -169,7 +181,7 @@ const PaymentResultContents = ({
         const captured = CAPTURED_STATUSES.has(order.paymentStatus);
         if (captured && order.fulfillmentStatus === "GRANTED") {
           setState({ kind: "success", credits: order.creditAmount, granted: true });
-          queryClient.invalidateQueries({ queryKey: walletQueryKeys.balance() });
+          refreshNotes(queryClient);
           return;
         }
         if (captured && kind !== "success") {
