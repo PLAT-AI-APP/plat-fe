@@ -2,6 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, m } from "framer-motion";
+import { TRANSITION_COLLAPSE } from "@/constants/motion";
 import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
 import { useEmailVerifyMutation } from "@/api/auth/emailVerify";
@@ -224,7 +225,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.4, ease: "easeInOut" }}
+            transition={TRANSITION_COLLAPSE}
             className="overflow-hidden"
           >
             <div className="mt-5 flex flex-col gap-2">

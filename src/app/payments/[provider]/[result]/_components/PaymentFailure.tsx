@@ -218,8 +218,9 @@ const PaymentFailure = ({ variant, reason }: PaymentFailureProps) => {
         </m.p>
       )}
 
+      {/* 다음 행동 버튼은 연출이 끝나기를 기다리지 않는다. 1초 넘게 늦게 뜨면 누를 곳이 없어 보였다. */}
       <m.div
-        {...rise(0.7)}
+        {...rise(0.3)}
         className="mt-10 flex w-full max-w-80 flex-col gap-2.5"
       >
         <ButtonLink href="/token-charge" size="lg" fullWidth>

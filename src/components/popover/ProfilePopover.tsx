@@ -21,6 +21,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import Check from "@/icons/Check";
 import { useUserStore } from "@/store/useUserStore";
 import { m, AnimatePresence } from "framer-motion";
+import { TRANSITION_COLLAPSE } from "@/constants/motion";
 import { PopoverLayout } from "./layout";
 import useToggle from "@/hooks/common/useToggle";
 import { useModalStore } from "@/store/useModalStore";
@@ -304,7 +305,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      transition={TRANSITION_COLLAPSE}
                       className="overflow-hidden"
                     >
                       <ul className="flex flex-col gap-1 p-2.5">
