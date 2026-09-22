@@ -3,7 +3,7 @@
 import React, { ChangeEvent, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { Droppable } from "@hello-pangea/dnd";
-import { UseFieldArrayReturn } from "react-hook-form";
+import { UseFieldArrayReturn, useFormContext } from "react-hook-form";
 import AssetGuidePanel from "./AssetGuidePanel";
 import AssetItem from "./AssetItem";
 import { useUniverseAssetImageUploadMutation } from "@/api/universe/postUniverseAssetImage";
@@ -27,6 +27,7 @@ const Asset = ({ assetFieldArray }: AssetProps) => {
   const t = useTranslations("characterCreate.asset");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { fields, append, remove } = assetFieldArray;
+  const { getValues, setValue } = useFormContext<CharacterCreateFormValues>();
   const { mutateAsync: uploadAssetImage } =
     useUniverseAssetImageUploadMutation();
 
@@ -48,32 +49,53 @@ const Asset = ({ assetFieldArray }: AssetProps) => {
       return;
     }
 
+    /*
+     * 고르는 즉시 목록에 붙이고 업로드는 뒤에서 한다. 예전에는 업로드가 끝나야 항목이 생겨,
+     * 모바일 회선에서는 몇 초 동안 아무 반응이 없었고 그 사이 다시 누르게 됐다.
+     * 미리보기는 파일을 base64 로 읽지 않고 object URL 로 바로 만든다.
+     *
+     * 업로드 중에 순서를 바꾸거나 지울 수 있어, 끝난 뒤에는 인덱스가 아니라 이 미리보기 주소로
+     * 항목을 다시 찾는다. fileId 가 채워지기 전까지 AssetItem 이 대기 표시를 하고,
+     * 등록·임시저장과 시나리오로 끌어넣기는 막힌다.
+     */
+    const previewUrl = URL.createObjectURL(file);
+    append({
+      assetFile: null,
+      assetName: file.name
+        .split(".")
+        .slice(0, -1)
+        .join(".")
+        .slice(0, ASSET_NAME_MAX_LENGTH),
+      assetImage: previewUrl,
+      assetImageFileId: null,
+      assetSituation: "",
+      assetVisibility: "PUBLIC",
+    });
+    e.target.value = "";
+
+    const findIndex = () =>
+      (getValues("asset") ?? []).findIndex(
+        (asset) => asset.assetImage === previewUrl,
+      );
+
     try {
       const uploadedImage = await uploadAssetImage({
         assetImageFile: file,
       });
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        append({
-          assetFile: null,
-          assetName: file.name
-            .split(".")
-            .slice(0, -1)
-            .join(".")
-            .slice(0, ASSET_NAME_MAX_LENGTH),
-          assetImage: reader.result as string,
-          assetImageFileId: uploadedImage.fileId,
-          assetSituation: "",
-          assetVisibility: "PUBLIC",
-        });
-      };
-      reader.readAsDataURL(file);
-    } catch (error) {
-      // 실패 토스트는 axios 인터셉터 → MutationCache의 전역 에러 처리에서 이미 띄우므로 여기서 중복으로 띄우지 않습니다.
-      console.error("Asset image upload failed:", error);
-    }
+      const index = findIndex();
+      if (index === -1) return;
 
-    e.target.value = "";
+      setValue(`asset.${index}.assetImageFileId`, uploadedImage.fileId, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+    } catch (error) {
+      // 실패 토스트는 MutationCache의 전역 에러 처리에서 이미 띄운다. 올리지 못한 항목은 목록에서 뺀다.
+      console.error("Asset image upload failed:", error);
+      const index = findIndex();
+      if (index !== -1) remove(index);
+      URL.revokeObjectURL(previewUrl);
+    }
   };
 
   const addAsset = () => {

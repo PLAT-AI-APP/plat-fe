@@ -1,19 +1,5 @@
 import { FileUploadType } from "@/api/file/postFileUpload";
 
-export const dataUrlToFile = async (
-  dataUrl: string,
-  fileName: string,
-  type: string,
-) => {
-  // 크롭 모달 결과는 data URL이므로 업로드 API에 넘길 수 있도록 File 객체로 변환합니다.
-  const response = await fetch(dataUrl);
-  const blob = await response.blob();
-
-  return new File([blob], fileName, {
-    type: type || blob.type,
-  });
-};
-
 /**
  * 백엔드가 업로드 때 미리 만들어 두는 이미지 크기 변형본 (plat-be ImageVariant).
  * sq = 정사각 크롭, 숫자는 한 변 px.

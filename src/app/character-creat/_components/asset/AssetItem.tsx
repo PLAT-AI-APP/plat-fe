@@ -18,6 +18,8 @@ import {
 import { CharacterCreateFormValues } from "@/schema/character.schema";
 import { showAppToast } from "@/lib/toast";
 
+const formOptions = { shouldDirty: true, shouldValidate: true } as const;
+
 interface AssetItemProps {
   id: string;
   index: number;
@@ -26,7 +28,7 @@ interface AssetItemProps {
 
 const AssetItem = ({ id, index, remove }: AssetItemProps) => {
   const t = useTranslations("characterCreate.asset");
-  const { register, setValue, control } =
+  const { register, setValue, getValues, control } =
     useFormContext<CharacterCreateFormValues>();
   // 이 에셋의 오류만 구독한다. useFormContext().formState.errors 를 읽으면 루트 폼 전체가 오류
   // 구독자가 되어, 이 탭을 한 번 연 뒤로는 어느 칸이든 유효↔무효가 바뀔 때마다 폼 전체가 다시 그려졌다.
@@ -35,6 +37,12 @@ const AssetItem = ({ id, index, remove }: AssetItemProps) => {
   const { mutateAsync: uploadAssetImage } =
     useUniverseAssetImageUploadMutation();
   const assetImage = useWatch({ control, name: `asset.${index}.assetImage` });
+  const assetImageFileId = useWatch({
+    control,
+    name: `asset.${index}.assetImageFileId`,
+  });
+  // 미리보기는 떴지만 아직 fileId 를 못 받은 상태 = 뒤에서 올리는 중.
+  const isUploading = Boolean(assetImage) && !assetImageFileId;
   const assetName = useWatch({ control, name: `asset.${index}.assetName` });
   const assetSituation = useWatch({
     control,
@@ -82,28 +90,47 @@ const AssetItem = ({ id, index, remove }: AssetItemProps) => {
       return;
     }
 
+    // 고른 이미지를 바로 보여 주고 업로드는 뒤에서 한다(asset/index.tsx 와 같은 방식).
+    const previousImage = getValues(`asset.${index}.assetImage`);
+    const previousFileId = getValues(`asset.${index}.assetImageFileId`);
+    const previewUrl = URL.createObjectURL(file);
+    setValue(`asset.${index}.assetImage`, previewUrl, formOptions);
+    setValue(`asset.${index}.assetImageFileId`, null, formOptions);
+    e.target.value = "";
+
+    // 업로드 중에 순서가 바뀔 수 있어 미리보기 주소로 항목을 다시 찾는다.
+    const findIndex = () =>
+      (getValues("asset") ?? []).findIndex(
+        (asset) => asset.assetImage === previewUrl,
+      );
+
     try {
       const uploadedImage = await uploadAssetImage({
         assetImageFile: file,
       });
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setValue(`asset.${index}.assetImage`, reader.result as string, {
-          shouldDirty: true,
-          shouldValidate: true,
-        });
-        setValue(`asset.${index}.assetImageFileId`, uploadedImage.fileId, {
-          shouldDirty: true,
-          shouldValidate: true,
-        });
-      };
-      reader.readAsDataURL(file);
-    } catch (error) {
-      // 실패 토스트는 axios 인터셉터 → MutationCache의 전역 에러 처리에서 이미 띄우므로 여기서 중복으로 띄우지 않습니다.
-      console.error("Asset image upload failed:", error);
-    }
+      const currentIndex = findIndex();
+      if (currentIndex === -1) return;
 
-    e.target.value = "";
+      setValue(
+        `asset.${currentIndex}.assetImageFileId`,
+        uploadedImage.fileId,
+        formOptions,
+      );
+      if (previousImage?.startsWith("blob:")) URL.revokeObjectURL(previousImage);
+    } catch (error) {
+      // 실패 토스트는 MutationCache의 전역 에러 처리에서 이미 띄운다. 앞 이미지로 되돌린다.
+      console.error("Asset image upload failed:", error);
+      const currentIndex = findIndex();
+      if (currentIndex !== -1) {
+        setValue(`asset.${currentIndex}.assetImage`, previousImage, formOptions);
+        setValue(
+          `asset.${currentIndex}.assetImageFileId`,
+          previousFileId,
+          formOptions,
+        );
+      }
+      URL.revokeObjectURL(previewUrl);
+    }
   };
 
   return (
@@ -138,7 +165,19 @@ const AssetItem = ({ id, index, remove }: AssetItemProps) => {
                     unoptimized
                     className="object-cover"
                   />
-                ) : (
+                ) : null}
+                {isUploading ? (
+                  <span
+                    role="status"
+                    aria-label={t("uploading")}
+                    className="absolute inset-0 flex items-center justify-center bg-scrim/40"
+                  >
+                    <span
+                      aria-hidden="true"
+                      className="size-5 animate-spin rounded-full border-2 border-white/40 border-t-white"
+                    />
+                  </span>
+                ) : assetImage ? null : (
                   <ImageIcon className="h-6 w-6 text-font-disabled" />
                 )}
                 <input

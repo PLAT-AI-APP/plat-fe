@@ -2,6 +2,7 @@
 
 import React, { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { useIsMutating } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { FieldErrors, FieldPath, useFormContext } from "react-hook-form";
 import { useRouter } from "next/navigation";
@@ -260,6 +261,12 @@ const CreateHeader = ({
     useUniverseUpdateMutation();
   const isEditMode = Boolean(universeId);
   const isMutationPending = isCreatePending || isUpdatePending;
+  // 이미지는 고르는 즉시 미리보기에 뜨고 업로드는 뒤에서 이어진다. 끝나야 fileId 가 채워지므로
+  // 그동안은 등록·임시저장을 대기 상태로 둔다(누르면 이미지 없이 저장되거나 검증에 걸렸다).
+  const isUploadingImages =
+    useIsMutating({ mutationKey: ["post-file-upload"] }) +
+      useIsMutating({ mutationKey: ["post-universe-asset-image"] }) >
+    0;
   // 검증(zod parseAsync)은 비동기라, 그동안에는 아직 요청이 시작되지 않아 isPending 이 false 다.
   // 그 틈에 들어온 두 번째 클릭이 그대로 통과해 세계관이 둘 만들어질 수 있었다.
   // 성공한 뒤에도 풀지 않는다 — router.push 가 끝나기 전에 다시 눌리면 마찬가지다.
@@ -270,7 +277,8 @@ const CreateHeader = ({
     hasSubmittedRef.current = true;
     markSubmitSuccess();
   };
-  const isPending = isMutationPending || isSubmitting;
+  const isSubmitInFlight = isMutationPending || isSubmitting;
+  const isPending = isSubmitInFlight || isUploadingImages;
 
   const handleSafeBack = (fallbackPath = "/") => {
     if (window.history.state.__next_navigation_guard_stack_index > 0) {
@@ -423,7 +431,7 @@ const CreateHeader = ({
   };
 
   const handleRegisterClick = async () => {
-    if (isSubmitLockedRef.current) return;
+    if (isSubmitLockedRef.current || isUploadingImages) return;
 
     isSubmitLockedRef.current = true;
     setIsSubmitting(true);
@@ -462,11 +470,11 @@ const CreateHeader = ({
             <button
               type="button"
               onClick={onSave}
-              disabled={isSaving}
-              aria-busy={isSaving || undefined}
+              disabled={isSaving || isUploadingImages}
+              aria-busy={isSaving || isUploadingImages || undefined}
               className={cn(
                 "rounded-xl border border-main bg-card px-5 py-2 hover:bg-card-hover",
-                isSaving && "pending-state",
+                (isSaving || isUploadingImages) && "pending-state",
               )}
             >
               {t("temporarySave")}
@@ -484,11 +492,12 @@ const CreateHeader = ({
         <ActiveButton
           isActive
           text={
+            // 이미지 업로드를 기다리는 동안은 스피너만 돌고 문구는 그대로 둔다("등록 중"이 아니다).
             isEditMode
-              ? isPending
+              ? isSubmitInFlight
                 ? t("submittingEdit")
                 : t("submitEdit")
-              : isPending
+              : isSubmitInFlight
                 ? t("submitting")
                 : t("submit")
           }

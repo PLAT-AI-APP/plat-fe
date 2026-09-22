@@ -272,7 +272,8 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
       destination.droppableId === "create-preview-list"
     ) {
       const asset = getValues(`asset.${source.index}`);
-      if (!asset?.assetImage) return;
+      // 아직 업로드 중인 에셋은 fileId 가 없어 시나리오에 넣으면 저장할 수 없다.
+      if (!asset?.assetImage || !asset.assetImageFileId) return;
 
       const currentContents =
         getValues(`scenarios.${activeScenarioIndex}.contents`) || [];

@@ -49,6 +49,7 @@ const th: typeof ko = {
       upload: "อัปโหลด",
       invalidType: "อนุญาตเฉพาะไฟล์รูป jpg, png, webp เท่านั้น",
       invalidSize: "ขนาดไฟล์สูงสุดคือ 5MB",
+      uploading: "กำลังอัปโหลดรูปภาพ",
       uploadFailed: "อัปโหลดรูปภาพไม่สำเร็จ โปรดลองอีกครั้ง",
     },
     details: {
@@ -104,6 +105,7 @@ const th: typeof ko = {
       closeGuide: "ปิดคู่มือแอสเซ็ต",
       invalidType: "อนุญาตเฉพาะไฟล์รูป jpg, png, webp เท่านั้น",
       invalidSize: "ขนาดไฟล์สูงสุดคือ 5MB",
+      uploading: "กำลังอัปโหลดรูปภาพ",
       uploadFailed: "อัปโหลดรูปภาพแอสเซ็ตไม่สำเร็จ โปรดลองอีกครั้ง",
     },
     scenario: {
