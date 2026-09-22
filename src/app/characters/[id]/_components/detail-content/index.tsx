@@ -6,6 +6,7 @@ import dayjs from "@/lib/dayjs";
 import { cn } from "@/lib/utils";
 import { useFadeInAfterLoading } from "@/hooks/common/useFadeInAfterLoading";
 import { useModalStore } from "@/store/useModalStore";
+import { usePreloadModalsWhenIdle } from "@/hooks/common/usePreloadModalsWhenIdle";
 import { useUniverseCommentsInfiniteQuery } from "@/api/comment/getUniverseComments";
 import {
   adaptUniverseDetailToCharacterDetail,
@@ -46,6 +47,8 @@ const CharacterDetailContent = ({
   const commentsCount = commentsData?.pages[0]?.page.totalElements ?? 0;
   const t = useTranslations("characterDetail");
   const openModal = useModalStore((state) => state.openModal);
+  // 이 화면의 주 버튼인 "대화 시작" 모달을 미리 받아 둔다.
+  usePreloadModalsWhenIdle(["CHATTING_START"]);
   const [currentTab, setCurrentTab] = useState<CharacterDetailTab>("settings");
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const settingsRef = useRef<HTMLElement>(null);

@@ -2,15 +2,18 @@
 
 import dynamic from "next/dynamic";
 import { Suspense, useEffect, useState } from "react";
+import { runWhenIdle } from "@/lib/idle";
+import { useAuthStore } from "@/store/useAuthStore";
 import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
 
+const loadModalManager = () => import("@/components/modal/ModalManager");
+const loadDialogManager = () => import("@/components/dialog/DialogManager");
+
 const ModalManager = dynamic(() =>
-  import("@/components/modal/ModalManager").then(
-    (module) => module.ModalManager,
-  ),
+  loadModalManager().then((module) => module.ModalManager),
 );
-const DialogManager = dynamic(() => import("@/components/dialog/DialogManager"));
+const DialogManager = dynamic(loadDialogManager);
 
 const LazyLayerManagers = () => {
   const [hasLoadedModalManager, setHasLoadedModalManager] = useState(
@@ -19,6 +22,27 @@ const LazyLayerManagers = () => {
   const [hasLoadedDialogManager, setHasLoadedDialogManager] = useState(
     () => useDialogStore.getState().currentDialog !== null,
   );
+
+  /*
+   * 처음 여는 모달은 매니저 청크 → 모달 청크를 차례로 받느라 누른 뒤 한동안 아무 반응이 없었다.
+   * 로그인 창처럼 가장 먼저 열리는 모달이 특히 그랬다. 첫 화면이 다 그려진 뒤 한가할 때 두 매니저를
+   * 마운트해 두고(열린 게 없으면 아무것도 그리지 않는다), 비로그인이면 로그인 창 코드도 받아 둔다.
+   */
+  const isAuthReady = useAuthStore((state) => state.isAuthReady);
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  useEffect(() => {
+    if (!isAuthReady) return;
+
+    return runWhenIdle(() => {
+      setHasLoadedModalManager(true);
+      setHasLoadedDialogManager(true);
+      if (!isLoggedIn) {
+        void import("@/components/modal/ModalRegistry").then(({ preloadModal }) =>
+          preloadModal("LOGIN"),
+        );
+      }
+    });
+  }, [isAuthReady, isLoggedIn]);
 
   useEffect(() => {
     const loadWhenNeeded = (state: ReturnType<typeof useModalStore.getState>) => {
