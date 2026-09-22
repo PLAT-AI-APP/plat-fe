@@ -55,6 +55,7 @@ const ko = {
     sortByChats: "대화량",
     sortRecommended: "맞춤 추천순",
     sortWish: "찜",
+    empty: "아직 공식 캐릭터가 없어요",
   },
   newPage: {
     title: "이달의 신규 캐릭터",
