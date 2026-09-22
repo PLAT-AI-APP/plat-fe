@@ -151,6 +151,7 @@ const ja = {
     collapse: "閉じる",
     assetAlt: "{name} アセット",
     commentMenu: "コメントメニュー",
+    universeMenu: "キャラクターメニュー",
     commentsCount: "コメント {count}件",
     myProfileAlt: "自分のプロフィール",
     loggedInCommentPlaceholder: "不適切なコメントは削除される場合があります",
@@ -202,6 +203,7 @@ const ja = {
   profilePopover: {
     notice: "お知らせ",
     customerService: "カスタマーセンター",
+    myReports: "通報履歴",
     persona: "マイペルソナ",
     contentSettings: "コンテンツ設定",
     loginWithKakao: "Kakaoアカウントで始める",
@@ -221,6 +223,38 @@ const ja = {
     bl: "BL",
     horror: "ホラー",
     mystery: "ミステリー",
+  },
+  report: {
+    targetTypes: {
+      COMMENT: "コメント",
+      UNIVERSE: "キャラクター",
+    },
+    reasons: {
+      SEXUAL: "性的なコンテンツ",
+      VIOLENCE: "暴力的なコンテンツ",
+      HATE: "ヘイトスピーチ",
+      COPYRIGHT: "著作権侵害",
+      SPAM: "スパム・広告",
+      ETC: "その他",
+    },
+    statuses: {
+      PENDING: "受付済み",
+      ACTIONED: "対応済み",
+      DISMISSED: "違反なし",
+    },
+    statusGuides: {
+      PENDING: "運営チームが確認中です。対応が完了したらお知らせします",
+      ACTIONED: "通報内容を確認し、運営ポリシーに基づいて対応しました。ご協力ありがとうございます",
+      DISMISSED: "確認の結果、運営ポリシーへの違反は見つかりませんでした",
+    },
+  },
+  myReports: {
+    empty: "まだ通報履歴はありません",
+    reportedAt: "{date} 通報",
+    detailLabel: "入力した内容",
+    noDetail: "入力した内容はありません",
+    resultLabel: "処理結果",
+    handledAt: "処理日 {date}",
   },
   usageHistory: {
     expiresUntil: "{date}まで",

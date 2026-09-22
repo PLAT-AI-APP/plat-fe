@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { useFadeInAfterLoading } from "@/hooks/common/useFadeInAfterLoading";
 import ErrorState from "./ErrorState";
 import EmptyState from "./EmptyState";
+import type { MascotMood } from "./EmptyMascot";
 
 interface QueryStateBoundaryProps {
   isPending: boolean;
@@ -15,6 +16,8 @@ interface QueryStateBoundaryProps {
   /** 로딩 중 보여줄 스켈레톤. 없으면 아무것도 그리지 않습니다. */
   pendingFallback?: ReactNode;
   emptyMessage?: string;
+  /** 빈 결과에 띄울 캐릭터 표정. 넘기지 않으면 문구만 보인다. */
+  emptyMood?: MascotMood;
   emptyFallback?: ReactNode;
   errorClassName?: string;
   children: ReactNode;
@@ -35,6 +38,7 @@ const QueryStateBoundary = ({
   onRetry,
   pendingFallback = null,
   emptyMessage,
+  emptyMood,
   emptyFallback,
   errorClassName,
   children,
@@ -52,7 +56,8 @@ const QueryStateBoundary = ({
 
   if (isEmpty) {
     if (emptyFallback) return <>{emptyFallback}</>;
-    if (emptyMessage) return <EmptyState message={emptyMessage} />;
+    if (emptyMessage)
+      return <EmptyState message={emptyMessage} mood={emptyMood} />;
     return null;
   }
 

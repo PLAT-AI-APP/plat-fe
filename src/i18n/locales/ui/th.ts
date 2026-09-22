@@ -150,6 +150,7 @@ const th = {
     collapse: "ย่อ",
     assetAlt: "แอสเซ็ต {name}",
     commentMenu: "เมนูความคิดเห็น",
+    universeMenu: "เมนูตัวละคร",
     commentsCount: "{count} ความคิดเห็น",
     myProfileAlt: "โปรไฟล์ของฉัน",
     loggedInCommentPlaceholder: "ความคิดเห็นที่ไม่เหมาะสมอาจถูกลบได้",
@@ -201,6 +202,7 @@ const th = {
   profilePopover: {
     notice: "ประกาศ",
     customerService: "ศูนย์ลูกค้า",
+    myReports: "ประวัติการรายงาน",
     persona: "เพอร์โซนาของฉัน",
     contentSettings: "ตั้งค่าเนื้อหา",
     loginWithKakao: "เริ่มด้วยบัญชี Kakao",
@@ -220,6 +222,38 @@ const th = {
     bl: "BL",
     horror: "สยองขวัญ",
     mystery: "สืบสวน",
+  },
+  report: {
+    targetTypes: {
+      COMMENT: "ความคิดเห็น",
+      UNIVERSE: "ตัวละคร",
+    },
+    reasons: {
+      SEXUAL: "เนื้อหาทางเพศ",
+      VIOLENCE: "ความรุนแรง",
+      HATE: "ถ้อยคำแสดงความเกลียดชัง",
+      COPYRIGHT: "ละเมิดลิขสิทธิ์",
+      SPAM: "สแปม·โฆษณา",
+      ETC: "อื่นๆ",
+    },
+    statuses: {
+      PENDING: "ได้รับแล้ว",
+      ACTIONED: "ดำเนินการแล้ว",
+      DISMISSED: "ไม่พบการละเมิด",
+    },
+    statusGuides: {
+      PENDING: "ทีมงานกำลังตรวจสอบ เราจะแจ้งให้ทราบเมื่อดำเนินการเสร็จ",
+      ACTIONED: "เราได้ตรวจสอบรายงานของคุณและดำเนินการตามนโยบายแล้ว ขอบคุณที่ช่วยกันดูแลชุมชน",
+      DISMISSED: "จากการตรวจสอบ ไม่พบการละเมิดนโยบาย",
+    },
+  },
+  myReports: {
+    empty: "ยังไม่มีประวัติการรายงาน",
+    reportedAt: "รายงานเมื่อ {date}",
+    detailLabel: "สิ่งที่คุณเขียน",
+    noDetail: "ไม่ได้กรอกรายละเอียด",
+    resultLabel: "ผลการดำเนินการ",
+    handledAt: "ดำเนินการเมื่อ {date}",
   },
   usageHistory: {
     expiresUntil: "ใช้ได้ถึง {date}",

@@ -147,6 +147,7 @@ const zh = {
     collapse: "收起",
     assetAlt: "{name} 素材",
     commentMenu: "评论菜单",
+    universeMenu: "角色菜单",
     commentsCount: "{count} 条评论",
     myProfileAlt: "我的头像",
     loggedInCommentPlaceholder: "不适当的评论可能会被删除",
@@ -198,6 +199,7 @@ const zh = {
   profilePopover: {
     notice: "公告",
     customerService: "客服中心",
+    myReports: "举报记录",
     persona: "我的人格设定",
     contentSettings: "内容设置",
     loginWithKakao: "使用 Kakao 账号开始",
@@ -217,6 +219,38 @@ const zh = {
     bl: "BL",
     horror: "恐怖",
     mystery: "推理",
+  },
+  report: {
+    targetTypes: {
+      COMMENT: "评论",
+      UNIVERSE: "角色",
+    },
+    reasons: {
+      SEXUAL: "色情内容",
+      VIOLENCE: "暴力内容",
+      HATE: "仇恨言论",
+      COPYRIGHT: "侵犯版权",
+      SPAM: "垃圾信息·广告",
+      ETC: "其他",
+    },
+    statuses: {
+      PENDING: "已受理",
+      ACTIONED: "已处理",
+      DISMISSED: "未违规",
+    },
+    statusGuides: {
+      PENDING: "运营团队正在审核，处理完成后会通知你",
+      ACTIONED: "我们已审核你的举报，并根据运营政策进行了处理。感谢你的协助",
+      DISMISSED: "经审核，未发现违反运营政策的情况",
+    },
+  },
+  myReports: {
+    empty: "还没有举报记录",
+    reportedAt: "{date} 举报",
+    detailLabel: "我填写的内容",
+    noDetail: "未填写内容",
+    resultLabel: "处理结果",
+    handledAt: "处理时间 {date}",
   },
   usageHistory: {
     expiresUntil: "有效期至 {date}",

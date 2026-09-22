@@ -195,6 +195,7 @@ const SearchLanding = () => {
               ))}
             </div>
           }
+          emptyMood="search"
           emptyMessage={t("searchResults.empty")}
         >
           <div className="grid grid-cols-1 gap-2 @lg:grid-cols-2 @2xl:grid-cols-3">
@@ -239,7 +240,8 @@ const SearchLanding = () => {
                 )}
               </CardGrid>
             }
-            emptyMessage={t("searchResults.empty")}
+            emptyMood="search"
+          emptyMessage={t("searchResults.empty")}
           >
             <CardGrid size="S">
               {characterItems.map(({ card }) => (

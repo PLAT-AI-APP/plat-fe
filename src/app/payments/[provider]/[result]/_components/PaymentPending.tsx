@@ -11,31 +11,84 @@ import { EASE_OUT } from "@/constants/motion";
 /*
  * 결제 결과를 기다리는 화면.
  *
- * 확인 중(confirming/checking)에는 토큰 둘레를 빛줄기가 돌고 토큰이 뒤집히며
+ * 서버에 묻고 있는 동안(working)에는 토큰 둘레를 빛줄기가 돌고 토큰이 뒤집히며
  * "지금 처리 중"임을 보여준다. 결제 도중 창을 닫으면 곤란하므로 안내 문구는
- * "닫지 말고 기다려 달라"를 먼저 말한다. 결론이 늦어진 delayed 와 지급 대기인
- * granting 은 같은 무대에서 움직임만 멈추고 버튼을 보여준다.
+ * "닫지 말고 기다려 달라"를 먼저 말한다. 더 기다려도 소용없는 상태는 같은
+ * 무대에서 움직임을 멈추고 뱃지와 버튼으로 다음 행동을 안내한다.
  */
 
-export type PendingPhase = "confirming" | "checking" | "delayed" | "granting";
+export type PendingPhase =
+  | "confirming"
+  | "checking"
+  | "granting"
+  | "delayed"
+  /** PC 에서 결제창을 새 창으로 띄워 두고 기다리는 중 */
+  | "popup"
+  /** 결제창이 닫혔는데 아직 결과를 받지 못했다 */
+  | "popupClosed"
+  /** (결제창 안) 결과를 원래 창에 넘겼다 */
+  | "handedOff";
 
-const COPY: Record<PendingPhase, { title: string; hint: string }> = {
+type Badge = "warn" | "muted" | "done";
+
+interface PhaseConfig {
+  title: string;
+  hint: string;
+  /** 서버·결제창의 답을 기다리며 움직이는 중인지 */
+  working: boolean;
+  badge?: Badge;
+  /** actions 를 따로 넘기지 않았을 때 충전 페이지·홈 버튼을 보여줄지 */
+  links?: boolean;
+}
+
+const PHASES: Record<PendingPhase, PhaseConfig> = {
   confirming: {
     title: "tokenCharge.payment.confirmingTitle",
     hint: "tokenCharge.payment.confirmingHint",
+    working: true,
   },
   checking: {
     title: "tokenCharge.payment.confirmingTitle",
     hint: "tokenCharge.payment.checkingHint",
+    working: true,
+  },
+  // 결제는 끝났고 노트 지급만 남았다. 계속 확인하되 기다리지 않아도 되게 버튼을 준다.
+  granting: {
+    title: "tokenCharge.payment.grantingTitle",
+    hint: "tokenCharge.payment.grantingHint",
+    working: true,
+    links: true,
   },
   delayed: {
     title: "tokenCharge.payment.delayedTitle",
     hint: "tokenCharge.payment.delayedHint",
+    working: false,
+    badge: "warn",
+    links: true,
   },
-  granting: {
-    title: "tokenCharge.payment.grantingTitle",
-    hint: "tokenCharge.payment.grantingHint",
+  popup: {
+    title: "tokenCharge.payment.popupTitle",
+    hint: "tokenCharge.payment.popupHint",
+    working: true,
   },
+  popupClosed: {
+    title: "tokenCharge.payment.popupClosedTitle",
+    hint: "tokenCharge.payment.popupClosedHint",
+    working: false,
+    badge: "muted",
+  },
+  handedOff: {
+    title: "tokenCharge.payment.handedOffTitle",
+    hint: "tokenCharge.payment.handedOffHint",
+    working: false,
+    badge: "done",
+  },
+};
+
+const BADGE_CLASS: Record<Badge, string> = {
+  warn: "bg-warning text-on-brand",
+  muted: "bg-card text-font-2",
+  done: "bg-brand text-on-brand",
 };
 
 /** 토큰 둘레를 서로 다른 속도로 도는 빛 알갱이 */
@@ -62,6 +115,39 @@ const ClockIcon = () => (
   </svg>
 );
 
+const WindowIcon = () => (
+  <svg viewBox="0 0 24 24" className="size-5" fill="none" aria-hidden>
+    <rect
+      x="4"
+      y="5"
+      width="16"
+      height="14"
+      rx="2.5"
+      stroke="currentColor"
+      strokeWidth="2"
+    />
+    <path d="M4 9.5h16" stroke="currentColor" strokeWidth="2" />
+  </svg>
+);
+
+const CheckIcon = () => (
+  <svg viewBox="0 0 24 24" className="size-5" fill="none" aria-hidden>
+    <path
+      d="m6 12.5 4 4 8-9"
+      stroke="currentColor"
+      strokeWidth="2.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+const BADGE_ICON: Record<Badge, React.ReactNode> = {
+  warn: <ClockIcon />,
+  muted: <WindowIcon />,
+  done: <CheckIcon />,
+};
+
 /** 제목 뒤에서 차례로 튀는 점 세 개 */
 const BouncingDots = () => (
   <span aria-hidden className="ml-1 inline-flex gap-1 align-middle">
@@ -83,14 +169,16 @@ const BouncingDots = () => (
 
 interface PaymentPendingProps {
   phase: PendingPhase;
+  /** 기본 버튼(충전 페이지·홈) 대신 보여줄 버튼. 결제창 대기처럼 동작이 필요한 자리에서 쓴다. */
+  actions?: React.ReactNode;
 }
 
-const PaymentPending = ({ phase }: PaymentPendingProps) => {
+const PaymentPending = ({ phase, actions }: PaymentPendingProps) => {
   const t = useTranslations();
   const reduceMotion = useReducedMotion() ?? false;
-  const working = phase === "confirming" || phase === "checking";
+  const config = PHASES[phase];
+  const { working, badge } = config;
   const moving = working && !reduceMotion;
-  const copy = COPY[phase];
 
   return (
     <div className="relative flex w-full flex-col items-center">
@@ -187,7 +275,8 @@ const PaymentPending = ({ phase }: PaymentPendingProps) => {
             <m.div
               className={cn(
                 "drop-shadow-[0_10px_24px_rgba(255,122,0,0.35)] transition-[filter,opacity] duration-slow",
-                phase === "delayed" && "opacity-70 grayscale-[0.6]",
+                (phase === "delayed" || phase === "popupClosed") &&
+                  "opacity-70 grayscale-[0.6]",
               )}
               animate={moving ? { rotateY: [0, 0, 360] } : { rotateY: 0 }}
               transition={{
@@ -201,19 +290,19 @@ const PaymentPending = ({ phase }: PaymentPendingProps) => {
             </m.div>
           </m.div>
 
-          {/* 멈춘 상태에서는 시계 뱃지로 "기다리는 중"을 알린다 */}
+          {/* 멈춘 상태는 뱃지 하나로 "왜 멈췄는지"를 알린다 */}
           <AnimatePresence>
-            {!working && (
+            {badge && (
               <m.span
+                key={badge}
                 aria-hidden
                 className={cn(
                   "absolute -right-2 -bottom-1 flex size-9 items-center justify-center rounded-full ring-4 ring-dark",
-                  phase === "delayed"
-                    ? "bg-warning text-on-brand"
-                    : "bg-brand text-on-brand",
+                  BADGE_CLASS[badge],
                 )}
                 initial={reduceMotion ? false : { scale: 0, rotate: -90 }}
                 animate={{ scale: 1, rotate: 0 }}
+                exit={{ scale: 0 }}
                 transition={{
                   type: "spring",
                   stiffness: 420,
@@ -221,7 +310,7 @@ const PaymentPending = ({ phase }: PaymentPendingProps) => {
                   delay: 0.2,
                 }}
               >
-                <ClockIcon />
+                {BADGE_ICON[badge]}
               </m.span>
             )}
           </AnimatePresence>
@@ -231,7 +320,7 @@ const PaymentPending = ({ phase }: PaymentPendingProps) => {
       {/* 문구 */}
       <div role="status" className="mt-2 flex flex-col items-center">
         <h2 className="heading-2 text-font-0">
-          {t(copy.title)}
+          {t(config.title)}
           {working && <BouncingDots />}
         </h2>
 
@@ -244,7 +333,7 @@ const PaymentPending = ({ phase }: PaymentPendingProps) => {
             exit={{ opacity: 0, y: -6 }}
             transition={{ duration: 0.3, ease: EASE_OUT }}
           >
-            {t(copy.hint)}
+            {t(config.hint)}
           </m.p>
         </AnimatePresence>
       </div>
@@ -263,19 +352,23 @@ const PaymentPending = ({ phase }: PaymentPendingProps) => {
         </div>
       )}
 
-      {!working && (
+      {(actions || config.links) && (
         <m.div
           className="mt-10 flex w-full max-w-80 flex-col gap-2.5"
           initial={reduceMotion ? false : { opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.5, ease: EASE_OUT }}
         >
-          <ButtonLink href="/token-charge" size="lg" fullWidth>
-            {t("tokenCharge.payment.backToCharge")}
-          </ButtonLink>
-          <ButtonLink href="/" variant="secondary" size="lg" fullWidth>
-            {t("tokenCharge.payment.goHome")}
-          </ButtonLink>
+          {actions ?? (
+            <>
+              <ButtonLink href="/token-charge" size="lg" fullWidth>
+                {t("tokenCharge.payment.backToCharge")}
+              </ButtonLink>
+              <ButtonLink href="/" variant="secondary" size="lg" fullWidth>
+                {t("tokenCharge.payment.goHome")}
+              </ButtonLink>
+            </>
+          )}
         </m.div>
       )}
     </div>

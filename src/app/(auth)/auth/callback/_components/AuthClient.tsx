@@ -1,18 +1,44 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
 import { useSocialTokenMutation } from "@/api/auth/PostSocialToken";
-import { PENDING_WELCOME_CREDIT_DIALOG_KEY } from "@/constants/auth";
+import {
+  PENDING_WELCOME_CREDIT_DIALOG_KEY,
+  SOCIAL_LOGIN_PROVIDER_KEY,
+} from "@/constants/auth";
+import AuthProcessing, { type SocialProvider } from "./AuthProcessing";
+
+const PROVIDERS: SocialProvider[] = ["kakao", "google"];
+
+/**
+ * 로그인 버튼을 누를 때 남긴 수단. 모르거나 형식이 다르면 null — 수단 없이 안내한다.
+ * 지우지 않는다: 지우면 이동 직전 다시 그릴 때 문구가 바뀌어 깜빡이고, 다음 로그인 때 덮어쓴다.
+ */
+const readProvider = (): SocialProvider | null => {
+  try {
+    const saved = sessionStorage.getItem(SOCIAL_LOGIN_PROVIDER_KEY);
+    return PROVIDERS.find((provider) => provider === saved) ?? null;
+  } catch {
+    return null;
+  }
+};
+
+// 이 화면에 머무는 동안 값이 바뀌지 않으므로 구독할 것이 없다.
+const subscribeNothing = () => () => {};
 
 interface AuthClientProps {
   code: string;
 }
 
 const AuthClient = ({ code }: AuthClientProps) => {
-  const t = useTranslations("auth.callback");
   const router = useRouter();
+  // 서버 렌더에는 sessionStorage 가 없어 null 로 그리고, 브라우저에서 곧바로 저장된 수단으로 바꾼다.
+  const provider = useSyncExternalStore(
+    subscribeNothing,
+    readProvider,
+    () => null,
+  );
   const { mutate } = useSocialTokenMutation();
   const isRequested = useRef(false); // StrictMode에서 API가 두 번 중복 호출되는 것을 방어합니다.
 
@@ -45,8 +71,9 @@ const AuthClient = ({ code }: AuthClientProps) => {
   }, [code, mutate, router]);
 
   return (
-    <div className="flex min-h-dvh flex-col items-center justify-center bg-dark">
-      <h1 className="title-1 animate-pulse text-font-1">{t("processing")}</h1>
+    // AuthLayout 이 가운데 정렬이라 폭을 직접 채우지 않으면 내용 폭으로 줄어든다.
+    <div className="flex w-full self-stretch">
+      <AuthProcessing provider={provider} />
     </div>
   );
 };

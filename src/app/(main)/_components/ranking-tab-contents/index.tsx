@@ -50,6 +50,7 @@ const RankingTabContents = () => {
         isError={isError}
         error={error}
         isEmpty={items.length === 0}
+        emptyMood="peek"
         emptyMessage={t("rankingPage.empty")}
         onRetry={refetch}
         pendingFallback={

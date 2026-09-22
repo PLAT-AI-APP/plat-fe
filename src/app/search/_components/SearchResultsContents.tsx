@@ -216,6 +216,7 @@ const SearchResultsContents = ({
         <QueryStateBoundary
           isPending={false}
           isEmpty={isTooShort || isEmpty}
+          emptyMood="search"
           emptyMessage={
             isTooShort
               ? t("searchResults.minLength", {
