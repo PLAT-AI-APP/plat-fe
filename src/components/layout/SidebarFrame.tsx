@@ -81,7 +81,10 @@ const SidebarFrame = ({
           } as CSSProperties
         }
         className={cn(
-          "grid overflow-hidden transition-[grid-template-columns] duration-slow ease-out",
+          // 열 폭은 애니메이션하지 않는다. 폭을 300ms 동안 매 프레임 바꾸면 오른쪽 콘텐츠 전체(카드
+          // 그리드 등)가 매 프레임 레이아웃을 다시 해 무거운 화면에서 끊겼다. 접힘의 움직임은
+          // 사이드바 라벨의 opacity/transform 전환(Sidebar.tsx)이 맡는다.
+          "grid overflow-hidden",
           isSidebarInline
             ? "[grid-template-columns:var(--sidebar-width)_minmax(0,1fr)]"
             : "[grid-template-columns:minmax(0,1fr)]",
