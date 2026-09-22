@@ -39,18 +39,6 @@ const ko = {
       submit: "저장",
       successToast: "유저노트가 저장되었습니다",
     },
-    refundRequest: {
-      title: "환불 요청",
-      productLabel: "결제 상품",
-      amountLabel: "결제 금액",
-      creditLabel: "지급 노트",
-      refundableUntilLabel: "환불 가능 기한",
-      notice: "노트를 하나도 사용하지 않은 결제만 결제 후 7일 이내 전액 환불할 수 있어요. 요청은 운영팀 확인 후 처리돼요.",
-      reasonLabel: "환불 사유 (선택)",
-      reasonPlaceholder: "환불 사유를 알려주시면 서비스 개선에 참고할게요",
-      submit: "환불 요청하기",
-      successToast: "환불 요청이 접수되었습니다",
-    },
     report: {
       titleComment: "{nickname}님의 댓글에 어떤 문제가 있나요?",
       titleUniverse: "{name} 캐릭터에 어떤 문제가 있나요?",

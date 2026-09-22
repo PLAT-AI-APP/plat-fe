@@ -44,18 +44,6 @@ const en: typeof ko = {
       submit: "Save",
       successToast: "Your user note has been saved",
     },
-    refundRequest: {
-      title: "Request refund",
-      productLabel: "Product",
-      amountLabel: "Amount paid",
-      creditLabel: "Notes received",
-      refundableUntilLabel: "Refund deadline",
-      notice: "Only payments whose notes are completely unused can be fully refunded within 7 days of payment. Requests are processed after review by our team.",
-      reasonLabel: "Reason (optional)",
-      reasonPlaceholder: "Tell us why so we can improve the service",
-      submit: "Request refund",
-      successToast: "Your refund request has been submitted",
-    },
     report: {
       titleComment: "What's wrong with {nickname}'s comment?",
       titleUniverse: "What's wrong with the character {name}?",
