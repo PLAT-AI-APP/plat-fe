@@ -122,7 +122,7 @@ const FollowModal = ({
       isFetchingNextPage: activeQuery.isFetchingNextPage,
       fetchNextPage: activeQuery.fetchNextPage,
     },
-    { rootMargin: "200px" },
+    // rootMargin 기본값(아래 800px)이면 모달 목록도 바닥 전에 다음 쪽을 받는다.
   );
 
   const handleToggleFollow = (targetUserId: string, isFollowing: boolean) => {

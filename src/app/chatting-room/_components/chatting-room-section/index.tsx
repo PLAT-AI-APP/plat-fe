@@ -155,6 +155,8 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
 
   const { targetRef: topSentinelRef } = useIntersectionObserver({
     onIntersect: handleLoadOlderMessages,
+    // 여기서는 위로 올릴수록 과거를 부른다. 기본값(아래쪽 여유)과 반대다.
+    rootMargin: "600px 0px 0px 0px",
     enabled: Boolean(hasNextPage) && !isMessagesPending,
   });
 
