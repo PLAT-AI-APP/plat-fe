@@ -10,6 +10,7 @@ import MessageList from "@/components/chat/MessageList";
 import SkeletonChatMessages from "@/components/skeleton/SkeletonChatMessages";
 import { ErrorState } from "@/components/state";
 import { useChatTurn } from "@/hooks/chat/useChatTurn";
+import { useStoredChatModel } from "@/hooks/chat/useStoredChatModel";
 import { useIntersectionObserver } from "@/hooks/dom/useIntersectionObserver";
 import { useScrollTimeout } from "@/hooks/dom/useScrollTiemout";
 import { toAiModel } from "@/lib/chatModel";
@@ -110,13 +111,17 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
     () => chatCatalog?.models.map(toAiModel) ?? [],
     [chatCatalog],
   );
-  // 서버에 방별 모델 저장이 없어 화면에서만 기억하고, 고르기 전엔 목록 첫 모델을 쓴다.
-  const [selectedModelId, setSelectedModelId] = useState<string | null>(null);
+  // 서버에 방별 모델 저장이 없어 브라우저에 기억한다. 고른 적이 없거나 그 모델이 카탈로그에서
+  // 빠졌으면 목록 첫 모델을 쓴다.
+  const { selectedModelId, selectModel } = useStoredChatModel(roomId);
   const currentAi = models.find((model) => model.id === selectedModelId) ?? models[0];
 
-  const handleCurrentAi = useCallback((model: AIModelType) => {
-    setSelectedModelId(model.id);
-  }, []);
+  const handleCurrentAi = useCallback(
+    (model: AIModelType) => {
+      selectModel(model.id);
+    },
+    [selectModel],
+  );
 
   const chatFormRef = useRef<ChatFormHandle>(null);
   const handleTurnFailed = useCallback((message: string) => {
