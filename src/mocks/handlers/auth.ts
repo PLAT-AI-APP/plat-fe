@@ -214,6 +214,7 @@ export const authHandlers = [
       {
         accessToken: "mock-access-token",
         isNew: firstLoginEmails.has(username),
+        welcomeCredit: firstLoginEmails.has(username) ? 300 : null,
         // toast 디자인 확인용 MSW 계정에서만 내려주는 검수 전용 필드입니다.
         ...(toastTestCase && {
           toastDescription: toastTestCase.description,
@@ -285,6 +286,7 @@ export const authHandlers = [
     return HttpResponse.json({
       accessToken: "mock-social-access-token",
       isNew: code === "new",
+      welcomeCredit: code === "new" ? 300 : null,
     });
   }),
 
