@@ -1,6 +1,8 @@
+import { Fragment, useMemo } from "react";
 import InlineEditActions from "@/components/chat/InlineEditActions";
 import { useInlineTextEdit } from "@/hooks/form/useInlineTextEdit";
 import { Pen, Trash } from "@/icons";
+import { splitUserNarration } from "@/lib/platParse";
 
 interface UserChatBubbleProps {
   text: string;
@@ -25,6 +27,10 @@ const UserChatBubble = ({
     handleKeyDown,
     handleFocus,
   } = useInlineTextEdit({ value: text, onSubmit: onUpdate });
+
+  // *…* 로 감싼 부분은 지문이라 캐릭터 응답의 지문과 같은 톤으로 낮춰 그린다. 수정할 때는
+  // 원문을 그대로 고쳐야 하므로 입력란에는 * 를 남겨 둔다.
+  const segments = useMemo(() => splitUserNarration(text), [text]);
 
   if (isEditing) {
     return (
@@ -69,8 +75,16 @@ const UserChatBubble = ({
         </div>
       )}
 
-      <span className="body-5 rounded-[16px_16px_0px_16px] bg-brand-opacity-2 px-3 py-2 text-font-1">
-        {text}
+      <span className="body-5 whitespace-pre-wrap rounded-[16px_16px_0px_16px] bg-brand-opacity-2 px-3 py-2 text-font-1">
+        {segments.map((segment, index) =>
+          segment.isNarration ? (
+            <em key={index} className="text-font-2 not-italic">
+              {segment.value}
+            </em>
+          ) : (
+            <Fragment key={index}>{segment.value}</Fragment>
+          ),
+        )}
       </span>
     </div>
   );
