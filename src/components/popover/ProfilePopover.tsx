@@ -199,7 +199,9 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
       {isLoggedIn ? (
         // Link 가 이동을 맡는다. 예전에는 onClick 에서 router.push 를 한 번 더 불러 같은 이동이 두 번 나갔다.
         <Link
-          onClick={onClose}
+          // onClose(=useToggle의 toggle)는 받은 이벤트에 preventDefault를 건다. 그대로 넘기면
+          // Link가 기본 동작이 막힌 클릭으로 보고 이동을 건너뛴다 — 이벤트를 넘기지 않는다.
+          onClick={() => onClose()}
           href={`/profile/${userId}`}
           className="flex items-center justify-between rounded-lg p-2 transition-colors hover:bg-btn-hover"
         >
