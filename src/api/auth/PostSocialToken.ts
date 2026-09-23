@@ -5,6 +5,8 @@ import { useAuthStore } from "@/store/useAuthStore";
 interface SocialTokenResponse {
   accessToken?: string;
   isNew?: boolean;
+  /** 이번 로그인으로 지급되는 웰컴 크레딧. 최초 로그인이 아니거나 정책이 꺼져 있으면 null */
+  welcomeCredit?: number | null;
 }
 
 export const postSocialToken = async (code: string) => {

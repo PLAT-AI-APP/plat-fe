@@ -150,7 +150,8 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
             data.toastDescription,
           );
 
-          if (data.isNew) {
+          // 최초 로그인이어도 웰컴 크레딧 정책이 꺼져 있으면 지급이 없으므로 안내하지 않는다.
+          if (data.welcomeCredit != null) {
             handleFirstLoginSuccess();
             return;
           }
