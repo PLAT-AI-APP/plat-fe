@@ -244,7 +244,7 @@ const ChattingSidebar = ({
             className="h-full"
           >
             {sidebarDepth === "MEMORY" ? (
-              <ChattingMemoryView roomId={roomId} onBack={handleDepthBack} />
+              <ChattingMemoryView onBack={handleDepthBack} />
             ) : sidebarDepth === "USER_NOTE" ? (
               <ChattingUserNoteView roomId={roomId} onBack={handleDepthBack} />
             ) : sidebarDepth === "ASSET_GALLERY" ? (
