@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import { authAxios } from "..";
+import { chatAxios } from "..";
 import { AppError } from "@/type/api";
 import type { ChatCatalog } from "@/type/chat";
 import { useAuthReady } from "@/hooks/data/useAuthReady";
 import { chatQueryKeys } from "./queryKeys";
 
 const getChatModels = async () => {
-  const response = await authAxios.get<ChatCatalog>("/chat/models");
+  const response = await chatAxios.get<ChatCatalog>("/chat/models");
 
   return response.data;
 };

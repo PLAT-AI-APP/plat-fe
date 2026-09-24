@@ -76,6 +76,14 @@ let lastApiErrorToast:
     }
   | undefined;
 
+/**
+ * AI 채팅(`/chat/**`) 오리진. 백엔드에서 채팅은 별도 앱(ai 도메인)이 받는다.
+ * 비어 있으면 일반 API 오리진을 그대로 쓴다(목업·단일 서버 환경).
+ */
+export const CHAT_BASE_URI =
+  process.env.NEXT_PUBLIC_CHAT_BASE_URI?.trim() ||
+  process.env.NEXT_PUBLIC_BASE_URI;
+
 const BASE_CONFIG = {
   baseURL: process.env.NEXT_PUBLIC_BASE_URI,
   headers: { "Content-Type": "application/json" },
@@ -312,6 +320,13 @@ export const authAxios: AxiosInstance = axios.create({
   withCredentials: true,
 });
 
+/** AI 채팅 API용. 오리진만 다르고 인증·재발급 동작은 authAxios와 같습니다(토큰 재발급은 일반 API 오리진으로 나갑니다). */
+export const chatAxios: AxiosInstance = axios.create({
+  ...BASE_CONFIG,
+  baseURL: CHAT_BASE_URI,
+  withCredentials: true,
+});
+
 /** 요청 인터셉터 */
 const onRequest = (
   config: InternalAxiosRequestConfig,
@@ -449,4 +464,10 @@ authAxios.interceptors.request.use((c) => onRequest(c, true));
 authAxios.interceptors.response.use(
   onResponseSuccess,
   (err: AxiosError<ApiErrorResponse>) => onResponseError(err, authAxios),
+);
+
+chatAxios.interceptors.request.use((c) => onRequest(c, true));
+chatAxios.interceptors.response.use(
+  onResponseSuccess,
+  (err: AxiosError<ApiErrorResponse>) => onResponseError(err, chatAxios),
 );
