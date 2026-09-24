@@ -1,7 +1,7 @@
 import { useAuthStore } from "@/store/useAuthStore";
 import { useLocaleStore } from "@/store/useLocaleStore";
 import { refreshAccessToken } from "@/api/auth/postRefresh";
-import type { AppError } from "@/api";
+import { CHAT_BASE_URI, type AppError } from "@/api";
 import { getApiErrorMessage } from "@/lib/apiError";
 
 export interface ChatStreamHandlers {
@@ -122,7 +122,7 @@ export const consumeChatStream = async ({
   /** 종료 이벤트까지 받았으면 true, 그 전에 연결이 닫혔으면 false */
   const connect = async (allowRetry: boolean): Promise<boolean> => {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URI ?? ""}${SSE_ENDPOINT(turnId)}`,
+      `${CHAT_BASE_URI ?? ""}${SSE_ENDPOINT(turnId)}`,
       {
         method: "GET",
         headers: buildHeaders(cursor),

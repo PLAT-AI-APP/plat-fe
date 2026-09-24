@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { authAxios } from "..";
+import { chatAxios } from "..";
 import { AppError } from "@/type/api";
 import type { ChatStartRequest, ChatStartResponse } from "@/type/chat";
 
@@ -8,7 +8,7 @@ import type { ChatStartRequest, ChatStartResponse } from "@/type/chat";
  * 실제 토큰은 이 turnId로 SSE를 따로 구독해서 받습니다.
  */
 const postChatStart = async (request: ChatStartRequest) => {
-  const response = await authAxios.post<ChatStartResponse>("/chat", request);
+  const response = await chatAxios.post<ChatStartResponse>("/chat", request);
 
   return response.data;
 };
