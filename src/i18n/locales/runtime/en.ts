@@ -15,6 +15,7 @@ const en = {
     home: "Explore characters",
     search: "Search",
     usageHistory: "Usage history",
+    earnings: "My earnings",
     myReports: "My reports",
   },
   errorPage: {

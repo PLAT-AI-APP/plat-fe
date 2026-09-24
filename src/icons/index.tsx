@@ -41,6 +41,7 @@ export { default as SendFill } from "./SendFill";
 // 5. 유저 및 시스템
 export { default as User } from "./User";
 export { default as Persona } from "./Persona";
+export { default as Coin } from "./Coin";
 export { default as Home } from "./Home";
 export { default as Gear } from "./Gear";
 export { default as Global } from "./Global";

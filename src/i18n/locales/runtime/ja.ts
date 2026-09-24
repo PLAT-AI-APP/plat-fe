@@ -12,6 +12,7 @@ const ja: typeof en = {
     home: "キャラクターを探す",
     search: "検索",
     usageHistory: "利用履歴",
+    earnings: "マイ収益",
     myReports: "通報履歴",
   },
   errorPage: {

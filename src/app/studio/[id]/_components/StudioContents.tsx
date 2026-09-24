@@ -7,6 +7,7 @@ import CharacterShowcase from "@/components/character/CharacterShowcase";
 import SortFilter from "@/components/character/SortFilter";
 import { useChangeQueryString } from "@/hooks/navigation/useChangeQueryString";
 import CharacterCreateBanner from "./CharacterCreateBanner";
+import EarningsBanner from "./EarningsBanner";
 import CharacterList from "./character-list";
 import { DUMMY_CHARACTERS as charArray } from "./dummyData";
 import Header from "./Header";
@@ -40,6 +41,7 @@ const StudioContents = ({ id }: StudioContentsProps) => {
             <StudioStats />
           </div>
 
+          <EarningsBanner />
           <CharacterCreateBanner />
         </div>
 

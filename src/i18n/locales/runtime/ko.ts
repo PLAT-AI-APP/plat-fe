@@ -14,6 +14,7 @@ const ko: typeof en = {
     home: "캐릭터 둘러보기",
     search: "검색",
     usageHistory: "사용 내역",
+    earnings: "나의 수익",
     myReports: "신고 내역",
   },
   errorPage: {
