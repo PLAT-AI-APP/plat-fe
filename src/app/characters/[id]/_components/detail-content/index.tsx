@@ -6,6 +6,7 @@ import dayjs from "@/lib/dayjs";
 import { cn } from "@/lib/utils";
 import { useFadeInAfterLoading } from "@/hooks/common/useFadeInAfterLoading";
 import { useModalStore } from "@/store/useModalStore";
+import { usePreloadModalsWhenIdle } from "@/hooks/common/usePreloadModalsWhenIdle";
 import { useUniverseCommentsInfiniteQuery } from "@/api/comment/getUniverseComments";
 import {
   adaptUniverseDetailToCharacterDetail,
@@ -23,6 +24,14 @@ interface CharacterDetailContentProps {
   characterId: string;
 }
 
+/** 문서 위에 떠 있는 헤더의 높이(tokens.css 의 --header-height). */
+const getHeaderHeight = () =>
+  Number.parseFloat(
+    getComputedStyle(document.documentElement).getPropertyValue(
+      "--header-height",
+    ),
+  ) || 0;
+
 const CharacterDetailContent = ({
   characterId,
 }: CharacterDetailContentProps) => {
@@ -30,9 +39,11 @@ const CharacterDetailContent = ({
     data: universe,
     error,
     isError,
-    isLoading,
+    isPending,
     refetch,
   } = useUniverseDetailQuery(characterId);
+  // 인증 확인 전에는 쿼리가 꺼져 있어 isLoading 이 false 다. 데이터가 없으면 로딩으로 본다.
+  const isLoading = isPending && !isError;
   const fadeInClassName = useFadeInAfterLoading(isLoading);
   const character = useMemo(
     () =>
@@ -44,6 +55,8 @@ const CharacterDetailContent = ({
   const commentsCount = commentsData?.pages[0]?.page.totalElements ?? 0;
   const t = useTranslations("characterDetail");
   const openModal = useModalStore((state) => state.openModal);
+  // 이 화면의 주 버튼인 "대화 시작" 모달을 미리 받아 둔다.
+  usePreloadModalsWhenIdle(["CHATTING_START"]);
   const [currentTab, setCurrentTab] = useState<CharacterDetailTab>("settings");
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const settingsRef = useRef<HTMLElement>(null);
@@ -62,56 +75,52 @@ const CharacterDetailContent = ({
     [],
   );
   const currentScenario = character?.scenarios[0];
-  const getScrollContainer = useCallback(
-    () => document.getElementById("page-content"),
-    [],
-  );
   const handleTabChange = useCallback(
     (tab: CharacterDetailTab, targetId: string) => {
-      const scrollContainer = getScrollContainer();
       const targetSection = document.getElementById(targetId);
 
-      if (!scrollContainer || !targetSection) return;
+      if (!targetSection) return;
 
       if (programmaticScrollTimeoutRef.current) {
         clearTimeout(programmaticScrollTimeoutRef.current);
       }
 
-      // hash 기본 이동은 navigation guard와 충돌할 수 있어, 실제 스크롤 컨테이너를 직접 이동시킵니다.
+      // hash 기본 이동은 navigation guard와 충돌할 수 있어 문서 스크롤을 직접 옮깁니다.
+      // 고정 헤더가 위를 덮으므로 그 높이만큼 더 띄웁니다.
       const targetTop =
-        targetSection.getBoundingClientRect().top -
-        scrollContainer.getBoundingClientRect().top +
-        scrollContainer.scrollTop -
+        targetSection.getBoundingClientRect().top +
+        window.scrollY -
+        getHeaderHeight() -
         72;
 
       isProgrammaticScrollRef.current = true;
       setCurrentTab(tab);
-      scrollContainer.scrollTo({ top: targetTop, behavior: "smooth" });
+      window.scrollTo({ top: targetTop, behavior: "smooth" });
       programmaticScrollTimeoutRef.current = setTimeout(() => {
         isProgrammaticScrollRef.current = false;
       }, 700);
     },
-    [getScrollContainer],
+    [],
   );
 
   useEffect(() => {
-    const scrollContainer = getScrollContainer();
+    // 스크롤 이벤트마다 위치를 여러 번 읽으면 레이아웃 계산이 반복된다. 한 프레임에 한 번만 잰다.
+    let frameId = 0;
 
-    if (!scrollContainer) return;
-
-    const handleScroll = () => {
+    const updateCurrentTab = () => {
+      frameId = 0;
       if (isProgrammaticScrollRef.current) return;
 
+      const root = document.documentElement;
       const isScrolledToBottom =
-        scrollContainer.scrollTop + scrollContainer.clientHeight >=
-        scrollContainer.scrollHeight - 2;
+        window.scrollY + window.innerHeight >= root.scrollHeight - 2;
 
       if (isScrolledToBottom) {
         setCurrentTab("comments");
         return;
       }
 
-      const containerTop = scrollContainer.getBoundingClientRect().top;
+      const containerTop = getHeaderHeight();
       const entries = Object.entries(sectionRefs) as [
         CharacterDetailTab,
         typeof settingsRef,
@@ -131,11 +140,18 @@ const CharacterDetailContent = ({
       }
     };
 
-    scrollContainer.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
+    const handleScroll = () => {
+      if (!frameId) frameId = requestAnimationFrame(updateCurrentTab);
+    };
 
-    return () => scrollContainer.removeEventListener("scroll", handleScroll);
-  }, [getScrollContainer, sectionRefs]);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    updateCurrentTab();
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (frameId) cancelAnimationFrame(frameId);
+    };
+  }, [sectionRefs]);
 
   useEffect(() => {
     return () => {
@@ -209,7 +225,7 @@ const CharacterDetailContent = ({
         />
 
         <main className="flex min-w-0 flex-col">
-          <div className="sticky top-0 z-[1] bg-dark">
+          <div className="sticky top-(--header-height) z-[1] bg-dark">
             <DetailTabs
               commentsCount={commentsCount}
               currentTab={currentTab}

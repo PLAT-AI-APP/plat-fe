@@ -9,25 +9,37 @@ import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
 import type { DialogTypeMap } from "@/type/dialog";
 
-const DIALOG_COMPONENTS: {
+const DIALOG_LOADERS = {
+  CHAT_DELETE: () => import("./ChatDeleteDialog"),
+  CHAT_LEAVE: () => import("./ChatLeaveDialog"),
+  CHAT_RESTART: () => import("./ChatRestartDialog"),
+  COMMENT_DELETE: () => import("./CommentDeleteDialog"),
+  DRAFT_OVERWRITE: () => import("./DraftOverwriteDialog"),
+  DRAFT_SAVE_OVERWRITE: () => import("./DraftSaveOverwriteDialog"),
+  LOGIN_REQUIRED: () => import("./LoginRequiredDialog"),
+  PERSONA_DELETE: () => import("./PersonaDeleteDialog"),
+  SIGNUP_COMPLETE: () => import("./SignupCompleteDialog"),
+  UNSAVED_CHANGES: () => import("./UnsavedChangesDialog"),
+  USER_BLOCK: () => import("./UserBlockDialog"),
+  WELCOME_CREDIT: () => import("./WelcomeCreditDialog"),
+  WITHDRAWAL_COMPLETE: () => import("./WithdrawalCompleteDialog"),
+  WITHDRAWAL_CONFIRM: () => import("./WithdrawalConfirmDialog"),
+} satisfies Record<keyof DialogTypeMap, () => Promise<unknown>>;
+
+const DIALOG_COMPONENTS = Object.fromEntries(
+  Object.entries(DIALOG_LOADERS).map(([type, loader]) => [
+    type,
+    dynamic(loader as () => Promise<{ default: ComponentType<object> }>),
+  ]),
+) as unknown as {
   [K in keyof DialogTypeMap]: ComponentType<
     DialogTypeMap[K] & { onClose: () => void }
   >;
-} = {
-  CHAT_DELETE: dynamic(() => import("./ChatDeleteDialog")),
-  CHAT_LEAVE: dynamic(() => import("./ChatLeaveDialog")),
-  CHAT_RESTART: dynamic(() => import("./ChatRestartDialog")),
-  COMMENT_DELETE: dynamic(() => import("./CommentDeleteDialog")),
-  DRAFT_OVERWRITE: dynamic(() => import("./DraftOverwriteDialog")),
-  DRAFT_SAVE_OVERWRITE: dynamic(() => import("./DraftSaveOverwriteDialog")),
-  LOGIN_REQUIRED: dynamic(() => import("./LoginRequiredDialog")),
-  PERSONA_DELETE: dynamic(() => import("./PersonaDeleteDialog")),
-  SIGNUP_COMPLETE: dynamic(() => import("./SignupCompleteDialog")),
-  UNSAVED_CHANGES: dynamic(() => import("./UnsavedChangesDialog")),
-  USER_BLOCK: dynamic(() => import("./UserBlockDialog")),
-  WELCOME_CREDIT: dynamic(() => import("./WelcomeCreditDialog")),
-  WITHDRAWAL_COMPLETE: dynamic(() => import("./WithdrawalCompleteDialog")),
-  WITHDRAWAL_CONFIRM: dynamic(() => import("./WithdrawalConfirmDialog")),
+};
+
+/** 다이얼로그 코드를 미리 받아 둔다(ModalRegistry 의 preloadModal 과 같은 용도). */
+export const preloadDialog = (type: keyof DialogTypeMap) => {
+  void DIALOG_LOADERS[type]().catch(() => undefined);
 };
 
 const DialogManager = () => {

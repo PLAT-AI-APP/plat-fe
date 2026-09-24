@@ -50,6 +50,7 @@ const en: typeof ko = {
       upload: "Upload",
       invalidType: "Only jpg, png, and webp image files are allowed.",
       invalidSize: "File size can be up to 5MB.",
+      uploading: "Uploading image",
       uploadFailed: "Failed to upload the image. Please try again.",
     },
     details: {
@@ -107,6 +108,7 @@ const en: typeof ko = {
       closeGuide: "Close asset guide",
       invalidType: "Only jpg, png, and webp image files are allowed.",
       invalidSize: "File size can be up to 5MB.",
+      uploading: "Uploading image",
       uploadFailed: "Failed to upload the asset image. Please try again.",
     },
     scenario: {

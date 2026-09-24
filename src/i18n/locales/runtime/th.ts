@@ -137,6 +137,11 @@ const th: typeof en = {
       title: "ลองสำรวจหาตัวละครที่ใช่สำหรับคุณ",
       searchTag: "ค้นหาด้วยแท็ก",
     },
+    createdEmpty: {
+      title: "ยังไม่มีตัวละครที่เปิดเผย",
+      mineDescription: "สร้างตัวละครและเปิดเผย แล้วจะแสดงบนโปรไฟล์ของคุณ",
+      create: "สร้างตัวละคร",
+    },
     sort: {
       latest: "ล่าสุด",
       chats: "ตามจำนวนแชต",
@@ -260,6 +265,7 @@ const th: typeof en = {
     perChat: "แชต",
     messageForm: "แบบฟอร์มป้อนข้อความ",
     messagePlaceholder: "ส่งข้อความ",
+    send: "ส่ง",
     situation: "สถานการณ์",
     suggestedReply: "คำตอบแนะนำ",
     deleteResponse: "ลบคำตอบ",

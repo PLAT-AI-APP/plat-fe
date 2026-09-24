@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { keepPreviousData, useInfiniteQuery } from "@tanstack/react-query";
 import { axiosInstance } from "..";
 import { AppError, PageWith } from "@/type/api";
 import type { NoticeCategory, NoticeSummary } from "@/type/notice";
@@ -29,6 +29,9 @@ const getNoticeList = async (
  *
  * category 를 주면 서버가 그 분류만 내려줍니다. 탭을 바꾸면 조회 키가 달라져 그 탭의 목록을
  * 새로 요청하고, 한 번 본 탭은 캐시에서 바로 보여줍니다.
+ *
+ * 처음 여는 탭은 새 목록이 올 때까지 앞 탭의 목록을 흐리게 둔다(keepPreviousData). 목록 전체를
+ * 스켈레톤으로 바꾸면 필터를 누를 때마다 화면이 번쩍였다.
  */
 export const useNoticeListInfiniteQuery = (
   category?: NoticeCategory | null,
@@ -39,5 +42,6 @@ export const useNoticeListInfiniteQuery = (
     initialPageParam: 0,
     getNextPageParam: getNextPageNumber,
     staleTime: 1000 * 60 * 5,
+    placeholderData: keepPreviousData,
   });
 };

@@ -5,6 +5,7 @@ import { authAxios, axiosInstance } from "..";
 import { AppError, PageWith } from "@/type/api";
 import { getNextPageNumber } from "@/lib/pagination";
 import { useAuthReady } from "@/hooks/data/useAuthReady";
+import { useAuthStore } from "@/store/useAuthStore";
 import type { LikableCard } from "@/type/card";
 import { userQueryKeys } from "./queryKeys";
 
@@ -39,6 +40,7 @@ export const useUserUniversesInfiniteQuery = (
   enabled = true,
 ) => {
   const authenticated = useAuthReady();
+  const isAuthChecked = useAuthStore((state) => state.isAuthReady);
 
   return useInfiniteQuery<PageWith<UserUniverseCard>, AppError>({
     queryKey: [...userQueryKeys.universes(userId), authenticated],
@@ -47,6 +49,7 @@ export const useUserUniversesInfiniteQuery = (
       getUserUniverses(userId ?? "", pageParam as number, authenticated),
     getNextPageParam: getNextPageNumber,
     staleTime: 1000 * 60,
-    enabled: Boolean(userId) && enabled,
+    // 인증 확인 전에 먼저 받으면, 확인이 끝나 키가 바뀔 때 처음부터 다시 로딩한다.
+    enabled: Boolean(userId) && enabled && isAuthChecked,
   });
 };

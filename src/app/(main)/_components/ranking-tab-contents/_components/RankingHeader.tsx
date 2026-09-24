@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import ShallowLink from "@/components/navigation/ShallowLink";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import dayjs from "@/lib/dayjs";
@@ -27,8 +27,9 @@ const PeriodPills = () => {
 
         return (
           <li key={id}>
-            <Link
-              href={{ query: { tab: "ranking", period: id, sort: currentSort } }}
+            <ShallowLink
+              mode="replace"
+              href={`/?${new URLSearchParams({ tab: "ranking", period: id, sort: currentSort })}`}
               className={cn(
                 "body-5 flex items-center justify-center whitespace-nowrap rounded-2xl px-4 py-2 transition-colors",
                 isActive
@@ -37,7 +38,7 @@ const PeriodPills = () => {
               )}
             >
               {t(`ranking.${id}`)}
-            </Link>
+            </ShallowLink>
           </li>
         );
       })}

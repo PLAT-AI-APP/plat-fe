@@ -58,12 +58,10 @@ export const isSuppressedError = (error: unknown): boolean =>
 export const isRetryableError = (error: unknown): boolean => {
   if (!isAppError(error)) return true;
 
-  if (
-    error.code === NETWORK_ERROR_CODE ||
-    error.code === TIMEOUT_ERROR_CODE
-  ) {
-    return true;
-  }
+  // 네트워크 끊김은 곧 돌아올 수 있어 다시 본다. 다만 타임아웃은 이미 10초를 기다린 결과라,
+  // 세 번 더 재시도하면 사용자는 1분 가까이 아무 안내 없이 기다리게 된다 — 바로 알린다.
+  if (error.code === NETWORK_ERROR_CODE) return true;
+  if (error.code === TIMEOUT_ERROR_CODE) return false;
 
   return (error.status ?? 0) >= 500;
 };

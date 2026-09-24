@@ -59,6 +59,7 @@ const ja = {
     sortByChats: "会話量順",
     sortRecommended: "おすすめ順",
     sortWish: "お気に入り",
+    empty: "まだ公式キャラクターがいません",
   },
   newPage: {
     title: "今月の新作キャラクター",

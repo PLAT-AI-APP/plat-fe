@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { authAxios, axiosInstance } from "..";
 import { AppError, PageWith } from "@/type/api";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -84,5 +84,8 @@ export const useSearchQuery = (params: GetSearchParams) => {
     // 짧은 검색어는 서버가 400 으로 돌려보내므로 아예 보내지 않습니다.
     enabled: isSearchableKeyword(params.q) && isAuthReady,
     staleTime: 1000 * 60,
+    // 다시 검색하면 새 결과가 올 때까지 앞 결과를 흐리게 둔다. 스켈레톤으로 비우면 개수까지
+    // 사라졌다가 다시 채워져 화면이 크게 번쩍였다.
+    placeholderData: keepPreviousData,
   });
 };

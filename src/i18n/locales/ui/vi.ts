@@ -59,6 +59,7 @@ const vi = {
     sortByChats: "Theo lượt chat",
     sortRecommended: "Đề xuất riêng cho bạn",
     sortWish: "Yêu thích",
+    empty: "Chưa có nhân vật chính thức nào",
   },
   newPage: {
     title: "Nhân vật mới trong tháng",

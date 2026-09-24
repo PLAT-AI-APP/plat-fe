@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useDeleteCommentMutation } from "@/api/comment/deleteComment";
 import { useDeleteCommentPinMutation } from "@/api/comment/deleteCommentPin";
 import { usePatchCommentMutation } from "@/api/comment/patchComment";
@@ -50,13 +50,24 @@ export const useCommentActions = ({
 
   const scope = { universeId, parentCommentId };
 
+  // 하트는 낙관적으로 바로 바뀐다. 요청이 오가는 중에 또 누르면 반대 요청이 겹쳐 서버에 어느
+  // 쪽이 남을지 알 수 없어, 그동안의 입력만 흘려보낸다(버튼을 흐리게 하지는 않는다).
+  const isLikeInFlightRef = useRef(false);
+
   const toggleLike = () => {
     // 조용히 막으면 눌러도 아무 일이 없어 보이므로 로그인 창을 바로 연다.
     if (!requireLogin()) return;
+    if (isLikeInFlightRef.current) return;
 
+    isLikeInFlightRef.current = true;
     const variables = { commentId: comment.commentId, ...scope };
-    if (comment.meta.liked) unlike(variables);
-    else like(variables);
+    const options = {
+      onSettled: () => {
+        isLikeInFlightRef.current = false;
+      },
+    };
+    if (comment.meta.liked) unlike(variables, options);
+    else like(variables, options);
   };
 
   const startEdit = () => {
@@ -73,20 +84,27 @@ export const useCommentActions = ({
     const content = editedContent.trim();
     if (!content || isPatching) return;
 
+    // 고친 내용은 캐시에 먼저 들어가므로 바로 닫는다. 실패하면(토스트는 전역에서 뜬다)
+    // 쓰던 글 그대로 수정 모드를 다시 열어 준다.
+    setIsEditing(false);
     patchComment(
       { commentId: comment.commentId, content, ...scope },
-      { onSuccess: () => setIsEditing(false) },
+      {
+        onError: () => {
+          setEditedContent(content);
+          setIsEditing(true);
+        },
+      },
     );
   };
 
   const remove = () => {
     openDialog("COMMENT_DELETE", {
       isReply: Boolean(parentCommentId),
+      // 목록에서 먼저 빠지므로 확인 창도 바로 닫는다. 실패하면 캐시가 되돌려지고 토스트가 뜬다.
       onConfirm: () => {
-        deleteComment(
-          { commentId: comment.commentId, ...scope },
-          { onSettled: closeDialog },
-        );
+        deleteComment({ commentId: comment.commentId, ...scope });
+        closeDialog();
       },
     });
   };

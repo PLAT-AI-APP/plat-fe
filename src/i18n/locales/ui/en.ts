@@ -59,6 +59,7 @@ const en = {
     sortByChats: "Most chatted",
     sortRecommended: "Recommended for you",
     sortWish: "Wishlist",
+    empty: "No official characters yet",
   },
   newPage: {
     title: "New characters this month",

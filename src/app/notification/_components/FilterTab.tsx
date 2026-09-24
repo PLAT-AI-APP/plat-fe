@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import ShallowLink from "@/components/navigation/ShallowLink";
 import React from "react";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
@@ -40,10 +40,9 @@ const FilterTab = ({ currentFilter }: FilterTabProps) => {
 
           return (
             <li key={id}>
-              <Link
-                // 전체는 빈 query 객체로 주면 href 가 "" 가 되어 브라우저가 현재 주소(필터 포함)로 해석한다.
-                // 그러면 다른 탭에서 전체로 돌아올 수 없으므로 경로를 명시한다.
-                href={id === "ALL" ? "/notification" : { query: { filter: id } }}
+              {/* 같은 페이지 안의 전환이라 서버에 다시 묻지 않는다(ShallowLink). */}
+              <ShallowLink
+                href={id === "ALL" ? "/notification" : `/notification?filter=${id}`}
                 // 배경·여백을 링크에 둔다. li 에 두면 글자 부분만 눌려 알약의 여백을 눌러도 반응이 없다.
                 className={cn(
                   "body-5 block rounded-full bg-card px-3 py-1.5 text-font-2 transition-colors hover:bg-card-hover",
@@ -51,7 +50,7 @@ const FilterTab = ({ currentFilter }: FilterTabProps) => {
                 )}
               >
                 {filterLabelMap[id]}
-              </Link>
+              </ShallowLink>
             </li>
           );
         })}

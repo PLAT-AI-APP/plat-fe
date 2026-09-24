@@ -48,11 +48,12 @@ const FollowUserItem = ({
       <button
         type="button"
         onClick={() => onToggleFollow(user.userId, isFollowing)}
+        // 글자는 낙관적으로 이미 바뀌었으니 흐리게 하지 않고, 응답 전 연타만 막는다.
         disabled={isPending}
+        aria-busy={isPending || undefined}
         className={cn(
           "title-6 flex min-w-[96px] shrink-0 items-center justify-center whitespace-nowrap rounded-full px-4 py-1 text-left",
           isFollowing ? "bg-main" : "bg-font-1 text-dark",
-          isPending && "pending-state",
         )}
       >
         {isFollowing ? commonT("following") : commonT("follow")}

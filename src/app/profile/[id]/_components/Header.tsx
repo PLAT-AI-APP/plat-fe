@@ -16,6 +16,7 @@ import { useFollowToggle } from "@/hooks/follow/useFollowToggle";
 import { cn, formatWithCommas } from "@/lib/utils";
 // import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
+import { usePreloadModalsWhenIdle } from "@/hooks/common/usePreloadModalsWhenIdle";
 import { useUserStore } from "@/store/useUserStore";
 
 interface HeaderProps {
@@ -109,6 +110,9 @@ const Header = ({ userId, profile }: HeaderProps) => {
     userId,
     isFollowing: serverIsFollowing ?? false,
   });
+
+  // 내 프로필에서 여는 모달(팔로우 목록·프로필 수정)을 미리 받아 둔다.
+  usePreloadModalsWhenIdle(["FOLLOW", "PROFILE_EDIT"], isOwnProfile);
 
   const openFollowModal = (tab: "followers" | "following") => {
     // 팔로워/팔로잉 목록은 본인만 볼 수 있으므로 타인 프로필에서는 모달을 열지 않습니다.

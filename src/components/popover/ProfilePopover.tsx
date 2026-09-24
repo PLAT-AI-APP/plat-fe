@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { cn, formatWithCommas } from "@/lib/utils";
@@ -22,8 +22,8 @@ import { useAuthStore } from "@/store/useAuthStore";
 import Check from "@/icons/Check";
 import { useUserStore } from "@/store/useUserStore";
 import { m, AnimatePresence } from "framer-motion";
+import { TRANSITION_COLLAPSE } from "@/constants/motion";
 import { PopoverLayout } from "./layout";
-import { useRouter } from "next/navigation";
 import useToggle from "@/hooks/common/useToggle";
 import { useModalStore } from "@/store/useModalStore";
 import useRouteEffect from "@/hooks/navigation/useRouteEffect";
@@ -53,8 +53,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
   const t = useTranslations("profilePopover");
   const rootT = useTranslations();
   const selectorT = useTranslations("selector");
-  const router = useRouter();
-  const { mutate: logout } = useLogoutMutation();
+  const { mutate: logout, isPending: isLoggingOut } = useLogoutMutation();
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const openModal = useModalStore((state) => state.openModal);
   const tendency = useToggle();
@@ -139,6 +138,18 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
   const loginModalBtnRef = useRef(null);
   const loginModal = useToggle();
 
+  const [redirectingProvider, setRedirectingProvider] = useState<
+    "KAKAO" | "GOOGLE" | null
+  >(null);
+  // 인증 페이지에서 뒤로 오면 bfcache 로 되살아난 화면에서 버튼이 대기 상태로 굳어 있다.
+  useEffect(() => {
+    const handlePageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) setRedirectingProvider(null);
+    };
+    window.addEventListener("pageshow", handlePageShow);
+    return () => window.removeEventListener("pageshow", handlePageShow);
+  }, []);
+
   const handleLoginBtn = (name: "KAKAO" | "GOOGLE" | "LOGIN") => {
     if (name === "LOGIN") {
       openModal("LOGIN", {
@@ -146,6 +157,9 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
       });
       return;
     }
+
+    // 인증 페이지가 뜰 때까지 버튼에 변화가 없으면 여러 번 누르게 된다.
+    setRedirectingProvider(name);
 
     if (typeof window !== "undefined") {
       const currentPath = window.location.pathname + window.location.search;
@@ -174,10 +188,6 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
     (state) => state.balance?.availableBalance ?? 0,
   );
 
-  const handleRouterPush = () => {
-    router.push(`/profile/${userId}`);
-    onClose();
-  };
 
   useRouteEffect(onClose);
 
@@ -193,8 +203,11 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
       )}
     >
       {isLoggedIn ? (
+        // Link 가 이동을 맡는다. 예전에는 onClick 에서 router.push 를 한 번 더 불러 같은 이동이 두 번 나갔다.
         <Link
-          onClick={handleRouterPush}
+          // onClose(=useToggle의 toggle)는 받은 이벤트에 preventDefault를 건다. 그대로 넘기면
+          // Link가 기본 동작이 막힌 클릭으로 보고 이동을 건너뛴다 — 이벤트를 넘기지 않는다.
+          onClick={() => onClose()}
           href={`/profile/${userId}`}
           className="flex items-center justify-between rounded-lg p-2 transition-colors hover:bg-btn-hover"
         >
@@ -214,27 +227,40 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
         </Link>
       ) : (
         <div className="body-5 flex flex-col gap-3 p-2">
-          <div
+          <button
+            type="button"
             onClick={() => handleLoginBtn("KAKAO")}
-            className="flex cursor-pointer items-center justify-center relative body-5 text-center h-11 rounded-lg bg-[#FEE500] w-full py-2 text-scrim"
+            disabled={redirectingProvider !== null}
+            aria-busy={redirectingProvider === "KAKAO" || undefined}
+            className={cn(
+              "flex cursor-pointer items-center justify-center relative body-5 text-center h-11 rounded-lg bg-[#FEE500] w-full py-2 text-scrim",
+              redirectingProvider === "KAKAO" && "pending-state",
+            )}
           >
             <Kakao className="absolute w-5.5 h-5.5 top-1/2 left-7.5 -translate-y-1/2" />
             {t("loginWithKakao")}
-          </div>
-          <div
+          </button>
+          <button
+            type="button"
             onClick={() => handleLoginBtn("GOOGLE")}
-            className="flex cursor-pointer items-center justify-center relative body-5 text-center h-11 rounded-lg bg-font-1 w-full py-2 text-font-4"
+            disabled={redirectingProvider !== null}
+            aria-busy={redirectingProvider === "GOOGLE" || undefined}
+            className={cn(
+              "flex cursor-pointer items-center justify-center relative body-5 text-center h-11 rounded-lg bg-font-1 w-full py-2 text-font-4",
+              redirectingProvider === "GOOGLE" && "pending-state",
+            )}
           >
             <Google className="absolute w-5.5 h-5.5 top-1/2 left-7.5 -translate-y-1/2" />
             {t("loginWithGoogle")}
-          </div>
-          <div
+          </button>
+          <button
+            type="button"
             ref={loginModalBtnRef}
             onClick={() => handleLoginBtn("LOGIN")}
             className="flex cursor-pointer items-center justify-center relative body-5 text-center h-11 rounded-lg bg-card w-full py-2 text-font-2"
           >
             {t("loginWithOther")}
-          </div>
+          </button>
         </div>
       )}
 
@@ -287,7 +313,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                      transition={TRANSITION_COLLAPSE}
                       className="overflow-hidden"
                     >
                       <ul className="flex flex-col gap-1 p-2.5">
@@ -381,13 +407,22 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
           <div className="py-2.5">
             <div className="h-px w-full bg-main" />
           </div>
-          <div
+          {/* 응답이 올 때까지 팝오버가 그대로라 다시 누르게 되고 POST 가 두 번 나갔다.
+              요청 중에는 대기 표시를 하고 더 받지 않는다. 서버 요청에 토큰이 실려야 해서
+              로컬 로그인 상태를 먼저 지우지는 않는다. */}
+          <button
+            type="button"
             onClick={() => logout()}
-            className="menu-item body-5 cursor-pointer gap-2 text-font-1 ease-in-out"
+            disabled={isLoggingOut}
+            aria-busy={isLoggingOut || undefined}
+            className={cn(
+              "menu-item body-5 w-full cursor-pointer gap-2 text-font-1 ease-in-out",
+              isLoggingOut && "pending-state",
+            )}
           >
             <Logout size={18} className="size-[18px] shrink-0 text-font-2" />
             {t("logout")}
-          </div>
+          </button>
         </>
       )}
     </PopoverLayout>

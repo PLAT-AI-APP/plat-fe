@@ -18,7 +18,8 @@ const RouteLoading = () => {
     <div
       aria-busy="true"
       aria-live="polite"
-      className="flex min-h-[60vh] w-full flex-col items-center justify-center gap-3"
+      // 빠른 이동에서는 금방 사라지는데 바로 뜨면 마스코트가 한 번 번쩍인다. 스켈레톤처럼 300ms 뒤에 나타난다.
+      className="delayed-appear flex min-h-[60vh] w-full flex-col items-center justify-center gap-3"
     >
       <span className="sr-only">{t("text")}</span>
       <EmptyMascot

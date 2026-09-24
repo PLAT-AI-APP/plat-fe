@@ -21,6 +21,26 @@ import { TRANSITION_FAST, popVariants } from "@/constants/motion";
  */
 const mountedStackIndexes: number[] = [];
 
+/*
+ * 배경을 깐 모달이 떠 있는 동안 뒤 페이지가 스크롤되지 않게 막는다. 페이지는 문서가 스크롤하므로
+ * (base.css) 막지 않으면 모달 위에서 휠을 굴릴 때 뒤 목록이 움직인다. 모달이 겹칠 수 있어 센다.
+ * html 에 scrollbar-gutter:stable 이 있어 스크롤바가 사라져도 화면이 옆으로 흔들리지 않는다.
+ */
+let documentScrollLockCount = 0;
+const lockDocumentScroll = () => {
+  if (documentScrollLockCount === 0) {
+    document.documentElement.style.overflow = "hidden";
+  }
+  documentScrollLockCount += 1;
+
+  return () => {
+    documentScrollLockCount -= 1;
+    if (documentScrollLockCount === 0) {
+      document.documentElement.style.overflow = "";
+    }
+  };
+};
+
 /**
  * ModalManager·DialogManager가 자기가 그리는 레이어의 층 번호를 내려준다.
  *
@@ -87,7 +107,7 @@ export const ModalLayout = ({
    *
    * 배경 모달에는 화면 밖으로 넘치지 않게 하는 계약을 함께 건다. 이게 없어서
    * 모달이 화면보다 크면 위아래가 잘려 나가고, 잘린 부분에 확인 버튼이 있으면
-   * 그 모달은 아예 쓸 수 없었다. base.css 가 body 에 overflow:hidden 을 걸어
+   * 그 모달은 아예 쓸 수 없었다. 모달이 떠 있는 동안은 뒤 페이지 스크롤도 막으므로
    * 페이지를 스크롤해 도달할 수도 없다. 세로 중앙 정렬(top-1/2 + -translate-y-1/2)
    * 이라 넘침이 위아래로 반씩 갈리는 것도 한몫했다.
    *
@@ -108,6 +128,11 @@ export const ModalLayout = ({
     containerRef: modalRef,
     enabled: isClient && hasBackground,
   });
+
+  useEffect(() => {
+    if (!hasBackground) return;
+    return lockDocumentScroll();
+  }, [hasBackground]);
 
   // esc를 누르면 현재 스택에서 가장 위에 있는 모달만 닫습니다.
   useEffect(() => {

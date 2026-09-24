@@ -49,6 +49,7 @@ const ja: typeof ko = {
       upload: "アップロード",
       invalidType: "jpg、png、webp 画像ファイルのみ可能です。",
       invalidSize: "ファイル容量は最大 5MB まで可能です。",
+      uploading: "画像をアップロード中",
       uploadFailed:
         "画像のアップロードに失敗しました。もう一度お試しください。",
     },
@@ -106,6 +107,7 @@ const ja: typeof ko = {
       closeGuide: "アセット案内を閉じる",
       invalidType: "jpg、png、webp 画像ファイルのみ可能です。",
       invalidSize: "ファイル容量は最大 5MB まで可能です。",
+      uploading: "画像をアップロード中",
       uploadFailed:
         "アセット画像のアップロードに失敗しました。もう一度お試しください。",
     },

@@ -101,7 +101,7 @@ const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
           text={t("submit")}
           type="submit"
           isActive={isValid}
-          disabled={!isValid || isUpdating}
+          isPending={isUpdating}
           className="mt-10 mb-5 rounded-xl"
         />
       </section>

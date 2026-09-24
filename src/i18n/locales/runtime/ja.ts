@@ -133,6 +133,11 @@ const ja: typeof en = {
       title: "ぴったりのキャラクターを探してみましょう",
       searchTag: "タグで検索する",
     },
+    createdEmpty: {
+      title: "まだ公開しているキャラクターがありません",
+      mineDescription: "キャラクターを作って公開すると、プロフィールに表示されます",
+      create: "キャラクターを作る",
+    },
     sort: {
       latest: "最新順",
       chats: "チャット順",
@@ -257,6 +262,7 @@ const ja: typeof en = {
     perChat: "チャット",
     messageForm: "メッセージ入力フォーム",
     messagePlaceholder: "メッセージを送信",
+    send: "送信",
     situation: "状況",
     suggestedReply: "おすすめ返信",
     deleteResponse: "返信を削除",

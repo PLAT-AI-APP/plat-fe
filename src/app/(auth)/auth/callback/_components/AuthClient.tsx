@@ -52,7 +52,8 @@ const AuthClient = ({ code }: AuthClientProps) => {
 
         localStorage.removeItem("prevPath");
 
-        if (data?.isNew) {
+        // 최초 로그인이어도 웰컴 크레딧 정책이 꺼져 있으면 지급이 없으므로 안내하지 않는다.
+        if (data?.welcomeCredit != null) {
           // 첫 로그인 시 홈에서 웰컴 다이얼로그를 띄울 수 있도록 대기 상태로 저장합니다.
           sessionStorage.setItem(PENDING_WELCOME_CREDIT_DIALOG_KEY, "true");
           router.replace("/");

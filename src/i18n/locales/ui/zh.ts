@@ -55,6 +55,7 @@ const zh = {
     sortByChats: "按对话量排序",
     sortRecommended: "个性化推荐顺",
     sortWish: "收藏",
+    empty: "暂无官方角色",
   },
   newPage: {
     title: "本月新角色",

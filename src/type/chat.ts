@@ -40,6 +40,14 @@ interface UserMessageType {
 /** 최종 메시지 유니온 타입 */
 export type ChatMessageType = AssistantMessageType | UserMessageType;
 
+/** 채팅방 지나온 대화(장기기억) 항목 */
+export interface ChatMemoryEntry {
+  content: string;
+  createdAt: string;
+  id: string;
+  turn: number;
+}
+
 /** 채팅방 에셋 갤러리 이미지 항목 */
 export interface ChatAssetGalleryItem {
   id: string;

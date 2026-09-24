@@ -2,10 +2,11 @@
 
 import { AnimatePresence } from "framer-motion";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import React, { useRef } from "react";
 import { useDeleteRoomMutation } from "@/api/room/deleteRoom";
 import { usePinRoomMutation, useUnpinRoomMutation } from "@/api/room/patchRoomPin";
+import { usePrefetchRoom } from "@/api/room/usePrefetchRoom";
 import MyChattingMenuPopover from "@/components/popover/MyChattingMenuPopover";
 import useToggle from "@/hooks/common/useToggle";
 import { useRelativeTimeLabel } from "@/hooks/i18n/useRelativeTimeLabel";
@@ -33,7 +34,6 @@ const ChattingItem = ({
   lastUsedAt,
   isPinned,
 }: ChattingItemProps) => {
-  const router = useRouter();
   const getRelativeTime = useRelativeTimeLabel();
   const { close, isOpen, toggle } = useToggle();
   const triggerRef = useRef<HTMLSpanElement>(null);
@@ -42,10 +42,7 @@ const ChattingItem = ({
   const { mutate: pinRoom, isPending: isPinning } = usePinRoomMutation();
   const { mutate: unpinRoom, isPending: isUnpinning } = useUnpinRoomMutation();
   const isPinPending = isPinning || isUnpinning;
-
-  const chattingItemOnClick = () => {
-    router.push(`/chatting-room?roomId=${roomId}`);
-  };
+  const prefetchRoom = usePrefetchRoom();
 
   const handleDeleteClick = () => {
     // 채팅 기록은 복구할 수 없으므로 삭제 전 확인을 거친다.
@@ -63,10 +60,21 @@ const ChattingItem = ({
 
   return (
     <li
-      onClick={chattingItemOnClick}
       data-chat-id={roomId}
-      className="flex cursor-pointer gap-3 rounded-lg px-4 py-3 transition-colors duration-200 hover:bg-btn-hover"
+      className="relative flex gap-3 rounded-lg px-4 py-3 transition-colors duration-200 hover:bg-btn-hover"
     >
+      {/*
+        항목 전체를 덮는 링크. 예전에는 li 의 onClick 에서 router.push 를 불러 미리 받기(prefetch)가
+        없었고, 누른 뒤에야 채팅방을 받기 시작했다. 메뉴 버튼은 링크 위(z-10)에 따로 둔다 —
+        a 안에 button 을 넣으면 올바르지 않은 마크업이 된다.
+      */}
+      <Link
+        href={`/chatting-room?roomId=${roomId}`}
+        aria-label={title}
+        onPointerEnter={() => prefetchRoom(roomId)}
+        onFocus={() => prefetchRoom(roomId)}
+        className="absolute inset-0 rounded-lg"
+      />
       <Image
         src={thumbnailUrl || DEFAULT_THUMBNAIL}
         width={84}
@@ -97,13 +105,10 @@ const ChattingItem = ({
               </p>
             </div>
 
-            <span ref={triggerRef} className="relative flex shrink-0">
+            <span ref={triggerRef} className="relative z-10 flex shrink-0">
               <button
                 type="button"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  toggle();
-                }}
+                onClick={toggle}
                 className="flex size-7 items-center justify-center rounded-lg text-font-2 transition-colors duration-200 hover:text-font-1"
               >
                 <Dots className="size-5" />

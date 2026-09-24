@@ -4,6 +4,7 @@ import { AppError, PageWith } from "@/type/api";
 import type { Comment } from "@/type/comment";
 import { getNextPageNumber } from "@/lib/pagination";
 import { useAuthReady } from "@/hooks/data/useAuthReady";
+import { useAuthStore } from "@/store/useAuthStore";
 import { commentQueryKeys } from "./queryKeys";
 
 /** 페이지 크기는 서버가 20으로 고정합니다. */
@@ -27,6 +28,7 @@ const getUniverseComments = async (
 /** 세계관 댓글 목록 조회 */
 export const useUniverseCommentsInfiniteQuery = (universeId?: string) => {
   const authenticated = useAuthReady();
+  const isAuthChecked = useAuthStore((state) => state.isAuthReady);
 
   return useInfiniteQuery<PageWith<Comment>, AppError>({
     queryKey: [...commentQueryKeys.universeComments(universeId), authenticated],
@@ -35,6 +37,7 @@ export const useUniverseCommentsInfiniteQuery = (universeId?: string) => {
       getUniverseComments(universeId ?? "", pageParam as number, authenticated),
     getNextPageParam: getNextPageNumber,
     staleTime: 1000 * 60,
-    enabled: Boolean(universeId),
+    // 인증 확인 전에 먼저 받으면, 확인이 끝나 키가 바뀔 때 처음부터 다시 로딩한다.
+    enabled: Boolean(universeId) && isAuthChecked,
   });
 };

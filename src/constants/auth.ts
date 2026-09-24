@@ -9,7 +9,8 @@ export const PROTECTED_ROUTES = [
   "/my-reports",
   "/customer-service/qna",
   "/withdrawal",
-  "/profile",
+  // 프로필(/profile/[id])은 캐릭터 상세처럼 비로그인도 볼 수 있다. 공개 프로필·공개 작품·팔로우 수 API 가
+  // 토큰 없이 동작하고, 팔로우·찜 탭처럼 로그인이 필요한 것은 각자 로그인 창을 연다.
 ];
 
 // 인증 필요 다이얼로그를 한 번 건너뛰는 세션 키

@@ -1,4 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
+import { useCallback } from "react";
+import { queryOptions, useQuery, useQueryClient } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
 import type {
@@ -9,6 +10,7 @@ import type {
 } from "@/type/character";
 import { universeQueryKeys } from "./queryKeys";
 import { useAuthReady } from "@/hooks/data/useAuthReady";
+import { useAuthStore } from "@/store/useAuthStore";
 
 export type UniverseDetailVisibility = "PUBLIC" | "PRIVATE";
 export type UniverseDetailTendency =
@@ -158,15 +160,43 @@ export const adaptUniverseDetailToCharacterDetail = (
   };
 };
 
+/** 조회 훅과 미리 받기(prefetch)가 같은 키·요청을 쓰도록 한곳에서 만든다. */
+const universeDetailQueryOptions = (universeId: string | undefined, authReady: boolean) =>
+  queryOptions<UniverseDetailResponse, AppError>({
+    queryKey: [...universeQueryKeys.detail(universeId), authReady],
+    queryFn: () => getUniverseDetail(universeId ?? ""),
+  });
+
 export const useUniverseDetailQuery = (universeId?: string) => {
   // 세계관 상세는 로그인이 필수라, 보고 있던 중 세션이 만료되면 401로 실패한
   // 채 멈춘다. 쿼리 키에 로그인 상태를 반영해 두면, 로그인 안내 모달에서 다시
   // 로그인했을 때 키가 바뀌면서 자동으로 재요청된다 — 새로고침 없이도 내용이 채워진다.
   const authReady = useAuthReady();
+  const isAuthChecked = useAuthStore((state) => state.isAuthReady);
 
-  return useQuery<UniverseDetailResponse, AppError>({
-    queryKey: [...universeQueryKeys.detail(universeId), authReady],
-    queryFn: () => getUniverseDetail(universeId ?? ""),
-    enabled: Boolean(universeId),
+  return useQuery({
+    ...universeDetailQueryOptions(universeId, authReady),
+    // 인증 확인 전에 먼저 받으면, 확인이 끝나 키가 바뀔 때 처음부터 다시 로딩한다.
+    enabled: Boolean(universeId) && isAuthChecked,
   });
+};
+
+/**
+ * 카드에 포인터를 올리거나 포커스했을 때 상세를 미리 받는다. 누르는 순간에는 이미 캐시에 있어
+ * 상세 화면이 스켈레톤 없이 바로 뜬다. 상세는 로그인이 필요해 로그인한 사람에게만 한다
+ * (비로그인이면 어차피 401 이라 헛요청이다). 이미 신선한 캐시가 있으면 다시 받지 않는다.
+ */
+export const usePrefetchUniverseDetail = () => {
+  const queryClient = useQueryClient();
+  const authReady = useAuthReady();
+
+  return useCallback(
+    (universeId: string) => {
+      if (!authReady) return;
+      void queryClient.prefetchQuery(
+        universeDetailQueryOptions(universeId, authReady),
+      );
+    },
+    [queryClient, authReady],
+  );
 };

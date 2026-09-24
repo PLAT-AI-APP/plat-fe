@@ -62,7 +62,7 @@ const PasswordReset = () => {
 
       <ActiveButton
         isActive={isPasswordResetActive}
-        disabled={!isPasswordResetActive || isResetting}
+        isPending={isResetting}
         text={t("submit")}
         className="mt-6"
         type="submit"

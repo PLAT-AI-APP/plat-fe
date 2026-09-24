@@ -48,6 +48,7 @@ const ko = {
       upload: "업로드",
       invalidType: "jpg, png, webp 이미지 파일만 가능합니다.",
       invalidSize: "파일 용량은 최대 5MB까지 가능합니다.",
+      uploading: "이미지를 올리는 중",
       uploadFailed: "이미지 업로드에 실패했습니다. 다시 시도해 주세요.",
     },
     details: {
@@ -102,6 +103,7 @@ const ko = {
       closeGuide: "에셋 안내 닫기",
       invalidType: "jpg, png, webp 이미지 파일만 가능합니다.",
       invalidSize: "파일 용량은 최대 5MB까지 가능합니다.",
+      uploading: "이미지를 올리는 중",
       uploadFailed: "에셋 이미지 업로드에 실패했습니다. 다시 시도해 주세요.",
     },
     scenario: {

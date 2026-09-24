@@ -58,6 +58,7 @@ const th = {
     sortByChats: "เรียงตามจำนวนแชต",
     sortRecommended: "ตามคำแนะนำเฉพาะคุณ",
     sortWish: "รายการโปรด",
+    empty: "ยังไม่มีตัวละครทางการ",
   },
   newPage: {
     title: "ตัวละครใหม่ประจำเดือนนี้",

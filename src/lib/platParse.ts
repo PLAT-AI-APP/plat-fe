@@ -328,3 +328,38 @@ export function parsePlatCached(source: string): PlatBlock[] {
 
   return blocks;
 }
+
+/** 사용자가 친 문장을 지문(*…*)과 일반 글로 나눈 조각 */
+export interface NarrationSegment {
+  isNarration: boolean;
+  value: string;
+}
+
+const USER_NARRATION_REGEX = /\*([^*]+)\*/g;
+
+/**
+ * 사용자가 직접 친 한 줄에서 *…* 로 감싼 지문을 갈라냅니다.
+ *
+ * 캐릭터 응답은 .plat 블록 파서가 처리하지만, 사용자 말풍선은 블록으로 쪼개지 않고
+ * 말풍선 하나를 유지해야 해서 인라인으로만 나눕니다. 짝이 맞지 않는 *는 글자 그대로 둡니다.
+ */
+export const splitUserNarration = (text: string): NarrationSegment[] => {
+  const segments: NarrationSegment[] = [];
+  let lastIndex = 0;
+
+  for (const match of text.matchAll(USER_NARRATION_REGEX)) {
+    const matchIndex = match.index ?? 0;
+
+    if (matchIndex > lastIndex) {
+      segments.push({ isNarration: false, value: text.slice(lastIndex, matchIndex) });
+    }
+    segments.push({ isNarration: true, value: match[1] });
+    lastIndex = matchIndex + match[0].length;
+  }
+
+  if (lastIndex < text.length) {
+    segments.push({ isNarration: false, value: text.slice(lastIndex) });
+  }
+
+  return segments;
+};

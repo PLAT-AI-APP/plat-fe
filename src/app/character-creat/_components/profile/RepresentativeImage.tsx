@@ -1,16 +1,14 @@
 "use client";
 
-import React, { ChangeEvent, useState } from "react";
+import React from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
-import { useFileUploadMutation } from "@/api/file/postFileUpload";
 import { Close, ImageIcon, Plus } from "@/icons";
-import { dataUrlToFile } from "@/lib/file";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
 import { cn } from "@/lib/utils";
-import { showAppToast } from "@/lib/toast";
+import { useCroppedImageUpload } from "./useCroppedImageUpload";
 
 const RepresentativeImageCropModal = dynamic(
   () => import("./RepresentativeImageCropModal"),
@@ -19,80 +17,24 @@ const RepresentativeImageCropModal = dynamic(
 
 const RepresentativeImage = () => {
   const t = useTranslations("characterCreate.representativeImage");
-  const { setValue, control } = useFormContext<CharacterCreateFormValues>();
+  const { control } = useFormContext<CharacterCreateFormValues>();
   const preview = useWatch({ control, name: "representativeImage" });
-  const { mutateAsync: uploadFile } = useFileUploadMutation();
-  const [cropTarget, setCropTarget] = useState<{
-    src: string;
-    type: string;
-  } | null>(null);
-
-  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
-    if (!allowedTypes.includes(file.type)) {
-      showAppToast("warning", t("invalidType"));
-      e.target.value = "";
-      return;
-    }
-
-    const maxSize = 5 * 1024 * 1024;
-    if (file.size > maxSize) {
-      showAppToast("warning", t("invalidSize"));
-      e.target.value = "";
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      if (typeof reader.result !== "string") return;
-
-      // 업로드 직후에는 바로 저장하지 않고, 크롭 모달에서 확정된 결과만 반영합니다.
-      setCropTarget({
-        src: reader.result,
-        type: file.type,
-      });
-    };
-    reader.readAsDataURL(file);
-    e.target.value = "";
-  };
-
-  // 크롭 결과 확정 즉시 업로드해 fileId를 받아 둡니다. 제출 시점에는 폼 값만 그대로 전송합니다.
-  const handleCropApply = async (croppedImage: string) => {
-    if (!cropTarget) return;
-
-    try {
-      const croppedFile = await dataUrlToFile(
-        croppedImage,
-        `representative-image.${cropTarget.type.split("/")[1] || "webp"}`,
-        cropTarget.type,
-      );
-      const uploadedImage = await uploadFile({
-        fileType: "UNIVERSE_PROFILE",
-        file: croppedFile,
-      });
-
-      setValue("representativeImage", croppedImage, {
-        shouldDirty: true,
-        shouldValidate: true,
-      });
-      setValue("representativeImageId", uploadedImage.fileId, {
-        shouldDirty: true,
-        shouldValidate: true,
-      });
-      setCropTarget(null);
-    } catch (error) {
-      // 실패 토스트는 axios 인터셉터 → MutationCache의 전역 에러 처리에서 이미 띄우므로 여기서 중복으로 띄우지 않습니다.
-      console.error("Representative image upload failed:", error);
-    }
-  };
-
-  const handlePreviewDelete = () => {
-    setValue("representativeImage", "");
-    setValue("representativeImageId", null);
-  };
+  const uploadingLabel = t("uploading");
+  const {
+    cropTarget,
+    isUploading,
+    handleImageChange,
+    handleCropApply,
+    closeCrop,
+    handleDelete: handlePreviewDelete,
+  } = useCroppedImageUpload({
+    imageField: "representativeImage",
+    idField: "representativeImageId",
+    fileType: "UNIVERSE_PROFILE",
+    fileBaseName: "representative-image",
+    invalidTypeMessage: t("invalidType"),
+    invalidSizeMessage: t("invalidSize"),
+  });
 
   return (
     <section>
@@ -137,6 +79,19 @@ const RepresentativeImage = () => {
               ) : (
                 <ImageIcon className="h-7.5 w-7.5 text-font-disabled" />
               )}
+              {isUploading && (
+                // 미리보기는 이미 바뀌었고 업로드만 뒤에서 이어진다. 끝날 때까지 등록은 막힌다.
+                <span
+                  role="status"
+                  aria-label={uploadingLabel}
+                  className="absolute inset-0 flex items-center justify-center bg-scrim/40"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="size-6 animate-spin rounded-full border-2 border-white/40 border-t-white"
+                  />
+                </span>
+              )}
             </div>
 
             <span
@@ -168,7 +123,7 @@ const RepresentativeImage = () => {
           imageSrc={cropTarget.src}
           imageType={cropTarget.type}
           onApply={handleCropApply}
-          onClose={() => setCropTarget(null)}
+          onClose={closeCrop}
         />
       )}
     </section>

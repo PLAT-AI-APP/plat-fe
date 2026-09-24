@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { AnimatePresence, m } from "framer-motion";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
@@ -27,8 +28,14 @@ import { useModalStore } from "@/store/useModalStore";
 import { useWalletStore } from "@/store/useWalletStore";
 import ChattingAssetGalleryView from "./chatting-asset-gallery-view";
 import ChattingMemoryView from "./chatting-memory-view";
-import ChattingUserNoteView from "./chatting-user-note-view";
 import { TRANSITION } from "@/constants/motion";
+
+/*
+ * 유저노트 화면은 react-hook-form·zod 를 쓰는데, 그대로 가져오면 두 라이브러리(약 126KB)가
+ * 채팅방 첫 로딩에 함께 실린다. 사이드바에서 유저노트를 열 때만 받도록 나눈다.
+ * (모달이던 시절에는 모달 레지스트리가 같은 방식으로 늦게 불러왔다.)
+ */
+const ChattingUserNoteView = dynamic(() => import("./chatting-user-note-view"));
 
 interface ChattingSidebarProps {
   roomId: string;
@@ -237,7 +244,7 @@ const ChattingSidebar = ({
             className="h-full"
           >
             {sidebarDepth === "MEMORY" ? (
-              <ChattingMemoryView roomId={roomId} onBack={handleDepthBack} />
+              <ChattingMemoryView onBack={handleDepthBack} />
             ) : sidebarDepth === "USER_NOTE" ? (
               <ChattingUserNoteView roomId={roomId} onBack={handleDepthBack} />
             ) : sidebarDepth === "ASSET_GALLERY" ? (

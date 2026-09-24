@@ -5,16 +5,16 @@ import { useChatModelsQuery } from "@/api/chat/getChatModels";
 import { useRoomDetailQuery } from "@/api/room/getRoomDetail";
 import { useRoomMessagesInfiniteQuery } from "@/api/room/getRoomMessages";
 import { useUniverseDetailQuery } from "@/api/universe/getUniverseDetail";
-import ChatForm from "@/components/chat/ChatForm";
+import ChatForm, { type ChatFormHandle } from "@/components/chat/ChatForm";
 import MessageList from "@/components/chat/MessageList";
 import SkeletonChatMessages from "@/components/skeleton/SkeletonChatMessages";
 import { ErrorState } from "@/components/state";
 import { useChatTurn } from "@/hooks/chat/useChatTurn";
+import { useStoredChatModel } from "@/hooks/chat/useStoredChatModel";
 import { useIntersectionObserver } from "@/hooks/dom/useIntersectionObserver";
 import { useScrollTimeout } from "@/hooks/dom/useScrollTiemout";
 import { toAiModel } from "@/lib/chatModel";
 import { toImageVariantUrl } from "@/lib/file";
-import { cn } from "@/lib/utils";
 import { AIModelType, ChatMessageType } from "@/type/chat";
 import type { RoomMessage } from "@/type/room";
 import ChattingRoomHeader from "./ChattingRoomHeader";
@@ -48,7 +48,7 @@ const toChatMessage = (
       };
 
 const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
-  const { isScrolling, onScroll } = useScrollTimeout();
+  const { onScroll } = useScrollTimeout();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [scrollContainer, setScrollContainer] = useState<HTMLDivElement | null>(null);
 
@@ -103,21 +103,33 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
   }, [data, hasNextPage, characterName, profileImage]);
 
   const [isSuggestedReplyOn, setIsSuggestedReplyOn] = useState(true);
+  const handleSuggestedReplyToggle = useCallback(() => {
+    setIsSuggestedReplyOn((prevState) => !prevState);
+  }, []);
   const { data: chatCatalog, isPending: isModelsPending } = useChatModelsQuery();
   const models = useMemo(
     () => chatCatalog?.models.map(toAiModel) ?? [],
     [chatCatalog],
   );
-  // 서버에 방별 모델 저장이 없어 화면에서만 기억하고, 고르기 전엔 목록 첫 모델을 쓴다.
-  const [selectedModelId, setSelectedModelId] = useState<string | null>(null);
+  // 서버에 방별 모델 저장이 없어 브라우저에 기억한다. 고른 적이 없거나 그 모델이 카탈로그에서
+  // 빠졌으면 목록 첫 모델을 쓴다.
+  const { selectedModelId, selectModel } = useStoredChatModel(roomId);
   const currentAi = models.find((model) => model.id === selectedModelId) ?? models[0];
 
-  const handleCurrentAi = useCallback((model: AIModelType) => {
-    setSelectedModelId(model.id);
+  const handleCurrentAi = useCallback(
+    (model: AIModelType) => {
+      selectModel(model.id);
+    },
+    [selectModel],
+  );
+
+  const chatFormRef = useRef<ChatFormHandle>(null);
+  const handleTurnFailed = useCallback((message: string) => {
+    chatFormRef.current?.restore(message);
   }, []);
 
   // 진행 중인 턴의 말풍선은 서버 이력과 별개로 이어붙이고, 저장이 끝나 이력에 들어오면 훅이 치운다.
-  const { pendingMessages, isBusy, sendMessage } = useChatTurn({
+  const { pendingMessages, isBusy, canSend, sendMessage } = useChatTurn({
     roomId,
     universeCharacterId: universe?.character.universeCharacterId,
     personaId: room?.personaId,
@@ -125,6 +137,7 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
     multiplier: room?.multiplier,
     characterName,
     profileImage,
+    onTurnFailed: handleTurnFailed,
   });
   const messages = useMemo(
     () => [...serverMessages, ...pendingMessages],
@@ -147,6 +160,8 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
 
   const { targetRef: topSentinelRef } = useIntersectionObserver({
     onIntersect: handleLoadOlderMessages,
+    // 여기서는 위로 올릴수록 과거를 부른다. 기본값(아래쪽 여유)과 반대다.
+    rootMargin: "600px 0px 0px 0px",
     enabled: Boolean(hasNextPage) && !isMessagesPending,
   });
 
@@ -164,10 +179,7 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
         <div
           ref={handleScrollContainerRef}
           onScroll={onScroll}
-          className={cn(
-            "relative flex-1 overflow-y-auto hide-scrollbar-on-idle",
-            isScrolling && "is-scrolling",
-          )}
+          className="relative flex-1 overflow-y-auto hide-scrollbar-on-idle"
         >
           <ChattingRoomHeader
             roomId={roomId}
@@ -178,9 +190,7 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
             isModelsLoading={isModelsPending}
             handleCurrentAi={handleCurrentAi}
             isSuggestedReplyOn={isSuggestedReplyOn}
-            onSuggestedReplyToggle={() =>
-              setIsSuggestedReplyOn((prevState) => !prevState)
-            }
+            onSuggestedReplyToggle={handleSuggestedReplyToggle}
           />
           <ChattingRoomNotice />
 
@@ -205,7 +215,12 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
 
         {/* 메시지 목록이 px-4 를 쓰므로 입력창도 같은 여백을 써야 줄이 맞는다. */}
         <div className="shrink-0 bg-dark px-4 py-4">
-          <ChatForm onSendMessage={sendMessage} disabled={isBusy} />
+          <ChatForm
+            ref={chatFormRef}
+            onSendMessage={sendMessage}
+            disabled={isBusy}
+            isPreparing={!canSend && !isRoomError && !isUniverseError}
+          />
         </div>
       </div>
     </section>

@@ -1,20 +1,33 @@
 "use client";
 
-import { FormEvent, useCallback, useState } from "react";
+import { FormEvent, Ref, memo, useCallback, useImperativeHandle, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Asterisk, MoveUp } from "@/icons";
 import { useAutoResizeTextarea } from "@/hooks/form/useAutoResizeTextarea";
 import { useTextareaSubmitShortcuts } from "@/hooks/form/useTextareaSubmitShortcuts";
 import ActiveButton from "../ActiveButton";
 
+export interface ChatFormHandle {
+  /** 보내지 못한 글을 입력창에 되돌린다. 그 사이 새로 쓴 글이 있으면 덮어쓰지 않는다. */
+  restore: (message: string) => void;
+}
+
 interface ChatFormProps {
+  ref?: Ref<ChatFormHandle>;
   /** 전송을 받아들이지 않으면(false) 입력한 글을 지우지 않고 그대로 둡니다. */
   onSendMessage: (message: string) => boolean | void;
   /** 응답을 받는 중처럼 지금은 보낼 수 없을 때. 글은 계속 쓸 수 있습니다. */
   disabled?: boolean;
+  /** 방 정보·모델을 아직 받는 중이라 보낼 수 없을 때. 버튼에 대기 표시를 한다. */
+  isPreparing?: boolean;
 }
 
-const ChatForm = ({ onSendMessage, disabled = false }: ChatFormProps) => {
+const ChatForm = ({
+  ref,
+  onSendMessage,
+  disabled = false,
+  isPreparing = false,
+}: ChatFormProps) => {
   const t = useTranslations();
   const [msg, setMsg] = useState("");
   const hasMessage = msg.trim().length > 0;
@@ -22,6 +35,17 @@ const ChatForm = ({ onSendMessage, disabled = false }: ChatFormProps) => {
     maxRows: 5,
     value: msg,
   });
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      restore: (message) => {
+        setMsg((current) => (current.trim() ? current : message));
+        requestAnimationFrame(resizeTextarea);
+      },
+    }),
+    [resizeTextarea],
+  );
 
   const submitMessage = useCallback(() => {
     if (!hasMessage || disabled) return;
@@ -95,7 +119,10 @@ const ChatForm = ({ onSendMessage, disabled = false }: ChatFormProps) => {
           </button>
 
           <ActiveButton
-            isActive={!disabled}
+            // 쓴 글이 없거나 응답을 받는 중이면 눌러도 소용이 없으니 활성처럼 보이지 않게 한다.
+            isActive={hasMessage && !disabled && !isPreparing}
+            isPending={isPreparing}
+            aria-label={t("chatUI.send")}
             text=""
             type="submit"
             className="flex size-8.5 items-center justify-center rounded-full p-0"
@@ -108,4 +135,5 @@ const ChatForm = ({ onSendMessage, disabled = false }: ChatFormProps) => {
   );
 };
 
-export default ChatForm;
+// 스트리밍 중 방 화면이 프레임마다 다시 그려져도 입력창은 props 가 같으면 건너뛴다.
+export default memo(ChatForm);

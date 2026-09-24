@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { DraggableProvidedDragHandleProps } from "@hello-pangea/dnd";
 import { cn } from "@/lib/utils";
 import { ScenarioContentItem } from "@/type/character";
@@ -14,7 +15,6 @@ interface PreviewListItemProps {
   item: ScenarioContentItem;
   isDragging: boolean;
   isEditing: boolean;
-  editedValue: string;
   characterName: string;
   profileImage: string;
   profileAlt: string;
@@ -23,9 +23,9 @@ interface PreviewListItemProps {
   labels: PreviewEditLabels;
   dragHandleProps: DraggableProvidedDragHandleProps | null;
   onEdit: () => void;
-  onEditValueChange: (value: string) => void;
   onCancelEdit: () => void;
-  onConfirmEdit: () => void;
+  /** 고친 글을 확정한다. */
+  onConfirmEdit: (value: string) => void;
   onDelete?: () => void;
 }
 
@@ -33,7 +33,6 @@ const PreviewListItem = ({
   item,
   isDragging,
   isEditing,
-  editedValue,
   characterName,
   profileImage,
   profileAlt,
@@ -42,11 +41,22 @@ const PreviewListItem = ({
   labels,
   dragHandleProps,
   onEdit,
-  onEditValueChange,
   onCancelEdit,
   onConfirmEdit,
   onDelete,
 }: PreviewListItemProps) => {
+  // 고치는 중인 글은 이 항목이 들고 있는다. 목록이 들고 있으면 한 글자마다 목록의 모든 항목
+  // (드래그 래퍼·행동 구분 파싱 포함)이 다시 그려져, 대화가 길수록 입력이 무거웠다.
+  const [editedValue, setEditedValue] = useState(item.value);
+  const [wasEditing, setWasEditing] = useState(isEditing);
+  // 편집을 시작하는 순간 지금 글로 초기화한다(렌더 중 조정 — effect 를 쓰면 한 프레임 옛 글이 보인다).
+  if (isEditing !== wasEditing) {
+    setWasEditing(isEditing);
+    if (isEditing) setEditedValue(item.value);
+  }
+  const onEditValueChange = setEditedValue;
+  const handleConfirmEdit = () => onConfirmEdit(editedValue);
+
   return (
     <div>
       <article
@@ -78,7 +88,7 @@ const PreviewListItem = ({
                 labels={labels}
                 onChange={onEditValueChange}
                 onCancel={onCancelEdit}
-                onConfirm={onConfirmEdit}
+                onConfirm={handleConfirmEdit}
               />
             ) : item.type === "userChat" ? (
               <EditableUserChatPreview
@@ -86,14 +96,14 @@ const PreviewListItem = ({
                 labels={labels}
                 onChange={onEditValueChange}
                 onCancel={onCancelEdit}
-                onConfirm={onConfirmEdit}
+                onConfirm={handleConfirmEdit}
               />
             ) : (
               <EditableScenarioPreview
                 value={editedValue}
                 onChange={onEditValueChange}
                 onCancel={onCancelEdit}
-                onConfirm={onConfirmEdit}
+                onConfirm={handleConfirmEdit}
               />
             )}
           </div>
@@ -147,7 +157,7 @@ const PreviewListItem = ({
           cancelLabel={labels.cancelEdit}
           confirmLabel={labels.confirmEdit}
           onCancel={onCancelEdit}
-          onConfirm={onConfirmEdit}
+          onConfirm={handleConfirmEdit}
         />
       )}
     </div>

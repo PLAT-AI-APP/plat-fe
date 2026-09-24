@@ -131,6 +131,11 @@ const zh: typeof en = {
       title: "去探索最适合你的角色吧",
       searchTag: "按标签搜索",
     },
+    createdEmpty: {
+      title: "还没有公开的角色",
+      mineDescription: "创建并公开角色后，就会显示在个人主页上",
+      create: "创建角色",
+    },
     sort: {
       latest: "最新顺",
       chats: "聊天顺",
@@ -250,6 +255,7 @@ const zh: typeof en = {
     perChat: "聊天",
     messageForm: "消息输入表单",
     messagePlaceholder: "发送消息",
+    send: "发送",
     situation: "情境",
     suggestedReply: "推荐回复",
     deleteResponse: "删除回复",

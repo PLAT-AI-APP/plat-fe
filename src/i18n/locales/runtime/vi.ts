@@ -139,6 +139,11 @@ const vi: typeof en = {
       title: "Khám phá để tìm nhân vật phù hợp với bạn",
       searchTag: "Tìm theo thẻ",
     },
+    createdEmpty: {
+      title: "Chưa có nhân vật công khai nào",
+      mineDescription: "Tạo và công khai nhân vật để hiển thị trên hồ sơ của bạn",
+      create: "Tạo nhân vật",
+    },
     sort: {
       latest: "Mới nhất",
       chats: "Theo lượt chat",
@@ -265,6 +270,7 @@ const vi: typeof en = {
     perChat: "chat",
     messageForm: "Biểu mẫu nhập tin nhắn",
     messagePlaceholder: "Gửi tin nhắn",
+    send: "Gửi",
     situation: "Tình huống",
     suggestedReply: "Trả lời gợi ý",
     deleteResponse: "Xóa phản hồi",

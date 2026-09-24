@@ -92,16 +92,16 @@ const CategoriesTabContents = () => {
             </p>
 
             <div className="flex w-full min-w-0 items-center gap-3 sm:w-auto">
-              {isTablet && (
-                <button
-                  type="button"
-                  onClick={() => setIsTagSidebarOpen(true)}
-                  className="body-5 flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl border border-main px-3 py-2 text-font-1 transition-colors hover:bg-btn-hover"
-                >
-                  <Tag className="size-4 shrink-0" />
-                  {t("tagFilter")}
-                </button>
-              )}
+              {/* 보일지는 CSS(lg:hidden)로 정한다. JS 로 폭을 재서 그리면 서버 HTML 에는 없다가
+                  하이드레이션 뒤에 끼어들어 정렬 버튼을 옆으로 밀었다. */}
+              <button
+                type="button"
+                onClick={() => setIsTagSidebarOpen(true)}
+                className="body-5 flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-xl border border-main px-3 py-2 text-font-1 transition-colors hover:bg-btn-hover lg:hidden"
+              >
+                <Tag className="size-4 shrink-0" />
+                {t("tagFilter")}
+              </button>
               <SearchResultSort value={sort} onChange={setSort} />
             </div>
           </header>

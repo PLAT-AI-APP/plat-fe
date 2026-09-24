@@ -3,6 +3,7 @@
 import { AnimatePresence } from "framer-motion";
 import React, { useRef } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useUniverseDeleteMutation } from "@/api/universe/deleteUniverse";
@@ -46,12 +47,6 @@ const CharacterItem = ({
   const triggerRef = useRef(null);
   const { isOpen, toggle } = useToggle();
 
-  const handleCardClick = () => {
-    if (!isOpen) {
-      router.push(`/characters/${id}`);
-    }
-  };
-
   const handleDeleteConfirm = () => {
     if (isDeleting) return;
 
@@ -75,10 +70,19 @@ const CharacterItem = ({
   };
 
   return (
-    <article
-      onClick={handleCardClick}
-      className="flex cursor-pointer gap-2 rounded-2xl px-3 py-2.5 transition-colors hover:bg-card"
-    >
+    <article className="relative flex gap-2 rounded-2xl px-3 py-2.5 transition-colors hover:bg-card">
+      {/*
+        카드 전체를 덮는 링크. router.push 로는 미리 받기가 없어 누른 뒤에야 상세를 받기 시작했다.
+        메뉴 버튼은 링크 위(z-10)에 둔다. 메뉴가 열려 있을 때 카드를 누르면 메뉴만 닫히게 이동을 막는다.
+      */}
+      <Link
+        href={`/characters/${id}`}
+        aria-label={title}
+        onClick={(event) => {
+          if (isOpen) event.preventDefault();
+        }}
+        className="absolute inset-0 rounded-2xl"
+      />
       <Image
         src={thumbnail}
         alt={studioT("characterImageAlt", { title })}
@@ -94,7 +98,7 @@ const CharacterItem = ({
         <section className="flex flex-col">
           <header className="flex items-center justify-between">
             <h3 className="title-3">{title}</h3>
-            <div className="relative">
+            <div className="relative z-10">
               <IconButton
                 ref={triggerRef}
                 size="sm"

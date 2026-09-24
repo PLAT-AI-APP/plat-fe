@@ -63,8 +63,9 @@ const SmartInput = forwardRef<
   const currentDisplayValue =
     value !== undefined ? String(value ?? "") : displayValue;
 
+  // 최소·최대 줄 수가 같으면 높이가 고정이라 잴 필요가 없다(높이 재기는 매번 강제 리플로우다).
   const { textareaRef, resizeTextarea } = useAutoResizeTextarea({
-    enabled: isTextarea,
+    enabled: isTextarea && minLine !== maxLine,
     value,
   });
   const { iconRef, paddingLeft } = useLeftPadding(leftElement);
@@ -88,7 +89,8 @@ const SmartInput = forwardRef<
       setDisplayValue(e.target.value);
     }
     onChange?.(e);
-    if (isTextarea) resizeTextarea();
+    // controlled 입력은 값이 바뀐 뒤 훅의 layout effect 가 잰다. 여기서도 재면 입력마다 두 번 잰다.
+    if (isTextarea && value === undefined) resizeTextarea();
   };
 
   const isNavigationType =

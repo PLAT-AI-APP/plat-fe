@@ -6,14 +6,15 @@ import "react-easy-crop/react-easy-crop.css";
 import { useTranslations } from "next-intl";
 import { Close } from "@/icons";
 import { ModalLayout } from "@/components/ModalLayout";
-import { createCroppedImageDataUrl } from "@/lib/cropImage";
+import { createCroppedImageBlob, getCropOutputType } from "@/lib/cropImage";
 import { cn } from "@/lib/utils";
 import IconButton from "@/components/ui/IconButton";
 
 interface RepresentativeImageCropModalProps {
   imageSrc: string;
   imageType: string;
-  onApply: (croppedImage: string) => void | Promise<void>;
+  /** 잘라 낸 이미지. 부모가 바로 미리보기에 넣고 업로드는 뒤에서 한다. */
+  onApply: (croppedImage: Blob) => void;
   onClose: () => void;
 }
 
@@ -47,14 +48,16 @@ const RepresentativeImageCropModal = ({
     setIsApplying(true);
 
     try {
-      const croppedImage = await createCroppedImageDataUrl({
+      const croppedImage = await createCroppedImageBlob({
         imageSrc,
         cropArea: croppedAreaPixels,
-        outputType: imageType === "image/png" ? "image/png" : "image/jpeg",
+        outputType: getCropOutputType(imageType),
       });
 
-      await onApply(croppedImage);
-    } finally {
+      // 업로드를 기다리지 않는다. 부모가 미리보기를 바로 바꾸고 이 모달을 닫는다.
+      onApply(croppedImage);
+    } catch (error) {
+      console.error("Image crop failed:", error);
       setIsApplying(false);
     }
   };

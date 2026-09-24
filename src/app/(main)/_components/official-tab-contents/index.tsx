@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRankingQuery } from "@/api/ranking/getRanking";
 import CharacterShowcase from "@/components/character/CharacterShowcase";
+import { EmptyState } from "@/components/state";
 import FilterDropdown from "../FilterDropdown";
 
 /**
@@ -34,6 +35,11 @@ const OfficialTabContents = () => {
     size: PAGE_SIZE,
   });
 
+  const items = data?.content ?? [];
+  // CharacterShowcase 는 빈 목록이면 아무것도 그리지 않아, 제목과 정렬만 남은 빈 탭이 됐다.
+  // 로딩·실패는 CharacterShowcase 에 맡기고 정말 0개일 때만 다른 탭처럼 안내한다.
+  const isEmpty = !isPending && !isError && items.length === 0;
+
   return (
     <article className="flex w-full flex-col gap-5 pt-5">
       <div className="flex w-full items-center justify-between">
@@ -46,23 +52,27 @@ const OfficialTabContents = () => {
         />
       </div>
 
-      <CharacterShowcase
-        charArray={(data?.content ?? []).map(({ card }) => ({
-          id: card.universeId,
-          name: card.title,
-          dec: card.description,
-          creatorName: card.creator.nickname,
-          chatCount: card.chatCount,
-          img: card.images,
-          isNew: card.isNew,
-          isOfficial: true,
-        }))}
-        cardSize="S"
-        isLoading={isPending}
-        isError={isError}
-        error={error}
-        onRetry={refetch}
-      />
+      {isEmpty ? (
+        <EmptyState mood="peek" message={t("empty")} />
+      ) : (
+        <CharacterShowcase
+          charArray={items.map(({ card }) => ({
+            id: card.universeId,
+            name: card.title,
+            dec: card.description,
+            creatorName: card.creator.nickname,
+            chatCount: card.chatCount,
+            img: card.images,
+            isNew: card.isNew,
+            isOfficial: true,
+          }))}
+          cardSize="S"
+          isLoading={isPending}
+          isError={isError}
+          error={error}
+          onRetry={refetch}
+        />
+      )}
     </article>
   );
 };

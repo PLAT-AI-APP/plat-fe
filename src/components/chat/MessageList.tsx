@@ -217,6 +217,30 @@ const MessageList = memo(
       hasScrolledToLatestRef.current = true;
     }, [messages.length, scrollContainer, virtualizer]);
 
+    // 내가 방금 보낸 말은 위로 스크롤해 둔 상태여도 바닥으로 내려가 보여 준다. followOnAppend 는
+    // 이미 바닥 근처일 때만 따라가서, 보내도 화면 밖에 붙어 아무 일도 없는 것처럼 보였다.
+    const lastMessageId = messages.at(-1)?.id;
+    const previousLastMessageIdRef = useRef(lastMessageId);
+    useLayoutEffect(() => {
+      const previousLastId = previousLastMessageIdRef.current;
+      previousLastMessageIdRef.current = lastMessageId;
+      if (!hasScrolledToLatestRef.current || previousLastId === lastMessageId) {
+        return;
+      }
+
+      const current = messagesRef.current;
+      const previousIndex = current.findIndex(
+        (message) => message.id === previousLastId,
+      );
+      // 이전 마지막 메시지가 사라졌다면(임시 말풍선 → 서버 이력 교체) 새로 보낸 것이 아니다.
+      if (previousIndex === -1) return;
+
+      const hasSentMessage = current
+        .slice(previousIndex + 1)
+        .some((message) => message.role === "user");
+      if (hasSentMessage) virtualizer.scrollToEnd();
+    }, [lastMessageId, virtualizer]);
+
     return (
       <section
         ref={listRef}

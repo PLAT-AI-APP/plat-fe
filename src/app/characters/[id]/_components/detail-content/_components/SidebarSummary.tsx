@@ -51,7 +51,8 @@ const SidebarSummary = ({
     useDeleteUniverseLikeMutation();
   const isLikePending = isLikeMutating || isUnlikeMutating;
 
-  /* 찜은 로그인이 있어야 합니다. 조용히 무시하면 눌러도 아무 일이 없어 보이므로 로그인 창을 바로 엽니다. */
+  /* 찜은 로그인이 있어야 합니다. 조용히 무시하면 눌러도 아무 일이 없어 보이므로 로그인 창을 바로 엽니다.
+   * 하트는 낙관적으로 먼저 칠해지므로 요청 중에도 버튼을 흐리게 하지 않고, 연타만 여기서 막습니다. */
   const handleToggleLike = () => {
     if (isLikePending) return;
 
@@ -69,7 +70,7 @@ const SidebarSummary = ({
   } = useFollowToggle({
     userId: creatorId ?? "",
     isFollowing: character.creator.isFollowing,
-    // 상세 응답에 creator.isFollowing 이 함께 실려 오므로 같이 다시 받는다.
+    // 상세 응답에 창작자 팔로워 수가 실려 오므로 같이 다시 받는다(뒤에서 교체돼 화면은 그대로다).
     extraInvalidateKeys: [universeQueryKeys.detail(character.characterId)],
   });
 
@@ -114,7 +115,7 @@ const SidebarSummary = ({
   );
 
   return (
-    <aside className="flex w-full shrink-0 flex-col gap-5 self-start min-[900px]:sticky min-[900px]:top-0 min-[900px]:w-[389px]">
+    <aside className="flex w-full shrink-0 flex-col gap-5 self-start min-[900px]:sticky min-[900px]:top-(--header-height) min-[900px]:w-[389px]">
       <section className="flex flex-col gap-4">
         {!isCreator && character.isOfficial && (
           <span className="body-7 w-fit rounded-xl bg-brand/10 px-3 py-2 text-brand-dark">
@@ -211,11 +212,11 @@ const SidebarSummary = ({
             <button
               type="button"
               onClick={handleToggleLike}
-              disabled={isLikePending}
+              aria-busy={isLikePending}
               aria-pressed={character.liked}
               aria-label={character.liked ? t("unlike") : t("like")}
               title={character.liked ? t("unlike") : t("like")}
-              className="flex size-[52px] shrink-0 items-center justify-center rounded-2xl bg-card text-font-2 transition-colors hover:bg-card-hover disabled:opacity-60"
+              className="flex size-[52px] shrink-0 items-center justify-center rounded-2xl bg-card text-font-2 transition-colors hover:bg-card-hover"
             >
               {character.liked ? (
                 <HeartFill className="size-5 text-brand" aria-hidden="true" />
@@ -247,13 +248,14 @@ const SidebarSummary = ({
               <button
                 type="button"
                 onClick={handleCreatorFollowToggle}
-                disabled={isFollowPending}
+                // 버튼 글자는 낙관적으로 바로 바뀐다. 요청 중에 흐리게 하면 오히려 기다리는 것처럼
+                // 보여서, 연타는 훅이 막고 모양은 그대로 둔다.
+                aria-busy={isFollowPending}
                 className={cn(
                   "title-6 rounded-full px-3 py-1 transition-colors",
                   isFollowingCreator
                     ? "bg-main text-font-1"
                     : "bg-font-1 text-dark",
-                  isFollowPending && "pending-state",
                 )}
               >
                 {isFollowingCreator ? t("following") : t("follow")}
