@@ -13,6 +13,7 @@ const th: typeof en = {
     home: "สำรวจตัวละคร",
     search: "ค้นหา",
     usageHistory: "ประวัติการใช้งาน",
+    earnings: "รายได้ของฉัน",
     myReports: "ประวัติการรายงาน",
   },
   errorPage: {
