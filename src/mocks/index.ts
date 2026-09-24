@@ -19,6 +19,7 @@ import { reportHandlers } from "./handlers/report";
 import { rankingHandlers } from "./handlers/ranking";
 import { roomHandlers } from "./handlers/room";
 import { searchHandlers } from "./handlers/search";
+import { earningHandlers } from "./handlers/earning";
 
 /**
  * 모든 핸들러를 하나의 배열로 통합합니다.
@@ -48,4 +49,5 @@ export const handlers = [
   ...rankingHandlers,
   ...roomHandlers,
   ...searchHandlers,
+  ...earningHandlers,
 ];
