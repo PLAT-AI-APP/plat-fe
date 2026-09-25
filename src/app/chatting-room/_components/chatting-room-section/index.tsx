@@ -102,10 +102,6 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
     return messages;
   }, [data, hasNextPage, characterName, profileImage]);
 
-  const [isSuggestedReplyOn, setIsSuggestedReplyOn] = useState(true);
-  const handleSuggestedReplyToggle = useCallback(() => {
-    setIsSuggestedReplyOn((prevState) => !prevState);
-  }, []);
   const { data: chatCatalog, isPending: isModelsPending } = useChatModelsQuery();
   const models = useMemo(
     () => chatCatalog?.models.map(toAiModel) ?? [],
@@ -144,14 +140,6 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
     [serverMessages, pendingMessages],
   );
 
-  const handleDeleteMessage = useCallback(() => {
-    // 메시지 삭제 API가 아직 없어 동작하지 않는다. 버튼 자리만 보존한다.
-  }, []);
-
-  const handleRetryMessage = useCallback(() => {
-    // 재생성 API가 아직 없어 동작하지 않는다. 버튼 자리만 보존한다.
-  }, []);
-
   const handleLoadOlderMessages = useCallback(() => {
     if (!hasNextPage || isFetchingNextPage) return;
 
@@ -189,8 +177,6 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
             isCharacterLoading={isCharacterLoading}
             isModelsLoading={isModelsPending}
             handleCurrentAi={handleCurrentAi}
-            isSuggestedReplyOn={isSuggestedReplyOn}
-            onSuggestedReplyToggle={handleSuggestedReplyToggle}
           />
           <ChattingRoomNotice />
 
@@ -203,12 +189,11 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
           ) : isMessagesError && serverMessages.length === 0 ? (
             <ErrorState error={messagesError} onRetry={refetchMessages} />
           ) : (
+            // 추천 답변·메시지 삭제·재생성은 서버 API 가 생길 때까지 넘기지 않아 버튼이 뜨지 않는다.
             <MessageList
               messages={messages}
               scrollContainer={scrollContainer}
-              isAiSuggestedChat={isSuggestedReplyOn}
-              onDeleteMessage={handleDeleteMessage}
-              onRetryMessage={handleRetryMessage}
+              isAiSuggestedChat={false}
             />
           )}
         </div>

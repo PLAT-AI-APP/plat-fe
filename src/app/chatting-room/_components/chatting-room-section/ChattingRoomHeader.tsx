@@ -20,8 +20,6 @@ interface ChattingRoomHeaderProps {
   /** 모델 목록을 아직 받는 중일 때. */
   isModelsLoading?: boolean;
   handleCurrentAi: (model: AIModelType) => void;
-  isSuggestedReplyOn: boolean;
-  onSuggestedReplyToggle: () => void;
 }
 
 const ChattingRoomHeader = ({
@@ -32,8 +30,6 @@ const ChattingRoomHeader = ({
   isCharacterLoading = false,
   isModelsLoading = false,
   handleCurrentAi,
-  isSuggestedReplyOn,
-  onSuggestedReplyToggle,
 }: ChattingRoomHeaderProps) => {
   const t = useTranslations("chatRoom.sidebar");
   const router = useRouter();
@@ -99,8 +95,6 @@ const ChattingRoomHeader = ({
               <ChattingSidebar
                 roomId={roomId}
                 toggleIsSidebar={toggleIsSidebar}
-                isSuggestedReplyOn={isSuggestedReplyOn}
-                onSuggestedReplyToggle={onSuggestedReplyToggle}
               />
             )}
           </AnimatePresence>,

@@ -66,8 +66,9 @@ const MessageRow = memo(
             isEditMode={isEditable}
             onUpdate={handleUpdate}
             // 시나리오는 캐릭터가 만든 응답이 아니라 지우거나 다시 만들 대상이 아니다.
-            onDelete={message.isScenario ? undefined : handleDelete}
-            onRetry={message.isScenario ? undefined : handleRetry}
+            // 처리 함수를 받지 않았으면 버튼도 띄우지 않는다.
+            onDelete={message.isScenario || !onDeleteMessage ? undefined : handleDelete}
+            onRetry={message.isScenario || !onRetryMessage ? undefined : handleRetry}
           />
           {/* 추천 답변은 응답을 다 받은 뒤에 붙인다. 받는 동안 붙이면 입력 중 표시 밑에 먼저 떠 버린다. */}
           {showSuggestedChat && !message.isStreaming && <AiSuggestedChat />}
@@ -80,7 +81,7 @@ const MessageRow = memo(
         text={message.content}
         isEditable={isEditable}
         onUpdate={handleUpdate}
-        onDelete={handleDelete}
+        onDelete={onDeleteMessage ? handleDelete : undefined}
       />
     );
   },

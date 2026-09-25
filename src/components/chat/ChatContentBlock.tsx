@@ -221,22 +221,26 @@ const ChatContentBlock = ({
       {/* 받는 중인 응답은 아직 서버에 없어 지우거나 다시 만들 대상이 없다. */}
       {!isEditMode && !isStreaming && !endsWithUserDialogue && (onDelete || onRetry) && (
         <div className="-mt-4 flex gap-1 pl-11">
-          <button
-            type="button"
-            onClick={onDelete}
-            className="flex size-7 items-center justify-center rounded-lg bg-card p-1.5 text-font-2 transition-colors hover:bg-btn-hover"
-            aria-label={t("chatUI.deleteResponse")}
-          >
-            <ChatTrash className="size-4" />
-          </button>
-          <button
-            type="button"
-            onClick={onRetry}
-            className="flex size-7 items-center justify-center rounded-lg bg-card p-1.5 text-font-2 transition-colors hover:bg-btn-hover"
-            aria-label={t("chatUI.retryResponse")}
-          >
-            <ChatRetry className="size-4" />
-          </button>
+          {onDelete && (
+            <button
+              type="button"
+              onClick={onDelete}
+              className="flex size-7 items-center justify-center rounded-lg bg-card p-1.5 text-font-2 transition-colors hover:bg-btn-hover"
+              aria-label={t("chatUI.deleteResponse")}
+            >
+              <ChatTrash className="size-4" />
+            </button>
+          )}
+          {onRetry && (
+            <button
+              type="button"
+              onClick={onRetry}
+              className="flex size-7 items-center justify-center rounded-lg bg-card p-1.5 text-font-2 transition-colors hover:bg-btn-hover"
+              aria-label={t("chatUI.retryResponse")}
+            >
+              <ChatRetry className="size-4" />
+            </button>
+          )}
         </div>
       )}
     </div>

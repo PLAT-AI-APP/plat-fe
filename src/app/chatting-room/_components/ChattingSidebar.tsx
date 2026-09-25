@@ -6,28 +6,18 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import {
-  ArrowLeft,
-  ChatPlus,
-  Eye,
-  EyeOff,
-  GalleryViewLine,
-  ImageIcon,
-  Logout,
-  PenSparkle,
-  Persona,
-  Storage,
-  Token,
-} from "@/icons";
+import { ArrowLeft, ChatPlus, Logout, Persona, Token } from "@/icons";
 import Note from "@/icons/Note";
 import { useRoomDetailQuery } from "@/api/room/getRoomDetail";
+import {
+  adaptUniverseDetailToCharacterDetail,
+  useUniverseDetailQuery,
+} from "@/api/universe/getUniverseDetail";
 import { usePatchRoomPersonaMutation } from "@/api/room/patchRoomPersona";
 import { cn, formatWithCommas } from "@/lib/utils";
 import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
 import { useWalletStore } from "@/store/useWalletStore";
-import ChattingAssetGalleryView from "./chatting-asset-gallery-view";
-import ChattingMemoryView from "./chatting-memory-view";
 import { TRANSITION } from "@/constants/motion";
 
 /*
@@ -40,8 +30,6 @@ const ChattingUserNoteView = dynamic(() => import("./chatting-user-note-view"));
 interface ChattingSidebarProps {
   roomId: string;
   toggleIsSidebar: () => void;
-  isSuggestedReplyOn: boolean;
-  onSuggestedReplyToggle: () => void;
 }
 
 interface SidebarMenuItemProps {
@@ -49,14 +37,14 @@ interface SidebarMenuItemProps {
   label: string;
   onClick?: () => void;
   trailing?: React.ReactNode;
+  disabled?: boolean;
 }
 
-interface SidebarToggleProps {
-  isOn: boolean;
-  onClick: () => void;
-}
-
-type SidebarDepth = "SETTINGS" | "MEMORY" | "ASSET_GALLERY" | "USER_NOTE";
+/*
+ * 지나온 대화(장기기억)·에셋 갤러리·추천 답변·에셋 보기는 서버 연동 전까지 메뉴에서 뺀다.
+ * 목업 데이터나 없는 API 를 부르는 화면을 사용자에게 보여 주지 않기 위해서다.
+ */
+type SidebarDepth = "SETTINGS" | "USER_NOTE";
 
 /** 사이드바 오버레이 페이드 애니메이션 */
 const sidebarOverlayMotion = {
@@ -86,6 +74,7 @@ const SidebarMenuItem = ({
   label,
   onClick,
   trailing,
+  disabled = false,
 }: SidebarMenuItemProps) => {
   const content = (
     <>
@@ -109,36 +98,10 @@ const SidebarMenuItem = ({
     <button
       type="button"
       onClick={onClick}
-      className="body-5 flex w-full items-center justify-between rounded-lg px-2 py-2 text-font-1 transition-colors hover:bg-btn-hover"
+      disabled={disabled}
+      className="body-5 flex w-full items-center justify-between rounded-lg px-2 py-2 text-font-1 transition-colors hover:bg-btn-hover disabled:cursor-wait disabled:opacity-50"
     >
       {content}
-    </button>
-  );
-};
-
-const SidebarToggle = ({ isOn, onClick }: SidebarToggleProps) => {
-  const ToggleIcon = isOn ? Eye : EyeOff;
-
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        "relative h-6 w-12 rounded-full border transition-colors",
-        isOn
-          ? "border-brand/40 bg-brand-opacity-2"
-          : "border-main/40 bg-darkest",
-      )}
-      aria-pressed={isOn}
-    >
-      <span
-        className={cn(
-          "absolute left-0.5 top-0.5 flex size-5 items-center justify-center rounded-full transition",
-          isOn ? "translate-x-6 bg-brand" : "translate-x-0 bg-font-disabled",
-        )}
-      >
-        <ToggleIcon className="size-4 text-on-brand" />
-      </span>
     </button>
   );
 };
@@ -146,8 +109,6 @@ const SidebarToggle = ({ isOn, onClick }: SidebarToggleProps) => {
 const ChattingSidebar = ({
   roomId,
   toggleIsSidebar,
-  isSuggestedReplyOn,
-  onSuggestedReplyToggle,
 }: ChattingSidebarProps) => {
   const t = useTranslations("chatRoom.sidebar");
   const router = useRouter();
@@ -157,8 +118,12 @@ const ChattingSidebar = ({
     (state) => state.balance?.availableBalance ?? 0,
   );
   const { data: room } = useRoomDetailQuery(roomId);
+  // 채팅방 화면이 이미 받아 둔 세계관 상세를 캐시에서 그대로 쓴다.
+  const { data: universe } = useUniverseDetailQuery(room?.universeId);
+  const scenarios = universe
+    ? adaptUniverseDetailToCharacterDetail(universe).scenarios
+    : [];
   const { mutate: patchRoomPersona } = usePatchRoomPersonaMutation();
-  const [isAssetViewOn, setIsAssetViewOn] = useState(true);
   const [sidebarDepth, setSidebarDepth] = useState<SidebarDepth>("SETTINGS");
 
   const isDepthViewOpen = sidebarDepth !== "SETTINGS";
@@ -172,16 +137,6 @@ const ChattingSidebar = ({
       onSelectPersona: (persona) =>
         patchRoomPersona({ roomId, personaId: persona.personaId }),
     });
-  };
-
-  const handleAssetViewToggle = () => {
-    // 채팅 화면 안의 에셋 표시 여부만 변경
-    setIsAssetViewOn((prevState) => !prevState);
-  };
-
-  const handleAssetGalleryBack = () => {
-    // 에셋 갤러리 하위 화면에서 설정 화면으로 복귀
-    setSidebarDepth("SETTINGS");
   };
 
   const handleDepthBack = () => {
@@ -213,9 +168,17 @@ const ChattingSidebar = ({
   };
 
   const handleRestartChat = () => {
-    // 새 대화 API 연결 전까지 확인 다이얼로그만 연결
+    // 같은 세계관으로 새 채팅방을 만든다. 페르소나·시나리오는 채팅 시작 창에서 다시 고른다.
+    if (!universe) return;
     openDialog("CHAT_RESTART", {
-      onConfirm: toggleIsSidebar,
+      onConfirm: () => {
+        toggleIsSidebar();
+        openModal("CHATTING_START", {
+          universeId: universe.universeId,
+          scenarioList: scenarios,
+          currentScenario: scenarios[0],
+        });
+      },
     });
   };
 
@@ -243,15 +206,8 @@ const ChattingSidebar = ({
             transition={sidebarTransition}
             className="h-full"
           >
-            {sidebarDepth === "MEMORY" ? (
-              <ChattingMemoryView onBack={handleDepthBack} />
-            ) : sidebarDepth === "USER_NOTE" ? (
+            {sidebarDepth === "USER_NOTE" ? (
               <ChattingUserNoteView roomId={roomId} onBack={handleDepthBack} />
-            ) : sidebarDepth === "ASSET_GALLERY" ? (
-              <ChattingAssetGalleryView
-                roomId={roomId}
-                onBack={handleAssetGalleryBack}
-              />
             ) : (
               <div className="flex h-full flex-col justify-between p-5">
                 <div className="flex flex-col gap-5">
@@ -305,59 +261,16 @@ const ChattingSidebar = ({
                     </section>
 
                     <section className="flex flex-col gap-3">
-                      <h2 className="body-5 text-font-2">{t("memoryLog")}</h2>
-                      <menu className="flex list-none flex-col gap-1">
-                        <li>
-                          <SidebarMenuItem
-                            icon={Storage}
-                            label={t("memory")}
-                            onClick={() => setSidebarDepth("MEMORY")}
-                          />
-                        </li>
-                        <li>
-                          <SidebarMenuItem
-                            icon={ImageIcon}
-                            label={t("assetGallery")}
-                            onClick={() => setSidebarDepth("ASSET_GALLERY")}
-                          />
-                        </li>
-                      </menu>
-                    </section>
-
-                    <section className="flex flex-col gap-3">
                       <h2 className="body-5 text-font-2">
                         {t("chatSettings")}
                       </h2>
                       <menu className="flex list-none flex-col gap-1">
                         <li>
                           <SidebarMenuItem
-                            icon={PenSparkle}
-                            label={t("suggestedReply")}
-                            trailing={
-                              <SidebarToggle
-                                isOn={isSuggestedReplyOn}
-                                onClick={onSuggestedReplyToggle}
-                              />
-                            }
-                          />
-                        </li>
-                        <li>
-                          <SidebarMenuItem
-                            icon={GalleryViewLine}
-                            label={t("assetView")}
-                            trailing={
-                              <SidebarToggle
-                                isOn={isAssetViewOn}
-                                onClick={handleAssetViewToggle}
-                              />
-                            }
-                          />
-                        </li>
-                        <li>
-                          <SidebarMenuItem
                             icon={ChatPlus}
                             label={t("restartChat")}
                             onClick={handleRestartChat}
+                            disabled={!universe}
                           />
                         </li>
                       </menu>
