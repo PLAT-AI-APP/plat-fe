@@ -197,10 +197,18 @@ const ko = {
     male: "남성향",
     female: "여성향",
   },
+  betaBanner: {
+    label: "클로즈베타 안내",
+    badge: "클로즈베타",
+    message: "지금은 클로즈베타 기간이에요. 불편한 점이나 오류를 알려 주시면 빠르게 고칠게요.",
+    report: "버그 제보하기",
+    close: "안내 닫기",
+  },
   profilePopover: {
     notice: "공지사항",
     customerService: "고객센터",
     myReports: "신고 내역",
+    bugReport: "버그 제보",
     earnings: "나의 수익",
     persona: "내 페르소나",
     contentSettings: "콘텐츠 설정",

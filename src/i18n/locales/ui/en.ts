@@ -207,10 +207,18 @@ const en = {
     male: "Male-oriented",
     female: "Female-oriented",
   },
+  betaBanner: {
+    label: "Closed beta notice",
+    badge: "Closed beta",
+    message: "We are in closed beta. Tell us about any bugs or rough edges and we will fix them fast.",
+    report: "Report a bug",
+    close: "Close notice",
+  },
   profilePopover: {
     notice: "Notice",
     customerService: "Customer service",
     myReports: "My reports",
+    bugReport: "Report a bug",
     earnings: "My earnings",
     persona: "My persona",
     contentSettings: "Content settings",

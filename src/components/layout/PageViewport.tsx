@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import BetaBanner from "./BetaBanner";
 
 interface PageViewportProps {
   children: ReactNode;
@@ -28,6 +29,12 @@ const PageViewport = ({
         !isHomePath && !isChattingRoomPath && "content-x",
       )}
     >
+      {/* 채팅방은 화면 높이를 꽉 채워 쓰므로 띠를 두지 않는다. 버그 제보는 프로필 메뉴에도 있다. */}
+      {!isChattingRoomPath && (
+        <div className={cn("pt-3", isHomePath && "content-x")}>
+          <BetaBanner />
+        </div>
+      )}
       {children}
     </div>
   );

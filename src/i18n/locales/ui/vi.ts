@@ -201,10 +201,18 @@ const vi = {
     male: "Hướng nam",
     female: "Hướng nữ",
   },
+  betaBanner: {
+    label: "Thông báo beta kín",
+    badge: "Beta kín",
+    message: "Chúng tôi đang trong giai đoạn beta kín. Hãy báo cho chúng tôi lỗi hoặc điểm bất tiện, chúng tôi sẽ sửa nhanh.",
+    report: "Báo lỗi",
+    close: "Đóng thông báo",
+  },
   profilePopover: {
     notice: "Thông báo",
     customerService: "Trung tâm khách hàng",
     myReports: "Lịch sử báo cáo",
+    bugReport: "Báo lỗi",
     earnings: "Thu nhập của tôi",
     persona: "Persona của tôi",
     contentSettings: "Cài đặt nội dung",

@@ -31,13 +31,23 @@ const QNA_LIST_PATH = "/customer-service/qna";
  * API(`POST /payments/orders/{orderUid}/cancel`)로 보낸다. 서버가 환불을 접수하면서 환불 문의를 함께 열고,
  * 결과는 운영팀이 그 문의에 답변으로 단다.
  */
-const QnaWriteContents = () => {
+const isWriteCategory = (value: string | undefined): value is WriteCategory =>
+  (WRITE_CATEGORIES as readonly string[]).includes(value ?? "");
+
+interface QnaWriteContentsProps {
+  /** 주소로 받은 유형. 목록에 없는 값이면 기본 유형으로 연다. */
+  initialCategory?: string;
+}
+
+const QnaWriteContents = ({ initialCategory }: QnaWriteContentsProps) => {
   const t = useTranslations("customerService");
   const router = useRouter();
   const { mutate: postQna, isPending: isQnaPending } = usePostQnaMutation();
   const { mutate: requestRefund, isPending: isRefundPending } = usePaymentRefundMutation();
 
-  const [category, setCategory] = useState<WriteCategory>(WRITE_CATEGORIES[0]);
+  const [category, setCategory] = useState<WriteCategory>(
+    isWriteCategory(initialCategory) ? initialCategory : WRITE_CATEGORIES[0],
+  );
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [orderUid, setOrderUid] = useState<string | null>(null);

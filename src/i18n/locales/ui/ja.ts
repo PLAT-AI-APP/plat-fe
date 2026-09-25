@@ -201,10 +201,18 @@ const ja = {
     male: "男性向け",
     female: "女性向け",
   },
+  betaBanner: {
+    label: "クローズドベータのお知らせ",
+    badge: "クローズドベータ",
+    message: "現在クローズドベータ期間です。不具合や使いにくい点を教えていただければすぐに直します。",
+    report: "不具合を報告",
+    close: "お知らせを閉じる",
+  },
   profilePopover: {
     notice: "お知らせ",
     customerService: "カスタマーセンター",
     myReports: "通報履歴",
+    bugReport: "不具合を報告",
     earnings: "マイ収益",
     persona: "マイペルソナ",
     contentSettings: "コンテンツ設定",

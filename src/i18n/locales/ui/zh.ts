@@ -197,10 +197,18 @@ const zh = {
     male: "男性向",
     female: "女性向",
   },
+  betaBanner: {
+    label: "封闭测试通知",
+    badge: "封闭测试",
+    message: "目前处于封闭测试期间。如遇到问题或错误，请告诉我们，我们会尽快修复。",
+    report: "反馈问题",
+    close: "关闭通知",
+  },
   profilePopover: {
     notice: "公告",
     customerService: "客服中心",
     myReports: "举报记录",
+    bugReport: "反馈问题",
     earnings: "我的收益",
     persona: "我的人格设定",
     contentSettings: "内容设置",
