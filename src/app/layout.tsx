@@ -12,7 +12,7 @@ import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 import { NavigationGuardProvider } from "next-navigation-guard";
 import MSWProvider from "@/providers/MSWProvider";
 import MotionProvider from "@/providers/MotionProvider";
-import { ALLOW_INDEXING } from "@/constants/seo";
+import { ALLOW_INDEXING, SITE_URL } from "@/constants/seo";
 
 export const metadata: Metadata = {
   // 1. 기본 메타데이터 및 타이틀 템플릿
@@ -46,10 +46,8 @@ export const metadata: Metadata = {
   },
 
   // 3. 경로 기준점 및 파비콘
-  // metadataBase: new URL("https://plat.so"), // 실제 도메인 주소
-  alternates: {
-    canonical: "/",
-  },
+  // 전역 canonical 은 두지 않는다. 두면 모든 페이지가 "/" 를 원본이라 주장해 하위 페이지가 검색에서 빠진다.
+  metadataBase: new URL(SITE_URL),
   // icons: {
   //   icon: "/favicon.ico",
   //   shortcut: "/favicon-32x32.png",
