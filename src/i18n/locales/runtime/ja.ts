@@ -16,6 +16,8 @@ const ja: typeof en = {
     myReports: "通報履歴",
   },
   errorPage: {
+    maintenanceTitle: "メンテナンス中です",
+    maintenanceDescription: "より良いサービスのため一時的にメンテナンスを行っています。しばらくしてから再度お越しください。",
     notFound: "お探しのページが見つかりません。",
     notFoundTitle: "ページが見つかりません",
     notFoundHint: "アドレスが変わったか、ページが削除された可能性があります。",

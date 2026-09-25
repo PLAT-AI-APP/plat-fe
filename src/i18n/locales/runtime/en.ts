@@ -19,6 +19,8 @@ const en = {
     myReports: "My reports",
   },
   errorPage: {
+    maintenanceTitle: "Under maintenance",
+    maintenanceDescription: "We are doing some quick maintenance. Please check back shortly.",
     notFound: "We couldn't find the page you requested.",
     notFoundTitle: "Page not found",
     notFoundHint: "The address may have changed, or the page was removed.",

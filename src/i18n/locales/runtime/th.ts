@@ -17,6 +17,8 @@ const th: typeof en = {
     myReports: "ประวัติการรายงาน",
   },
   errorPage: {
+    maintenanceTitle: "กำลังปรับปรุงระบบ",
+    maintenanceDescription: "เรากำลังปรับปรุงระบบชั่วคราวเพื่อบริการที่ดีขึ้น โปรดกลับมาอีกครั้งในภายหลัง",
     notFound: "ไม่พบหน้าที่คุณต้องการ",
     notFoundTitle: "ไม่พบหน้านี้",
     notFoundHint: "ที่อยู่อาจเปลี่ยนไป หรือหน้านี้ถูกลบแล้ว",

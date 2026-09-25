@@ -17,6 +17,8 @@ const vi: typeof en = {
     myReports: "Lịch sử báo cáo",
   },
   errorPage: {
+    maintenanceTitle: "Đang bảo trì",
+    maintenanceDescription: "Chúng tôi đang bảo trì ngắn để phục vụ tốt hơn. Vui lòng quay lại sau ít phút.",
     notFound: "Không tìm thấy trang bạn yêu cầu.",
     notFoundTitle: "Không tìm thấy trang",
     notFoundHint: "Địa chỉ có thể đã thay đổi hoặc trang đã bị xóa.",

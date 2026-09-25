@@ -18,6 +18,8 @@ const ko: typeof en = {
     myReports: "신고 내역",
   },
   errorPage: {
+    maintenanceTitle: "점검 중이에요",
+    maintenanceDescription: "더 나은 서비스를 위해 잠시 점검하고 있어요. 조금 뒤에 다시 찾아 주세요.",
     notFound: "요청하신 페이지를 찾을 수 없습니다.",
     notFoundTitle: "페이지를 찾을 수 없어요",
     notFoundHint: "주소가 바뀌었거나 삭제된 페이지일 수 있어요.",

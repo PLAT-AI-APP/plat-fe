@@ -17,6 +17,8 @@ const zh: typeof en = {
     myReports: "举报记录",
   },
   errorPage: {
+    maintenanceTitle: "正在维护",
+    maintenanceDescription: "为了提供更好的服务，我们正在进行短暂维护。请稍后再来。",
     notFound: "找不到您请求的页面。",
     notFoundTitle: "找不到页面",
     notFoundHint: "地址可能已更改，或页面已被删除。",
