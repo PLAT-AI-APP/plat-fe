@@ -29,6 +29,8 @@ const zh: typeof ko = {
     },
     profileEdit: {
       title: "编辑个人资料",
+      optionalInfoNotice:
+        "出生日期和性别为选填项。不填写也可使用全部功能，清空后会立即删除。",
       changePassword: "修改密码",
       submit: "保存",
       invalidType: "仅支持 jpg、png、webp 格式的图片文件。",

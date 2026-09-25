@@ -27,6 +27,8 @@ const ko = {
     },
     profileEdit: {
       title: "프로필 수정",
+      optionalInfoNotice:
+        "생년월일·성별은 선택 항목이에요. 입력하지 않아도 모든 기능을 쓸 수 있고, 지우면 바로 삭제돼요.",
       changePassword: "비밀번호 변경",
       submit: "저장",
       invalidType: "jpg, png, webp 이미지 파일만 가능합니다.",

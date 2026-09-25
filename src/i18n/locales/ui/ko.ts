@@ -311,6 +311,8 @@ const ko = {
       remainPoints: "남는 포인트",
       phone: "받는 번호",
       phoneInvalid: "받는 번호를 확인해 주세요",
+      phonePrivacy:
+        "받는 번호는 상품권 발송에만 쓰고, 처리 후 30일이 지나면 끝 4자리만 남기고 파기해요.",
       giftNotice: "3일 내 문자 발송",
       requested: "교환을 신청했어요",
     },

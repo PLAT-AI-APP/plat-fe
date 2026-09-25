@@ -315,6 +315,8 @@ const vi = {
       remainPoints: "Điểm còn lại",
       phone: "Số nhận",
       phoneInvalid: "Vui lòng kiểm tra số nhận",
+      phonePrivacy:
+        "Số điện thoại chỉ dùng để gửi thẻ quà tặng và sẽ bị hủy, chỉ giữ 4 số cuối, sau 30 ngày kể từ khi xử lý.",
       giftNotice: "Gửi SMS trong 3 ngày",
       requested: "Đã gửi yêu cầu đổi",
     },

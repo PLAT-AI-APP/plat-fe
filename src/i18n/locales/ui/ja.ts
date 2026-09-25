@@ -315,6 +315,8 @@ const ja = {
       remainPoints: "残りポイント",
       phone: "受取番号",
       phoneInvalid: "受取番号を確認してください",
+      phonePrivacy:
+        "番号はギフト券の送付にのみ使用し、処理から30日後に末尾4桁を残して破棄します。",
       giftNotice: "3日以内にSMSで送信",
       requested: "交換を申請しました",
     },

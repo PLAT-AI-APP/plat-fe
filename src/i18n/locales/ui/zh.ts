@@ -311,6 +311,8 @@ const zh = {
       remainPoints: "剩余积分",
       phone: "接收号码",
       phoneInvalid: "请确认接收号码",
+      phonePrivacy:
+        "号码仅用于发送礼品卡，处理 30 天后仅保留后 4 位并销毁其余部分。",
       giftNotice: "3天内短信发送",
       requested: "已提交兑换申请",
     },

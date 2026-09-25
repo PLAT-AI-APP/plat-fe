@@ -260,6 +260,7 @@ const ExchangeConfirmModal = ({
               ? t("exchange.phoneInvalid")
               : t("exchange.giftNotice")}
           </p>
+          <p className="body-7 text-font-2">{t("exchange.phonePrivacy")}</p>
         </div>
 
         <div className="grid grid-cols-2 gap-2">

@@ -29,6 +29,8 @@ const th: typeof ko = {
     },
     profileEdit: {
       title: "แก้ไขโปรไฟล์",
+      optionalInfoNotice:
+        "วันเกิดและเพศเป็นข้อมูลที่ไม่บังคับ ใช้งานได้ทุกฟีเจอร์แม้ไม่กรอก และจะถูกลบทันทีเมื่อล้างข้อมูล",
       changePassword: "เปลี่ยนรหัสผ่าน",
       submit: "บันทึก",
       invalidType: "รองรับเฉพาะไฟล์รูปภาพ jpg, png, webp เท่านั้น",

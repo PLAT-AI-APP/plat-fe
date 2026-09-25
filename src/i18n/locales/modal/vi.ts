@@ -31,6 +31,8 @@ const vi: typeof ko = {
     },
     profileEdit: {
       title: "Chỉnh sửa hồ sơ",
+      optionalInfoNotice:
+        "Ngày sinh và giới tính là không bắt buộc. Bạn vẫn dùng được mọi tính năng khi không nhập, và dữ liệu bị xóa ngay khi bạn xóa trống.",
       changePassword: "Đổi mật khẩu",
       submit: "Lưu",
       invalidType: "Chỉ hỗ trợ file ảnh jpg, png, webp.",

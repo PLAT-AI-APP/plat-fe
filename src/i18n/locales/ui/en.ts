@@ -321,6 +321,8 @@ const en = {
       remainPoints: "Points left",
       phone: "Phone number",
       phoneInvalid: "Check the phone number",
+      phonePrivacy:
+        "Your number is used only to send the gift card and is masked (last 4 digits kept) 30 days after processing.",
       giftNotice: "Sent by text within 3 days",
       requested: "Request submitted",
     },

@@ -30,6 +30,8 @@ const en: typeof ko = {
     },
     profileEdit: {
       title: "Edit profile",
+      optionalInfoNotice:
+        "Birth date and gender are optional. You can use every feature without them, and clearing them deletes them right away.",
       changePassword: "Change password",
       submit: "Save",
       invalidType: "Only jpg, png, and webp image files are supported.",

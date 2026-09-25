@@ -30,6 +30,8 @@ const ja: typeof ko = {
     },
     profileEdit: {
       title: "プロフィール修正",
+      optionalInfoNotice:
+        "生年月日・性別は任意項目です。入力しなくてもすべての機能を使え、消去するとすぐに削除されます。",
       changePassword: "パスワード変更",
       submit: "保存",
       invalidType: "jpg、png、webp画像ファイルのみ使用できます。",
