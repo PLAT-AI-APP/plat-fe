@@ -62,8 +62,9 @@ const zh: typeof en = {
     companyName: "Orbitlab Co., Ltd.",
     representative: "代表 金承佑",
     registrationNumberLabel: "营业执照号码",
+    mailOrderNumberLabel: "通信销售业申报号",
     address: "仁川广域市 延寿区 Harmony-ro178番街22号 7层707号 707-A19号",
-    copyright: "© 2025 Wrtn. All rights reserved.",
+    copyright: "© 2026 Orbitlab Co., Ltd. All rights reserved.",
   },
   searchBar: {
     placeholder: "请输入搜索词",

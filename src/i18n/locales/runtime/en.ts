@@ -64,8 +64,9 @@ const en = {
     companyName: "Orbitlab Co., Ltd.",
     representative: "CEO Kim Seungwoo",
     registrationNumberLabel: "Business registration number",
+    mailOrderNumberLabel: "Mail-order Business Reg. No.",
     address: "707-A19, 707, 7F, 22 Harmony-ro 178beon-gil, Yeonsu-gu, Incheon",
-    copyright: "© 2025 Wrtn. All rights reserved.",
+    copyright: "© 2026 Orbitlab Co., Ltd. All rights reserved.",
   },
   searchBar: {
     placeholder: "Search by keyword",

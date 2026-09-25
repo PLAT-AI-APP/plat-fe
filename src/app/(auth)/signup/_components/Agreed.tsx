@@ -11,22 +11,23 @@ import Checkbox from "@/icons/Checkbox";
 import CheckboxEmpty from "@/icons/CheckboxEmpty";
 import CheckboxFill from "@/icons/CheckboxFill";
 import { ArrowRight } from "@/icons";
+import { LEGAL_LINKS } from "@/constants/legal";
 
 const AGREEMENT_ITEMS = [
   {
     id: "isTermsAgreed",
     titleKey: "termsOfService",
-    link: "https://bloom-shawl-3f7.notion.site/PLAT-36f1c900ce3e8073805de6e7e8e6cfbf?source=copy_link",
+    link: LEGAL_LINKS.terms,
   },
   {
     id: "isPrivacyAgreed",
     titleKey: "privacyPolicy",
-    link: "https://bloom-shawl-3f7.notion.site/PLAT-3721c900ce3e800bac34c38d68e1a682?source=copy_link",
+    link: LEGAL_LINKS.privacy,
   },
   {
     id: "isAgeAgreed",
     titleKey: "ageOver14",
-    link: "https://bloom-shawl-3f7.notion.site/PLAT-3721c900ce3e80c3bb36c3e32a0f08b1?source=copy_link",
+    link: LEGAL_LINKS.ageOver14,
   },
 ] as const;
 

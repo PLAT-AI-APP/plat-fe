@@ -61,8 +61,9 @@ const ja: typeof en = {
     companyName: "Orbitlab Co., Ltd.",
     representative: "代表 キム・スンウ",
     registrationNumberLabel: "事業者登録番号",
+    mailOrderNumberLabel: "通信販売業届出番号",
     address: "仁川広域市 延寿区 ハーモニーロ178番キル 22, 7階 707号 707-A19号",
-    copyright: "© 2025 Wrtn. All rights reserved.",
+    copyright: "© 2026 Orbitlab Co., Ltd. All rights reserved.",
   },
   searchBar: {
     placeholder: "検索語を入力してください",

@@ -63,8 +63,9 @@ const ko: typeof en = {
     companyName: "(주)오비트랩",
     representative: "대표 김승우",
     registrationNumberLabel: "사업자등록번호",
+    mailOrderNumberLabel: "통신판매업신고",
     address: "인천광역시 연수구 하모니로178번길 22, 7층 707호 707-아19호",
-    copyright: "© 2025 Wrtn. All rights reserved.",
+    copyright: "© 2026 Orbitlab Co., Ltd. All rights reserved.",
   },
   searchBar: {
     placeholder: "검색어를 입력하세요",

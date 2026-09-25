@@ -62,9 +62,10 @@ const th: typeof en = {
     companyName: "Orbitlab Co., Ltd.",
     representative: "ตัวแทน Kim Seungwoo",
     registrationNumberLabel: "เลขทะเบียนธุรกิจ",
+    mailOrderNumberLabel: "เลขทะเบียนธุรกิจขายออนไลน์",
     address:
       "707-A19, 707 ชั้น 7, 22 Harmony-ro 178beon-gil, Yeonsu-gu, Incheon",
-    copyright: "© 2025 Wrtn. All rights reserved.",
+    copyright: "© 2026 Orbitlab Co., Ltd. All rights reserved.",
   },
   searchBar: {
     placeholder: "กรอกคำค้นหา",
