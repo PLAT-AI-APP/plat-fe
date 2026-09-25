@@ -242,6 +242,10 @@ const ko = {
       HATE: "혐오 표현",
       COPYRIGHT: "저작권 침해",
       SPAM: "스팸·광고",
+      DEFAMATION: "명예훼손·사생활 침해",
+      IMPERSONATION: "실존 인물 사칭",
+      MINOR_SEXUAL: "미성년자 성적 콘텐츠",
+      PERSONAL_INFO: "개인정보 노출",
       ETC: "기타",
     },
     statuses: {

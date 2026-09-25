@@ -246,6 +246,10 @@ const ja = {
       HATE: "ヘイトスピーチ",
       COPYRIGHT: "著作権侵害",
       SPAM: "スパム・広告",
+      DEFAMATION: "名誉毀損・プライバシー侵害",
+      IMPERSONATION: "実在人物のなりすまし",
+      MINOR_SEXUAL: "未成年者の性的コンテンツ",
+      PERSONAL_INFO: "個人情報の露出",
       ETC: "その他",
     },
     statuses: {

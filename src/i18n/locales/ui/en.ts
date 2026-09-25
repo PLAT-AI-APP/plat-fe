@@ -252,6 +252,10 @@ const en = {
       HATE: "Hate speech",
       COPYRIGHT: "Copyright infringement",
       SPAM: "Spam or ads",
+      DEFAMATION: "Defamation / privacy",
+      IMPERSONATION: "Impersonating a real person",
+      MINOR_SEXUAL: "Sexual content involving minors",
+      PERSONAL_INFO: "Personal info exposure",
       ETC: "Other",
     },
     statuses: {

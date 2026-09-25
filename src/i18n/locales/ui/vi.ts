@@ -246,6 +246,10 @@ const vi = {
       HATE: "Ngôn từ thù ghét",
       COPYRIGHT: "Vi phạm bản quyền",
       SPAM: "Spam·Quảng cáo",
+      DEFAMATION: "Phỉ báng / xâm phạm quyền riêng tư",
+      IMPERSONATION: "Mạo danh người thật",
+      MINOR_SEXUAL: "Nội dung tình dục liên quan trẻ vị thành niên",
+      PERSONAL_INFO: "Lộ thông tin cá nhân",
       ETC: "Khác",
     },
     statuses: {

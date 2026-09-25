@@ -242,6 +242,10 @@ const zh = {
       HATE: "仇恨言论",
       COPYRIGHT: "侵犯版权",
       SPAM: "垃圾信息·广告",
+      DEFAMATION: "诽谤·侵犯隐私",
+      IMPERSONATION: "冒充真实人物",
+      MINOR_SEXUAL: "涉及未成年人的色情内容",
+      PERSONAL_INFO: "泄露个人信息",
       ETC: "其他",
     },
     statuses: {

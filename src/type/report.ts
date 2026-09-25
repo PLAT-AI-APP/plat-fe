@@ -7,8 +7,12 @@ export type ReportTargetType = (typeof REPORT_TARGET_TYPES)[number];
 /** 신고 모달의 사유 칩이 이 순서대로 놓인다. 기타(ETC)는 상세 입력이 필수라 맨 뒤에 둔다. */
 export const REPORT_REASONS = [
   "SEXUAL",
+  "MINOR_SEXUAL",
   "VIOLENCE",
   "HATE",
+  "DEFAMATION",
+  "IMPERSONATION",
+  "PERSONAL_INFO",
   "COPYRIGHT",
   "SPAM",
   "ETC",
