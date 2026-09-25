@@ -110,6 +110,8 @@ const zh: typeof en = {
       creationsDeleted: "你亲自创建的角色和世界观在注销后都会被删除。",
       chatsReadOnly: "已有聊天室会保留，但无法再发送新消息。",
     },
+    remainingBalance:
+      "剩余的 {credits} 积分和 {points}P 收益积分在注销后将无法恢复。如有待发放的礼品卡兑换，完成后才能注销。",
     legalNotice:
       "支付、退款和积分交易记录因相关法规规定的保管义务（5年）而不会立即删除。",
     agreement: "我已确认以上全部内容",

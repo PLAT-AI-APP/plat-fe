@@ -119,6 +119,8 @@ const en = {
       chatsReadOnly:
         "Existing chat rooms stay, but you won't be able to send new messages.",
     },
+    remainingBalance:
+      "Your remaining {credits} credits and {points}P in earnings can't be recovered after you leave. If a gift card exchange is still pending, you can leave once it's done.",
     legalNotice:
       "Payment, refund, and credit transaction records are not deleted immediately because the retention obligation (5 years) is required by applicable commerce and tax laws.",
     agreement: "I have checked everything written above.",

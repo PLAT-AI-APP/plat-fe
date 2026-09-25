@@ -118,6 +118,8 @@ const vi: typeof en = {
       chatsReadOnly:
         "Các phòng chat hiện có vẫn được giữ lại, nhưng bạn sẽ không thể gửi tin nhắn mới.",
     },
+    remainingBalance:
+      "{credits} tín dụng và {points}P điểm thu nhập còn lại sẽ không thể khôi phục sau khi rời đi. Nếu còn yêu cầu đổi thẻ quà tặng đang chờ gửi, bạn có thể rời đi sau khi hoàn tất.",
     legalNotice:
       "Lịch sử thanh toán, hoàn tiền và giao dịch credit sẽ không bị xóa ngay vì có nghĩa vụ lưu trữ theo quy định pháp luật liên quan (5 năm).",
     agreement: "Tôi đã kiểm tra toàn bộ nội dung ở trên",

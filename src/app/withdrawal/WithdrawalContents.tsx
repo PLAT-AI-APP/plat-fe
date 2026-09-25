@@ -8,6 +8,8 @@ import CheckboxEmpty from "@/icons/CheckboxEmpty";
 import useToggle from "@/hooks/common/useToggle";
 import { cn } from "@/lib/utils";
 import { useDeleteUserMutation } from "@/api/user/deleteUser";
+import { useEarningSummaryQuery } from "@/api/earning/getEarningSummary";
+import { useWalletBalanceQuery } from "@/api/wallet/getWalletBalance";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useDialogStore } from "@/store/useDialogStore";
 import { useUserStore } from "@/store/useUserStore";
@@ -25,6 +27,12 @@ const WithdrawalContents = () => {
   const openDialog = useDialogStore((state) => state.openDialog);
   const closeDialog = useDialogStore((state) => state.closeDialog);
   const { isOpen: isConfirmed, toggle: toggleConfirmed } = useToggle();
+  // 사라질 잔액을 숫자로 먼저 보여 준다. "크레딧이 지워진다"는 문장만으로는 얼마를 잃는지 알 수 없다.
+  const { data: wallet } = useWalletBalanceQuery();
+  const { data: earning } = useEarningSummaryQuery();
+  const remainingCredits = wallet?.balance ?? 0;
+  const remainingPoints = earning?.available ?? 0;
+  const hasRemaining = remainingCredits > 0 || remainingPoints > 0;
 
   const notices = [
     t("withdrawalPage.notices.dataDeleted"),
@@ -95,6 +103,18 @@ const WithdrawalContents = () => {
                   </li>
                 </ul>
               </div>
+
+              {hasRemaining && (
+                <p
+                  role="note"
+                  className="body-5 rounded-xl border border-main px-4 py-3 text-font-1"
+                >
+                  {t("withdrawalPage.remainingBalance", {
+                    credits: remainingCredits.toLocaleString(),
+                    points: remainingPoints.toLocaleString(),
+                  })}
+                </p>
+              )}
 
               <p className="body-8 text-font-disabled">
                 {t("withdrawalPage.legalNotice")}
