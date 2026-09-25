@@ -36,6 +36,10 @@ export interface Room {
   /** 이 방에서 쓰는 페르소나. 페르소나 선택 모달의 현재 선택 상태로 씁니다. */
   personaId: string;
   multiplier: PromptMultiplier;
+  /** AI 가 대화를 요약해 쌓은 장기기억. 사용자가 고칠 수 있고 다음 요약은 고친 내용 위에 합쳐진다. */
+  memory: string;
+  /** 사용자가 적은 유저노트. 매 턴 프롬프트에 들어간다. */
+  userNote: string;
 }
 
 export type MessageSender = "USER" | "AI";

@@ -3,10 +3,10 @@ import { FIELD_ERROR_MESSAGES } from "@/constants/fieldMessages";
 import { REPORT_REASONS } from "@/type/report";
 
 export const userNoteFormSchema = z.object({
+  // 비워서 저장하면 유저노트를 지운다.
   userNote: z
     .string()
     .trim()
-    .min(1, FIELD_ERROR_MESSAGES.userNoteRequired)
     .max(500, FIELD_ERROR_MESSAGES.userNoteMaxLength),
 });
 

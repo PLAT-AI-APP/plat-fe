@@ -1,9 +1,13 @@
 "use client";
 
+import { useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
+import { useRoomDetailQuery } from "@/api/room/getRoomDetail";
 import { usePatchRoomUserNoteMutation } from "@/api/room/patchRoomUserNote";
+import { roomQueryKeys } from "@/api/room/queryKeys";
 import { ArrowLeft } from "@/icons";
 import Note from "@/icons/Note";
 import { useAutoResizeTextarea } from "@/hooks/form/useAutoResizeTextarea";
@@ -11,6 +15,7 @@ import { useTranslateText } from "@/hooks/i18n/useTranslateText";
 import { focusFirstFieldError } from "@/lib/formError";
 import { showAppToast } from "@/lib/toast";
 import { userNoteFormSchema, UserNoteFormValues } from "@/schema/modal.schema";
+import type { Room } from "@/type/room";
 
 /** userNoteFormSchema 의 최대 길이와 같아야 카운터와 검증이 어긋나지 않는다. */
 const USER_NOTE_MAX_LENGTH = 500;
@@ -28,16 +33,25 @@ const ChattingUserNoteView = ({ roomId, onBack }: ChattingUserNoteViewProps) => 
   const sidebarT = useTranslations("chatRoom.sidebar");
   const t = useTranslations("modalUi.userNote");
   const translateText = useTranslateText();
+  const queryClient = useQueryClient();
+  const { data: room } = useRoomDetailQuery(roomId);
+  const savedNote = room?.userNote ?? "";
   const {
     register,
     handleSubmit,
     control,
     setFocus,
-    formState: { errors },
+    reset,
+    formState: { errors, isDirty },
   } = useForm<UserNoteFormValues>({
     resolver: zodResolver(userNoteFormSchema),
-    defaultValues: { userNote: "" },
+    defaultValues: { userNote: savedNote },
   });
+
+  // 방 정보가 늦게 오면 저장된 노트로 채운다. 이미 고치기 시작했으면 덮지 않는다.
+  useEffect(() => {
+    if (!isDirty) reset({ userNote: savedNote });
+  }, [savedNote, isDirty, reset]);
 
   const noteValue = useWatch({ control, name: "userNote" }) ?? "";
   const { textareaRef } = useAutoResizeTextarea({
@@ -58,7 +72,13 @@ const ChattingUserNoteView = ({ roomId, onBack }: ChattingUserNoteViewProps) => 
     patchUserNote(
       { roomId, userNote: data.userNote },
       {
-        onSuccess: () => showAppToast("success", t("successToast")),
+        onSuccess: () => {
+          queryClient.setQueryData<Room>(roomQueryKeys.detail(roomId), (prev) =>
+            prev ? { ...prev, userNote: data.userNote } : prev,
+          );
+          reset({ userNote: data.userNote });
+          showAppToast("success", t("successToast"));
+        },
       },
     );
   };
@@ -89,8 +109,7 @@ const ChattingUserNoteView = ({ roomId, onBack }: ChattingUserNoteViewProps) => 
         </header>
 
         <div className="flex flex-col gap-3">
-          {/* 백엔드는 방마다 userNote 문자열 하나를 통째로 덮어쓰고 조회 API가 없어,
-              지나온 대화처럼 매번 새로 입력하는 단일 텍스트로 다룬다. */}
+          {/* 방마다 userNote 문자열 하나를 통째로 덮어쓴다. 방 조회로 받은 값을 채워 열고, 비워서 저장하면 지운다. */}
           <div className="flex rounded-lg border border-main bg-darkest px-2 py-3 transition-colors focus-within:field-focus!">
             <textarea
               {...noteField}
@@ -110,7 +129,7 @@ const ChattingUserNoteView = ({ roomId, onBack }: ChattingUserNoteViewProps) => 
 
             <button
               type="submit"
-              disabled={isPending || !noteValue.trim()}
+              disabled={isPending || noteValue.trim() === savedNote.trim()}
               className="body-7 rounded border border-main bg-btn-hover px-3 py-1 text-font-1 transition-colors hover:bg-card-selected disabled:cursor-default disabled:opacity-50"
             >
               {t("submit")}

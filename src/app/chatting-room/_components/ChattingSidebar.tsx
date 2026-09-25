@@ -6,7 +6,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, ChatPlus, Logout, Persona, Token } from "@/icons";
+import { ArrowLeft, ChatPlus, Logout, Persona, Storage, Token } from "@/icons";
 import Note from "@/icons/Note";
 import { useRoomDetailQuery } from "@/api/room/getRoomDetail";
 import {
@@ -26,6 +26,7 @@ import { TRANSITION } from "@/constants/motion";
  * (모달이던 시절에는 모달 레지스트리가 같은 방식으로 늦게 불러왔다.)
  */
 const ChattingUserNoteView = dynamic(() => import("./chatting-user-note-view"));
+const ChattingMemoryView = dynamic(() => import("./chatting-memory-view"));
 
 interface ChattingSidebarProps {
   roomId: string;
@@ -41,10 +42,10 @@ interface SidebarMenuItemProps {
 }
 
 /*
- * 지나온 대화(장기기억)·에셋 갤러리·추천 답변·에셋 보기는 서버 연동 전까지 메뉴에서 뺀다.
+ * 에셋 갤러리·추천 답변·에셋 보기는 서버 연동 전까지 메뉴에서 뺀다.
  * 목업 데이터나 없는 API 를 부르는 화면을 사용자에게 보여 주지 않기 위해서다.
  */
-type SidebarDepth = "SETTINGS" | "USER_NOTE";
+type SidebarDepth = "SETTINGS" | "USER_NOTE" | "MEMORY";
 
 /** 사이드바 오버레이 페이드 애니메이션 */
 const sidebarOverlayMotion = {
@@ -208,6 +209,8 @@ const ChattingSidebar = ({
           >
             {sidebarDepth === "USER_NOTE" ? (
               <ChattingUserNoteView roomId={roomId} onBack={handleDepthBack} />
+            ) : sidebarDepth === "MEMORY" ? (
+              <ChattingMemoryView roomId={roomId} onBack={handleDepthBack} />
             ) : (
               <div className="flex h-full flex-col justify-between p-5">
                 <div className="flex flex-col gap-5">
@@ -255,6 +258,19 @@ const ChattingSidebar = ({
                             icon={Note}
                             label={t("userNote")}
                             onClick={() => setSidebarDepth("USER_NOTE")}
+                          />
+                        </li>
+                      </menu>
+                    </section>
+
+                    <section className="flex flex-col gap-3">
+                      <h2 className="body-5 text-font-2">{t("memoryLog")}</h2>
+                      <menu className="flex list-none flex-col gap-1">
+                        <li>
+                          <SidebarMenuItem
+                            icon={Storage}
+                            label={t("memory")}
+                            onClick={() => setSidebarDepth("MEMORY")}
                           />
                         </li>
                       </menu>
