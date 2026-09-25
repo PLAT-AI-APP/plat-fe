@@ -14,6 +14,7 @@ const DIALOG_LOADERS = {
   CHAT_LEAVE: () => import("./ChatLeaveDialog"),
   CHAT_RESTART: () => import("./ChatRestartDialog"),
   COMMENT_DELETE: () => import("./CommentDeleteDialog"),
+  CREDIT_INSUFFICIENT: () => import("./CreditInsufficientDialog"),
   DRAFT_OVERWRITE: () => import("./DraftOverwriteDialog"),
   DRAFT_SAVE_OVERWRITE: () => import("./DraftSaveOverwriteDialog"),
   LOGIN_REQUIRED: () => import("./LoginRequiredDialog"),

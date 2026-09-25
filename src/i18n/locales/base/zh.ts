@@ -78,6 +78,12 @@ const zh: typeof ko = {
     },
   },
   dialog: {
+    creditInsufficient: {
+      title: "笔记积分不足",
+      description: "继续此对话需要更多笔记积分。\n充值后返回，刚才要发送的消息仍会保留在输入框中。",
+      cancel: "稍后",
+      confirm: "去充值",
+    },
     chatRestart: {
       title: "要重新开始对话吗？",
       description: "将为这个角色创建新的聊天室，\n并移动到新的聊天室。",

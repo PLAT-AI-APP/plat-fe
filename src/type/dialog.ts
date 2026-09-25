@@ -12,6 +12,10 @@ export interface DialogProps {
   isConfirmPending?: boolean;
 }
 
+export interface CreditInsufficientDialogProps {
+  onClose: () => void;
+}
+
 export interface DraftOverwriteDialogProps {
   onCancel: () => void;
   onClose: () => void;
@@ -105,6 +109,7 @@ export type DialogTypeMap = {
   CHAT_LEAVE: DialogWithoutManagerClose<ChatLeaveDialogProps>;
   CHAT_RESTART: DialogWithoutManagerClose<ChatRestartDialogProps>;
   COMMENT_DELETE: DialogWithoutManagerClose<CommentDeleteDialogProps>;
+  CREDIT_INSUFFICIENT: DialogWithoutManagerClose<CreditInsufficientDialogProps>;
   DRAFT_OVERWRITE: DialogWithoutManagerClose<DraftOverwriteDialogProps>;
   DRAFT_SAVE_OVERWRITE: DialogWithoutManagerClose<DraftSaveOverwriteDialogProps>;
   LOGIN_REQUIRED: DialogWithoutManagerClose<LoginRequiredDialogProps>;

@@ -12,7 +12,11 @@ import { roomQueryKeys } from "@/api/room/queryKeys";
 import { getApiErrorMessage, isAppError } from "@/lib/apiError";
 import { createTextReveal } from "@/lib/textReveal";
 import { showAppToast } from "@/lib/toast";
+import { useDialogStore } from "@/store/useDialogStore";
 import type { ChatMessageType } from "@/type/chat";
+
+/** 크레딧 예약 시 잔액이 모자라면 서버가 주는 코드(422). */
+const CREDIT_INSUFFICIENT_CODE = "CREDIT_INSUFFICIENT";
 
 // 서버는 턴이 끝난 뒤 두 메시지를 저장하므로, 바로 조회하면 아직 없을 수 있어 잠깐 기다리며 다시 봅니다.
 const SYNC_RETRY_COUNT = 3;
@@ -64,6 +68,7 @@ export const useChatTurn = ({
 }: UseChatTurnParams) => {
   const queryClient = useQueryClient();
   const { mutateAsync: startChat } = usePostChatStartMutation();
+  const openDialog = useDialogStore((state) => state.openDialog);
   const [turns, setTurns] = useState<ChatTurnState[]>([]);
   const [isBusy, setIsBusy] = useState(false);
   // state 는 다음 렌더에야 반영돼, 연달아 눌린 전송을 막으려면 즉시 읽히는 ref 가 필요합니다.
@@ -153,7 +158,7 @@ export const useChatTurn = ({
       });
 
       try {
-        // 시작 요청의 실패 토스트는 MutationCache 가 이미 띄웁니다.
+        // 시작 요청은 전역 토스트를 끄고 아래 catch 에서 직접 알린다(노트 부족은 다이얼로그).
         const { turnId } = await startChat({
           chatTurnId,
           context: {
@@ -230,6 +235,14 @@ export const useChatTurn = ({
         // 아무 응답도 못 받았다면 보낸 말이 조용히 사라지지 않게, 말풍선을 거두고 입력창에 되돌린다.
         removeTurn(chatTurnId);
         onTurnFailedRef.current?.(message);
+        if (!hasStarted) {
+          // 노트가 모자라 시작하지 못했으면 토스트 대신 충전으로 안내한다. 보낸 말은 위에서 입력창에 돌려놨다.
+          if (isAppError(error) && error.code === CREDIT_INSUFFICIENT_CODE) {
+            openDialog("CREDIT_INSUFFICIENT", {});
+          } else {
+            notifyApiError(error);
+          }
+        }
         if (hasStarted) void settleTurn(chatTurnId, false);
       }
     },
@@ -242,6 +255,7 @@ export const useChatTurn = ({
       removeTurn,
       releaseBusy,
       settleTurn,
+      openDialog,
     ],
   );
 

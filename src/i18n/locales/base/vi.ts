@@ -78,6 +78,12 @@ const vi: typeof ko = {
     },
   },
   dialog: {
+    creditInsufficient: {
+      title: "Không đủ credit note",
+      description: "Bạn cần thêm credit note để tiếp tục cuộc trò chuyện.\nNạp xong quay lại, tin nhắn định gửi vẫn còn trong ô nhập.",
+      cancel: "Để sau",
+      confirm: "Nạp ngay",
+    },
     chatRestart: {
       title: "Bắt đầu lại cuộc trò chuyện?",
       description:

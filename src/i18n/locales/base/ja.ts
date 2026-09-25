@@ -78,6 +78,12 @@ const ja: typeof ko = {
     },
   },
   dialog: {
+    creditInsufficient: {
+      title: "ノートが足りません",
+      description: "この会話を続けるにはノートが必要です。\nチャージして戻ると、送ろうとしたメッセージは入力欄に残っています。",
+      cancel: "あとで",
+      confirm: "チャージする",
+    },
     chatRestart: {
       title: "会話を新しく始めますか？",
       description:

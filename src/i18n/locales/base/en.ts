@@ -80,6 +80,12 @@ const en: typeof ko = {
     },
   },
   dialog: {
+    creditInsufficient: {
+      title: "Not enough notes",
+      description: "You need more notes to continue this chat.\nYour message will still be in the input box when you come back.",
+      cancel: "Later",
+      confirm: "Top up",
+    },
     chatRestart: {
       title: "Start a new conversation?",
       description:

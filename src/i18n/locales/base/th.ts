@@ -78,6 +78,12 @@ const th: typeof ko = {
     },
   },
   dialog: {
+    creditInsufficient: {
+      title: "โน้ตไม่พอ",
+      description: "ต้องมีโน้ตเพิ่มเพื่อคุยต่อ\nเติมแล้วกลับมา ข้อความที่จะส่งยังอยู่ในช่องพิมพ์",
+      cancel: "ไว้ทีหลัง",
+      confirm: "เติมโน้ต",
+    },
     chatRestart: {
       title: "เริ่มบทสนทนาใหม่หรือไม่?",
       description:

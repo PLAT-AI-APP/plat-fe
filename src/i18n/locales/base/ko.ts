@@ -78,6 +78,12 @@ const ko = {
     },
   },
   dialog: {
+    creditInsufficient: {
+      title: "노트가 부족해요",
+      description: "이 대화를 이어 가려면 노트가 더 필요해요.\n충전하고 돌아오면 보내려던 말이 입력창에 그대로 있어요.",
+      cancel: "나중에",
+      confirm: "충전하기",
+    },
     chatRestart: {
       title: "대화를 새로 할까요?",
       description:

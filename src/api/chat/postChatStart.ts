@@ -13,10 +13,14 @@ const postChatStart = async (request: ChatStartRequest) => {
   return response.data;
 };
 
-/** 채팅 턴 시작 */
+/**
+ * 채팅 턴 시작. 실패 안내는 useChatTurn 이 직접 한다 — 노트 부족처럼 토스트 대신 다이얼로그로 알릴 오류가 있어서
+ * 전역 토스트를 끈다.
+ */
 export const usePostChatStartMutation = () => {
   return useMutation<ChatStartResponse, AppError, ChatStartRequest>({
     mutationKey: ["post-chat-start"],
     mutationFn: postChatStart,
+    meta: { silent: true },
   });
 };
