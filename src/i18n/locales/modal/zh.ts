@@ -44,6 +44,7 @@ const zh: typeof ko = {
     report: {
       titleComment: "{nickname}的评论存在什么问题？",
       titleUniverse: "角色「{name}」有什么问题？",
+      titleMessage: "「{name}」的回复有什么问题？",
       reasonLabel: "举报原因",
       detailPlaceholder: "请具体说明举报原因，我们会审核后处理。",
       detailPlaceholderRequired: "请告诉我们具体是什么问题",
@@ -53,6 +54,7 @@ const zh: typeof ko = {
       viewHistory: "举报记录",
       alreadySubmitted: "你已举报过此内容。处理结果可在举报记录中查看",
       selfTarget: "无法举报自己发布的内容",
+      selfTargetMessage: "无法举报自己创建的角色的回复",
       targetNotFound: "该内容已被删除或无法查看",
     },
     passwordReset: {

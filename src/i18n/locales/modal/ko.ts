@@ -42,6 +42,7 @@ const ko = {
     report: {
       titleComment: "{nickname}님의 댓글에 어떤 문제가 있나요?",
       titleUniverse: "{name} 캐릭터에 어떤 문제가 있나요?",
+      titleMessage: "{name}의 답변에 어떤 문제가 있나요?",
       reasonLabel: "신고 사유",
       detailPlaceholder: "신고 사유를 구체적으로 남겨주시면 검토 후 조치할게요.",
       detailPlaceholderRequired: "어떤 점이 문제인지 알려주세요",
@@ -51,6 +52,7 @@ const ko = {
       viewHistory: "신고 내역",
       alreadySubmitted: "이미 신고한 대상이에요. 처리 결과는 신고 내역에서 확인할 수 있어요",
       selfTarget: "내가 작성한 콘텐츠는 신고할 수 없어요",
+      selfTargetMessage: "내가 만든 캐릭터의 답변은 신고할 수 없어요",
       targetNotFound: "삭제됐거나 더 이상 볼 수 없는 콘텐츠예요",
     },
     passwordReset: {

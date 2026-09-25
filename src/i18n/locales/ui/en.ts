@@ -244,6 +244,7 @@ const en = {
     targetTypes: {
       COMMENT: "Comment",
       UNIVERSE: "Character",
+      MESSAGE: "AI reply",
     },
     reasons: {
       SEXUAL: "Sexual content",

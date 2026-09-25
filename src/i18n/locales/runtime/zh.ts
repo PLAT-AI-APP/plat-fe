@@ -279,6 +279,7 @@ const zh: typeof en = {
     suggestedReply: "推荐回复",
     deleteResponse: "删除回复",
     retryResponse: "重新生成回复",
+    reportResponse: "举报回复",
     selectedSuggestedReply: "已选择的推荐回复",
     characterTyping: "{name}正在输入",
     characterProfileAlt: "{name} 的头像",

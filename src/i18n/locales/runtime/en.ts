@@ -294,6 +294,7 @@ const en = {
     suggestedReply: "Suggested reply",
     deleteResponse: "Delete response",
     retryResponse: "Regenerate response",
+    reportResponse: "Report response",
     selectedSuggestedReply: "Selected suggested reply",
     characterTyping: "{name} is typing",
     characterProfileAlt: "{name} profile image",

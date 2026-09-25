@@ -292,6 +292,7 @@ const vi: typeof en = {
     suggestedReply: "Trả lời gợi ý",
     deleteResponse: "Xóa phản hồi",
     retryResponse: "Tạo lại phản hồi",
+    reportResponse: "Báo cáo phản hồi",
     selectedSuggestedReply: "Câu trả lời gợi ý đã chọn",
     characterTyping: "{name} đang nhập",
     characterProfileAlt: "Ảnh hồ sơ của {name}",

@@ -237,6 +237,7 @@ const th = {
     targetTypes: {
       COMMENT: "ความคิดเห็น",
       UNIVERSE: "ตัวละคร",
+      MESSAGE: "คำตอบของ AI",
     },
     reasons: {
       SEXUAL: "เนื้อหาทางเพศ",

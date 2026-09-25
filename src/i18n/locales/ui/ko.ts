@@ -234,6 +234,7 @@ const ko = {
     targetTypes: {
       COMMENT: "댓글",
       UNIVERSE: "캐릭터",
+      MESSAGE: "AI 답변",
     },
     reasons: {
       SEXUAL: "선정성",

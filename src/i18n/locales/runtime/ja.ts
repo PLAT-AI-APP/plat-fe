@@ -284,6 +284,7 @@ const ja: typeof en = {
     suggestedReply: "おすすめ返信",
     deleteResponse: "返信を削除",
     retryResponse: "返信を再生成",
+    reportResponse: "返信を通報",
     selectedSuggestedReply: "選択されたおすすめ返信",
     characterTyping: "{name}が入力中",
     characterProfileAlt: "{name}のプロフィール画像",

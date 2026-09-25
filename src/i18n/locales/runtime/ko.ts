@@ -284,6 +284,7 @@ const ko: typeof en = {
     suggestedReply: "추천답변",
     deleteResponse: "응답 삭제",
     retryResponse: "응답 다시하기",
+    reportResponse: "응답 신고",
     selectedSuggestedReply: "선택된 추천 응답",
     characterTyping: "{name} 입력 중",
     characterProfileAlt: "{name} 프로필 이미지",

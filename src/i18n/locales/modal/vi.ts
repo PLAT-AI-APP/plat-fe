@@ -48,6 +48,7 @@ const vi: typeof ko = {
     report: {
       titleComment: "Bình luận của {nickname} có vấn đề gì?",
       titleUniverse: "Nhân vật {name} có vấn đề gì?",
+      titleMessage: "Câu trả lời của {name} có vấn đề gì?",
       reasonLabel: "Lý do báo cáo",
       detailPlaceholder: "Vui lòng nêu rõ lý do, chúng tôi sẽ xem xét và xử lý.",
       detailPlaceholderRequired: "Hãy cho chúng tôi biết vấn đề là gì",
@@ -57,6 +58,7 @@ const vi: typeof ko = {
       viewHistory: "Lịch sử báo cáo",
       alreadySubmitted: "Bạn đã báo cáo nội dung này. Có thể xem kết quả trong Lịch sử báo cáo",
       selfTarget: "Không thể báo cáo nội dung của chính bạn",
+      selfTargetMessage: "Không thể báo cáo câu trả lời từ nhân vật do bạn tạo",
       targetNotFound: "Nội dung này đã bị xóa hoặc không còn khả dụng",
     },
     passwordReset: {

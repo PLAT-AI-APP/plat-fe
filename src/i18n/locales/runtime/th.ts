@@ -287,6 +287,7 @@ const th: typeof en = {
     suggestedReply: "คำตอบแนะนำ",
     deleteResponse: "ลบคำตอบ",
     retryResponse: "สร้างคำตอบใหม่",
+    reportResponse: "รายงานคำตอบ",
     selectedSuggestedReply: "คำตอบแนะนำที่เลือก",
     characterTyping: "{name} กำลังพิมพ์",
     characterProfileAlt: "รูปโปรไฟล์ของ {name}",

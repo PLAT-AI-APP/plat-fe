@@ -238,6 +238,7 @@ const vi = {
     targetTypes: {
       COMMENT: "Bình luận",
       UNIVERSE: "Nhân vật",
+      MESSAGE: "Câu trả lời AI",
     },
     reasons: {
       SEXUAL: "Nội dung khiêu dâm",

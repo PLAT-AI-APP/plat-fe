@@ -40,7 +40,7 @@ type RejectionCode = keyof typeof REJECTION_MESSAGE_KEYS;
 const isRejectionCode = (code: string): code is RejectionCode =>
   code in REJECTION_MESSAGE_KEYS;
 
-/** 댓글·캐릭터 공용 신고. 사유 하나는 필수, 상세는 기타(ETC)일 때만 필수다. 모양은 댓글 신고 디자인을 따른다. */
+/** 댓글·캐릭터·AI 답변 공용 신고. 사유 하나는 필수, 상세는 기타(ETC)일 때만 필수다. 모양은 댓글 신고 디자인을 따른다. */
 const ReportModal = ({ onClose, targetType, targetId, targetName }: ReportModalProps) => {
   const t = useTranslations("modalUi.report");
   const commonT = useTranslations("common");
@@ -83,9 +83,14 @@ const ReportModal = ({ onClose, targetType, targetId, targetName }: ReportModalP
 
   const handleReportError = (error: AppError) => {
     if (isRejectionCode(error.code)) {
+      // AI 답변은 신고자가 쓴 글이 아니다. 거절 사유는 "내 캐릭터의 답변"이라 문구를 따로 둔다.
+      const messageKey =
+        error.code === "REPORT_SELF_TARGET" && targetType === "MESSAGE"
+          ? "selfTargetMessage"
+          : REJECTION_MESSAGE_KEYS[error.code];
       showAppToast(
         error.code === "REPORT_ALREADY_SUBMITTED" ? "info" : "warning",
-        t(REJECTION_MESSAGE_KEYS[error.code]),
+        t(messageKey),
         error.code === "REPORT_ALREADY_SUBMITTED"
           ? { action: { label: t("viewHistory"), onClick: goToMyReports } }
           : undefined,
@@ -137,7 +142,9 @@ const ReportModal = ({ onClose, targetType, targetId, targetName }: ReportModalP
   const title =
     targetType === "COMMENT"
       ? t("titleComment", { nickname: targetName })
-      : t("titleUniverse", { name: targetName });
+      : targetType === "MESSAGE"
+        ? t("titleMessage", { name: targetName })
+        : t("titleUniverse", { name: targetName });
 
   return (
     <ModalLayout

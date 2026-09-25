@@ -44,6 +44,7 @@ const th: typeof ko = {
     report: {
       titleComment: "ความคิดเห็นของ {nickname} มีปัญหาอะไร?",
       titleUniverse: "ตัวละคร {name} มีปัญหาอะไร?",
+      titleMessage: "คำตอบของ {name} มีปัญหาอะไร?",
       reasonLabel: "เหตุผลการรายงาน",
       detailPlaceholder: "โปรดระบุเหตุผลอย่างละเอียด เราจะตรวจสอบและดำเนินการ",
       detailPlaceholderRequired: "บอกเราว่ามีปัญหาอะไร",
@@ -53,6 +54,7 @@ const th: typeof ko = {
       viewHistory: "ประวัติการรายงาน",
       alreadySubmitted: "คุณรายงานเนื้อหานี้ไปแล้ว ตรวจสอบผลได้ที่ประวัติการรายงาน",
       selfTarget: "ไม่สามารถรายงานเนื้อหาของตัวเองได้",
+      selfTargetMessage: "ไม่สามารถรายงานคำตอบจากตัวละครที่คุณสร้างเองได้",
       targetNotFound: "เนื้อหานี้ถูกลบหรือไม่สามารถดูได้แล้ว",
     },
     passwordReset: {

@@ -238,6 +238,7 @@ const ja = {
     targetTypes: {
       COMMENT: "コメント",
       UNIVERSE: "キャラクター",
+      MESSAGE: "AIの返信",
     },
     reasons: {
       SEXUAL: "性的なコンテンツ",

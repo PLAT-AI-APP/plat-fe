@@ -15,6 +15,7 @@ import { useIntersectionObserver } from "@/hooks/dom/useIntersectionObserver";
 import { useScrollTimeout } from "@/hooks/dom/useScrollTiemout";
 import { toAiModel } from "@/lib/chatModel";
 import { toImageVariantUrl } from "@/lib/file";
+import { useModalStore } from "@/store/useModalStore";
 import { AIModelType, ChatMessageType } from "@/type/chat";
 import type { RoomMessage } from "@/type/room";
 import ChattingRoomHeader from "./ChattingRoomHeader";
@@ -69,6 +70,13 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
   // 방을 받기 전에는 세계관 쿼리가 꺼져 있어 isLoading 이 false 이므로, 데이터 유무로 판단한다.
   const isCharacterLoading = !universe && !isUniverseError;
   const characterName = universe?.character.name ?? "";
+  const openModal = useModalStore((state) => state.openModal);
+  // 신고 모달은 목록 밖에서 열리므로 함수가 매 렌더 바뀌면 메시지 행이 전부 다시 그려진다.
+  const handleReportMessage = useCallback(
+    (messageId: string) =>
+      openModal("REPORT", { targetType: "MESSAGE", targetId: messageId, targetName: characterName }),
+    [openModal, characterName],
+  );
   // 말풍선 아바타는 36px 이라 원본 대신 정사각 140px 변형본이면 충분하다(2배 화면 기준 72px 이상).
   const profileImage =
     toImageVariantUrl(universe?.character.profileImageUrl, "sq140") ?? "";
@@ -194,6 +202,7 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
               messages={messages}
               scrollContainer={scrollContainer}
               isAiSuggestedChat={false}
+              onReportMessage={handleReportMessage}
             />
           )}
         </div>

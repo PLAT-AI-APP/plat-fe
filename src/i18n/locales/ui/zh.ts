@@ -234,6 +234,7 @@ const zh = {
     targetTypes: {
       COMMENT: "评论",
       UNIVERSE: "角色",
+      MESSAGE: "AI 回复",
     },
     reasons: {
       SEXUAL: "色情内容",

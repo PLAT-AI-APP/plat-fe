@@ -21,8 +21,13 @@ interface MessageListProps {
   onUpdateMessage?: (id: string, newContent: string) => void;
   onDeleteMessage?: (id: string) => void;
   onRetryMessage?: (id: string) => void;
+  /** AI 응답 신고. 서버 id(숫자)를 받은 응답에만 버튼이 뜬다 — 받는 중인 임시 응답은 신고할 대상이 없다. */
+  onReportMessage?: (id: string) => void;
   isAiSuggestedChat?: boolean;
 }
+
+/** 서버에 저장된 메시지 id 는 숫자(Snowflake)다. 받는 중·보내는 중인 임시 메시지는 다른 모양의 id 를 쓴다. */
+const SERVER_MESSAGE_ID = /^\d+$/;
 
 interface MessageRowProps {
   message: ChatMessageType;
@@ -31,6 +36,7 @@ interface MessageRowProps {
   onUpdateMessage?: MessageListProps["onUpdateMessage"];
   onDeleteMessage?: MessageListProps["onDeleteMessage"];
   onRetryMessage?: MessageListProps["onRetryMessage"];
+  onReportMessage?: MessageListProps["onReportMessage"];
 }
 
 const MessageRow = memo(
@@ -41,6 +47,7 @@ const MessageRow = memo(
     onUpdateMessage,
     onDeleteMessage,
     onRetryMessage,
+    onReportMessage,
   }: MessageRowProps) => {
     const handleUpdate = useCallback(
       (newContent: string) => onUpdateMessage?.(message.id, newContent),
@@ -54,6 +61,11 @@ const MessageRow = memo(
       () => onRetryMessage?.(message.id),
       [message.id, onRetryMessage],
     );
+    const handleReport = useCallback(
+      () => onReportMessage?.(message.id),
+      [message.id, onReportMessage],
+    );
+    const isStoredMessage = SERVER_MESSAGE_ID.test(message.id);
 
     if (message.role === "assistant") {
       return (
@@ -69,6 +81,11 @@ const MessageRow = memo(
             // 처리 함수를 받지 않았으면 버튼도 띄우지 않는다.
             onDelete={message.isScenario || !onDeleteMessage ? undefined : handleDelete}
             onRetry={message.isScenario || !onRetryMessage ? undefined : handleRetry}
+            onReport={
+              message.isScenario || !onReportMessage || !isStoredMessage
+                ? undefined
+                : handleReport
+            }
           />
           {/* 추천 답변은 응답을 다 받은 뒤에 붙인다. 받는 동안 붙이면 입력 중 표시 밑에 먼저 떠 버린다. */}
           {showSuggestedChat && !message.isStreaming && <AiSuggestedChat />}
@@ -103,7 +120,8 @@ const MessageRow = memo(
       previous.showSuggestedChat === next.showSuggestedChat &&
       previous.onUpdateMessage === next.onUpdateMessage &&
       previous.onDeleteMessage === next.onDeleteMessage &&
-      previous.onRetryMessage === next.onRetryMessage
+      previous.onRetryMessage === next.onRetryMessage &&
+      previous.onReportMessage === next.onReportMessage
     );
   },
 );
@@ -132,6 +150,7 @@ const MessageList = memo(
     onUpdateMessage,
     onDeleteMessage,
     onRetryMessage,
+    onReportMessage,
     isAiSuggestedChat = true,
   }: MessageListProps) => {
     const listRef = useRef<HTMLElement>(null);
@@ -272,6 +291,7 @@ const MessageList = memo(
                 onUpdateMessage={onUpdateMessage}
                 onDeleteMessage={onDeleteMessage}
                 onRetryMessage={onRetryMessage}
+                onReportMessage={onReportMessage}
               />
             </article>
           );
