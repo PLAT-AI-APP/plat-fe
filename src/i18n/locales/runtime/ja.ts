@@ -267,6 +267,7 @@ const ja: typeof en = {
     submitting: "開始しています...",
   },
   chatUI: {
+    aiGeneratedNotice: "AIが生成した会話です。実在の人物や事実と異なる場合があります。",
     sampleReply1Quote: "うん、すぐ閉めるね。大丈夫、誰にも見えないよ。",
     sampleReply1Narration: "私は素早くドアを閉め、鍵をかけ直した。",
     sampleReply2Quote: "ちょっと待って、今はここにいるほうが安全だよ。",

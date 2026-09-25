@@ -270,6 +270,7 @@ const th: typeof en = {
     submitting: "กำลังเริ่ม...",
   },
   chatUI: {
+    aiGeneratedNotice: "บทสนทนานี้สร้างโดย AI อาจไม่ตรงกับบุคคลหรือข้อเท็จจริงจริง",
     sampleReply1Quote: "อืม เดี๋ยวปิดเลย ไม่เป็นไรนะ ไม่มีใครเห็นหรอก",
     sampleReply1Narration: "ฉันรีบปิดประตูแล้วล็อกอีกครั้ง",
     sampleReply2Quote: "เดี๋ยวก่อน ตอนนี้อยู่ที่นี่ปลอดภัยกว่า",

@@ -267,6 +267,7 @@ const ko: typeof en = {
     submitting: "시작하는 중...",
   },
   chatUI: {
+    aiGeneratedNotice: "AI가 생성한 대화예요. 실제 인물·사실과 다를 수 있어요.",
     sampleReply1Quote: "응, 바로 닫을게. 괜찮아, 아무도 못 봐.",
     sampleReply1Narration: "나는 재빨리 문을 닫고 잠금장치를 다시 걸었다.",
     sampleReply2Quote: "잠깐만, 지금은 여기 있는 게 더 안전해.",

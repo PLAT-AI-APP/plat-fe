@@ -262,6 +262,7 @@ const zh: typeof en = {
     submitting: "开始中...",
   },
   chatUI: {
+    aiGeneratedNotice: "对话由 AI 生成，可能与真实人物或事实不符。",
     sampleReply1Quote: "嗯，我马上关上。没事的，没有人会看到。",
     sampleReply1Narration: "我迅速关上门，重新锁好。",
     sampleReply2Quote: "等一下，现在待在这里更安全。",

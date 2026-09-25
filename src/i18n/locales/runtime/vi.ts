@@ -275,6 +275,7 @@ const vi: typeof en = {
     submitting: "Đang bắt đầu...",
   },
   chatUI: {
+    aiGeneratedNotice: "Cuộc trò chuyện do AI tạo ra và có thể không đúng với người thật hoặc sự thật.",
     sampleReply1Quote: "Ừ, mình đóng ngay đây. Không sao đâu, không ai thấy đâu.",
     sampleReply1Narration: "Tôi nhanh chóng đóng cửa và khóa lại.",
     sampleReply2Quote: "Khoan đã, bây giờ ở đây an toàn hơn.",
