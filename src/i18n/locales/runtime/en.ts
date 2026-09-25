@@ -209,14 +209,28 @@ const en = {
     noteUnit: "Notes",
     bonusNoteUnit: "Notes",
     priceUnit: "KRW",
+    confirm: {
+      title: "Please review before paying",
+      product: "Item",
+      notes: "Notes",
+      notesWithBonus: "{total} notes ({base} + {bonus} bonus)",
+      price: "Amount",
+      vatIncluded: "(VAT incl.)",
+      validity: "Validity",
+      validityValue: "1 year from issue",
+      refundNotice: "Unused items can be refunded within 7 days of payment.\nRefunds are restricted once any notes are used or after 7 days.",
+      agree: "I have reviewed the above and agree to the payment. (Required)",
+      cancel: "Cancel",
+      submit: "Pay",
+    },
     policiesTitle: "Refund policy and note usage guide",
     policies: {
       item1:
-        "Refunds are not available for notes that have already been used. (Unused items can be refunded within 7 days of payment.)",
+        "Unused items can be refunded (order withdrawal) within 7 days of payment.",
       item2:
         "Paid notes you purchase are valid for one year from the date you receive them.",
       item3:
-        "Refunds are not available for subjective dissatisfaction with AI responses or a simple change of mind.",
+        "Once any notes from an item have been used, or 7 days have passed since payment, withdrawal is restricted due to the nature of digital content.",
       item4:
         "Refund requests and inquiries are available through the PLAT customer center.",
       item5:

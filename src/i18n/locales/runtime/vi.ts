@@ -208,14 +208,28 @@ const vi: typeof en = {
     noteUnit: "Note",
     bonusNoteUnit: "Note",
     priceUnit: "won",
+    confirm: {
+      title: "Vui lòng kiểm tra trước khi thanh toán",
+      product: "Sản phẩm",
+      notes: "Note nhận được",
+      notesWithBonus: "{total} note (cơ bản {base} + thưởng {bonus})",
+      price: "Số tiền thanh toán",
+      vatIncluded: "(đã gồm VAT)",
+      validity: "Thời hạn",
+      validityValue: "1 năm kể từ ngày nhận",
+      refundNotice: "Sản phẩm chưa sử dụng có thể được hoàn tiền trong vòng 7 ngày sau khi thanh toán.\nNếu đã dùng một phần hoặc quá 7 ngày, việc hoàn tiền sẽ bị hạn chế.",
+      agree: "Tôi đã kiểm tra nội dung trên và đồng ý thanh toán. (Bắt buộc)",
+      cancel: "Hủy",
+      submit: "Thanh toán",
+    },
     policiesTitle: "Chính sách hoàn tiền và hướng dẫn sử dụng note",
     policies: {
       item1:
-        "Không thể hoàn tiền cho note đã có lịch sử sử dụng. (Sản phẩm chưa sử dụng có thể được hoàn tiền trong vòng 7 ngày sau khi thanh toán)",
+        "Sản phẩm chưa sử dụng có thể được hoàn tiền (rút lại đơn hàng) trong vòng 7 ngày sau khi thanh toán.",
       item2:
         "Thời hạn sử dụng của note trả phí đã mua là 1 năm kể từ thời điểm nhận được.",
       item3:
-        "Không thể hoàn tiền do không hài lòng mang tính chủ quan với kết quả trả lời của AI hoặc chỉ vì đổi ý.",
+        "Nếu đã sử dụng một phần note của sản phẩm hoặc đã quá 7 ngày kể từ khi thanh toán, việc rút lại đơn hàng sẽ bị hạn chế do đặc thù của nội dung số.",
       item4:
         "Có thể yêu cầu hoàn tiền và gửi thắc mắc thông qua trung tâm khách hàng PLAT.",
       item5:
