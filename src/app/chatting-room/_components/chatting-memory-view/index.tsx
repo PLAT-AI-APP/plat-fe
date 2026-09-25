@@ -9,6 +9,7 @@ import { roomQueryKeys } from "@/api/room/queryKeys";
 import { ArrowLeft, Storage } from "@/icons";
 import { useAutoResizeTextarea } from "@/hooks/form/useAutoResizeTextarea";
 import { showAppToast } from "@/lib/toast";
+import { cn } from "@/lib/utils";
 import type { Room } from "@/type/room";
 
 /** 서버 PATCH /rooms/{roomId}/memory 의 최대 길이와 같아야 한다. */
@@ -53,9 +54,11 @@ const ChattingMemoryView = ({ roomId, onBack }: ChattingMemoryViewProps) => {
 
   const trimmed = draft.trim();
   const isUnchanged = trimmed === savedMemory.trim();
+  // maxLength 는 타이핑·붙여넣기만 막는다. 그 밖의 경로로 넘친 값은 서버가 400 으로 거절하므로 여기서 먼저 막는다.
+  const isOverLimit = trimmed.length > MEMORY_MAX_LENGTH;
 
   const handleSave = () => {
-    if (isPending || isUnchanged) return;
+    if (isPending || isUnchanged || isOverLimit) return;
 
     patchMemory(
       { roomId, memory: trimmed },
@@ -109,14 +112,19 @@ const ChattingMemoryView = ({ roomId, onBack }: ChattingMemoryViewProps) => {
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="body-7 text-font-2">
+            <span
+              className={cn(
+                "body-7",
+                isOverLimit ? "text-font-accents" : "text-font-2",
+              )}
+            >
               {draft.length}/{MEMORY_MAX_LENGTH}
             </span>
 
             <button
               type="button"
               onClick={handleSave}
-              disabled={isPending || isUnchanged}
+              disabled={isPending || isUnchanged || isOverLimit}
               className="body-7 rounded border border-main bg-btn-hover px-3 py-1 text-font-1 transition-colors hover:bg-card-selected disabled:cursor-default disabled:opacity-50"
             >
               {t("memorySaveButton")}
