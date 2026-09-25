@@ -12,6 +12,7 @@ import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 import { NavigationGuardProvider } from "next-navigation-guard";
 import MSWProvider from "@/providers/MSWProvider";
 import MotionProvider from "@/providers/MotionProvider";
+import { ALLOW_INDEXING } from "@/constants/seo";
 
 export const metadata: Metadata = {
   // 1. 기본 메타데이터 및 타이틀 템플릿
@@ -31,13 +32,13 @@ export const metadata: Metadata = {
     "커스텀 AI",
   ],
 
-  // 2. 검색 엔진 로봇 제어
+  // 2. 검색 엔진 로봇 제어 (클로즈베타 동안은 수집 차단, NEXT_PUBLIC_ALLOW_INDEXING=true 로 연다)
   robots: {
-    index: true,
-    follow: true,
+    index: ALLOW_INDEXING,
+    follow: ALLOW_INDEXING,
     googleBot: {
-      index: true,
-      follow: true,
+      index: ALLOW_INDEXING,
+      follow: ALLOW_INDEXING,
       "max-video-preview": -1,
       "max-image-preview": "large",
       "max-snippet": -1,
