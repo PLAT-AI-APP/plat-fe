@@ -23,6 +23,8 @@ const EarningsContents = () => {
   const summaryQuery = useEarningSummaryQuery();
   const { data, isPending, isError, error, refetch } = summaryQuery;
   const available = data?.available ?? 0;
+  // 값이 오기 전이나 없을 때는 막아 둔다. 서버도 인증이 없으면 상품권 신청을 거절한다.
+  const identityVerified = data?.identityVerified === true;
 
   return (
     <section className="mx-auto mb-10 flex w-full max-w-160 flex-col gap-8 pt-5">
@@ -65,7 +67,10 @@ const EarningsContents = () => {
 
       <section className="flex flex-col gap-4">
         <h2 className="title-3">{t("giftCards")}</h2>
-        <GiftCardList available={available} />
+        <GiftCardList
+          available={available}
+          identityVerified={identityVerified}
+        />
       </section>
 
       {modal === "convert" && data && (

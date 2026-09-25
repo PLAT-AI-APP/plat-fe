@@ -290,6 +290,7 @@ const ko = {
     },
     exchange: {
       insufficient: "포인트 부족",
+      identityRequired: "본인인증 후 교환할 수 있어요",
       shortBy: "{value}P 더 모으면 교환할 수 있어요",
       progressLabel: "교환까지 모은 포인트",
       button: "교환",

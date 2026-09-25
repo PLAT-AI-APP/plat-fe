@@ -294,6 +294,7 @@ const vi = {
     },
     exchange: {
       insufficient: "Không đủ điểm",
+      identityRequired: "Có thể đổi sau khi xác minh danh tính",
       shortBy: "Cần thêm {value}P để đổi",
       progressLabel: "Điểm đã tích cho phần thưởng này",
       button: "Đổi",

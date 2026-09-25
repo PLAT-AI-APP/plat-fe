@@ -294,6 +294,7 @@ const ja = {
     },
     exchange: {
       insufficient: "ポイント不足",
+      identityRequired: "本人認証後に交換できます",
       shortBy: "あと{value}Pで交換できます",
       progressLabel: "交換までに貯めたポイント",
       button: "交換",

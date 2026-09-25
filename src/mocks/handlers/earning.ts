@@ -19,6 +19,7 @@ const MIN_REDEEM = 5000;
 const summary: EarningSummary = {
   available: 12480,
   noteUnitPrice: 4,
+  identityVerified: true,
 };
 
 const products: RewardProduct[] = [

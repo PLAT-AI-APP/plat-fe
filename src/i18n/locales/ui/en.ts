@@ -300,6 +300,7 @@ const en = {
     },
     exchange: {
       insufficient: "Not enough points",
+      identityRequired: "Available after identity verification",
       shortBy: "{value}P more to redeem",
       progressLabel: "Points toward this reward",
       button: "Redeem",

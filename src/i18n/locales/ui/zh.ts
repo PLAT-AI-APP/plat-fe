@@ -290,6 +290,7 @@ const zh = {
     },
     exchange: {
       insufficient: "积分不足",
+      identityRequired: "完成实名认证后即可兑换",
       shortBy: "再攒{value}P即可兑换",
       progressLabel: "距离兑换已攒积分",
       button: "兑换",

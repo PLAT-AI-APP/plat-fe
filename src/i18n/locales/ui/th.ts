@@ -293,6 +293,7 @@ const th = {
     },
     exchange: {
       insufficient: "คะแนนไม่พอ",
+      identityRequired: "แลกได้หลังยืนยันตัวตน",
       shortBy: "อีก {value}P ถึงจะแลกได้",
       progressLabel: "คะแนนที่สะสมเพื่อแลกรางวัลนี้",
       button: "แลก",
