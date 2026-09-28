@@ -402,9 +402,9 @@ const vi = {
     refund: {
       productLabel: "Sản phẩm",
       amountLabel: "Số tiền thanh toán",
-      creditLabel: "Ghi chú nhận được",
+      creditLabel: "Note nhận được",
       refundableUntilLabel: "Hạn hoàn tiền",
-      notice: "Chỉ các thanh toán chưa sử dụng ghi chú nào mới được hoàn toàn bộ trong vòng 7 ngày. Yêu cầu sẽ được xử lý sau khi đội ngũ xem xét.",
+      notice: "Chỉ các thanh toán chưa sử dụng note nào mới được hoàn toàn bộ trong vòng 7 ngày. Yêu cầu sẽ được xử lý sau khi đội ngũ xem xét.",
       reasonLabel: "Lý do (không bắt buộc)",
       reasonPlaceholder: "Cho chúng tôi biết lý do để cải thiện dịch vụ",
       submit: "Yêu cầu hoàn tiền",

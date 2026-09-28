@@ -10,7 +10,7 @@ const vi: typeof ko = {
       openSettings: "Mở cài đặt phòng chat",
       close: "Đóng cài đặt phòng chat",
       backToSettings: "Quay lại cài đặt phòng chat",
-      ownedNotes: "Ghi chú sở hữu",
+      ownedNotes: "Note sở hữu",
       userSettings: "Cài đặt người dùng",
       memoryLog: "Nhật ký trí nhớ",
       chatSettings: "Cài đặt môi trường chat",
