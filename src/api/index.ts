@@ -3,6 +3,7 @@ import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
 import { isProtectedPath } from "@/constants/auth";
 import { showAppToast } from "@/lib/toast";
+import { reportError } from "@/lib/monitoring";
 import {
   NETWORK_ERROR_CODE,
   TIMEOUT_ERROR_CODE,
@@ -238,6 +239,14 @@ export const logApiError = (error: unknown): string | undefined => {
   // 개발 모드에서는 어느 요청이 왜 깨졌는지 한 줄로 함께 남긴다.
   const detail = formatErrorDetail(error);
   if (detail) console.error(`[API] ${detail}`, error);
+  // 4xx 는 대부분 입력·권한 문제라 수집하지 않는다. 서버가 깨진 5xx 만 모은다.
+  if (error.status !== undefined && error.status >= 500) {
+    const path = error.requestUrl?.split("?")[0] ?? "";
+    reportError(
+      new Error(`[API ${error.status}] ${error.requestMethod ?? ""} ${path}`),
+      { code: error.code, status: error.status },
+    );
+  }
 
   return detail;
 };

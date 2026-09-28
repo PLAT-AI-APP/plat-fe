@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { reportError } from "@/lib/monitoring";
 import { useTranslations } from "next-intl";
 import Button from "@/components/ui/Button";
 import ButtonLink from "@/components/ui/ButtonLink";
@@ -20,6 +21,7 @@ const SegmentError = ({ error, reset }: SegmentErrorProps) => {
 
   useEffect(() => {
     console.error("[segment-error]", error);
+    reportError(error, { boundary: "segment-error", digest: error.digest });
   }, [error]);
 
   return (
