@@ -17,15 +17,18 @@ const zh: typeof ko = {
     sections: {
       environment: "环境设置",
       notifications: "通知与内容管理",
+      consent: "通知接收",
     },
     rows: {
       theme: "显示模式",
       language: "首选语言",
       blockedUsers: "屏蔽管理",
+      marketing: "接收营销信息",
     },
     actions: {
       goToBlockedUsers: "前往屏蔽管理",
       withdrawal: "注销账号",
+      marketingFailed: "无法更改设置，请稍后重试。",
     },
   },
   auth: {
@@ -52,11 +55,22 @@ const zh: typeof ko = {
       invalidHint: "登录链接已过期或地址不正确，请重新登录。",
       goHome: "返回首页",
     },
+    agreementGate: {
+      firstTitle: "请完成注册",
+      firstDescription: "使用 PLAT 前，请同意以下条款。",
+      revisedTitle: "条款已更新",
+      revisedDescription: "请查看并同意更新后的条款以继续使用。",
+      version: "版本 {version}",
+      submit: "同意并继续",
+      logout: "退出登录",
+      failed: "未能保存您的同意，请稍后重试。",
+    },
     signup: {
       agreeAll: "同意全部条款",
       termsOfService: "同意使用条款（必填）",
       privacyPolicy: "隐私政策（必填）",
       ageOver14: "我已年满 14 周岁。（必填）",
+      marketing: "我同意接收营销信息。（选填）",
       title: "注册",
       subtitle: "各种有魅力的角色正在等你",
       submit: "下一步",

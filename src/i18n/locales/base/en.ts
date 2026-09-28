@@ -19,15 +19,18 @@ const en: typeof ko = {
     sections: {
       environment: "Preferences",
       notifications: "Notifications & Content",
+      consent: "Notifications",
     },
     rows: {
       theme: "Theme",
       language: "Preferred language",
       blockedUsers: "Blocked users",
+      marketing: "Marketing messages",
     },
     actions: {
       goToBlockedUsers: "Go to blocked users",
       withdrawal: "Delete account",
+      marketingFailed: "We couldn't update this setting. Please try again shortly.",
     },
   },
   auth: {
@@ -54,11 +57,22 @@ const en: typeof ko = {
       invalidHint: "The sign-in link expired or the address is wrong. Please sign in again.",
       goHome: "Go home",
     },
+    agreementGate: {
+      firstTitle: "Finish signing up",
+      firstDescription: "Please agree to the terms below to use PLAT.",
+      revisedTitle: "Our terms have changed",
+      revisedDescription: "Review and agree to the updated terms to keep using PLAT.",
+      version: "Version {version}",
+      submit: "Agree and continue",
+      logout: "Log out",
+      failed: "We couldn't save your consent. Please try again shortly.",
+    },
     signup: {
       agreeAll: "Agree to all terms",
       termsOfService: "Agree to Terms of Service (required)",
       privacyPolicy: "Privacy Policy (required)",
       ageOver14: "I am 14 years old or older. (required)",
+      marketing: "I agree to receive marketing messages. (optional)",
       title: "Sign up",
       subtitle: "A lineup of charming characters is waiting for you",
       submit: "Next",

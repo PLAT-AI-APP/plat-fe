@@ -67,6 +67,12 @@ const SignupForm = () => {
         nickname: data.nickname,
         password: data.password,
         passwordCheck: data.passwordCheck,
+        agreements: {
+          termsOfService: data.isTermsAgreed,
+          privacyPolicy: data.isPrivacyAgreed,
+          ageOver14: data.isAgeAgreed,
+          marketing: data.isMarketingAgreed,
+        },
       },
       {
         onSuccess: () => {
@@ -80,6 +86,7 @@ const SignupForm = () => {
             isPrivacyAgreed: false,
             isTermsAgreed: false,
             isAgeAgreed: false,
+            isMarketingAgreed: false,
           });
           setIsEmailVerified(false);
 

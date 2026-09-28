@@ -20,6 +20,7 @@ const SignupPage = () => {
       isPrivacyAgreed: false,
       isTermsAgreed: false,
       isAgeAgreed: false,
+      isMarketingAgreed: false,
     },
   });
 

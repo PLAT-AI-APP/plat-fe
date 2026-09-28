@@ -17,15 +17,18 @@ const ko = {
     sections: {
       environment: "환경설정",
       notifications: "알림 및 콘텐츠 관리",
+      consent: "알림 수신",
     },
     rows: {
       theme: "화면모드",
       language: "선호언어",
       blockedUsers: "차단 관리",
+      marketing: "마케팅 정보 수신",
     },
     actions: {
       goToBlockedUsers: "차단 관리로 이동",
       withdrawal: "회원탈퇴",
+      marketingFailed: "설정을 바꾸지 못했어요. 잠시 뒤 다시 시도해 주세요.",
     },
   },
   auth: {
@@ -52,11 +55,22 @@ const ko = {
       invalidHint: "로그인 링크가 만료됐거나 주소가 올바르지 않아요. 다시 로그인해 주세요.",
       goHome: "홈으로",
     },
+    agreementGate: {
+      firstTitle: "가입을 마무리해 주세요",
+      firstDescription: "PLAT을 이용하려면 아래 약관에 동의해 주세요.",
+      revisedTitle: "약관이 바뀌었어요",
+      revisedDescription: "바뀐 약관을 확인하고 동의하면 계속 이용할 수 있어요.",
+      version: "{version} 버전",
+      submit: "동의하고 계속하기",
+      logout: "로그아웃",
+      failed: "동의를 저장하지 못했어요. 잠시 뒤 다시 시도해 주세요.",
+    },
     signup: {
       agreeAll: "약관 전체 동의",
       termsOfService: "서비스이용약관 동의 (필수)",
       privacyPolicy: "개인정보 처리방침 (필수)",
       ageOver14: "만 14세 이상입니다. (필수)",
+      marketing: "광고성 정보 수신에 동의합니다. (선택)",
       title: "회원가입",
       subtitle: "다양한 매력의 캐릭터들이 당신을 기다리고 있어요",
       submit: "다음",

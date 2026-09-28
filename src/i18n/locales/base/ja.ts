@@ -17,15 +17,18 @@ const ja: typeof ko = {
     sections: {
       environment: "環境設定",
       notifications: "通知とコンテンツ管理",
+      consent: "通知の受信",
     },
     rows: {
       theme: "画面モード",
       language: "優先言語",
       blockedUsers: "ブロック管理",
+      marketing: "広告・お知らせの受信",
     },
     actions: {
       goToBlockedUsers: "ブロック管理へ移動",
       withdrawal: "退会",
+      marketingFailed: "設定を変更できませんでした。しばらくしてからもう一度お試しください。",
     },
   },
   auth: {
@@ -52,11 +55,22 @@ const ja: typeof ko = {
       invalidHint: "ログインリンクの有効期限が切れているか、アドレスが正しくありません。もう一度ログインしてください。",
       goHome: "ホームへ",
     },
+    agreementGate: {
+      firstTitle: "登録を完了してください",
+      firstDescription: "PLATを利用するには、以下の規約に同意してください。",
+      revisedTitle: "規約が変更されました",
+      revisedDescription: "変更された規約を確認して同意すると、引き続き利用できます。",
+      version: "バージョン {version}",
+      submit: "同意して続ける",
+      logout: "ログアウト",
+      failed: "同意を保存できませんでした。しばらくしてからもう一度お試しください。",
+    },
     signup: {
       agreeAll: "すべての規約に同意",
       termsOfService: "利用規約に同意（必須）",
       privacyPolicy: "プライバシーポリシー（必須）",
       ageOver14: "満14歳以上です。（必須）",
+      marketing: "広告・お知らせの受信に同意します。（任意）",
       title: "会員登録",
       subtitle: "魅力的なキャラクターたちがあなたを待っています",
       submit: "次へ",

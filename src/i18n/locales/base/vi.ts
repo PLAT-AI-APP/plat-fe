@@ -17,15 +17,18 @@ const vi: typeof ko = {
     sections: {
       environment: "Thiết lập môi trường",
       notifications: "Thông báo và quản lý nội dung",
+      consent: "Nhận thông báo",
     },
     rows: {
       theme: "Chế độ màn hình",
       language: "Ngôn ngữ ưu tiên",
       blockedUsers: "Quản lý chặn",
+      marketing: "Nhận thông tin quảng cáo",
     },
     actions: {
       goToBlockedUsers: "Đi tới quản lý chặn",
       withdrawal: "Xóa tài khoản",
+      marketingFailed: "Không thể thay đổi cài đặt. Vui lòng thử lại sau.",
     },
   },
   auth: {
@@ -52,11 +55,22 @@ const vi: typeof ko = {
       invalidHint: "Liên kết đăng nhập đã hết hạn hoặc địa chỉ không đúng. Vui lòng đăng nhập lại.",
       goHome: "Về trang chủ",
     },
+    agreementGate: {
+      firstTitle: "Hoàn tất đăng ký",
+      firstDescription: "Vui lòng đồng ý với các điều khoản dưới đây để sử dụng PLAT.",
+      revisedTitle: "Điều khoản đã thay đổi",
+      revisedDescription: "Hãy xem và đồng ý với điều khoản mới để tiếp tục sử dụng.",
+      version: "Phiên bản {version}",
+      submit: "Đồng ý và tiếp tục",
+      logout: "Đăng xuất",
+      failed: "Không thể lưu sự đồng ý của bạn. Vui lòng thử lại sau.",
+    },
     signup: {
       agreeAll: "Đồng ý tất cả điều khoản",
       termsOfService: "Đồng ý Điều khoản sử dụng (bắt buộc)",
       privacyPolicy: "Chính sách quyền riêng tư (bắt buộc)",
       ageOver14: "Tôi từ 14 tuổi trở lên. (bắt buộc)",
+      marketing: "Tôi đồng ý nhận thông tin quảng cáo. (tùy chọn)",
       title: "Đăng ký",
       subtitle: "Những nhân vật đầy sức hút đang chờ bạn",
       submit: "Tiếp theo",
