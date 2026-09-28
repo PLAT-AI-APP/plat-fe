@@ -199,8 +199,9 @@ const ScenarioComposer = ({
             <button
               type="button"
               onClick={wrapActionText}
-              // `*행동*` 은 캐릭터 대사에서만 행동으로 구분해 그린다. 내레이터·사용자 입력에서는 그대로 글자로 남는다.
-              disabled={currentMode !== "chat"}
+              // 행동 종류는 한 줄 전체가 이미 지문이라 그 안의 `*` 는 글자로 남는다(인코딩이 이스케이프한다).
+              // 캐릭터·사용자 대사에서는 `*행동*` 이 지문으로 그려지므로 쓸 수 있게 둔다.
+              disabled={currentMode === "action"}
               aria-label={t("actionMark")}
               className={COMPOSER_TOOL_BUTTON_CLASS_NAME}
             >
