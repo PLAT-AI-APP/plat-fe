@@ -110,7 +110,7 @@ const vi: typeof en = {
       recordsRetained:
         "Lịch sử đơn hàng và giao dịch sẽ được lưu trữ an toàn trong một thời gian nhất định.",
       creditsRemoved:
-        "Credit chưa sử dụng sẽ không được hoàn tiền và sẽ bị xóa cùng lúc.",
+        "Note chưa sử dụng sẽ không được hoàn tiền và sẽ bị xóa cùng lúc.",
       rejoinRestricted:
         "Bạn không thể đăng ký lại bằng cùng địa chỉ email trong 7 ngày.",
       creationsDeleted:
@@ -119,9 +119,9 @@ const vi: typeof en = {
         "Các phòng chat hiện có vẫn được giữ lại, nhưng bạn sẽ không thể gửi tin nhắn mới.",
     },
     remainingBalance:
-      "{credits} tín dụng và {points}P điểm thu nhập còn lại sẽ không thể khôi phục sau khi rời đi. Nếu còn yêu cầu đổi thẻ quà tặng đang chờ gửi, bạn có thể rời đi sau khi hoàn tất.",
+      "{credits} note và {points}P điểm thu nhập còn lại sẽ không thể khôi phục sau khi rời đi. Nếu còn yêu cầu đổi thẻ quà tặng đang chờ gửi, bạn có thể rời đi sau khi hoàn tất.",
     legalNotice:
-      "Lịch sử thanh toán, hoàn tiền và giao dịch credit sẽ không bị xóa ngay vì có nghĩa vụ lưu trữ theo quy định pháp luật liên quan (5 năm).",
+      "Lịch sử thanh toán, hoàn tiền và giao dịch note sẽ không bị xóa ngay vì có nghĩa vụ lưu trữ theo quy định pháp luật liên quan (5 năm).",
     agreement: "Tôi đã kiểm tra toàn bộ nội dung ở trên",
     back: "Tôi muốn suy nghĩ thêm",
     submit: "Tôi sẽ xóa tài khoản",

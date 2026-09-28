@@ -135,9 +135,9 @@ const ja: typeof ko = {
       skip: "後でやる",
     },
     welcomeCredit: {
-      title: "ウェルカムクレジットが届きました",
+      title: "ウェルカムノートが届きました",
       descriptionBefore: "最初の旅を応援するため、",
-      descriptionHighlight: "ウェルカムノートクレジットをプレゼントしました",
+      descriptionHighlight: "ウェルカムノートをプレゼントしました",
       descriptionAfter: "臨場感ある会話を楽しむ準備はできましたか？",
       confirm: "確認",
     },

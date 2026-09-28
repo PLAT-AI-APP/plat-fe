@@ -139,9 +139,9 @@ const en: typeof ko = {
       skip: "Maybe later",
     },
     welcomeCredit: {
-      title: "Your welcome credit has arrived",
+      title: "Your welcome notes have arrived",
       descriptionBefore: "To support your first journey, ",
-      descriptionHighlight: "we gifted you welcome note credits",
+      descriptionHighlight: "we gifted you welcome notes",
       descriptionAfter: "Are you ready to enjoy vivid conversations?",
       confirm: "OK",
     },

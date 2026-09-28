@@ -135,9 +135,9 @@ const ko = {
       skip: "다음에 할게요",
     },
     welcomeCredit: {
-      title: "웰컴 크레딧이 도착했어요",
+      title: "웰컴 노트가 도착했어요",
       descriptionBefore: "회원님의 첫 여정을 위해, ",
-      descriptionHighlight: "웰컴 노트 크레딧을 선물했어요",
+      descriptionHighlight: "웰컴 노트를 선물했어요",
       descriptionAfter: "생생한 대화를 즐길 준비가 되셨나요?",
       confirm: "확인",
     },

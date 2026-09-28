@@ -134,9 +134,9 @@ const zh: typeof ko = {
       skip: "以后再说",
     },
     welcomeCredit: {
-      title: "欢迎积分已到账",
+      title: "欢迎笔记已到账",
       descriptionBefore: "为了支持你的第一次旅程，",
-      descriptionHighlight: "我们赠送了欢迎笔记积分",
+      descriptionHighlight: "我们赠送了欢迎笔记",
       descriptionAfter: "准备好享受生动的对话了吗？",
       confirm: "确认",
     },

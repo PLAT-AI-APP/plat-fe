@@ -135,9 +135,9 @@ const vi: typeof ko = {
       skip: "Để sau",
     },
     welcomeCredit: {
-      title: "Tín dụng chào mừng đã đến",
+      title: "Note chào mừng đã đến",
       descriptionBefore: "Để hỗ trợ hành trình đầu tiên của bạn, ",
-      descriptionHighlight: "chúng tôi đã tặng bạn credit note chào mừng",
+      descriptionHighlight: "chúng tôi đã tặng bạn note chào mừng",
       descriptionAfter:
         "Bạn đã sẵn sàng tận hưởng những cuộc trò chuyện sống động chưa?",
       confirm: "Xác nhận",

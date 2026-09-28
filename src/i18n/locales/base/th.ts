@@ -136,9 +136,9 @@ const th: typeof ko = {
       skip: "ไว้คราวหน้า",
     },
     welcomeCredit: {
-      title: "เครดิตต้อนรับมาถึงแล้ว",
+      title: "โน้ตต้อนรับมาถึงแล้ว",
       descriptionBefore: "เพื่อสนับสนุนการเดินทางครั้งแรกของคุณ ",
-      descriptionHighlight: "เราได้มอบเครดิตโน้ตต้อนรับให้คุณ",
+      descriptionHighlight: "เราได้มอบโน้ตต้อนรับให้คุณ",
       descriptionAfter: "พร้อมจะสนุกกับบทสนทนาที่มีชีวิตชีวาหรือยัง?",
       confirm: "ยืนยัน",
     },
