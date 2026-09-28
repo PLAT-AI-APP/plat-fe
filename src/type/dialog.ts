@@ -68,6 +68,8 @@ export interface PersonaDeleteDialogProps {
 
 export interface SignupCompleteDialogProps {
   nickname: string;
+  /** 가입 때 받은 동의의 처리 결과. 있으면 창 아래에 함께 보여 준다. */
+  agreement?: Omit<AgreementResultDialogProps, "onClose">;
   onClose: () => void;
   onLogin: () => void;
 }

@@ -93,7 +93,18 @@ const SignupForm = () => {
           // 회원가입 완료 다이얼로그는 홈으로 이동한 뒤 열어 회원가입 화면 위에 레이어가 남지 않게 합니다.
           sessionStorage.setItem(
             PENDING_SIGNUP_COMPLETE_DIALOG_KEY,
-            JSON.stringify({ nickname: data.nickname }),
+            JSON.stringify({
+              nickname: data.nickname,
+              agreement: {
+                processedAt: new Date().toISOString(),
+                items: [
+                  { type: "termsOfService", agreed: data.isTermsAgreed },
+                  { type: "privacyPolicy", agreed: data.isPrivacyAgreed },
+                  { type: "ageOver14", agreed: data.isAgeAgreed },
+                  { type: "marketing", agreed: data.isMarketingAgreed },
+                ],
+              },
+            }),
           );
           router.replace("/");
         },

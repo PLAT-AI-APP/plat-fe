@@ -9,6 +9,7 @@ import {
 } from "@/constants/auth";
 import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
+import type { SignupCompleteDialogProps } from "@/type/dialog";
 
 const PendingAuthDialogs = () => {
   const pathname = usePathname();
@@ -37,11 +38,13 @@ const PendingAuthDialogs = () => {
 
       const parsedDialogData = JSON.parse(pendingSignupCompleteDialog) as {
         nickname?: string;
+        agreement?: SignupCompleteDialogProps["agreement"];
       };
 
       clearModals();
       openDialog("SIGNUP_COMPLETE", {
         nickname: parsedDialogData.nickname || "",
+        agreement: parsedDialogData.agreement,
         onLogin: () => {
           openModal("LOGIN", { triggerRef: undefined });
         },
