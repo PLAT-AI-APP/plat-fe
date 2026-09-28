@@ -30,14 +30,23 @@ const CharacterChat = ({
 
   return (
     <article className="flex gap-2">
-      <ResourceImage
-        src={image}
-        alt={t("chatUI.characterProfileAlt", { name: CharacterName })}
-        width={imageSize}
-        height={imageSize}
-        unoptimized
-        className={cn("avatar-img", imageClassName)}
-      />
+      {/* 프로필이 없거나 세계관 상세가 아직 오지 않았으면 빈 src 로 그리지 않는다 — next/image 가 매번 콘솔 에러를 낸다.
+          받는 중 말풍선(ChatContentBlock)과 같은 빈 원으로 자리만 잡아, 이미지가 와도 줄이 흔들리지 않게 한다. */}
+      {image ? (
+        <ResourceImage
+          src={image}
+          alt={t("chatUI.characterProfileAlt", { name: CharacterName })}
+          width={imageSize}
+          height={imageSize}
+          unoptimized
+          className={cn("avatar-img", imageClassName)}
+        />
+      ) : (
+        <span
+          className={cn("shrink-0 rounded-full bg-card", imageClassName)}
+          aria-hidden
+        />
+      )}
 
       <div id="chat-bubble-container" className="body-5">
         {/* 이름은 세계관 상세가 도착해야 채워진다. 비어 있어도 한 줄 높이를 잡아 두어, 나중에 채워질 때
