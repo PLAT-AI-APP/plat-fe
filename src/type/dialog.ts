@@ -99,12 +99,29 @@ export interface WithdrawalConfirmDialogProps {
   onConfirm: () => void;
 }
 
+export interface AgreementResultItem {
+  /** `dialog.agreementResult.items` 아래 키. */
+  type: "termsOfService" | "privacyPolicy" | "ageOver14" | "marketing";
+  agreed: boolean;
+  /** 이미 한 동의를 거둔 것이면 "미동의" 대신 "철회" 로 적는다. */
+  withdrawn?: boolean;
+  version?: string | null;
+}
+
+export interface AgreementResultDialogProps {
+  onClose: () => void;
+  /** 처리 시각(ISO). */
+  processedAt: string;
+  items: AgreementResultItem[];
+}
+
 type DialogWithoutManagerClose<T extends { onClose: () => void }> = Omit<
   T,
   "onClose"
 >;
 
 export type DialogTypeMap = {
+  AGREEMENT_RESULT: DialogWithoutManagerClose<AgreementResultDialogProps>;
   CHAT_DELETE: DialogWithoutManagerClose<ChatDeleteDialogProps>;
   CHAT_LEAVE: DialogWithoutManagerClose<ChatLeaveDialogProps>;
   CHAT_RESTART: DialogWithoutManagerClose<ChatRestartDialogProps>;

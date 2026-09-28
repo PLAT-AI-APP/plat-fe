@@ -11,6 +11,7 @@ import {
 } from "@/api/agreement/agreements";
 import { showAppToast } from "@/lib/toast";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useDialogStore } from "@/store/useDialogStore";
 import SettingLanguageSelect from "./SettingLanguageSelect";
 import SettingRow from "./SettingRow";
 import SettingSection from "./SettingSection";
@@ -38,10 +39,17 @@ const SettingsContents = () => {
   const isLightMode = useIsHydrated() && resolvedTheme === "light";
 
   const { data: agreementStatus } = useAgreementStatusQuery();
+  const openDialog = useDialogStore((state) => state.openDialog);
   const { mutate: changeMarketing, isPending: isChangingMarketing } =
     useMarketingAgreementMutation();
   const handleMarketingChange = (agreed: boolean) =>
     changeMarketing(agreed, {
+      // 광고성 정보 수신 동의·철회는 처리 결과(일자·내용)를 알려야 한다.
+      onSuccess: () =>
+        openDialog("AGREEMENT_RESULT", {
+          processedAt: new Date().toISOString(),
+          items: [{ type: "marketing", agreed, withdrawn: !agreed }],
+        }),
       onError: () =>
         showAppToast("error", t("settings.actions.marketingFailed")),
     });

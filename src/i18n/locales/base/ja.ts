@@ -178,6 +178,21 @@ const ja: typeof ko = {
       description: "今移動すると、編集内容は保存されません。",
       confirm: "移動する",
     },
+    agreementResult: {
+      title: "同意の処理結果をお知らせします",
+      description: "{date}に以下のとおり処理しました。",
+      agreed: "同意",
+      declined: "未同意",
+      withdrawn: "撤回",
+      sender: "送信元：PLAT（株式会社オービットラボ）",
+      confirm: "確認",
+      items: {
+        termsOfService: "サービス利用規約",
+        privacyPolicy: "個人情報処理方針",
+        ageOver14: "14歳以上の確認",
+        marketing: "広告情報の受信",
+      },
+    },
     withdrawalComplete: {
       title: "これまでご利用いただきありがとうございました",
       descriptionLine1: "これまでPLATをご利用いただきありがとうございました。",

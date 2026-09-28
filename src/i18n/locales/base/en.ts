@@ -182,6 +182,21 @@ const en: typeof ko = {
       description: "If you leave now, your edits will not be saved.",
       confirm: "Leave",
     },
+    agreementResult: {
+      title: "Your consent has been recorded",
+      description: "Processed on {date} as follows.",
+      agreed: "Agreed",
+      declined: "Declined",
+      withdrawn: "Withdrawn",
+      sender: "From: PLAT (Orbitlab Co., Ltd.)",
+      confirm: "OK",
+      items: {
+        termsOfService: "Terms of Service",
+        privacyPolicy: "Privacy Policy",
+        ageOver14: "Age 14 or older",
+        marketing: "Marketing messages",
+      },
+    },
     withdrawalComplete: {
       title: "Thank you for being with us",
       descriptionLine1: "Thank you for spending time with PLAT.",

@@ -179,6 +179,21 @@ const vi: typeof ko = {
       description: "Nếu rời đi bây giờ, nội dung chỉnh sửa sẽ không được lưu.",
       confirm: "Rời đi",
     },
+    agreementResult: {
+      title: "Kết quả xử lý đồng ý",
+      description: "Đã xử lý vào {date} như sau.",
+      agreed: "Đồng ý",
+      declined: "Không đồng ý",
+      withdrawn: "Đã rút lại",
+      sender: "Người gửi: PLAT (Orbitlab Co., Ltd.)",
+      confirm: "Xác nhận",
+      items: {
+        termsOfService: "Điều khoản dịch vụ",
+        privacyPolicy: "Chính sách quyền riêng tư",
+        ageOver14: "Xác nhận từ 14 tuổi trở lên",
+        marketing: "Nhận thông tin quảng cáo",
+      },
+    },
     withdrawalComplete: {
       title: "Cảm ơn bạn đã đồng hành cùng chúng tôi",
       descriptionLine1: "Cảm ơn bạn đã dành thời gian với PLAT.",

@@ -176,6 +176,21 @@ const zh: typeof ko = {
       description: "如果现在离开，修改内容将不会被保存。",
       confirm: "离开",
     },
+    agreementResult: {
+      title: "同意处理结果通知",
+      description: "已于 {date} 按如下内容处理。",
+      agreed: "同意",
+      declined: "未同意",
+      withdrawn: "已撤回",
+      sender: "发送方：PLAT（Orbitlab 株式会社）",
+      confirm: "确认",
+      items: {
+        termsOfService: "服务使用条款",
+        privacyPolicy: "个人信息处理方针",
+        ageOver14: "年满 14 岁确认",
+        marketing: "接收广告信息",
+      },
+    },
     withdrawalComplete: {
       title: "感谢一直以来的陪伴",
       descriptionLine1: "感谢你一直以来对 PLAT 的支持。",

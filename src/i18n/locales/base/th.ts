@@ -179,6 +179,21 @@ const th: typeof ko = {
       description: "หากออกตอนนี้ สิ่งที่แก้ไขจะไม่ถูกบันทึก",
       confirm: "ออก",
     },
+    agreementResult: {
+      title: "แจ้งผลการให้ความยินยอม",
+      description: "ดำเนินการเมื่อ {date} ดังนี้",
+      agreed: "ยินยอม",
+      declined: "ไม่ยินยอม",
+      withdrawn: "ถอนความยินยอม",
+      sender: "ผู้ส่ง: PLAT (Orbitlab Co., Ltd.)",
+      confirm: "ตกลง",
+      items: {
+        termsOfService: "ข้อกำหนดการใช้บริการ",
+        privacyPolicy: "นโยบายความเป็นส่วนตัว",
+        ageOver14: "ยืนยันอายุ 14 ปีขึ้นไป",
+        marketing: "รับข้อมูลโฆษณา",
+      },
+    },
     withdrawalComplete: {
       title: "ขอบคุณที่ใช้งานกับเรา",
       descriptionLine1: "ขอบคุณที่ใช้เวลาร่วมกับ PLAT",

@@ -15,8 +15,17 @@ import { ArrowRight } from "@/icons";
 import Checkbox from "@/icons/Checkbox";
 import CheckboxEmpty from "@/icons/CheckboxEmpty";
 import { showAppToast } from "@/lib/toast";
+import { useDialogStore } from "@/store/useDialogStore";
+import type { AgreementResultItem } from "@/type/dialog";
 
 type RequiredType = Exclude<AgreementType, "MARKETING">;
+
+const RESULT_TYPE: Record<AgreementType, AgreementResultItem["type"]> = {
+  TERMS_OF_SERVICE: "termsOfService",
+  PRIVACY_POLICY: "privacyPolicy",
+  AGE_OVER_14: "ageOver14",
+  MARKETING: "marketing",
+};
 
 const ITEMS: Record<RequiredType, { labelKey: string; link: string }> = {
   TERMS_OF_SERVICE: { labelKey: "termsOfService", link: LEGAL_LINKS.terms },
@@ -35,6 +44,7 @@ const AgreementGate = () => {
   const { data: status } = useAgreementStatusQuery();
   const { mutate: agree, isPending: isAgreeing } = useAgreeMutation();
   const { mutate: logout, isPending: isLoggingOut } = useLogoutMutation();
+  const openDialog = useDialogStore((state) => state.openDialog);
   const [checked, setChecked] = useState<
     Partial<Record<AgreementType, boolean>>
   >({});
@@ -75,7 +85,19 @@ const AgreementGate = () => {
         ageOver14: !!checked.AGE_OVER_14,
         ...(status.firstConsent && { marketing: !!checked.MARKETING }),
       },
-      { onError: () => showAppToast("error", t("agreementGate.failed")) },
+      {
+        // 무엇에 언제 동의했는지 바로 알린다. 창이 닫히기 전에 목록을 만들어 둔다.
+        onSuccess: () =>
+          openDialog("AGREEMENT_RESULT", {
+            processedAt: new Date().toISOString(),
+            items: types.map((type) => ({
+              type: RESULT_TYPE[type],
+              agreed: !!checked[type],
+              version: versionOf(type),
+            })),
+          }),
+        onError: () => showAppToast("error", t("agreementGate.failed")),
+      },
     );
 
   const versionOf = (type: AgreementType) =>

@@ -178,6 +178,21 @@ const ko = {
       description: "지금 나가면 수정한 내용은 저장되지 않습니다.",
       confirm: "나가기",
     },
+    agreementResult: {
+      title: "동의 처리 결과를 알려 드려요",
+      description: "{date}에 아래와 같이 처리했어요.",
+      agreed: "동의",
+      declined: "미동의",
+      withdrawn: "철회",
+      sender: "보낸 곳: PLAT (주식회사 오비트랩)",
+      confirm: "확인",
+      items: {
+        termsOfService: "서비스 이용약관",
+        privacyPolicy: "개인정보 처리방침",
+        ageOver14: "만 14세 이상 확인",
+        marketing: "광고성 정보 수신",
+      },
+    },
     withdrawalComplete: {
       title: "그동안 이용해 주셔서 감사해요",
       descriptionLine1: "그동안 PLAT과 함께해 주셔서 감사해요.",
