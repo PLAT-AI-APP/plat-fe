@@ -221,7 +221,7 @@ const en = {
       price: "Amount",
       vatIncluded: "(VAT incl.)",
       validity: "Validity",
-      validityValue: "1 year from issue",
+      validityValue: "5 years from issue",
       refundNotice: "Unused items can be refunded within 7 days of payment.\nRefunds are restricted once any notes are used or after 7 days.",
       agree: "I have reviewed the above and agree to the payment. (Required)",
       cancel: "Cancel",
@@ -232,7 +232,7 @@ const en = {
       item1:
         "Unused items can be refunded (order withdrawal) within 7 days of payment.",
       item2:
-        "Paid notes you purchase are valid for one year from the date you receive them.",
+        "Paid notes you purchase are valid for five years from the date you receive them.",
       item3:
         "Once any notes from an item have been used, or 7 days have passed since payment, withdrawal is restricted due to the nature of digital content.",
       item4:

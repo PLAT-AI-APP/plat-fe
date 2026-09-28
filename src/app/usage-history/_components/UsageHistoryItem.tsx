@@ -14,9 +14,9 @@ import { UsageHistoryItemType } from "@/type/note";
 /** 만료일 노출이 필요한 지급성 내역인지 확인합니다. */
 const shouldShowExpiryDate = (amount: number) => amount > 0;
 
-/** 노트 만료일. 지급일로부터 1년 뒤입니다. */
+/** 노트 만료일. 지급일로부터 5년 뒤입니다(서버 credit.expiration 과 같은 값). */
 const getExpiryDate = (createdAt: string) =>
-  dayjs(createdAt).add(1, "year").format("YYYY.MM.DD");
+  dayjs(createdAt).add(5, "year").format("YYYY.MM.DD");
 
 /** 상세설명에 보여줄 API 참조 정보를 고릅니다. */
 const getLedgerDetailText = (item: UsageHistoryItemType) =>

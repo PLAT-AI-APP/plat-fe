@@ -220,7 +220,7 @@ const vi: typeof en = {
       price: "Số tiền thanh toán",
       vatIncluded: "(đã gồm VAT)",
       validity: "Thời hạn",
-      validityValue: "1 năm kể từ ngày nhận",
+      validityValue: "5 năm kể từ ngày nhận",
       refundNotice: "Sản phẩm chưa sử dụng có thể được hoàn tiền trong vòng 7 ngày sau khi thanh toán.\nNếu đã dùng một phần hoặc quá 7 ngày, việc hoàn tiền sẽ bị hạn chế.",
       agree: "Tôi đã kiểm tra nội dung trên và đồng ý thanh toán. (Bắt buộc)",
       cancel: "Hủy",
@@ -231,7 +231,7 @@ const vi: typeof en = {
       item1:
         "Sản phẩm chưa sử dụng có thể được hoàn tiền (rút lại đơn hàng) trong vòng 7 ngày sau khi thanh toán.",
       item2:
-        "Thời hạn sử dụng của note trả phí đã mua là 1 năm kể từ thời điểm nhận được.",
+        "Thời hạn sử dụng của note trả phí đã mua là 5 năm kể từ thời điểm nhận được.",
       item3:
         "Nếu đã sử dụng một phần note của sản phẩm hoặc đã quá 7 ngày kể từ khi thanh toán, việc rút lại đơn hàng sẽ bị hạn chế do đặc thù của nội dung số.",
       item4:

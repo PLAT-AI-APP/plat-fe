@@ -212,7 +212,7 @@ const zh: typeof en = {
       price: "支付金额",
       vatIncluded: "（含增值税）",
       validity: "有效期",
-      validityValue: "自发放日起1年",
+      validityValue: "自发放日起5年",
       refundNotice: "支付后7天内且未使用的商品可以退款。\n一旦部分使用或超过7天，将无法退款。",
       agree: "我已确认以上内容并同意支付。（必选）",
       cancel: "取消",
@@ -222,7 +222,7 @@ const zh: typeof en = {
     policies: {
       item1:
         "支付后7天内且未使用的商品可申请退款（撤回订单）。",
-      item2: "购买的付费笔记有效期为自获得之日起1年。",
+      item2: "购买的付费笔记有效期为自获得之日起5年。",
       item3:
         "商品中的笔记一旦部分使用，或支付已超过7天，基于数字内容的特性，将限制撤回订单。",
       item4: "退款申请及咨询可通过 PLAT 客服中心进行。",
