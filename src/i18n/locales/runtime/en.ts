@@ -171,12 +171,12 @@ const en = {
     viewCount: "{count} views",
   },
   tokenCharge: {
-    title: "Token charge",
+    title: "Charge notes",
     payment: {
       redirecting: "Redirecting to the payment page…",
       success: "{credits} notes have been added.",
       failed: "The payment failed. Please try again.",
-      backToCharge: "Back to token charge",
+      backToCharge: "Back to charging notes",
       successTitle: "Charge complete!",
       balanceLabel: "Current balance",
       goExplore: "Meet characters",

@@ -162,7 +162,7 @@ const zh: typeof en = {
     viewCount: "浏览 {count}",
   },
   tokenCharge: {
-    title: "代币充值",
+    title: "充值笔记",
     payment: {
       redirecting: "正在跳转到支付页面…",
       success: "已充值 {credits} 个笔记。",

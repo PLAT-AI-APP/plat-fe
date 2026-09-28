@@ -48,7 +48,7 @@ const vi: typeof en = {
     home: "Trang chủ",
     myChatting: "Chat của tôi",
     characterCreate: "Tạo nhân vật",
-    noteCharge: "Nap note",
+    noteCharge: "Nạp note",
     navigation: "Menu thanh bên",
     toggle: "Thu gọn hoặc mở rộng thanh bên",
     close: "Đóng thanh bên",
@@ -170,7 +170,7 @@ const vi: typeof en = {
     viewCount: "{count} lượt xem",
   },
   tokenCharge: {
-    title: "Nạp token",
+    title: "Nạp note",
     payment: {
       redirecting: "Đang chuyển đến trang thanh toán…",
       success: "Đã nạp {credits} ghi chú.",

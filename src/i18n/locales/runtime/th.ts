@@ -168,12 +168,12 @@ const th: typeof en = {
     viewCount: "เข้าชม {count}",
   },
   tokenCharge: {
-    title: "เติมโทเค็น",
+    title: "เติมโน้ต",
     payment: {
       redirecting: "กำลังไปยังหน้าชำระเงิน…",
       success: "เติม {credits} โน้ตเรียบร้อยแล้ว",
       failed: "การชำระเงินล้มเหลว โปรดลองอีกครั้ง",
-      backToCharge: "กลับไปหน้าเติมโทเค็น",
+      backToCharge: "กลับไปหน้าเติมโน้ต",
       successTitle: "เติมสำเร็จ!",
       balanceLabel: "ยอดคงเหลือปัจจุบัน",
       goExplore: "ไปพบตัวละคร",

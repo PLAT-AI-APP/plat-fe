@@ -165,7 +165,7 @@ const ko: typeof en = {
     viewCount: "조회 {count}",
   },
   tokenCharge: {
-    title: "토큰 충전",
+    title: "노트 충전",
     payment: {
       redirecting: "결제창으로 이동하고 있어요…",
       success: "{credits} 노트가 충전되었어요.",

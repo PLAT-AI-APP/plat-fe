@@ -164,7 +164,7 @@ const ja: typeof en = {
     viewCount: "閲覧 {count}",
   },
   tokenCharge: {
-    title: "トークンチャージ",
+    title: "ノートチャージ",
     payment: {
       redirecting: "決済ページへ移動しています…",
       success: "{credits}ノートがチャージされました。",
