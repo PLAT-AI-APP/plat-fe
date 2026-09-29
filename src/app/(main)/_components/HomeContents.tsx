@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import dynamic from "next/dynamic";
 import { useSearchParams } from "next/navigation";
 import Footer from "@/components/Footer";
@@ -16,6 +17,9 @@ import MenuTab from "./MenuTab";
  *
  * ssr:false 는 쓰지 않는다 — 첫 화면이 비어 보이는 대가가 크다.
  * 여기서 필요한 건 코드 분할뿐이다.
+ *
+ * next/dynamic 은 ssr 기본값에서 자체 Suspense 를 만들지 않아, 처음 여는 탭의 청크를 받는 동안 로딩이
+ * (main)/loading.tsx 까지 번져 배너·탭까지 홈 전체가 로딩 화면으로 깜빡였다. 탭 본문 둘레에 경계를 둔다.
  */
 const TAB_COMPONENTS = {
   all: dynamic(() => import("./home-tab-contents")),
@@ -109,7 +113,10 @@ const HomeContents = () => {
             id="contents-wrapper"
             className="flex flex-col grow w-full pb-12"
           >
-            <TabContents />
+            {/* 탭 청크를 받는 동안은 탭 본문 자리만 비운다(배너·탭 줄은 그대로). */}
+            <Suspense fallback={null}>
+              <TabContents />
+            </Suspense>
           </div>
 
           <div className="shrink-0 w-full">

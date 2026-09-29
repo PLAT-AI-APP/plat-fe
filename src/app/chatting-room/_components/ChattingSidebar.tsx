@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { AnimatePresence, m } from "framer-motion";
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -32,11 +32,25 @@ import { TRANSITION } from "@/constants/motion";
  * 유저노트 화면은 react-hook-form·zod 를 쓰는데, 그대로 가져오면 두 라이브러리(약 126KB)가
  * 채팅방 첫 로딩에 함께 실린다. 사이드바에서 유저노트를 열 때만 받도록 나눈다.
  * (모달이던 시절에는 모달 레지스트리가 같은 방식으로 늦게 불러왔다.)
+ *
+ * next/dynamic 은 ssr 기본값에서 자체 Suspense 를 만들지 않는다. 그래서 처음 여는 하위 화면의 청크를
+ * 받는 동안 로딩이 채팅방 라우트의 loading.tsx 까지 번져, 화면 전체가 한 번 로딩 화면으로 깜빡였다
+ * (청크가 캐시된 두 번째부터는 없었다). 사이드바 안에 경계를 두고, 사이드바가 열리면 미리 받아 둔다.
  */
-const ChattingUserNoteView = dynamic(() => import("./chatting-user-note-view"));
-const ChattingMemoryView = dynamic(() => import("./chatting-memory-view"));
-const ChattingAssetGalleryView = dynamic(
-  () => import("./chatting-asset-gallery-view"),
+const loadUserNoteView = () => import("./chatting-user-note-view");
+const loadMemoryView = () => import("./chatting-memory-view");
+const loadAssetGalleryView = () => import("./chatting-asset-gallery-view");
+const ChattingUserNoteView = dynamic(loadUserNoteView);
+const ChattingMemoryView = dynamic(loadMemoryView);
+const ChattingAssetGalleryView = dynamic(loadAssetGalleryView);
+
+/** 하위 화면 청크를 받는 동안 사이드바 안에만 보이는 자리. 뒤로 가기 줄과 본문 줄 모양만 둔다. */
+const SidebarDepthFallback = () => (
+  <div aria-hidden="true" className="flex h-full flex-col gap-5 p-5">
+    <div className="skeleton size-5 rounded-md" />
+    <div className="skeleton h-6 w-32 rounded-full" />
+    <div className="skeleton h-40 w-full rounded-xl" />
+  </div>
 );
 
 interface ChattingSidebarProps {
@@ -118,10 +132,7 @@ const SidebarMenuItem = ({
   );
 };
 
-const ChattingSidebar = ({
-  roomId,
-  toggleIsSidebar,
-}: ChattingSidebarProps) => {
+const ChattingSidebar = ({ roomId, toggleIsSidebar }: ChattingSidebarProps) => {
   const t = useTranslations("chatRoom.sidebar");
   const router = useRouter();
   const openDialog = useDialogStore((state) => state.openDialog);
@@ -140,9 +151,15 @@ const ChattingSidebar = ({
 
   const isDepthViewOpen = sidebarDepth !== "SETTINGS";
 
+  // 사이드바가 열리면 하위 화면 청크를 미리 받아, 눌렀을 때 기다리지 않게 한다.
+  useEffect(() => {
+    void loadUserNoteView();
+    void loadMemoryView();
+    void loadAssetGalleryView();
+  }, []);
+
   const handleOpenPersonaModal = () => {
-    // 다른 레이어 UI를 열기 전 사이드바 먼저 닫기
-    toggleIsSidebar();
+    // 모달(z-100)이 사이드바(z-20) 위에 뜨므로 사이드바는 그대로 둔다. 페르소나를 바꾼 뒤 설정을 이어서 볼 수 있다.
     openModal("PERSONA", {
       // 현재 페르소나를 넘기면 모달이 "관리"가 아니라 "선택" 모드로 열린다.
       currentPersonaId: room?.personaId,
@@ -218,115 +235,120 @@ const ChattingSidebar = ({
             transition={sidebarTransition}
             className="h-full"
           >
-            {sidebarDepth === "USER_NOTE" ? (
-              <ChattingUserNoteView roomId={roomId} onBack={handleDepthBack} />
-            ) : sidebarDepth === "MEMORY" ? (
-              <ChattingMemoryView roomId={roomId} onBack={handleDepthBack} />
-            ) : sidebarDepth === "ASSET_GALLERY" ? (
-              <ChattingAssetGalleryView
-                roomId={roomId}
-                onBack={handleDepthBack}
-              />
-            ) : (
-              <div className="flex h-full flex-col justify-between p-5">
-                <div className="flex flex-col gap-5">
-                  <header className="flex w-full items-center justify-between">
-                    <button
-                      type="button"
-                      onClick={toggleIsSidebar}
-                      className="flex size-5 items-center justify-center text-font-2 transition-colors hover:text-font-1"
-                      aria-label={t("close")}
-                    >
-                      <ArrowLeft className="size-5" />
-                    </button>
+            <Suspense fallback={<SidebarDepthFallback />}>
+              {sidebarDepth === "USER_NOTE" ? (
+                <ChattingUserNoteView
+                  roomId={roomId}
+                  onBack={handleDepthBack}
+                />
+              ) : sidebarDepth === "MEMORY" ? (
+                <ChattingMemoryView roomId={roomId} onBack={handleDepthBack} />
+              ) : sidebarDepth === "ASSET_GALLERY" ? (
+                <ChattingAssetGalleryView
+                  roomId={roomId}
+                  onBack={handleDepthBack}
+                />
+              ) : (
+                <div className="flex h-full flex-col justify-between p-5">
+                  <div className="flex flex-col gap-5">
+                    <header className="flex w-full items-center justify-between">
+                      <button
+                        type="button"
+                        onClick={toggleIsSidebar}
+                        className="flex size-5 items-center justify-center text-font-2 transition-colors hover:text-font-1"
+                        aria-label={t("close")}
+                      >
+                        <ArrowLeft className="size-5" />
+                      </button>
 
-                    <Link
-                      href="/token-charge"
-                      className="flex items-center gap-1.5 rounded-lg bg-card px-3 py-2 transition-colors hover:bg-card-hover"
-                    >
-                      <Token className="size-[21px]" />
-                      <span className="body-5 whitespace-nowrap text-font-1">
-                        {formatWithCommas(availableBalance)}
-                      </span>
-                    </Link>
-                  </header>
+                      <Link
+                        href="/token-charge"
+                        className="flex items-center gap-1.5 rounded-lg bg-card px-3 py-2 transition-colors hover:bg-card-hover"
+                      >
+                        <Token className="size-[21px]" />
+                        <span className="body-5 whitespace-nowrap text-font-1">
+                          {formatWithCommas(availableBalance)}
+                        </span>
+                      </Link>
+                    </header>
 
-                  <nav className="flex flex-col gap-6">
-                    <section className="flex flex-col gap-3">
-                      <h2 className="body-5 text-font-2">
-                        {t("userSettings")}
-                      </h2>
-                      <menu className="flex list-none flex-col gap-1">
-                        <li>
-                          <SidebarMenuItem
-                            icon={Persona}
-                            label={t("persona")}
-                            onClick={handleOpenPersonaModal}
-                            trailing={
-                              <span className="flex size-6 items-center justify-center">
-                                <ArrowLeft className="size-4 rotate-180 text-font-2" />
-                              </span>
-                            }
-                          />
-                        </li>
-                        <li>
-                          <SidebarMenuItem
-                            icon={Note}
-                            label={t("userNote")}
-                            onClick={() => setSidebarDepth("USER_NOTE")}
-                          />
-                        </li>
-                      </menu>
-                    </section>
+                    <nav className="flex flex-col gap-6">
+                      <section className="flex flex-col gap-3">
+                        <h2 className="body-5 text-font-2">
+                          {t("userSettings")}
+                        </h2>
+                        <menu className="flex list-none flex-col gap-1">
+                          <li>
+                            <SidebarMenuItem
+                              icon={Persona}
+                              label={t("persona")}
+                              onClick={handleOpenPersonaModal}
+                              trailing={
+                                <span className="flex size-6 items-center justify-center">
+                                  <ArrowLeft className="size-4 rotate-180 text-font-2" />
+                                </span>
+                              }
+                            />
+                          </li>
+                          <li>
+                            <SidebarMenuItem
+                              icon={Note}
+                              label={t("userNote")}
+                              onClick={() => setSidebarDepth("USER_NOTE")}
+                            />
+                          </li>
+                        </menu>
+                      </section>
 
-                    <section className="flex flex-col gap-3">
-                      <h2 className="body-5 text-font-2">{t("memoryLog")}</h2>
-                      <menu className="flex list-none flex-col gap-1">
-                        <li>
-                          <SidebarMenuItem
-                            icon={Storage}
-                            label={t("memory")}
-                            onClick={() => setSidebarDepth("MEMORY")}
-                          />
-                        </li>
-                        <li>
-                          <SidebarMenuItem
-                            icon={ImageIcon}
-                            label={t("assetGallery")}
-                            onClick={() => setSidebarDepth("ASSET_GALLERY")}
-                          />
-                        </li>
-                      </menu>
-                    </section>
+                      <section className="flex flex-col gap-3">
+                        <h2 className="body-5 text-font-2">{t("memoryLog")}</h2>
+                        <menu className="flex list-none flex-col gap-1">
+                          <li>
+                            <SidebarMenuItem
+                              icon={Storage}
+                              label={t("memory")}
+                              onClick={() => setSidebarDepth("MEMORY")}
+                            />
+                          </li>
+                          <li>
+                            <SidebarMenuItem
+                              icon={ImageIcon}
+                              label={t("assetGallery")}
+                              onClick={() => setSidebarDepth("ASSET_GALLERY")}
+                            />
+                          </li>
+                        </menu>
+                      </section>
 
-                    <section className="flex flex-col gap-3">
-                      <h2 className="body-5 text-font-2">
-                        {t("chatSettings")}
-                      </h2>
-                      <menu className="flex list-none flex-col gap-1">
-                        <li>
-                          <SidebarMenuItem
-                            icon={ChatPlus}
-                            label={t("restartChat")}
-                            onClick={handleRestartChat}
-                            disabled={!universe}
-                          />
-                        </li>
-                      </menu>
-                    </section>
-                  </nav>
+                      <section className="flex flex-col gap-3">
+                        <h2 className="body-5 text-font-2">
+                          {t("chatSettings")}
+                        </h2>
+                        <menu className="flex list-none flex-col gap-1">
+                          <li>
+                            <SidebarMenuItem
+                              icon={ChatPlus}
+                              label={t("restartChat")}
+                              onClick={handleRestartChat}
+                              disabled={!universe}
+                            />
+                          </li>
+                        </menu>
+                      </section>
+                    </nav>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={handleLeaveChat}
+                    className="body-5 flex w-full items-center gap-2 px-2 py-3 text-font-2 transition-colors hover:text-font-1"
+                  >
+                    <Logout className="size-6 scale-x-[-1]" />
+                    <span>{t("leaveChat")}</span>
+                  </button>
                 </div>
-
-                <button
-                  type="button"
-                  onClick={handleLeaveChat}
-                  className="body-5 flex w-full items-center gap-2 px-2 py-3 text-font-2 transition-colors hover:text-font-1"
-                >
-                  <Logout className="size-6 scale-x-[-1]" />
-                  <span>{t("leaveChat")}</span>
-                </button>
-              </div>
-            )}
+              )}
+            </Suspense>
           </m.div>
         </AnimatePresence>
       </m.div>
