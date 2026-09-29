@@ -20,6 +20,12 @@ const ko: typeof en = {
   errorPage: {
     maintenanceTitle: "점검 중이에요",
     maintenanceDescription: "더 나은 서비스를 위해 잠시 점검하고 있어요. 조금 뒤에 다시 찾아 주세요.",
+    maintenanceDrainingTitle: "곧 점검이 시작돼요",
+    maintenanceDrainingDescription: "지금은 새 채팅과 결제를 시작할 수 없어요. 진행 중이던 답변과 결제는 끝까지 처리돼요.",
+    maintenanceExpectedEnd: "예상 종료: {time}",
+    maintenanceOverTitle: "점검이 끝났어요",
+    maintenanceOverDescription: "기다려 주셔서 고마워요. 이제 다시 이용할 수 있어요.",
+    maintenanceBack: "이어서 이용하기",
     notFound: "요청하신 페이지를 찾을 수 없습니다.",
     notFoundTitle: "페이지를 찾을 수 없어요",
     notFoundHint: "주소가 바뀌었거나 삭제된 페이지일 수 있어요.",

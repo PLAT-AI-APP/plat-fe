@@ -208,6 +208,14 @@ const vi = {
     report: "Báo lỗi",
     close: "Đóng thông báo",
   },
+  maintenanceBanner: {
+    label: "Thông báo bảo trì máy chủ",
+    badge: "Lịch bảo trì",
+    badgeDraining: "Đang chuẩn bị bảo trì",
+    notice: "Máy chủ sẽ bảo trì từ {start}.",
+    noticeWithEnd: "Máy chủ sẽ bảo trì từ {start} đến {end}.",
+    draining: "Sắp bắt đầu bảo trì. Bạn có thể trò chuyện và thanh toán mới sau khi bảo trì kết thúc.",
+  },
   profilePopover: {
     notice: "Thông báo",
     customerService: "Trung tâm khách hàng",

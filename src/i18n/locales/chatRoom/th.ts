@@ -32,6 +32,8 @@ const th: typeof ko = {
       assetTotal: "ทั้งหมด  {count} รายการ",
       suggestedReply: "คำตอบแนะนำ",
       assetView: "แสดงแอสเซ็ต",
+      assetLocked: "แอสเซ็ตที่ล็อกอยู่",
+      backToAssetGallery: "กลับไปที่แกลเลอรีแอสเซ็ต",
       restartChat: "เริ่มบทสนทนาใหม่",
       leaveChat: "ออกจากห้องแชต",
     },

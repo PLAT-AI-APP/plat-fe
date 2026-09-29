@@ -117,6 +117,12 @@ const vi: typeof ko = {
       cancel: "Hủy",
       confirm: "Xóa",
     },
+    chatTurnDelete: {
+      title: "Xóa đoạn hội thoại này?",
+      description: "Tin nhắn của bạn và câu trả lời của nhân vật sẽ bị xóa cùng lúc và không thể khôi phục. Ghi chú đã dùng sẽ không được hoàn lại.",
+      cancel: "Hủy",
+      confirm: "Xóa",
+    },
     loginRequired: {
       title: "Cần đăng nhập",
       description: "Đây là tính năng chỉ dùng được sau khi đăng nhập.",

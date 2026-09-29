@@ -116,6 +116,12 @@ const zh: typeof ko = {
       cancel: "取消",
       confirm: "删除",
     },
+    chatTurnDelete: {
+      title: "要删除这段对话吗？",
+      description: "你发送的消息和角色的回复会一起删除，且无法恢复。已使用的笔记不会退还。",
+      cancel: "取消",
+      confirm: "删除",
+    },
     loginRequired: {
       title: "需要登录",
       description: "登录后才可以使用此功能。",

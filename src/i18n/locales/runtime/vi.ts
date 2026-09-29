@@ -19,6 +19,12 @@ const vi: typeof en = {
   errorPage: {
     maintenanceTitle: "Đang bảo trì",
     maintenanceDescription: "Chúng tôi đang bảo trì ngắn để phục vụ tốt hơn. Vui lòng quay lại sau ít phút.",
+    maintenanceDrainingTitle: "Sắp bắt đầu bảo trì",
+    maintenanceDrainingDescription: "Hiện không thể bắt đầu cuộc trò chuyện hoặc thanh toán mới. Các câu trả lời và thanh toán đang diễn ra sẽ được hoàn tất.",
+    maintenanceExpectedEnd: "Dự kiến kết thúc: {time}",
+    maintenanceOverTitle: "Đã bảo trì xong",
+    maintenanceOverDescription: "Cảm ơn bạn đã chờ. Bạn có thể tiếp tục sử dụng.",
+    maintenanceBack: "Tiếp tục",
     notFound: "Không tìm thấy trang bạn yêu cầu.",
     notFoundTitle: "Không tìm thấy trang",
     notFoundHint: "Địa chỉ có thể đã thay đổi hoặc trang đã bị xóa.",

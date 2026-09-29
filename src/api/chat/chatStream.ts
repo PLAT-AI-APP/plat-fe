@@ -1,7 +1,7 @@
 import { useAuthStore } from "@/store/useAuthStore";
 import { useLocaleStore } from "@/store/useLocaleStore";
 import { refreshAccessToken } from "@/api/auth/postRefresh";
-import { CHAT_BASE_URI, type AppError } from "@/api";
+import { CHAT_BASE_URI, trackChatStream, type AppError } from "@/api";
 import { getApiErrorMessage } from "@/lib/apiError";
 
 export interface ChatStreamHandlers {
@@ -108,7 +108,7 @@ const toAppError = (status: number, body: string): AppError => {
  * 프록시 타임아웃 등으로 done/failed 없이 연결이 닫히면, 잘린 응답이 완료된 것처럼 남지 않도록
  * 마지막으로 받은 이벤트 id 부터 몇 번 이어 받고, 그래도 안 되면 ChatStreamInterruptedError 를 던집니다.
  */
-export const consumeChatStream = async ({
+const consume = async ({
   turnId,
   lastEventId,
   signal,
@@ -197,3 +197,7 @@ export const consumeChatStream = async ({
     if (signal?.aborted) return;
   }
 };
+
+/** 스트림을 받는 동안은 점검으로 막힌 곁들인 조회가 화면을 점검 안내로 옮기지 않는다(src/api/index.ts). */
+export const consumeChatStream = (options: ChatStreamOptions) =>
+  trackChatStream(() => consume(options));

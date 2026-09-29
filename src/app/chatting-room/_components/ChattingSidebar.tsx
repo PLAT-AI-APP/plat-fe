@@ -6,7 +6,15 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, ChatPlus, Logout, Persona, Storage, Token } from "@/icons";
+import {
+  ArrowLeft,
+  ChatPlus,
+  ImageIcon,
+  Logout,
+  Persona,
+  Storage,
+  Token,
+} from "@/icons";
 import Note from "@/icons/Note";
 import { useRoomDetailQuery } from "@/api/room/getRoomDetail";
 import {
@@ -27,6 +35,9 @@ import { TRANSITION } from "@/constants/motion";
  */
 const ChattingUserNoteView = dynamic(() => import("./chatting-user-note-view"));
 const ChattingMemoryView = dynamic(() => import("./chatting-memory-view"));
+const ChattingAssetGalleryView = dynamic(
+  () => import("./chatting-asset-gallery-view"),
+);
 
 interface ChattingSidebarProps {
   roomId: string;
@@ -42,10 +53,10 @@ interface SidebarMenuItemProps {
 }
 
 /*
- * 에셋 갤러리·추천 답변·에셋 보기는 서버 연동 전까지 메뉴에서 뺀다.
+ * 추천 답변은 서버 연동 전까지 메뉴에서 뺀다.
  * 목업 데이터나 없는 API 를 부르는 화면을 사용자에게 보여 주지 않기 위해서다.
  */
-type SidebarDepth = "SETTINGS" | "USER_NOTE" | "MEMORY";
+type SidebarDepth = "SETTINGS" | "USER_NOTE" | "MEMORY" | "ASSET_GALLERY";
 
 /** 사이드바 오버레이 페이드 애니메이션 */
 const sidebarOverlayMotion = {
@@ -211,6 +222,11 @@ const ChattingSidebar = ({
               <ChattingUserNoteView roomId={roomId} onBack={handleDepthBack} />
             ) : sidebarDepth === "MEMORY" ? (
               <ChattingMemoryView roomId={roomId} onBack={handleDepthBack} />
+            ) : sidebarDepth === "ASSET_GALLERY" ? (
+              <ChattingAssetGalleryView
+                roomId={roomId}
+                onBack={handleDepthBack}
+              />
             ) : (
               <div className="flex h-full flex-col justify-between p-5">
                 <div className="flex flex-col gap-5">
@@ -271,6 +287,13 @@ const ChattingSidebar = ({
                             icon={Storage}
                             label={t("memory")}
                             onClick={() => setSidebarDepth("MEMORY")}
+                          />
+                        </li>
+                        <li>
+                          <SidebarMenuItem
+                            icon={ImageIcon}
+                            label={t("assetGallery")}
+                            onClick={() => setSidebarDepth("ASSET_GALLERY")}
                           />
                         </li>
                       </menu>

@@ -21,6 +21,12 @@ const en = {
   errorPage: {
     maintenanceTitle: "Under maintenance",
     maintenanceDescription: "We are doing some quick maintenance. Please check back shortly.",
+    maintenanceDrainingTitle: "Maintenance is about to start",
+    maintenanceDrainingDescription: "You can't start new chats or payments right now. Replies and payments already in progress will finish.",
+    maintenanceExpectedEnd: "Expected to end: {time}",
+    maintenanceOverTitle: "Maintenance is over",
+    maintenanceOverDescription: "Thanks for waiting. Everything is available again.",
+    maintenanceBack: "Continue",
     notFound: "We couldn't find the page you requested.",
     notFoundTitle: "Page not found",
     notFoundHint: "The address may have changed, or the page was removed.",

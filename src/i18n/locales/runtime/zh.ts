@@ -19,6 +19,12 @@ const zh: typeof en = {
   errorPage: {
     maintenanceTitle: "正在维护",
     maintenanceDescription: "为了提供更好的服务，我们正在进行短暂维护。请稍后再来。",
+    maintenanceDrainingTitle: "即将开始维护",
+    maintenanceDrainingDescription: "目前无法开始新的聊天或支付。进行中的回复和支付会处理完成。",
+    maintenanceExpectedEnd: "预计结束：{time}",
+    maintenanceOverTitle: "维护已结束",
+    maintenanceOverDescription: "感谢您的耐心等待，现在可以继续使用了。",
+    maintenanceBack: "继续使用",
     notFound: "找不到您请求的页面。",
     notFoundTitle: "找不到页面",
     notFoundHint: "地址可能已更改，或页面已被删除。",

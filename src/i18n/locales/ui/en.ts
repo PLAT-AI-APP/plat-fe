@@ -214,6 +214,14 @@ const en = {
     report: "Report a bug",
     close: "Close notice",
   },
+  maintenanceBanner: {
+    label: "Server maintenance notice",
+    badge: "Scheduled maintenance",
+    badgeDraining: "Preparing for maintenance",
+    notice: "Server maintenance starts at {start}.",
+    noticeWithEnd: "Server maintenance runs from {start} to {end}.",
+    draining: "Maintenance is about to start. New chats and payments will be available after it ends.",
+  },
   profilePopover: {
     notice: "Notice",
     customerService: "Customer service",

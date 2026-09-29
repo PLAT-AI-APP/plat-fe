@@ -19,6 +19,12 @@ const th: typeof en = {
   errorPage: {
     maintenanceTitle: "กำลังปรับปรุงระบบ",
     maintenanceDescription: "เรากำลังปรับปรุงระบบชั่วคราวเพื่อบริการที่ดีขึ้น โปรดกลับมาอีกครั้งในภายหลัง",
+    maintenanceDrainingTitle: "กำลังจะเริ่มปรับปรุงระบบ",
+    maintenanceDrainingDescription: "ขณะนี้ไม่สามารถเริ่มแชตหรือการชำระเงินใหม่ได้ คำตอบและการชำระเงินที่กำลังดำเนินอยู่จะเสร็จสมบูรณ์",
+    maintenanceExpectedEnd: "คาดว่าจะเสร็จ: {time}",
+    maintenanceOverTitle: "ปรับปรุงระบบเสร็จแล้ว",
+    maintenanceOverDescription: "ขอบคุณที่รอ ตอนนี้ใช้งานได้ตามปกติแล้ว",
+    maintenanceBack: "ใช้งานต่อ",
     notFound: "ไม่พบหน้าที่คุณต้องการ",
     notFoundTitle: "ไม่พบหน้านี้",
     notFoundHint: "ที่อยู่อาจเปลี่ยนไป หรือหน้านี้ถูกลบแล้ว",

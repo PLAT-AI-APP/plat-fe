@@ -204,6 +204,14 @@ const zh = {
     report: "反馈问题",
     close: "关闭通知",
   },
+  maintenanceBanner: {
+    label: "服务器维护通知",
+    badge: "维护预告",
+    badgeDraining: "维护准备中",
+    notice: "服务器将于{start}开始维护。",
+    noticeWithEnd: "服务器将于{start}至{end}进行维护。",
+    draining: "即将开始维护。新的聊天和支付请在维护结束后进行。",
+  },
   profilePopover: {
     notice: "公告",
     customerService: "客服中心",

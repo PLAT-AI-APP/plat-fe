@@ -109,3 +109,34 @@ export const prependLatestRoomMessages = async (
 
   return addedCount;
 };
+
+/**
+ * 지운 메시지를 캐시에서 뺀다. 턴 삭제 응답이나 재생성으로 바뀐 옛 답에 쓴다.
+ *
+ * 무한스크롤을 다시 받지 않고 그 자리에서만 뺀다. 커서는 각 페이지의 첫 항목이라, 첫 항목이 빠져도
+ * 다음 항목이 커서가 되어 과거 방향 조회가 그대로 이어진다.
+ */
+export const removeRoomMessagesFromCache = (
+  queryClient: QueryClient,
+  roomId: string,
+  messageIds: readonly string[],
+) => {
+  if (messageIds.length === 0) return;
+  const removed = new Set(messageIds);
+
+  queryClient.setQueryData<
+    InfiniteData<SliceWith<RoomMessage>, string | undefined>
+  >(roomQueryKeys.messages(roomId), (previous) => {
+    if (!previous) return previous;
+
+    return {
+      ...previous,
+      pages: previous.pages.map((page) => ({
+        ...page,
+        content: page.content.filter(
+          (message) => !removed.has(message.messageId),
+        ),
+      })),
+    };
+  });
+};

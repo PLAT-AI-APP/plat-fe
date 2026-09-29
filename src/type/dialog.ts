@@ -50,6 +50,12 @@ export interface ChatDeleteDialogProps {
   onConfirm: () => void;
 }
 
+/** 채팅방 안의 한 턴(내 말 + 캐릭터 답) 삭제 확인 */
+export interface ChatTurnDeleteDialogProps {
+  onClose: () => void;
+  onConfirm: () => void;
+}
+
 export interface LoginRequiredDialogProps {
   confirmText?: string;
   description?: string;
@@ -127,6 +133,7 @@ export type DialogTypeMap = {
   CHAT_DELETE: DialogWithoutManagerClose<ChatDeleteDialogProps>;
   CHAT_LEAVE: DialogWithoutManagerClose<ChatLeaveDialogProps>;
   CHAT_RESTART: DialogWithoutManagerClose<ChatRestartDialogProps>;
+  CHAT_TURN_DELETE: DialogWithoutManagerClose<ChatTurnDeleteDialogProps>;
   COMMENT_DELETE: DialogWithoutManagerClose<CommentDeleteDialogProps>;
   CREDIT_INSUFFICIENT: DialogWithoutManagerClose<CreditInsufficientDialogProps>;
   DRAFT_OVERWRITE: DialogWithoutManagerClose<DraftOverwriteDialogProps>;

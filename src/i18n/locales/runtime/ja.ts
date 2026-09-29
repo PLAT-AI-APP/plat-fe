@@ -18,6 +18,12 @@ const ja: typeof en = {
   errorPage: {
     maintenanceTitle: "メンテナンス中です",
     maintenanceDescription: "より良いサービスのため一時的にメンテナンスを行っています。しばらくしてから再度お越しください。",
+    maintenanceDrainingTitle: "まもなくメンテナンスが始まります",
+    maintenanceDrainingDescription: "現在、新しいチャットと決済は開始できません。進行中の返信と決済は最後まで処理されます。",
+    maintenanceExpectedEnd: "終了予定：{time}",
+    maintenanceOverTitle: "メンテナンスが終わりました",
+    maintenanceOverDescription: "お待たせしました。再びご利用いただけます。",
+    maintenanceBack: "続けて利用する",
     notFound: "お探しのページが見つかりません。",
     notFoundTitle: "ページが見つかりません",
     notFoundHint: "アドレスが変わったか、ページが削除された可能性があります。",

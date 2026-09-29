@@ -117,6 +117,12 @@ const ja: typeof ko = {
       cancel: "キャンセル",
       confirm: "削除",
     },
+    chatTurnDelete: {
+      title: "この会話を削除しますか？",
+      description: "送ったメッセージとキャラクターの返信が一緒に削除され、元に戻せません。使用したノートは戻りません。",
+      cancel: "キャンセル",
+      confirm: "削除",
+    },
     loginRequired: {
       title: "ログインが必要です",
       description: "ログイン後に利用できる機能です。",

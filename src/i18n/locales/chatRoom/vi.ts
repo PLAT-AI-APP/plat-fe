@@ -33,6 +33,8 @@ const vi: typeof ko = {
       assetTotal: "Tổng  {count}",
       suggestedReply: "Trả lời gợi ý",
       assetView: "Hiển thị asset",
+      assetLocked: "Tài nguyên đang khóa",
+      backToAssetGallery: "Quay lại thư viện tài nguyên",
       restartChat: "Bắt đầu lại cuộc trò chuyện",
       leaveChat: "Rời phòng chat",
     },

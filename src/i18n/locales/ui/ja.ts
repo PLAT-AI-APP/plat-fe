@@ -208,6 +208,14 @@ const ja = {
     report: "不具合を報告",
     close: "お知らせを閉じる",
   },
+  maintenanceBanner: {
+    label: "サーバーメンテナンスのお知らせ",
+    badge: "メンテナンス予定",
+    badgeDraining: "メンテナンス準備中",
+    notice: "{start}からサーバーメンテナンスを行います。",
+    noticeWithEnd: "{start}から{end}までサーバーメンテナンスを行います。",
+    draining: "まもなくメンテナンスが始まります。新しいチャットと決済はメンテナンス終了後にご利用ください。",
+  },
   profilePopover: {
     notice: "お知らせ",
     customerService: "カスタマーセンター",

@@ -204,6 +204,14 @@ const ko = {
     report: "버그 제보하기",
     close: "안내 닫기",
   },
+  maintenanceBanner: {
+    label: "서버 점검 안내",
+    badge: "점검 예정",
+    badgeDraining: "점검 준비 중",
+    notice: "{start}부터 서버 점검이 있어요.",
+    noticeWithEnd: "{start}부터 {end}까지 서버 점검이 있어요.",
+    draining: "곧 점검이 시작돼요. 새 채팅과 결제는 점검이 끝난 뒤에 할 수 있어요.",
+  },
   profilePopover: {
     notice: "공지사항",
     customerService: "고객센터",

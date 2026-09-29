@@ -117,6 +117,12 @@ const ko = {
       cancel: "취소하기",
       confirm: "삭제",
     },
+    chatTurnDelete: {
+      title: "이 대화를 지울까요?",
+      description: "내가 보낸 말과 캐릭터의 답이 함께 지워지고 되돌릴 수 없어요. 사용한 노트는 돌아오지 않아요.",
+      cancel: "취소하기",
+      confirm: "삭제",
+    },
     loginRequired: {
       title: "로그인이 필요해요",
       description: "로그인 후 이용할 수 있는 기능입니다.",

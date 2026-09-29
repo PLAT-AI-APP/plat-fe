@@ -9,74 +9,29 @@ import type {
 import { rooms, nextMessageId } from "./room";
 import type { MessageSender, RoomMessage } from "@/type/room";
 
-/** 채팅방 에셋 갤러리 목 이미지 목록 */
-const chatAssetGalleryItems: ChatAssetGalleryItem[] = [
-  {
-    id: "asset-1",
-    imageUrl: "/images/sample.png",
-    isLocked: false,
+/** 채팅방 에셋 갤러리 목 이미지 목록. 서버처럼 해금된 4개 다음 잠긴 것(내용을 비운 채)이 온다. */
+const chatAssetGalleryItems: ChatAssetGalleryItem[] = Array.from(
+  { length: 12 },
+  (_, index) => {
+    const isLocked = index >= 4;
+    return {
+      id: `asset-${index + 1}`,
+      fileId: isLocked ? null : `file-${index + 1}`,
+      imageUrl: isLocked ? null : "/images/sample.png",
+      name: isLocked ? null : `장면 ${index + 1}`,
+      situation: isLocked ? null : "비 오는 골목에서 우산을 건네는 장면",
+      isLocked,
+      unlockedAt: isLocked
+        ? null
+        : new Date(Date.UTC(2026, 8, 1 + index)).toISOString(),
+    };
   },
-  {
-    id: "asset-2",
-    imageUrl: "/images/sample.png",
-    isLocked: false,
-  },
-  {
-    id: "asset-3",
-    imageUrl: "/images/sample.png",
-    isLocked: false,
-  },
-  {
-    id: "asset-4",
-    imageUrl: "/images/sample.png",
-    isLocked: false,
-  },
-  {
-    id: "asset-5",
-    imageUrl: "/images/sample.png",
-    isLocked: true,
-  },
-  {
-    id: "asset-6",
-    imageUrl: "/images/sample.png",
-    isLocked: true,
-  },
-  {
-    id: "asset-7",
-    imageUrl: "/images/sample.png",
-    isLocked: true,
-  },
-  {
-    id: "asset-8",
-    imageUrl: "/images/sample.png",
-    isLocked: true,
-  },
-  {
-    id: "asset-9",
-    imageUrl: "/images/sample.png",
-    isLocked: true,
-  },
-  {
-    id: "asset-10",
-    imageUrl: "/images/sample.png",
-    isLocked: true,
-  },
-  {
-    id: "asset-11",
-    imageUrl: "/images/sample.png",
-    isLocked: true,
-  },
-  {
-    id: "asset-12",
-    imageUrl: "/images/sample.png",
-    isLocked: true,
-  },
-];
+);
 
 /** 에셋 갤러리 목 카운트와 목록 응답 */
 const chatAssetGallery: ChatAssetGalleryResponse = {
   items: chatAssetGalleryItems,
-  totalCount: 50,
+  totalCount: 12,
   visibleCount: 4,
 };
 
@@ -159,7 +114,7 @@ const chatStartError = (code: string, message: string, status: number) =>
   HttpResponse.json({ code, message }, { status });
 
 export const chatHandlers = [
-  http.get(/\/chat-rooms\/([^/]+)\/assets(?:\?.*)?$/, () => {
+  http.get(/\/rooms\/([^/]+)\/assets(?:\?.*)?$/, () => {
     return HttpResponse.json(chatAssetGallery);
   }),
 

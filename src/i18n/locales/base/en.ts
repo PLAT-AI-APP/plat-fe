@@ -121,6 +121,12 @@ const en: typeof ko = {
       cancel: "Cancel",
       confirm: "Delete",
     },
+    chatTurnDelete: {
+      title: "Delete this exchange?",
+      description: "Your message and the character's reply will both be deleted and can't be restored. Notes already used won't be refunded.",
+      cancel: "Cancel",
+      confirm: "Delete",
+    },
     loginRequired: {
       title: "Login is required",
       description: "This feature is available after logging in.",

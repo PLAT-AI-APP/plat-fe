@@ -33,6 +33,8 @@ const ja: typeof ko = {
       assetTotal: "合計  {count}件",
       suggestedReply: "おすすめ返信",
       assetView: "アセット表示",
+      assetLocked: "ロックされたアセット",
+      backToAssetGallery: "アセットギャラリーに戻る",
       restartChat: "会話を新しく始める",
       leaveChat: "チャットルームを退出",
     },
