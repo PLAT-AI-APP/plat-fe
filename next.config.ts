@@ -3,8 +3,23 @@ import type { NextConfig } from "next";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
+/**
+ * 모든 화면 응답에 붙이는 보안 헤더.
+ * - X-Frame-Options: 다른 사이트가 우리 화면을 iframe 에 넣어 클릭을 가로채지 못하게 한다.
+ * - X-Content-Type-Options: 브라우저가 응답 형식을 추측해 스크립트로 실행하지 않게 한다.
+ * - Referrer-Policy: 다른 사이트로 나갈 때 주소의 경로·쿼리(pg_token 등)를 넘기지 않는다.
+ */
+const SECURITY_HEADERS = [
+  { key: "X-Frame-Options", value: "DENY" },
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+];
+
 const nextConfig: NextConfig = {
   output: "standalone",
+  async headers() {
+    return [{ source: "/:path*", headers: SECURITY_HEADERS }];
+  },
   experimental: {
     /*
      * 배럴 파일을 통과하는 임포트를 실제 사용한 모듈로만 좁힌다.
