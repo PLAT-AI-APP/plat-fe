@@ -60,7 +60,6 @@ const vi: typeof ko = {
       firstDescription: "Vui lòng đồng ý với các điều khoản dưới đây để sử dụng PLAT.",
       revisedTitle: "Điều khoản đã thay đổi",
       revisedDescription: "Hãy xem và đồng ý với điều khoản mới để tiếp tục sử dụng.",
-      version: "Phiên bản {version}",
       submit: "Đồng ý và tiếp tục",
       logout: "Đăng xuất",
       failed: "Không thể lưu sự đồng ý của bạn. Vui lòng thử lại sau.",

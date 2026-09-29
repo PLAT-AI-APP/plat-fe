@@ -62,7 +62,6 @@ const en: typeof ko = {
       firstDescription: "Please agree to the terms below to use PLAT.",
       revisedTitle: "Our terms have changed",
       revisedDescription: "Review and agree to the updated terms to keep using PLAT.",
-      version: "Version {version}",
       submit: "Agree and continue",
       logout: "Log out",
       failed: "We couldn't save your consent. Please try again shortly.",

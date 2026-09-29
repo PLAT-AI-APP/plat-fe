@@ -60,7 +60,6 @@ const zh: typeof ko = {
       firstDescription: "使用 PLAT 前，请同意以下条款。",
       revisedTitle: "条款已更新",
       revisedDescription: "请查看并同意更新后的条款以继续使用。",
-      version: "版本 {version}",
       submit: "同意并继续",
       logout: "退出登录",
       failed: "未能保存您的同意，请稍后重试。",

@@ -60,7 +60,6 @@ const ja: typeof ko = {
       firstDescription: "PLATを利用するには、以下の規約に同意してください。",
       revisedTitle: "規約が変更されました",
       revisedDescription: "変更された規約を確認して同意すると、引き続き利用できます。",
-      version: "バージョン {version}",
       submit: "同意して続ける",
       logout: "ログアウト",
       failed: "同意を保存できませんでした。しばらくしてからもう一度お試しください。",

@@ -113,7 +113,6 @@ export interface AgreementResultItem {
   agreed: boolean;
   /** 이미 한 동의를 거둔 것이면 "미동의" 대신 "철회" 로 적는다. */
   withdrawn?: boolean;
-  version?: string | null;
 }
 
 export interface AgreementResultDialogProps {

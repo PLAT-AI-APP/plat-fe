@@ -60,7 +60,6 @@ const ko = {
       firstDescription: "PLAT을 이용하려면 아래 약관에 동의해 주세요.",
       revisedTitle: "약관이 바뀌었어요",
       revisedDescription: "바뀐 약관을 확인하고 동의하면 계속 이용할 수 있어요.",
-      version: "{version} 버전",
       submit: "동의하고 계속하기",
       logout: "로그아웃",
       failed: "동의를 저장하지 못했어요. 잠시 뒤 다시 시도해 주세요.",

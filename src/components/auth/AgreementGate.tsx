@@ -93,15 +93,11 @@ const AgreementGate = () => {
             items: types.map((type) => ({
               type: RESULT_TYPE[type],
               agreed: !!checked[type],
-              version: versionOf(type),
             })),
           }),
         onError: () => showAppToast("error", t("agreementGate.failed")),
       },
     );
-
-  const versionOf = (type: AgreementType) =>
-    pending.find((item) => item.type === type)?.version;
 
   return (
     <div
@@ -147,7 +143,6 @@ const AgreementGate = () => {
 
           <ul className="flex flex-col gap-3">
             {types.map((type) => {
-              const version = versionOf(type);
               const item = type === "MARKETING" ? null : ITEMS[type];
               return (
                 <li
@@ -163,11 +158,6 @@ const AgreementGate = () => {
                     {checked[type] ? <Checkbox /> : <CheckboxEmpty />}
                     <span className="body-5 text-font-1">
                       {t(`signup.${item ? item.labelKey : "marketing"}`)}
-                      {version && (
-                        <span className="ml-1 text-font-2">
-                          {t("agreementGate.version", { version })}
-                        </span>
-                      )}
                     </span>
                   </button>
                   {item && (

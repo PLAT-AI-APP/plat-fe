@@ -39,9 +39,6 @@ const AgreementResultSummary = ({
           >
             <span className="text-font-1">
               {t(`items.${item.type}`)}
-              {item.version && (
-                <span className="ml-1 text-font-2">{item.version}</span>
-              )}
             </span>
             <span className={item.agreed ? "text-brand" : "text-font-disabled"}>
               {t(
