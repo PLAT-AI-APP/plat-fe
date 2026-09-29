@@ -30,6 +30,8 @@ const en: typeof ko = {
     },
     profileEdit: {
       title: "Edit profile",
+      optionalInfoNotice:
+        "Birth date and gender are optional. You can use every feature without them, and clearing them deletes them right away.",
       changePassword: "Change password",
       submit: "Save",
       invalidType: "Only jpg, png, and webp image files are supported.",
@@ -47,6 +49,7 @@ const en: typeof ko = {
     report: {
       titleComment: "What's wrong with {nickname}'s comment?",
       titleUniverse: "What's wrong with the character {name}?",
+      titleMessage: "What's wrong with {name}'s reply?",
       reasonLabel: "Reason",
       detailPlaceholder: "Please describe the reason in detail and we'll review it and take action.",
       detailPlaceholderRequired: "Tell us what the problem is.",
@@ -56,6 +59,7 @@ const en: typeof ko = {
       viewHistory: "My reports",
       alreadySubmitted: "You've already reported this. You can check the result in My reports.",
       selfTarget: "You can't report your own content.",
+      selfTargetMessage: "You can't report replies from your own character.",
       targetNotFound: "This content was deleted or is no longer available.",
     },
     passwordReset: {

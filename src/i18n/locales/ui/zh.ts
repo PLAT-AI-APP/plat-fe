@@ -197,10 +197,36 @@ const zh = {
     male: "男性向",
     female: "女性向",
   },
+  betaBanner: {
+    label: "封闭测试通知",
+    badge: "封闭测试",
+    message: "目前处于封闭测试期间。如遇到问题或错误，请告诉我们，我们会尽快修复。",
+    report: "反馈问题",
+    close: "关闭通知",
+  },
+  maintenanceBanner: {
+    label: "服务器维护通知",
+    badge: "维护预告",
+    badgeDraining: "维护准备中",
+    notice: "服务器将于{start}开始维护。",
+    noticeWithEnd: "服务器将于{start}至{end}进行维护。",
+    draining: "即将开始维护。新的聊天和支付请在维护结束后进行。",
+  },
+  legalPage: {
+    language: "语言",
+    translationNotice: "本译文仅供参考。如与韩文原文不一致，以韩文原文为准。",
+    fallbackNotice: "该语言的译文尚未提供，现显示韩文原文。",
+    effectiveAt: "{date}起施行",
+    history: "历史版本",
+    currentOption: "{date}施行（当前）",
+    pastOption: "{date}施行",
+    pastNotice: "您正在查看历史版本。当前适用的内容请查看现行版本。",
+  },
   profilePopover: {
     notice: "公告",
     customerService: "客服中心",
     myReports: "举报记录",
+    bugReport: "反馈问题",
     earnings: "我的收益",
     persona: "我的人格设定",
     contentSettings: "内容设置",
@@ -226,6 +252,7 @@ const zh = {
     targetTypes: {
       COMMENT: "评论",
       UNIVERSE: "角色",
+      MESSAGE: "AI 回复",
     },
     reasons: {
       SEXUAL: "色情内容",
@@ -233,6 +260,10 @@ const zh = {
       HATE: "仇恨言论",
       COPYRIGHT: "侵犯版权",
       SPAM: "垃圾信息·广告",
+      DEFAMATION: "诽谤·侵犯隐私",
+      IMPERSONATION: "冒充真实人物",
+      MINOR_SEXUAL: "涉及未成年人的色情内容",
+      PERSONAL_INFO: "泄露个人信息",
       ETC: "其他",
     },
     statuses: {
@@ -290,6 +321,7 @@ const zh = {
     },
     exchange: {
       insufficient: "积分不足",
+      identityRequired: "完成实名认证后即可兑换",
       shortBy: "再攒{value}P即可兑换",
       progressLabel: "距离兑换已攒积分",
       button: "兑换",
@@ -297,6 +329,8 @@ const zh = {
       remainPoints: "剩余积分",
       phone: "接收号码",
       phoneInvalid: "请确认接收号码",
+      phonePrivacy:
+        "号码仅用于发送礼品卡，处理 30 天后仅保留后 4 位并销毁其余部分。",
       giftNotice: "3天内短信发送",
       requested: "已提交兑换申请",
     },

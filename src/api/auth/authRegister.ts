@@ -8,6 +8,13 @@ interface PostAuthRegisterProps {
   password: string;
   passwordCheck: string;
   code: string;
+  /** 가입 화면의 동의. 필수 셋이 false 면 서버가 400 으로 거절한다. */
+  agreements: {
+    termsOfService: boolean;
+    privacyPolicy: boolean;
+    ageOver14: boolean;
+    marketing: boolean;
+  };
 }
 
 const PostAuthRegister = async (props: PostAuthRegisterProps) => {

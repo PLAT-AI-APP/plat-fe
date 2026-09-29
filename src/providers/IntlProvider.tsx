@@ -7,6 +7,7 @@ import {
   type AppLocale,
   DAYJS_LOCALE_BY_APP_LOCALE,
   DEFAULT_LOCALE,
+  INTL_TIME_ZONE,
 } from "@/i18n/config";
 import {
   defaultMessages,
@@ -61,7 +62,11 @@ const IntlProvider = ({ children }: { children: React.ReactNode }) => {
   }, [readyLocale]);
 
   return (
-    <NextIntlClientProvider locale={readyLocale} messages={messages}>
+    <NextIntlClientProvider
+      locale={readyLocale}
+      messages={messages}
+      timeZone={INTL_TIME_ZONE}
+    >
       {children}
     </NextIntlClientProvider>
   );

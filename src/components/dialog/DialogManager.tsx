@@ -10,10 +10,13 @@ import { useModalStore } from "@/store/useModalStore";
 import type { DialogTypeMap } from "@/type/dialog";
 
 const DIALOG_LOADERS = {
+  AGREEMENT_RESULT: () => import("./AgreementResultDialog"),
   CHAT_DELETE: () => import("./ChatDeleteDialog"),
   CHAT_LEAVE: () => import("./ChatLeaveDialog"),
   CHAT_RESTART: () => import("./ChatRestartDialog"),
+  CHAT_TURN_DELETE: () => import("./ChatTurnDeleteDialog"),
   COMMENT_DELETE: () => import("./CommentDeleteDialog"),
+  CREDIT_INSUFFICIENT: () => import("./CreditInsufficientDialog"),
   DRAFT_OVERWRITE: () => import("./DraftOverwriteDialog"),
   DRAFT_SAVE_OVERWRITE: () => import("./DraftSaveOverwriteDialog"),
   LOGIN_REQUIRED: () => import("./LoginRequiredDialog"),

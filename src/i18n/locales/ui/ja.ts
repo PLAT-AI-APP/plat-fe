@@ -201,10 +201,36 @@ const ja = {
     male: "男性向け",
     female: "女性向け",
   },
+  betaBanner: {
+    label: "クローズドベータのお知らせ",
+    badge: "クローズドベータ",
+    message: "現在クローズドベータ期間です。不具合や使いにくい点を教えていただければすぐに直します。",
+    report: "不具合を報告",
+    close: "お知らせを閉じる",
+  },
+  maintenanceBanner: {
+    label: "サーバーメンテナンスのお知らせ",
+    badge: "メンテナンス予定",
+    badgeDraining: "メンテナンス準備中",
+    notice: "{start}からサーバーメンテナンスを行います。",
+    noticeWithEnd: "{start}から{end}までサーバーメンテナンスを行います。",
+    draining: "まもなくメンテナンスが始まります。新しいチャットと決済はメンテナンス終了後にご利用ください。",
+  },
+  legalPage: {
+    language: "言語",
+    translationNotice: "理解を助けるための翻訳版です。内容が異なる場合は韓国語の原文が優先されます。",
+    fallbackNotice: "この言語の翻訳版はまだないため、韓国語の原文を表示しています。",
+    effectiveAt: "{date}施行",
+    history: "過去のバージョン",
+    currentOption: "{date}施行（現在）",
+    pastOption: "{date}施行",
+    pastNotice: "過去のバージョンを表示しています。現在適用される内容は最新バージョンをご確認ください。",
+  },
   profilePopover: {
     notice: "お知らせ",
     customerService: "カスタマーセンター",
     myReports: "通報履歴",
+    bugReport: "不具合を報告",
     earnings: "マイ収益",
     persona: "マイペルソナ",
     contentSettings: "コンテンツ設定",
@@ -230,6 +256,7 @@ const ja = {
     targetTypes: {
       COMMENT: "コメント",
       UNIVERSE: "キャラクター",
+      MESSAGE: "AIの返信",
     },
     reasons: {
       SEXUAL: "性的なコンテンツ",
@@ -237,6 +264,10 @@ const ja = {
       HATE: "ヘイトスピーチ",
       COPYRIGHT: "著作権侵害",
       SPAM: "スパム・広告",
+      DEFAMATION: "名誉毀損・プライバシー侵害",
+      IMPERSONATION: "実在人物のなりすまし",
+      MINOR_SEXUAL: "未成年者の性的コンテンツ",
+      PERSONAL_INFO: "個人情報の露出",
       ETC: "その他",
     },
     statuses: {
@@ -294,6 +325,7 @@ const ja = {
     },
     exchange: {
       insufficient: "ポイント不足",
+      identityRequired: "本人認証後に交換できます",
       shortBy: "あと{value}Pで交換できます",
       progressLabel: "交換までに貯めたポイント",
       button: "交換",
@@ -301,6 +333,8 @@ const ja = {
       remainPoints: "残りポイント",
       phone: "受取番号",
       phoneInvalid: "受取番号を確認してください",
+      phonePrivacy:
+        "番号はギフト券の送付にのみ使用し、処理から30日後に末尾4桁を残して破棄します。",
       giftNotice: "3日以内にSMSで送信",
       requested: "交換を申請しました",
     },

@@ -2,10 +2,12 @@
 
 import { useTranslations } from "next-intl";
 import type { SignupCompleteDialogProps } from "@/type/dialog";
+import AgreementResultSummary from "./AgreementResultSummary";
 import Dialog from "./Dialog";
 
 const SignupCompleteDialog = ({
   nickname,
+  agreement,
   onClose,
   onLogin,
 }: SignupCompleteDialogProps) => {
@@ -34,6 +36,13 @@ const SignupCompleteDialog = ({
             <p>{t("dialog.signupComplete.descriptionLine1")}</p>
             <p>{t("dialog.signupComplete.descriptionLine2")}</p>
           </div>
+
+          {agreement && (
+            <AgreementResultSummary
+              processedAt={agreement.processedAt}
+              items={agreement.items}
+            />
+          )}
         </div>
       }
       confirmText="dialog.signupComplete.confirm"

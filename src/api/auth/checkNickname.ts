@@ -4,8 +4,14 @@ import { AppError } from "@/type/api";
 import { getApiErrorMessage } from "@/lib/apiError";
 import { authQueryKeys } from "./queryKeys";
 
+/** 못 쓰는 이유. DUPLICATED 사용 중 · RESERVED 운영진 사칭 · BANNED_WORD 금지어 */
+export type NicknameUnavailableReason =
+  "DUPLICATED" | "RESERVED" | "BANNED_WORD";
+
 interface CheckNicknameResponse {
   available: boolean;
+  /** 못 쓸 때만 온다 */
+  reason?: NicknameUnavailableReason | null;
 }
 
 /** 닉네임 중복 확인 응답 보정 */

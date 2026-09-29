@@ -17,6 +17,14 @@ const vi: typeof en = {
     myReports: "Lịch sử báo cáo",
   },
   errorPage: {
+    maintenanceTitle: "Đang bảo trì",
+    maintenanceDescription: "Chúng tôi đang bảo trì ngắn để phục vụ tốt hơn. Vui lòng quay lại sau ít phút.",
+    maintenanceDrainingTitle: "Sắp bắt đầu bảo trì",
+    maintenanceDrainingDescription: "Hiện không thể bắt đầu cuộc trò chuyện hoặc thanh toán mới. Các câu trả lời và thanh toán đang diễn ra sẽ được hoàn tất.",
+    maintenanceExpectedEnd: "Dự kiến kết thúc: {time}",
+    maintenanceOverTitle: "Đã bảo trì xong",
+    maintenanceOverDescription: "Cảm ơn bạn đã chờ. Bạn có thể tiếp tục sử dụng.",
+    maintenanceBack: "Tiếp tục",
     notFound: "Không tìm thấy trang bạn yêu cầu.",
     notFoundTitle: "Không tìm thấy trang",
     notFoundHint: "Địa chỉ có thể đã thay đổi hoặc trang đã bị xóa.",
@@ -46,7 +54,7 @@ const vi: typeof en = {
     home: "Trang chủ",
     myChatting: "Chat của tôi",
     characterCreate: "Tạo nhân vật",
-    noteCharge: "Nap note",
+    noteCharge: "Nạp note",
     navigation: "Menu thanh bên",
     toggle: "Thu gọn hoặc mở rộng thanh bên",
     close: "Đóng thanh bên",
@@ -62,9 +70,10 @@ const vi: typeof en = {
     companyName: "Orbitlab Co., Ltd.",
     representative: "Đại diện Kim Seungwoo",
     registrationNumberLabel: "Mã số doanh nghiệp",
+    mailOrderNumberLabel: "Số đăng ký bán hàng trực tuyến",
     address:
       "707-A19, 707, tầng 7, 22 Harmony-ro 178beon-gil, Yeonsu-gu, Incheon",
-    copyright: "© 2025 Wrtn. All rights reserved.",
+    copyright: "© 2026 Orbitlab Co., Ltd. All rights reserved.",
   },
   searchBar: {
     placeholder: "Nhập từ khóa tìm kiếm",
@@ -107,7 +116,7 @@ const vi: typeof en = {
       recordsRetained:
         "Lịch sử đơn hàng và giao dịch sẽ được lưu trữ an toàn trong một thời gian nhất định.",
       creditsRemoved:
-        "Credit chưa sử dụng sẽ không được hoàn tiền và sẽ bị xóa cùng lúc.",
+        "Note chưa sử dụng sẽ không được hoàn tiền và sẽ bị xóa cùng lúc.",
       rejoinRestricted:
         "Bạn không thể đăng ký lại bằng cùng địa chỉ email trong 7 ngày.",
       creationsDeleted:
@@ -115,8 +124,10 @@ const vi: typeof en = {
       chatsReadOnly:
         "Các phòng chat hiện có vẫn được giữ lại, nhưng bạn sẽ không thể gửi tin nhắn mới.",
     },
+    remainingBalance:
+      "{credits} note và {points}P điểm thu nhập còn lại sẽ không thể khôi phục sau khi rời đi. Nếu còn yêu cầu đổi thẻ quà tặng đang chờ gửi, bạn có thể rời đi sau khi hoàn tất.",
     legalNotice:
-      "Lịch sử thanh toán, hoàn tiền và giao dịch credit sẽ không bị xóa ngay vì có nghĩa vụ lưu trữ theo quy định pháp luật liên quan (5 năm).",
+      "Lịch sử thanh toán, hoàn tiền và giao dịch note sẽ không bị xóa ngay vì có nghĩa vụ lưu trữ theo quy định pháp luật liên quan (5 năm).",
     agreement: "Tôi đã kiểm tra toàn bộ nội dung ở trên",
     back: "Tôi muốn suy nghĩ thêm",
     submit: "Tôi sẽ xóa tài khoản",
@@ -165,10 +176,10 @@ const vi: typeof en = {
     viewCount: "{count} lượt xem",
   },
   tokenCharge: {
-    title: "Nạp token",
+    title: "Nạp note",
     payment: {
       redirecting: "Đang chuyển đến trang thanh toán…",
-      success: "Đã nạp {credits} ghi chú.",
+      success: "Đã nạp {credits} note.",
       failed: "Thanh toán thất bại. Vui lòng thử lại.",
       backToCharge: "Quay lại trang nạp",
       successTitle: "Nạp thành công!",
@@ -182,11 +193,11 @@ const vi: typeof en = {
       goHome: "Về trang chủ",
       confirmingTitle: "Đang xác nhận thanh toán",
       confirmingHint: "Vui lòng không đóng trang này và chờ trong giây lát.",
-      checkingHint: "Quá trình này lâu hơn bình thường một chút. Ghi chú sẽ được cộng ngay khi xác nhận xong.",
+      checkingHint: "Quá trình này lâu hơn bình thường một chút. Note sẽ được cộng ngay khi xác nhận xong.",
       delayedTitle: "Việc xác nhận đang mất nhiều thời gian",
-      delayedHint: "Nếu thanh toán thành công, ghi chú sẽ được cộng tự động.",
+      delayedHint: "Nếu thanh toán thành công, note sẽ được cộng tự động.",
       grantingTitle: "Thanh toán hoàn tất",
-      grantingHint: "Ghi chú sẽ sớm được cộng.",
+      grantingHint: "Note sẽ sớm được cộng.",
       popupOpening: "Đang mở cửa sổ thanh toán…",
       popupTitle: "Vui lòng thanh toán trong cửa sổ mới",
       popupHint: "Hoàn tất thanh toán KakaoPay trong cửa sổ mới, kết quả sẽ hiện ngay tại đây.",
@@ -207,14 +218,28 @@ const vi: typeof en = {
     noteUnit: "Note",
     bonusNoteUnit: "Note",
     priceUnit: "won",
+    confirm: {
+      title: "Vui lòng kiểm tra trước khi thanh toán",
+      product: "Sản phẩm",
+      notes: "Note nhận được",
+      notesWithBonus: "{total} note (cơ bản {base} + thưởng {bonus})",
+      price: "Số tiền thanh toán",
+      vatIncluded: "(đã gồm VAT)",
+      validity: "Thời hạn",
+      validityValue: "5 năm kể từ ngày nhận",
+      refundNotice: "Sản phẩm chưa sử dụng có thể được hoàn tiền trong vòng 7 ngày sau khi thanh toán.\nNếu đã dùng một phần hoặc quá 7 ngày, việc hoàn tiền sẽ bị hạn chế.",
+      agree: "Tôi đã kiểm tra nội dung trên và đồng ý thanh toán. (Bắt buộc)",
+      cancel: "Hủy",
+      submit: "Thanh toán",
+    },
     policiesTitle: "Chính sách hoàn tiền và hướng dẫn sử dụng note",
     policies: {
       item1:
-        "Không thể hoàn tiền cho note đã có lịch sử sử dụng. (Sản phẩm chưa sử dụng có thể được hoàn tiền trong vòng 7 ngày sau khi thanh toán)",
+        "Sản phẩm chưa sử dụng có thể được hoàn tiền (rút lại đơn hàng) trong vòng 7 ngày sau khi thanh toán.",
       item2:
-        "Thời hạn sử dụng của note trả phí đã mua là 1 năm kể từ thời điểm nhận được.",
+        "Thời hạn sử dụng của note trả phí đã mua là 5 năm kể từ thời điểm nhận được.",
       item3:
-        "Không thể hoàn tiền do không hài lòng mang tính chủ quan với kết quả trả lời của AI hoặc chỉ vì đổi ý.",
+        "Nếu đã sử dụng một phần note của sản phẩm hoặc đã quá 7 ngày kể từ khi thanh toán, việc rút lại đơn hàng sẽ bị hạn chế do đặc thù của nội dung số.",
       item4:
         "Có thể yêu cầu hoàn tiền và gửi thắc mắc thông qua trung tâm khách hàng PLAT.",
       item5:
@@ -256,6 +281,7 @@ const vi: typeof en = {
     submitting: "Đang bắt đầu...",
   },
   chatUI: {
+    aiGeneratedNotice: "Cuộc trò chuyện do AI tạo ra và có thể không đúng với người thật hoặc sự thật.",
     sampleReply1Quote: "Ừ, mình đóng ngay đây. Không sao đâu, không ai thấy đâu.",
     sampleReply1Narration: "Tôi nhanh chóng đóng cửa và khóa lại.",
     sampleReply2Quote: "Khoan đã, bây giờ ở đây an toàn hơn.",
@@ -275,6 +301,7 @@ const vi: typeof en = {
     suggestedReply: "Trả lời gợi ý",
     deleteResponse: "Xóa phản hồi",
     retryResponse: "Tạo lại phản hồi",
+    reportResponse: "Báo cáo phản hồi",
     selectedSuggestedReply: "Câu trả lời gợi ý đã chọn",
     characterTyping: "{name} đang nhập",
     characterProfileAlt: "Ảnh hồ sơ của {name}",

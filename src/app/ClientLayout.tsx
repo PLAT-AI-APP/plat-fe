@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import AgreementGate from "@/components/auth/AgreementGate";
 import AuthSessionRuntime from "@/components/auth/AuthSessionRuntime";
 import PendingAuthDialogs from "@/components/auth/PendingAuthDialogs";
 import ProtectedNavigationInterceptor from "@/components/auth/ProtectedNavigationInterceptor";
@@ -10,6 +11,7 @@ export default function ClientLayout({ children }: { children: ReactNode }) {
       <AuthSessionRuntime />
       <ProtectedNavigationInterceptor />
       <PendingAuthDialogs />
+      <AgreementGate />
 
       <AppShell>{children}</AppShell>
     </>

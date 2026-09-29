@@ -2,7 +2,10 @@
 
 import React, { useEffect } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
-import { useCheckNicknameQuery } from "@/api/auth/checkNickname";
+import {
+  type NicknameUnavailableReason,
+  useCheckNicknameQuery,
+} from "@/api/auth/checkNickname";
 import SmartInput from "@/components/smart-input";
 import {
   FIELD_FEEDBACK_MESSAGES,
@@ -11,6 +14,13 @@ import {
 import { useDebounce } from "@/hooks/common/useDebounce";
 import { NICKNAME_REGEX } from "@/lib/regex";
 import { useUserStore } from "@/store/useUserStore";
+
+/** 못 쓰는 이유별 안내. 운영진 사칭 닉네임에 "이미 사용 중"이라고 하면 숫자만 붙여 다시 시도하게 된다. */
+const UNAVAILABLE_MESSAGE: Record<NicknameUnavailableReason, string> = {
+  DUPLICATED: FIELD_FEEDBACK_MESSAGES.nicknameUnavailable,
+  RESERVED: FIELD_FEEDBACK_MESSAGES.nicknameReserved,
+  BANNED_WORD: FIELD_FEEDBACK_MESSAGES.nicknameBannedWord,
+};
 
 const NicknameField = () => {
   const user = useUserStore((state) => state.user);
@@ -51,6 +61,9 @@ const NicknameField = () => {
     },
   );
 
+  const unavailableMessage =
+    UNAVAILABLE_MESSAGE[nicknameData?.reason ?? "DUPLICATED"];
+
   const error = errors.nickname;
   const isNicknameSettled = debouncedNickname === currentNickname;
   const isUnavailableNickname =
@@ -87,7 +100,7 @@ const NicknameField = () => {
     if (nicknameData?.available === false) {
       setError("nickname", {
         type: "manual",
-        message: FIELD_FEEDBACK_MESSAGES.nicknameUnavailable,
+        message: unavailableMessage,
       });
       return;
     }
@@ -105,6 +118,7 @@ const NicknameField = () => {
     nicknameData?.available,
     setError,
     trigger,
+    unavailableMessage,
     user?.nickname,
   ]);
 
@@ -118,9 +132,7 @@ const NicknameField = () => {
       maxLength={20}
       error={
         (error?.message as string) ||
-        (isUnavailableNickname
-          ? FIELD_FEEDBACK_MESSAGES.nicknameUnavailable
-          : undefined)
+        (isUnavailableNickname ? unavailableMessage : undefined)
       }
       helperMessage={
         isAvailableNickname

@@ -17,15 +17,18 @@ const ko = {
     sections: {
       environment: "환경설정",
       notifications: "알림 및 콘텐츠 관리",
+      consent: "알림 수신",
     },
     rows: {
       theme: "화면모드",
       language: "선호언어",
       blockedUsers: "차단 관리",
+      marketing: "마케팅 정보 수신",
     },
     actions: {
       goToBlockedUsers: "차단 관리로 이동",
       withdrawal: "회원탈퇴",
+      marketingFailed: "설정을 바꾸지 못했어요. 잠시 뒤 다시 시도해 주세요.",
     },
   },
   auth: {
@@ -52,11 +55,21 @@ const ko = {
       invalidHint: "로그인 링크가 만료됐거나 주소가 올바르지 않아요. 다시 로그인해 주세요.",
       goHome: "홈으로",
     },
+    agreementGate: {
+      firstTitle: "가입을 마무리해 주세요",
+      firstDescription: "PLAT을 이용하려면 아래 약관에 동의해 주세요.",
+      revisedTitle: "약관이 바뀌었어요",
+      revisedDescription: "바뀐 약관을 확인하고 동의하면 계속 이용할 수 있어요.",
+      submit: "동의하고 계속하기",
+      logout: "로그아웃",
+      failed: "동의를 저장하지 못했어요. 잠시 뒤 다시 시도해 주세요.",
+    },
     signup: {
       agreeAll: "약관 전체 동의",
       termsOfService: "서비스이용약관 동의 (필수)",
       privacyPolicy: "개인정보 처리방침 (필수)",
       ageOver14: "만 14세 이상입니다. (필수)",
+      marketing: "광고성 정보 수신에 동의합니다. (선택)",
       title: "회원가입",
       subtitle: "다양한 매력의 캐릭터들이 당신을 기다리고 있어요",
       submit: "다음",
@@ -78,6 +91,12 @@ const ko = {
     },
   },
   dialog: {
+    creditInsufficient: {
+      title: "노트가 부족해요",
+      description: "이 대화를 이어 가려면 노트가 더 필요해요.\n충전하고 돌아오면 보내려던 말이 입력창에 그대로 있어요.",
+      cancel: "나중에",
+      confirm: "충전하기",
+    },
     chatRestart: {
       title: "대화를 새로 할까요?",
       description:
@@ -94,6 +113,12 @@ const ko = {
     chatDelete: {
       title: "정말 채팅방을 삭제할까요?",
       description: "그 동안의 캐릭터와 진행한 대화는 복구할 수 없어요",
+      cancel: "취소하기",
+      confirm: "삭제",
+    },
+    chatTurnDelete: {
+      title: "이 대화를 지울까요?",
+      description: "내가 보낸 말과 캐릭터의 답이 함께 지워지고 되돌릴 수 없어요. 사용한 노트는 돌아오지 않아요.",
       cancel: "취소하기",
       confirm: "삭제",
     },
@@ -115,9 +140,9 @@ const ko = {
       skip: "다음에 할게요",
     },
     welcomeCredit: {
-      title: "웰컴 크레딧이 도착했어요",
+      title: "웰컴 노트가 도착했어요",
       descriptionBefore: "회원님의 첫 여정을 위해, ",
-      descriptionHighlight: "웰컴 노트 크레딧을 선물했어요",
+      descriptionHighlight: "웰컴 노트를 선물했어요",
       descriptionAfter: "생생한 대화를 즐길 준비가 되셨나요?",
       confirm: "확인",
     },
@@ -158,6 +183,21 @@ const ko = {
       description: "지금 나가면 수정한 내용은 저장되지 않습니다.",
       confirm: "나가기",
     },
+    agreementResult: {
+      title: "동의 처리 결과를 알려 드려요",
+      description: "{date}에 아래와 같이 처리했어요.",
+      agreed: "동의",
+      declined: "미동의",
+      withdrawn: "철회",
+      sender: "보낸 곳: PLAT (주식회사 오비트랩)",
+      confirm: "확인",
+      items: {
+        termsOfService: "서비스 이용약관",
+        privacyPolicy: "개인정보 처리방침",
+        ageOver14: "만 14세 이상 확인",
+        marketing: "광고성 정보 수신",
+      },
+    },
     withdrawalComplete: {
       title: "그동안 이용해 주셔서 감사해요",
       descriptionLine1: "그동안 PLAT과 함께해 주셔서 감사해요.",
@@ -186,6 +226,10 @@ const ko = {
     feedback: {
       nicknameAvailable: "멋진 닉네임이에요",
       nicknameUnavailable: "이미 사용 중인 닉네임이에요",
+      nicknameReserved: "운영진으로 오인될 수 있는 닉네임은 쓸 수 없어요",
+      nicknameBannedWord: "사용할 수 없는 단어가 들어 있어요",
+      emailAlreadyRegistered:
+        "이미 가입된 이메일이에요. 가입할 때 쓴 방법(이메일·구글·카카오)으로 로그인해 주세요",
       emailVerificationSent: "메일함에서 인증번호를 확인해 주세요",
       emailVerificationComplete: "이메일 인증이 완료되었어요",
       emailVerificationExpired: "시간이 초과되었어요",

@@ -2,6 +2,7 @@
 
 import "@/app/globals.css";
 import { useEffect } from "react";
+import { reportError } from "@/lib/monitoring";
 import type { AppLocale } from "@/i18n/config";
 import en from "@/i18n/locales/runtime/en";
 import ja from "@/i18n/locales/runtime/ja";
@@ -45,6 +46,7 @@ const GlobalError = ({ error, reset }: GlobalErrorProps) => {
 
   useEffect(() => {
     console.error("[global-error]", error);
+    reportError(error, { boundary: "global-error", digest: error.digest });
   }, [error]);
 
   return (

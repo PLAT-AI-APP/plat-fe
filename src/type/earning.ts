@@ -17,10 +17,11 @@ export type RewardType = "GIFT_CARD" | "NOTE";
 export type RewardRedemptionStatus =
   "REQUESTED" | "GRANTING" | "ISSUED" | "REJECTED";
 
-/** 수익 요약. 교환 가능 포인트(1P = 1원)와 노트 1개당 전환 포인트. */
+/** 수익 요약. 교환 가능 포인트(1P = 1원), 노트 1개당 전환 포인트, 상품권 교환에 필요한 본인인증 여부. */
 export interface EarningSummary {
   available: number;
   noteUnitPrice: number;
+  identityVerified: boolean;
 }
 
 export interface EarningLedgerItem {

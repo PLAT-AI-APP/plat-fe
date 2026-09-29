@@ -16,6 +16,8 @@ const PHONE_PATTERN = /^01[0-9]-?\d{3,4}-?\d{4}$/;
 
 interface GiftCardListProps {
   available: number;
+  /** 본인인증 전이면 상품권 교환 버튼을 막고 이유를 버튼에 적는다. */
+  identityVerified: boolean;
 }
 
 /** 상품 썸네일. 이미지가 없으면 네이버페이 초록 위 머리글자로 대신 그린다. */
@@ -76,6 +78,7 @@ const RewardVisual = ({ product }: { product: RewardProduct }) => {
 interface RewardCardProps {
   product: RewardProduct;
   available: number;
+  identityVerified: boolean;
   onSelect: (product: RewardProduct) => void;
 }
 
@@ -85,7 +88,12 @@ interface RewardCardProps {
  * 포인트가 모자랄 때도 상품을 감추지 않는다. 얼마나 남았는지 막대와 문장으로
  * 보여 주는 편이 목표가 되기 때문이다.
  */
-const RewardCard = ({ product, available, onSelect }: RewardCardProps) => {
+const RewardCard = ({
+  product,
+  available,
+  identityVerified,
+  onSelect,
+}: RewardCardProps) => {
   const t = useTranslations("earnings");
   const enough = available >= product.pointPrice;
   const missing = product.pointPrice - available;
@@ -131,10 +139,14 @@ const RewardCard = ({ product, available, onSelect }: RewardCardProps) => {
         <Button
           size="lg"
           fullWidth
-          disabled={!enough}
+          disabled={!identityVerified || !enough}
           onClick={() => onSelect(product)}
         >
-          {enough ? t("exchange.button") : t("exchange.insufficient")}
+          {!identityVerified
+            ? t("exchange.identityRequired")
+            : enough
+              ? t("exchange.button")
+              : t("exchange.insufficient")}
         </Button>
       </div>
     </li>
@@ -248,6 +260,7 @@ const ExchangeConfirmModal = ({
               ? t("exchange.phoneInvalid")
               : t("exchange.giftNotice")}
           </p>
+          <p className="body-7 text-font-2">{t("exchange.phonePrivacy")}</p>
         </div>
 
         <div className="grid grid-cols-2 gap-2">
@@ -275,7 +288,7 @@ const ExchangeConfirmModal = ({
 };
 
 /** 상품권 목록. 신청하면 포인트가 바로 빠지고 내역에 발송 상태가 남는다. */
-const GiftCardList = ({ available }: GiftCardListProps) => {
+const GiftCardList = ({ available, identityVerified }: GiftCardListProps) => {
   const t = useTranslations("earnings");
   const [selected, setSelected] = useState<RewardProduct | null>(null);
   const {
@@ -319,6 +332,7 @@ const GiftCardList = ({ available }: GiftCardListProps) => {
               key={product.productId}
               product={product}
               available={available}
+              identityVerified={identityVerified}
               onSelect={setSelected}
             />
           ))}

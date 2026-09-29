@@ -29,6 +29,8 @@ const th: typeof ko = {
     },
     profileEdit: {
       title: "แก้ไขโปรไฟล์",
+      optionalInfoNotice:
+        "วันเกิดและเพศเป็นข้อมูลที่ไม่บังคับ ใช้งานได้ทุกฟีเจอร์แม้ไม่กรอก และจะถูกลบทันทีเมื่อล้างข้อมูล",
       changePassword: "เปลี่ยนรหัสผ่าน",
       submit: "บันทึก",
       invalidType: "รองรับเฉพาะไฟล์รูปภาพ jpg, png, webp เท่านั้น",
@@ -44,6 +46,7 @@ const th: typeof ko = {
     report: {
       titleComment: "ความคิดเห็นของ {nickname} มีปัญหาอะไร?",
       titleUniverse: "ตัวละคร {name} มีปัญหาอะไร?",
+      titleMessage: "คำตอบของ {name} มีปัญหาอะไร?",
       reasonLabel: "เหตุผลการรายงาน",
       detailPlaceholder: "โปรดระบุเหตุผลอย่างละเอียด เราจะตรวจสอบและดำเนินการ",
       detailPlaceholderRequired: "บอกเราว่ามีปัญหาอะไร",
@@ -53,6 +56,7 @@ const th: typeof ko = {
       viewHistory: "ประวัติการรายงาน",
       alreadySubmitted: "คุณรายงานเนื้อหานี้ไปแล้ว ตรวจสอบผลได้ที่ประวัติการรายงาน",
       selfTarget: "ไม่สามารถรายงานเนื้อหาของตัวเองได้",
+      selfTargetMessage: "ไม่สามารถรายงานคำตอบจากตัวละครที่คุณสร้างเองได้",
       targetNotFound: "เนื้อหานี้ถูกลบหรือไม่สามารถดูได้แล้ว",
     },
     passwordReset: {

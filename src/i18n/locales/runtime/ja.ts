@@ -16,6 +16,14 @@ const ja: typeof en = {
     myReports: "通報履歴",
   },
   errorPage: {
+    maintenanceTitle: "メンテナンス中です",
+    maintenanceDescription: "より良いサービスのため一時的にメンテナンスを行っています。しばらくしてから再度お越しください。",
+    maintenanceDrainingTitle: "まもなくメンテナンスが始まります",
+    maintenanceDrainingDescription: "現在、新しいチャットと決済は開始できません。進行中の返信と決済は最後まで処理されます。",
+    maintenanceExpectedEnd: "終了予定：{time}",
+    maintenanceOverTitle: "メンテナンスが終わりました",
+    maintenanceOverDescription: "お待たせしました。再びご利用いただけます。",
+    maintenanceBack: "続けて利用する",
     notFound: "お探しのページが見つかりません。",
     notFoundTitle: "ページが見つかりません",
     notFoundHint: "アドレスが変わったか、ページが削除された可能性があります。",
@@ -61,8 +69,9 @@ const ja: typeof en = {
     companyName: "Orbitlab Co., Ltd.",
     representative: "代表 キム・スンウ",
     registrationNumberLabel: "事業者登録番号",
+    mailOrderNumberLabel: "通信販売業届出番号",
     address: "仁川広域市 延寿区 ハーモニーロ178番キル 22, 7階 707号 707-A19号",
-    copyright: "© 2025 Wrtn. All rights reserved.",
+    copyright: "© 2026 Orbitlab Co., Ltd. All rights reserved.",
   },
   searchBar: {
     placeholder: "検索語を入力してください",
@@ -102,15 +111,17 @@ const ja: typeof en = {
     notices: {
       dataDeleted: "すべてのデータと個人情報は削除され、復元できません。",
       recordsRetained: "注文と取引履歴は一定期間安全に保管されます。",
-      creditsRemoved: "未使用のクレジットは返金されず、一緒に削除されます。",
+      creditsRemoved: "未使用のノートは返金されず、一緒に削除されます。",
       rejoinRestricted: "同じメールアドレスでは7日間再登録できません。",
       creationsDeleted:
         "直接作成したキャラクターと世界観は退会後すべて削除されます。",
       chatsReadOnly:
         "既存のチャットルームは維持されますが、新しいメッセージは送信できません。",
     },
+    remainingBalance:
+      "残っている{credits}ノートと収益ポイント{points}Pは、退会すると元に戻せません。発送待ちのギフト券交換がある場合は、完了後に退会できます。",
     legalNotice:
-      "決済・返金・クレジット取引記録は、関連法令に基づく保管義務（5年）があるため、すぐには削除されません。",
+      "決済・返金・ノート取引記録は、関連法令に基づく保管義務（5年）があるため、すぐには削除されません。",
     agreement: "上に記載された内容をすべて確認しました",
     back: "もう少し考えます",
     submit: "退会します",
@@ -159,7 +170,7 @@ const ja: typeof en = {
     viewCount: "閲覧 {count}",
   },
   tokenCharge: {
-    title: "トークンチャージ",
+    title: "ノートチャージ",
     payment: {
       redirecting: "決済ページへ移動しています…",
       success: "{credits}ノートがチャージされました。",
@@ -201,13 +212,27 @@ const ja: typeof en = {
     noteUnit: "ノート",
     bonusNoteUnit: "ノート",
     priceUnit: "ウォン",
+    confirm: {
+      title: "お支払い前にご確認ください",
+      product: "商品",
+      notes: "付与ノート",
+      notesWithBonus: "{total}ノート（基本 {base} + ボーナス {bonus}）",
+      price: "お支払い金額",
+      vatIncluded: "（税込）",
+      validity: "有効期間",
+      validityValue: "付与日から5年",
+      refundNotice: "決済後7日以内かつ未使用の商品は返金できます。\n一部でも使用した場合や7日を過ぎた場合は返金が制限されます。",
+      agree: "上記の内容を確認し、決済に同意します。（必須）",
+      cancel: "キャンセル",
+      submit: "決済する",
+    },
     policiesTitle: "返金ポリシーおよびノート利用案内",
     policies: {
       item1:
-        "使用履歴のあるノートは返金できません。（未使用商品は決済後7日以内であれば返金可能）",
-      item2: "購入した有料ノートの有効期間は獲得時点から1年です。",
+        "決済後7日以内かつ未使用の商品は返金（申込みの撤回）が可能です。",
+      item2: "購入した有料ノートの有効期間は獲得時点から5年です。",
       item3:
-        "AIの回答結果に対する主観的な不満や単純な気変わりによる返金はできません。",
+        "商品のノートを一部でも使用した場合、または決済から7日を過ぎた場合は、デジタルコンテンツの特性上、申込みの撤回が制限されます。",
       item4: "返金のご要望やお問い合わせはPLATカスタマーセンターから可能です。",
       item5:
         "無料で提供されたノートは返金対象外であり、有効期間は付与方法によって異なる場合があります。",
@@ -248,6 +273,7 @@ const ja: typeof en = {
     submitting: "開始しています...",
   },
   chatUI: {
+    aiGeneratedNotice: "AIが生成した会話です。実在の人物や事実と異なる場合があります。",
     sampleReply1Quote: "うん、すぐ閉めるね。大丈夫、誰にも見えないよ。",
     sampleReply1Narration: "私は素早くドアを閉め、鍵をかけ直した。",
     sampleReply2Quote: "ちょっと待って、今はここにいるほうが安全だよ。",
@@ -267,6 +293,7 @@ const ja: typeof en = {
     suggestedReply: "おすすめ返信",
     deleteResponse: "返信を削除",
     retryResponse: "返信を再生成",
+    reportResponse: "返信を通報",
     selectedSuggestedReply: "選択されたおすすめ返信",
     characterTyping: "{name}が入力中",
     characterProfileAlt: "{name}のプロフィール画像",

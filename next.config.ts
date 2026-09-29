@@ -39,7 +39,22 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/images/**",
       },
+      {
+        protocol: "https",
+        hostname: "api.plat.so",
+        port: "",
+        pathname: "/images/**",
+      },
+      // 로컬 백엔드(docker compose local)가 서빙하는 이미지
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "8080",
+        pathname: "/images/**",
+      },
     ],
+    // 로컬 백엔드 이미지는 사설 주소라 기본 설정에서는 최적화 서버가 받지 않는다. 개발 서버에서만 허용한다.
+    dangerouslyAllowLocalIP: process.env.NODE_ENV === "development",
   },
 };
 

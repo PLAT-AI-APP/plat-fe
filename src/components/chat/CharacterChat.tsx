@@ -3,7 +3,7 @@
 import React from "react";
 import { useTranslations } from "next-intl";
 import ResourceImage from "@/components/ResourceImage";
-import { splitActionSegments } from "@/lib/chatText";
+import ActionText from "@/components/chat/ActionText";
 import { cn } from "@/lib/utils";
 
 interface CharacterChatProps {
@@ -24,20 +24,26 @@ const CharacterChat = ({
   bubbleClassName = "rounded-[0px_16px_16px_16px]",
 }: CharacterChatProps) => {
   const t = useTranslations();
-  const segments = splitActionSegments(chatText);
-  // `**행동**` 이 있을 때만 줄을 나눠 그린다. 없으면 예전과 똑같이 문자열 하나로 둬 다른 대사의 모양이 바뀌지 않는다.
-  const hasAction = segments.some((segment) => segment.type === "action");
 
   return (
     <article className="flex gap-2">
-      <ResourceImage
-        src={image}
-        alt={t("chatUI.characterProfileAlt", { name: CharacterName })}
-        width={imageSize}
-        height={imageSize}
-        unoptimized
-        className={cn("avatar-img", imageClassName)}
-      />
+      {/* 프로필이 없거나 세계관 상세가 아직 오지 않았으면 빈 src 로 그리지 않는다 — next/image 가 매번 콘솔 에러를 낸다.
+          받는 중 말풍선(ChatContentBlock)과 같은 빈 원으로 자리만 잡아, 이미지가 와도 줄이 흔들리지 않게 한다. */}
+      {image ? (
+        <ResourceImage
+          src={image}
+          alt={t("chatUI.characterProfileAlt", { name: CharacterName })}
+          width={imageSize}
+          height={imageSize}
+          unoptimized
+          className={cn("avatar-img", imageClassName)}
+        />
+      ) : (
+        <span
+          className={cn("shrink-0 rounded-full bg-card", imageClassName)}
+          aria-hidden
+        />
+      )}
 
       <div id="chat-bubble-container" className="body-5">
         {/* 이름은 세계관 상세가 도착해야 채워진다. 비어 있어도 한 줄 높이를 잡아 두어, 나중에 채워질 때
@@ -46,23 +52,9 @@ const CharacterChat = ({
           {CharacterName}
         </span>
         <div
-          className={cn(
-            "w-fit bg-card px-3 py-2 text-font-1",
-            hasAction && "flex flex-col gap-2",
-            bubbleClassName,
-          )}
+          className={cn("w-fit bg-card px-3 py-2 text-font-1", bubbleClassName)}
         >
-          {hasAction
-            ? segments.map((segment, index) => (
-                <p
-                  key={index}
-                  // 행동은 대사보다 한 단계 흐린 색으로 구분한다.
-                  className={cn(segment.type === "action" && "text-font-2")}
-                >
-                  {segment.value}
-                </p>
-              ))
-            : chatText}
+          <ActionText text={chatText} />
         </div>
       </div>
     </article>

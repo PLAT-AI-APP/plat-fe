@@ -18,6 +18,14 @@ const ko: typeof en = {
     myReports: "신고 내역",
   },
   errorPage: {
+    maintenanceTitle: "점검 중이에요",
+    maintenanceDescription: "더 나은 서비스를 위해 잠시 점검하고 있어요. 조금 뒤에 다시 찾아 주세요.",
+    maintenanceDrainingTitle: "곧 점검이 시작돼요",
+    maintenanceDrainingDescription: "지금은 새 채팅과 결제를 시작할 수 없어요. 진행 중이던 답변과 결제는 끝까지 처리돼요.",
+    maintenanceExpectedEnd: "예상 종료: {time}",
+    maintenanceOverTitle: "점검이 끝났어요",
+    maintenanceOverDescription: "기다려 주셔서 고마워요. 이제 다시 이용할 수 있어요.",
+    maintenanceBack: "이어서 이용하기",
     notFound: "요청하신 페이지를 찾을 수 없습니다.",
     notFoundTitle: "페이지를 찾을 수 없어요",
     notFoundHint: "주소가 바뀌었거나 삭제된 페이지일 수 있어요.",
@@ -63,8 +71,9 @@ const ko: typeof en = {
     companyName: "(주)오비트랩",
     representative: "대표 김승우",
     registrationNumberLabel: "사업자등록번호",
+    mailOrderNumberLabel: "통신판매업신고",
     address: "인천광역시 연수구 하모니로178번길 22, 7층 707호 707-아19호",
-    copyright: "© 2025 Wrtn. All rights reserved.",
+    copyright: "© 2026 Orbitlab Co., Ltd. All rights reserved.",
   },
   searchBar: {
     placeholder: "검색어를 입력하세요",
@@ -104,14 +113,16 @@ const ko: typeof en = {
     notices: {
       dataDeleted: "모든 데이터와 개인정보는 삭제되며 다시 찾을 수 없어요",
       recordsRetained: "주문과 거래 내역은 일정기간 동안 안전하게 보관돼요",
-      creditsRemoved: "사용하지 않은 크레딧은 환불되지 않고 함께 지워져요",
+      creditsRemoved: "사용하지 않은 노트는 환불되지 않고 함께 지워져요",
       rejoinRestricted: "같은 이메일 주소로는 7일 동안 가입할 수 없어요",
       creationsDeleted: "직접 제작한 캐릭터와 세계관은 탈퇴 후 모두 지워져요",
       chatsReadOnly:
         "단, 기존 채팅방은 유지되며 신규 메세지는 전송할 수 없어요",
     },
+    remainingBalance:
+      "지금 남은 노트 {credits}개와 수익 포인트 {points}P는 탈퇴하면 되돌릴 수 없어요. 발송을 기다리는 상품권 교환이 있으면 끝난 뒤에 탈퇴할 수 있어요.",
     legalNotice:
-      "결제·환불·크레딧 거래 기록은 「전자상거래법」·「국세기본법」 등에 따른 보관 의무(5년)가 있어 즉시 삭제되지 않습니다.",
+      "결제·환불·노트 거래 기록은 「전자상거래법」·「국세기본법」 등에 따른 보관 의무(5년)가 있어 즉시 삭제되지 않습니다.",
     agreement: "위에 적힌 내용을 전부 확인했어요",
     back: "좀 더 생각할래요",
     submit: "탈퇴할게요",
@@ -160,7 +171,7 @@ const ko: typeof en = {
     viewCount: "조회 {count}",
   },
   tokenCharge: {
-    title: "토큰 충전",
+    title: "노트 충전",
     payment: {
       redirecting: "결제창으로 이동하고 있어요…",
       success: "{credits} 노트가 충전되었어요.",
@@ -202,13 +213,27 @@ const ko: typeof en = {
     noteUnit: "노트",
     bonusNoteUnit: "노트",
     priceUnit: "원",
+    confirm: {
+      title: "결제 전 확인해 주세요",
+      product: "상품",
+      notes: "지급 노트",
+      notesWithBonus: "{total}노트 (기본 {base} + 보너스 {bonus})",
+      price: "결제 금액",
+      vatIncluded: "(VAT 포함)",
+      validity: "유효기간",
+      validityValue: "지급일로부터 5년",
+      refundNotice: "결제 후 7일 이내이고 사용하지 않은 상품은 환불할 수 있어요.\n일부라도 사용했거나 7일이 지나면 환불이 제한돼요.",
+      agree: "위 내용을 확인했으며 결제에 동의합니다. (필수)",
+      cancel: "취소",
+      submit: "결제하기",
+    },
     policiesTitle: "환불 정책 및 노트 이용 안내",
     policies: {
       item1:
-        "사용 이력이 있는 노트에 대해서는 환불이 불가능합니다. (단, 미사용 상품은 결제 후 7일 이내 환불 가능)",
-      item2: "구매한 유료 노트의 유효기간은 획득 시점으로부터 1년입니다.",
+        "결제 후 7일 이내이고 사용하지 않은 상품은 환불(청약철회)할 수 있습니다.",
+      item2: "구매한 유료 노트의 유효기간은 획득 시점으로부터 5년입니다.",
       item3:
-        "AI의 답변 결과에 대한 주관적인 불만족이나 단순 변심으로 인한 환불은 불가능합니다.",
+        "상품의 노트를 일부라도 사용했거나 결제 후 7일이 지나면 디지털 콘텐츠 특성상 청약철회가 제한됩니다.",
       item4: "환불 요청 및 문의는 플랫 고객센터를 통해서 가능합니다.",
       item5:
         "무료로 제공된 노트는 환불 대상에서 제외되며, 유효기간은 지급 방식에 따라 다를 수 있습니다.",
@@ -248,6 +273,7 @@ const ko: typeof en = {
     submitting: "시작하는 중...",
   },
   chatUI: {
+    aiGeneratedNotice: "AI가 생성한 대화예요. 실제 인물·사실과 다를 수 있어요.",
     sampleReply1Quote: "응, 바로 닫을게. 괜찮아, 아무도 못 봐.",
     sampleReply1Narration: "나는 재빨리 문을 닫고 잠금장치를 다시 걸었다.",
     sampleReply2Quote: "잠깐만, 지금은 여기 있는 게 더 안전해.",
@@ -267,6 +293,7 @@ const ko: typeof en = {
     suggestedReply: "추천답변",
     deleteResponse: "응답 삭제",
     retryResponse: "응답 다시하기",
+    reportResponse: "응답 신고",
     selectedSuggestedReply: "선택된 추천 응답",
     characterTyping: "{name} 입력 중",
     characterProfileAlt: "{name} 프로필 이미지",

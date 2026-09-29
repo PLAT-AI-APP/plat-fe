@@ -207,10 +207,36 @@ const en = {
     male: "Male-oriented",
     female: "Female-oriented",
   },
+  betaBanner: {
+    label: "Closed beta notice",
+    badge: "Closed beta",
+    message: "We are in closed beta. Tell us about any bugs or rough edges and we will fix them fast.",
+    report: "Report a bug",
+    close: "Close notice",
+  },
+  maintenanceBanner: {
+    label: "Server maintenance notice",
+    badge: "Scheduled maintenance",
+    badgeDraining: "Preparing for maintenance",
+    notice: "Server maintenance starts at {start}.",
+    noticeWithEnd: "Server maintenance runs from {start} to {end}.",
+    draining: "Maintenance is about to start. New chats and payments will be available after it ends.",
+  },
+  legalPage: {
+    language: "Language",
+    translationNotice: "This translation is provided for convenience. If it differs from the Korean original, the Korean original prevails.",
+    fallbackNotice: "A translation for this language is not available yet, so the Korean original is shown.",
+    effectiveAt: "Effective {date}",
+    history: "Previous versions",
+    currentOption: "Effective {date} (current)",
+    pastOption: "Effective {date}",
+    pastNotice: "You are viewing a previous version. Please check the current version for the terms that apply now.",
+  },
   profilePopover: {
     notice: "Notice",
     customerService: "Customer service",
     myReports: "My reports",
+    bugReport: "Report a bug",
     earnings: "My earnings",
     persona: "My persona",
     contentSettings: "Content settings",
@@ -236,6 +262,7 @@ const en = {
     targetTypes: {
       COMMENT: "Comment",
       UNIVERSE: "Character",
+      MESSAGE: "AI reply",
     },
     reasons: {
       SEXUAL: "Sexual content",
@@ -243,6 +270,10 @@ const en = {
       HATE: "Hate speech",
       COPYRIGHT: "Copyright infringement",
       SPAM: "Spam or ads",
+      DEFAMATION: "Defamation / privacy",
+      IMPERSONATION: "Impersonating a real person",
+      MINOR_SEXUAL: "Sexual content involving minors",
+      PERSONAL_INFO: "Personal info exposure",
       ETC: "Other",
     },
     statuses: {
@@ -300,6 +331,7 @@ const en = {
     },
     exchange: {
       insufficient: "Not enough points",
+      identityRequired: "Available after identity verification",
       shortBy: "{value}P more to redeem",
       progressLabel: "Points toward this reward",
       button: "Redeem",
@@ -307,6 +339,8 @@ const en = {
       remainPoints: "Points left",
       phone: "Phone number",
       phoneInvalid: "Check the phone number",
+      phonePrivacy:
+        "Your number is used only to send the gift card and is masked (last 4 digits kept) 30 days after processing.",
       giftNotice: "Sent by text within 3 days",
       requested: "Request submitted",
     },

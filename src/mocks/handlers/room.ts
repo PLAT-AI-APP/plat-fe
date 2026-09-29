@@ -220,6 +220,8 @@ export const roomHandlers = [
       universeId: room.universeId,
       personaId: room.personaId,
       multiplier: room.multiplier,
+      memory: room.memory,
+      userNote: room.userNote,
     };
     return HttpResponse.json(response);
   }),

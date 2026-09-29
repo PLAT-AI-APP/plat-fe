@@ -17,15 +17,18 @@ const zh: typeof ko = {
     sections: {
       environment: "环境设置",
       notifications: "通知与内容管理",
+      consent: "通知接收",
     },
     rows: {
       theme: "显示模式",
       language: "首选语言",
       blockedUsers: "屏蔽管理",
+      marketing: "接收营销信息",
     },
     actions: {
       goToBlockedUsers: "前往屏蔽管理",
       withdrawal: "注销账号",
+      marketingFailed: "无法更改设置，请稍后重试。",
     },
   },
   auth: {
@@ -52,11 +55,21 @@ const zh: typeof ko = {
       invalidHint: "登录链接已过期或地址不正确，请重新登录。",
       goHome: "返回首页",
     },
+    agreementGate: {
+      firstTitle: "请完成注册",
+      firstDescription: "使用 PLAT 前，请同意以下条款。",
+      revisedTitle: "条款已更新",
+      revisedDescription: "请查看并同意更新后的条款以继续使用。",
+      submit: "同意并继续",
+      logout: "退出登录",
+      failed: "未能保存您的同意，请稍后重试。",
+    },
     signup: {
       agreeAll: "同意全部条款",
       termsOfService: "同意使用条款（必填）",
       privacyPolicy: "隐私政策（必填）",
       ageOver14: "我已年满 14 周岁。（必填）",
+      marketing: "我同意接收营销信息。（选填）",
       title: "注册",
       subtitle: "各种有魅力的角色正在等你",
       submit: "下一步",
@@ -78,6 +91,12 @@ const zh: typeof ko = {
     },
   },
   dialog: {
+    creditInsufficient: {
+      title: "笔记不足",
+      description: "继续此对话需要更多笔记。\n充值后返回，刚才要发送的消息仍会保留在输入框中。",
+      cancel: "稍后",
+      confirm: "去充值",
+    },
     chatRestart: {
       title: "要重新开始对话吗？",
       description: "将为这个角色创建新的聊天室，\n并移动到新的聊天室。",
@@ -93,6 +112,12 @@ const zh: typeof ko = {
     chatDelete: {
       title: "确定要删除聊天室吗？",
       description: "与该角色进行过的对话将无法恢复。",
+      cancel: "取消",
+      confirm: "删除",
+    },
+    chatTurnDelete: {
+      title: "要删除这段对话吗？",
+      description: "你发送的消息和角色的回复会一起删除，且无法恢复。已使用的笔记不会退还。",
       cancel: "取消",
       confirm: "删除",
     },
@@ -114,9 +139,9 @@ const zh: typeof ko = {
       skip: "以后再说",
     },
     welcomeCredit: {
-      title: "欢迎积分已到账",
+      title: "欢迎笔记已到账",
       descriptionBefore: "为了支持你的第一次旅程，",
-      descriptionHighlight: "我们赠送了欢迎笔记积分",
+      descriptionHighlight: "我们赠送了欢迎笔记",
       descriptionAfter: "准备好享受生动的对话了吗？",
       confirm: "确认",
     },
@@ -156,6 +181,21 @@ const zh: typeof ko = {
       description: "如果现在离开，修改内容将不会被保存。",
       confirm: "离开",
     },
+    agreementResult: {
+      title: "同意处理结果通知",
+      description: "已于 {date} 按如下内容处理。",
+      agreed: "同意",
+      declined: "未同意",
+      withdrawn: "已撤回",
+      sender: "发送方：PLAT（Orbitlab 株式会社）",
+      confirm: "确认",
+      items: {
+        termsOfService: "服务使用条款",
+        privacyPolicy: "个人信息处理方针",
+        ageOver14: "年满 14 岁确认",
+        marketing: "接收广告信息",
+      },
+    },
     withdrawalComplete: {
       title: "感谢一直以来的陪伴",
       descriptionLine1: "感谢你一直以来对 PLAT 的支持。",
@@ -184,6 +224,10 @@ const zh: typeof ko = {
     feedback: {
       nicknameAvailable: "这是个很棒的昵称",
       nicknameUnavailable: "该昵称已被使用",
+      nicknameReserved: "不能使用可能被误认为运营人员的昵称",
+      nicknameBannedWord: "包含不允许使用的词语",
+      emailAlreadyRegistered:
+        "该邮箱已注册。请使用注册时的方式（邮箱、Google、Kakao）登录",
       emailVerificationSent: "请在邮箱中确认验证码",
       emailVerificationComplete: "邮箱认证已完成",
       emailVerificationExpired: "时间已超时",

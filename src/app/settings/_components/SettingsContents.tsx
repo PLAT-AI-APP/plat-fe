@@ -5,7 +5,13 @@ import { useSyncExternalStore } from "react";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 // import { ArrowDown } from "@/icons"; // [차단 관리] 후순위로 보류
+import {
+  useAgreementStatusQuery,
+  useMarketingAgreementMutation,
+} from "@/api/agreement/agreements";
+import { showAppToast } from "@/lib/toast";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useDialogStore } from "@/store/useDialogStore";
 import SettingLanguageSelect from "./SettingLanguageSelect";
 import SettingRow from "./SettingRow";
 import SettingSection from "./SettingSection";
@@ -31,6 +37,22 @@ const SettingsContents = () => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
   const isLightMode = useIsHydrated() && resolvedTheme === "light";
+
+  const { data: agreementStatus } = useAgreementStatusQuery();
+  const openDialog = useDialogStore((state) => state.openDialog);
+  const { mutate: changeMarketing, isPending: isChangingMarketing } =
+    useMarketingAgreementMutation();
+  const handleMarketingChange = (agreed: boolean) =>
+    changeMarketing(agreed, {
+      // 광고성 정보 수신 동의·철회는 처리 결과(일자·내용)를 알려야 한다.
+      onSuccess: () =>
+        openDialog("AGREEMENT_RESULT", {
+          processedAt: new Date().toISOString(),
+          items: [{ type: "marketing", agreed, withdrawn: !agreed }],
+        }),
+      onError: () =>
+        showAppToast("error", t("settings.actions.marketingFailed")),
+    });
 
   const handleThemeChange = (checked: boolean) => {
     // 스위치 checked 값을 실제 next-themes 테마 값으로 변환합니다.
@@ -77,6 +99,21 @@ const SettingsContents = () => {
                 </SettingRow>
               </SettingSection>
               */}
+
+              <hr className="w-full border-main" />
+
+              {/* 광고성 정보 수신 동의는 언제든 철회할 수 있어야 한다(정보통신망법 제50조). */}
+              <SettingSection title={t("settings.sections.consent")}>
+                <SettingRow title={t("settings.rows.marketing")}>
+                  <SettingToggle
+                    checked={!!agreementStatus?.marketingAgreed}
+                    label={t("settings.rows.marketing")}
+                    onChange={handleMarketingChange}
+                    themeIcon={false}
+                    disabled={!agreementStatus || isChangingMarketing}
+                  />
+                </SettingRow>
+              </SettingSection>
 
               <hr className="w-full border-main" />
 

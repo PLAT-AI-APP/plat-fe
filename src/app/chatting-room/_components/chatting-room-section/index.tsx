@@ -2,6 +2,7 @@
 
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import { useChatModelsQuery } from "@/api/chat/getChatModels";
+import { useDeleteRoomMessageMutation } from "@/api/room/deleteRoomMessage";
 import { useRoomDetailQuery } from "@/api/room/getRoomDetail";
 import { useRoomMessagesInfiniteQuery } from "@/api/room/getRoomMessages";
 import { useUniverseDetailQuery } from "@/api/universe/getUniverseDetail";
@@ -15,6 +16,8 @@ import { useIntersectionObserver } from "@/hooks/dom/useIntersectionObserver";
 import { useScrollTimeout } from "@/hooks/dom/useScrollTiemout";
 import { toAiModel } from "@/lib/chatModel";
 import { toImageVariantUrl } from "@/lib/file";
+import { useDialogStore } from "@/store/useDialogStore";
+import { useModalStore } from "@/store/useModalStore";
 import { AIModelType, ChatMessageType } from "@/type/chat";
 import type { RoomMessage } from "@/type/room";
 import ChattingRoomHeader from "./ChattingRoomHeader";
@@ -69,6 +72,13 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
   // 방을 받기 전에는 세계관 쿼리가 꺼져 있어 isLoading 이 false 이므로, 데이터 유무로 판단한다.
   const isCharacterLoading = !universe && !isUniverseError;
   const characterName = universe?.character.name ?? "";
+  const openModal = useModalStore((state) => state.openModal);
+  // 신고 모달은 목록 밖에서 열리므로 함수가 매 렌더 바뀌면 메시지 행이 전부 다시 그려진다.
+  const handleReportMessage = useCallback(
+    (messageId: string) =>
+      openModal("REPORT", { targetType: "MESSAGE", targetId: messageId, targetName: characterName }),
+    [openModal, characterName],
+  );
   // 말풍선 아바타는 36px 이라 원본 대신 정사각 140px 변형본이면 충분하다(2배 화면 기준 72px 이상).
   const profileImage =
     toImageVariantUrl(universe?.character.profileImageUrl, "sq140") ?? "";
@@ -102,10 +112,6 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
     return messages;
   }, [data, hasNextPage, characterName, profileImage]);
 
-  const [isSuggestedReplyOn, setIsSuggestedReplyOn] = useState(true);
-  const handleSuggestedReplyToggle = useCallback(() => {
-    setIsSuggestedReplyOn((prevState) => !prevState);
-  }, []);
   const { data: chatCatalog, isPending: isModelsPending } = useChatModelsQuery();
   const models = useMemo(
     () => chatCatalog?.models.map(toAiModel) ?? [],
@@ -129,7 +135,14 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
   }, []);
 
   // 진행 중인 턴의 말풍선은 서버 이력과 별개로 이어붙이고, 저장이 끝나 이력에 들어오면 훅이 치운다.
-  const { pendingMessages, isBusy, canSend, sendMessage } = useChatTurn({
+  const {
+    pendingMessages,
+    replacingMessageIds,
+    isBusy,
+    canSend,
+    sendMessage,
+    regenerateMessage,
+  } = useChatTurn({
     roomId,
     universeCharacterId: universe?.character.universeCharacterId,
     personaId: room?.personaId,
@@ -139,18 +152,27 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
     profileImage,
     onTurnFailed: handleTurnFailed,
   });
-  const messages = useMemo(
-    () => [...serverMessages, ...pendingMessages],
-    [serverMessages, pendingMessages],
+  // 다시 만드는 중인 옛 답은 가리고, 그 자리(목록 끝)에 새로 받는 답을 잇는다.
+  const messages = useMemo(() => {
+    const visible =
+      replacingMessageIds.length === 0
+        ? serverMessages
+        : serverMessages.filter(
+            (message) => !replacingMessageIds.includes(message.id),
+          );
+    return [...visible, ...pendingMessages];
+  }, [serverMessages, pendingMessages, replacingMessageIds]);
+
+  const openDialog = useDialogStore((state) => state.openDialog);
+  const { mutate: deleteRoomMessage } = useDeleteRoomMessageMutation();
+  // 답을 만드는 동안에는 지우거나 다시 만들 수 없다(서버도 409). 버튼을 거둬 헛누름을 막는다.
+  const handleDeleteMessage = useCallback(
+    (messageId: string) =>
+      openDialog("CHAT_TURN_DELETE", {
+        onConfirm: () => deleteRoomMessage({ roomId, messageId }),
+      }),
+    [openDialog, deleteRoomMessage, roomId],
   );
-
-  const handleDeleteMessage = useCallback(() => {
-    // 메시지 삭제 API가 아직 없어 동작하지 않는다. 버튼 자리만 보존한다.
-  }, []);
-
-  const handleRetryMessage = useCallback(() => {
-    // 재생성 API가 아직 없어 동작하지 않는다. 버튼 자리만 보존한다.
-  }, []);
 
   const handleLoadOlderMessages = useCallback(() => {
     if (!hasNextPage || isFetchingNextPage) return;
@@ -189,8 +211,6 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
             isCharacterLoading={isCharacterLoading}
             isModelsLoading={isModelsPending}
             handleCurrentAi={handleCurrentAi}
-            isSuggestedReplyOn={isSuggestedReplyOn}
-            onSuggestedReplyToggle={handleSuggestedReplyToggle}
           />
           <ChattingRoomNotice />
 
@@ -203,12 +223,14 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
           ) : isMessagesError && serverMessages.length === 0 ? (
             <ErrorState error={messagesError} onRetry={refetchMessages} />
           ) : (
+            // 추천 답변은 서버 API 가 생길 때까지 넘기지 않아 뜨지 않는다.
             <MessageList
               messages={messages}
               scrollContainer={scrollContainer}
-              isAiSuggestedChat={isSuggestedReplyOn}
-              onDeleteMessage={handleDeleteMessage}
-              onRetryMessage={handleRetryMessage}
+              isAiSuggestedChat={false}
+              onDeleteMessage={isBusy ? undefined : handleDeleteMessage}
+              onRetryMessage={isBusy || !canSend ? undefined : regenerateMessage}
+              onReportMessage={handleReportMessage}
             />
           )}
         </div>

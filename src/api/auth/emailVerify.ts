@@ -15,9 +15,16 @@ const PostEmailVerify = async (email: string) => {
   );
 };
 
-/** 이메일 인증번호 발송 */
+/** 이미 가입된 이메일. 서버가 인증번호를 보내기 전에 거절한다. */
+export const EMAIL_UNAVAILABLE_CODE = "EMAIL_UNAVAILABLE";
+
+/**
+ * 이메일 인증번호 발송.
+ * 실패 안내는 부르는 쪽이 맡는다(전역 토스트 끔) — 이미 가입된 이메일은 입력칸 아래에 알려야 어느 칸이 문제인지 보인다.
+ */
 export const useEmailVerifyMutation = () => {
   return useMutation<void, AppError, string>({
     mutationFn: PostEmailVerify,
+    meta: { silent: true },
   });
 };

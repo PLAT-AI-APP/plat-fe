@@ -30,6 +30,8 @@ const ja: typeof ko = {
     },
     profileEdit: {
       title: "プロフィール修正",
+      optionalInfoNotice:
+        "生年月日・性別は任意項目です。入力しなくてもすべての機能を使え、消去するとすぐに削除されます。",
       changePassword: "パスワード変更",
       submit: "保存",
       invalidType: "jpg、png、webp画像ファイルのみ使用できます。",
@@ -45,6 +47,7 @@ const ja: typeof ko = {
     report: {
       titleComment: "{nickname}さんのコメントにどんな問題がありますか？",
       titleUniverse: "キャラクター「{name}」にどのような問題がありますか？",
+      titleMessage: "「{name}」の返信にどのような問題がありますか？",
       reasonLabel: "通報理由",
       detailPlaceholder: "通報理由を具体的にお書きください。確認のうえ対応します。",
       detailPlaceholderRequired: "どのような問題があるか教えてください",
@@ -54,6 +57,7 @@ const ja: typeof ko = {
       viewHistory: "通報履歴",
       alreadySubmitted: "すでに通報済みです。処理結果は通報履歴で確認できます",
       selfTarget: "自分が作成したコンテンツは通報できません",
+      selfTargetMessage: "自分が作ったキャラクターの返信は通報できません",
       targetNotFound: "削除されたか、表示できなくなったコンテンツです",
     },
     passwordReset: {

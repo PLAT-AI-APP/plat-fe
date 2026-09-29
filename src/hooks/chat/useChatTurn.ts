@@ -6,13 +6,22 @@ import { notifyApiError } from "@/api";
 import { walletQueryKeys } from "@/api/wallet/queryKeys";
 import { noteQueryKeys } from "@/api/note/queryKeys";
 import { consumeChatStream } from "@/api/chat/chatStream";
+import { chatQueryKeys } from "@/api/chat/queryKeys";
+import { usePostChatRegenerateMutation } from "@/api/chat/postChatRegenerate";
 import { usePostChatStartMutation } from "@/api/chat/postChatStart";
-import { prependLatestRoomMessages } from "@/api/room/getRoomMessages";
+import {
+  prependLatestRoomMessages,
+  removeRoomMessagesFromCache,
+} from "@/api/room/getRoomMessages";
 import { roomQueryKeys } from "@/api/room/queryKeys";
 import { getApiErrorMessage, isAppError } from "@/lib/apiError";
 import { createTextReveal } from "@/lib/textReveal";
 import { showAppToast } from "@/lib/toast";
-import type { ChatMessageType } from "@/type/chat";
+import { useDialogStore } from "@/store/useDialogStore";
+import type { ChatMessageType, ChatStartResponse } from "@/type/chat";
+
+/** 크레딧 예약 시 잔액이 모자라면 서버가 주는 코드(422). */
+const CREDIT_INSUFFICIENT_CODE = "CREDIT_INSUFFICIENT";
 
 // 서버는 턴이 끝난 뒤 두 메시지를 저장하므로, 바로 조회하면 아직 없을 수 있어 잠깐 기다리며 다시 봅니다.
 const SYNC_RETRY_COUNT = 3;
@@ -37,7 +46,10 @@ interface UseChatTurnParams {
 
 interface ChatTurnState {
   chatTurnId: string;
-  userContent: string;
+  /** 사용자가 보낸 말. 재생성 턴은 이미 저장된 말을 다시 쓰므로 비어 있다. */
+  userContent?: string;
+  /** 재생성 턴이 바꿀 옛 AI 답 id. 턴이 도는 동안 화면에서 옛 답을 가린다. */
+  replacesMessageId?: string;
   assistantContent: string;
   /** 응답 글자를 아직 받거나 화면에 내보내는 중인지 */
   isStreaming: boolean;
@@ -64,6 +76,8 @@ export const useChatTurn = ({
 }: UseChatTurnParams) => {
   const queryClient = useQueryClient();
   const { mutateAsync: startChat } = usePostChatStartMutation();
+  const { mutateAsync: startRegenerate } = usePostChatRegenerateMutation();
+  const openDialog = useDialogStore((state) => state.openDialog);
   const [turns, setTurns] = useState<ChatTurnState[]>([]);
   const [isBusy, setIsBusy] = useState(false);
   // state 는 다음 렌더에야 반영돼, 연달아 눌린 전송을 막으려면 즉시 읽히는 ref 가 필요합니다.
@@ -125,26 +139,48 @@ export const useChatTurn = ({
    * 같은 큐에 넣어 두 변경이 한 번에 그려지게 한다.
    */
   const settleTurn = useCallback(
-    async (chatTurnId: string, keepIfUnsynced: boolean) => {
+    async (
+      chatTurnId: string,
+      keepIfUnsynced: boolean,
+      replacesMessageId?: string,
+    ) => {
       const isSynced = await syncSavedMessages().catch(() => false);
 
       // 저장 확인이 끝내 안 된 정상 응답은 사라지지 않게 남겨 둡니다.
       if (isSynced || !keepIfUnsynced) {
-        notifyManager.schedule(() => removeTurn(chatTurnId));
+        notifyManager.schedule(() => {
+          // 재생성이 저장됐으면 서버는 옛 답을 지웠다. 캐시에서도 같이 빼야 옛 답이 다시 보이지 않는다.
+          // 저장되지 않았으면(실패) 서버에 옛 답이 그대로 있으니 가림만 푼다.
+          if (isSynced && replacesMessageId) {
+            removeRoomMessagesFromCache(queryClient, roomId, [
+              replacesMessageId,
+            ]);
+          }
+          removeTurn(chatTurnId);
+        });
       }
 
       void queryClient.invalidateQueries({ queryKey: roomQueryKeys.lists() });
+      // 답에 새 에셋이 나왔으면 갤러리에서 풀린다.
+      void queryClient.invalidateQueries({
+        queryKey: chatQueryKeys.assetGallery(roomId),
+      });
     },
-    [queryClient, removeTurn, syncSavedMessages],
+    [queryClient, roomId, removeTurn, syncSavedMessages],
   );
 
   const runTurn = useCallback(
     async (
-      message: string,
       chatTurnId: string,
       abortController: AbortController,
-      request: { universeCharacterId: string; personaId: string; modelId: string },
+      start: () => Promise<ChatStartResponse>,
+      options: {
+        /** 아무 응답도 못 받고 실패하면 입력창에 되돌릴 원문. 재생성은 되돌릴 입력이 없다. */
+        restoreMessage?: string;
+        replacesMessageId?: string;
+      },
     ) => {
+      const { restoreMessage, replacesMessageId } = options;
       let hasStarted = false;
       let receivedText = "";
       // 토큰이 뭉쳐서 와도 응답이 툭 나타나지 않도록 화면에는 조금씩 이어 보여 준다.
@@ -153,20 +189,8 @@ export const useChatTurn = ({
       });
 
       try {
-        // 시작 요청의 실패 토스트는 MutationCache 가 이미 띄웁니다.
-        const { turnId } = await startChat({
-          chatTurnId,
-          context: {
-            roomId,
-            universeCharacterId: request.universeCharacterId,
-            personaId: request.personaId,
-          },
-          generation: {
-            message,
-            model: request.modelId,
-            multiplier: multiplier ?? 1,
-          },
-        });
+        // 시작 요청은 전역 토스트를 끄고 아래 catch 에서 직접 알린다(노트 부족은 다이얼로그).
+        const { turnId } = await start();
         hasStarted = true;
 
         let hasFailed = false;
@@ -206,7 +230,7 @@ export const useChatTurn = ({
         });
 
         // 실패해도 부분 응답이 저장됐을 수 있어, 이력을 한 번 확인한 뒤에 화면의 임시 말풍선을 치웁니다.
-        void settleTurn(chatTurnId, !hasFailed);
+        void settleTurn(chatTurnId, !hasFailed, replacesMessageId);
       } catch (error) {
         reveal.cancel();
         if (abortController.signal.aborted) return;
@@ -223,25 +247,34 @@ export const useChatTurn = ({
         if (hasStarted && receivedText) {
           // 받다 만 응답이 서버에 저장됐을 수 있다. 확인되면 이력으로 바꾸고, 아니면 보이던 대로 둔다.
           updateTurn(chatTurnId, { isStreaming: false });
-          void settleTurn(chatTurnId, true);
+          void settleTurn(chatTurnId, true, replacesMessageId);
           return;
         }
 
         // 아무 응답도 못 받았다면 보낸 말이 조용히 사라지지 않게, 말풍선을 거두고 입력창에 되돌린다.
+        // 재생성이면 가려 둔 옛 답이 다시 보인다.
         removeTurn(chatTurnId);
-        onTurnFailedRef.current?.(message);
-        if (hasStarted) void settleTurn(chatTurnId, false);
+        if (restoreMessage !== undefined) {
+          onTurnFailedRef.current?.(restoreMessage);
+        }
+        if (!hasStarted) {
+          // 노트가 모자라 시작하지 못했으면 토스트 대신 충전으로 안내한다. 보낸 말은 위에서 입력창에 돌려놨다.
+          if (isAppError(error) && error.code === CREDIT_INSUFFICIENT_CODE) {
+            openDialog("CREDIT_INSUFFICIENT", {});
+          } else {
+            notifyApiError(error);
+          }
+        }
+        if (hasStarted) void settleTurn(chatTurnId, false, replacesMessageId);
       }
     },
     [
-      multiplier,
-      roomId,
-      startChat,
       queryClient,
       updateTurn,
       removeTurn,
       releaseBusy,
       settleTurn,
+      openDialog,
     ],
   );
 
@@ -275,15 +308,87 @@ export const useChatTurn = ({
         },
       ]);
 
-      void runTurn(message, chatTurnId, abortController, {
-        universeCharacterId,
-        personaId,
-        modelId,
-      });
+      void runTurn(
+        chatTurnId,
+        abortController,
+        () =>
+          startChat({
+            chatTurnId,
+            context: { roomId, universeCharacterId, personaId },
+            generation: {
+              message,
+              model: modelId,
+              multiplier: multiplier ?? 1,
+            },
+          }),
+        { restoreMessage: message },
+      );
 
       return true;
     },
-    [universeCharacterId, personaId, modelId, runTurn],
+    [
+      universeCharacterId,
+      personaId,
+      modelId,
+      multiplier,
+      roomId,
+      startChat,
+      runTurn,
+    ],
+  );
+
+  /**
+   * 마지막 AI 답 다시 만들기. 새 답을 받는 동안 옛 답은 가리고, 서버가 확정하면 옛 답을 새 답으로 바꾼다.
+   * 실패하면 서버에 옛 답이 그대로 있어 가림만 푼다.
+   */
+  const regenerateMessage = useCallback(
+    (messageId: string) => {
+      if (
+        !universeCharacterId ||
+        !personaId ||
+        !modelId ||
+        isBusyRef.current
+      ) {
+        return;
+      }
+
+      const chatTurnId = crypto.randomUUID();
+      const abortController = new AbortController();
+      abortControllerRef.current = abortController;
+      isBusyRef.current = true;
+      setIsBusy(true);
+      setTurns((previous) => [
+        ...previous,
+        {
+          chatTurnId,
+          replacesMessageId: messageId,
+          assistantContent: "",
+          isStreaming: true,
+        },
+      ]);
+
+      void runTurn(
+        chatTurnId,
+        abortController,
+        () =>
+          startRegenerate({
+            chatTurnId,
+            context: { roomId, universeCharacterId, personaId },
+            messageId,
+            generation: { model: modelId, multiplier: multiplier ?? 1 },
+          }),
+        { replacesMessageId: messageId },
+      );
+    },
+    [
+      universeCharacterId,
+      personaId,
+      modelId,
+      multiplier,
+      roomId,
+      startRegenerate,
+      runTurn,
+    ],
   );
 
   /** 세계관·페르소나·모델을 모두 받아 지금 보낼 수 있는지 */
@@ -292,13 +397,16 @@ export const useChatTurn = ({
   const pendingMessages = useMemo<ChatMessageType[]>(
     () =>
       turns.flatMap((turn) => {
-        const messages: ChatMessageType[] = [
-          {
-            id: `pending-user-${turn.chatTurnId}`,
-            role: "user",
-            content: turn.userContent,
-          },
-        ];
+        const messages: ChatMessageType[] =
+          turn.userContent === undefined
+            ? []
+            : [
+                {
+                  id: `pending-user-${turn.chatTurnId}`,
+                  role: "user",
+                  content: turn.userContent,
+                },
+              ];
 
         // 첫 토큰이 오기 전에도 자리를 잡아 두면 ChatContentBlock 이 입력 중 표시를 그린다.
         // 전송 후 몇 초간 아무것도 없다가 응답이 툭 나타나지 않게 하려는 것이다.
@@ -318,11 +426,22 @@ export const useChatTurn = ({
     [turns, characterName, profileImage],
   );
 
+  /** 재생성 중이라 화면에서 가릴 옛 답 id */
+  const replacingMessageIds = useMemo(
+    () =>
+      turns.flatMap((turn) =>
+        turn.replacesMessageId ? [turn.replacesMessageId] : [],
+      ),
+    [turns],
+  );
+
   return {
     pendingMessages,
+    replacingMessageIds,
     /** 응답을 기다리거나 받는 중인지. 이 동안은 다음 전송을 받지 않습니다. */
     isBusy,
     canSend,
     sendMessage,
+    regenerateMessage,
   };
 };

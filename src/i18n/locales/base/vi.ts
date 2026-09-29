@@ -17,15 +17,18 @@ const vi: typeof ko = {
     sections: {
       environment: "Thiết lập môi trường",
       notifications: "Thông báo và quản lý nội dung",
+      consent: "Nhận thông báo",
     },
     rows: {
       theme: "Chế độ màn hình",
       language: "Ngôn ngữ ưu tiên",
       blockedUsers: "Quản lý chặn",
+      marketing: "Nhận thông tin quảng cáo",
     },
     actions: {
       goToBlockedUsers: "Đi tới quản lý chặn",
       withdrawal: "Xóa tài khoản",
+      marketingFailed: "Không thể thay đổi cài đặt. Vui lòng thử lại sau.",
     },
   },
   auth: {
@@ -52,11 +55,21 @@ const vi: typeof ko = {
       invalidHint: "Liên kết đăng nhập đã hết hạn hoặc địa chỉ không đúng. Vui lòng đăng nhập lại.",
       goHome: "Về trang chủ",
     },
+    agreementGate: {
+      firstTitle: "Hoàn tất đăng ký",
+      firstDescription: "Vui lòng đồng ý với các điều khoản dưới đây để sử dụng PLAT.",
+      revisedTitle: "Điều khoản đã thay đổi",
+      revisedDescription: "Hãy xem và đồng ý với điều khoản mới để tiếp tục sử dụng.",
+      submit: "Đồng ý và tiếp tục",
+      logout: "Đăng xuất",
+      failed: "Không thể lưu sự đồng ý của bạn. Vui lòng thử lại sau.",
+    },
     signup: {
       agreeAll: "Đồng ý tất cả điều khoản",
       termsOfService: "Đồng ý Điều khoản sử dụng (bắt buộc)",
       privacyPolicy: "Chính sách quyền riêng tư (bắt buộc)",
       ageOver14: "Tôi từ 14 tuổi trở lên. (bắt buộc)",
+      marketing: "Tôi đồng ý nhận thông tin quảng cáo. (tùy chọn)",
       title: "Đăng ký",
       subtitle: "Những nhân vật đầy sức hút đang chờ bạn",
       submit: "Tiếp theo",
@@ -78,6 +91,12 @@ const vi: typeof ko = {
     },
   },
   dialog: {
+    creditInsufficient: {
+      title: "Không đủ note",
+      description: "Bạn cần thêm note để tiếp tục cuộc trò chuyện.\nNạp xong quay lại, tin nhắn định gửi vẫn còn trong ô nhập.",
+      cancel: "Để sau",
+      confirm: "Nạp ngay",
+    },
     chatRestart: {
       title: "Bắt đầu lại cuộc trò chuyện?",
       description:
@@ -94,6 +113,12 @@ const vi: typeof ko = {
     chatDelete: {
       title: "Bạn thật sự muốn xóa phòng chat này?",
       description: "Cuộc trò chuyện với nhân vật này sẽ không thể khôi phục.",
+      cancel: "Hủy",
+      confirm: "Xóa",
+    },
+    chatTurnDelete: {
+      title: "Xóa đoạn hội thoại này?",
+      description: "Tin nhắn của bạn và câu trả lời của nhân vật sẽ bị xóa cùng lúc và không thể khôi phục. Ghi chú đã dùng sẽ không được hoàn lại.",
       cancel: "Hủy",
       confirm: "Xóa",
     },
@@ -115,9 +140,9 @@ const vi: typeof ko = {
       skip: "Để sau",
     },
     welcomeCredit: {
-      title: "Tín dụng chào mừng đã đến",
+      title: "Note chào mừng đã đến",
       descriptionBefore: "Để hỗ trợ hành trình đầu tiên của bạn, ",
-      descriptionHighlight: "chúng tôi đã tặng bạn credit note chào mừng",
+      descriptionHighlight: "chúng tôi đã tặng bạn note chào mừng",
       descriptionAfter:
         "Bạn đã sẵn sàng tận hưởng những cuộc trò chuyện sống động chưa?",
       confirm: "Xác nhận",
@@ -159,6 +184,21 @@ const vi: typeof ko = {
       description: "Nếu rời đi bây giờ, nội dung chỉnh sửa sẽ không được lưu.",
       confirm: "Rời đi",
     },
+    agreementResult: {
+      title: "Kết quả xử lý đồng ý",
+      description: "Đã xử lý vào {date} như sau.",
+      agreed: "Đồng ý",
+      declined: "Không đồng ý",
+      withdrawn: "Đã rút lại",
+      sender: "Người gửi: PLAT (Orbitlab Co., Ltd.)",
+      confirm: "Xác nhận",
+      items: {
+        termsOfService: "Điều khoản dịch vụ",
+        privacyPolicy: "Chính sách quyền riêng tư",
+        ageOver14: "Xác nhận từ 14 tuổi trở lên",
+        marketing: "Nhận thông tin quảng cáo",
+      },
+    },
     withdrawalComplete: {
       title: "Cảm ơn bạn đã đồng hành cùng chúng tôi",
       descriptionLine1: "Cảm ơn bạn đã dành thời gian với PLAT.",
@@ -189,6 +229,11 @@ const vi: typeof ko = {
     feedback: {
       nicknameAvailable: "Đó là một biệt danh rất hay",
       nicknameUnavailable: "Biệt danh này đã được sử dụng",
+      nicknameReserved:
+        "Không thể dùng biệt danh có thể bị nhầm là quản trị viên",
+      nicknameBannedWord: "Biệt danh chứa từ không được phép",
+      emailAlreadyRegistered:
+        "Email này đã được đăng ký. Vui lòng đăng nhập bằng phương thức đã dùng khi đăng ký (email, Google hoặc Kakao)",
       emailVerificationSent: "Vui lòng kiểm tra mã xác minh trong email",
       emailVerificationComplete: "Xác minh email đã hoàn tất",
       emailVerificationExpired: "Đã hết thời gian",

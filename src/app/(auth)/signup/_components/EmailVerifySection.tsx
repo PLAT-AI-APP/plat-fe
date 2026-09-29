@@ -5,7 +5,11 @@ import { AnimatePresence, m } from "framer-motion";
 import { TRANSITION_COLLAPSE } from "@/constants/motion";
 import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
-import { useEmailVerifyMutation } from "@/api/auth/emailVerify";
+import { notifyApiError } from "@/api";
+import {
+  EMAIL_UNAVAILABLE_CODE,
+  useEmailVerifyMutation,
+} from "@/api/auth/emailVerify";
 import { useEmailVerifyConfirmMutation } from "@/api/auth/emailVerifyConfirm";
 import ActiveButton from "@/components/ActiveButton";
 import SmartInput from "@/components/smart-input";
@@ -76,6 +80,17 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
         setIsEmailVerified(false);
         onVerifiedChange?.(false);
         startTimer();
+      },
+      onError: (error) => {
+        // 이메일·구글·카카오 어느 방법으로든 이미 가입된 이메일. 인증까지 마친 뒤가 아니라 지금 알린다.
+        if (error.code === EMAIL_UNAVAILABLE_CODE) {
+          setError("email", {
+            type: "manual",
+            message: FIELD_FEEDBACK_MESSAGES.emailAlreadyRegistered,
+          });
+          return;
+        }
+        notifyApiError(error);
       },
     });
   };

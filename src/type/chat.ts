@@ -40,25 +40,29 @@ interface UserMessageType {
 /** 최종 메시지 유니온 타입 */
 export type ChatMessageType = AssistantMessageType | UserMessageType;
 
-/** 채팅방 지나온 대화(장기기억) 항목 */
-export interface ChatMemoryEntry {
-  content: string;
-  createdAt: string;
-  id: string;
-  turn: number;
-}
-
-/** 채팅방 에셋 갤러리 이미지 항목 */
+/**
+ * 채팅방 에셋 갤러리 이미지 항목.
+ *
+ * 해금은 이 방의 캐릭터 답변에 그 에셋이 한 번이라도 나온 것이다. 잠긴 항목은 서버가 파일·주소·이름·상황을
+ * 비워 준다 — 흐림 처리만으로는 원본 주소가 그대로 새어 나가기 때문이다.
+ */
 export interface ChatAssetGalleryItem {
+  /** 세계관 에셋 id */
   id: string;
-  imageUrl: string;
+  fileId: string | null;
+  imageUrl: string | null;
+  name: string | null;
+  situation: string | null;
   isLocked: boolean;
+  unlockedAt: string | null;
 }
 
-/** 채팅방 에셋 갤러리 목록 요약 */
+/** 채팅방 에셋 갤러리. 해금된 것(해금 순) 다음 잠긴 것(에셋 순)으로 온다. */
 export interface ChatAssetGalleryResponse {
   items: ChatAssetGalleryItem[];
+  /** 세계관 에셋 수 */
   totalCount: number;
+  /** 그중 해금된 수 */
   visibleCount: number;
 }
 
@@ -109,6 +113,18 @@ export interface ChatStartRequest {
     /** 배수 값(숫자). 허용 집합 밖이면 서버가 1.0으로 되돌립니다. */
     multiplier: number;
   };
+}
+
+/**
+ * POST /chat/regenerate 요청. 방의 마지막 AI 답만 다시 만들 수 있다(아니면 409).
+ * 입력은 서버가 그 답의 짝인 사용자 메시지 원문을 쓴다.
+ */
+export interface ChatRegenerateRequest {
+  chatTurnId: string;
+  context: ChatStartRequest["context"];
+  /** 다시 만들 AI 답 메시지 id */
+  messageId: string;
+  generation: Omit<ChatStartRequest["generation"], "message">;
 }
 
 /** POST /chat 응답. 이 turnId로 SSE를 구독합니다. */

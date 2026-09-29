@@ -5,7 +5,7 @@ import remarkBreaks from "remark-breaks";
 import remarkGfm from "remark-gfm";
 import { cn } from "@/lib/utils";
 
-interface NoticeMarkdownProps {
+interface MarkdownDocumentProps {
   content: string;
 }
 
@@ -158,7 +158,7 @@ const markdownComponents: Partial<Components> = {
   ),
 };
 
-const NoticeMarkdown = ({ content }: NoticeMarkdownProps) => (
+const MarkdownDocument = ({ content }: MarkdownDocumentProps) => (
   <ReactMarkdown
     remarkPlugins={[remarkGfm, remarkBreaks]}
     components={markdownComponents}
@@ -167,4 +167,4 @@ const NoticeMarkdown = ({ content }: NoticeMarkdownProps) => (
   </ReactMarkdown>
 );
 
-export default NoticeMarkdown;
+export default MarkdownDocument;

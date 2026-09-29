@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import React from "react";
-import StudioContents from "./_components/StudioContents";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Studio",
@@ -10,12 +9,14 @@ interface Props {
   params: Promise<{ id: string }>;
 }
 
-// 보기·정렬은 StudioContents 가 주소에서 직접 읽는다. 여기서 searchParams 를 읽으면 전환할
-// 때마다 서버 렌더를 다시 받아, 토글 손잡이가 서버 응답만큼 늦게 움직였다.
+/**
+ * 스튜디오는 아직 서버와 연결되지 않은 목업이다(통계·목록이 전부 더미). 진입 링크는 없지만 주소로 들어올 수 있어,
+ * 연결되기 전까지는 같은 제작자의 프로필로 보낸다. 화면 코드(_components)는 연결 작업 때 다시 쓴다.
+ */
 const StudioPage = async ({ params }: Props) => {
   const { id } = await params;
 
-  return <StudioContents id={id} />;
+  redirect(`/profile/${id}`);
 };
 
 export default StudioPage;

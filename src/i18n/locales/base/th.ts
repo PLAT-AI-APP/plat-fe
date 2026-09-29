@@ -17,15 +17,18 @@ const th: typeof ko = {
     sections: {
       environment: "การตั้งค่าสภาพแวดล้อม",
       notifications: "การแจ้งเตือนและการจัดการคอนเทนต์",
+      consent: "การรับการแจ้งเตือน",
     },
     rows: {
       theme: "โหมดหน้าจอ",
       language: "ภาษาที่ต้องการ",
       blockedUsers: "การจัดการการบล็อก",
+      marketing: "รับข้อมูลการตลาด",
     },
     actions: {
       goToBlockedUsers: "ไปที่การจัดการการบล็อก",
       withdrawal: "ลบบัญชี",
+      marketingFailed: "เปลี่ยนการตั้งค่าไม่สำเร็จ โปรดลองอีกครั้งในภายหลัง",
     },
   },
   auth: {
@@ -52,11 +55,21 @@ const th: typeof ko = {
       invalidHint: "ลิงก์เข้าสู่ระบบหมดอายุหรือที่อยู่ไม่ถูกต้อง โปรดเข้าสู่ระบบอีกครั้ง",
       goHome: "กลับหน้าแรก",
     },
+    agreementGate: {
+      firstTitle: "ลงทะเบียนให้เสร็จสิ้น",
+      firstDescription: "โปรดยอมรับข้อกำหนดด้านล่างเพื่อใช้งาน PLAT",
+      revisedTitle: "ข้อกำหนดมีการเปลี่ยนแปลง",
+      revisedDescription: "โปรดตรวจสอบและยอมรับข้อกำหนดใหม่เพื่อใช้งานต่อ",
+      submit: "ยอมรับและดำเนินการต่อ",
+      logout: "ออกจากระบบ",
+      failed: "บันทึกการยอมรับไม่สำเร็จ โปรดลองอีกครั้งในภายหลัง",
+    },
     signup: {
       agreeAll: "ยอมรับข้อกำหนดทั้งหมด",
       termsOfService: "ยอมรับข้อกำหนดการใช้งาน (จำเป็น)",
       privacyPolicy: "นโยบายความเป็นส่วนตัว (จำเป็น)",
       ageOver14: "ฉันมีอายุ 14 ปีขึ้นไป (จำเป็น)",
+      marketing: "ฉันยินยอมรับข้อมูลการตลาด (ไม่บังคับ)",
       title: "สมัครสมาชิก",
       subtitle: "ตัวละครที่มีเสน่ห์มากมายกำลังรอคุณอยู่",
       submit: "ถัดไป",
@@ -78,6 +91,12 @@ const th: typeof ko = {
     },
   },
   dialog: {
+    creditInsufficient: {
+      title: "โน้ตไม่พอ",
+      description: "ต้องมีโน้ตเพิ่มเพื่อคุยต่อ\nเติมแล้วกลับมา ข้อความที่จะส่งยังอยู่ในช่องพิมพ์",
+      cancel: "ไว้ทีหลัง",
+      confirm: "เติมโน้ต",
+    },
     chatRestart: {
       title: "เริ่มบทสนทนาใหม่หรือไม่?",
       description:
@@ -94,6 +113,12 @@ const th: typeof ko = {
     chatDelete: {
       title: "ต้องการลบห้องแชตนี้จริงหรือไม่?",
       description: "บทสนทนาที่คุณมีกับตัวละครนี้จะไม่สามารถกู้คืนได้",
+      cancel: "ยกเลิก",
+      confirm: "ลบ",
+    },
+    chatTurnDelete: {
+      title: "ลบบทสนทนานี้ไหม?",
+      description: "ข้อความของคุณและคำตอบของตัวละครจะถูกลบพร้อมกันและกู้คืนไม่ได้ โน้ตที่ใช้ไปแล้วจะไม่ได้คืน",
       cancel: "ยกเลิก",
       confirm: "ลบ",
     },
@@ -116,9 +141,9 @@ const th: typeof ko = {
       skip: "ไว้คราวหน้า",
     },
     welcomeCredit: {
-      title: "เครดิตต้อนรับมาถึงแล้ว",
+      title: "โน้ตต้อนรับมาถึงแล้ว",
       descriptionBefore: "เพื่อสนับสนุนการเดินทางครั้งแรกของคุณ ",
-      descriptionHighlight: "เราได้มอบเครดิตโน้ตต้อนรับให้คุณ",
+      descriptionHighlight: "เราได้มอบโน้ตต้อนรับให้คุณ",
       descriptionAfter: "พร้อมจะสนุกกับบทสนทนาที่มีชีวิตชีวาหรือยัง?",
       confirm: "ยืนยัน",
     },
@@ -159,6 +184,21 @@ const th: typeof ko = {
       description: "หากออกตอนนี้ สิ่งที่แก้ไขจะไม่ถูกบันทึก",
       confirm: "ออก",
     },
+    agreementResult: {
+      title: "แจ้งผลการให้ความยินยอม",
+      description: "ดำเนินการเมื่อ {date} ดังนี้",
+      agreed: "ยินยอม",
+      declined: "ไม่ยินยอม",
+      withdrawn: "ถอนความยินยอม",
+      sender: "ผู้ส่ง: PLAT (Orbitlab Co., Ltd.)",
+      confirm: "ตกลง",
+      items: {
+        termsOfService: "ข้อกำหนดการใช้บริการ",
+        privacyPolicy: "นโยบายความเป็นส่วนตัว",
+        ageOver14: "ยืนยันอายุ 14 ปีขึ้นไป",
+        marketing: "รับข้อมูลโฆษณา",
+      },
+    },
     withdrawalComplete: {
       title: "ขอบคุณที่ใช้งานกับเรา",
       descriptionLine1: "ขอบคุณที่ใช้เวลาร่วมกับ PLAT",
@@ -188,6 +228,11 @@ const th: typeof ko = {
     feedback: {
       nicknameAvailable: "เป็นชื่อเล่นที่ดีมาก",
       nicknameUnavailable: "ชื่อเล่นนี้ถูกใช้งานแล้ว",
+      nicknameReserved:
+        "ไม่สามารถใช้ชื่อเล่นที่อาจทำให้เข้าใจผิดว่าเป็นทีมงานได้",
+      nicknameBannedWord: "มีคำที่ไม่อนุญาตให้ใช้",
+      emailAlreadyRegistered:
+        "อีเมลนี้ลงทะเบียนแล้ว กรุณาเข้าสู่ระบบด้วยวิธีที่ใช้สมัคร (อีเมล, Google หรือ Kakao)",
       emailVerificationSent: "กรุณาตรวจสอบรหัสยืนยันในอีเมล",
       emailVerificationComplete: "ยืนยันอีเมลเรียบร้อยแล้ว",
       emailVerificationExpired: "หมดเวลาแล้ว",

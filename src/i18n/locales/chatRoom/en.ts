@@ -33,6 +33,8 @@ const en: typeof ko = {
       assetTotal: "Total  {count}",
       suggestedReply: "Suggested replies",
       assetView: "Show assets",
+      assetLocked: "Locked asset",
+      backToAssetGallery: "Back to asset gallery",
       restartChat: "Restart chat",
       leaveChat: "Leave chat room",
     },

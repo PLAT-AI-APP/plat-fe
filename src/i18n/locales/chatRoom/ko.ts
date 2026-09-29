@@ -30,6 +30,8 @@ const ko = {
       assetTotal: "총  {count}개",
       suggestedReply: "추천 답변",
       assetView: "에셋 보기",
+      assetLocked: "잠긴 에셋",
+      backToAssetGallery: "에셋 갤러리로 돌아가기",
       restartChat: "대화 새로하기",
       leaveChat: "채팅방 나가기",
     },

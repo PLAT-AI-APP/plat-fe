@@ -17,15 +17,18 @@ const ja: typeof ko = {
     sections: {
       environment: "環境設定",
       notifications: "通知とコンテンツ管理",
+      consent: "通知の受信",
     },
     rows: {
       theme: "画面モード",
       language: "優先言語",
       blockedUsers: "ブロック管理",
+      marketing: "広告・お知らせの受信",
     },
     actions: {
       goToBlockedUsers: "ブロック管理へ移動",
       withdrawal: "退会",
+      marketingFailed: "設定を変更できませんでした。しばらくしてからもう一度お試しください。",
     },
   },
   auth: {
@@ -52,11 +55,21 @@ const ja: typeof ko = {
       invalidHint: "ログインリンクの有効期限が切れているか、アドレスが正しくありません。もう一度ログインしてください。",
       goHome: "ホームへ",
     },
+    agreementGate: {
+      firstTitle: "登録を完了してください",
+      firstDescription: "PLATを利用するには、以下の規約に同意してください。",
+      revisedTitle: "規約が変更されました",
+      revisedDescription: "変更された規約を確認して同意すると、引き続き利用できます。",
+      submit: "同意して続ける",
+      logout: "ログアウト",
+      failed: "同意を保存できませんでした。しばらくしてからもう一度お試しください。",
+    },
     signup: {
       agreeAll: "すべての規約に同意",
       termsOfService: "利用規約に同意（必須）",
       privacyPolicy: "プライバシーポリシー（必須）",
       ageOver14: "満14歳以上です。（必須）",
+      marketing: "広告・お知らせの受信に同意します。（任意）",
       title: "会員登録",
       subtitle: "魅力的なキャラクターたちがあなたを待っています",
       submit: "次へ",
@@ -78,6 +91,12 @@ const ja: typeof ko = {
     },
   },
   dialog: {
+    creditInsufficient: {
+      title: "ノートが足りません",
+      description: "この会話を続けるにはノートが必要です。\nチャージして戻ると、送ろうとしたメッセージは入力欄に残っています。",
+      cancel: "あとで",
+      confirm: "チャージする",
+    },
     chatRestart: {
       title: "会話を新しく始めますか？",
       description:
@@ -94,6 +113,12 @@ const ja: typeof ko = {
     chatDelete: {
       title: "本当にチャットルームを削除しますか？",
       description: "このキャラクターとのこれまでの会話は復元できません。",
+      cancel: "キャンセル",
+      confirm: "削除",
+    },
+    chatTurnDelete: {
+      title: "この会話を削除しますか？",
+      description: "送ったメッセージとキャラクターの返信が一緒に削除され、元に戻せません。使用したノートは戻りません。",
       cancel: "キャンセル",
       confirm: "削除",
     },
@@ -115,9 +140,9 @@ const ja: typeof ko = {
       skip: "後でやる",
     },
     welcomeCredit: {
-      title: "ウェルカムクレジットが届きました",
+      title: "ウェルカムノートが届きました",
       descriptionBefore: "最初の旅を応援するため、",
-      descriptionHighlight: "ウェルカムノートクレジットをプレゼントしました",
+      descriptionHighlight: "ウェルカムノートをプレゼントしました",
       descriptionAfter: "臨場感ある会話を楽しむ準備はできましたか？",
       confirm: "確認",
     },
@@ -158,6 +183,21 @@ const ja: typeof ko = {
       description: "今移動すると、編集内容は保存されません。",
       confirm: "移動する",
     },
+    agreementResult: {
+      title: "同意の処理結果をお知らせします",
+      description: "{date}に以下のとおり処理しました。",
+      agreed: "同意",
+      declined: "未同意",
+      withdrawn: "撤回",
+      sender: "送信元：PLAT（株式会社オービットラボ）",
+      confirm: "確認",
+      items: {
+        termsOfService: "サービス利用規約",
+        privacyPolicy: "個人情報処理方針",
+        ageOver14: "14歳以上の確認",
+        marketing: "広告情報の受信",
+      },
+    },
     withdrawalComplete: {
       title: "これまでご利用いただきありがとうございました",
       descriptionLine1: "これまでPLATをご利用いただきありがとうございました。",
@@ -188,6 +228,10 @@ const ja: typeof ko = {
     feedback: {
       nicknameAvailable: "素敵なニックネームです",
       nicknameUnavailable: "すでに使用中のニックネームです",
+      nicknameReserved: "運営スタッフと誤解されるニックネームは使用できません",
+      nicknameBannedWord: "使用できない単語が含まれています",
+      emailAlreadyRegistered:
+        "このメールアドレスはすでに登録されています。登録時の方法（メール・Google・Kakao）でログインしてください",
       emailVerificationSent: "メールで認証番号を確認してください",
       emailVerificationComplete: "メール認証が完了しました",
       emailVerificationExpired: "時間切れです",

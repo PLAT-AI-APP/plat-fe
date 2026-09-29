@@ -14,7 +14,7 @@ import { cn, formatStatCount } from "@/lib/utils";
 import { useLocaleStore } from "@/store/useLocaleStore";
 import type { NoticeCategory } from "@/type/notice";
 
-const NoticeMarkdown = dynamic(() => import("./NoticeMarkdown"));
+const MarkdownDocument = dynamic(() => import("@/components/markdown/MarkdownDocument"));
 
 /** 목록의 배지와 같은 색을 씁니다 — 같은 분류가 화면마다 달라 보이면 안 됩니다. */
 const NOTICE_CATEGORY_STYLE: Record<
@@ -126,7 +126,7 @@ const NotificationDetailPage = ({ params }: PageProps) => {
           </header>
 
           <section className="body-3 flex flex-col gap-3 border-t border-main pt-6 text-font-1">
-            <NoticeMarkdown content={notice.content} />
+            <MarkdownDocument content={notice.content} />
           </section>
         </div>
       )}

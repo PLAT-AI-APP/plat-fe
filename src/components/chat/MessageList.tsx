@@ -19,18 +19,28 @@ interface MessageListProps {
   scrollContainer: HTMLDivElement | null;
   isEditable?: boolean;
   onUpdateMessage?: (id: string, newContent: string) => void;
+  /** 턴 삭제. 서버에 저장된 메시지에만 버튼이 뜬다. */
   onDeleteMessage?: (id: string) => void;
+  /** 답 다시 만들기. 서버가 방의 마지막 답만 받으므로 목록 맨 끝의 저장된 답에만 버튼이 뜬다. */
   onRetryMessage?: (id: string) => void;
+  /** AI 응답 신고. 서버 id(숫자)를 받은 응답에만 버튼이 뜬다 — 받는 중인 임시 응답은 신고할 대상이 없다. */
+  onReportMessage?: (id: string) => void;
   isAiSuggestedChat?: boolean;
 }
+
+/** 서버에 저장된 메시지 id 는 숫자(Snowflake)다. 받는 중·보내는 중인 임시 메시지는 다른 모양의 id 를 쓴다. */
+const SERVER_MESSAGE_ID = /^\d+$/;
 
 interface MessageRowProps {
   message: ChatMessageType;
   isEditable: boolean;
   showSuggestedChat: boolean;
+  /** 목록 맨 끝 메시지인지. 다시 만들기는 마지막 답에만 된다. */
+  isLast: boolean;
   onUpdateMessage?: MessageListProps["onUpdateMessage"];
   onDeleteMessage?: MessageListProps["onDeleteMessage"];
   onRetryMessage?: MessageListProps["onRetryMessage"];
+  onReportMessage?: MessageListProps["onReportMessage"];
 }
 
 const MessageRow = memo(
@@ -38,9 +48,11 @@ const MessageRow = memo(
     message,
     isEditable,
     showSuggestedChat,
+    isLast,
     onUpdateMessage,
     onDeleteMessage,
     onRetryMessage,
+    onReportMessage,
   }: MessageRowProps) => {
     const handleUpdate = useCallback(
       (newContent: string) => onUpdateMessage?.(message.id, newContent),
@@ -54,6 +66,13 @@ const MessageRow = memo(
       () => onRetryMessage?.(message.id),
       [message.id, onRetryMessage],
     );
+    const handleReport = useCallback(
+      () => onReportMessage?.(message.id),
+      [message.id, onReportMessage],
+    );
+    const isStoredMessage = SERVER_MESSAGE_ID.test(message.id);
+    // 보내는 중·받는 중인 임시 메시지는 아직 서버에 없어 지울 대상이 없다.
+    const canDelete = Boolean(onDeleteMessage) && isStoredMessage;
 
     if (message.role === "assistant") {
       return (
@@ -66,8 +85,18 @@ const MessageRow = memo(
             isEditMode={isEditable}
             onUpdate={handleUpdate}
             // 시나리오는 캐릭터가 만든 응답이 아니라 지우거나 다시 만들 대상이 아니다.
-            onDelete={message.isScenario ? undefined : handleDelete}
-            onRetry={message.isScenario ? undefined : handleRetry}
+            // 처리 함수를 받지 않았으면 버튼도 띄우지 않는다.
+            onDelete={message.isScenario || !canDelete ? undefined : handleDelete}
+            onRetry={
+              message.isScenario || !onRetryMessage || !isStoredMessage || !isLast
+                ? undefined
+                : handleRetry
+            }
+            onReport={
+              message.isScenario || !onReportMessage || !isStoredMessage
+                ? undefined
+                : handleReport
+            }
           />
           {/* 추천 답변은 응답을 다 받은 뒤에 붙인다. 받는 동안 붙이면 입력 중 표시 밑에 먼저 떠 버린다. */}
           {showSuggestedChat && !message.isStreaming && <AiSuggestedChat />}
@@ -80,7 +109,7 @@ const MessageRow = memo(
         text={message.content}
         isEditable={isEditable}
         onUpdate={handleUpdate}
-        onDelete={handleDelete}
+        onDelete={canDelete ? handleDelete : undefined}
       />
     );
   },
@@ -100,9 +129,11 @@ const MessageRow = memo(
       isSameMessage &&
       previous.isEditable === next.isEditable &&
       previous.showSuggestedChat === next.showSuggestedChat &&
+      previous.isLast === next.isLast &&
       previous.onUpdateMessage === next.onUpdateMessage &&
       previous.onDeleteMessage === next.onDeleteMessage &&
-      previous.onRetryMessage === next.onRetryMessage
+      previous.onRetryMessage === next.onRetryMessage &&
+      previous.onReportMessage === next.onReportMessage
     );
   },
 );
@@ -131,6 +162,7 @@ const MessageList = memo(
     onUpdateMessage,
     onDeleteMessage,
     onRetryMessage,
+    onReportMessage,
     isAiSuggestedChat = true,
   }: MessageListProps) => {
     const listRef = useRef<HTMLElement>(null);
@@ -268,9 +300,11 @@ const MessageList = memo(
                 showSuggestedChat={
                   virtualMessage.index === lastAssistantIndex && isAiSuggestedChat
                 }
+                isLast={virtualMessage.index === messages.length - 1}
                 onUpdateMessage={onUpdateMessage}
                 onDeleteMessage={onDeleteMessage}
                 onRetryMessage={onRetryMessage}
+                onReportMessage={onReportMessage}
               />
             </article>
           );

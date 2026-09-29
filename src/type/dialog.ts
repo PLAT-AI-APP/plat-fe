@@ -12,6 +12,10 @@ export interface DialogProps {
   isConfirmPending?: boolean;
 }
 
+export interface CreditInsufficientDialogProps {
+  onClose: () => void;
+}
+
 export interface DraftOverwriteDialogProps {
   onCancel: () => void;
   onClose: () => void;
@@ -46,6 +50,12 @@ export interface ChatDeleteDialogProps {
   onConfirm: () => void;
 }
 
+/** 채팅방 안의 한 턴(내 말 + 캐릭터 답) 삭제 확인 */
+export interface ChatTurnDeleteDialogProps {
+  onClose: () => void;
+  onConfirm: () => void;
+}
+
 export interface LoginRequiredDialogProps {
   confirmText?: string;
   description?: string;
@@ -64,6 +74,8 @@ export interface PersonaDeleteDialogProps {
 
 export interface SignupCompleteDialogProps {
   nickname: string;
+  /** 가입 때 받은 동의의 처리 결과. 있으면 창 아래에 함께 보여 준다. */
+  agreement?: Omit<AgreementResultDialogProps, "onClose">;
   onClose: () => void;
   onLogin: () => void;
 }
@@ -95,16 +107,34 @@ export interface WithdrawalConfirmDialogProps {
   onConfirm: () => void;
 }
 
+export interface AgreementResultItem {
+  /** `dialog.agreementResult.items` 아래 키. */
+  type: "termsOfService" | "privacyPolicy" | "ageOver14" | "marketing";
+  agreed: boolean;
+  /** 이미 한 동의를 거둔 것이면 "미동의" 대신 "철회" 로 적는다. */
+  withdrawn?: boolean;
+}
+
+export interface AgreementResultDialogProps {
+  onClose: () => void;
+  /** 처리 시각(ISO). */
+  processedAt: string;
+  items: AgreementResultItem[];
+}
+
 type DialogWithoutManagerClose<T extends { onClose: () => void }> = Omit<
   T,
   "onClose"
 >;
 
 export type DialogTypeMap = {
+  AGREEMENT_RESULT: DialogWithoutManagerClose<AgreementResultDialogProps>;
   CHAT_DELETE: DialogWithoutManagerClose<ChatDeleteDialogProps>;
   CHAT_LEAVE: DialogWithoutManagerClose<ChatLeaveDialogProps>;
   CHAT_RESTART: DialogWithoutManagerClose<ChatRestartDialogProps>;
+  CHAT_TURN_DELETE: DialogWithoutManagerClose<ChatTurnDeleteDialogProps>;
   COMMENT_DELETE: DialogWithoutManagerClose<CommentDeleteDialogProps>;
+  CREDIT_INSUFFICIENT: DialogWithoutManagerClose<CreditInsufficientDialogProps>;
   DRAFT_OVERWRITE: DialogWithoutManagerClose<DraftOverwriteDialogProps>;
   DRAFT_SAVE_OVERWRITE: DialogWithoutManagerClose<DraftSaveOverwriteDialogProps>;
   LOGIN_REQUIRED: DialogWithoutManagerClose<LoginRequiredDialogProps>;

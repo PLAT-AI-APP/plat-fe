@@ -197,10 +197,36 @@ const ko = {
     male: "남성향",
     female: "여성향",
   },
+  betaBanner: {
+    label: "클로즈베타 안내",
+    badge: "클로즈베타",
+    message: "지금은 클로즈베타 기간이에요. 불편한 점이나 오류를 알려 주시면 빠르게 고칠게요.",
+    report: "버그 제보하기",
+    close: "안내 닫기",
+  },
+  maintenanceBanner: {
+    label: "서버 점검 안내",
+    badge: "점검 예정",
+    badgeDraining: "점검 준비 중",
+    notice: "{start}부터 서버 점검이 있어요.",
+    noticeWithEnd: "{start}부터 {end}까지 서버 점검이 있어요.",
+    draining: "곧 점검이 시작돼요. 새 채팅과 결제는 점검이 끝난 뒤에 할 수 있어요.",
+  },
+  legalPage: {
+    language: "언어",
+    translationNotice: "이해를 돕기 위한 번역본이에요. 내용이 서로 다르면 한국어 원문이 우선해요.",
+    fallbackNotice: "이 언어의 번역본이 아직 없어 한국어 원문을 보여 드려요.",
+    effectiveAt: "{date}부터 시행",
+    history: "지난 버전",
+    currentOption: "{date} 시행 (현재)",
+    pastOption: "{date} 시행",
+    pastNotice: "지난 버전을 보고 있어요. 지금 적용되는 내용은 현재 버전을 확인해 주세요.",
+  },
   profilePopover: {
     notice: "공지사항",
     customerService: "고객센터",
     myReports: "신고 내역",
+    bugReport: "버그 제보",
     earnings: "나의 수익",
     persona: "내 페르소나",
     contentSettings: "콘텐츠 설정",
@@ -226,6 +252,7 @@ const ko = {
     targetTypes: {
       COMMENT: "댓글",
       UNIVERSE: "캐릭터",
+      MESSAGE: "AI 답변",
     },
     reasons: {
       SEXUAL: "선정성",
@@ -233,6 +260,10 @@ const ko = {
       HATE: "혐오 표현",
       COPYRIGHT: "저작권 침해",
       SPAM: "스팸·광고",
+      DEFAMATION: "명예훼손·사생활 침해",
+      IMPERSONATION: "실존 인물 사칭",
+      MINOR_SEXUAL: "미성년자 성적 콘텐츠",
+      PERSONAL_INFO: "개인정보 노출",
       ETC: "기타",
     },
     statuses: {
@@ -290,6 +321,7 @@ const ko = {
     },
     exchange: {
       insufficient: "포인트 부족",
+      identityRequired: "본인인증 후 교환할 수 있어요",
       shortBy: "{value}P 더 모으면 교환할 수 있어요",
       progressLabel: "교환까지 모은 포인트",
       button: "교환",
@@ -297,6 +329,8 @@ const ko = {
       remainPoints: "남는 포인트",
       phone: "받는 번호",
       phoneInvalid: "받는 번호를 확인해 주세요",
+      phonePrivacy:
+        "받는 번호는 상품권 발송에만 쓰고, 처리 후 30일이 지나면 끝 4자리만 남기고 파기해요.",
       giftNotice: "3일 내 문자 발송",
       requested: "교환을 신청했어요",
     },

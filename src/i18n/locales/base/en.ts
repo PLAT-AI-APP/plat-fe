@@ -19,15 +19,18 @@ const en: typeof ko = {
     sections: {
       environment: "Preferences",
       notifications: "Notifications & Content",
+      consent: "Notifications",
     },
     rows: {
       theme: "Theme",
       language: "Preferred language",
       blockedUsers: "Blocked users",
+      marketing: "Marketing messages",
     },
     actions: {
       goToBlockedUsers: "Go to blocked users",
       withdrawal: "Delete account",
+      marketingFailed: "We couldn't update this setting. Please try again shortly.",
     },
   },
   auth: {
@@ -54,11 +57,21 @@ const en: typeof ko = {
       invalidHint: "The sign-in link expired or the address is wrong. Please sign in again.",
       goHome: "Go home",
     },
+    agreementGate: {
+      firstTitle: "Finish signing up",
+      firstDescription: "Please agree to the terms below to use PLAT.",
+      revisedTitle: "Our terms have changed",
+      revisedDescription: "Review and agree to the updated terms to keep using PLAT.",
+      submit: "Agree and continue",
+      logout: "Log out",
+      failed: "We couldn't save your consent. Please try again shortly.",
+    },
     signup: {
       agreeAll: "Agree to all terms",
       termsOfService: "Agree to Terms of Service (required)",
       privacyPolicy: "Privacy Policy (required)",
       ageOver14: "I am 14 years old or older. (required)",
+      marketing: "I agree to receive marketing messages. (optional)",
       title: "Sign up",
       subtitle: "A lineup of charming characters is waiting for you",
       submit: "Next",
@@ -80,6 +93,12 @@ const en: typeof ko = {
     },
   },
   dialog: {
+    creditInsufficient: {
+      title: "Not enough notes",
+      description: "You need more notes to continue this chat.\nYour message will still be in the input box when you come back.",
+      cancel: "Later",
+      confirm: "Top up",
+    },
     chatRestart: {
       title: "Start a new conversation?",
       description:
@@ -101,6 +120,12 @@ const en: typeof ko = {
       cancel: "Cancel",
       confirm: "Delete",
     },
+    chatTurnDelete: {
+      title: "Delete this exchange?",
+      description: "Your message and the character's reply will both be deleted and can't be restored. Notes already used won't be refunded.",
+      cancel: "Cancel",
+      confirm: "Delete",
+    },
     loginRequired: {
       title: "Login is required",
       description: "This feature is available after logging in.",
@@ -119,9 +144,9 @@ const en: typeof ko = {
       skip: "Maybe later",
     },
     welcomeCredit: {
-      title: "Your welcome credit has arrived",
+      title: "Your welcome notes have arrived",
       descriptionBefore: "To support your first journey, ",
-      descriptionHighlight: "we gifted you welcome note credits",
+      descriptionHighlight: "we gifted you welcome notes",
       descriptionAfter: "Are you ready to enjoy vivid conversations?",
       confirm: "OK",
     },
@@ -162,6 +187,21 @@ const en: typeof ko = {
       description: "If you leave now, your edits will not be saved.",
       confirm: "Leave",
     },
+    agreementResult: {
+      title: "Your consent has been recorded",
+      description: "Processed on {date} as follows.",
+      agreed: "Agreed",
+      declined: "Declined",
+      withdrawn: "Withdrawn",
+      sender: "From: PLAT (Orbitlab Co., Ltd.)",
+      confirm: "OK",
+      items: {
+        termsOfService: "Terms of Service",
+        privacyPolicy: "Privacy Policy",
+        ageOver14: "Age 14 or older",
+        marketing: "Marketing messages",
+      },
+    },
     withdrawalComplete: {
       title: "Thank you for being with us",
       descriptionLine1: "Thank you for spending time with PLAT.",
@@ -192,6 +232,11 @@ const en: typeof ko = {
     feedback: {
       nicknameAvailable: "Nice nickname",
       nicknameUnavailable: "This nickname is already taken",
+      nicknameReserved:
+        "Nicknames that could be mistaken for staff are not allowed",
+      nicknameBannedWord: "This nickname contains a word that is not allowed",
+      emailAlreadyRegistered:
+        "This email is already registered. Log in with the method you signed up with (email, Google, or Kakao)",
       emailVerificationSent: "Check your inbox for the verification code",
       emailVerificationComplete: "Email verification is complete",
       emailVerificationExpired: "The time has expired",

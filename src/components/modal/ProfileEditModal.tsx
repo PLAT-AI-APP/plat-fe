@@ -84,6 +84,8 @@ const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
           <BioField />
           <BirthDateInput value={birth} />
           <GenderField />
+          {/* 선택 개인정보는 수집·이용 목적과 거부 권리를 입력하는 곳에서 알린다(개인정보보호법 제15·22조). */}
+          <p className="body-7 -mt-3 text-font-2">{t("optionalInfoNotice")}</p>
           <AccountField />
         </div>
 

@@ -9,7 +9,7 @@ import ResourceImage from "@/components/ResourceImage";
 import InlineEditActions from "@/components/chat/InlineEditActions";
 import Scenario from "@/components/chat/Scenario";
 import UserChatBubble from "@/components/chat/UserChatBubble";
-import { ChatRetry, ChatTrash, Pen, Trash } from "@/icons";
+import { ChatRetry, ChatTrash, Flag, Pen, Trash } from "@/icons";
 import { useAutoResizeTextarea } from "@/hooks/form/useAutoResizeTextarea";
 import { useInlineTextEdit } from "@/hooks/form/useInlineTextEdit";
 import { getResourceImageUrl } from "@/lib/file";
@@ -31,6 +31,8 @@ interface ChatContentBlockProps {
   onUpdate?: (newContent: string) => void;
   onDelete?: () => void;
   onRetry?: () => void;
+  /** 서버에 저장된 응답만 신고할 수 있다. 처리 함수를 받지 않으면 버튼도 없다. */
+  onReport?: () => void;
 }
 
 interface TypingIndicatorProps {
@@ -96,6 +98,7 @@ const ChatContentBlock = ({
   onUpdate,
   onDelete,
   onRetry,
+  onReport,
 }: ChatContentBlockProps) => {
   const t = useTranslations();
   const userDisplayName = useUserDisplayName();
@@ -219,24 +222,39 @@ const ChatContentBlock = ({
       )}
 
       {/* 받는 중인 응답은 아직 서버에 없어 지우거나 다시 만들 대상이 없다. */}
-      {!isEditMode && !isStreaming && !endsWithUserDialogue && (onDelete || onRetry) && (
+      {!isEditMode && !isStreaming && !endsWithUserDialogue && (onDelete || onRetry || onReport) && (
         <div className="-mt-4 flex gap-1 pl-11">
-          <button
-            type="button"
-            onClick={onDelete}
-            className="flex size-7 items-center justify-center rounded-lg bg-card p-1.5 text-font-2 transition-colors hover:bg-btn-hover"
-            aria-label={t("chatUI.deleteResponse")}
-          >
-            <ChatTrash className="size-4" />
-          </button>
-          <button
-            type="button"
-            onClick={onRetry}
-            className="flex size-7 items-center justify-center rounded-lg bg-card p-1.5 text-font-2 transition-colors hover:bg-btn-hover"
-            aria-label={t("chatUI.retryResponse")}
-          >
-            <ChatRetry className="size-4" />
-          </button>
+          {onDelete && (
+            <button
+              type="button"
+              onClick={onDelete}
+              className="flex size-7 items-center justify-center rounded-lg bg-card p-1.5 text-font-2 transition-colors hover:bg-btn-hover"
+              aria-label={t("chatUI.deleteResponse")}
+            >
+              <ChatTrash className="size-4" />
+            </button>
+          )}
+          {onRetry && (
+            <button
+              type="button"
+              onClick={onRetry}
+              className="flex size-7 items-center justify-center rounded-lg bg-card p-1.5 text-font-2 transition-colors hover:bg-btn-hover"
+              aria-label={t("chatUI.retryResponse")}
+            >
+              <ChatRetry className="size-4" />
+            </button>
+          )}
+          {onReport && (
+            <button
+              type="button"
+              onClick={onReport}
+              className="flex size-7 items-center justify-center rounded-lg bg-card p-1.5 text-font-2 transition-colors hover:bg-btn-hover"
+              aria-label={t("chatUI.reportResponse")}
+              title={t("chatUI.reportResponse")}
+            >
+              <Flag className="size-4" />
+            </button>
+          )}
         </div>
       )}
     </div>

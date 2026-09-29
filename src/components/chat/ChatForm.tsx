@@ -131,6 +131,10 @@ const ChatForm = ({
           </ActiveButton>
         </footer>
       </fieldset>
+      {/* AI 기본법 제31조: 생성형 AI 결과물임을 이용자가 알 수 있게 대화 화면에 늘 표시한다. */}
+      <p className="body-8 mt-2 text-center text-font-disabled">
+        {t("chatUI.aiGeneratedNotice")}
+      </p>
     </form>
   );
 };

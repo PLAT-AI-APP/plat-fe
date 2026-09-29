@@ -89,12 +89,11 @@ export const authFormSchema = z
     isTermsAgreed: z.boolean().refine((value) => value === true, {
       message: FIELD_ERROR_MESSAGES.termsRequired,
     }),
-    isAgeAgreed: z
-      .boolean()
-      .refine((value) => value === true, {
-        message: FIELD_ERROR_MESSAGES.ageRequired,
-      })
-      .optional(),
+    isAgeAgreed: z.boolean().refine((value) => value === true, {
+      message: FIELD_ERROR_MESSAGES.ageRequired,
+    }),
+    // 선택 동의. 거부해도 가입할 수 있다(정보통신망법 제22조의2).
+    isMarketingAgreed: z.boolean(),
   })
   .refine((data) => data.password === data.passwordCheck, {
     path: ["passwordCheck"],

@@ -14,6 +14,7 @@ import { useRequireLogin } from "@/hooks/common/useRequireLogin";
 import { useWalletStore } from "@/store/useWalletStore";
 import type { Product } from "@/type/product";
 import PolicyGuide from "./PolicyGuide";
+import PurchaseConfirmDialog from "./PurchaseConfirmDialog";
 import PaymentWindowOverlay, {
   type PendingPaymentWindow,
 } from "./PaymentWindowOverlay";
@@ -126,11 +127,20 @@ const TokenChargeContents = () => {
 
   const [pendingWindow, setPendingWindow] =
     useState<PendingPaymentWindow | null>(null);
+  // 결제 전 확인 창에 띄운 상품. 동의하고 결제하기를 눌러야 주문을 만든다.
+  const [confirmingProduct, setConfirmingProduct] = useState<Product | null>(
+    null,
+  );
+
+  const handleSelectProduct = (product: Product) => {
+    if (!requireLogin()) return;
+    setConfirmingProduct(product);
+  };
 
   // 주문을 만들면 서버가 PG 결제 준비까지 마치고 결제창 주소를 준다.
   // PC 는 결제창을 새 창으로 띄우고 이 화면에서 결과를 기다리며, 휴대폰은 지금 창에서 이동한다.
   const handlePurchase = (product: Product) => {
-    if (!requireLogin()) return;
+    setConfirmingProduct(null);
 
     // 새 창은 클릭 순간에 열어야 팝업 차단에 걸리지 않는다. 막혔으면 null 이고, 지금 창에서 이동한다.
     const popup = canUsePaymentWindow()
@@ -208,7 +218,7 @@ const TokenChargeContents = () => {
                 key={product.productId}
                 product={product}
                 disabled={isCreatingOrder}
-                onPurchase={handlePurchase}
+                onPurchase={handleSelectProduct}
               />
             ))}
           </ul>
@@ -216,6 +226,14 @@ const TokenChargeContents = () => {
       </div>
 
       <PolicyGuide />
+
+      {confirmingProduct && (
+        <PurchaseConfirmDialog
+          product={confirmingProduct}
+          onClose={() => setConfirmingProduct(null)}
+          onConfirm={handlePurchase}
+        />
+      )}
 
       {pendingWindow && (
         <PaymentWindowOverlay

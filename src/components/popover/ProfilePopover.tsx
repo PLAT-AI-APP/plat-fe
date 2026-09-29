@@ -8,6 +8,7 @@ import {
   ArrowRight,
   Coin,
   Flag,
+  Info,
   Gear,
   Google,
   Headphone,
@@ -24,6 +25,7 @@ import { useUserStore } from "@/store/useUserStore";
 import { m, AnimatePresence } from "framer-motion";
 import { TRANSITION_COLLAPSE } from "@/constants/motion";
 import { PopoverLayout } from "./layout";
+import { BUG_REPORT_PATH } from "@/components/layout/BetaBanner";
 import useToggle from "@/hooks/common/useToggle";
 import { useModalStore } from "@/store/useModalStore";
 import useRouteEffect from "@/hooks/navigation/useRouteEffect";
@@ -65,6 +67,8 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
       link: "/customer-service",
       icon: Headphone,
     },
+    // 베타 기간 버그 제보는 1:1 문의의 "오류 신고" 유형으로 받는다.
+    { name: t("bugReport"), link: BUG_REPORT_PATH, icon: Info },
     // 내 신고의 처리 결과를 보는 곳이라 로그인했을 때만 보인다.
     ...(isLoggedIn
       ? [{ name: t("myReports"), link: "/my-reports", icon: Flag }]

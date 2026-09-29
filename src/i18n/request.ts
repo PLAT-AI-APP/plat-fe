@@ -1,5 +1,5 @@
 import { getRequestConfig } from "next-intl/server";
-import { DEFAULT_LOCALE } from "@/i18n/config";
+import { DEFAULT_LOCALE, INTL_TIME_ZONE } from "@/i18n/config";
 import { defaultMessages } from "@/i18n/loadMessages";
 
 export default getRequestConfig(async () => {
@@ -10,5 +10,6 @@ export default getRequestConfig(async () => {
   return {
     locale,
     messages: defaultMessages,
+    timeZone: INTL_TIME_ZONE,
   };
 });

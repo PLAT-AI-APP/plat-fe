@@ -3,6 +3,7 @@ import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
 import { isProtectedPath } from "@/constants/auth";
 import { showAppToast } from "@/lib/toast";
+import { reportError } from "@/lib/monitoring";
 import {
   NETWORK_ERROR_CODE,
   TIMEOUT_ERROR_CODE,
@@ -104,6 +105,50 @@ export const isAuthExpiredError = (error: unknown) => {
   }
 
   return false;
+};
+
+export const SERVICE_MAINTENANCE_CODE = "SERVICE_MAINTENANCE";
+export const MAINTENANCE_PATH = "/maintenance";
+
+const isMaintenanceError = (err: AxiosError<ApiErrorResponse>) =>
+  err.response?.status === 503 &&
+  err.response.data?.code === SERVICE_MAINTENANCE_CODE;
+
+/**
+ * 점검으로 막힌 요청이 온 화면은 점검 안내로 옮긴다. 한 화면의 요청 여럿이 함께 막혀도 한 번만 옮긴다.
+ *
+ * 소프트 종료 중에도 끝까지 가는 흐름은 가리지 않는다.
+ * - 결제 결과 화면: 결제 승인은 통과하므로, 승인 뒤 곁들인 조회(잔액 등)가 막혔다고 결과를 가리면
+ *   사용자는 결제가 됐는지 알 수 없다.
+ * - 답변을 받는 중의 조회: 스트림은 끝까지 오는데 곁들인 조회(잔액 등) 때문에 화면이 넘어가면 답변을 못 본다.
+ *   스트림이 끝난 뒤의 요청이나 새 메시지 전송(POST)이 막히면 그때 옮긴다.
+ */
+let isMaintenanceRedirecting = false;
+let activeChatStreams = 0;
+
+/** 채팅 답변 스트림을 받는 동안을 표시한다. 그동안 막힌 조회는 화면을 옮기지 않는다. */
+export const trackChatStream = async <T>(run: () => Promise<T>) => {
+  activeChatStreams += 1;
+  try {
+    return await run();
+  } finally {
+    activeChatStreams -= 1;
+  }
+};
+const redirectToMaintenance = (config?: InternalAxiosRequestConfig) => {
+  if (typeof window === "undefined" || isMaintenanceRedirecting) return;
+
+  const { pathname, search } = window.location;
+  if (pathname === MAINTENANCE_PATH || pathname.startsWith("/payments/")) {
+    return;
+  }
+  if (activeChatStreams > 0 && isReadRequest(config)) {
+    return;
+  }
+
+  isMaintenanceRedirecting = true;
+  const from = encodeURIComponent(`${pathname}${search}`);
+  window.location.assign(`${MAINTENANCE_PATH}?from=${from}`);
 };
 
 /** 만료 응답이 여러 요청에서 동시에 와도 안내는 한 번만 노출합니다. */
@@ -238,6 +283,19 @@ export const logApiError = (error: unknown): string | undefined => {
   // 개발 모드에서는 어느 요청이 왜 깨졌는지 한 줄로 함께 남긴다.
   const detail = formatErrorDetail(error);
   if (detail) console.error(`[API] ${detail}`, error);
+  // 4xx 는 대부분 입력·권한 문제라 수집하지 않는다. 서버가 깨진 5xx 만 모은다.
+  // 점검 503 은 예정된 차단이라 뺀다. 넣으면 점검 동안의 모든 요청이 오류로 쌓인다.
+  if (
+    error.status !== undefined &&
+    error.status >= 500 &&
+    error.code !== SERVICE_MAINTENANCE_CODE
+  ) {
+    const path = error.requestUrl?.split("?")[0] ?? "";
+    reportError(
+      new Error(`[API ${error.status}] ${error.requestMethod ?? ""} ${path}`),
+      { code: error.code, status: error.status },
+    );
+  }
 
   return detail;
 };
@@ -422,10 +480,13 @@ const onResponseError = async (
   // 세션 만료 안내는 Dialog로 보여주므로 토스트까지 겹치지 않게 합니다.
   // 로그인 실패(/auth/login) 401은 사유를 알려야 하므로 그대로 노출합니다.
   const isSessionExpired = err.response?.status === 401 && !isAuthEndpoint;
+  // 점검은 화면을 점검 안내로 옮겨 알리므로 토스트를 겹치지 않는다.
+  const isMaintenance = isMaintenanceError(err);
+  if (isMaintenance) redirectToMaintenance(err.config);
 
   return Promise.reject({
     ...formattedError,
-    suppressToast: isSessionExpired,
+    suppressToast: isSessionExpired || isMaintenance,
   });
 };
 
@@ -435,10 +496,12 @@ const onPlainResponseError = (
 ): Promise<never> => {
   const formattedError = buildAppError(err);
   const requestUrl = err.config?.url || "";
+  const isMaintenance = isMaintenanceError(err);
+  if (isMaintenance) redirectToMaintenance(err.config);
 
   return Promise.reject({
     ...formattedError,
-    suppressToast: requestUrl.includes("/auth/refresh"),
+    suppressToast: requestUrl.includes("/auth/refresh") || isMaintenance,
   });
 };
 

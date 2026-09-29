@@ -30,6 +30,8 @@ const zh: typeof ko = {
       assetTotal: "共  {count}个",
       suggestedReply: "推荐回复",
       assetView: "显示素材",
+      assetLocked: "未解锁的素材",
+      backToAssetGallery: "返回素材图库",
       restartChat: "重新开始对话",
       leaveChat: "退出聊天室",
     },
