@@ -3,7 +3,8 @@ import { connection } from "next/server";
 import HomeContents from "./_components/HomeContents";
 
 export const metadata: Metadata = {
-  title: "home",
+  // 클라이언트가 그리는 제목(pageTitles.home)과 같게 둔다. 첫 HTML·공유 미리보기에 영어 "home" 이 나가지 않게.
+  title: "캐릭터 둘러보기",
 };
 
 /*

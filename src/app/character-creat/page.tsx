@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import CharacterCreateForm from "./_components/CharacterCreateForm";
 
 export const metadata: Metadata = {
-  title: "Character Create",
+  title: "캐릭터 만들기",
 };
 
 interface CharacterCreatPageProps {
