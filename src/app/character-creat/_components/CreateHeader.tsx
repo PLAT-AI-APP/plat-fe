@@ -25,6 +25,7 @@ import {
   useUniverseUpdateMutation,
 } from "@/api/universe/patchUniverseUpdate";
 import { useTranslateText } from "@/hooks/i18n/useTranslateText";
+import { useSafeBack } from "@/hooks/navigation/useSafeBack";
 import { TabId } from "./CreateTabs";
 
 interface CreateHeaderProps {
@@ -280,14 +281,7 @@ const CreateHeader = ({
   const isSubmitInFlight = isMutationPending || isSubmitting;
   const isPending = isSubmitInFlight || isUploadingImages;
 
-  const handleSafeBack = (fallbackPath = "/") => {
-    if (window.history.state.__next_navigation_guard_stack_index > 0) {
-      router.back();
-      return;
-    }
-
-    router.push(fallbackPath);
-  };
+  const handleSafeBack = useSafeBack();
 
   // 검증에 실패했을 때: 첫 오류가 있는 탭으로 옮기고 이유를 알린다.
   const handleInvalid = (errors: FieldErrors<CharacterCreateFormValues>) => {

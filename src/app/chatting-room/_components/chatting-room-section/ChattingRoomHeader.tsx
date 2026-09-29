@@ -4,8 +4,8 @@ import React, { memo, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
 import AiModelSelect from "@/components/chat/AiModeSelect";
+import { useSafeBack } from "@/hooks/navigation/useSafeBack";
 import { ArrowDown, Dots } from "@/icons";
 import { AIModelType } from "@/type/chat";
 import ChattingSidebar from "../ChattingSidebar";
@@ -32,7 +32,7 @@ const ChattingRoomHeader = ({
   handleCurrentAi,
 }: ChattingRoomHeaderProps) => {
   const t = useTranslations("chatRoom.sidebar");
-  const router = useRouter();
+  const handleSafeBack = useSafeBack();
   const [isSidebar, setIsSidebar] = useState(false);
 
   const toggleIsSidebar = () => {
@@ -45,7 +45,8 @@ const ChattingRoomHeader = ({
       <div className="flex min-w-0 items-center gap-1">
         <button
           type="button"
-          onClick={() => router.back()}
+          // 새 탭·알림 링크로 바로 들어왔으면 돌아갈 기록이 없어 내 채팅 목록으로 보낸다.
+          onClick={() => handleSafeBack("/my-chatting")}
           className="flex size-6 shrink-0 items-center justify-center text-font-2 transition-colors hover:text-font-1"
           aria-label={t("back")}
         >
