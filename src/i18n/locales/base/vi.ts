@@ -117,10 +117,16 @@ const vi: typeof ko = {
       confirm: "Xóa",
     },
     chatTurnDelete: {
-      title: "Xóa đoạn hội thoại này?",
-      description: "Tin nhắn của bạn và câu trả lời của nhân vật sẽ bị xóa cùng lúc và không thể khôi phục. Ghi chú đã dùng sẽ không được hoàn lại.",
+      title: "Xóa từ đây?",
+      description: "Đoạn hội thoại này và mọi thứ sau đó sẽ bị xóa, phần hội thoại đã qua cũng quay về trước thời điểm này. Không thể khôi phục và ghi chú đã dùng sẽ không được hoàn lại.",
       cancel: "Hủy",
       confirm: "Xóa",
+    },
+    chatTurnRegenerate: {
+      title: "Tạo lại câu trả lời này?",
+      description: "Khi câu trả lời mới hoàn tất, mọi hội thoại sau đó sẽ bị xóa và phần hội thoại đã qua quay về thời điểm này. Không thể khôi phục.",
+      cancel: "Hủy",
+      confirm: "Tạo lại",
     },
     loginRequired: {
       title: "Cần đăng nhập",

@@ -4,7 +4,10 @@ import React, { useCallback, useMemo, useRef, useState } from "react";
 import { useChatModelsQuery } from "@/api/chat/getChatModels";
 import { useDeleteRoomMessageMutation } from "@/api/room/deleteRoomMessage";
 import { useRoomDetailQuery } from "@/api/room/getRoomDetail";
-import { useRoomMessagesInfiniteQuery } from "@/api/room/getRoomMessages";
+import {
+  isMessageAtOrAfter,
+  useRoomMessagesInfiniteQuery,
+} from "@/api/room/getRoomMessages";
 import { useUniverseDetailQuery } from "@/api/universe/getUniverseDetail";
 import ChatForm, { type ChatFormHandle } from "@/components/chat/ChatForm";
 import MessageList from "@/components/chat/MessageList";
@@ -137,7 +140,7 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
   // 진행 중인 턴의 말풍선은 서버 이력과 별개로 이어붙이고, 저장이 끝나 이력에 들어오면 훅이 치운다.
   const {
     pendingMessages,
-    replacingMessageIds,
+    replacingFromMessageId,
     isBusy,
     canSend,
     sendMessage,
@@ -152,16 +155,15 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
     profileImage,
     onTurnFailed: handleTurnFailed,
   });
-  // 다시 만드는 중인 옛 답은 가리고, 그 자리(목록 끝)에 새로 받는 답을 잇는다.
+  // 다시 만드는 중인 옛 답과 그 뒤 대화는 가리고(확정되면 서버가 지운다), 목록 끝에 새로 받는 답을 잇는다.
   const messages = useMemo(() => {
-    const visible =
-      replacingMessageIds.length === 0
-        ? serverMessages
-        : serverMessages.filter(
-            (message) => !replacingMessageIds.includes(message.id),
-          );
+    const visible = replacingFromMessageId
+      ? serverMessages.filter(
+          (message) => !isMessageAtOrAfter(message.id, replacingFromMessageId),
+        )
+      : serverMessages;
     return [...visible, ...pendingMessages];
-  }, [serverMessages, pendingMessages, replacingMessageIds]);
+  }, [serverMessages, pendingMessages, replacingFromMessageId]);
 
   const openDialog = useDialogStore((state) => state.openDialog);
   const { mutate: deleteRoomMessage } = useDeleteRoomMessageMutation();
@@ -172,6 +174,20 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
         onConfirm: () => deleteRoomMessage({ roomId, messageId }),
       }),
     [openDialog, deleteRoomMessage, roomId],
+  );
+  // 마지막 답은 바로 다시 만든다. 중간 답은 확정되면 뒤 대화가 모두 지워지므로 먼저 묻는다.
+  const lastServerMessageId = serverMessages.at(-1)?.id;
+  const handleRetryMessage = useCallback(
+    (messageId: string) => {
+      if (messageId === lastServerMessageId) {
+        regenerateMessage(messageId);
+        return;
+      }
+      openDialog("CHAT_TURN_REGENERATE", {
+        onConfirm: () => regenerateMessage(messageId),
+      });
+    },
+    [lastServerMessageId, regenerateMessage, openDialog],
   );
 
   const handleLoadOlderMessages = useCallback(() => {
@@ -229,7 +245,7 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
               scrollContainer={scrollContainer}
               isAiSuggestedChat={false}
               onDeleteMessage={isBusy ? undefined : handleDeleteMessage}
-              onRetryMessage={isBusy || !canSend ? undefined : regenerateMessage}
+              onRetryMessage={isBusy || !canSend ? undefined : handleRetryMessage}
               onReportMessage={handleReportMessage}
             />
           )}

@@ -11,7 +11,7 @@ import { usePostChatRegenerateMutation } from "@/api/chat/postChatRegenerate";
 import { usePostChatStartMutation } from "@/api/chat/postChatStart";
 import {
   prependLatestRoomMessages,
-  removeRoomMessagesFromCache,
+  removeRoomMessagesFromCacheFrom,
 } from "@/api/room/getRoomMessages";
 import { roomQueryKeys } from "@/api/room/queryKeys";
 import { getApiErrorMessage, isAppError } from "@/lib/apiError";
@@ -119,16 +119,17 @@ export const useChatTurn = ({
     setIsBusy(false);
   }, []);
 
-  const syncSavedMessages = useCallback(async () => {
+  /** 저장된 새 메시지를 캐시에 붙이고 그 id 를 돌려준다. 끝내 저장이 안 보이면 null. */
+  const syncSavedMessages = useCallback(async (): Promise<string[] | null> => {
     for (let attempt = 0; attempt < SYNC_RETRY_COUNT; attempt += 1) {
       // 첫 시도는 바로, 그 뒤로는 저장될 시간을 조금씩 준다. 마지막 시도 뒤에는 기다릴 이유가 없다.
       if (attempt > 0) await wait(SYNC_RETRY_DELAY_MS);
 
-      const addedCount = await prependLatestRoomMessages(queryClient, roomId);
-      if (addedCount > 0) return true;
+      const addedIds = await prependLatestRoomMessages(queryClient, roomId);
+      if (addedIds.length > 0) return addedIds;
     }
 
-    return false;
+    return null;
   }, [queryClient, roomId]);
 
   /**
@@ -144,23 +145,29 @@ export const useChatTurn = ({
       keepIfUnsynced: boolean,
       replacesMessageId?: string,
     ) => {
-      const isSynced = await syncSavedMessages().catch(() => false);
+      const addedIds = await syncSavedMessages().catch(() => null);
+      const isSynced = addedIds !== null;
 
       // 저장 확인이 끝내 안 된 정상 응답은 사라지지 않게 남겨 둡니다.
       if (isSynced || !keepIfUnsynced) {
         notifyManager.schedule(() => {
-          // 재생성이 저장됐으면 서버는 옛 답을 지웠다. 캐시에서도 같이 빼야 옛 답이 다시 보이지 않는다.
-          // 저장되지 않았으면(실패) 서버에 옛 답이 그대로 있으니 가림만 푼다.
-          if (isSynced && replacesMessageId) {
-            removeRoomMessagesFromCache(queryClient, roomId, [
+          // 재생성이 저장됐으면 서버는 옛 답과 그 뒤 대화를 지웠다. 캐시에서도 같이 빼야 다시 보이지 않는다.
+          // 저장되지 않았으면(실패) 서버에 그대로 있으니 가림만 푼다.
+          if (addedIds && replacesMessageId) {
+            removeRoomMessagesFromCacheFrom(
+              queryClient,
+              roomId,
               replacesMessageId,
-            ]);
+              addedIds,
+            );
           }
           removeTurn(chatTurnId);
         });
       }
 
       void queryClient.invalidateQueries({ queryKey: roomQueryKeys.lists() });
+      // 지나온 대화는 요약이 비동기로 바뀌고, 재생성이면 그 턴 이전으로 되돌아간다.
+      void queryClient.invalidateQueries({ queryKey: roomQueryKeys.detail(roomId) });
       // 답에 새 에셋이 나왔으면 갤러리에서 풀린다.
       void queryClient.invalidateQueries({
         queryKey: chatQueryKeys.assetGallery(roomId),
@@ -338,8 +345,8 @@ export const useChatTurn = ({
   );
 
   /**
-   * 마지막 AI 답 다시 만들기. 새 답을 받는 동안 옛 답은 가리고, 서버가 확정하면 옛 답을 새 답으로 바꾼다.
-   * 실패하면 서버에 옛 답이 그대로 있어 가림만 푼다.
+   * AI 답 다시 만들기. 새 답을 받는 동안 옛 답과 그 뒤 대화를 가리고, 서버가 확정하면 그것들을 지우고 새 답을 붙인다.
+   * 실패하면 서버에 그대로 있어 가림만 푼다.
    */
   const regenerateMessage = useCallback(
     (messageId: string) => {
@@ -426,18 +433,15 @@ export const useChatTurn = ({
     [turns, characterName, profileImage],
   );
 
-  /** 재생성 중이라 화면에서 가릴 옛 답 id */
-  const replacingMessageIds = useMemo(
-    () =>
-      turns.flatMap((turn) =>
-        turn.replacesMessageId ? [turn.replacesMessageId] : [],
-      ),
+  /** 재생성 중이라 화면에서 가릴 첫 메시지 id. 이 답부터 뒤 대화를 모두 가린다. */
+  const replacingFromMessageId = useMemo(
+    () => turns.find((turn) => turn.replacesMessageId)?.replacesMessageId,
     [turns],
   );
 
   return {
     pendingMessages,
-    replacingMessageIds,
+    replacingFromMessageId,
     /** 응답을 기다리거나 받는 중인지. 이 동안은 다음 전송을 받지 않습니다. */
     isBusy,
     canSend,

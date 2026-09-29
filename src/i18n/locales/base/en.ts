@@ -121,10 +121,16 @@ const en: typeof ko = {
       confirm: "Delete",
     },
     chatTurnDelete: {
-      title: "Delete this exchange?",
-      description: "Your message and the character's reply will both be deleted and can't be restored. Notes already used won't be refunded.",
+      title: "Delete from here?",
+      description: "This exchange and everything after it will be deleted, and the story so far will return to before this point. This can't be undone, and notes already used won't be refunded.",
       cancel: "Cancel",
       confirm: "Delete",
+    },
+    chatTurnRegenerate: {
+      title: "Regenerate this reply?",
+      description: "Once the new reply is ready, everything after it will be deleted and the story so far will return to this point. This can't be undone.",
+      cancel: "Cancel",
+      confirm: "Regenerate",
     },
     loginRequired: {
       title: "Login is required",
