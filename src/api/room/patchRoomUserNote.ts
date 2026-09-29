@@ -4,7 +4,7 @@ import { AppError } from "@/type/api";
 
 interface PatchRoomUserNoteProps {
   roomId: string;
-  /** 최대 4000자 */
+  /** 최대 500자(서버 PatchRoomUserNoteRequest.MAX_LENGTH, userNoteFormSchema 와 같다) */
   userNote: string;
 }
 

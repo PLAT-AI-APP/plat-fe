@@ -7,6 +7,8 @@ const PROVIDER_ICON: Record<ChatModelOption["provider"], string> = {
 };
 
 // 번역 문구가 있는 모델만 둔다. 없으면 서버가 준 설명(한국어)으로 떨어진다.
+// 값(번역 키)의 이름은 예전 모델 세대(Opus 4.6·GPT-5.1 등) 때 지은 것이다. 모델이 바뀌어도 문구가 같아
+// 키만 이어 쓴다 — 키 이름의 버전은 모델 버전과 무관하다.
 const DESCRIPTION_KEY: Record<string, string> = {
   CLAUDE_OPUS_5_5: "claudeOpus46Description",
   CLAUDE_SONNET_5_5: "claudeSonnet46Description",
