@@ -2,7 +2,7 @@ import type ko from "./ko";
 
 const th: typeof ko = {
   chatRoom: {
-    generatedNotice: "ข้อความทั้งหมดที่ตัวละครส่งเป็นเนื้อหาที่สร้างขึ้น",
+    generatedNotice: "บทสนทนานี้สร้างโดย AI อาจไม่ตรงกับบุคคลหรือข้อเท็จจริงจริง",
     sidebar: {
       title: "ตั้งค่าห้องแชต",
       back: "ย้อนกลับ",

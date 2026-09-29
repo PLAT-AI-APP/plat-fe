@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { useUniverseCommentsInfiniteQuery } from "@/api/comment/getUniverseComments";
 import { EmptyState, InfiniteQueryBoundary } from "@/components/state";
@@ -30,7 +31,20 @@ const CommentsPanel = ({
     refetch,
   } = useUniverseCommentsInfiniteQuery(universeId);
 
-  const comments = data?.pages.flatMap((page) => page.content) ?? [];
+  const comments = useMemo(
+    () =>
+      (data?.pages.flatMap((page) => page.content) ?? []).sort(
+        (first, second) => {
+          // 고정 댓글은 항상 먼저 보여주고, 나머지는 오래 작성된 순서로 배치합니다.
+          if (first.meta.pinned !== second.meta.pinned) {
+            return first.meta.pinned ? -1 : 1;
+          }
+
+          return first.meta.createdAt.localeCompare(second.meta.createdAt);
+        },
+      ),
+    [data],
+  );
   // 총 개수는 첫 페이지의 페이지 정보에 실려 옵니다.
   const totalCount = data?.pages[0]?.page.totalElements ?? 0;
 

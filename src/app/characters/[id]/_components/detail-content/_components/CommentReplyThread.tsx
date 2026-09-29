@@ -1,9 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+import type { RefObject } from "react";
+import { AnimatePresence, m } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { useCommentRepliesInfiniteQuery } from "@/api/comment/getCommentReplies";
 import { usePostCommentReplyMutation } from "@/api/comment/postCommentReply";
+import { useClickAway } from "@/hooks/dom/useClickAway";
 import { useAuthStore } from "@/store/useAuthStore";
 import type { Comment } from "@/type/comment";
 import CommentComposer from "./CommentComposer";
@@ -20,6 +23,8 @@ interface CommentReplyThreadProps {
   isComposerOpen: boolean;
   /** 답글 등록에 성공해 입력창을 닫을 때 */
   onComposerClose: () => void;
+  /** 바깥 클릭 감지에서 제외할 답글 입력창 토글 버튼 */
+  composerTriggerRef: RefObject<HTMLButtonElement | null>;
 }
 
 /**
@@ -34,17 +39,20 @@ const CommentReplyThread = ({
   creatorId,
   isComposerOpen,
   onComposerClose,
+  composerTriggerRef,
 }: CommentReplyThreadProps) => {
   const t = useTranslations("characterDetail");
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const [replyContent, setReplyContent] = useState("");
+  const composerRef = useRef<HTMLDivElement>(null);
   // 답글은 열지 않아도 REPLIES_PREVIEW_COUNT개까지는 바로 보여주고, 더보기를 눌러야 전부 받아옵니다.
   const [showAllReplies, setShowAllReplies] = useState(false);
 
   const hasReplies = parentComment.meta.replyCount > 0;
   const { data, fetchNextPage, hasNextPage } = useCommentRepliesInfiniteQuery(
     parentComment.commentId,
-    hasReplies,
+    // 첫 답글 등록 뒤 빈 영역이 보이지 않도록 입력창을 여는 순간부터 목록을 준비합니다.
+    hasReplies || isComposerOpen,
   );
   const { mutate: postReply, isPending: isReplying } =
     usePostCommentReplyMutation();
@@ -57,6 +65,15 @@ const CommentReplyThread = ({
     !showAllReplies && (replies.length > REPLIES_PREVIEW_COUNT || hasNextPage);
   // 입력창이 열린 채로 로그아웃되면 입력창은 거둔다.
   const showComposer = isComposerOpen && isLoggedIn;
+
+  useClickAway(
+    composerRef,
+    () => {
+      // 작성 중인 내용은 보존하고, 아무것도 입력하지 않은 입력창만 바깥 클릭으로 닫는다.
+      if (showComposer && !replyContent.trim()) onComposerClose();
+    },
+    composerTriggerRef,
+  );
 
   const handleShowMoreReplies = () => {
     setShowAllReplies(true);
@@ -73,6 +90,7 @@ const CommentReplyThread = ({
         // 등록한 답글은 바로 아래 목록에 보이므로 입력창은 닫는다. 실패하면 고쳐 보낼 수 있게 그대로 둔다.
         onSuccess: () => {
           setReplyContent("");
+          setShowAllReplies(true);
           onComposerClose();
         },
       },
@@ -84,20 +102,32 @@ const CommentReplyThread = ({
   return (
     // article 의 gap-3(12px)에 4px 를 더해 댓글과 답글 사이를 16px 로 둔다.
     // 본문·푸터 사이(12px)까지 넓어지지 않도록 article 의 gap 자체는 건드리지 않는다.
-    <div className="mt-1 flex flex-col gap-4">
-      {showComposer && (
-        <CommentComposer
-          value={replyContent}
-          onChange={setReplyContent}
-          onSubmit={handleSubmitReply}
-          canSubmit={!isReplying && Boolean(replyContent.trim())}
-          placeholder={t("replyPlaceholder")}
-          submitLabel={t("submitComment")}
-        />
-      )}
+    <m.div layout className="mt-1 flex flex-col gap-4">
+      <AnimatePresence initial={false}>
+        {showComposer && (
+          <m.div
+            ref={composerRef}
+            key="reply-composer"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.18, ease: "easeOut" }}
+            className="overflow-hidden"
+          >
+            <CommentComposer
+              value={replyContent}
+              onChange={setReplyContent}
+              onSubmit={handleSubmitReply}
+              canSubmit={!isReplying && Boolean(replyContent.trim())}
+              placeholder={t("replyPlaceholder")}
+              submitLabel={t("submitComment")}
+            />
+          </m.div>
+        )}
+      </AnimatePresence>
 
       {hasReplies && (
-        <div className="flex flex-col gap-5">
+        <m.div layout="position" className="flex flex-col gap-5">
           <ul className="flex flex-col gap-3">
             {visibleReplies.map((reply) => (
               <CommentListItem
@@ -119,9 +149,9 @@ const CommentReplyThread = ({
               {t("commentRepliesShowMore")}
             </button>
           )}
-        </div>
+        </m.div>
       )}
-    </div>
+    </m.div>
   );
 };
 

@@ -1,6 +1,6 @@
 const ko = {
   chatRoom: {
-    generatedNotice: "캐릭터가 보내는 메시지는 모두 생성된 내용이에요",
+    generatedNotice: "AI가 생성한 대화예요. 실제 인물·사실과 다를 수 있어요.",
     sidebar: {
       title: "채팅방 설정",
       back: "뒤로가기",

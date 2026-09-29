@@ -35,7 +35,19 @@ const CommentInputBox = ({
 
     mutate(
       { universeId, content: comment.trim() },
-      { onSuccess: () => setComment("") },
+      {
+        onSuccess: () => {
+          setComment("");
+
+          // 갱신된 댓글 목록이 DOM에 반영된 다음 오른쪽 문서 스크롤을 끝까지 내립니다.
+          requestAnimationFrame(() => {
+            window.scrollTo({
+              top: document.documentElement.scrollHeight,
+              behavior: "smooth",
+            });
+          });
+        },
+      },
     );
   };
 

@@ -276,7 +276,6 @@ const th: typeof en = {
     submitting: "กำลังเริ่ม...",
   },
   chatUI: {
-    aiGeneratedNotice: "บทสนทนานี้สร้างโดย AI อาจไม่ตรงกับบุคคลหรือข้อเท็จจริงจริง",
     modelSelect: "เลือกโมเดล AI",
     modelIcon: "ไอคอน {name}",
     coin: "เหรียญ",

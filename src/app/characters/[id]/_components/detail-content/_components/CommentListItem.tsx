@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { KeyboardEvent } from "react";
 import { useTranslations } from "next-intl";
 import { Heart, HeartFill, Message, Pin } from "@/icons";
@@ -46,6 +46,7 @@ const CommentListItem = ({
   const getRelativeTime = useRelativeTimeLabel();
   const requireLogin = useRequireLogin();
   const [isReplyComposerOpen, setIsReplyComposerOpen] = useState(false);
+  const replyButtonRef = useRef<HTMLButtonElement>(null);
 
   const { toggleLike, edit, remove, report, pin, unpin } = useCommentActions({
     comment,
@@ -189,6 +190,7 @@ const CommentListItem = ({
                 </span>
 
                 <button
+                  ref={replyButtonRef}
                   type="button"
                   onClick={handleToggleReplyComposer}
                   className="body-7 text-font-2 transition-colors hover:text-font-1"
@@ -207,6 +209,7 @@ const CommentListItem = ({
               creatorId={creatorId}
               isComposerOpen={isReplyComposerOpen}
               onComposerClose={handleCloseReplyComposer}
+              composerTriggerRef={replyButtonRef}
             />
           )}
         </article>

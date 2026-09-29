@@ -273,7 +273,6 @@ const ko: typeof en = {
     submitting: "시작하는 중...",
   },
   chatUI: {
-    aiGeneratedNotice: "AI가 생성한 대화예요. 실제 인물·사실과 다를 수 있어요.",
     modelSelect: "AI 모델 선택",
     modelIcon: "{name} 아이콘",
     coin: "코인",

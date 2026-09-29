@@ -26,14 +26,19 @@ export const usePostCommentReplyMutation = () => {
     mutationKey: ["post-comment-reply"],
     mutationFn: postCommentReply,
     onSuccess: (_, { commentId, universeId }) => {
-      queryClient.invalidateQueries({
-        queryKey: commentQueryKeys.replies(commentId),
-      });
-      if (universeId) {
+      // 입력창을 닫기 전에 새 답글과 부모의 답글 수가 함께 반영되도록 두 재조회를 기다립니다.
+      return Promise.all([
         queryClient.invalidateQueries({
-          queryKey: commentQueryKeys.universeComments(universeId),
-        });
-      }
+          queryKey: commentQueryKeys.replies(commentId),
+        }),
+        ...(universeId
+          ? [
+              queryClient.invalidateQueries({
+                queryKey: commentQueryKeys.universeComments(universeId),
+              }),
+            ]
+          : []),
+      ]);
     },
   });
 };

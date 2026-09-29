@@ -281,7 +281,6 @@ const vi: typeof en = {
     submitting: "Đang bắt đầu...",
   },
   chatUI: {
-    aiGeneratedNotice: "Cuộc trò chuyện do AI tạo ra và có thể không đúng với người thật hoặc sự thật.",
     modelSelect: "Chọn mô hình AI",
     modelIcon: "Biểu tượng {name}",
     coin: "coin",

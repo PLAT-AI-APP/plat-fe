@@ -268,7 +268,6 @@ const zh: typeof en = {
     submitting: "开始中...",
   },
   chatUI: {
-    aiGeneratedNotice: "对话由 AI 生成，可能与真实人物或事实不符。",
     modelSelect: "选择 AI 模型",
     modelIcon: "{name} 图标",
     coin: "金币",

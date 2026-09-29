@@ -273,7 +273,6 @@ const ja: typeof en = {
     submitting: "開始しています...",
   },
   chatUI: {
-    aiGeneratedNotice: "AIが生成した会話です。実在の人物や事実と異なる場合があります。",
     modelSelect: "AIモデル選択",
     modelIcon: "{name} アイコン",
     coin: "コイン",

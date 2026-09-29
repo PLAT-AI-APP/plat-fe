@@ -2,8 +2,7 @@ import type ko from "./ko";
 
 const vi: typeof ko = {
   chatRoom: {
-    generatedNotice:
-      "Tất cả tin nhắn do nhân vật gửi đều là nội dung được tạo.",
+    generatedNotice: "Cuộc trò chuyện do AI tạo ra và có thể không đúng với người thật hoặc sự thật.",
     sidebar: {
       title: "Cài đặt phòng chat",
       back: "Quay lại",
