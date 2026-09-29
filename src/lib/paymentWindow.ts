@@ -32,9 +32,13 @@ export interface PaymentReturn {
   pgToken: string | null;
 }
 
-/** 휴대폰·태블릿은 새 창 대신 지금 창에서 결제창으로 이동한다(앱 전환·팝업 제약). */
+/**
+ * 휴대폰·태블릿은 새 창 대신 지금 창에서 결제창으로 이동한다(앱 전환·팝업 제약).
+ * iPadOS 13+ 사파리는 기본이 데스크톱 모드라 UA 가 Mac 과 같다. 터치 지점이 여럿인 "Macintosh" 는 iPad 로 본다.
+ */
 export const isMobileDevice = () =>
-  /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+  (/Macintosh/i.test(navigator.userAgent) && navigator.maxTouchPoints > 1);
 
 export const canUsePaymentWindow = () =>
   typeof window !== "undefined" &&

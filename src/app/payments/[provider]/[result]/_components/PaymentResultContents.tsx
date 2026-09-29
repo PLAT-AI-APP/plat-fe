@@ -57,6 +57,21 @@ const refreshNotes = (queryClient: QueryClient) => {
   });
 };
 
+/**
+ * 승인을 보낸 뒤 주소에서 pg_token 을 뗀다. 남겨 두면 새로고침·공유·방문 기록에 일회용 승인 토큰이 남고,
+ * 다시 열 때 이미 쓴 토큰으로 승인을 또 보낸다. Next 가 쓰는 history.state 는 그대로 둔다.
+ */
+const dropPgTokenFromUrl = () => {
+  const url = new URL(window.location.href);
+  if (!url.searchParams.has("pg_token")) return;
+  url.searchParams.delete("pg_token");
+  window.history.replaceState(
+    window.history.state,
+    "",
+    `${url.pathname}${url.search}${url.hash}`,
+  );
+};
+
 interface PaymentResultContentsProps {
   provider: string;
   result: string;
@@ -126,6 +141,7 @@ const PaymentResultContents = ({
     const slowTimer = setTimeout(() => setSlow(true), SLOW_CONFIRM_MS);
     postPaymentConfirm({ orderUid, pgToken })
       .then((confirmed) => {
+        dropPgTokenFromUrl();
         setState({
           kind: "success",
           credits: confirmed.creditAmount,
@@ -134,6 +150,8 @@ const PaymentResultContents = ({
         refreshNotes(queryClient);
       })
       .catch((error: AppError) => {
+        // 서버가 답한 실패면 승인 토큰은 더 쓸 데가 없다. 결과를 모르는 오류면 다시 묻는 데 필요 없어 함께 뗀다.
+        dropPgTokenFromUrl();
         // 응답이 없었거나(네트워크) 결과를 모르는 오류면 주문 상태를 되짚습니다.
         if (!error?.status || UNCERTAIN_ERRORS.has(error.code)) {
           setState({ kind: "checking" });

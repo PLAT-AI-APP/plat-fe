@@ -223,10 +223,10 @@ const PaymentFailure = ({ variant, reason }: PaymentFailureProps) => {
         {...rise(0.3)}
         className="mt-10 flex w-full max-w-80 flex-col gap-2.5"
       >
-        <ButtonLink href="/token-charge" size="lg" fullWidth>
+        <ButtonLink replace href="/token-charge" size="lg" fullWidth>
           {t("tokenCharge.payment.retry")}
         </ButtonLink>
-        <ButtonLink href="/" variant="secondary" size="lg" fullWidth>
+        <ButtonLink replace href="/" variant="secondary" size="lg" fullWidth>
           {t("tokenCharge.payment.goHome")}
         </ButtonLink>
       </m.div>
