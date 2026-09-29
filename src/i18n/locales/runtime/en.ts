@@ -305,6 +305,8 @@ const en = {
     deleteResponse: "Delete response",
     editResponse: "Edit response",
     editMessage: "Edit message",
+    cancelEdit: "Cancel editing",
+    confirmEdit: "Save changes",
     deleteMessage: "Delete message",
     retryResponse: "Regenerate response",
     reportResponse: "Report response",

@@ -476,6 +476,8 @@ const CreateHeader = ({
             <button
               type="button"
               onClick={onDraftClick}
+              aria-label={t("loadDraft")}
+              title={t("loadDraft")}
               className="flex aspect-square h-full items-center justify-center rounded-xl border border-main bg-card p-2 hover:bg-card-hover"
             >
               <Redo className="h-4 w-4" />

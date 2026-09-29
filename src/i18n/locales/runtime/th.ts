@@ -298,6 +298,8 @@ const th: typeof en = {
     deleteResponse: "ลบคำตอบ",
     editResponse: "แก้ไขคำตอบ",
     editMessage: "แก้ไขข้อความ",
+    cancelEdit: "ยกเลิกการแก้ไข",
+    confirmEdit: "บันทึกการแก้ไข",
     deleteMessage: "ลบข้อความ",
     retryResponse: "สร้างคำตอบใหม่",
     reportResponse: "รายงานคำตอบ",

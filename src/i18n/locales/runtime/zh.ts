@@ -290,6 +290,8 @@ const zh: typeof en = {
     deleteResponse: "删除回复",
     editResponse: "编辑回复",
     editMessage: "编辑消息",
+    cancelEdit: "取消编辑",
+    confirmEdit: "完成编辑",
     deleteMessage: "删除消息",
     retryResponse: "重新生成回复",
     reportResponse: "举报回复",

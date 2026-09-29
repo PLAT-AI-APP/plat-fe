@@ -295,6 +295,8 @@ const ko: typeof en = {
     deleteResponse: "응답 삭제",
     editResponse: "응답 수정",
     editMessage: "메시지 수정",
+    cancelEdit: "수정 취소",
+    confirmEdit: "수정 완료",
     deleteMessage: "메시지 삭제",
     retryResponse: "응답 다시하기",
     reportResponse: "응답 신고",

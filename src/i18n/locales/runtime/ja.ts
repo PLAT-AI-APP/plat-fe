@@ -295,6 +295,8 @@ const ja: typeof en = {
     deleteResponse: "返信を削除",
     editResponse: "返信を編集",
     editMessage: "メッセージを編集",
+    cancelEdit: "編集をキャンセル",
+    confirmEdit: "編集を完了",
     deleteMessage: "メッセージを削除",
     retryResponse: "返信を再生成",
     reportResponse: "返信を通報",

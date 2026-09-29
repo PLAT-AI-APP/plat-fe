@@ -303,6 +303,8 @@ const vi: typeof en = {
     deleteResponse: "Xóa phản hồi",
     editResponse: "Chỉnh sửa phản hồi",
     editMessage: "Chỉnh sửa tin nhắn",
+    cancelEdit: "Hủy chỉnh sửa",
+    confirmEdit: "Lưu chỉnh sửa",
     deleteMessage: "Xóa tin nhắn",
     retryResponse: "Tạo lại phản hồi",
     reportResponse: "Báo cáo phản hồi",

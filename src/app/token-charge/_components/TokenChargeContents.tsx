@@ -53,44 +53,41 @@ const ProductListItem = ({
   const displayPrice = toMajorAmount(price.amountMinor, price.currency);
 
   return (
-    <li
-      role="button"
-      tabIndex={0}
-      aria-disabled={disabled}
-      onClick={() => !disabled && onPurchase(product)}
-      onKeyDown={(event) => {
-        if (!disabled && (event.key === "Enter" || event.key === " ")) {
-          event.preventDefault();
-          onPurchase(product);
-        }
-      }}
-      className="relative cursor-pointer rounded-2xl border border-main px-5 py-4 transition-colors hover:bg-btn-hover aria-disabled:cursor-wait aria-disabled:opacity-60"
-    >
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Token className="h-8 w-8" />
-          <div className="flex items-center gap-2">
-            <p className="body-3 flex gap-1">
-              <span>{formatWithCommas(credits.base)}</span>
-              <span>{t("tokenCharge.noteUnit")}</span>
-            </p>
-
-            {credits.bonus > 0 && (
-              <span className="title-3 text-brand-dark">
-                +{formatWithCommas(credits.bonus)}
-                {t("tokenCharge.bonusNoteUnit")}
+    // 목록 항목(li) 자체를 버튼 역할로 쓰면 목록 구조가 보조기술에서 사라진다. 항목 안에 진짜 버튼을 둔다.
+    <li>
+      <button
+        type="button"
+        disabled={disabled}
+        aria-busy={disabled || undefined}
+        onClick={() => onPurchase(product)}
+        className="relative w-full cursor-pointer rounded-2xl border border-main px-5 py-4 text-left transition-colors hover:bg-btn-hover disabled:cursor-wait disabled:opacity-60"
+      >
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Token className="h-8 w-8" />
+            <div className="flex items-center gap-2">
+              <span className="body-3 flex gap-1">
+                <span>{formatWithCommas(credits.base)}</span>
+                <span>{t("tokenCharge.noteUnit")}</span>
               </span>
-            )}
+
+              {credits.bonus > 0 && (
+                <span className="title-3 text-brand-dark">
+                  +{formatWithCommas(credits.bonus)}
+                  {t("tokenCharge.bonusNoteUnit")}
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-1.5">
+            <span className="title-3">
+              {formatWithCommas(displayPrice)}
+              {t("tokenCharge.priceUnit")}
+            </span>
           </div>
         </div>
-
-        <div className="flex items-center gap-1.5">
-          <span className="title-3">
-            {formatWithCommas(displayPrice)}
-            {t("tokenCharge.priceUnit")}
-          </span>
-        </div>
-      </div>
+      </button>
     </li>
   );
 };
