@@ -244,6 +244,8 @@ const th: typeof ko = {
       emailAlreadyRegistered:
         "อีเมลนี้ลงทะเบียนแล้ว กรุณาเข้าสู่ระบบด้วยวิธีที่ใช้สมัคร (อีเมล, Google หรือ Kakao)",
       emailVerificationSent: "กรุณาตรวจสอบรหัสยืนยันในอีเมล",
+      passwordResetCodeSent: "หากอีเมลนี้ลงทะเบียนไว้ เราได้ส่งรหัสยืนยันแล้ว โปรดตรวจสอบกล่องจดหมาย",
+      emailVerificationAttemptExceeded: "ป้อนรหัสยืนยันผิดหลายครั้ง โปรดขอรหัสใหม่",
       emailVerificationComplete: "ยืนยันอีเมลเรียบร้อยแล้ว",
       emailVerificationExpired: "หมดเวลาแล้ว",
       emailVerificationMismatch: "รหัสยืนยันไม่ตรงกัน",

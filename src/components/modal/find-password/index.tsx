@@ -52,6 +52,7 @@ const FindPasswordModal = ({ onClose, stackIndex }: FindPasswordModalProps) => {
             </header>
 
             <EmailVerifySection
+              purpose="PASSWORD_RESET"
               onVerifiedChange={(isVerified) => {
                 setIsEmailVerified(isVerified);
               }}

@@ -245,6 +245,8 @@ const vi: typeof ko = {
       emailAlreadyRegistered:
         "Email này đã được đăng ký. Vui lòng đăng nhập bằng phương thức đã dùng khi đăng ký (email, Google hoặc Kakao)",
       emailVerificationSent: "Vui lòng kiểm tra mã xác minh trong email",
+      passwordResetCodeSent: "Nếu email này đã đăng ký, chúng tôi đã gửi mã xác minh. Vui lòng kiểm tra hộp thư",
+      emailVerificationAttemptExceeded: "Bạn đã nhập sai mã quá nhiều lần. Vui lòng yêu cầu mã mới",
       emailVerificationComplete: "Xác minh email đã hoàn tất",
       emailVerificationExpired: "Đã hết thời gian",
       emailVerificationMismatch: "Mã xác minh không khớp",

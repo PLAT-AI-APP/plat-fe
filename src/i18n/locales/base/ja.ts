@@ -243,6 +243,8 @@ const ja: typeof ko = {
       emailAlreadyRegistered:
         "このメールアドレスはすでに登録されています。登録時の方法（メール・Google・Kakao）でログインしてください",
       emailVerificationSent: "メールで認証番号を確認してください",
+      passwordResetCodeSent: "登録済みのメールアドレスであれば認証番号を送信しました。メールをご確認ください",
+      emailVerificationAttemptExceeded: "認証番号の入力を複数回間違えました。認証番号を再度受け取ってください",
       emailVerificationComplete: "メール認証が完了しました",
       emailVerificationExpired: "時間切れです",
       emailVerificationMismatch: "認証番号が一致しません",

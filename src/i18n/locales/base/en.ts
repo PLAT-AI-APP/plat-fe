@@ -248,6 +248,8 @@ const en: typeof ko = {
       emailAlreadyRegistered:
         "This email is already registered. Log in with the method you signed up with (email, Google, or Kakao)",
       emailVerificationSent: "Check your inbox for the verification code",
+      passwordResetCodeSent: "If this email is registered, we've sent a verification code. Please check your inbox",
+      emailVerificationAttemptExceeded: "Too many incorrect attempts. Please request a new code",
       emailVerificationComplete: "Email verification is complete",
       emailVerificationExpired: "The time has expired",
       emailVerificationMismatch: "The verification code does not match",

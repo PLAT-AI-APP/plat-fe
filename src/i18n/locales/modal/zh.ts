@@ -65,6 +65,7 @@ const zh: typeof ko = {
       next: "下一步",
       submit: "修改密码",
       successToast: "密码已修改",
+      successLoginHint: "请使用新密码登录。",
     },
     imageCrop: {
       title: "编辑图片",

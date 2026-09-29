@@ -241,6 +241,8 @@ const ko = {
       emailAlreadyRegistered:
         "이미 가입된 이메일이에요. 가입할 때 쓴 방법(이메일·구글·카카오)으로 로그인해 주세요",
       emailVerificationSent: "메일함에서 인증번호를 확인해 주세요",
+      passwordResetCodeSent: "가입된 이메일이면 인증번호를 보냈어요. 메일함을 확인해 주세요",
+      emailVerificationAttemptExceeded: "인증번호를 여러 번 틀렸어요. 인증번호를 다시 받아 주세요",
       emailVerificationComplete: "이메일 인증이 완료되었어요",
       emailVerificationExpired: "시간이 초과되었어요",
       emailVerificationMismatch: "인증번호가 일치하지 않아요",

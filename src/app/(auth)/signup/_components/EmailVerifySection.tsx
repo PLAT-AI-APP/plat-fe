@@ -8,9 +8,15 @@ import { useFormContext, useWatch } from "react-hook-form";
 import { notifyApiError } from "@/api";
 import {
   EMAIL_UNAVAILABLE_CODE,
+  type EmailVerifyPurpose,
   useEmailVerifyMutation,
 } from "@/api/auth/emailVerify";
-import { useEmailVerifyConfirmMutation } from "@/api/auth/emailVerifyConfirm";
+import {
+  VERIFY_CODE_ATTEMPT_EXCEEDED_CODE,
+  VERIFY_CODE_EXPIRED_CODE,
+  VERIFY_CODE_INVALID_CODE,
+  useEmailVerifyConfirmMutation,
+} from "@/api/auth/emailVerifyConfirm";
 import ActiveButton from "@/components/ActiveButton";
 import SmartInput from "@/components/smart-input";
 import {
@@ -25,9 +31,31 @@ import { AuthFormValues } from "@/schema/auth.schema";
 
 interface EmailVerifySectionProps {
   onVerifiedChange?: (isVerified: boolean) => void;
+  /**
+   * 인증번호 용도. 가입(기본)은 이미 가입된 이메일을 거절하고, 비밀번호 재설정은 가입 여부를 드러내지 않는다
+   * — 서버가 가입된 이메일에만 보내고 응답은 늘 같으므로, 보냈다고 단정하지 않는 안내를 쓴다.
+   */
+  purpose?: EmailVerifyPurpose;
 }
 
-const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
+/** 확인 실패 사유별 안내. 틀림·만료·횟수 초과를 모두 "불일치"로 말하면 다시 받아야 하는지 알 수 없다. */
+const confirmErrorMessage = (code: string | undefined) => {
+  switch (code) {
+    case VERIFY_CODE_INVALID_CODE:
+      return FIELD_FEEDBACK_MESSAGES.emailVerificationMismatch;
+    case VERIFY_CODE_EXPIRED_CODE:
+      return FIELD_FEEDBACK_MESSAGES.emailVerificationExpired;
+    case VERIFY_CODE_ATTEMPT_EXCEEDED_CODE:
+      return FIELD_FEEDBACK_MESSAGES.emailVerificationAttemptExceeded;
+    default:
+      return null;
+  }
+};
+
+const EmailVerifySection = ({
+  onVerifiedChange,
+  purpose = "SIGNUP",
+}: EmailVerifySectionProps) => {
   const t = useTranslations();
   const translateText = useTranslateText();
   const [isOtpSent, setIsOtpSent] = useState(false);
@@ -73,17 +101,23 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
     setValue("code", "");
     clearErrors("code");
 
-    emailVerify(email, {
+    emailVerify({ email, purpose }, {
       onSuccess: () => {
         setIsOtpSent(true);
-        setFeedback("email", FIELD_FEEDBACK_MESSAGES.emailVerificationSent);
+        setFeedback(
+          "email",
+          purpose === "PASSWORD_RESET"
+            ? FIELD_FEEDBACK_MESSAGES.passwordResetCodeSent
+            : FIELD_FEEDBACK_MESSAGES.emailVerificationSent,
+        );
         setIsEmailVerified(false);
         onVerifiedChange?.(false);
         startTimer();
       },
       onError: (error) => {
         // 이메일·구글·카카오 어느 방법으로든 이미 가입된 이메일. 인증까지 마친 뒤가 아니라 지금 알린다.
-        if (error.code === EMAIL_UNAVAILABLE_CODE) {
+        // 재설정 용도에서는 서버가 이 코드를 주지 않는다(가입 여부를 숨긴다).
+        if (purpose === "SIGNUP" && error.code === EMAIL_UNAVAILABLE_CODE) {
           setError("email", {
             type: "manual",
             message: FIELD_FEEDBACK_MESSAGES.emailAlreadyRegistered,
@@ -108,7 +142,7 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
     if (!email) return;
 
     emailVerifyConfirm(
-      { code: code || "", email },
+      { code: code || "", email, purpose },
       {
         onSuccess: () => {
           setIsEmailVerified(true);
@@ -121,10 +155,11 @@ const EmailVerifySection = ({ onVerifiedChange }: EmailVerifySectionProps) => {
           clearErrors("code");
           stopTimer();
         },
-        onError: () => {
+        onError: (error) => {
+          // 인증번호 문제는 칸 아래에, 그 밖(네트워크·속도 제한 등)은 서버 문구를 그대로 칸 아래에 둔다.
           setError("code", {
             type: "manual",
-            message: FIELD_FEEDBACK_MESSAGES.emailVerificationMismatch,
+            message: confirmErrorMessage(error.code) ?? error.message,
           });
         },
       },

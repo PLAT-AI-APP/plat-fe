@@ -239,6 +239,8 @@ const zh: typeof ko = {
       emailAlreadyRegistered:
         "该邮箱已注册。请使用注册时的方式（邮箱、Google、Kakao）登录",
       emailVerificationSent: "请在邮箱中确认验证码",
+      passwordResetCodeSent: "如果该邮箱已注册，我们已发送验证码，请查收邮件",
+      emailVerificationAttemptExceeded: "验证码输入错误次数过多，请重新获取验证码",
       emailVerificationComplete: "邮箱认证已完成",
       emailVerificationExpired: "时间已超时",
       emailVerificationMismatch: "验证码不一致",

@@ -17,6 +17,9 @@ export const FIELD_FEEDBACK_MESSAGES = {
   nicknameBannedWord: "field.feedback.nicknameBannedWord",
   emailAlreadyRegistered: "field.feedback.emailAlreadyRegistered",
   emailVerificationSent: "field.feedback.emailVerificationSent",
+  passwordResetCodeSent: "field.feedback.passwordResetCodeSent",
+  emailVerificationAttemptExceeded:
+    "field.feedback.emailVerificationAttemptExceeded",
   emailVerificationComplete: "field.feedback.emailVerificationComplete",
   emailVerificationExpired: "field.feedback.emailVerificationExpired",
   emailVerificationMismatch: "field.feedback.emailVerificationMismatch",
