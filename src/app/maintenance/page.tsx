@@ -7,13 +7,11 @@ import StateScene from "@/components/state/StateScene";
 import ButtonLink from "@/components/ui/ButtonLink";
 import { useMaintenanceStatusQuery } from "@/api/system/getMaintenanceStatus";
 import { useMaintenanceTimeFormat } from "@/lib/maintenanceTime";
+import { toSafeReturnPath } from "@/lib/safePath";
 
 /** env 로 켠 점검(배포 단위)은 서버 점검 예약과 따로 돈다. 이때는 "끝났어요"를 보이면 안 된다. */
 const IS_ENV_MAINTENANCE = process.env.NEXT_PUBLIC_MAINTENANCE_MODE === "on";
 
-/** 같은 사이트 안 경로만 되돌아간다. `//evil.com` 같은 값으로 밖으로 나가지 않게 한다. */
-const toSafeReturnPath = (from: string | null) =>
-  from && from.startsWith("/") && !from.startsWith("//") ? from : "/";
 
 /**
  * 점검 안내.

@@ -54,6 +54,10 @@ const ko = {
       invalidTitle: "잘못된 접근이에요",
       invalidHint: "로그인 링크가 만료됐거나 주소가 올바르지 않아요. 다시 로그인해 주세요.",
       goHome: "홈으로",
+      failedTitle: "로그인하지 못했어요",
+      failedHint: "잠시 뒤 다시 시도해 주세요.",
+      retry: "다시 시도",
+      login: "로그인하기",
     },
     agreementGate: {
       firstTitle: "가입을 마무리해 주세요",

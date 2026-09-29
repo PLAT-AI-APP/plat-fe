@@ -54,6 +54,10 @@ const zh: typeof ko = {
       invalidTitle: "访问无效",
       invalidHint: "登录链接已过期或地址不正确，请重新登录。",
       goHome: "返回首页",
+      failedTitle: "登录失败",
+      failedHint: "请稍后再试。",
+      retry: "重试",
+      login: "登录",
     },
     agreementGate: {
       firstTitle: "请完成注册",

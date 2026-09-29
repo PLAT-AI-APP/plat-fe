@@ -31,6 +31,10 @@ export const PENDING_WELCOME_CREDIT_DIALOG_KEY =
 // 표시에만 쓰며 인증 판단에는 쓰지 않는다.
 export const SOCIAL_LOGIN_PROVIDER_KEY = "social-login-provider";
 
+// 소셜 로그인을 시작한 화면(pathname+search). 콜백이 로그인 뒤 이곳으로 돌려보낸다.
+// 탭마다 따로여야 해서 sessionStorage 에 둔다(localStorage 면 다른 탭의 오래된 값으로 돌아갔다).
+export const SOCIAL_LOGIN_RETURN_PATH_KEY = "social-login-return-path";
+
 /** 보호 경로 판별 */
 export const isProtectedPath = (path: string) =>
   PROTECTED_ROUTES.some((route) => path.startsWith(route));
