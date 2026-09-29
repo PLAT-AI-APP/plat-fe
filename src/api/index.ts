@@ -4,6 +4,7 @@ import { useModalStore } from "@/store/useModalStore";
 import { isProtectedPath } from "@/constants/auth";
 import { showAppToast } from "@/lib/toast";
 import { reportError } from "@/lib/monitoring";
+import { clearSession } from "@/lib/session";
 import {
   NETWORK_ERROR_CODE,
   TIMEOUT_ERROR_CODE,
@@ -182,9 +183,10 @@ const retryAsGuest = (
  * 저장된 인증 상태를 비우고, 사용자가 누른 동작이 실패한 경우에만 다시 로그인하도록 안내합니다.
  */
 const handleSessionExpired = ({ notify }: { notify: boolean }) => {
-  const { isLoggedIn, logout } = useAuthStore.getState();
+  const { isLoggedIn } = useAuthStore.getState();
 
-  logout();
+  // 인증 상태만이 아니라 저장된 내 정보·잔액·로그인에 딸린 캐시까지 함께 비운다.
+  clearSession({ reason: "expired" });
 
   if (!notify) return;
 
@@ -438,6 +440,15 @@ const onResponseError = async (
   ) {
     originalRequest._retry = true;
 
+    // 이 요청이 나간 뒤 이미 다른 요청(또는 다른 탭 동기화)이 토큰을 새로 받았다면, 늦게 도착한 401 이다.
+    // 재발급을 또 하지 않고 지금 토큰으로 한 번 다시 보낸다.
+    const currentToken = useAuthStore.getState().accessToken;
+    const sentAuthorization = originalRequest.headers.Authorization;
+    if (currentToken && sentAuthorization !== `Bearer ${currentToken}`) {
+      originalRequest.headers.Authorization = `Bearer ${currentToken}`;
+      return instance(originalRequest);
+    }
+
     try {
       const newAccessToken = await refreshAccessToken();
 
@@ -464,8 +475,18 @@ const onResponseError = async (
         const isRead = isReadRequest(originalRequest);
         handleSessionExpired({ notify: !isRead });
         if (isRead) return retryAsGuest(originalRequest, instance);
+        return Promise.reject(refreshError);
       }
-      return Promise.reject(refreshError);
+      // 재발급 요청 자체가 네트워크·타임아웃으로 실패했다. 재발급 오류는 토스트를 끄고 오므로(onPlainResponseError),
+      // 그대로 넘기면 사용자가 누른 요청이 아무 안내 없이 실패한다. 원 요청의 실패로 바꿔 알린다.
+      const refreshAppError = refreshError as Partial<AppError>;
+      return Promise.reject({
+        ...buildAppError(err),
+        ...(refreshAppError.code && refreshAppError.message
+          ? { code: refreshAppError.code, message: refreshAppError.message }
+          : {}),
+        suppressToast: false,
+      });
     }
   }
 

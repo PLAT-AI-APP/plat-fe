@@ -1,10 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
-import { useAuthStore } from "@/store/useAuthStore";
-import { useUserStore } from "@/store/useUserStore";
-import { useWalletStore } from "@/store/useWalletStore";
+import { clearSession } from "@/lib/session";
 import {
   LOGOUT_REDIRECT_IN_PROGRESS_KEY,
   PENDING_SIGNUP_COMPLETE_DIALOG_KEY,
@@ -33,19 +31,15 @@ const redirectHomeIfProtected = () => {
 
 /** 로그아웃 */
 export const useLogoutMutation = () => {
-  const queryClient = useQueryClient();
   const router = useRouter();
-  const logout = useAuthStore((state) => state.logout);
-  const clearUser = useUserStore((state) => state.clearUser);
-  const clearBalance = useWalletStore((state) => state.clearBalance);
   return useMutation<void, AppError>({
     mutationFn: PostLogout,
-    onSuccess: () => {
-      logout();
-      clearUser();
-      clearBalance();
-      // 로그인 상태에 종속된 캐시가 남아있지 않도록 전체 비우기
-      queryClient.clear();
+    // 서버 로그아웃이 실패해도(네트워크·이미 만료) 이 기기에서는 로그아웃돼야 한다. 성공 때만 정리하면
+    // 버튼을 눌렀는데 로그인된 채로 남았다. 서버 쪽 리프레시 토큰은 만료되거나 다음 로그인 때 바뀐다.
+    meta: { silent: true },
+    onSettled: () => {
+      // 인증·내 정보·잔액·로그인에 딸린 캐시를 한 번에 비운다.
+      clearSession({ reason: "logout" });
 
       // 보호 화면은 홈으로 이동하고, 그 외 화면은 전체 새로고침 대신
       // 서버 데이터만 다시 가져와 UI 애니메이션이 처음부터 다시 재생되지 않게 합니다.
