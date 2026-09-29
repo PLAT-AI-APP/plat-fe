@@ -60,8 +60,7 @@ export const useFollowToggle = ({
    * 버튼과 함께 대상의 팔로워 수와 "내가 팔로우 중인지" 캐시도 먼저 고친다. 예전에는 버튼만 바로
    * 바뀌고 숫자는 요청과 재조회가 끝나야 따라와 둘이 잠깐 어긋나 보였다.
    *
-   * "팔로우 중인지" 는 이미 답을 알고 있으므로 무효화하지 않고 값을 넣는다. 무효화하면 팔로잉
-   * 목록을 100명씩 끝까지 차례로 훑는 조회(getIsFollowing)가 다시 돌았다.
+   * "팔로우 중인지" 는 이미 답을 알고 있으므로 무효화하지 않고 값을 넣는다. 다시 물을 필요 없는 요청을 줄인다.
    */
   const applyOptimistic = (next: boolean) => {
     queryClient.setQueryData<GetFollowCountResponse>(
