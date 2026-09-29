@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
+import { notifyApiError } from "@/api";
 import { useAuthRegisterMutation } from "@/api/auth/authRegister";
 import ActiveButton from "@/components/ActiveButton";
 import NicknameField from "@/components/field/NicknameField";
@@ -12,11 +13,23 @@ import PasswordField from "@/components/field/PasswordField";
 import { useFormServerError } from "@/hooks/form/useFormServerError";
 import { useTranslateText } from "@/hooks/i18n/useTranslateText";
 import { focusFirstFieldError } from "@/lib/formError";
+import { showAppToast } from "@/lib/toast";
 import { AuthFormValues } from "@/schema/auth.schema";
 import Agreed from "./Agreed";
 import EmailVerifySection from "./EmailVerifySection";
 
 const PENDING_SIGNUP_COMPLETE_DIALOG_KEY = "pending-signup-complete-dialog";
+
+/**
+ * 서버 검증 오류(fields)의 키 중 이 폼에서 사용자가 고칠 수 있는 칸.
+ * 여기 없는 키(인증번호·동의 항목·폼 전체 규칙 등)에 오류를 달면 보이지도, 고쳐서 지울 수도 없어
+ * 가입 버튼이 계속 잠긴다. 그런 오류는 토스트로 알린다.
+ */
+const SERVER_FIELD_KEYS = ["email", "nickname", "password", "passwordCheck"] as const;
+type ServerFieldKey = (typeof SERVER_FIELD_KEYS)[number];
+
+const isServerFieldKey = (key: string): key is ServerFieldKey =>
+  (SERVER_FIELD_KEYS as readonly string[]).includes(key);
 
 const SignupForm = () => {
   const t = useTranslations();
@@ -109,8 +122,21 @@ const SignupForm = () => {
           router.replace("/");
         },
         onError: (error) => {
-          // 서버에서 내려온 필드별 에러를 RHF 에러 상태로 매핑해 입력 필드 아래에 표시합니다.
-          setFieldErrors(error.fields);
+          // 고칠 수 있는 칸의 오류는 그 칸 아래에, 나머지는 토스트로 알린다.
+          const fieldErrors: Partial<Record<ServerFieldKey, string>> = {};
+          const otherMessages: string[] = [];
+          Object.entries(error.fields ?? {}).forEach(([key, message]) => {
+            if (!message) return;
+            if (isServerFieldKey(key)) fieldErrors[key] = message;
+            else otherMessages.push(message);
+          });
+
+          const hasFieldErrors = setFieldErrors(fieldErrors);
+          if (otherMessages.length > 0) {
+            showAppToast("error", otherMessages[0]);
+          } else if (!hasFieldErrors) {
+            notifyApiError(error);
+          }
         },
       },
     );
