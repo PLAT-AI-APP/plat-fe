@@ -248,6 +248,7 @@ const ja: typeof en = {
   myChatting: {
     searchPlaceholder: "チャット内容、キャラクター、ペルソナ名で検索",
     clearSearch: "検索語を消去",
+    openMenu: "チャットメニューを開く",
     title: "マイチャット",
     empty: "まだチャットがありません。",
   },

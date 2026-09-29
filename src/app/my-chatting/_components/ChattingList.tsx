@@ -54,7 +54,7 @@ const ChattingList = ({ searchQuery }: ChattingListProps) => {
       normalizedSearchQuery
         ? items.filter((room) =>
             [room.title, room.personaName, room.lastMessage].some((value) =>
-              value.toLowerCase().includes(normalizedSearchQuery),
+              value?.toLowerCase().includes(normalizedSearchQuery),
             ),
           )
         : items,

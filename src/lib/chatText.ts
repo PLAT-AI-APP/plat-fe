@@ -40,3 +40,17 @@ export const splitActionSegments = (text: string): ChatTextSegment[] => {
 
   return segments;
 };
+
+/** 이미지 같은 에셋 토큰. {{user}} 는 이름 자리라 남긴다. */
+const PREVIEW_ASSET_TOKEN = /\{\{(?!user\}\})[^}]*\}\}/g;
+
+/**
+ * 목록 미리보기용 한 줄 평문. 지문 표시 별표(*)와 이미지 토큰을 빼고 줄바꿈·연속 공백을 한 칸으로 줄인다.
+ * 대화가 아직 없으면(null) 빈 문자열이다.
+ */
+export const toChatPreviewText = (raw: string | null | undefined): string =>
+  (raw ?? "")
+    .replace(PREVIEW_ASSET_TOKEN, " ")
+    .replace(/\*/g, "")
+    .replace(/\s+/g, " ")
+    .trim();

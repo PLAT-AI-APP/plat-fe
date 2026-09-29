@@ -244,6 +244,7 @@ const zh: typeof en = {
   myChatting: {
     searchPlaceholder: "按聊天内容、角色或人设名称搜索",
     clearSearch: "清除搜索词",
+    openMenu: "打开聊天菜单",
     title: "我的聊天",
     empty: "还没有聊天记录。",
   },

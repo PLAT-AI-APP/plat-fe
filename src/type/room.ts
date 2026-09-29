@@ -23,7 +23,8 @@ export interface ThumbnailRoom {
   title: string;
   thumbnailUrl: string | null;
   personaName: string;
-  lastMessage: string;
+  /** 아직 주고받은 말이 없는 방은 null. */
+  lastMessage: string | null;
   lastUsedAt: string | null;
   isPinned: boolean;
 }

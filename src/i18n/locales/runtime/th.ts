@@ -251,6 +251,7 @@ const th: typeof en = {
   myChatting: {
     searchPlaceholder: "ค้นหาด้วยเนื้อหาแชต ตัวละคร หรือชื่อเพอร์โซนา",
     clearSearch: "ล้างคำค้นหา",
+    openMenu: "เปิดเมนูแชต",
     title: "แชตของฉัน",
     empty: "ยังไม่มีแชต",
   },

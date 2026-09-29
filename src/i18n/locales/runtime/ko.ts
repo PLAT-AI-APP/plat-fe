@@ -248,6 +248,7 @@ const ko: typeof en = {
   myChatting: {
     searchPlaceholder: "채팅 내용, 캐릭터, 페르소나 이름으로 찾아보세요",
     clearSearch: "검색어 지우기",
+    openMenu: "채팅방 메뉴 열기",
     title: "내 채팅",
     empty: "아직 대화한 채팅방이 없어요.",
   },

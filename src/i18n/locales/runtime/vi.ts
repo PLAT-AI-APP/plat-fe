@@ -256,6 +256,7 @@ const vi: typeof en = {
   myChatting: {
     searchPlaceholder: "Tìm theo nội dung chat, nhân vật hoặc tên persona",
     clearSearch: "Xóa từ khóa tìm kiếm",
+    openMenu: "Mở menu trò chuyện",
     title: "Chat của tôi",
     empty: "Chưa có cuộc trò chuyện nào.",
   },

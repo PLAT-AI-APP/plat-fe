@@ -258,6 +258,7 @@ const en = {
   myChatting: {
     searchPlaceholder: "Search by chat, character, or persona name",
     clearSearch: "Clear search",
+    openMenu: "Open chat menu",
     title: "My chats",
     empty: "No chats yet.",
   },
