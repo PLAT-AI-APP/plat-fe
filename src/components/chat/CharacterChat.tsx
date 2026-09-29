@@ -25,7 +25,7 @@ const CharacterChat = ({
 }: CharacterChatProps) => {
   const t = useTranslations();
   const segments = splitActionSegments(chatText);
-  // `**행동**` 이 있을 때만 줄을 나눠 그린다. 없으면 예전과 똑같이 문자열 하나로 둬 다른 대사의 모양이 바뀌지 않는다.
+  // 대사 속 동작 `(…)` 이 있을 때만 조각으로 나눠 그린다. 없으면 예전과 똑같이 문자열 하나로 둬 다른 대사의 모양이 바뀌지 않는다.
   const hasAction = segments.some((segment) => segment.type === "action");
 
   return (
@@ -55,21 +55,20 @@ const CharacterChat = ({
           {CharacterName}
         </span>
         <div
-          className={cn(
-            "w-fit bg-card px-3 py-2 text-font-1",
-            hasAction && "flex flex-col gap-2",
-            bubbleClassName,
-          )}
+          className={cn("w-fit bg-card px-3 py-2 text-font-1", bubbleClassName)}
         >
           {hasAction
             ? segments.map((segment, index) => (
-                <p
-                  key={index}
-                  // 행동은 대사보다 한 단계 흐린 색으로 구분한다.
-                  className={cn(segment.type === "action" && "text-font-2")}
-                >
-                  {segment.value}
-                </p>
+                <React.Fragment key={index}>
+                  {/* 조각 사이는 한 칸 띄운다. 괄호 뒤에 바로 오는 마침표·물음표 같은 문장부호 앞은 띄우지 않는다. */}
+                  {index > 0 && !/^[.,!?…~。、！？]/.test(segment.value) && " "}
+                  {segment.type === "action" ? (
+                    // 말하며 하는 동작은 대사와 같은 줄에 두되, 한 단계 흐린 색·기울임으로 구분한다.
+                    <span className="text-font-2 italic">({segment.value})</span>
+                  ) : (
+                    segment.value
+                  )}
+                </React.Fragment>
               ))
             : chatText}
         </div>
