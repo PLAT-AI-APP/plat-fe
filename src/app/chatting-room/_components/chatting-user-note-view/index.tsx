@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
-import { useRoomDetailQuery } from "@/api/room/getRoomDetail";
+import { useRoomUserNoteQuery } from "@/api/room/getRoomUserNote";
 import { usePatchRoomUserNoteMutation } from "@/api/room/patchRoomUserNote";
 import { roomQueryKeys } from "@/api/room/queryKeys";
 import { ArrowLeft } from "@/icons";
@@ -34,8 +34,7 @@ const ChattingUserNoteView = ({ roomId, onBack }: ChattingUserNoteViewProps) => 
   const t = useTranslations("modalUi.userNote");
   const translateText = useTranslateText();
   const queryClient = useQueryClient();
-  const { data: room } = useRoomDetailQuery(roomId);
-  const savedNote = room?.userNote ?? "";
+  const { data: savedNote = "" } = useRoomUserNoteQuery(roomId);
   const {
     register,
     handleSubmit,
@@ -73,6 +72,11 @@ const ChattingUserNoteView = ({ roomId, onBack }: ChattingUserNoteViewProps) => 
       { roomId, userNote: data.userNote },
       {
         onSuccess: () => {
+          queryClient.setQueryData<string>(
+            roomQueryKeys.userNote(roomId),
+            data.userNote,
+          );
+          // 방 상세도 같은 값을 들고 있어 함께 맞춰 둔다(채팅 요청이 이 캐시를 쓴다).
           queryClient.setQueryData<Room>(roomQueryKeys.detail(roomId), (prev) =>
             prev ? { ...prev, userNote: data.userNote } : prev,
           );

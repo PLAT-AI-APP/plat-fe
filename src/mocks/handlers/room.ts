@@ -284,6 +284,22 @@ export const roomHandlers = [
     });
   }),
 
+  // 채팅방 장기기억 조회
+  http.get(/\/rooms\/([^/]+)\/memory(?:\?.*)?$/, ({ request }) => {
+    const room = findRoom(request, /\/rooms\/([^/]+)\/memory$/);
+    if (!room) return roomNotFound();
+
+    return HttpResponse.json({ memory: room.memory });
+  }),
+
+  // 채팅방 유저 노트 조회
+  http.get(/\/rooms\/([^/]+)\/note(?:\?.*)?$/, ({ request }) => {
+    const room = findRoom(request, /\/rooms\/([^/]+)\/note$/);
+    if (!room) return roomNotFound();
+
+    return HttpResponse.json({ userNote: room.userNote });
+  }),
+
   // 채팅방 장기기억 수정
   http.patch(/\/rooms\/([^/]+)\/memory(?:\?.*)?$/, async ({ request }) => {
     const room = findRoom(request, /\/rooms\/([^/]+)\/memory$/);

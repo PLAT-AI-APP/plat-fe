@@ -9,5 +9,7 @@ export const roomQueryKeys = {
   lists: () => roomListRootKey,
   list: (size?: number) => [...roomListRootKey, size] as const,
   detail: (roomId?: string) => ["get-room-detail", roomId] as const,
+  userNote: (roomId?: string) => ["get-room-user-note", roomId] as const,
+  memory: (roomId?: string) => ["get-room-memory", roomId] as const,
   messages: (roomId?: string) => ["get-room-messages", roomId] as const,
 };
