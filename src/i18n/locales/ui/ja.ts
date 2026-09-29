@@ -217,6 +217,9 @@ const ja = {
     draining: "まもなくメンテナンスが始まります。新しいチャットと決済はメンテナンス終了後にご利用ください。",
   },
   legalPage: {
+    language: "言語",
+    translationNotice: "理解を助けるための翻訳版です。内容が異なる場合は韓国語の原文が優先されます。",
+    fallbackNotice: "この言語の翻訳版はまだないため、韓国語の原文を表示しています。",
     effectiveAt: "{date}施行",
     history: "過去のバージョン",
     currentOption: "{date}施行（現在）",

@@ -217,6 +217,9 @@ const vi = {
     draining: "Sắp bắt đầu bảo trì. Bạn có thể trò chuyện và thanh toán mới sau khi bảo trì kết thúc.",
   },
   legalPage: {
+    language: "Ngôn ngữ",
+    translationNotice: "Bản dịch này chỉ nhằm hỗ trợ tham khảo. Nếu có khác biệt, bản gốc tiếng Hàn được ưu tiên.",
+    fallbackNotice: "Chưa có bản dịch cho ngôn ngữ này nên hiển thị bản gốc tiếng Hàn.",
     effectiveAt: "Có hiệu lực từ {date}",
     history: "Phiên bản trước",
     currentOption: "Hiệu lực {date} (hiện tại)",

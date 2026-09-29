@@ -223,6 +223,9 @@ const en = {
     draining: "Maintenance is about to start. New chats and payments will be available after it ends.",
   },
   legalPage: {
+    language: "Language",
+    translationNotice: "This translation is provided for convenience. If it differs from the Korean original, the Korean original prevails.",
+    fallbackNotice: "A translation for this language is not available yet, so the Korean original is shown.",
     effectiveAt: "Effective {date}",
     history: "Previous versions",
     currentOption: "Effective {date} (current)",

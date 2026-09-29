@@ -213,6 +213,9 @@ const ko = {
     draining: "곧 점검이 시작돼요. 새 채팅과 결제는 점검이 끝난 뒤에 할 수 있어요.",
   },
   legalPage: {
+    language: "언어",
+    translationNotice: "이해를 돕기 위한 번역본이에요. 내용이 서로 다르면 한국어 원문이 우선해요.",
+    fallbackNotice: "이 언어의 번역본이 아직 없어 한국어 원문을 보여 드려요.",
     effectiveAt: "{date}부터 시행",
     history: "지난 버전",
     currentOption: "{date} 시행 (현재)",

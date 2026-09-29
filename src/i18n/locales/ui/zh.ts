@@ -213,6 +213,9 @@ const zh = {
     draining: "即将开始维护。新的聊天和支付请在维护结束后进行。",
   },
   legalPage: {
+    language: "语言",
+    translationNotice: "本译文仅供参考。如与韩文原文不一致，以韩文原文为准。",
+    fallbackNotice: "该语言的译文尚未提供，现显示韩文原文。",
     effectiveAt: "{date}起施行",
     history: "历史版本",
     currentOption: "{date}施行（当前）",
