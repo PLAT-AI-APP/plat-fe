@@ -3,7 +3,7 @@
 import React from "react";
 import { useTranslations } from "next-intl";
 import ResourceImage from "@/components/ResourceImage";
-import { splitActionSegments } from "@/lib/chatText";
+import ActionText from "@/components/chat/ActionText";
 import { cn } from "@/lib/utils";
 
 interface CharacterChatProps {
@@ -24,9 +24,6 @@ const CharacterChat = ({
   bubbleClassName = "rounded-[0px_16px_16px_16px]",
 }: CharacterChatProps) => {
   const t = useTranslations();
-  const segments = splitActionSegments(chatText);
-  // 대사 속 동작 `(…)` 이 있을 때만 조각으로 나눠 그린다. 없으면 예전과 똑같이 문자열 하나로 둬 다른 대사의 모양이 바뀌지 않는다.
-  const hasAction = segments.some((segment) => segment.type === "action");
 
   return (
     <article className="flex gap-2">
@@ -57,20 +54,7 @@ const CharacterChat = ({
         <div
           className={cn("w-fit bg-card px-3 py-2 text-font-1", bubbleClassName)}
         >
-          {hasAction
-            ? segments.map((segment, index) => (
-                <React.Fragment key={index}>
-                  {/* 조각 사이는 한 칸 띄운다. 괄호 뒤에 바로 오는 마침표·물음표 같은 문장부호 앞은 띄우지 않는다. */}
-                  {index > 0 && !/^[.,!?…~。、！？]/.test(segment.value) && " "}
-                  {segment.type === "action" ? (
-                    // 말하며 하는 동작은 대사와 같은 줄에 두되, 한 단계 흐린 색·기울임으로 구분한다.
-                    <span className="text-font-2 italic">({segment.value})</span>
-                  ) : (
-                    segment.value
-                  )}
-                </React.Fragment>
-              ))
-            : chatText}
+          <ActionText text={chatText} />
         </div>
       </div>
     </article>
