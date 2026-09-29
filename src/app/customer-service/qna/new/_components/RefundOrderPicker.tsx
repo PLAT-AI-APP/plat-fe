@@ -198,7 +198,7 @@ const RefundOrderPicker = ({ selectedOrderUid, onSelect }: RefundOrderPickerProp
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = usePaymentOrderListQuery({ size: PAGE_SIZE });
+  } = usePaymentOrderListQuery({ size: PAGE_SIZE, paidOnly: true });
 
   const { items } = useInfiniteList({ data, hasNextPage, isFetchingNextPage, fetchNextPage });
 
