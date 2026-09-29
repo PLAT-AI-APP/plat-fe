@@ -232,6 +232,11 @@ const en: typeof ko = {
     feedback: {
       nicknameAvailable: "Nice nickname",
       nicknameUnavailable: "This nickname is already taken",
+      nicknameReserved:
+        "Nicknames that could be mistaken for staff are not allowed",
+      nicknameBannedWord: "This nickname contains a word that is not allowed",
+      emailAlreadyRegistered:
+        "This email is already registered. Log in with the method you signed up with (email, Google, or Kakao)",
       emailVerificationSent: "Check your inbox for the verification code",
       emailVerificationComplete: "Email verification is complete",
       emailVerificationExpired: "The time has expired",

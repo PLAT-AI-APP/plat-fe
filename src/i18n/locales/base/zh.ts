@@ -224,6 +224,10 @@ const zh: typeof ko = {
     feedback: {
       nicknameAvailable: "这是个很棒的昵称",
       nicknameUnavailable: "该昵称已被使用",
+      nicknameReserved: "不能使用可能被误认为运营人员的昵称",
+      nicknameBannedWord: "包含不允许使用的词语",
+      emailAlreadyRegistered:
+        "该邮箱已注册。请使用注册时的方式（邮箱、Google、Kakao）登录",
       emailVerificationSent: "请在邮箱中确认验证码",
       emailVerificationComplete: "邮箱认证已完成",
       emailVerificationExpired: "时间已超时",

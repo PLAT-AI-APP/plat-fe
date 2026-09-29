@@ -226,6 +226,10 @@ const ko = {
     feedback: {
       nicknameAvailable: "멋진 닉네임이에요",
       nicknameUnavailable: "이미 사용 중인 닉네임이에요",
+      nicknameReserved: "운영진으로 오인될 수 있는 닉네임은 쓸 수 없어요",
+      nicknameBannedWord: "사용할 수 없는 단어가 들어 있어요",
+      emailAlreadyRegistered:
+        "이미 가입된 이메일이에요. 가입할 때 쓴 방법(이메일·구글·카카오)으로 로그인해 주세요",
       emailVerificationSent: "메일함에서 인증번호를 확인해 주세요",
       emailVerificationComplete: "이메일 인증이 완료되었어요",
       emailVerificationExpired: "시간이 초과되었어요",

@@ -13,6 +13,9 @@ export const FIELD_HELPER_MESSAGES = {
 export const FIELD_FEEDBACK_MESSAGES = {
   nicknameAvailable: "field.feedback.nicknameAvailable",
   nicknameUnavailable: "field.feedback.nicknameUnavailable",
+  nicknameReserved: "field.feedback.nicknameReserved",
+  nicknameBannedWord: "field.feedback.nicknameBannedWord",
+  emailAlreadyRegistered: "field.feedback.emailAlreadyRegistered",
   emailVerificationSent: "field.feedback.emailVerificationSent",
   emailVerificationComplete: "field.feedback.emailVerificationComplete",
   emailVerificationExpired: "field.feedback.emailVerificationExpired",

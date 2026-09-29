@@ -228,6 +228,10 @@ const ja: typeof ko = {
     feedback: {
       nicknameAvailable: "素敵なニックネームです",
       nicknameUnavailable: "すでに使用中のニックネームです",
+      nicknameReserved: "運営スタッフと誤解されるニックネームは使用できません",
+      nicknameBannedWord: "使用できない単語が含まれています",
+      emailAlreadyRegistered:
+        "このメールアドレスはすでに登録されています。登録時の方法（メール・Google・Kakao）でログインしてください",
       emailVerificationSent: "メールで認証番号を確認してください",
       emailVerificationComplete: "メール認証が完了しました",
       emailVerificationExpired: "時間切れです",

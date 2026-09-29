@@ -228,6 +228,11 @@ const th: typeof ko = {
     feedback: {
       nicknameAvailable: "เป็นชื่อเล่นที่ดีมาก",
       nicknameUnavailable: "ชื่อเล่นนี้ถูกใช้งานแล้ว",
+      nicknameReserved:
+        "ไม่สามารถใช้ชื่อเล่นที่อาจทำให้เข้าใจผิดว่าเป็นทีมงานได้",
+      nicknameBannedWord: "มีคำที่ไม่อนุญาตให้ใช้",
+      emailAlreadyRegistered:
+        "อีเมลนี้ลงทะเบียนแล้ว กรุณาเข้าสู่ระบบด้วยวิธีที่ใช้สมัคร (อีเมล, Google หรือ Kakao)",
       emailVerificationSent: "กรุณาตรวจสอบรหัสยืนยันในอีเมล",
       emailVerificationComplete: "ยืนยันอีเมลเรียบร้อยแล้ว",
       emailVerificationExpired: "หมดเวลาแล้ว",

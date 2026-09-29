@@ -229,6 +229,11 @@ const vi: typeof ko = {
     feedback: {
       nicknameAvailable: "Đó là một biệt danh rất hay",
       nicknameUnavailable: "Biệt danh này đã được sử dụng",
+      nicknameReserved:
+        "Không thể dùng biệt danh có thể bị nhầm là quản trị viên",
+      nicknameBannedWord: "Biệt danh chứa từ không được phép",
+      emailAlreadyRegistered:
+        "Email này đã được đăng ký. Vui lòng đăng nhập bằng phương thức đã dùng khi đăng ký (email, Google hoặc Kakao)",
       emailVerificationSent: "Vui lòng kiểm tra mã xác minh trong email",
       emailVerificationComplete: "Xác minh email đã hoàn tất",
       emailVerificationExpired: "Đã hết thời gian",
