@@ -299,6 +299,8 @@ const vi: typeof en = {
     characterTyping: "{name} đang nhập",
     characterProfileAlt: "Ảnh hồ sơ của {name}",
     chatAssetAlt: "Ảnh tình huống trong chat",
+    lightChatDescription: "Mô hình nhẹ và nhanh cho những cuộc trò chuyện thường ngày.",
+    balancedChatDescription: "Mô hình cân bằng giữa tốc độ và khả năng diễn đạt.",
     gemini31Description:
       "Mô hình AI mới nhất với hiệu năng và khả năng biểu đạt được cải thiện.",
     gemini30Description:

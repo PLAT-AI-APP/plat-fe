@@ -286,6 +286,8 @@ const zh: typeof en = {
     characterTyping: "{name}正在输入",
     characterProfileAlt: "{name} 的头像",
     chatAssetAlt: "聊天情境图片",
+    lightChatDescription: "适合轻松快速对话的轻量模型",
+    balancedChatDescription: "速度与表现力兼顾的模型",
     gemini31Description: "具备更强性能和表现力的最新 AI 模型",
     gemini30Description: "可享受沉浸式对话的最新 AI 模型",
     gemini25Description: "适合长篇对话的最新高性能 AI 模型",

@@ -301,6 +301,8 @@ const en = {
     characterTyping: "{name} is typing",
     characterProfileAlt: "{name} profile image",
     chatAssetAlt: "Chat scene image",
+    lightChatDescription: "A quick, lightweight model for casual conversations.",
+    balancedChatDescription: "A model balancing speed and expressiveness.",
     gemini31Description:
       "The latest AI model with improved performance and expression.",
     gemini30Description:

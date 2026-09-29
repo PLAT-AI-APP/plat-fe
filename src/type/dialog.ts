@@ -56,6 +56,11 @@ export interface ChatTurnDeleteDialogProps {
   onConfirm: () => void;
 }
 
+export interface ChatTurnRegenerateDialogProps {
+  onClose: () => void;
+  onConfirm: () => void;
+}
+
 export interface LoginRequiredDialogProps {
   confirmText?: string;
   description?: string;
@@ -133,6 +138,7 @@ export type DialogTypeMap = {
   CHAT_LEAVE: DialogWithoutManagerClose<ChatLeaveDialogProps>;
   CHAT_RESTART: DialogWithoutManagerClose<ChatRestartDialogProps>;
   CHAT_TURN_DELETE: DialogWithoutManagerClose<ChatTurnDeleteDialogProps>;
+  CHAT_TURN_REGENERATE: DialogWithoutManagerClose<ChatTurnRegenerateDialogProps>;
   COMMENT_DELETE: DialogWithoutManagerClose<CommentDeleteDialogProps>;
   CREDIT_INSUFFICIENT: DialogWithoutManagerClose<CreditInsufficientDialogProps>;
   DRAFT_OVERWRITE: DialogWithoutManagerClose<DraftOverwriteDialogProps>;

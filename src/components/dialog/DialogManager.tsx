@@ -15,6 +15,7 @@ const DIALOG_LOADERS = {
   CHAT_LEAVE: () => import("./ChatLeaveDialog"),
   CHAT_RESTART: () => import("./ChatRestartDialog"),
   CHAT_TURN_DELETE: () => import("./ChatTurnDeleteDialog"),
+  CHAT_TURN_REGENERATE: () => import("./ChatTurnRegenerateDialog"),
   COMMENT_DELETE: () => import("./CommentDeleteDialog"),
   CREDIT_INSUFFICIENT: () => import("./CreditInsufficientDialog"),
   DRAFT_OVERWRITE: () => import("./DraftOverwriteDialog"),

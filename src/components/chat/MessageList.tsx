@@ -21,7 +21,7 @@ interface MessageListProps {
   onUpdateMessage?: (id: string, newContent: string) => void;
   /** 턴 삭제. 서버에 저장된 메시지에만 버튼이 뜬다. */
   onDeleteMessage?: (id: string) => void;
-  /** 답 다시 만들기. 서버가 방의 마지막 답만 받으므로 목록 맨 끝의 저장된 답에만 버튼이 뜬다. */
+  /** 답 다시 만들기. 저장된 답이면 어느 답에든 버튼이 뜬다 — 중간 답은 확정되면 뒤 대화가 지워진다. */
   onRetryMessage?: (id: string) => void;
   /** AI 응답 신고. 서버 id(숫자)를 받은 응답에만 버튼이 뜬다 — 받는 중인 임시 응답은 신고할 대상이 없다. */
   onReportMessage?: (id: string) => void;
@@ -43,8 +43,6 @@ interface MessageRowProps {
   /** 이 줄 아래에 붙일 추천 문장. 마지막 답에만 넘어온다. */
   suggestions: string[];
   onSuggestionSelect?: MessageListProps["onSuggestionSelect"];
-  /** 목록 맨 끝 메시지인지. 다시 만들기는 마지막 답에만 된다. */
-  isLast: boolean;
   onUpdateMessage?: MessageListProps["onUpdateMessage"];
   onDeleteMessage?: MessageListProps["onDeleteMessage"];
   onRetryMessage?: MessageListProps["onRetryMessage"];
@@ -57,7 +55,6 @@ const MessageRow = memo(
     isEditable,
     suggestions,
     onSuggestionSelect,
-    isLast,
     onUpdateMessage,
     onDeleteMessage,
     onRetryMessage,
@@ -97,7 +94,7 @@ const MessageRow = memo(
             // 처리 함수를 받지 않았으면 버튼도 띄우지 않는다.
             onDelete={message.isScenario || !canDelete ? undefined : handleDelete}
             onRetry={
-              message.isScenario || !onRetryMessage || !isStoredMessage || !isLast
+              message.isScenario || !onRetryMessage || !isStoredMessage
                 ? undefined
                 : handleRetry
             }
@@ -141,7 +138,6 @@ const MessageRow = memo(
       previous.isEditable === next.isEditable &&
       previous.suggestions === next.suggestions &&
       previous.onSuggestionSelect === next.onSuggestionSelect &&
-      previous.isLast === next.isLast &&
       previous.onUpdateMessage === next.onUpdateMessage &&
       previous.onDeleteMessage === next.onDeleteMessage &&
       previous.onRetryMessage === next.onRetryMessage &&
@@ -316,7 +312,6 @@ const MessageList = memo(
                     : EMPTY_SUGGESTIONS
                 }
                 onSuggestionSelect={onSuggestionSelect}
-                isLast={virtualMessage.index === messages.length - 1}
                 onUpdateMessage={onUpdateMessage}
                 onDeleteMessage={onDeleteMessage}
                 onRetryMessage={onRetryMessage}
