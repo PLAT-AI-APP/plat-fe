@@ -52,7 +52,11 @@ const CharacterChat = ({
           {CharacterName}
         </span>
         <div
-          className={cn("w-fit bg-card px-3 py-2 text-font-1", bubbleClassName)}
+          // 여러 줄 대사의 줄바꿈을 살린다. 연속 공백은 한 칸으로 줄여 원문 들여쓰기가 말풍선을 벌리지 않게 한다.
+          className={cn(
+            "w-fit whitespace-pre-line bg-card px-3 py-2 text-font-1",
+            bubbleClassName,
+          )}
         >
           <ActionText text={chatText} />
         </div>

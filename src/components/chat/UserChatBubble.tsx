@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import InlineEditActions from "@/components/chat/InlineEditActions";
 import { useInlineTextEdit } from "@/hooks/form/useInlineTextEdit";
 import { Pen, Trash } from "@/icons";
@@ -16,6 +17,7 @@ const UserChatBubble = ({
   onUpdate,
   onDelete,
 }: UserChatBubbleProps) => {
+  const t = useTranslations();
   const {
     isEditing,
     draft: editedText,
@@ -51,22 +53,30 @@ const UserChatBubble = ({
 
   return (
     <div className="group flex items-end justify-end gap-1">
-      {isEditable && (
+      {/* 고치기는 미리보기처럼 글을 직접 바꿀 수 있는 자리에서만, 지우기는 지울 대상(서버 메시지)이 있으면 늘 보인다.
+          채팅방에서는 내 말을 지우면 그 턴과 뒤 대화가 함께 지워진다. */}
+      {(isEditable || onDelete) && (
         <div className="flex gap-1">
-          <button
-            type="button"
-            onClick={startEditing}
-            className="rounded-lg p-1.5 hover:bg-btn-hover"
-          >
-            <Pen className="size-4 text-font-2" />
-          </button>
-          <button
-            type="button"
-            onClick={onDelete}
-            className="rounded-lg p-1.5 hover:bg-btn-hover"
-          >
-            <Trash className="size-4 text-font-2" />
-          </button>
+          {isEditable && (
+            <button
+              type="button"
+              onClick={startEditing}
+              className="rounded-lg p-1.5 hover:bg-btn-hover"
+              aria-label={t("chatUI.editMessage")}
+            >
+              <Pen className="size-4 text-font-2" />
+            </button>
+          )}
+          {onDelete && (
+            <button
+              type="button"
+              onClick={onDelete}
+              className="rounded-lg p-1.5 hover:bg-btn-hover"
+              aria-label={t("chatUI.deleteMessage")}
+            >
+              <Trash className="size-4 text-font-2" />
+            </button>
+          )}
         </div>
       )}
 

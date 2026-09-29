@@ -5,7 +5,17 @@ interface UseTextareaSubmitShortcutsOptions {
   onSubmit: () => void;
   /** 되돌릴 원래 값이 있는 "수정" 자리에서만 넘깁니다. 새로 작성하는 자리는 취소할 게 없어 생략합니다. */
   onCancel?: () => void;
+  /**
+   * 터치가 주 입력인 기기(pointer: coarse)에서는 Enter 를 줄바꿈으로 둔다. 가상 키보드에는 Shift+Enter 가 없어
+   * 여러 줄을 쓸 방법이 없기 때문이다. 이때 전송은 버튼으로 한다.
+   */
+  newlineOnTouch?: boolean;
 }
+
+const isCoarsePointer = () =>
+  typeof window !== "undefined" &&
+  typeof window.matchMedia === "function" &&
+  window.matchMedia("(pointer: coarse)").matches;
 
 /**
  * textarea의 제출/취소 단축키 공통 동작입니다. 기존 값을 고쳐 쓰는 곳,
@@ -18,6 +28,7 @@ interface UseTextareaSubmitShortcutsOptions {
 export const useTextareaSubmitShortcuts = ({
   onSubmit,
   onCancel,
+  newlineOnTouch = false,
 }: UseTextareaSubmitShortcutsOptions) => {
   const handleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -32,11 +43,12 @@ export const useTextareaSubmitShortcuts = ({
         !event.shiftKey &&
         !event.nativeEvent.isComposing
       ) {
+        if (newlineOnTouch && isCoarsePointer()) return;
         event.preventDefault();
         onSubmit();
       }
     },
-    [onCancel, onSubmit],
+    [onCancel, onSubmit, newlineOnTouch],
   );
 
   const handleFocus = useCallback((event: FocusEvent<HTMLTextAreaElement>) => {
