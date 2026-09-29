@@ -40,5 +40,7 @@ export const useDraftUpdateMutation = () => {
   >({
     mutationKey: ["put-draft-update"],
     mutationFn: putDraftUpdate,
+    // 저장 실패는 useUniverseDraft 가 직접 알린다. 전역 토스트까지 뜨면 두 번 말한다.
+    meta: { silent: true },
   });
 };

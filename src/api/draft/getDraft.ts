@@ -26,5 +26,7 @@ export const useDraftMutation = () => {
   return useMutation<DraftResponse, AppError, string>({
     mutationKey: ["get-draft"],
     mutationFn: getDraft,
+    // 불러오기 실패는 useUniverseDraft 가 직접 알린다. 전역 토스트까지 뜨면 두 번 말한다.
+    meta: { silent: true },
   });
 };

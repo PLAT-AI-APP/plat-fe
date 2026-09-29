@@ -1,6 +1,8 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
+import { draftQueryKeys } from "@/api/draft/queryKeys";
+import { invalidateUniverseLists } from "./invalidateUniverseLists";
 
 export type UniverseCreateVisibility = "PUBLIC" | "PRIVATE";
 export type UniverseCreateTendency = "ALL" | "MALE_ORIENTED" | "FEMALE_ORIENTED";
@@ -68,6 +70,8 @@ export const postUniverseCreate = async (request: UniverseCreateRequest) => {
 };
 
 export const useUniverseCreateMutation = () => {
+  const queryClient = useQueryClient();
+
   return useMutation<
     UniverseCreateResponse,
     AppError<UniverseCreateRequest>,
@@ -75,5 +79,10 @@ export const useUniverseCreateMutation = () => {
   >({
     mutationKey: ["post-universe-create"],
     mutationFn: postUniverseCreate,
+    // 새 세계관이 내 프로필·홈 목록에 바로 보이게 한다. 초안은 서버가 지웠으니 현재 초안도 다시 본다.
+    onSuccess: () => {
+      invalidateUniverseLists(queryClient);
+      void queryClient.invalidateQueries({ queryKey: draftQueryKeys.current("UNIVERSE") });
+    },
   });
 };
