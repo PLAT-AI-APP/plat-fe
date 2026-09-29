@@ -55,6 +55,8 @@ export const useAgreeMutation = () => {
     mutationFn: async (request) => {
       await authAxios.post("/users/me/agreements", request);
     },
+    // 실패는 동의 창(AgreementGate)이 자기 문구로 알린다. 전역 토스트까지 뜨면 두 번 말한다.
+    meta: { silent: true },
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: agreementQueryKeys.status() }),
   });
@@ -67,6 +69,8 @@ export const useMarketingAgreementMutation = () => {
     mutationFn: async (agreed) => {
       await authAxios.patch("/users/me/marketing", { agreed });
     },
+    // 실패는 설정 화면이 자기 문구로 알린다. 전역 토스트까지 뜨면 두 번 말한다.
+    meta: { silent: true },
     onSuccess: () =>
       queryClient.invalidateQueries({ queryKey: agreementQueryKeys.status() }),
   });
