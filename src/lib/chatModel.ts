@@ -8,12 +8,17 @@ const PROVIDER_ICON: Record<ChatModelOption["provider"], string> = {
 
 // 번역 문구가 있는 모델만 둔다. 없으면 서버가 준 설명(한국어)으로 떨어진다.
 const DESCRIPTION_KEY: Record<string, string> = {
-  CLAUDE_SONNET_4_6: "claudeSonnet46Description",
-  CLAUDE_OPUS_4_8: "claudeOpus46Description",
-  GEMINI_2_5_PRO: "gemini25Description",
+  CLAUDE_OPUS_5_5: "claudeOpus46Description",
+  CLAUDE_SONNET_5_5: "claudeSonnet46Description",
+  CLAUDE_HAIKU_4_5: "lightChatDescription",
   GEMINI_3_1_PRO_PREVIEW: "gemini31Description",
-  GEMINI_3_FLASH_PREVIEW: "gemini3FlashDescription",
-  GPT_5_5: "gpt51Description",
+  GEMINI_3_8_FLASH: "gemini3FlashDescription",
+  GEMINI_3_5_FLASH_LITE: "lightChatDescription",
+  GPT_6_SOL: "gpt51Description",
+  GPT_6_LUNA: "lightChatDescription",
+  GPT_5_6_SOL: "gpt51Description",
+  GPT_5_6_TERRA: "balancedChatDescription",
+  GPT_5_6_LUNA: "lightChatDescription",
 };
 
 /** 백엔드 모델 카탈로그 한 줄을 화면용 모델로 바꿉니다. */

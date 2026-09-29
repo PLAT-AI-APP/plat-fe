@@ -71,14 +71,14 @@ export const useRoomMessagesInfiniteQuery = (roomId?: string, size = 20) =>
  *
  * 무한스크롤 쿼리를 통째로 invalidate하면 이미 불러온 페이지를 예전 커서로 다시 받아, 새 메시지만큼
  * 밀린 항목이 어느 페이지에도 없게 됩니다. 그래서 가장 최근 한 페이지만 받아 아직 없는 것만 앞에 붙입니다.
- * 새로 붙은 메시지 수를 돌려주며, 0이면 서버가 아직 저장을 마치지 않은 것입니다.
+ * 새로 붙은 메시지 id 를 돌려주며, 비었으면 서버가 아직 저장을 마치지 않은 것입니다.
  */
 export const prependLatestRoomMessages = async (
   queryClient: QueryClient,
   roomId: string,
 ) => {
   const latest = await getRoomMessages({ roomId });
-  let addedCount = 0;
+  let addedIds: string[] = [];
 
   queryClient.setQueryData<
     InfiniteData<SliceWith<RoomMessage>, string | undefined>
@@ -93,7 +93,7 @@ export const prependLatestRoomMessages = async (
     const fresh = latest.content.filter(
       (message) => !knownIds.has(message.messageId),
     );
-    addedCount = fresh.length;
+    addedIds = fresh.map((message) => message.messageId);
     if (fresh.length === 0) return previous;
 
     // 페이지 안이 시간순이라 새 메시지는 맨 뒤에 붙는다.
@@ -107,11 +107,46 @@ export const prependLatestRoomMessages = async (
     };
   });
 
-  return addedCount;
+  return addedIds;
+};
+
+/** Snowflake id 는 시간순이다. 자릿수가 커 Number 로는 비교가 틀릴 수 있어 BigInt 로 본다. */
+export const isMessageAtOrAfter = (messageId: string, fromMessageId: string) =>
+  /^\d+$/.test(messageId) && BigInt(messageId) >= BigInt(fromMessageId);
+
+/**
+ * 이 메시지부터 뒤 메시지를 캐시에서 뺀다. 답을 다시 만들어 확정되면 서버가 옛 답과 그 뒤 대화를 지운다.
+ * 방금 받아 붙인 새 답({@code keepIds})은 남긴다.
+ */
+export const removeRoomMessagesFromCacheFrom = (
+  queryClient: QueryClient,
+  roomId: string,
+  fromMessageId: string,
+  keepIds: readonly string[],
+) => {
+  const kept = new Set(keepIds);
+
+  queryClient.setQueryData<
+    InfiniteData<SliceWith<RoomMessage>, string | undefined>
+  >(roomQueryKeys.messages(roomId), (previous) => {
+    if (!previous) return previous;
+
+    return {
+      ...previous,
+      pages: previous.pages.map((page) => ({
+        ...page,
+        content: page.content.filter(
+          (message) =>
+            kept.has(message.messageId) ||
+            !isMessageAtOrAfter(message.messageId, fromMessageId),
+        ),
+      })),
+    };
+  });
 };
 
 /**
- * 지운 메시지를 캐시에서 뺀다. 턴 삭제 응답이나 재생성으로 바뀐 옛 답에 쓴다.
+ * 지운 메시지를 캐시에서 뺀다. 턴 삭제 응답(그 턴과 뒤 대화 전부)에 쓴다.
  *
  * 무한스크롤을 다시 받지 않고 그 자리에서만 뺀다. 커서는 각 페이지의 첫 항목이라, 첫 항목이 빠져도
  * 다음 항목이 커서가 되어 과거 방향 조회가 그대로 이어진다.

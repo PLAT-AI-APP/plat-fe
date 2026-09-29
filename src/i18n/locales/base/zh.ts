@@ -116,10 +116,16 @@ const zh: typeof ko = {
       confirm: "删除",
     },
     chatTurnDelete: {
-      title: "要删除这段对话吗？",
-      description: "你发送的消息和角色的回复会一起删除，且无法恢复。已使用的笔记不会退还。",
+      title: "要从这里删除吗？",
+      description: "这段对话及之后的所有对话都会被删除，过往对话也会回到此前的状态。无法恢复，已使用的笔记不会退还。",
       cancel: "取消",
       confirm: "删除",
+    },
+    chatTurnRegenerate: {
+      title: "要重新生成这条回复吗？",
+      description: "新回复生成后，之后的所有对话都会被删除，过往对话也会回到此时的状态。无法恢复。",
+      cancel: "取消",
+      confirm: "重新生成",
     },
     loginRequired: {
       title: "需要登录",

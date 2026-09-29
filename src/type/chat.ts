@@ -68,9 +68,9 @@ export interface ChatAssetGalleryResponse {
 
 /** 채팅 모델 카탈로그 한 줄 */
 export interface ChatModelOption {
-  /** enum 이름 (예: CLAUDE_SONNET_4_6) */
+  /** enum 이름 (예: CLAUDE_SONNET_5_5) */
   name: string;
-  /** 제공사 모델 식별자 (예: claude-sonnet-4-6). 채팅 요청에 이 값이 아니라 name을 보냅니다. */
+  /** 제공사 모델 식별자 (예: claude-sonnet-5-5). 채팅 요청에 이 값이 아니라 name을 보냅니다. */
   value: string;
   provider: "ANTHROPIC" | "GOOGLE" | "OPENAI";
   /** 화면에 그대로 쓰는 모델 이름 (예: Claude Sonnet 4.6) */

@@ -117,10 +117,16 @@ const ja: typeof ko = {
       confirm: "削除",
     },
     chatTurnDelete: {
-      title: "この会話を削除しますか？",
-      description: "送ったメッセージとキャラクターの返信が一緒に削除され、元に戻せません。使用したノートは戻りません。",
+      title: "ここから削除しますか？",
+      description: "この会話とそれ以降の会話がすべて削除され、これまでの会話もこの時点より前に戻ります。元に戻せず、使用したノートは戻りません。",
       cancel: "キャンセル",
       confirm: "削除",
+    },
+    chatTurnRegenerate: {
+      title: "この返信を作り直しますか？",
+      description: "新しい返信ができると、それ以降の会話がすべて削除され、これまでの会話もこの時点に戻ります。元に戻せません。",
+      cancel: "キャンセル",
+      confirm: "作り直す",
     },
     loginRequired: {
       title: "ログインが必要です",

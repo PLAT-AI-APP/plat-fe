@@ -301,6 +301,8 @@ const th: typeof en = {
     characterTyping: "{name} กำลังพิมพ์",
     characterProfileAlt: "รูปโปรไฟล์ของ {name}",
     chatAssetAlt: "รูปสถานการณ์ในแชต",
+    lightChatDescription: "โมเดลเบาและเร็วสำหรับบทสนทนาสบาย ๆ",
+    balancedChatDescription: "โมเดลที่สมดุลระหว่างความเร็วและการแสดงออก",
     gemini31Description: "โมเดล AI ล่าสุดที่มีประสิทธิภาพและการสื่อสารดีขึ้น",
     gemini30Description: "โมเดล AI ล่าสุดสำหรับบทสนทนาที่สมจริงยิ่งขึ้น",
     gemini25Description: "โมเดล AI ประสิทธิภาพสูง เหมาะกับบทสนทนายาว",
