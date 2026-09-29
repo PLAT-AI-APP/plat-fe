@@ -10,12 +10,13 @@ const postQna = async (request: QnaCreateRequest) => {
   return response.data;
 };
 
-/** 1:1 문의 등록. 성공하면 내 문의 목록을 다시 받는다. */
+/** 1:1 문의 등록. 성공하면 내 문의 목록을 다시 받는다. 실패는 작성 화면이 칸 아래나 토스트로 직접 알린다. */
 export const usePostQnaMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation<QnaCreated, AppError, QnaCreateRequest>({
     mutationFn: postQna,
+    meta: { silent: true },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: qnaQueryKeys.mine() });
     },

@@ -3,12 +3,15 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { notifyApiError } from "@/api";
 import { usePaymentRefundMutation } from "@/api/payment/postPaymentRefund";
 import { usePostQnaMutation } from "@/api/qna/postQna";
 import ActiveButton from "@/components/ActiveButton";
 import SmartInput from "@/components/smart-input";
 import { ChipButton } from "@/components/ui/Button";
+import { useUnsavedChangesGuard } from "@/hooks/navigation/useUnsavedChangesGuard";
 import { showAppToast } from "@/lib/toast";
+import type { AppError } from "@/type/api";
 import type { QnaWritableCategory } from "@/type/qna";
 import CustomerServiceHeader from "../../../_components/CustomerServiceHeader";
 import RefundOrderPicker from "./RefundOrderPicker";
@@ -51,6 +54,37 @@ const QnaWriteContents = ({ initialCategory }: QnaWriteContentsProps) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [orderUid, setOrderUid] = useState<string | null>(null);
+  // 서버가 거절한 칸별 사유. 고치면 그 칸의 사유는 지운다.
+  const [fieldErrors, setFieldErrors] = useState<{
+    title?: string;
+    content?: string;
+  }>({});
+
+  // 쓰던 내용이 있으면 떠나기 전에 묻는다. 환불 결제만 고른 것도 쓰던 것으로 본다.
+  const isDirty =
+    title.trim().length > 0 || content.trim().length > 0 || orderUid !== null;
+  const { allowLeave } = useUnsavedChangesGuard({ isDirty });
+
+  /** 서버 검증 오류를 칸 아래에 단다. 칸에 붙일 수 없으면 토스트로 알린다. */
+  const handleSubmitError = (error: AppError) => {
+    const fields = error.fields ?? {};
+    const next = {
+      title: fields.title,
+      // 환불 사유(reason)는 본문 칸을 함께 쓴다.
+      content: fields.content ?? fields.reason,
+    };
+    if (next.title || next.content) {
+      setFieldErrors(next);
+      return;
+    }
+    notifyApiError(error);
+  };
+
+  /** 등록을 마치고 목록으로. 뒤로가기로 빈 작성 화면에 돌아오지 않게 기록을 바꾼다. */
+  const leaveToList = () => {
+    allowLeave();
+    router.replace(QNA_LIST_PATH);
+  };
 
   const isRefund = category === "REFUND";
   const isPending = isQnaPending || isRefundPending;
@@ -74,8 +108,9 @@ const QnaWriteContents = ({ initialCategory }: QnaWriteContentsProps) => {
               isExisting ? t("refund.existingToast") : t("refund.successToast"),
               { description: t("refund.successDescription") },
             );
-            router.push(QNA_LIST_PATH);
+            leaveToList();
           },
+          onError: handleSubmitError,
         },
       );
       return;
@@ -86,14 +121,16 @@ const QnaWriteContents = ({ initialCategory }: QnaWriteContentsProps) => {
       {
         onSuccess: () => {
           showAppToast("success", t("write.success"));
-          router.push(QNA_LIST_PATH);
+          leaveToList();
         },
+        onError: handleSubmitError,
       },
     );
   };
 
   const handleChangeCategory = (next: WriteCategory) => {
     setCategory(next);
+    setFieldErrors({});
     // 환불 사유는 255자라 일반 문의에서 넘어오면 잘라 둔다.
     if (next === "REFUND") setContent((prev) => prev.slice(0, REFUND_REASON_MAX_LENGTH));
   };
@@ -134,7 +171,11 @@ const QnaWriteContents = ({ initialCategory }: QnaWriteContentsProps) => {
               type="textarea"
               name="reason"
               value={content}
-              onChange={(event) => setContent(event.target.value)}
+              onChange={(event) => {
+                setContent(event.target.value);
+                setFieldErrors((prev) => ({ ...prev, content: undefined }));
+              }}
+              error={fieldErrors.content}
               label={t("refund.reasonLabel")}
               maxLength={REFUND_REASON_MAX_LENGTH}
               minLine={4}
@@ -147,7 +188,11 @@ const QnaWriteContents = ({ initialCategory }: QnaWriteContentsProps) => {
             <SmartInput
               name="title"
               value={title}
-              onChange={(event) => setTitle(event.target.value)}
+              onChange={(event) => {
+                setTitle(event.target.value);
+                setFieldErrors((prev) => ({ ...prev, title: undefined }));
+              }}
+              error={fieldErrors.title}
               label={t("write.titleLabel")}
               maxLength={TITLE_MAX_LENGTH}
               placeholder={t("write.titlePlaceholder")}
@@ -157,7 +202,11 @@ const QnaWriteContents = ({ initialCategory }: QnaWriteContentsProps) => {
               type="textarea"
               name="content"
               value={content}
-              onChange={(event) => setContent(event.target.value)}
+              onChange={(event) => {
+                setContent(event.target.value);
+                setFieldErrors((prev) => ({ ...prev, content: undefined }));
+              }}
+              error={fieldErrors.content}
               label={t("write.contentLabel")}
               maxLength={CONTENT_MAX_LENGTH}
               minLine={8}
