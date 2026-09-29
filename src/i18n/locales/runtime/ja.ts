@@ -337,6 +337,7 @@ const ja: typeof en = {
     nicknameCheckInvalid: "ニックネームの重複確認の応答を確認できませんでした。",
     loginTokenMissing: "ログインの応答にトークンが含まれていません。",
     chatNoResponse: "チャットの応答を受け取れませんでした。",
+    chatTurnInProgress: "前の返答をまだ作成中です。しばらくしてから会話を読み込み直します。",
     personaDetailInvalid: "ペルソナ詳細の応答を確認できませんでした。",
   },
   loading: {

@@ -49,9 +49,9 @@ const parseEventBlock = (block: string) => {
 
     const colonIndex = line.indexOf(":");
     const field = colonIndex === -1 ? line : line.slice(0, colonIndex);
-    // 스펙상 콜론 뒤 공백 한 칸은 값에 포함하지 않습니다.
-    const value =
-      colonIndex === -1 ? "" : line.slice(colonIndex + 1).replace(/^ /, "");
+    // SSE 스펙은 콜론 뒤 공백 한 칸을 떼지만, 서버(Spring SseEmitter)는 `data:` 뒤에 공백 없이 토큰을 붙인다.
+    // 토큰 맨 앞 공백이 곧 띄어쓰기이므로 떼지 않는다(BE↔FE 계약).
+    const value = colonIndex === -1 ? "" : line.slice(colonIndex + 1);
 
     if (field === "id") id = value;
     else if (field === "event") event = value;

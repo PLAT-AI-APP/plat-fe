@@ -22,10 +22,16 @@ import type { ChatMessageType, ChatStartResponse } from "@/type/chat";
 
 /** 크레딧 예약 시 잔액이 모자라면 서버가 주는 코드(422). */
 const CREDIT_INSUFFICIENT_CODE = "CREDIT_INSUFFICIENT";
+/** 같은 사용자의 이전 턴이 아직 생성 중이라 새 턴을 받지 않을 때 서버가 주는 코드(409). */
+const CHAT_TURN_IN_PROGRESS_CODE = "CHAT_TURN_IN_PROGRESS";
 
 // 서버는 턴이 끝난 뒤 두 메시지를 저장하므로, 바로 조회하면 아직 없을 수 있어 잠깐 기다리며 다시 봅니다.
 const SYNC_RETRY_COUNT = 3;
 const SYNC_RETRY_DELAY_MS = 1000;
+/** 저장 확인이 안 된 채 남겨 둔 응답을 다시 확인해 보고 거두기까지 기다리는 시간 */
+const UNSYNCED_TURN_TTL_MS = 10_000;
+/** 이전 턴이 아직 도는 중(409)일 때, 그 결과를 이력에 붙이러 다시 보는 시점들 */
+const IN_PROGRESS_RESYNC_DELAYS_MS = [5_000, 15_000];
 
 const wait = (ms: number) =>
   new Promise<void>((resolve) => setTimeout(resolve, ms));
@@ -53,6 +59,8 @@ interface ChatTurnState {
   assistantContent: string;
   /** 응답 글자를 아직 받거나 화면에 내보내는 중인지 */
   isStreaming: boolean;
+  /** 저장 확인을 끝내 못 해 보이던 대로 남겨 둔 턴. 다음 서버 메시지가 반영되거나 잠시 뒤 거둔다. */
+  isUnsynced?: boolean;
 }
 
 /**
@@ -89,13 +97,35 @@ export const useChatTurn = ({
     onTurnFailedRef.current = onTurnFailed;
   }, [onTurnFailed]);
 
+  // 남겨 둔 턴을 거두거나 이력을 다시 보는 예약. 화면을 떠나면 모두 취소한다.
+  const timersRef = useRef(new Set<ReturnType<typeof setTimeout>>());
+  // 이 화면에서 턴을 한 번이라도 보냈는지. 떠날 때 이력·목록을 새로 받게 할지 정한다.
+  const hasRunTurnRef = useRef(false);
+
+  const schedule = useCallback((callback: () => void, delayMs: number) => {
+    const timer = setTimeout(() => {
+      timersRef.current.delete(timer);
+      callback();
+    }, delayMs);
+    timersRef.current.add(timer);
+  }, []);
+
   // 화면을 떠나면 스트림 구독만 끊습니다. 생성은 서버에서 끝까지 이어지고 결과는 이력에 저장됩니다.
-  useEffect(
-    () => () => {
+  // 캐시에는 아직 그 결과가 없으므로, 돌아왔을 때 마지막 턴이 빠져 보이지 않게 이력과 목록을 새로 받게 합니다.
+  useEffect(() => {
+    const timers = timersRef.current;
+    return () => {
       abortControllerRef.current?.abort();
-    },
-    [],
-  );
+      timers.forEach(clearTimeout);
+      timers.clear();
+      if (hasRunTurnRef.current) {
+        void queryClient.invalidateQueries({
+          queryKey: roomQueryKeys.messages(roomId),
+        });
+        void queryClient.invalidateQueries({ queryKey: roomQueryKeys.lists() });
+      }
+    };
+  }, [queryClient, roomId]);
 
   const updateTurn = useCallback(
     (chatTurnId: string, patch: Partial<ChatTurnState>) => {
@@ -148,7 +178,6 @@ export const useChatTurn = ({
       const addedIds = await syncSavedMessages().catch(() => null);
       const isSynced = addedIds !== null;
 
-      // 저장 확인이 끝내 안 된 정상 응답은 사라지지 않게 남겨 둡니다.
       if (isSynced || !keepIfUnsynced) {
         notifyManager.schedule(() => {
           // 재생성이 저장됐으면 서버는 옛 답과 그 뒤 대화를 지웠다. 캐시에서도 같이 빼야 다시 보이지 않는다.
@@ -161,8 +190,37 @@ export const useChatTurn = ({
               addedIds,
             );
           }
-          removeTurn(chatTurnId);
+          // 새 서버 메시지가 반영됐으면 그보다 앞서 남겨 둔 미확정 턴도 이번 조회에 함께 들어왔거나
+          // 끝내 저장되지 않은 것이다. 그대로 두면 서버 메시지와 겹쳐 두 번 보인다.
+          setTurns((previous) =>
+            previous.filter(
+              (turn) =>
+                turn.chatTurnId !== chatTurnId &&
+                !(isSynced && turn.isUnsynced),
+            ),
+          );
         });
+      } else {
+        // 저장 확인이 끝내 안 된 정상 응답은 바로 사라지지 않게 남겨 두고, 잠시 뒤 한 번 더 확인한 다음 거둔다.
+        // 그때까지도 이력에 없으면 서버에 저장되지 않은 것이라 계속 들고 있으면 새로고침과 화면이 어긋난다.
+        updateTurn(chatTurnId, { isUnsynced: true });
+        schedule(() => {
+          void prependLatestRoomMessages(queryClient, roomId)
+            .catch(() => [] as string[])
+            .then((lateIds) => {
+              notifyManager.schedule(() => {
+                if (lateIds.length > 0 && replacesMessageId) {
+                  removeRoomMessagesFromCacheFrom(
+                    queryClient,
+                    roomId,
+                    replacesMessageId,
+                    lateIds,
+                  );
+                }
+                removeTurn(chatTurnId);
+              });
+            });
+        }, UNSYNCED_TURN_TTL_MS);
       }
 
       void queryClient.invalidateQueries({ queryKey: roomQueryKeys.lists() });
@@ -173,8 +231,18 @@ export const useChatTurn = ({
         queryKey: chatQueryKeys.assetGallery(roomId),
       });
     },
-    [queryClient, roomId, removeTurn, syncSavedMessages],
+    [queryClient, roomId, removeTurn, updateTurn, schedule, syncSavedMessages],
   );
+
+  /** 이전 턴이 서버에서 아직 도는 중이다. 끝나면 저장될 그 결과를 잠시 뒤 이력에 붙인다. */
+  const resyncAfterInProgress = useCallback(() => {
+    IN_PROGRESS_RESYNC_DELAYS_MS.forEach((delayMs) => {
+      schedule(() => {
+        void prependLatestRoomMessages(queryClient, roomId).catch(() => []);
+        void queryClient.invalidateQueries({ queryKey: roomQueryKeys.lists() });
+      }, delayMs);
+    });
+  }, [queryClient, roomId, schedule]);
 
   const runTurn = useCallback(
     async (
@@ -188,6 +256,7 @@ export const useChatTurn = ({
       },
     ) => {
       const { restoreMessage, replacesMessageId } = options;
+      hasRunTurnRef.current = true;
       let hasStarted = false;
       let receivedText = "";
       // 토큰이 뭉쳐서 와도 응답이 툭 나타나지 않도록 화면에는 조금씩 이어 보여 준다.
@@ -220,6 +289,19 @@ export const useChatTurn = ({
           },
         });
 
+        if (hasFailed && !receivedText) {
+          // 한 글자도 못 받고 실패하면 서버는 아무것도 저장하지 않는다. 보낸 말이 잠깐 떠 있다 사라지지 않게
+          // 말풍선을 바로 거두고 입력창에 되돌린다. 재생성이면 가려 둔 옛 답이 다시 보인다.
+          reveal.cancel();
+          if (abortController.signal.aborted) return;
+          removeTurn(chatTurnId);
+          releaseBusy();
+          if (restoreMessage !== undefined) {
+            onTurnFailedRef.current?.(restoreMessage);
+          }
+          return;
+        }
+
         // 받은 글자를 화면에 다 내보낸 뒤에 임시 말풍선을 서버 이력으로 바꿔야 끝에서 툭 튀지 않는다.
         await reveal.finish();
         if (abortController.signal.aborted) return;
@@ -227,14 +309,6 @@ export const useChatTurn = ({
         updateTurn(chatTurnId, { isStreaming: false });
         // 응답이 다 보였으니 바로 다음 말을 받는다. 저장 확인은 뒤에서 이어진다.
         releaseBusy();
-
-        void queryClient.invalidateQueries({
-          queryKey: walletQueryKeys.balance(),
-        });
-        // 노트를 썼으니 사용 내역도 달라졌다.
-        void queryClient.invalidateQueries({
-          queryKey: noteQueryKeys.usageHistoryLists(),
-        });
 
         // 실패해도 부분 응답이 저장됐을 수 있어, 이력을 한 번 확인한 뒤에 화면의 임시 말풍선을 치웁니다.
         void settleTurn(chatTurnId, !hasFailed, replacesMessageId);
@@ -268,11 +342,28 @@ export const useChatTurn = ({
           // 노트가 모자라 시작하지 못했으면 토스트 대신 충전으로 안내한다. 보낸 말은 위에서 입력창에 돌려놨다.
           if (isAppError(error) && error.code === CREDIT_INSUFFICIENT_CODE) {
             openDialog("CREDIT_INSUFFICIENT", {});
+          } else if (
+            isAppError(error) &&
+            error.code === CHAT_TURN_IN_PROGRESS_CODE
+          ) {
+            // 방금 떠났다 돌아온 사이 이전 답이 서버에서 아직 만들어지는 중이다. 곧 이력에 붙인다.
+            showAppToast("info", getApiErrorMessage("chatTurnInProgress"));
+            resyncAfterInProgress();
           } else {
             notifyApiError(error);
           }
         }
         if (hasStarted) void settleTurn(chatTurnId, false, replacesMessageId);
+      } finally {
+        if (hasStarted) {
+          // 시작된 턴은 성공·실패·중단 어느 쪽이든 예약·정산으로 잔액과 사용 내역이 바뀐다.
+          void queryClient.invalidateQueries({
+            queryKey: walletQueryKeys.balance(),
+          });
+          void queryClient.invalidateQueries({
+            queryKey: noteQueryKeys.usageHistoryLists(),
+          });
+        }
       }
     },
     [
@@ -282,6 +373,7 @@ export const useChatTurn = ({
       releaseBusy,
       settleTurn,
       openDialog,
+      resyncAfterInProgress,
     ],
   );
 

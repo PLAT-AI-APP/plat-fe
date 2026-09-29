@@ -354,6 +354,7 @@ const en = {
     nicknameCheckInvalid: "We couldn't read the nickname availability response.",
     loginTokenMissing: "The login response did not include a token.",
     chatNoResponse: "We didn't receive a chat response.",
+    chatTurnInProgress: "The previous reply is still being generated. We'll reload the chat in a moment.",
     personaDetailInvalid: "We couldn't read the persona details response.",
   },
   loading: {

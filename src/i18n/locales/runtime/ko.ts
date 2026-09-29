@@ -337,6 +337,7 @@ const ko: typeof en = {
     nicknameCheckInvalid: "닉네임 중복 확인 응답을 확인해 주세요.",
     loginTokenMissing: "로그인 응답에서 토큰을 찾을 수 없습니다.",
     chatNoResponse: "채팅 응답을 받지 못했습니다.",
+    chatTurnInProgress: "이전 답변을 아직 만들고 있어요. 잠시 뒤 대화를 다시 불러올게요.",
     personaDetailInvalid: "페르소나 상세 응답을 확인해 주세요.",
   },
   loading: {

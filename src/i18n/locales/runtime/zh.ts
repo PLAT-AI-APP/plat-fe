@@ -331,6 +331,7 @@ const zh: typeof en = {
     nicknameCheckInvalid: "无法识别昵称查重的响应结果。",
     loginTokenMissing: "登录响应中没有找到令牌。",
     chatNoResponse: "未收到聊天回复。",
+    chatTurnInProgress: "上一条回复仍在生成中，稍后将重新加载对话。",
     personaDetailInvalid: "无法识别人设详情的响应结果。",
   },
   loading: {

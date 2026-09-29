@@ -341,6 +341,7 @@ const th: typeof en = {
     nicknameCheckInvalid: "ไม่สามารถอ่านผลการตรวจสอบชื่อเล่นซ้ำได้",
     loginTokenMissing: "ไม่พบโทเค็นในผลการเข้าสู่ระบบ",
     chatNoResponse: "ไม่ได้รับการตอบกลับจากแชต",
+    chatTurnInProgress: "กำลังสร้างคำตอบก่อนหน้าอยู่ จะโหลดบทสนทนาใหม่ในอีกสักครู่",
     personaDetailInvalid: "ไม่สามารถอ่านผลรายละเอียดเพอร์โซนาได้",
   },
   loading: {
