@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import InlineEditActions from "@/components/chat/InlineEditActions";
 import { useInlineTextEdit } from "@/hooks/form/useInlineTextEdit";
 import { Pen, Trash } from "@/icons";
-import { splitUserNarration } from "@/lib/platParse";
+import { splitActionSegments } from "@/lib/chatText";
 import { cn } from "@/lib/utils";
 
 interface UserChatBubbleProps {
@@ -29,19 +29,10 @@ const UserChatBubble = ({
     handleFocus,
   } = useInlineTextEdit({ value: text, onSubmit: onUpdate });
 
-  /*
-   * *…* 로 감싼 부분은 지문이라 캐릭터 응답의 지문처럼 자기 줄을 차지하고 톤도 낮춰 그린다.
-   * 줄이 나뉘면 지문과 맞닿아 있던 공백이 줄 앞뒤에 남아 들여쓰기처럼 보이므로 다듬는다
-   * (지문이 없으면 사용자가 친 그대로 둔다). 수정할 때는 원문을 고쳐야 하니 입력란에는 * 를 남긴다.
-   */
-  const segments = useMemo(() => {
-    const parsed = splitUserNarration(text);
-    if (parsed.length === 1) return parsed;
-
-    return parsed
-      .map((segment) => ({ ...segment, value: segment.value.trim() }))
-      .filter((segment) => segment.value !== "");
-  }, [text]);
+  // 사용자 말에서도 *행동* 을 캐릭터 대사와 똑같이 갈라 그린다(같은 규칙을 두 번 쓰지 않도록 공용 함수를 쓴다).
+  const segments = useMemo(() => splitActionSegments(text), [text]);
+  // 행동이 있을 때만 줄을 나눈다. 없으면 예전처럼 문자열 하나로 둬 다른 말풍선의 모양이 바뀌지 않는다.
+  const hasAction = segments.some((segment) => segment.type === "action");
 
   if (isEditing) {
     return (
@@ -86,15 +77,23 @@ const UserChatBubble = ({
         </div>
       )}
 
-      <div className="body-5 whitespace-pre-wrap rounded-[16px_16px_0px_16px] bg-brand-opacity-2 px-3 py-2 text-font-1">
-        {segments.map((segment, index) => (
-          <span
-            key={index}
-            className={cn("block", segment.isNarration && "text-font-2")}
-          >
-            {segment.value}
-          </span>
-        ))}
+      <div
+        className={cn(
+          "body-5 whitespace-pre-wrap rounded-[16px_16px_0px_16px] bg-brand-opacity-2 px-3 py-2 text-font-1",
+          hasAction && "flex flex-col gap-2",
+        )}
+      >
+        {hasAction
+          ? segments.map((segment, index) => (
+              <p
+                key={index}
+                // 행동은 대사보다 한 단계 흐린 색으로 구분한다.
+                className={cn(segment.type === "action" && "text-font-2")}
+              >
+                {segment.value}
+              </p>
+            ))
+          : text}
       </div>
     </div>
   );
