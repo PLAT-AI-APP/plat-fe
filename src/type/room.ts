@@ -40,6 +40,10 @@ export interface Room {
   memory: string;
   /** 사용자가 적은 유저노트. 매 턴 프롬프트에 들어간다. */
   userNote: string;
+  /** 이 방의 대화 언어. PATCH /rooms/{roomId}/language 로 바꾼다. */
+  language: string;
+  /** 켜면 응답 끝에 추천 문장 3개가 함께 온다. */
+  answerRecommendationEnabled: boolean;
 }
 
 export type MessageSender = "USER" | "AI";

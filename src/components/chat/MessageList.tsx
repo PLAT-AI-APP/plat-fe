@@ -25,16 +25,24 @@ interface MessageListProps {
   onRetryMessage?: (id: string) => void;
   /** AI 응답 신고. 서버 id(숫자)를 받은 응답에만 버튼이 뜬다 — 받는 중인 임시 응답은 신고할 대상이 없다. */
   onReportMessage?: (id: string) => void;
-  isAiSuggestedChat?: boolean;
+  /** 마지막 답과 함께 온 추천 문장. 비어 있으면 추천 줄이 뜨지 않는다. */
+  suggestions?: string[];
+  /** 추천 문장을 골랐을 때. 입력창에 넣기만 하고 보내지는 않는다. */
+  onSuggestionSelect?: (text: string) => void;
 }
 
 /** 서버에 저장된 메시지 id 는 숫자(Snowflake)다. 받는 중·보내는 중인 임시 메시지는 다른 모양의 id 를 쓴다. */
 const SERVER_MESSAGE_ID = /^\d+$/;
 
+/** 기본값을 매 렌더 새로 만들면 마지막 줄의 memo 비교가 늘 어긋난다. */
+const EMPTY_SUGGESTIONS: string[] = [];
+
 interface MessageRowProps {
   message: ChatMessageType;
   isEditable: boolean;
-  showSuggestedChat: boolean;
+  /** 이 줄 아래에 붙일 추천 문장. 마지막 답에만 넘어온다. */
+  suggestions: string[];
+  onSuggestionSelect?: MessageListProps["onSuggestionSelect"];
   /** 목록 맨 끝 메시지인지. 다시 만들기는 마지막 답에만 된다. */
   isLast: boolean;
   onUpdateMessage?: MessageListProps["onUpdateMessage"];
@@ -47,7 +55,8 @@ const MessageRow = memo(
   ({
     message,
     isEditable,
-    showSuggestedChat,
+    suggestions,
+    onSuggestionSelect,
     isLast,
     onUpdateMessage,
     onDeleteMessage,
@@ -99,7 +108,9 @@ const MessageRow = memo(
             }
           />
           {/* 추천 답변은 응답을 다 받은 뒤에 붙인다. 받는 동안 붙이면 입력 중 표시 밑에 먼저 떠 버린다. */}
-          {showSuggestedChat && !message.isStreaming && <AiSuggestedChat />}
+          {!message.isStreaming && onSuggestionSelect && (
+            <AiSuggestedChat items={suggestions} onSelect={onSuggestionSelect} />
+          )}
         </div>
       );
     }
@@ -128,7 +139,8 @@ const MessageRow = memo(
     return (
       isSameMessage &&
       previous.isEditable === next.isEditable &&
-      previous.showSuggestedChat === next.showSuggestedChat &&
+      previous.suggestions === next.suggestions &&
+      previous.onSuggestionSelect === next.onSuggestionSelect &&
       previous.isLast === next.isLast &&
       previous.onUpdateMessage === next.onUpdateMessage &&
       previous.onDeleteMessage === next.onDeleteMessage &&
@@ -163,7 +175,8 @@ const MessageList = memo(
     onDeleteMessage,
     onRetryMessage,
     onReportMessage,
-    isAiSuggestedChat = true,
+    suggestions = EMPTY_SUGGESTIONS,
+    onSuggestionSelect,
   }: MessageListProps) => {
     const listRef = useRef<HTMLElement>(null);
     const messagesRef = useRef(messages);
@@ -297,9 +310,12 @@ const MessageList = memo(
               <MessageRow
                 message={message}
                 isEditable={isEditable}
-                showSuggestedChat={
-                  virtualMessage.index === lastAssistantIndex && isAiSuggestedChat
+                suggestions={
+                  virtualMessage.index === lastAssistantIndex
+                    ? suggestions
+                    : EMPTY_SUGGESTIONS
                 }
+                onSuggestionSelect={onSuggestionSelect}
                 isLast={virtualMessage.index === messages.length - 1}
                 onUpdateMessage={onUpdateMessage}
                 onDeleteMessage={onDeleteMessage}

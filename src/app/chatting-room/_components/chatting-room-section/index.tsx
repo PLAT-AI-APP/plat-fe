@@ -133,11 +133,16 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
   const handleTurnFailed = useCallback((message: string) => {
     chatFormRef.current?.restore(message);
   }, []);
+  // 고른 추천은 입력창에 넣기만 한다. 바로 보내면 고쳐 쓸 틈이 없다.
+  const handleSuggestionSelect = useCallback((text: string) => {
+    chatFormRef.current?.fill(text);
+  }, []);
 
   // 진행 중인 턴의 말풍선은 서버 이력과 별개로 이어붙이고, 저장이 끝나 이력에 들어오면 훅이 치운다.
   const {
     pendingMessages,
     replacingMessageIds,
+    suggestions,
     isBusy,
     canSend,
     sendMessage,
@@ -223,11 +228,11 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
           ) : isMessagesError && serverMessages.length === 0 ? (
             <ErrorState error={messagesError} onRetry={refetchMessages} />
           ) : (
-            // 추천 답변은 서버 API 가 생길 때까지 넘기지 않아 뜨지 않는다.
             <MessageList
               messages={messages}
               scrollContainer={scrollContainer}
-              isAiSuggestedChat={false}
+              suggestions={suggestions}
+              onSuggestionSelect={handleSuggestionSelect}
               onDeleteMessage={isBusy ? undefined : handleDeleteMessage}
               onRetryMessage={isBusy || !canSend ? undefined : regenerateMessage}
               onReportMessage={handleReportMessage}

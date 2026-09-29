@@ -10,6 +10,8 @@ import ActiveButton from "../ActiveButton";
 export interface ChatFormHandle {
   /** 보내지 못한 글을 입력창에 되돌린다. 그 사이 새로 쓴 글이 있으면 덮어쓰지 않는다. */
   restore: (message: string) => void;
+  /** 고른 추천 문장을 입력창에 채운다. 사용자가 직접 고른 것이라 쓰던 글이 있어도 덮어쓴다. */
+  fill: (message: string) => void;
 }
 
 interface ChatFormProps {
@@ -43,8 +45,20 @@ const ChatForm = ({
         setMsg((current) => (current.trim() ? current : message));
         requestAnimationFrame(resizeTextarea);
       },
+      fill: (message) => {
+        setMsg(message);
+        requestAnimationFrame(() => {
+          resizeTextarea();
+          // 바로 이어 쓸 수 있게 글 끝에 커서를 둔다.
+          const textarea = textareaRef.current;
+          if (!textarea) return;
+
+          textarea.focus();
+          textarea.setSelectionRange(message.length, message.length);
+        });
+      },
     }),
-    [resizeTextarea],
+    [resizeTextarea, textareaRef],
   );
 
   const submitMessage = useCallback(() => {

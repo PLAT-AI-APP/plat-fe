@@ -222,6 +222,8 @@ export const roomHandlers = [
       multiplier: room.multiplier,
       memory: room.memory,
       userNote: room.userNote,
+      language: "KO",
+      answerRecommendationEnabled: true,
     };
     return HttpResponse.json(response);
   }),
