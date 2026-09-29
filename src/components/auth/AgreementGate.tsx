@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import {
   type AgreementType,
@@ -49,8 +50,11 @@ const AgreementGate = () => {
     Partial<Record<AgreementType, boolean>>
   >({});
 
+  const pathname = usePathname();
+
   const pending = status?.pending ?? [];
-  const isOpen = pending.length > 0;
+  // 약관 페이지는 동의하기 전에 읽어야 하는 화면이라 가리지 않는다. 동의 창의 링크가 새 탭으로 여기를 연다.
+  const isOpen = pending.length > 0 && !pathname.startsWith("/legal/");
 
   // 뒤 화면이 스크롤되지 않게 막는다.
   useEffect(() => {

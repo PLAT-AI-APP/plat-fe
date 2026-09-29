@@ -212,6 +212,13 @@ const ko = {
     noticeWithEnd: "{start}부터 {end}까지 서버 점검이 있어요.",
     draining: "곧 점검이 시작돼요. 새 채팅과 결제는 점검이 끝난 뒤에 할 수 있어요.",
   },
+  legalPage: {
+    effectiveAt: "{date}부터 시행",
+    history: "지난 버전",
+    currentOption: "{date} 시행 (현재)",
+    pastOption: "{date} 시행",
+    pastNotice: "지난 버전을 보고 있어요. 지금 적용되는 내용은 현재 버전을 확인해 주세요.",
+  },
   profilePopover: {
     notice: "공지사항",
     customerService: "고객센터",

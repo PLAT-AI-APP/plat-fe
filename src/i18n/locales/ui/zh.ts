@@ -212,6 +212,13 @@ const zh = {
     noticeWithEnd: "服务器将于{start}至{end}进行维护。",
     draining: "即将开始维护。新的聊天和支付请在维护结束后进行。",
   },
+  legalPage: {
+    effectiveAt: "{date}起施行",
+    history: "历史版本",
+    currentOption: "{date}施行（当前）",
+    pastOption: "{date}施行",
+    pastNotice: "您正在查看历史版本。当前适用的内容请查看现行版本。",
+  },
   profilePopover: {
     notice: "公告",
     customerService: "客服中心",

@@ -216,6 +216,13 @@ const ja = {
     noticeWithEnd: "{start}から{end}までサーバーメンテナンスを行います。",
     draining: "まもなくメンテナンスが始まります。新しいチャットと決済はメンテナンス終了後にご利用ください。",
   },
+  legalPage: {
+    effectiveAt: "{date}施行",
+    history: "過去のバージョン",
+    currentOption: "{date}施行（現在）",
+    pastOption: "{date}施行",
+    pastNotice: "過去のバージョンを表示しています。現在適用される内容は最新バージョンをご確認ください。",
+  },
   profilePopover: {
     notice: "お知らせ",
     customerService: "カスタマーセンター",

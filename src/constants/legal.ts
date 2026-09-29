@@ -1,11 +1,23 @@
-// 약관·정책 문서 링크 (자체 페이지가 생기기 전까지 Notion 공개 페이지를 쓴다)
+import type { TermsDocumentType } from "@/api/legal/getTerms";
+
+/**
+ * 약관·정책 문서 페이지. 원문은 관리자 콘솔 > 법적 고지에서 버전으로 관리하고 서버가 내려 준다(src/app/legal).
+ * 예전에는 Notion 공개 페이지로 연결했다.
+ */
+export const LEGAL_SLUG_TYPE = {
+  terms: "TERMS_OF_SERVICE",
+  privacy: "PRIVACY_POLICY",
+  youth: "YOUTH_PROTECTION",
+} as const satisfies Record<string, TermsDocumentType>;
+
+export type LegalSlug = keyof typeof LEGAL_SLUG_TYPE;
+
 export const LEGAL_LINKS = {
-  terms:
-    "https://bloom-shawl-3f7.notion.site/PLAT-36f1c900ce3e8073805de6e7e8e6cfbf?source=copy_link",
-  privacy:
-    "https://bloom-shawl-3f7.notion.site/PLAT-3721c900ce3e800bac34c38d68e1a682?source=copy_link",
-  ageOver14:
-    "https://bloom-shawl-3f7.notion.site/PLAT-3721c900ce3e80c3bb36c3e32a0f08b1?source=copy_link",
+  terms: "/legal/terms",
+  privacy: "/legal/privacy",
+  // 가입의 "만 14세 이상" 항목은 청소년 보호 정책으로 잇는다.
+  ageOver14: "/legal/youth",
+  youth: "/legal/youth",
 } as const;
 
 // 사업자 정보 중 번역이 필요 없는 값. 빈 문자열이면 푸터에 표시하지 않는다.

@@ -215,6 +215,13 @@ const th = {
     noticeWithEnd: "จะมีการปรับปรุงเซิร์ฟเวอร์ตั้งแต่ {start} ถึง {end}",
     draining: "กำลังจะเริ่มปรับปรุงระบบ แชตและการชำระเงินใหม่จะใช้ได้หลังปรับปรุงเสร็จ",
   },
+  legalPage: {
+    effectiveAt: "มีผลตั้งแต่ {date}",
+    history: "ฉบับก่อนหน้า",
+    currentOption: "มีผล {date} (ปัจจุบัน)",
+    pastOption: "มีผล {date}",
+    pastNotice: "คุณกำลังดูฉบับก่อนหน้า โปรดตรวจสอบฉบับปัจจุบันสำหรับเนื้อหาที่ใช้บังคับอยู่",
+  },
   profilePopover: {
     notice: "ประกาศ",
     customerService: "ศูนย์ลูกค้า",

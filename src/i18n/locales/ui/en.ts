@@ -222,6 +222,13 @@ const en = {
     noticeWithEnd: "Server maintenance runs from {start} to {end}.",
     draining: "Maintenance is about to start. New chats and payments will be available after it ends.",
   },
+  legalPage: {
+    effectiveAt: "Effective {date}",
+    history: "Previous versions",
+    currentOption: "Effective {date} (current)",
+    pastOption: "Effective {date}",
+    pastNotice: "You are viewing a previous version. Please check the current version for the terms that apply now.",
+  },
   profilePopover: {
     notice: "Notice",
     customerService: "Customer service",

@@ -7,11 +7,12 @@ import { BUSINESS_INFO, LEGAL_LINKS } from "@/constants/legal";
 
 const Footer = () => {
   const t = useTranslations();
-  // 연결할 문서가 없는 메뉴(회사 소개·청소년 보호정책)는 링크가 생길 때까지 노출하지 않는다
+  // 연결할 문서가 없는 메뉴(회사 소개)는 링크가 생길 때까지 노출하지 않는다
   const menuArray = [
     { text: t("footer.support"), link: "/customer-service", external: false },
-    { text: t("footer.terms"), link: LEGAL_LINKS.terms, external: true },
-    { text: t("footer.privacy"), link: LEGAL_LINKS.privacy, external: true },
+    { text: t("footer.terms"), link: LEGAL_LINKS.terms, external: false },
+    { text: t("footer.privacy"), link: LEGAL_LINKS.privacy, external: false },
+    { text: t("footer.youth"), link: LEGAL_LINKS.youth, external: false },
   ];
 
   const businessItems = [

@@ -216,6 +216,13 @@ const vi = {
     noticeWithEnd: "Máy chủ sẽ bảo trì từ {start} đến {end}.",
     draining: "Sắp bắt đầu bảo trì. Bạn có thể trò chuyện và thanh toán mới sau khi bảo trì kết thúc.",
   },
+  legalPage: {
+    effectiveAt: "Có hiệu lực từ {date}",
+    history: "Phiên bản trước",
+    currentOption: "Hiệu lực {date} (hiện tại)",
+    pastOption: "Hiệu lực {date}",
+    pastNotice: "Bạn đang xem phiên bản trước. Vui lòng xem phiên bản hiện tại để biết nội dung đang áp dụng.",
+  },
   profilePopover: {
     notice: "Thông báo",
     customerService: "Trung tâm khách hàng",
