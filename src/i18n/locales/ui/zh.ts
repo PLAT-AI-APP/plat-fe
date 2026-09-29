@@ -356,6 +356,24 @@ const zh = {
     transactionDateLabel: "交易时间",
     copyTransactionId: "复制交易编号",
     copySuccess: "交易编号已复制。",
+    copyFailed: "无法复制交易编号。",
+    toggleDetail: "查看详情",
+    /* 원장 유형(type)·참조 유형(referenceType)별 제목. 서버 enum 을 그대로 보이지 않는다. */
+    titles: {
+      payment: "笔记充值",
+      adminGrant: "官方发放",
+      event: "活动奖励",
+      promotion: "促销奖励",
+      earningExchange: "收益兑换",
+      refundRestore: "退款撤销恢复",
+      charge: "笔记发放",
+      chat: "聊天",
+      imageGeneration: "图片生成",
+      use: "笔记使用",
+      refund: "退款",
+      expire: "已过期",
+      adminDeduct: "官方回收",
+    },
   },
   /* 고객센터(FAQ · 나의 Q&A). pageTitles 는 runtime 의 같은 네임스페이스에 재귀 병합된다. */
   pageTitles: {

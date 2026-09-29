@@ -360,6 +360,24 @@ const vi = {
     transactionDateLabel: "Thời gian giao dịch",
     copyTransactionId: "Sao chép mã giao dịch",
     copySuccess: "Đã sao chép mã giao dịch.",
+    copyFailed: "Không thể sao chép mã giao dịch.",
+    toggleDetail: "Xem chi tiết",
+    /* 원장 유형(type)·참조 유형(referenceType)별 제목. 서버 enum 을 그대로 보이지 않는다. */
+    titles: {
+      payment: "Nạp note",
+      adminGrant: "PLAT tặng",
+      event: "Thưởng sự kiện",
+      promotion: "Thưởng khuyến mãi",
+      earningExchange: "Đổi doanh thu",
+      refundRestore: "Khôi phục do hủy hoàn tiền",
+      charge: "Nhận note",
+      chat: "Trò chuyện",
+      imageGeneration: "Tạo hình ảnh",
+      use: "Dùng note",
+      refund: "Hoàn tiền",
+      expire: "Hết hạn",
+      adminDeduct: "PLAT thu hồi",
+    },
   },
   /* 고객센터(FAQ · 나의 Q&A). pageTitles 는 runtime 의 같은 네임스페이스에 재귀 병합된다. */
   pageTitles: {
