@@ -226,6 +226,7 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
         >
           <ChattingRoomHeader
             roomId={roomId}
+            universeId={room?.universeId}
             characterName={characterName}
             models={models}
             currentAi={currentAi}
