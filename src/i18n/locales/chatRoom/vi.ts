@@ -2,6 +2,8 @@ import type ko from "./ko";
 
 const vi: typeof ko = {
   chatRoom: {
+    closedNotice:
+      "Nhân vật đã bị xóa nên bạn không thể trò chuyện tiếp. Bạn vẫn xem được cuộc trò chuyện trước đó.",
     generatedNotice:
       "Tất cả tin nhắn do nhân vật gửi đều là nội dung được tạo.",
     sidebar: {

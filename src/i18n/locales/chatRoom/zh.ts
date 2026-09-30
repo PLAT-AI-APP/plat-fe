@@ -2,6 +2,8 @@ import type ko from "./ko";
 
 const zh: typeof ko = {
   chatRoom: {
+    closedNotice:
+      "角色已被删除，无法继续聊天。之前的对话仍可查看。",
     generatedNotice: "角色发送的所有消息均为生成内容。",
     sidebar: {
       title: "聊天室设置",

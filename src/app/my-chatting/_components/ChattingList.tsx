@@ -88,6 +88,7 @@ const ChattingList = ({ searchQuery }: ChattingListProps) => {
                 lastMessage={room.lastMessage}
                 lastUsedAt={room.lastUsedAt}
                 isPinned={room.isPinned}
+                isClosed={room.isClosed}
               />
 
               {/* 추후 다시 필요해질 수 있어 삭제 대신 주석 처리합니다.

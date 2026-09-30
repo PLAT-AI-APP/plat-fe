@@ -2,6 +2,8 @@ import type ko from "./ko";
 
 const en: typeof ko = {
   chatRoom: {
+    closedNotice:
+      "This character has been deleted, so you can no longer chat. Your past conversation is still here.",
     generatedNotice:
       "All messages sent by the character are AI-generated content.",
     sidebar: {

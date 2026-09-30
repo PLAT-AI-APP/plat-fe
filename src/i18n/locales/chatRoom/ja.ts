@@ -2,6 +2,8 @@ import type ko from "./ko";
 
 const ja: typeof ko = {
   chatRoom: {
+    closedNotice:
+      "キャラクターが削除されたため、これ以上会話できません。これまでの会話は引き続き見られます。",
     generatedNotice:
       "キャラクターが送信するメッセージはすべて生成された内容です。",
     sidebar: {

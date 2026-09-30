@@ -110,16 +110,16 @@ const zh: typeof en = {
     description: "真的很遗憾要分别了。在你离开 PLAT 前，请务必确认以下内容。",
     notices: {
       dataDeleted: "所有数据和个人信息都会被删除，无法再次找回。",
-      recordsRetained: "订单和交易记录会在一定期间内安全保存。",
+      recordsRetained: "仅支付和退款记录会依法保存5年，其余内容将全部删除。",
       creditsRemoved: "未使用的笔记不会退款，并会一同删除。",
       rejoinRestricted: "同一邮箱地址在 7 天内无法再次注册。",
       creationsDeleted: "你亲自创建的角色和世界观在注销后都会被删除。",
       chatsReadOnly: "已有聊天室会保留，但无法再发送新消息。",
     },
     remainingBalance:
-      "剩余的 {credits} 笔记和 {points}P 收益积分在注销后将无法恢复。如有待发放的礼品卡兑换，完成后才能注销。",
+      "剩余的 {credits} 笔记和 {points}P 收益积分在注销后将无法恢复。如有处理中的退款或待发放的礼品卡兑换，完成后才能注销。",
     legalNotice:
-      "支付、退款和笔记交易记录因相关法规规定的保管义务（5年）而不会立即删除。",
+      "支付和退款记录因相关法规规定的保管义务（5年）而不会立即删除。笔记和收益记录将在注销3天后全部删除。",
     agreement: "我已确认以上全部内容",
     back: "我再想想",
     submit: "我要注销",
@@ -242,6 +242,7 @@ const zh: typeof en = {
     },
   },
   myChatting: {
+    closedBadge: "已结束",
     searchPlaceholder: "按聊天内容、角色或人设名称搜索",
     clearSearch: "清除搜索词",
     openMenu: "打开聊天菜单",

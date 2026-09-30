@@ -1,5 +1,7 @@
 const ko = {
   chatRoom: {
+    closedNotice:
+      "캐릭터가 삭제되어 더 이상 대화할 수 없어요. 지난 대화는 계속 볼 수 있어요.",
     generatedNotice: "캐릭터가 보내는 메시지는 모두 생성된 내용이에요",
     sidebar: {
       title: "채팅방 설정",

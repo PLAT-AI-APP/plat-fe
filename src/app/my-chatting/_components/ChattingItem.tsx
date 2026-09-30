@@ -26,6 +26,8 @@ interface ChattingItemProps {
   lastMessage: string | null;
   lastUsedAt: string | null;
   isPinned: boolean;
+  /** 캐릭터가 지워진 방. 대화는 볼 수 있고 새 대화만 막힌다. */
+  isClosed: boolean;
 }
 
 const ChattingItem = ({
@@ -36,6 +38,7 @@ const ChattingItem = ({
   lastMessage,
   lastUsedAt,
   isPinned,
+  isClosed,
 }: ChattingItemProps) => {
   const t = useTranslations("myChatting");
   const getRelativeTime = useRelativeTimeLabel();
@@ -97,6 +100,11 @@ const ChattingItem = ({
             <div className="flex h-full min-w-0 flex-1 flex-col gap-1.5 overflow-hidden">
               <div className="flex items-center gap-1.5">
                 <h3 className="title-3 truncate text-font-1">{title}</h3>
+                {isClosed && (
+                  <span className="body-8 shrink-0 rounded-md bg-card-hover px-1.5 py-0.5 text-font-2">
+                    {t("closedBadge")}
+                  </span>
+                )}
                 {isPinned && (
                   <PinLine
                     className="size-4 shrink-0 text-font-1"
