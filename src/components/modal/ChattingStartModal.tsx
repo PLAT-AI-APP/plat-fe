@@ -144,6 +144,8 @@ const ChattingStartModal = ({
               handleCurrentScenario={handleSelectScenario}
               onClose={closeScenario}
               triggerRef={scenarioTriggerRef}
+              // 모달 본문이 스크롤돼서, absolute 로 그리면 팝오버 길이만큼 모달에 스크롤이 생긴다.
+              matchTriggerWidth
             />
           }
           descFontSize="body-5"
