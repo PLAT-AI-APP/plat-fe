@@ -21,9 +21,22 @@ import CharacterCreatePrompt from "./_components/CharacterCreatePrompt";
 
 const PAGE_SIZE = 24;
 
-const CategoryCharacterCard = memo(({ card }: { card: CategoryCardItem }) => {
+interface CategoryCharacterCardProps {
+  card: CategoryCardItem;
+  selectedTagIds: string[];
+}
+
+const CategoryCharacterCard = memo(({ card, selectedTagIds }: CategoryCharacterCardProps) => {
   // 카드 데이터가 유지되는 동안 태그 이름 배열도 재사용해 CharacterCard 메모화 보존
   const tagList = useMemo(() => card.tags.map((tag) => tag.name), [card.tags]);
+  // 사이드바는 id 로 고르지만 카드는 라벨을 그리므로, 고른 id 와 일치하는 태그의 라벨만 강조 대상으로 넘긴다.
+  const selectedTags = useMemo(() => {
+    if (selectedTagIds.length === 0) return undefined;
+    const selectedIdSet = new Set(selectedTagIds);
+    return card.tags
+      .filter((tag) => selectedIdSet.has(tag.tagId))
+      .map((tag) => tag.name);
+  }, [card.tags, selectedTagIds]);
 
   return (
     <CharacterCard
@@ -35,6 +48,7 @@ const CategoryCharacterCard = memo(({ card }: { card: CategoryCardItem }) => {
       chatCount={card.chatCount}
       images={card.images}
       tagList={tagList}
+      selectedTags={selectedTags}
       isNew={card.isNew}
       isOfficial={card.isOfficial}
       href={`/characters/${card.universeId}`}
@@ -131,6 +145,7 @@ const CategoriesTabContents = () => {
                 <CategoryCharacterCard
                   key={card.universeId}
                   card={card}
+                  selectedTagIds={selectedTagIds}
                 />
               ))}
             </CardGrid>
