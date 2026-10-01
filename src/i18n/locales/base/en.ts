@@ -57,6 +57,7 @@ const en: typeof ko = {
       invalidHint: "The sign-in link expired or the address is wrong. Please sign in again.",
       goHome: "Go home",
       failedTitle: "We couldn't log you in",
+      failedTitleWith: "We couldn't log you in with {provider}",
       failedHint: "Please try again in a moment.",
       retry: "Try again",
       login: "Log in",

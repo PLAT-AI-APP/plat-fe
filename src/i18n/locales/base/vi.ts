@@ -55,6 +55,7 @@ const vi: typeof ko = {
       invalidHint: "Liên kết đăng nhập đã hết hạn hoặc địa chỉ không đúng. Vui lòng đăng nhập lại.",
       goHome: "Về trang chủ",
       failedTitle: "Không thể đăng nhập",
+      failedTitleWith: "Không thể đăng nhập bằng tài khoản {provider}",
       failedHint: "Vui lòng thử lại sau giây lát.",
       retry: "Thử lại",
       login: "Đăng nhập",

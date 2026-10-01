@@ -55,6 +55,7 @@ const zh: typeof ko = {
       invalidHint: "登录链接已过期或地址不正确，请重新登录。",
       goHome: "返回首页",
       failedTitle: "登录失败",
+      failedTitleWith: "无法使用{provider}账号登录",
       failedHint: "请稍后再试。",
       retry: "重试",
       login: "登录",

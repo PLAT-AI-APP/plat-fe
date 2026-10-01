@@ -55,6 +55,7 @@ const ja: typeof ko = {
       invalidHint: "ログインリンクの有効期限が切れているか、アドレスが正しくありません。もう一度ログインしてください。",
       goHome: "ホームへ",
       failedTitle: "ログインできませんでした",
+      failedTitleWith: "{provider}アカウントでログインできませんでした",
       failedHint: "しばらくしてからもう一度お試しください。",
       retry: "もう一度試す",
       login: "ログイン",
