@@ -24,7 +24,8 @@ export const usePostUniverseCommentMutation = () => {
     mutationKey: ["post-universe-comment"],
     mutationFn: postUniverseComment,
     onSuccess: (_, { universeId }) => {
-      queryClient.invalidateQueries({
+      // 등록 직후 화면 동작이 갱신된 댓글 목록을 기준으로 이어지도록 재조회를 기다립니다.
+      return queryClient.invalidateQueries({
         queryKey: commentQueryKeys.universeComments(universeId),
       });
     },

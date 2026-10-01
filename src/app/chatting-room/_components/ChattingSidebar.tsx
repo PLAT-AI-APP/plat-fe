@@ -17,6 +17,7 @@ import {
   ChatPlus,
   ImageIcon,
   Logout,
+  Pen,
   Persona,
   Storage,
   Token,
@@ -27,6 +28,7 @@ import {
   adaptUniverseDetailToCharacterDetail,
   useUniverseDetailQuery,
 } from "@/api/universe/getUniverseDetail";
+import { usePatchRoomAnswerRecommendationMutation } from "@/api/room/patchRoomAnswerRecommendation";
 import { usePatchRoomPersonaMutation } from "@/api/room/patchRoomPersona";
 import { cn, formatWithCommas } from "@/lib/utils";
 import { useDialogStore } from "@/store/useDialogStore";
@@ -73,11 +75,35 @@ interface SidebarMenuItemProps {
   disabled?: boolean;
 }
 
-/*
- * 추천 답변은 서버 연동 전까지 메뉴에서 뺀다.
- * 목업 데이터나 없는 API 를 부르는 화면을 사용자에게 보여 주지 않기 위해서다.
- */
 type SidebarDepth = "SETTINGS" | "USER_NOTE" | "MEMORY" | "ASSET_GALLERY";
+
+interface SidebarToggleProps {
+  isOn: boolean;
+  onClick: () => void;
+  label: string;
+}
+
+/** 켬/끔만 있는 설정 줄의 스위치. 지금은 답변 추천 하나가 쓴다. */
+const SidebarToggle = ({ isOn, onClick, label }: SidebarToggleProps) => (
+  <button
+    type="button"
+    onClick={onClick}
+    role="switch"
+    aria-checked={isOn}
+    aria-label={label}
+    className={cn(
+      "relative h-6 w-12 shrink-0 rounded-full border transition-colors",
+      isOn ? "border-brand/40 bg-brand-opacity-2" : "border-main/40 bg-darkest",
+    )}
+  >
+    <span
+      className={cn(
+        "absolute left-0.5 top-0.5 size-5 rounded-full transition",
+        isOn ? "translate-x-6 bg-brand" : "translate-x-0 bg-font-disabled",
+      )}
+    />
+  </button>
+);
 
 /** 사이드바 오버레이 페이드 애니메이션 */
 const sidebarOverlayMotion = {
@@ -154,7 +180,17 @@ const ChattingSidebar = ({ roomId, toggleIsSidebar }: ChattingSidebarProps) => {
     ? adaptUniverseDetailToCharacterDetail(universe).scenarios
     : [];
   const { mutate: patchRoomPersona } = usePatchRoomPersonaMutation();
+  const { mutate: patchAnswerRecommendation } =
+    usePatchRoomAnswerRecommendationMutation();
   const [sidebarDepth, setSidebarDepth] = useState<SidebarDepth>("SETTINGS");
+
+  const isAnswerRecommendationOn = room?.answerRecommendationEnabled ?? false;
+  const handleAnswerRecommendationToggle = () => {
+    // 방 정보를 아직 못 받았으면 지금 값을 몰라 뒤집을 수 없다.
+    if (!room) return;
+
+    patchAnswerRecommendation({ roomId, enabled: !isAnswerRecommendationOn });
+  };
 
   const isDepthViewOpen = sidebarDepth !== "SETTINGS";
   const panelRef = useRef<HTMLDivElement>(null);
@@ -379,6 +415,19 @@ const ChattingSidebar = ({ roomId, toggleIsSidebar }: ChattingSidebarProps) => {
                           {t("chatSettings")}
                         </h2>
                         <menu className="flex list-none flex-col gap-1">
+                          <li>
+                            <SidebarMenuItem
+                              icon={Pen}
+                              label={t("suggestedReply")}
+                              trailing={
+                                <SidebarToggle
+                                  isOn={isAnswerRecommendationOn}
+                                  onClick={handleAnswerRecommendationToggle}
+                                  label={t("suggestedReply")}
+                                />
+                              }
+                            />
+                          </li>
                           <li>
                             <SidebarMenuItem
                               icon={ChatPlus}

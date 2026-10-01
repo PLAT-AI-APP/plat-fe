@@ -4,6 +4,7 @@ import React, { memo, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
+import Link from "next/link";
 import AiModelSelect from "@/components/chat/AiModeSelect";
 import { useSafeBack } from "@/hooks/navigation/useSafeBack";
 import { ArrowDown, Dots } from "@/icons";
@@ -12,6 +13,8 @@ import ChattingSidebar from "../ChattingSidebar";
 
 interface ChattingRoomHeaderProps {
   roomId: string;
+  /** 제목을 눌렀을 때 갈 캐릭터 상세. 방 정보를 받기 전에는 없습니다. */
+  universeId?: string;
   characterName: string;
   models: AIModelType[];
   currentAi?: AIModelType;
@@ -24,6 +27,7 @@ interface ChattingRoomHeaderProps {
 
 const ChattingRoomHeader = ({
   roomId,
+  universeId,
   characterName,
   models,
   currentAi,
@@ -57,7 +61,17 @@ const ChattingRoomHeader = ({
           <div aria-hidden="true" className="skeleton h-6 w-32 rounded-full" />
         ) : (
           <h1 className="title-1 min-w-0 truncate text-font-1">
-            {characterName}
+            {/* 세계관을 아직 못 받았으면 어디로 갈지 몰라 글자만 둔다. */}
+            {universeId ? (
+              <Link
+                href={`/characters/${universeId}`}
+                className="block truncate underline-offset-4 transition-colors hover:text-font-2 hover:underline"
+              >
+                {characterName}
+              </Link>
+            ) : (
+              characterName
+            )}
           </h1>
         )}
       </div>

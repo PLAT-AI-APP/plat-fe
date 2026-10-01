@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useQueryClient } from "@tanstack/react-query";
-import { useRoomDetailQuery } from "@/api/room/getRoomDetail";
+import { useRoomMemoryQuery } from "@/api/room/getRoomMemory";
 import { usePatchRoomMemoryMutation } from "@/api/room/patchRoomMemory";
 import { roomQueryKeys } from "@/api/room/queryKeys";
 import { ArrowLeft, Storage } from "@/icons";
@@ -37,12 +37,8 @@ const ChattingMemoryView = ({
 }: ChattingMemoryViewProps) => {
   const t = useTranslations("chatRoom.sidebar");
   const queryClient = useQueryClient();
-  const {
-    data: room,
-    isPending: isRoomPending,
-    refetch,
-  } = useRoomDetailQuery(roomId);
-  const savedMemory = room?.memory ?? "";
+  const { data: savedMemory = "", isPending: isMemoryPending } =
+    useRoomMemoryQuery(roomId);
   // 고치기 전에는 저장된 값을 그대로 보여 준다. 방 정보가 늦게 오거나 요약이 갱신돼도 따라가고,
   // 한 번 고치기 시작하면 사용자가 쓴 값을 덮지 않는다.
   const [editedDraft, setEditedDraft] = useState<string | null>(null);
@@ -52,11 +48,6 @@ const ChattingMemoryView = ({
     value: draft,
   });
   const { mutate: patchMemory, isPending } = usePatchRoomMemoryMutation();
-
-  // 요약은 턴마다 서버에서 바뀌므로 화면을 열 때마다 새로 받는다.
-  useEffect(() => {
-    refetch();
-  }, [refetch]);
 
   const trimmed = draft.trim();
   const isUnchanged = trimmed === savedMemory.trim();
@@ -77,6 +68,11 @@ const ChattingMemoryView = ({
       { roomId, memory: trimmed },
       {
         onSuccess: () => {
+          queryClient.setQueryData<string>(
+            roomQueryKeys.memory(roomId),
+            trimmed,
+          );
+          // 방 상세도 같은 값을 들고 있어 함께 맞춰 둔다.
           queryClient.setQueryData<Room>(roomQueryKeys.detail(roomId), (prev) =>
             prev ? { ...prev, memory: trimmed } : prev,
           );
@@ -115,7 +111,7 @@ const ChattingMemoryView = ({
               onChange={(event) => setEditedDraft(event.target.value)}
               rows={MEMORY_MIN_ROWS}
               maxLength={MEMORY_MAX_LENGTH}
-              disabled={isRoomPending}
+              disabled={isMemoryPending}
               placeholder={
                 savedMemory ? t("memoryPlaceholder") : t("memoryEmpty")
               }

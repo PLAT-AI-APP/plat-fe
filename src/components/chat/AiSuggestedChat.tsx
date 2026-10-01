@@ -1,46 +1,35 @@
 import React from "react";
 import { useTranslations } from "next-intl";
+import ActionText from "@/components/chat/ActionText";
 import { Pen } from "@/icons";
 
-/** 추천 답변 API 연동 전 임시 문구. 문장은 언어별 메시지(chatUI.sampleReply*)에서 가져온다. */
-const MOCK_AI_RESPONSES = [
-  {
-    id: "resp-01",
-    quoteKey: "chatUI.sampleReply1Quote",
-    narrationKey: "chatUI.sampleReply1Narration",
-  },
-  {
-    id: "resp-02",
-    quoteKey: "chatUI.sampleReply2Quote",
-    narrationKey: "chatUI.sampleReply2Narration",
-  },
-  {
-    id: "resp-03",
-    quoteKey: "chatUI.sampleReply3Quote",
-    narrationKey: "chatUI.sampleReply3Narration",
-  },
-] as const;
+interface AiSuggestedChatProps {
+  /** 서버가 응답 끝에 함께 보낸 추천 문장. 비어 있으면 아무것도 그리지 않는다. */
+  items: string[];
+  /** 고른 문장을 입력창에 넣는다. 바로 보내지는 않아 사용자가 고쳐 쓸 수 있다. */
+  onSelect: (text: string) => void;
+}
 
-const AiSuggestedChat = () => {
+const AiSuggestedChat = ({ items, onSelect }: AiSuggestedChatProps) => {
   const t = useTranslations();
 
+  if (items.length === 0) return null;
+
   return (
-    <section className="flex gap-5">
+    <section className="flex gap-5" aria-label={t("chatUI.suggestedReply")}>
       <Pen size={24} className="size-6 shrink-0 text-font-2" />
 
       <ul className="flex w-full max-w-[500px] flex-col gap-2">
-        {MOCK_AI_RESPONSES.map((res, index) => (
-          <li
-            key={res.id}
-            className="body-5 cursor-pointer rounded-2xl bg-btn-hover px-3 py-4 text-font-1 transition-colors hover:bg-btn-selected"
-          >
-            <span>{`"${t(res.quoteKey)}"`}</span>{" "}
-            <span className="text-font-2">{t(res.narrationKey)}</span>
-            {index === 0 && (
-              <span className="sr-only">
-                {t("chatUI.selectedSuggestedReply")}
-              </span>
-            )}
+        {items.map((item, index) => (
+          <li key={`${index}-${item}`}>
+            <button
+              type="button"
+              onClick={() => onSelect(item)}
+              className="body-5 w-full cursor-pointer rounded-2xl bg-btn-hover px-3 py-4 text-left text-font-1 transition-colors hover:bg-btn-selected"
+            >
+              {/* 추천 문장도 대사 안에 괄호 동작이 섞여 올 수 있어 말풍선과 같은 규칙으로 그린다. */}
+              <ActionText text={item} />
+            </button>
           </li>
         ))}
       </ul>

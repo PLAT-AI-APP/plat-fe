@@ -49,6 +49,10 @@ export interface Room {
   characterName: string;
   /** 캐릭터(세계관)가 지워진 방. 대화는 볼 수 있고 새 대화·다시 만들기·신고는 막힌다. */
   closed: boolean;
+  /** 이 방의 대화 언어. PATCH /rooms/{roomId}/language 로 바꾼다. */
+  language: string;
+  /** 켜면 응답 끝에 추천 문장 3개가 함께 온다. */
+  answerRecommendationEnabled: boolean;
 }
 
 export type MessageSender = "USER" | "AI";

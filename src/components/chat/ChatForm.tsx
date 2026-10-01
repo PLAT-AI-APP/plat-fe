@@ -16,6 +16,8 @@ const CHAT_MESSAGE_COUNTER_FROM = 3500;
 export interface ChatFormHandle {
   /** 보내지 못한 글을 입력창에 되돌린다. 그 사이 새로 쓴 글이 있으면 덮어쓰지 않는다. */
   restore: (message: string) => void;
+  /** 고른 추천 문장을 입력창에 채운다. 사용자가 직접 고른 것이라 쓰던 글이 있어도 덮어쓴다. */
+  fill: (message: string) => void;
 }
 
 interface ChatFormProps {
@@ -49,8 +51,20 @@ const ChatForm = ({
         setMsg((current) => (current.trim() ? current : message));
         requestAnimationFrame(resizeTextarea);
       },
+      fill: (message) => {
+        setMsg(message);
+        requestAnimationFrame(() => {
+          resizeTextarea();
+          // 바로 이어 쓸 수 있게 글 끝에 커서를 둔다.
+          const textarea = textareaRef.current;
+          if (!textarea) return;
+
+          textarea.focus();
+          textarea.setSelectionRange(message.length, message.length);
+        });
+      },
     }),
-    [resizeTextarea],
+    [resizeTextarea, textareaRef],
   );
 
   const submitMessage = useCallback(() => {
@@ -101,7 +115,12 @@ const ChatForm = ({
     <form className="shrink-0" onSubmit={handleSubmit}>
       <fieldset
         id="chat-input-container"
-        className="flex items-end gap-3 rounded-3xl border border-dark bg-darker px-4 py-3 transition-colors focus-within:field-focus!"
+        /*
+         * 테두리를 border 로 그리면 높이가 자동인 이 상자에서는 위아래 1px 씩 더해져 디자인(115px)보다
+         * 2px 커진다. Figma 가 선을 안쪽에 그리는 것과 같게, 자리를 차지하지 않는 inset 그림자로 두른다.
+         * (focus 색은 field-focus 와 같은 토큰을 쓴다.)
+         */
+        className="flex items-end gap-3 rounded-[28px] bg-darker p-4 pt-5 shadow-[inset_0_0_0_1px_var(--bg-dark)] transition-colors focus-within:bg-brand-opacity-3 focus-within:shadow-[inset_0_0_0_1px_var(--brand-dark)]"
       >
         <legend className="sr-only">{t("chatUI.messageForm")}</legend>
 
@@ -113,17 +132,20 @@ const ChatForm = ({
           maxLength={CHAT_MESSAGE_MAX_LENGTH}
           placeholder={t("chatUI.messagePlaceholder")}
           rows={1}
-          className="focus-ring-none body-5 custom-scrollbar min-h-[21px] flex-1 resize-none bg-transparent py-1.5 text-font-1 outline-none placeholder:text-font-disabled"
+          // 비어 있어도 79px 를 차지한다. 자동 높이 조절이 inline height 를 넣어도 min-height 가 이겨서
+          // 한 줄일 때 입력칸이 줄어들지 않는다.
+          className="focus-ring-none body-5 custom-scrollbar min-h-[79px] flex-1 resize-none bg-transparent p-0 text-font-1 outline-none placeholder:text-font-disabled"
         />
 
-        <footer className="flex shrink-0 items-center gap-3">
+        <footer className="flex shrink-0 items-center justify-end gap-2">
+          {/* 글자 없이 기호만 두므로 무엇을 하는 버튼인지는 레이블로만 알린다. */}
           <button
             type="button"
             onClick={handleSituationInsert}
-            className="body-5 flex h-8 items-center justify-center gap-1.5 rounded-full border border-main bg-card/50 py-1.5 pl-2.5 pr-3 text-font-2 transition-colors hover:bg-btn-hover"
+            aria-label={t("chatUI.situation")}
+            className="tap-target flex h-8.5 items-center justify-center px-2 text-font-2 transition-colors hover:text-font-1"
           >
-            <Asterisk className="size-4" />
-            {t("chatUI.situation")}
+            <Asterisk className="size-5" />
           </button>
 
           <ActiveButton
@@ -152,10 +174,6 @@ const ChatForm = ({
           {msg.length}/{CHAT_MESSAGE_MAX_LENGTH}
         </p>
       )}
-      {/* AI 기본법 제31조: 생성형 AI 결과물임을 이용자가 알 수 있게 대화 화면에 늘 표시한다. */}
-      <p className="body-8 mt-2 text-center text-font-disabled">
-        {t("chatUI.aiGeneratedNotice")}
-      </p>
     </form>
   );
 };

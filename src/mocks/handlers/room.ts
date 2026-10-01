@@ -226,6 +226,8 @@ export const roomHandlers = [
       userNote: room.userNote,
       characterName: "",
       closed: false,
+      language: "KO",
+      answerRecommendationEnabled: true,
     };
     return HttpResponse.json(response);
   }),
@@ -284,6 +286,22 @@ export const roomHandlers = [
       },
       content,
     });
+  }),
+
+  // 채팅방 장기기억 조회
+  http.get(/\/rooms\/([^/]+)\/memory(?:\?.*)?$/, ({ request }) => {
+    const room = findRoom(request, /\/rooms\/([^/]+)\/memory$/);
+    if (!room) return roomNotFound();
+
+    return HttpResponse.json({ memory: room.memory });
+  }),
+
+  // 채팅방 유저 노트 조회
+  http.get(/\/rooms\/([^/]+)\/note(?:\?.*)?$/, ({ request }) => {
+    const room = findRoom(request, /\/rooms\/([^/]+)\/note$/);
+    if (!room) return roomNotFound();
+
+    return HttpResponse.json({ userNote: room.userNote });
   }),
 
   // 채팅방 장기기억 수정

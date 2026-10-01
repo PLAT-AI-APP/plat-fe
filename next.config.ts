@@ -1,3 +1,4 @@
+import { withSentryConfig } from "@sentry/nextjs/config";
 import createNextIntlPlugin from "next-intl/plugin";
 import type { NextConfig } from "next";
 
@@ -73,4 +74,22 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withNextIntl(nextConfig);
+/*
+ * 소스맵 업로드는 배포 빌드에서 SENTRY_AUTH_TOKEN 이 있을 때만 한다.
+ * 토큰이 없으면(로컬·PR 빌드) 업로드를 건너뛰어 빌드가 실패하거나 경고로 시끄러워지지 않는다.
+ * 올린 소스맵은 브라우저에 공개되지 않도록 업로드 뒤 지운다.
+ */
+const sentryAuthToken = process.env.SENTRY_AUTH_TOKEN;
+
+export default withSentryConfig(withNextIntl(nextConfig), {
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  authToken: sentryAuthToken,
+  silent: !process.env.CI,
+  telemetry: false,
+  widenClientFileUpload: true,
+  sourcemaps: {
+    disable: !sentryAuthToken,
+    deleteSourcemapsAfterUpload: true,
+  },
+});
