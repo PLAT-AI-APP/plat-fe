@@ -95,24 +95,36 @@ const loadSdk = () => {
 
 export const isTossConfigured = () => TOSS_CLIENT_KEY.length > 0;
 
-interface OpenTossPaymentWindowParams {
+interface TossCheckoutParams {
   orderUid: string;
   orderName: string;
   amountMinor: number;
-  /** 구매자가 결제창을 닫았을 때. 결제는 일어나지 않았다. */
-  onCancel: () => void;
+}
+
+interface TossWindowHandlers {
+  /**
+   * 결제창이 닫혔다. 구매자가 닫았거나 결제 요청 단계에서 막혔다 — 어느 쪽이든 승인은 서버가 하므로
+   * 돈은 움직이지 않았고, 같은 주문으로 다시 열 수 있다.
+   */
+  onClosed: () => void;
+}
+
+export interface TossCheckout {
+  /** 결제창을 띄운다. 닫힌 뒤 다시 부르면 같은 주문으로 이어서 결제한다. */
+  open: (handlers: TossWindowHandlers) => Promise<void>;
+  /** 떠 있는 결제창을 내린다. */
+  close: () => void;
 }
 
 /**
- * 결제창을 띄운다. 결제수단을 고르면 인증을 요청하고, 성공·실패 모두 토스가 이 창을 결과 페이지로 보낸다.
- * SDK 를 못 받았거나 파라미터가 거절되면 예외를 던진다.
+ * 주문 하나의 결제창을 준비한다. 결제수단을 고르면 인증을 요청하고, 성공·실패 모두 토스가 이 창을
+ * 결과 페이지로 보낸다. SDK 를 못 받았으면 예외를 던진다.
  */
-export const openTossPaymentWindow = async ({
+export const prepareTossCheckout = async ({
   orderUid,
   orderName,
   amountMinor,
-  onCancel,
-}: OpenTossPaymentWindowParams) => {
+}: TossCheckoutParams): Promise<TossCheckout> => {
   const TossPayments = await loadSdk();
   const widgets = TossPayments(TOSS_CLIENT_KEY).widgets({
     customerKey: TossPayments.ANONYMOUS,
@@ -123,24 +135,38 @@ export const openTossPaymentWindow = async ({
   const base = `${window.location.origin}/payments/${TOSS_PROVIDER_SEGMENT}`;
   // orderName 은 결제창과 requestPayment 가 같아야 한다(최대 100자).
   const name = orderName.slice(0, 100);
-  const paymentWindow = await widgets.renderPaymentWindow({ orderName: name });
+  // 결제창은 한 번에 하나만 띄울 수 있다. 다시 열기 전에 앞의 것을 내린다.
+  let current: TossPaymentWindow | null = null;
 
-  paymentWindow.on("cancel", () => {
-    paymentWindow.destroy().catch(() => {});
-    onCancel();
-  });
-  paymentWindow.on("paymentRequest", () => {
-    widgets
-      .requestPayment({
-        orderId: orderUid,
-        orderName: name,
-        successUrl: `${base}/success`,
-        failUrl: `${base}/fail`,
-      })
-      .catch(() => {
-        // 인증 요청 단계에서 막혔다(파라미터 오류 등). 돈은 움직이지 않았다.
-        paymentWindow.destroy().catch(() => {});
-        onCancel();
-      });
-  });
+  const close = () => {
+    current?.destroy().catch(() => {});
+    current = null;
+  };
+
+  const open = async ({ onClosed }: TossWindowHandlers) => {
+    close();
+    const paymentWindow = await widgets.renderPaymentWindow({
+      orderName: name,
+    });
+    current = paymentWindow;
+    const closed = () => {
+      if (current !== paymentWindow) return;
+      close();
+      onClosed();
+    };
+    paymentWindow.on("cancel", closed);
+    paymentWindow.on("paymentRequest", () => {
+      widgets
+        .requestPayment({
+          orderId: orderUid,
+          orderName: name,
+          successUrl: `${base}/success`,
+          failUrl: `${base}/fail`,
+        })
+        // 카드사 창을 닫았거나 요청 단계에서 막혔다. 돈은 움직이지 않았다.
+        .catch(closed);
+    });
+  };
+
+  return { open, close };
 };
