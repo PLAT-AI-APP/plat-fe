@@ -48,11 +48,7 @@ export const metadata: Metadata = {
   // 3. 경로 기준점 및 파비콘
   // 전역 canonical 은 두지 않는다. 두면 모든 페이지가 "/" 를 원본이라 주장해 하위 페이지가 검색에서 빠진다.
   metadataBase: new URL(SITE_URL),
-  // icons: {
-  //   icon: "/favicon.ico",
-  //   shortcut: "/favicon-32x32.png",
-  //   apple: "/apple-touch-icon.png",
-  // },
+  // 파비콘(app/icon.png)·애플 터치 아이콘(app/apple-icon.png)·manifest(app/manifest.ts)는 Next 파일 규칙으로 자동 연결된다.
 
   // 4. Open Graph (전역 공통)
   openGraph: {

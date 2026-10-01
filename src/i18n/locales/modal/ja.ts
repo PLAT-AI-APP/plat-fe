@@ -66,6 +66,7 @@ const ja: typeof ko = {
       next: "次へ",
       submit: "パスワード変更",
       successToast: "パスワードが変更されました",
+      successLoginHint: "新しいパスワードでログインしてください。",
     },
     imageCrop: {
       title: "画像を編集",

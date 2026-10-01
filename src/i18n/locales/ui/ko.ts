@@ -356,6 +356,24 @@ const ko = {
     transactionDateLabel: "거래일시",
     copyTransactionId: "거래번호 복사",
     copySuccess: "거래번호가 복사되었습니다.",
+    copyFailed: "거래번호를 복사하지 못했어요.",
+    toggleDetail: "상세 보기",
+    /* 원장 유형(type)·참조 유형(referenceType)별 제목. 서버 enum 을 그대로 보이지 않는다. */
+    titles: {
+      payment: "노트 충전",
+      adminGrant: "운영 지급",
+      event: "이벤트 지급",
+      promotion: "프로모션 지급",
+      earningExchange: "수익 교환",
+      refundRestore: "환불 취소 복구",
+      charge: "노트 지급",
+      chat: "채팅",
+      imageGeneration: "이미지 생성",
+      use: "노트 사용",
+      refund: "환불",
+      expire: "기간 만료",
+      adminDeduct: "운영 회수",
+    },
   },
   /* 고객센터(FAQ · 나의 Q&A). pageTitles 는 runtime 의 같은 네임스페이스에 재귀 병합된다. */
   pageTitles: {

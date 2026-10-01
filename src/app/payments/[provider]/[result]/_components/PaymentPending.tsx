@@ -361,10 +361,10 @@ const PaymentPending = ({ phase, actions }: PaymentPendingProps) => {
         >
           {actions ?? (
             <>
-              <ButtonLink href="/token-charge" size="lg" fullWidth>
+              <ButtonLink replace href="/token-charge" size="lg" fullWidth>
                 {t("tokenCharge.payment.backToCharge")}
               </ButtonLink>
-              <ButtonLink href="/" variant="secondary" size="lg" fullWidth>
+              <ButtonLink replace href="/" variant="secondary" size="lg" fullWidth>
                 {t("tokenCharge.payment.goHome")}
               </ButtonLink>
             </>

@@ -2,6 +2,8 @@ import type ko from "./ko";
 
 const th: typeof ko = {
   chatRoom: {
+    closedNotice:
+      "ตัวละครถูกลบแล้ว จึงไม่สามารถแชตต่อได้ แต่ยังดูบทสนทนาเดิมได้",
     generatedNotice: "บทสนทนานี้สร้างโดย AI อาจไม่ตรงกับบุคคลหรือข้อเท็จจริงจริง",
     sidebar: {
       title: "ตั้งค่าห้องแชต",

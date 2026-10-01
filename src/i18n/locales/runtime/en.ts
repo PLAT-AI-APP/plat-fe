@@ -115,7 +115,7 @@ const en = {
       dataDeleted:
         "All data and personal information will be deleted and cannot be recovered.",
       recordsRetained:
-        "Order and transaction records are safely retained for a certain period.",
+        "Only payment and refund records are kept for 5 years as required by law. Everything else is deleted.",
       creditsRemoved:
         "Unused notes are not refunded and will be removed together.",
       rejoinRestricted:
@@ -126,9 +126,9 @@ const en = {
         "Existing chat rooms stay, but you won't be able to send new messages.",
     },
     remainingBalance:
-      "Your remaining {credits} notes and {points}P in earnings can't be recovered after you leave. If a gift card exchange is still pending, you can leave once it's done.",
+      "Your remaining {credits} notes and {points}P in earnings can't be recovered after you leave. If a refund is in progress or a gift card exchange is still pending, you can leave once it's done.",
     legalNotice:
-      "Payment, refund, and note transaction records are not deleted immediately because the retention obligation (5 years) is required by applicable commerce and tax laws.",
+      "Payment and refund records are not deleted immediately because applicable commerce and tax laws require them to be kept for 5 years. Note and earnings records are all deleted 3 days after you leave.",
     agreement: "I have checked everything written above.",
     back: "I need more time",
     submit: "Delete my account",
@@ -256,8 +256,10 @@ const en = {
     },
   },
   myChatting: {
+    closedBadge: "Ended",
     searchPlaceholder: "Search by chat, character, or persona name",
     clearSearch: "Clear search",
+    openMenu: "Open chat menu",
     title: "My chats",
     empty: "No chats yet.",
   },
@@ -295,6 +297,11 @@ const en = {
     situation: "Situation",
     suggestedReply: "Suggested reply",
     deleteResponse: "Delete response",
+    editResponse: "Edit response",
+    editMessage: "Edit message",
+    cancelEdit: "Cancel editing",
+    confirmEdit: "Save changes",
+    deleteMessage: "Delete message",
     retryResponse: "Regenerate response",
     reportResponse: "Report response",
     characterTyping: "{name} is typing",
@@ -346,6 +353,7 @@ const en = {
     nicknameCheckInvalid: "We couldn't read the nickname availability response.",
     loginTokenMissing: "The login response did not include a token.",
     chatNoResponse: "We didn't receive a chat response.",
+    chatTurnInProgress: "The previous reply is still being generated. We'll reload the chat in a moment.",
     personaDetailInvalid: "We couldn't read the persona details response.",
   },
   loading: {

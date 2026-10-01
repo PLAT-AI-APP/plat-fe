@@ -58,6 +58,11 @@
   --mascot-halo: #e9ecf2;
   --mascot-face: #3a3f52;
   --mascot-line: #b4bacb;
+  /* 앱 아이콘 바탕. 시안의 라이트·다크 아이콘은 바탕색만 다르다. 화면과 대비되도록 반대 테마의 아이콘을 쓴다. */
+  --app-icon-bg: #111112;
+  /* 헤더 워드마크. 시안의 라이트·다크 로고는 글자색과 마크 주황만 다르다. */
+  --logo-text: #2f3132;
+  --logo-mark: #ff5a1d;
 
   /* --- 테마 불변 토큰: .dark 에서 재정의하지 않는다 --- */
 
@@ -191,6 +196,9 @@
   --mascot-halo: #1e2335;
   --mascot-face: #11141f;
   --mascot-line: #4a5070;
+  --app-icon-bg: #ffffff;
+  --logo-text: #ffffff;
+  --logo-mark: #ff6c1d;
 
   --elevation-card: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
   --elevation-popover: 0 8px 24px 0 rgba(0, 0, 0, 0.2);

@@ -54,6 +54,11 @@ const th: typeof ko = {
       invalidTitle: "การเข้าถึงไม่ถูกต้อง",
       invalidHint: "ลิงก์เข้าสู่ระบบหมดอายุหรือที่อยู่ไม่ถูกต้อง โปรดเข้าสู่ระบบอีกครั้ง",
       goHome: "กลับหน้าแรก",
+      failedTitle: "เข้าสู่ระบบไม่สำเร็จ",
+      failedTitleWith: "เข้าสู่ระบบด้วยบัญชี {provider} ไม่สำเร็จ",
+      failedHint: "โปรดลองอีกครั้งในอีกสักครู่",
+      retry: "ลองอีกครั้ง",
+      login: "เข้าสู่ระบบ",
     },
     agreementGate: {
       firstTitle: "ลงทะเบียนให้เสร็จสิ้น",
@@ -240,6 +245,8 @@ const th: typeof ko = {
       emailAlreadyRegistered:
         "อีเมลนี้ลงทะเบียนแล้ว กรุณาเข้าสู่ระบบด้วยวิธีที่ใช้สมัคร (อีเมล, Google หรือ Kakao)",
       emailVerificationSent: "กรุณาตรวจสอบรหัสยืนยันในอีเมล",
+      passwordResetCodeSent: "หากอีเมลนี้ลงทะเบียนไว้ เราได้ส่งรหัสยืนยันแล้ว โปรดตรวจสอบกล่องจดหมาย",
+      emailVerificationAttemptExceeded: "ป้อนรหัสยืนยันผิดหลายครั้ง โปรดขอรหัสใหม่",
       emailVerificationComplete: "ยืนยันอีเมลเรียบร้อยแล้ว",
       emailVerificationExpired: "หมดเวลาแล้ว",
       emailVerificationMismatch: "รหัสยืนยันไม่ตรงกัน",

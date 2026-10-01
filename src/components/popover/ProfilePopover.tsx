@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { cn, formatWithCommas } from "@/lib/utils";
@@ -29,6 +29,7 @@ import { BUG_REPORT_PATH } from "@/components/layout/BetaBanner";
 import useToggle from "@/hooks/common/useToggle";
 import { useModalStore } from "@/store/useModalStore";
 import useRouteEffect from "@/hooks/navigation/useRouteEffect";
+import { useSocialLogin } from "@/hooks/auth/useSocialLogin";
 import Token from "@/icons/Token";
 import { useTranslations } from "next-intl";
 import { useWalletStore } from "@/store/useWalletStore";
@@ -142,17 +143,8 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
   const loginModalBtnRef = useRef(null);
   const loginModal = useToggle();
 
-  const [redirectingProvider, setRedirectingProvider] = useState<
-    "KAKAO" | "GOOGLE" | null
-  >(null);
-  // 인증 페이지에서 뒤로 오면 bfcache 로 되살아난 화면에서 버튼이 대기 상태로 굳어 있다.
-  useEffect(() => {
-    const handlePageShow = (event: PageTransitionEvent) => {
-      if (event.persisted) setRedirectingProvider(null);
-    };
-    window.addEventListener("pageshow", handlePageShow);
-    return () => window.removeEventListener("pageshow", handlePageShow);
-  }, []);
+  // 인증 페이지로 넘어가는 동안 버튼을 대기 상태로 둔다. 로그인 창과 같은 규칙으로 복귀 경로를 남긴다.
+  const { redirectingProvider, startSocialLogin } = useSocialLogin();
 
   const handleLoginBtn = (name: "KAKAO" | "GOOGLE" | "LOGIN") => {
     if (name === "LOGIN") {
@@ -162,18 +154,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
       return;
     }
 
-    // 인증 페이지가 뜰 때까지 버튼에 변화가 없으면 여러 번 누르게 된다.
-    setRedirectingProvider(name);
-
-    if (typeof window !== "undefined") {
-      const currentPath = window.location.pathname + window.location.search;
-      localStorage.setItem("prevPath", currentPath);
-    }
-
-    window.location.href =
-      name === "KAKAO"
-        ? `${process.env.NEXT_PUBLIC_BASE_URI}/oauth2/authorization/kakao`
-        : `${process.env.NEXT_PUBLIC_BASE_URI}/oauth2/authorization/google`;
+    startSocialLogin(name === "KAKAO" ? "kakao" : "google");
   };
 
   const handleProfilePopoverClose = () => {
@@ -235,10 +216,10 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
             type="button"
             onClick={() => handleLoginBtn("KAKAO")}
             disabled={redirectingProvider !== null}
-            aria-busy={redirectingProvider === "KAKAO" || undefined}
+            aria-busy={redirectingProvider === "kakao" || undefined}
             className={cn(
               "flex cursor-pointer items-center justify-center relative body-5 text-center h-11 rounded-lg bg-[#FEE500] w-full py-2 text-scrim",
-              redirectingProvider === "KAKAO" && "pending-state",
+              redirectingProvider === "kakao" && "pending-state",
             )}
           >
             <Kakao className="absolute w-5.5 h-5.5 top-1/2 left-7.5 -translate-y-1/2" />
@@ -248,10 +229,10 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
             type="button"
             onClick={() => handleLoginBtn("GOOGLE")}
             disabled={redirectingProvider !== null}
-            aria-busy={redirectingProvider === "GOOGLE" || undefined}
+            aria-busy={redirectingProvider === "google" || undefined}
             className={cn(
               "flex cursor-pointer items-center justify-center relative body-5 text-center h-11 rounded-lg bg-font-1 w-full py-2 text-font-4",
-              redirectingProvider === "GOOGLE" && "pending-state",
+              redirectingProvider === "google" && "pending-state",
             )}
           >
             <Google className="absolute w-5.5 h-5.5 top-1/2 left-7.5 -translate-y-1/2" />

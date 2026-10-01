@@ -116,7 +116,8 @@ export interface ChatStartRequest {
 }
 
 /**
- * POST /chat/regenerate 요청. 방의 마지막 AI 답만 다시 만들 수 있다(아니면 409).
+ * POST /chat/regenerate 요청. 방의 어느 AI 답이든 다시 만들 수 있고, 확정되면 그 뒤 대화는 지워진다.
+ * AI 답이 아니거나 짝인 사용자 메시지가 없으면 400, 이전 턴이 아직 생성 중이면 409(CHAT_TURN_IN_PROGRESS)다.
  * 입력은 서버가 그 답의 짝인 사용자 메시지 원문을 쓴다.
  */
 export interface ChatRegenerateRequest {

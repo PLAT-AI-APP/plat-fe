@@ -130,6 +130,8 @@ const toThumbnail = (room: MockRoom): ThumbnailRoom => ({
   lastMessage: room.messages.at(-1)?.content ?? "",
   lastUsedAt: room.lastUsedAt,
   isPinned: room.isPinned,
+  characterName: "",
+  isClosed: false,
 });
 
 /** 허용 집합 밖의 배수는 서버가 조용히 기본값(1.0)으로 되돌립니다. */
@@ -222,6 +224,8 @@ export const roomHandlers = [
       multiplier: room.multiplier,
       memory: room.memory,
       userNote: room.userNote,
+      characterName: "",
+      closed: false,
       language: "KO",
       answerRecommendationEnabled: true,
     };

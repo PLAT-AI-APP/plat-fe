@@ -359,6 +359,24 @@ const th = {
     transactionDateLabel: "วันที่ทำธุรกรรม",
     copyTransactionId: "คัดลอกหมายเลขธุรกรรม",
     copySuccess: "คัดลอกหมายเลขธุรกรรมแล้ว",
+    copyFailed: "คัดลอกหมายเลขธุรกรรมไม่สำเร็จ",
+    toggleDetail: "ดูรายละเอียด",
+    /* 원장 유형(type)·참조 유형(referenceType)별 제목. 서버 enum 을 그대로 보이지 않는다. */
+    titles: {
+      payment: "เติมโน้ต",
+      adminGrant: "ได้รับจากทีมงาน",
+      event: "รางวัลกิจกรรม",
+      promotion: "รางวัลโปรโมชัน",
+      earningExchange: "แลกรายได้",
+      refundRestore: "คืนค่าจากการยกเลิกการคืนเงิน",
+      charge: "ได้รับโน้ต",
+      chat: "แชต",
+      imageGeneration: "สร้างรูปภาพ",
+      use: "ใช้โน้ต",
+      refund: "คืนเงิน",
+      expire: "หมดอายุ",
+      adminDeduct: "ทีมงานเรียกคืน",
+    },
   },
   /* 고객센터(FAQ · 나의 Q&A). pageTitles 는 runtime 의 같은 네임스페이스에 재귀 병합된다. */
   pageTitles: {

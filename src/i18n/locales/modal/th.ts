@@ -65,6 +65,7 @@ const th: typeof ko = {
       next: "ถัดไป",
       submit: "เปลี่ยนรหัสผ่าน",
       successToast: "เปลี่ยนรหัสผ่านเรียบร้อยแล้ว",
+      successLoginHint: "โปรดเข้าสู่ระบบด้วยรหัสผ่านใหม่",
     },
     imageCrop: {
       title: "แก้ไขรูปภาพ",

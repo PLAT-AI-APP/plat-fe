@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import SettingsContents from "./_components/SettingsContents";
 
 export const metadata: Metadata = {
-  title: "Settings",
+  title: "설정",
 };
 
 const SettingsPage = () => {

@@ -1,6 +1,12 @@
 "use client";
 
-import React, { Suspense, useEffect, useState } from "react";
+import React, {
+  Suspense,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { AnimatePresence, m } from "framer-motion";
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -29,6 +35,7 @@ import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
 import { useWalletStore } from "@/store/useWalletStore";
 import { TRANSITION } from "@/constants/motion";
+import { useFocusTrap } from "@/hooks/dom/useFocusTrap";
 
 /*
  * 유저노트 화면은 react-hook-form·zod 를 쓰는데, 그대로 가져오면 두 라이브러리(약 126KB)가
@@ -186,6 +193,30 @@ const ChattingSidebar = ({ roomId, toggleIsSidebar }: ChattingSidebarProps) => {
   };
 
   const isDepthViewOpen = sidebarDepth !== "SETTINGS";
+  const panelRef = useRef<HTMLDivElement>(null);
+  // 장기기억·유저노트를 고치다 저장하지 않았는지. 하위 화면이 알려 준다.
+  const isDepthDirtyRef = useRef(false);
+  const handleDepthDirtyChange = useCallback((isDirty: boolean) => {
+    isDepthDirtyRef.current = isDirty;
+  }, []);
+
+  /** 고치던 내용이 있으면 버릴지 먼저 묻고, 괜찮다고 하면 이동한다. */
+  const confirmLeaveDepth = useCallback(
+    (leave: () => void) => {
+      if (!isDepthDirtyRef.current) {
+        leave();
+        return;
+      }
+      openDialog("UNSAVED_CHANGES", {
+        onCancel: () => undefined,
+        onLeave: () => {
+          isDepthDirtyRef.current = false;
+          leave();
+        },
+      });
+    },
+    [openDialog],
+  );
 
   // 사이드바가 열리면 하위 화면 청크를 미리 받아, 눌렀을 때 기다리지 않게 한다.
   useEffect(() => {
@@ -204,12 +235,12 @@ const ChattingSidebar = ({ roomId, toggleIsSidebar }: ChattingSidebarProps) => {
     });
   };
 
-  const handleDepthBack = () => {
+  const handleDepthBack = useCallback(() => {
     // 사이드바 하위 화면에서 설정 화면으로 복귀
-    setSidebarDepth("SETTINGS");
-  };
+    confirmLeaveDepth(() => setSidebarDepth("SETTINGS"));
+  }, [confirmLeaveDepth]);
 
-  const handleOverlayClick = () => {
+  const handleOverlayClick = useCallback(() => {
     // 가장 위에 열린 사이드바 레이어부터 닫기
     if (isDepthViewOpen) {
       handleDepthBack();
@@ -217,7 +248,21 @@ const ChattingSidebar = ({ roomId, toggleIsSidebar }: ChattingSidebarProps) => {
     }
 
     toggleIsSidebar();
-  };
+  }, [isDepthViewOpen, handleDepthBack, toggleIsSidebar]);
+
+  // Esc 는 바깥을 누른 것과 같게 맨 위 레이어부터 닫는다. 열리면 첫 버튼으로 포커스를 옮기고,
+  // 닫히면 사이드바를 연 버튼으로 돌려준다. 위에 모달·다이얼로그가 뜨면 그쪽 트랩이 키보드를 가져간다.
+  // 트랩은 onEscape 가 바뀌면 다시 걸리며 포커스를 첫 버튼으로 옮기고 돌아갈 자리도 잃는다. 참조를 고정한다.
+  const handleOverlayClickRef = useRef(handleOverlayClick);
+  useEffect(() => {
+    handleOverlayClickRef.current = handleOverlayClick;
+  }, [handleOverlayClick]);
+  const handleEscape = useCallback(() => handleOverlayClickRef.current(), []);
+  useFocusTrap({
+    containerRef: panelRef,
+    enabled: true,
+    onEscape: handleEscape,
+  });
 
   const handleConfirmLeaveChat = () => {
     // 채팅방 나가기 확인 후 홈으로 이동
@@ -258,11 +303,15 @@ const ChattingSidebar = ({ roomId, toggleIsSidebar }: ChattingSidebarProps) => {
       )}
     >
       <m.div
+        ref={panelRef}
         id="sidebar-container"
+        role="dialog"
+        aria-modal="true"
+        aria-label={t("title")}
         onClick={(event) => event.stopPropagation()}
         {...sidebarPanelMotion}
         transition={sidebarTransition}
-        className="h-dvh w-[336px] overflow-hidden border border-main bg-dark"
+        className="h-dvh w-[min(336px,100vw)] overflow-hidden border border-main bg-dark"
       >
         <AnimatePresence mode="wait" initial={false}>
           <m.div
@@ -276,9 +325,14 @@ const ChattingSidebar = ({ roomId, toggleIsSidebar }: ChattingSidebarProps) => {
                 <ChattingUserNoteView
                   roomId={roomId}
                   onBack={handleDepthBack}
+                  onDirtyChange={handleDepthDirtyChange}
                 />
               ) : sidebarDepth === "MEMORY" ? (
-                <ChattingMemoryView roomId={roomId} onBack={handleDepthBack} />
+                <ChattingMemoryView
+                  roomId={roomId}
+                  onBack={handleDepthBack}
+                  onDirtyChange={handleDepthDirtyChange}
+                />
               ) : sidebarDepth === "ASSET_GALLERY" ? (
                 <ChattingAssetGalleryView
                   roomId={roomId}

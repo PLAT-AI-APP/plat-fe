@@ -57,7 +57,8 @@ const PaymentWindowOverlay = ({
   const goTo = (path: string) => {
     if (leaving.current) return;
     leaving.current = true;
-    router.push(path);
+    // 결과 화면에서 뒤로 가면 끝난 결제의 대기 오버레이로 돌아오지 않게 기록을 바꾼다.
+    router.replace(path);
   };
 
   // 결제창이 돌아오며 보내는 결과

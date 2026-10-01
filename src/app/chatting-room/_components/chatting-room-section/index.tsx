@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useMemo, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { useChatModelsQuery } from "@/api/chat/getChatModels";
 import { useDeleteRoomMessageMutation } from "@/api/room/deleteRoomMessage";
 import { useRoomDetailQuery } from "@/api/room/getRoomDetail";
@@ -63,18 +64,21 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
     setScrollContainer(element);
   }, []);
 
+  const t = useTranslations();
   const {
     data: room,
     isError: isRoomError,
     error: roomError,
     refetch: refetchRoom,
   } = useRoomDetailQuery(roomId);
+  // 캐릭터(세계관)가 지워진 방은 세계관을 부르지 않는다(404). 이름은 방에 남긴 스냅샷을 쓴다.
+  const isClosed = room?.closed === true;
   const { data: universe, isError: isUniverseError } = useUniverseDetailQuery(
-    room?.universeId,
+    isClosed ? undefined : room?.universeId,
   );
   // 방을 받기 전에는 세계관 쿼리가 꺼져 있어 isLoading 이 false 이므로, 데이터 유무로 판단한다.
-  const isCharacterLoading = !universe && !isUniverseError;
-  const characterName = universe?.character.name ?? "";
+  const isCharacterLoading = !isClosed && !universe && !isUniverseError;
+  const characterName = universe?.character.name ?? room?.characterName ?? "";
   const openModal = useModalStore((state) => state.openModal);
   // 신고 모달은 목록 밖에서 열리므로 함수가 매 렌더 바뀌면 메시지 행이 전부 다시 그려진다.
   const handleReportMessage = useCallback(
@@ -251,20 +255,30 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
               suggestions={suggestions}
               onSuggestionSelect={handleSuggestionSelect}
               onDeleteMessage={isBusy ? undefined : handleDeleteMessage}
-              onRetryMessage={isBusy || !canSend ? undefined : handleRetryMessage}
-              onReportMessage={handleReportMessage}
+              onRetryMessage={isBusy || !canSend || isClosed ? undefined : handleRetryMessage}
+              // 지워진 캐릭터의 답은 신고할 대상이 사라졌다.
+              onReportMessage={isClosed ? undefined : handleReportMessage}
             />
           )}
         </div>
 
         {/* 메시지 목록이 px-4 를 쓰므로 입력창도 같은 여백을 써야 줄이 맞는다. */}
         <div className="shrink-0 bg-dark px-4 py-4">
-          <ChatForm
-            ref={chatFormRef}
-            onSendMessage={sendMessage}
-            disabled={isBusy}
-            isPreparing={!canSend && !isRoomError && !isUniverseError}
-          />
+          {isClosed ? (
+            <p
+              role="status"
+              className="body-4 rounded-xl bg-darkest px-4 py-4 text-center text-font-2"
+            >
+              {t("chatRoom.closedNotice")}
+            </p>
+          ) : (
+            <ChatForm
+              ref={chatFormRef}
+              onSendMessage={sendMessage}
+              disabled={isBusy}
+              isPreparing={!canSend && !isRoomError && !isUniverseError}
+            />
+          )}
         </div>
       </div>
     </section>

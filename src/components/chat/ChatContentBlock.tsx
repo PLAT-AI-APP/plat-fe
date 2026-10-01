@@ -125,10 +125,6 @@ const ChatContentBlock = ({
     [rawData, isStreaming],
   );
 
-  // 버튼은 캐릭터 응답 맨 아래 왼쪽에 붙는다. 사용자 대사로 끝나면 오른쪽 사용자 말풍선 밑에 걸려
-  // 사용자 말에 딸린 버튼처럼 보이므로 그리지 않는다.
-  const endsWithUserDialogue = blocks.at(-1)?.type === "USER_DIALOGUE";
-
   if (isStreaming && blocks.length === 0) {
     return (
       <TypingIndicator characterName={characterName} profileImage={profileImage} />
@@ -208,6 +204,7 @@ const ChatContentBlock = ({
             type="button"
             onClick={startEditing}
             className="rounded-lg bg-card p-1.5 hover:bg-btn-hover"
+            aria-label={t("chatUI.editResponse")}
           >
             <Pen className="size-4 text-font-2" />
           </button>
@@ -215,14 +212,16 @@ const ChatContentBlock = ({
             type="button"
             onClick={onDelete}
             className="rounded-lg bg-card p-1.5 hover:bg-btn-hover"
+            aria-label={t("chatUI.deleteResponse")}
           >
             <Trash className="size-4 text-font-2" />
           </button>
         </div>
       )}
 
-      {/* 받는 중인 응답은 아직 서버에 없어 지우거나 다시 만들 대상이 없다. */}
-      {!isEditMode && !isStreaming && !endsWithUserDialogue && (onDelete || onRetry || onReport) && (
+      {/* 받는 중인 응답은 아직 서버에 없어 지우거나 다시 만들 대상이 없다.
+          응답이 사용자 대사로 끝나도 그 턴의 답이므로 버튼은 캐릭터 쪽(왼쪽)에 그대로 둔다. */}
+      {!isEditMode && !isStreaming && (onDelete || onRetry || onReport) && (
         <div className="-mt-4 flex gap-1 pl-11">
           {onDelete && (
             <button

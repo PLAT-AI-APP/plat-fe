@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRoomMemoryQuery } from "@/api/room/getRoomMemory";
@@ -20,6 +20,8 @@ const MEMORY_MAX_ROWS = 18;
 interface ChattingMemoryViewProps {
   roomId: string;
   onBack: () => void;
+  /** 저장하지 않은 수정이 있는지. 사이드바가 이 화면을 벗어나기 전에 물어볼지 정한다. */
+  onDirtyChange?: (isDirty: boolean) => void;
 }
 
 /**
@@ -28,7 +30,11 @@ interface ChattingMemoryViewProps {
  * 방마다 AI 가 대화를 요약해 쌓은 글 하나다. 사용자가 고치면 다음 턴부터 프롬프트에 들어가고,
  * 이후 요약은 고친 내용 위에 새 대화를 합친다. 비워서 저장하면 기억을 지운다.
  */
-const ChattingMemoryView = ({ roomId, onBack }: ChattingMemoryViewProps) => {
+const ChattingMemoryView = ({
+  roomId,
+  onBack,
+  onDirtyChange,
+}: ChattingMemoryViewProps) => {
   const t = useTranslations("chatRoom.sidebar");
   const queryClient = useQueryClient();
   const { data: savedMemory = "", isPending: isMemoryPending } =
@@ -47,6 +53,13 @@ const ChattingMemoryView = ({ roomId, onBack }: ChattingMemoryViewProps) => {
   const isUnchanged = trimmed === savedMemory.trim();
   // maxLength 는 타이핑·붙여넣기만 막는다. 그 밖의 경로로 넘친 값은 서버가 400 으로 거절하므로 여기서 먼저 막는다.
   const isOverLimit = trimmed.length > MEMORY_MAX_LENGTH;
+  const isDirty = editedDraft !== null && !isUnchanged;
+
+  useEffect(() => {
+    onDirtyChange?.(isDirty);
+  }, [isDirty, onDirtyChange]);
+  // 화면이 닫히면 더는 고치던 내용이 없다.
+  useEffect(() => () => onDirtyChange?.(false), [onDirtyChange]);
 
   const handleSave = () => {
     if (isPending || isUnchanged || isOverLimit) return;

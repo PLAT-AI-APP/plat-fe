@@ -9,7 +9,8 @@ import { PopoverLayout } from "./layout";
 interface MyChattingMenuPopoverProps {
   onClose: () => void;
   triggerRef: React.RefObject<HTMLElement | null>;
-  onEdit: () => void;
+  /** 새 채팅. 넘기지 않으면 메뉴에서 뺀다 — 누를 수 있는데 아무 일도 없는 항목을 두지 않는다. */
+  onEdit?: () => void;
   onPin: () => void;
   onDelete: () => void;
   isPinned?: boolean;
@@ -33,12 +34,16 @@ const MyChattingMenuPopover = ({
 
   // 내 채팅 아이템 팝오버 액션 목록
   const menuActions = [
-    {
-      icon: <PenSparkle className="size-4 shrink-0" />,
-      label: t("newChat"),
-      onClick: onEdit,
-      textClassName: "text-font-1",
-    },
+    ...(onEdit
+      ? [
+          {
+            icon: <PenSparkle className="size-4 shrink-0" />,
+            label: t("newChat"),
+            onClick: onEdit,
+            textClassName: "text-font-1",
+          },
+        ]
+      : []),
     {
       icon: isPinned ? (
         <PinFill className="size-4 shrink-0" />

@@ -14,6 +14,7 @@ import { useDraftCreateMutation } from "@/api/draft/postDraftCreate";
 import { useDraftUpdateMutation } from "@/api/draft/putDraftUpdate";
 import { useDraftCurrentQuery } from "@/api/draft/getDraftCurrent";
 import { useDraftMutation } from "@/api/draft/getDraft";
+import { isAppError } from "@/lib/apiError";
 
 interface UseUniverseDraftParams {
   // 이미 만들어진 세계관을 수정하는 화면에는 초안 기능 자체가 없어, 새로 만드는 흐름에서만 켭니다.
@@ -64,20 +65,31 @@ export const useUniverseDraft = ({
     // 백엔드는 제목을 필수로 받는데, 임시저장은 제목을 채우기 전에도 눌러볼 수 있습니다.
     const title = currentValues.title.trim() || t("untitledDraftTitle");
 
+    const createNewDraft = async () => {
+      const created = await createDraft({
+        type: "UNIVERSE",
+        title,
+        payload: draft,
+        fileIds,
+      });
+      setCreatedDraftId(created.draftId);
+    };
+
     try {
       if (draftId) {
-        await updateDraft({
-          draftId,
-          request: { title, payload: draft, fileIds },
-        });
+        try {
+          await updateDraft({
+            draftId,
+            request: { title, payload: draft, fileIds },
+          });
+        } catch (error) {
+          // 알던 초안이 그사이 만료·삭제됐으면(다른 탭에서 등록 등) 새 초안으로 저장한다.
+          if (!isAppError(error) || error.status !== 404) throw error;
+          await createNewDraft();
+          void refetchCurrentDraft();
+        }
       } else {
-        const created = await createDraft({
-          type: "UNIVERSE",
-          title,
-          payload: draft,
-          fileIds,
-        });
-        setCreatedDraftId(created.draftId);
+        await createNewDraft();
       }
       // 저장한 시점의 값을 "저장된 기준"으로만 삼고 입력값은 건드리지 않는다. 예전처럼
       // reset(currentValues) 하면 요청이 오가는 동안 새로 친 글자가 저장 완료 순간 되돌아갔다.

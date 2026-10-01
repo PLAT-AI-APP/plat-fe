@@ -10,13 +10,15 @@ export interface ChatTextSegment {
  *   줄을 넘거나 60자를 넘는 괄호는 설명·인용일 가능성이 커서 대사 글자로 둔다.
  * - 별표 `*…*`·`**…**`: 예전 표기다. 이미 쓰인 대사를 위해 계속 받는다. 별표 안쪽 가장자리가 공백이나 별표이면
  *   행동으로 보지 않는다 — 곱셈 "2 * 3 * 4" 나 비어 있는 "****" 가 행동으로 바뀌지 않게 하려는 것이다.
+ *   괄호처럼 한 줄 안에서만 짝을 찾는다 — 줄을 넘어 짝을 맞추면 여러 줄 대사가 통째로 행동 색이 된다.
  */
 const ACTION_PATTERN =
-  /\(([^()\n]{1,60})\)|（([^（）\n]{1,60})）|(\*{1,2})([^\s*](?:[\s\S]*?[^\s*])?)\3/g;
+  /\(([^()\n]{1,60})\)|（([^（）\n]{1,60})）|(\*{1,2})([^\s*](?:[^\n]*?[^\s*])?)\3/g;
 
 /**
  * 캐릭터 대사를 일반 대사와 행동으로 나눈다. 순서는 그대로 두고 괄호·별표는 값에서 뺀다.
  * 짝이 없는 괄호·별표는 행동으로 보지 않고 글자 그대로 둔다 — 받는 중인 문장이 통째로 행동 색으로 바뀌지 않게 하려는 것이다.
+ * 대사 조각은 공백·줄바꿈을 원문 그대로 둔다. 조각을 이어 붙이면 원래 줄 모양이 된다.
  */
 export const splitActionSegments = (text: string): ChatTextSegment[] => {
   const segments: ChatTextSegment[] = [];
@@ -24,7 +26,7 @@ export const splitActionSegments = (text: string): ChatTextSegment[] => {
 
   for (const match of text.matchAll(ACTION_PATTERN)) {
     const matchStart = match.index ?? 0;
-    const before = text.slice(cursor, matchStart).trim();
+    const before = text.slice(cursor, matchStart);
     const action = (match[1] ?? match[2] ?? match[4] ?? "").trim();
 
     if (before) segments.push({ type: "text", value: before });
@@ -33,8 +35,22 @@ export const splitActionSegments = (text: string): ChatTextSegment[] => {
     cursor = matchStart + match[0].length;
   }
 
-  const rest = text.slice(cursor).trim();
+  const rest = text.slice(cursor);
   if (rest) segments.push({ type: "text", value: rest });
 
   return segments;
 };
+
+/** 이미지 같은 에셋 토큰. {{user}} 는 이름 자리라 남긴다. */
+const PREVIEW_ASSET_TOKEN = /\{\{(?!user\}\})[^}]*\}\}/g;
+
+/**
+ * 목록 미리보기용 한 줄 평문. 지문 표시 별표(*)와 이미지 토큰을 빼고 줄바꿈·연속 공백을 한 칸으로 줄인다.
+ * 대화가 아직 없으면(null) 빈 문자열이다.
+ */
+export const toChatPreviewText = (raw: string | null | undefined): string =>
+  (raw ?? "")
+    .replace(PREVIEW_ASSET_TOKEN, " ")
+    .replace(/\*/g, "")
+    .replace(/\s+/g, " ")
+    .trim();

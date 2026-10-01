@@ -43,6 +43,17 @@ export const useUserStore = create<UserState>()(
     }),
     {
       name: "user-storage", // 로컬 스토리지에 저장될 키 이름
+      // 새로고침 직후 헤더를 그리는 데 필요한 것만 남긴다. 이메일·생년월일·성별 같은 개인정보는
+      // 공용 PC 의 localStorage 에 두지 않는다 — 나머지는 로그인하면 /users/me 로 곧 다시 채워진다.
+      partialize: (state) => ({
+        user: state.user
+          ? {
+              id: state.user.id,
+              nickname: state.user.nickname,
+              profileImage: state.user.profileImage,
+            }
+          : null,
+      }),
     },
   ),
 );

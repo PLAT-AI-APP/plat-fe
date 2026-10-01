@@ -144,3 +144,97 @@
     opacity: 0.5;
   }
 }
+
+/* =========================================================================
+ * 소셜 로그인 실패 — 흐르던 연결이 끊기는 연출
+ *
+ * 기본 상태가 끊긴 뒤의 모습이고 keyframes 는 "아직 이어져 있던" from 만 갖는다.
+ * 그래서 모션 최소화에서 애니메이션이 꺼져도 끝난 모습이 그대로 남는다.
+ * ========================================================================= */
+
+/* 연결 점이 양쪽으로 물러나며 빛을 잃는다. 물러날 방향은 --snap-x 로 받는다. */
+.scene-snap {
+  opacity: 0.35;
+  transform: translate(var(--snap-x, 0), 4px) scale(0.75);
+  animation: scene-snap 0.5s cubic-bezier(0.32, 0.72, 0, 1) 0.35s both;
+}
+@keyframes scene-snap {
+  from {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+    background-color: var(--brand);
+  }
+}
+
+/* 끊긴 자리에 튀어나오는 X */
+.scene-pop {
+  animation: scene-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s both;
+}
+@keyframes scene-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.2) rotate(-45deg);
+  }
+}
+
+/* 소셜 계정 뱃지가 한 번 고개를 젓는다 */
+.scene-shake {
+  animation: scene-shake 0.5s ease-in-out 0.55s both;
+}
+@keyframes scene-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-6px);
+  }
+  40%,
+  80% {
+    transform: translateX(6px);
+  }
+}
+
+/* 닿지 못한 PLAT 이 빛을 잃는다 */
+.scene-dim {
+  opacity: 0.45;
+  filter: grayscale(1);
+  animation: scene-dim 0.5s ease-out 0.4s both;
+}
+@keyframes scene-dim {
+  from {
+    opacity: 1;
+    filter: grayscale(0);
+  }
+}
+
+/* 끊긴 자리의 X 를 한 획씩 그어 넣는다. 획 길이(약 14)보다 넉넉한 대시로 가렸다가 드러낸다. */
+.scene-draw {
+  stroke-dasharray: 16;
+  stroke-dashoffset: 0;
+  animation: scene-draw 0.28s ease-out 0.7s both;
+}
+@keyframes scene-draw {
+  from {
+    stroke-dashoffset: 16;
+  }
+}
+
+/* X 가 뜰 때 옅은 빨간 물결이 한 번 퍼진다 */
+.scene-halo {
+  animation:
+    scene-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s both,
+    scene-halo 0.9s ease-out 0.6s both;
+}
+@keyframes scene-halo {
+  from {
+    box-shadow: 0 0 0 0 var(--danger-bg);
+  }
+  40% {
+    box-shadow: 0 0 0 10px var(--danger-bg);
+  }
+  to {
+    box-shadow: 0 0 0 16px transparent;
+  }
+}

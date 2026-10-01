@@ -68,6 +68,7 @@ const en: typeof ko = {
       next: "Next",
       submit: "Change password",
       successToast: "Your password has been changed.",
+      successLoginHint: "Please log in with your new password.",
     },
     imageCrop: {
       title: "Edit image",

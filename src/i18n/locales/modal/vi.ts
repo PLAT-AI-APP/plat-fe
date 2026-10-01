@@ -69,6 +69,7 @@ const vi: typeof ko = {
       next: "Tiếp theo",
       submit: "Đổi mật khẩu",
       successToast: "Mật khẩu của bạn đã được thay đổi.",
+      successLoginHint: "Vui lòng đăng nhập bằng mật khẩu mới.",
     },
     imageCrop: {
       title: "Chỉnh sửa ảnh",

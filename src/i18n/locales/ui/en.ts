@@ -366,6 +366,24 @@ const en = {
     transactionDateLabel: "Transaction date",
     copyTransactionId: "Copy transaction ID",
     copySuccess: "Transaction number copied.",
+    copyFailed: "Couldn't copy the transaction ID.",
+    toggleDetail: "Show details",
+    /* 원장 유형(type)·참조 유형(referenceType)별 제목. 서버 enum 을 그대로 보이지 않는다. */
+    titles: {
+      payment: "Note purchase",
+      adminGrant: "Granted by PLAT",
+      event: "Event reward",
+      promotion: "Promotion reward",
+      earningExchange: "Earnings exchange",
+      refundRestore: "Refund reversal",
+      charge: "Notes granted",
+      chat: "Chat",
+      imageGeneration: "Image generation",
+      use: "Notes used",
+      refund: "Refund",
+      expire: "Expired",
+      adminDeduct: "Deducted by PLAT",
+    },
   },
   /* 고객센터(FAQ · 나의 Q&A). pageTitles 는 runtime 의 같은 네임스페이스에 재귀 병합된다. */
   pageTitles: {

@@ -110,7 +110,7 @@ const ja: typeof en = {
       "お別れするのが本当に残念です。PLATを退会する前に、以下の内容を必ず確認してください。",
     notices: {
       dataDeleted: "すべてのデータと個人情報は削除され、復元できません。",
-      recordsRetained: "注文と取引履歴は一定期間安全に保管されます。",
+      recordsRetained: "決済・返金記録のみ法令により5年間保管され、それ以外はすべて削除されます。",
       creditsRemoved: "未使用のノートは返金されず、一緒に削除されます。",
       rejoinRestricted: "同じメールアドレスでは7日間再登録できません。",
       creationsDeleted:
@@ -119,9 +119,9 @@ const ja: typeof en = {
         "既存のチャットルームは維持されますが、新しいメッセージは送信できません。",
     },
     remainingBalance:
-      "残っている{credits}ノートと収益ポイント{points}Pは、退会すると元に戻せません。発送待ちのギフト券交換がある場合は、完了後に退会できます。",
+      "残っている{credits}ノートと収益ポイント{points}Pは、退会すると元に戻せません。処理中の返金や発送待ちのギフト券交換がある場合は、完了後に退会できます。",
     legalNotice:
-      "決済・返金・ノート取引記録は、関連法令に基づく保管義務（5年）があるため、すぐには削除されません。",
+      "決済・返金記録は、関連法令に基づく保管義務（5年）があるため、すぐには削除されません。ノート・収益の記録は退会から3日後にすべて削除されます。",
     agreement: "上に記載された内容をすべて確認しました",
     back: "もう少し考えます",
     submit: "退会します",
@@ -246,8 +246,10 @@ const ja: typeof en = {
     },
   },
   myChatting: {
+    closedBadge: "会話終了",
     searchPlaceholder: "チャット内容、キャラクター、ペルソナ名で検索",
     clearSearch: "検索語を消去",
+    openMenu: "チャットメニューを開く",
     title: "マイチャット",
     empty: "まだチャットがありません。",
   },
@@ -285,6 +287,11 @@ const ja: typeof en = {
     situation: "状況",
     suggestedReply: "おすすめ返信",
     deleteResponse: "返信を削除",
+    editResponse: "返信を編集",
+    editMessage: "メッセージを編集",
+    cancelEdit: "編集をキャンセル",
+    confirmEdit: "編集を完了",
+    deleteMessage: "メッセージを削除",
     retryResponse: "返信を再生成",
     reportResponse: "返信を通報",
     characterTyping: "{name}が入力中",
@@ -329,6 +336,7 @@ const ja: typeof en = {
     nicknameCheckInvalid: "ニックネームの重複確認の応答を確認できませんでした。",
     loginTokenMissing: "ログインの応答にトークンが含まれていません。",
     chatNoResponse: "チャットの応答を受け取れませんでした。",
+    chatTurnInProgress: "前の返答をまだ作成中です。しばらくしてから会話を読み込み直します。",
     personaDetailInvalid: "ペルソナ詳細の応答を確認できませんでした。",
   },
   loading: {

@@ -311,10 +311,10 @@ const PaymentSuccess = ({ credits }: PaymentSuccessProps) => {
         {...rise(0.3)}
         className="mt-10 flex w-full max-w-80 flex-col gap-2.5"
       >
-        <ButtonLink href="/" size="lg" fullWidth>
+        <ButtonLink replace href="/" size="lg" fullWidth>
           {t("tokenCharge.payment.goExplore")}
         </ButtonLink>
-        <ButtonLink href="/token-charge" variant="secondary" size="lg" fullWidth>
+        <ButtonLink replace href="/token-charge" variant="secondary" size="lg" fullWidth>
           {t("tokenCharge.payment.backToCharge")}
         </ButtonLink>
       </m.div>

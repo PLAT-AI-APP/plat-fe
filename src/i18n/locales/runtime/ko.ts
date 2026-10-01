@@ -112,7 +112,7 @@ const ko: typeof en = {
       "헤어지게 되어 정말 아쉬워요. PLAT에서 탈퇴 전, 아래의 내용을 꼭 확인해 주세요",
     notices: {
       dataDeleted: "모든 데이터와 개인정보는 삭제되며 다시 찾을 수 없어요",
-      recordsRetained: "주문과 거래 내역은 일정기간 동안 안전하게 보관돼요",
+      recordsRetained: "결제·환불 기록만 법에 따라 5년 동안 보관되고, 나머지는 모두 지워져요",
       creditsRemoved: "사용하지 않은 노트는 환불되지 않고 함께 지워져요",
       rejoinRestricted: "같은 이메일 주소로는 7일 동안 가입할 수 없어요",
       creationsDeleted: "직접 제작한 캐릭터와 세계관은 탈퇴 후 모두 지워져요",
@@ -120,9 +120,9 @@ const ko: typeof en = {
         "단, 기존 채팅방은 유지되며 신규 메세지는 전송할 수 없어요",
     },
     remainingBalance:
-      "지금 남은 노트 {credits}개와 수익 포인트 {points}P는 탈퇴하면 되돌릴 수 없어요. 발송을 기다리는 상품권 교환이 있으면 끝난 뒤에 탈퇴할 수 있어요.",
+      "지금 남은 노트 {credits}개와 수익 포인트 {points}P는 탈퇴하면 되돌릴 수 없어요. 처리 중인 환불이나 발송을 기다리는 상품권 교환이 있으면 끝난 뒤에 탈퇴할 수 있어요.",
     legalNotice:
-      "결제·환불·노트 거래 기록은 「전자상거래법」·「국세기본법」 등에 따른 보관 의무(5년)가 있어 즉시 삭제되지 않습니다.",
+      "결제·환불 기록은 「전자상거래법」·「국세기본법」 등에 따른 보관 의무(5년)가 있어 즉시 삭제되지 않습니다. 노트·수익 기록은 탈퇴 3일 뒤 모두 삭제됩니다.",
     agreement: "위에 적힌 내용을 전부 확인했어요",
     back: "좀 더 생각할래요",
     submit: "탈퇴할게요",
@@ -246,8 +246,10 @@ const ko: typeof en = {
     },
   },
   myChatting: {
+    closedBadge: "대화 종료",
     searchPlaceholder: "채팅 내용, 캐릭터, 페르소나 이름으로 찾아보세요",
     clearSearch: "검색어 지우기",
+    openMenu: "채팅방 메뉴 열기",
     title: "내 채팅",
     empty: "아직 대화한 채팅방이 없어요.",
   },
@@ -285,6 +287,11 @@ const ko: typeof en = {
     situation: "상황",
     suggestedReply: "추천답변",
     deleteResponse: "응답 삭제",
+    editResponse: "응답 수정",
+    editMessage: "메시지 수정",
+    cancelEdit: "수정 취소",
+    confirmEdit: "수정 완료",
+    deleteMessage: "메시지 삭제",
     retryResponse: "응답 다시하기",
     reportResponse: "응답 신고",
     characterTyping: "{name} 입력 중",
@@ -329,6 +336,7 @@ const ko: typeof en = {
     nicknameCheckInvalid: "닉네임 중복 확인 응답을 확인해 주세요.",
     loginTokenMissing: "로그인 응답에서 토큰을 찾을 수 없습니다.",
     chatNoResponse: "채팅 응답을 받지 못했습니다.",
+    chatTurnInProgress: "이전 답변을 아직 만들고 있어요. 잠시 뒤 대화를 다시 불러올게요.",
     personaDetailInvalid: "페르소나 상세 응답을 확인해 주세요.",
   },
   loading: {

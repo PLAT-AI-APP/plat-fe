@@ -27,9 +27,15 @@ const USER_NOTE_MAX_ROWS = 12;
 interface ChattingUserNoteViewProps {
   roomId: string;
   onBack: () => void;
+  /** 저장하지 않은 수정이 있는지. 사이드바가 이 화면을 벗어나기 전에 물어볼지 정한다. */
+  onDirtyChange?: (isDirty: boolean) => void;
 }
 
-const ChattingUserNoteView = ({ roomId, onBack }: ChattingUserNoteViewProps) => {
+const ChattingUserNoteView = ({
+  roomId,
+  onBack,
+  onDirtyChange,
+}: ChattingUserNoteViewProps) => {
   const sidebarT = useTranslations("chatRoom.sidebar");
   const t = useTranslations("modalUi.userNote");
   const translateText = useTranslateText();
@@ -64,6 +70,13 @@ const ChattingUserNoteView = ({ roomId, onBack }: ChattingUserNoteViewProps) => 
     textareaRef.current = element;
   };
   const { mutate: patchUserNote, isPending } = usePatchRoomUserNoteMutation();
+  const hasUnsavedNote = isDirty && noteValue.trim() !== savedNote.trim();
+
+  useEffect(() => {
+    onDirtyChange?.(hasUnsavedNote);
+  }, [hasUnsavedNote, onDirtyChange]);
+  // 화면이 닫히면 더는 고치던 내용이 없다.
+  useEffect(() => () => onDirtyChange?.(false), [onDirtyChange]);
 
   const onSubmit = (data: UserNoteFormValues) => {
     if (isPending) return;

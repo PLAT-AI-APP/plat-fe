@@ -114,7 +114,7 @@ const vi: typeof en = {
       dataDeleted:
         "Tất cả dữ liệu và thông tin cá nhân sẽ bị xóa và không thể khôi phục.",
       recordsRetained:
-        "Lịch sử đơn hàng và giao dịch sẽ được lưu trữ an toàn trong một thời gian nhất định.",
+        "Chỉ lịch sử thanh toán và hoàn tiền được lưu 5 năm theo quy định pháp luật, mọi dữ liệu khác đều bị xóa.",
       creditsRemoved:
         "Note chưa sử dụng sẽ không được hoàn tiền và sẽ bị xóa cùng lúc.",
       rejoinRestricted:
@@ -125,9 +125,9 @@ const vi: typeof en = {
         "Các phòng chat hiện có vẫn được giữ lại, nhưng bạn sẽ không thể gửi tin nhắn mới.",
     },
     remainingBalance:
-      "{credits} note và {points}P điểm thu nhập còn lại sẽ không thể khôi phục sau khi rời đi. Nếu còn yêu cầu đổi thẻ quà tặng đang chờ gửi, bạn có thể rời đi sau khi hoàn tất.",
+      "{credits} note và {points}P điểm thu nhập còn lại sẽ không thể khôi phục sau khi rời đi. Nếu còn yêu cầu hoàn tiền đang xử lý hoặc đổi thẻ quà tặng đang chờ gửi, bạn có thể rời đi sau khi hoàn tất.",
     legalNotice:
-      "Lịch sử thanh toán, hoàn tiền và giao dịch note sẽ không bị xóa ngay vì có nghĩa vụ lưu trữ theo quy định pháp luật liên quan (5 năm).",
+      "Lịch sử thanh toán và hoàn tiền sẽ không bị xóa ngay vì có nghĩa vụ lưu trữ theo quy định pháp luật liên quan (5 năm). Lịch sử note và thu nhập sẽ bị xóa hoàn toàn sau 3 ngày kể từ khi rời đi.",
     agreement: "Tôi đã kiểm tra toàn bộ nội dung ở trên",
     back: "Tôi muốn suy nghĩ thêm",
     submit: "Tôi sẽ xóa tài khoản",
@@ -254,8 +254,10 @@ const vi: typeof en = {
     },
   },
   myChatting: {
+    closedBadge: "Đã kết thúc",
     searchPlaceholder: "Tìm theo nội dung chat, nhân vật hoặc tên persona",
     clearSearch: "Xóa từ khóa tìm kiếm",
+    openMenu: "Mở menu trò chuyện",
     title: "Chat của tôi",
     empty: "Chưa có cuộc trò chuyện nào.",
   },
@@ -293,6 +295,11 @@ const vi: typeof en = {
     situation: "Tình huống",
     suggestedReply: "Trả lời gợi ý",
     deleteResponse: "Xóa phản hồi",
+    editResponse: "Chỉnh sửa phản hồi",
+    editMessage: "Chỉnh sửa tin nhắn",
+    cancelEdit: "Hủy chỉnh sửa",
+    confirmEdit: "Lưu chỉnh sửa",
+    deleteMessage: "Xóa tin nhắn",
     retryResponse: "Tạo lại phản hồi",
     reportResponse: "Báo cáo phản hồi",
     characterTyping: "{name} đang nhập",
@@ -344,6 +351,7 @@ const vi: typeof en = {
     nicknameCheckInvalid: "Không đọc được phản hồi kiểm tra trùng biệt danh.",
     loginTokenMissing: "Không tìm thấy token trong phản hồi đăng nhập.",
     chatNoResponse: "Không nhận được phản hồi từ cuộc trò chuyện.",
+    chatTurnInProgress: "Câu trả lời trước vẫn đang được tạo. Cuộc trò chuyện sẽ được tải lại sau giây lát.",
     personaDetailInvalid: "Không đọc được phản hồi chi tiết persona.",
   },
   loading: {

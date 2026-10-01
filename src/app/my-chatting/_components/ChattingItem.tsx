@@ -4,6 +4,7 @@ import { AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useRef } from "react";
+import { useTranslations } from "next-intl";
 import { useDeleteRoomMutation } from "@/api/room/deleteRoom";
 import { usePinRoomMutation, useUnpinRoomMutation } from "@/api/room/patchRoomPin";
 import { usePrefetchRoom } from "@/api/room/usePrefetchRoom";
@@ -11,6 +12,7 @@ import MyChattingMenuPopover from "@/components/popover/MyChattingMenuPopover";
 import useToggle from "@/hooks/common/useToggle";
 import { useRelativeTimeLabel } from "@/hooks/i18n/useRelativeTimeLabel";
 import { Dots, PinLine, User } from "@/icons";
+import { toChatPreviewText } from "@/lib/chatText";
 import { useDialogStore } from "@/store/useDialogStore";
 
 const DEFAULT_THUMBNAIL = "/images/sample.png";
@@ -20,9 +22,12 @@ interface ChattingItemProps {
   title: string;
   thumbnailUrl: string | null;
   personaName: string;
-  lastMessage: string;
+  /** 아직 대화가 없으면 null. */
+  lastMessage: string | null;
   lastUsedAt: string | null;
   isPinned: boolean;
+  /** 캐릭터가 지워진 방. 대화는 볼 수 있고 새 대화만 막힌다. */
+  isClosed: boolean;
 }
 
 const ChattingItem = ({
@@ -33,7 +38,9 @@ const ChattingItem = ({
   lastMessage,
   lastUsedAt,
   isPinned,
+  isClosed,
 }: ChattingItemProps) => {
+  const t = useTranslations("myChatting");
   const getRelativeTime = useRelativeTimeLabel();
   const { close, isOpen, toggle } = useToggle();
   const triggerRef = useRef<HTMLSpanElement>(null);
@@ -43,6 +50,7 @@ const ChattingItem = ({
   const { mutate: unpinRoom, isPending: isUnpinning } = useUnpinRoomMutation();
   const isPinPending = isPinning || isUnpinning;
   const prefetchRoom = usePrefetchRoom();
+  const previewText = toChatPreviewText(lastMessage);
 
   const handleDeleteClick = () => {
     // 채팅 기록은 복구할 수 없으므로 삭제 전 확인을 거친다.
@@ -92,6 +100,11 @@ const ChattingItem = ({
             <div className="flex h-full min-w-0 flex-1 flex-col gap-1.5 overflow-hidden">
               <div className="flex items-center gap-1.5">
                 <h3 className="title-3 truncate text-font-1">{title}</h3>
+                {isClosed && (
+                  <span className="body-8 shrink-0 rounded-md bg-card-hover px-1.5 py-0.5 text-font-2">
+                    {t("closedBadge")}
+                  </span>
+                )}
                 {isPinned && (
                   <PinLine
                     className="size-4 shrink-0 text-font-1"
@@ -101,7 +114,7 @@ const ChattingItem = ({
               </div>
 
               <p className="body-4 w-full min-w-0 truncate text-font-2">
-                {lastMessage}
+                {previewText}
               </p>
             </div>
 
@@ -109,6 +122,8 @@ const ChattingItem = ({
               <button
                 type="button"
                 onClick={toggle}
+                aria-label={t("openMenu")}
+                aria-expanded={isOpen}
                 className="flex size-7 items-center justify-center rounded-lg text-font-2 transition-colors duration-200 hover:text-font-1"
               >
                 <Dots className="size-5" />
@@ -120,7 +135,6 @@ const ChattingItem = ({
                     triggerRef={triggerRef}
                     onClose={close}
                     onDelete={handleDeleteClick}
-                    onEdit={() => null}
                     onPin={handlePinToggle}
                     isPinned={isPinned}
                   />

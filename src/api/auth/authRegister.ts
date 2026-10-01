@@ -21,9 +21,10 @@ const PostAuthRegister = async (props: PostAuthRegisterProps) => {
   await axiosInstance.post("/auth/signup", props);
 };
 
-/** 최종 회원가입 */
+/** 최종 회원가입. 실패는 가입 폼이 칸 아래나 토스트로 직접 알린다(전역 토스트와 겹치지 않게). */
 export const useAuthRegisterMutation = () => {
   return useMutation<void, AppError, PostAuthRegisterProps>({
     mutationFn: PostAuthRegister,
+    meta: { silent: true },
   });
 };

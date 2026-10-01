@@ -39,6 +39,8 @@ export const usePaymentRefundMutation = () => {
   return useMutation<PaymentRefundResult, AppError, PostPaymentRefundParams>({
     mutationKey: ["post-payment-refund"],
     mutationFn: postPaymentRefund,
+    // 실패는 문의 작성 화면이 사유 칸 아래나 토스트로 직접 알린다.
+    meta: { silent: true },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: qnaQueryKeys.mine() });
       queryClient.invalidateQueries({ queryKey: paymentQueryKeys.orders() });

@@ -28,6 +28,8 @@ export const useSocialTokenMutation = () => {
 
   return useMutation({
     mutationFn: postSocialToken,
+    // 실패 사유는 콜백 화면이 연결이 끊기는 연출과 함께 직접 보여 준다. 토스트로 한 번 더 말하지 않는다.
+    meta: { silent: true },
     onSuccess: (data) => {
       if (data?.accessToken) {
         setAccessToken(data.accessToken);

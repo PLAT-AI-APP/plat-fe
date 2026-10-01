@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { ArrowDown, Check } from "@/icons";
 import { LANGUAGE_LIST } from "@/constants/language";
 import { useClickAway } from "@/hooks/dom/useClickAway";
@@ -11,6 +12,7 @@ import { useLocaleStore } from "@/store/useLocaleStore";
 const SettingLanguageSelect = () => {
   const locale = useLocaleStore((state) => state.locale);
   const setLocale = useLocaleStore((state) => state.setLocale);
+  const queryClient = useQueryClient();
   const { isOpen, toggle, close } = useToggle();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -25,8 +27,13 @@ const SettingLanguageSelect = () => {
   const handleSelect = (
     nextLocale: (typeof LANGUAGE_LIST)[number]["locale"],
   ) => {
-    setLocale(nextLocale);
     close();
+    if (nextLocale === locale) return;
+
+    setLocale(nextLocale);
+    // 서버가 Accept-Language 로 번역해 준 데이터(캐릭터 소개·공지·상품 이름 등)는 언어가 키에 없는 캐시가
+    // 많다. 모두 다시 받아야 옛 언어 글이 섞여 남지 않는다.
+    void queryClient.invalidateQueries();
   };
 
   return (

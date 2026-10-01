@@ -23,9 +23,14 @@ export interface ThumbnailRoom {
   title: string;
   thumbnailUrl: string | null;
   personaName: string;
-  lastMessage: string;
+  /** 아직 주고받은 말이 없는 방은 null. */
+  lastMessage: string | null;
   lastUsedAt: string | null;
   isPinned: boolean;
+  /** 방을 열 때 남긴 캐릭터 이름. */
+  characterName: string;
+  /** 캐릭터(세계관)가 지워진 방. 대화는 볼 수 있고 새 대화만 막힌다. */
+  isClosed: boolean;
 }
 
 /** 채팅방 단건 */
@@ -40,6 +45,10 @@ export interface Room {
   memory: string;
   /** 사용자가 적은 유저노트. 매 턴 프롬프트에 들어간다. */
   userNote: string;
+  /** 방을 열 때 남긴 캐릭터 이름. 캐릭터가 지워져도 이 이름을 보여 준다. */
+  characterName: string;
+  /** 캐릭터(세계관)가 지워진 방. 대화는 볼 수 있고 새 대화·다시 만들기·신고는 막힌다. */
+  closed: boolean;
   /** 이 방의 대화 언어. PATCH /rooms/{roomId}/language 로 바꾼다. */
   language: string;
   /** 켜면 응답 끝에 추천 문장 3개가 함께 온다. */

@@ -74,7 +74,7 @@ const Header = ({ handleFoldToggle, foldToggleRef }: HeaderProps) => {
         <Link id="header-logo-link" href={"/"}>
           <LogoWordmark
             id="header-logo-image"
-            className="h-7.25 min-w-30.5 shrink-0 text-font-1"
+            className="h-7.25 w-auto shrink-0"
           />
         </Link>
       </div>

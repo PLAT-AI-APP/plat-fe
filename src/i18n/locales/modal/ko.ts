@@ -63,6 +63,7 @@ const ko = {
       next: "다음",
       submit: "비밀번호 변경",
       successToast: "비밀번호가 변경되었습니다",
+      successLoginHint: "새 비밀번호로 로그인해 주세요.",
     },
     imageCrop: {
       title: "이미지 편집",

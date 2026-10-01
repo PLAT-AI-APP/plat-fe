@@ -9,6 +9,7 @@ import {
 import { useState } from "react";
 import { isAuthExpiredError, logApiError, notifyApiError } from "@/api";
 import { isAppError, isRetryableError } from "@/lib/apiError";
+import { registerSessionQueryClient } from "@/lib/session";
 
 export default function ReactQueryProvider({
   children,
@@ -76,6 +77,9 @@ export default function ReactQueryProvider({
         },
       }),
   );
+  // 세션 만료를 처리하는 axios 인터셉터(React 밖)가 캐시를 비울 수 있게 알려 둔다.
+  registerSessionQueryClient(queryClient);
+
   return (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );

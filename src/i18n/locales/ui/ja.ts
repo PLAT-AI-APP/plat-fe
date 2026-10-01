@@ -360,6 +360,24 @@ const ja = {
     transactionDateLabel: "取引日時",
     copyTransactionId: "取引番号をコピー",
     copySuccess: "取引番号がコピーされました。",
+    copyFailed: "取引番号をコピーできませんでした。",
+    toggleDetail: "詳細を見る",
+    /* 원장 유형(type)·참조 유형(referenceType)별 제목. 서버 enum 을 그대로 보이지 않는다. */
+    titles: {
+      payment: "ノートチャージ",
+      adminGrant: "運営からの付与",
+      event: "イベント付与",
+      promotion: "プロモーション付与",
+      earningExchange: "収益交換",
+      refundRestore: "返金取消による復元",
+      charge: "ノート付与",
+      chat: "チャット",
+      imageGeneration: "画像生成",
+      use: "ノート使用",
+      refund: "返金",
+      expire: "期限切れ",
+      adminDeduct: "運営による回収",
+    },
   },
   /* 고객센터(FAQ · 나의 Q&A). pageTitles 는 runtime 의 같은 네임스페이스에 재귀 병합된다. */
   pageTitles: {

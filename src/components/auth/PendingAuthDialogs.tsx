@@ -36,10 +36,19 @@ const PendingAuthDialogs = () => {
     if (pendingSignupCompleteDialog) {
       sessionStorage.removeItem(PENDING_SIGNUP_COMPLETE_DIALOG_KEY);
 
-      const parsedDialogData = JSON.parse(pendingSignupCompleteDialog) as {
+      // 저장소 값은 다른 코드·확장 프로그램이 바꿀 수 있다. 깨진 값이면 가입 완료 안내만 기본 문구로 띄운다.
+      let parsedDialogData: {
         nickname?: string;
         agreement?: SignupCompleteDialogProps["agreement"];
-      };
+      } = {};
+      try {
+        const parsed: unknown = JSON.parse(pendingSignupCompleteDialog);
+        if (parsed && typeof parsed === "object") {
+          parsedDialogData = parsed as typeof parsedDialogData;
+        }
+      } catch {
+        parsedDialogData = {};
+      }
 
       clearModals();
       openDialog("SIGNUP_COMPLETE", {

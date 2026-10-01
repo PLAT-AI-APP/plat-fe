@@ -5,7 +5,13 @@ import { useTranslations } from "next-intl";
 import { Asterisk, MoveUp } from "@/icons";
 import { useAutoResizeTextarea } from "@/hooks/form/useAutoResizeTextarea";
 import { useTextareaSubmitShortcuts } from "@/hooks/form/useTextareaSubmitShortcuts";
+import { cn } from "@/lib/utils";
 import ActiveButton from "../ActiveButton";
+
+/** 서버 POST /chat 의 message 최대 길이와 같아야 한다. */
+const CHAT_MESSAGE_MAX_LENGTH = 4000;
+/** 이만큼 쓰면 남은 글자 수를 보여 준다. 짧은 대화 중에는 숫자가 거슬리지 않게 숨긴다. */
+const CHAT_MESSAGE_COUNTER_FROM = 3500;
 
 export interface ChatFormHandle {
   /** 보내지 못한 글을 입력창에 되돌린다. 그 사이 새로 쓴 글이 있으면 덮어쓰지 않는다. */
@@ -77,6 +83,7 @@ const ChatForm = ({
 
   const { handleKeyDown: handleTextareaKeyDown } = useTextareaSubmitShortcuts({
     onSubmit: submitMessage,
+    newlineOnTouch: true,
   });
 
   const handleSituationInsert = () => {
@@ -122,6 +129,7 @@ const ChatForm = ({
           value={msg}
           onChange={(event) => setMsg(event.target.value)}
           onKeyDown={handleTextareaKeyDown}
+          maxLength={CHAT_MESSAGE_MAX_LENGTH}
           placeholder={t("chatUI.messagePlaceholder")}
           rows={1}
           // 비어 있어도 79px 를 차지한다. 자동 높이 조절이 inline height 를 넣어도 min-height 가 이겨서
@@ -153,6 +161,19 @@ const ChatForm = ({
           </ActiveButton>
         </footer>
       </fieldset>
+      {msg.length >= CHAT_MESSAGE_COUNTER_FROM && (
+        <p
+          aria-live="polite"
+          className={cn(
+            "body-8 mt-2 text-right",
+            msg.length >= CHAT_MESSAGE_MAX_LENGTH
+              ? "text-font-accents"
+              : "text-font-2",
+          )}
+        >
+          {msg.length}/{CHAT_MESSAGE_MAX_LENGTH}
+        </p>
+      )}
     </form>
   );
 };

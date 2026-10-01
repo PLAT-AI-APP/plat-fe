@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { FormProvider, useForm, useWatch } from "react-hook-form";
 import { LoginToastType, useEmailLoginMutation } from "@/api/auth/emailLogin";
 import ActiveButton from "@/components/ActiveButton";
@@ -21,10 +21,8 @@ import { loginFormSchema, LoginFormValues } from "@/schema/auth.schema";
 import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
 import { LoginModalProps } from "@/type/modal";
-import {
-  PENDING_WELCOME_CREDIT_DIALOG_KEY,
-  SOCIAL_LOGIN_PROVIDER_KEY,
-} from "@/constants/auth";
+import { PENDING_WELCOME_CREDIT_DIALOG_KEY } from "@/constants/auth";
+import { useSocialLogin } from "@/hooks/auth/useSocialLogin";
 
 const showLoginToast = (
   toastType: LoginToastType | undefined,
@@ -73,19 +71,10 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
 
   const { mutate: emailLogin, isPending: isEmailLoginPending } =
     useEmailLoginMutation();
-  // 외부 인증 페이지로 넘어가는 중인 소셜 로그인.
-  const [redirectingProvider, setRedirectingProvider] = useState<
-    "kakao" | "google" | null
-  >(null);
-  // 인증 페이지에서 뒤로 오면 브라우저가 떠나기 직전 화면(bfcache)을 그대로 되살려 버튼이
-  // 대기 상태로 굳어 있다. 되살아난 경우에만 풀어 준다.
-  useEffect(() => {
-    const handlePageShow = (event: PageTransitionEvent) => {
-      if (event.persisted) setRedirectingProvider(null);
-    };
-    window.addEventListener("pageshow", handlePageShow);
-    return () => window.removeEventListener("pageshow", handlePageShow);
-  }, []);
+  // 외부 인증 페이지로 넘어가는 중인 소셜 로그인. 이동 직전 모달의 이탈 확인은 건너뛴다.
+  const { redirectingProvider, startSocialLogin } = useSocialLogin({
+    beforeRedirect: allowNextNavigation,
+  });
 
   useEffect(() => {
     const frameId = window.requestAnimationFrame(() => {
@@ -186,17 +175,8 @@ const LoginModal = ({ onClose, triggerRef }: LoginModalProps) => {
     openModal("FIND_PASSWORD");
   };
 
-  const handleSocialLoginClick = (provider: "kakao" | "google") => {
-    if (redirectingProvider) return;
-    setRedirectingProvider(provider);
-    allowNextNavigation();
-    try {
-      sessionStorage.setItem(SOCIAL_LOGIN_PROVIDER_KEY, provider);
-    } catch {
-      // 저장할 수 없어도 로그인은 그대로 진행한다. 콜백 화면이 수단 없이 안내할 뿐이다.
-    }
-    window.location.href = `${process.env.NEXT_PUBLIC_BASE_URI}/oauth2/authorization/${provider}`;
-  };
+  const handleSocialLoginClick = (provider: "kakao" | "google") =>
+    startSocialLogin(provider);
 
   const handleSignupNavigationIntent = () => {
     allowNextNavigation();

@@ -10,17 +10,16 @@ const ActionText = ({ text }: { text: string }) => {
   const segments = splitActionSegments(text);
   if (!segments.some((segment) => segment.type === "action")) return text;
 
-  return segments.map((segment, index) => (
-    <React.Fragment key={index}>
-      {/* 조각 사이는 한 칸 띄운다. 괄호 뒤에 바로 오는 마침표·물음표 같은 문장부호 앞은 띄우지 않는다. */}
-      {index > 0 && !/^[.,!?…~。、！？]/.test(segment.value) && " "}
-      {segment.type === "action" ? (
-        <span className="text-font-2 italic">({segment.value})</span>
-      ) : (
-        segment.value
-      )}
-    </React.Fragment>
-  ));
+  // 대사 조각은 원문의 공백·줄바꿈을 그대로 들고 있어 따로 띄우지 않는다. 줄바꿈은 말풍선의 white-space 가 살린다.
+  return segments.map((segment, index) =>
+    segment.type === "action" ? (
+      <span key={index} className="text-font-2 italic">
+        ({segment.value})
+      </span>
+    ) : (
+      <React.Fragment key={index}>{segment.value}</React.Fragment>
+    ),
+  );
 };
 
 export default ActionText;

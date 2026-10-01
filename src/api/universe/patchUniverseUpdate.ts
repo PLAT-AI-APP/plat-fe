@@ -9,7 +9,8 @@ import type {
   UniverseCreateTendency,
   UniverseCreateVisibility,
 } from "./postUniverseCreate";
-import { universeQueryKeys } from "./queryKeys";
+import { isAppError } from "@/lib/apiError";
+import { invalidateUniverseLists } from "./invalidateUniverseLists";
 
 export type UniverseUpdateVisibility = UniverseCreateVisibility;
 export type UniverseUpdateTendency = UniverseCreateTendency;
@@ -47,11 +48,35 @@ export interface PatchUniverseUpdateParams {
   request: UniverseUpdateRequest;
 }
 
+/** 고치려는 언어의 번역이 없을 때 서버가 주는 코드(404). */
+const UNIVERSE_TRANSLATION_NOT_FOUND = "UNIVERSE_TRANSLATION_NOT_FOUND";
+
+/**
+ * language 는 "어느 언어 번역을 고칠지"다. 서버는 그 언어 번역이 없으면 404 로 거절한다.
+ *
+ * 세계관은 만든 사람의 언어 하나로만 번역이 생긴다. 상세 조회는 요청 언어 번역이 없으면 한국어로 떨어지므로,
+ * 수정 화면에 채워진 글도 그 규칙을 따른다. 상세 응답에 원본 언어가 없어, 지금 언어로 먼저 보내고
+ * 번역이 없다고 하면 상세가 보여 준 한국어 번역을 고친다.
+ */
 export const patchUniverseUpdate = async ({
   universeId,
   request,
 }: PatchUniverseUpdateParams) => {
-  await authAxios.patch(`/universe/${universeId}`, request);
+  try {
+    await authAxios.patch(`/universe/${universeId}`, request);
+  } catch (error) {
+    if (
+      request.language === "KO" ||
+      !isAppError(error) ||
+      error.code !== UNIVERSE_TRANSLATION_NOT_FOUND
+    ) {
+      throw error;
+    }
+    await authAxios.patch(`/universe/${universeId}`, {
+      ...request,
+      language: "KO",
+    });
+  }
 };
 
 export const useUniverseUpdateMutation = () => {
@@ -65,9 +90,7 @@ export const useUniverseUpdateMutation = () => {
     mutationKey: ["patch-universe-update"],
     mutationFn: patchUniverseUpdate,
     onSuccess: (_, { universeId }) => {
-      queryClient.invalidateQueries({
-        queryKey: universeQueryKeys.detail(universeId),
-      });
+      invalidateUniverseLists(queryClient, universeId);
     },
   });
 };

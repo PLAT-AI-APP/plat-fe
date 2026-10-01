@@ -203,6 +203,7 @@ const AssetItem = ({ id, index, remove }: AssetItemProps) => {
               <button
                 type="button"
                 onClick={() => remove(index)}
+                aria-label={t("deleteAsset")}
                 className="flex size-7 items-center justify-center rounded-full hover:bg-card"
               >
                 <Trash className="h-4 w-4" />
@@ -210,6 +211,8 @@ const AssetItem = ({ id, index, remove }: AssetItemProps) => {
               <button
                 type="button"
                 onClick={toggleActive}
+                aria-label={t("toggleAsset")}
+                aria-expanded={isActive}
                 className={`flex h-7 w-7 items-center justify-center rounded-full transition-transform hover:bg-card ${
                   isActive ? "rotate-180" : ""
                 }`}
