@@ -25,7 +25,8 @@ import {
   openBlankPaymentWindow,
   providerSegment,
 } from "@/lib/paymentWindow";
-import { isTossConfigured, openTossPaymentWindow } from "@/lib/tossPayments";
+import { isTossConfigured } from "@/lib/tossPayments";
+import TossPaymentOverlay from "./TossPaymentOverlay";
 import PageTitle from "@/components/PageTitle";
 import { EmptyState, ErrorState } from "@/components/state";
 
@@ -126,8 +127,11 @@ const TokenChargeContents = () => {
 
   const [pendingWindow, setPendingWindow] =
     useState<PendingPaymentWindow | null>(null);
-  // 토스 결제창을 여는 동안. 결제창이 이 페이지 위에 겹쳐 뜨므로 그 사이 다른 상품을 누르지 못하게 막는다.
-  const [openingToss, setOpeningToss] = useState(false);
+  // 토스 결제 대기 화면. 주문을 만드는 동안은 order 가 null 이다.
+  const [tossCheckout, setTossCheckout] = useState<{
+    product: Product;
+    order: PaymentOrderCreated | null;
+  } | null>(null);
   // 결제 전 확인 창에 띄운 상품. 동의하고 결제하기를 눌러야 주문을 만든다.
   const [confirmingProduct, setConfirmingProduct] = useState<Product | null>(
     null,
@@ -138,31 +142,19 @@ const TokenChargeContents = () => {
     setConfirmingProduct(product);
   };
 
-  // 토스페이먼츠: 서버가 주문(금액·주문번호)만 만들고, 결제창은 SDK 가 이 페이지 위에 띄운다.
-  // 인증이 끝나면 토스가 이 창을 결과 페이지로 보내고, 결과 페이지가 서버에 승인을 보낸다.
-  const openToss = (order: PaymentOrderCreated, product: Product) => {
-    setOpeningToss(true);
-    openTossPaymentWindow({
-      orderUid: order.orderUid,
-      orderName: order.orderName || product.display.name,
-      amountMinor: order.amountMinor,
-      onCancel: () => setOpeningToss(false),
-    }).catch(() => {
-      setOpeningToss(false);
-      showAppToast("error", t("tokenCharge.payment.failed"));
-    });
-  };
-
   // 주문을 만들면 서버가 PG 결제 준비까지 마친다. 결제창 주소가 오면(카카오페이 · 로컬 가짜 PG)
   // PC 는 새 창으로 띄우고 이 화면에서 결과를 기다리며, 휴대폰은 지금 창에서 이동한다.
   // 주소가 없으면(토스페이먼츠) SDK 로 결제창을 띄운다.
   const handlePurchase = (product: Product) => {
     setConfirmingProduct(null);
 
+    // 토스페이먼츠: 결제창은 새 창이 아니라 이 페이지 위에 뜬다. 누르는 즉시 대기 화면을 띄우고 주문을 만든다.
+    const toss = isTossConfigured();
+    if (toss) setTossCheckout({ product, order: null });
+
     // 새 창은 클릭 순간에 열어야 팝업 차단에 걸리지 않는다. 막혔으면 null 이고, 지금 창에서 이동한다.
-    // 토스 결제창은 새 창을 쓰지 않으므로 토스 키가 있으면 미리 열지 않는다.
     const popup =
-      !isTossConfigured() && canUsePaymentWindow()
+      !toss && canUsePaymentWindow()
         ? openBlankPaymentWindow(t("tokenCharge.payment.popupOpening"))
         : null;
 
@@ -174,13 +166,16 @@ const TokenChargeContents = () => {
           !order.redirectMobileUrl
         ) {
           popup?.close();
-          if (!isTossConfigured()) {
+          if (!toss) {
             showAppToast("error", t("tokenCharge.payment.failed"));
             return;
           }
-          openToss(order, product);
+          // 대기 화면이 주문을 받아 결제창을 연다.
+          setTossCheckout({ product, order });
           return;
         }
+        // 서버가 토스가 아닌 PG(이동 주소)로 답했다. 토스 대기 화면을 내리고 그 PG 흐름으로 간다.
+        setTossCheckout(null);
         const redirectUrl = isMobileDevice()
           ? (order.redirectMobileUrl ?? order.redirectPcUrl)
           : (order.redirectPcUrl ?? order.redirectMobileUrl);
@@ -202,7 +197,10 @@ const TokenChargeContents = () => {
         showAppToast("info", t("tokenCharge.payment.redirecting"));
         window.location.href = redirectUrl;
       },
-      onError: () => popup?.close(),
+      onError: () => {
+        popup?.close();
+        setTossCheckout(null);
+      },
     });
   };
 
@@ -249,7 +247,7 @@ const TokenChargeContents = () => {
               <ProductListItem
                 key={product.productId}
                 product={product}
-                disabled={isCreatingOrder || openingToss}
+                disabled={isCreatingOrder || tossCheckout !== null}
                 onPurchase={handleSelectProduct}
               />
             ))}
@@ -264,6 +262,15 @@ const TokenChargeContents = () => {
           product={confirmingProduct}
           onClose={() => setConfirmingProduct(null)}
           onConfirm={handlePurchase}
+        />
+      )}
+
+      {tossCheckout && (
+        <TossPaymentOverlay
+          order={tossCheckout.order}
+          fallbackOrderName={tossCheckout.product.display.name}
+          onClose={() => setTossCheckout(null)}
+          onExpired={() => handlePurchase(tossCheckout.product)}
         />
       )}
 
