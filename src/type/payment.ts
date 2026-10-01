@@ -3,6 +3,8 @@ import type { SliceWith } from "./api";
 /** POST /payments/orders 응답. 이동 주소가 있으면(카카오페이) 그 결제창으로 보냅니다. */
 export interface PaymentOrderCreated {
   orderUid: string;
+  /** 주문에 남긴 상품명. PG 결제창 주문명으로 그대로 넘겨 결제 내역과 장부가 같은 이름을 쓴다. */
+  orderName: string;
   pgProvider: string;
   amountMinor: number;
   currency: string;
