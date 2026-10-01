@@ -10,6 +10,7 @@ import { walletQueryKeys } from "@/api/wallet/queryKeys";
 import { noteQueryKeys } from "@/api/note/queryKeys";
 import { useAuthStore } from "@/store/useAuthStore";
 import { handOffToOpener, isMobileDevice } from "@/lib/paymentWindow";
+import { useMinimumDisplay } from "@/hooks/common/useMinimumDisplay";
 import type { AppError } from "@/api";
 import Button from "@/components/ui/Button";
 import PaymentSuccess from "./PaymentSuccess";
@@ -45,6 +46,8 @@ const POLL_SLOW_MS = 30_000;
 const FAST_WINDOW_MS = 7 * 60_000;
 /** 승인 요청이 이만큼 걸리면 "평소보다 오래 걸린다"는 안내로 바꾼다. */
 const SLOW_CONFIRM_MS = 8_000;
+/** 확인 중 연출을 최소한 보여 주는 시간. 승인이 빨라도 번쩍이고 결과로 넘어가지 않게 한다. */
+const MIN_CONFIRMING_MS = 1_000;
 
 /**
  * 노트가 들어왔으니 잔액과 사용 내역을 다시 받는다. 사용 내역을 빼먹으면 충전 페이지의
@@ -97,6 +100,13 @@ const PaymentResultContents = ({
     if (!pgToken) return { kind: "checking" };
     return { kind: "confirming" };
   });
+
+  // 승인·확인부터 시작하는 화면은 결과가 빨리 와도 확인 중 연출을 최소 시간만큼 보여 준다.
+  // 취소처럼 처음부터 결과가 정해진 화면은 붙잡지 않는다.
+  const [startsWaiting] = useState(
+    () => state.kind === "confirming" || state.kind === "checking",
+  );
+  const minimumShown = useMinimumDisplay(startsWaiting, MIN_CONFIRMING_MS);
 
   /*
    * 결제창을 새 창으로 띄운 경우 이 페이지는 그 결제창 안에서 열린다. 결과를 기다리는
@@ -160,7 +170,15 @@ const PaymentResultContents = ({
         setState({ kind: "failed", message: error?.message });
       })
       .finally(() => clearTimeout(slowTimer));
-  }, [state.kind, orderUid, pgToken, handoff, isAuthReady, isLoggedIn, queryClient]);
+  }, [
+    state.kind,
+    orderUid,
+    pgToken,
+    handoff,
+    isAuthReady,
+    isLoggedIn,
+    queryClient,
+  ]);
 
   /*
    * 결론이 안 난 동안 주문 상태를 되묻는다.
@@ -198,13 +216,21 @@ const PaymentResultContents = ({
         if (stopped) return;
         const captured = CAPTURED_STATUSES.has(order.paymentStatus);
         if (captured && order.fulfillmentStatus === "GRANTED") {
-          setState({ kind: "success", credits: order.creditAmount, granted: true });
+          setState({
+            kind: "success",
+            credits: order.creditAmount,
+            granted: true,
+          });
           refreshNotes(queryClient);
           return;
         }
         if (captured && kind !== "success") {
           // 결제는 확인됐다. 지급 대기로 넘어가 계속 묻는다.
-          setState({ kind: "success", credits: order.creditAmount, granted: false });
+          setState({
+            kind: "success",
+            credits: order.creditAmount,
+            granted: false,
+          });
           return;
         }
         if (CLOSED_STATUSES.has(order.paymentStatus)) {
@@ -239,7 +265,15 @@ const PaymentResultContents = ({
       clearTimeout(timer);
       document.removeEventListener("visibilitychange", onVisible);
     };
-  }, [polling, state.kind, orderUid, handoff, isAuthReady, isLoggedIn, queryClient]);
+  }, [
+    polling,
+    state.kind,
+    orderUid,
+    handoff,
+    isAuthReady,
+    isLoggedIn,
+    queryClient,
+  ]);
 
   if (handoff === "done") {
     return (
@@ -262,7 +296,7 @@ const PaymentResultContents = ({
     isAuthReady &&
     !isLoggedIn;
   const view: PaymentState =
-    handoff === "pending"
+    handoff === "pending" || !minimumShown
       ? { kind: "confirming" }
       : needsLogin
         ? { kind: "failed" }
