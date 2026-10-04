@@ -13,6 +13,7 @@ import { ChatRetry, ChatTrash, Flag, Pen, Trash } from "@/icons";
 import { useAutoResizeTextarea } from "@/hooks/form/useAutoResizeTextarea";
 import { useInlineTextEdit } from "@/hooks/form/useInlineTextEdit";
 import { getResourceImageUrl } from "@/lib/file";
+import { cn } from "@/lib/utils";
 import {
   parsePlatCached,
   parsePlatStreaming,
@@ -28,6 +29,8 @@ interface ChatContentBlockProps {
   /** 스트림으로 받는 중인 응답. 반쯤 온 블록을 미리 닫아 그리고, 삭제·다시하기 버튼은 숨긴다. */
   isStreaming?: boolean;
   isEditMode?: boolean;
+  /** 소설로 보기. 프로필·말풍선·나레이션 아이콘 없이 글만 이어서 보여 준다. */
+  isNovelView?: boolean;
   onUpdate?: (newContent: string) => void;
   onDelete?: () => void;
   onRetry?: () => void;
@@ -38,6 +41,7 @@ interface ChatContentBlockProps {
 interface TypingIndicatorProps {
   characterName: string;
   profileImage: string;
+  isNovelView: boolean;
 }
 
 const TYPING_DOTS = [0, 1, 2] as const;
@@ -46,8 +50,35 @@ const TYPING_DOTS = [0, 1, 2] as const;
 const TypingIndicator = ({
   characterName,
   profileImage,
+  isNovelView,
 }: TypingIndicatorProps) => {
   const t = useTranslations();
+
+  const dots = TYPING_DOTS.map((dot) => (
+    <m.span
+      key={dot}
+      aria-hidden
+      className="size-1.5 rounded-full bg-font-2"
+      animate={{ opacity: [0.3, 1, 0.3] }}
+      transition={{ duration: 1.2, repeat: Infinity, delay: dot * 0.2 }}
+    />
+  ));
+
+  // 소설로 보기에서는 프로필·말풍선 없이 `이름 | ···` 한 줄로 보여 준다.
+  if (isNovelView) {
+    return (
+      <m.article
+        {...slideUpVariants}
+        transition={TRANSITION_FAST}
+        role="status"
+        aria-label={t("chatUI.characterTyping", { name: characterName })}
+        className="body-4 flex h-6 items-center gap-1 text-speech"
+      >
+        {characterName && <span>{characterName} |</span>}
+        {dots}
+      </m.article>
+    );
+  }
 
   return (
     <m.article
@@ -74,15 +105,7 @@ const TypingIndicator = ({
       <div className="body-5">
         <span className="body-6 mb-1.5 block text-font-1">{characterName}</span>
         <div className="flex h-9 w-fit items-center gap-1 rounded-[0px_16px_16px_16px] bg-card px-3">
-          {TYPING_DOTS.map((dot) => (
-            <m.span
-              key={dot}
-              aria-hidden
-              className="size-1.5 rounded-full bg-font-2"
-              animate={{ opacity: [0.3, 1, 0.3] }}
-              transition={{ duration: 1.2, repeat: Infinity, delay: dot * 0.2 }}
-            />
-          ))}
+          {dots}
         </div>
       </div>
     </m.article>
@@ -95,6 +118,7 @@ const ChatContentBlock = ({
   profileImage,
   isStreaming = false,
   isEditMode = false,
+  isNovelView = false,
   onUpdate,
   onDelete,
   onRetry,
@@ -127,7 +151,11 @@ const ChatContentBlock = ({
 
   if (isStreaming && blocks.length === 0) {
     return (
-      <TypingIndicator characterName={characterName} profileImage={profileImage} />
+      <TypingIndicator
+        characterName={characterName}
+        profileImage={profileImage}
+        isNovelView={isNovelView}
+      />
     );
   }
 
@@ -152,7 +180,7 @@ const ChatContentBlock = ({
   }
 
   return (
-    <div className="flex w-full flex-col gap-6">
+    <div className={cn("flex w-full flex-col", isNovelView ? "gap-5" : "gap-6")}>
       {blocks.map((block, index) => {
         if (block.type === "DIALOGUE") {
           return (
@@ -161,13 +189,18 @@ const ChatContentBlock = ({
               image={profileImage}
               chatText={segmentsToDisplayText(block.segments, userDisplayName)}
               CharacterName={characterName}
+              isNovelView={isNovelView}
             />
           );
         }
 
         if (block.type === "USER_DIALOGUE") {
           return (
-            <UserChatBubble key={index} text={segmentsToDisplayText(block.segments, userDisplayName)} />
+            <UserChatBubble
+              key={index}
+              text={segmentsToDisplayText(block.segments, userDisplayName)}
+              isNovelView={isNovelView}
+            />
           );
         }
 
@@ -191,7 +224,11 @@ const ChatContentBlock = ({
 
         if (block.type === "NARRATIVE") {
           return (
-            <Scenario key={index} text={segmentsToDisplayText(block.segments, userDisplayName)} />
+            <Scenario
+              key={index}
+              text={segmentsToDisplayText(block.segments, userDisplayName)}
+              isNovelView={isNovelView}
+            />
           );
         }
 
@@ -199,7 +236,7 @@ const ChatContentBlock = ({
       })}
 
       {isEditMode && !isStreaming && (
-        <div className="-mt-4 flex gap-1 pl-11">
+        <div className={cn("-mt-4 flex gap-1", !isNovelView && "pl-11")}>
           <button
             type="button"
             onClick={startEditing}
@@ -222,7 +259,7 @@ const ChatContentBlock = ({
       {/* 받는 중인 응답은 아직 서버에 없어 지우거나 다시 만들 대상이 없다.
           응답이 사용자 대사로 끝나도 그 턴의 답이므로 버튼은 캐릭터 쪽(왼쪽)에 그대로 둔다. */}
       {!isEditMode && !isStreaming && (onDelete || onRetry || onReport) && (
-        <div className="-mt-4 flex gap-1 pl-11">
+        <div className={cn("-mt-4 flex gap-1", !isNovelView && "pl-11")}>
           {onDelete && (
             <button
               type="button"

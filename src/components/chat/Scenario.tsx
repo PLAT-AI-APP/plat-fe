@@ -7,6 +7,8 @@ interface ScenarioProps {
   className?: string;
   iconClassName?: string;
   textClassName?: string;
+  /** 소설로 보기. 나레이션 아이콘 없이 글만 그린다. */
+  isNovelView?: boolean;
 }
 
 const Scenario = ({
@@ -14,11 +16,20 @@ const Scenario = ({
   className,
   iconClassName = "size-6",
   textClassName,
+  isNovelView = false,
 }: ScenarioProps) => {
   return (
     <section id="scenario-item" className={cn("flex gap-5", className)}>
-      <Message className={cn("shrink-0 text-font-2", iconClassName)} />
-      <p className={cn("body-5 whitespace-pre-wrap text-font-2", textClassName)}>
+      {!isNovelView && (
+        <Message className={cn("shrink-0 text-font-2", iconClassName)} />
+      )}
+      <p
+        className={cn(
+          "body-4 whitespace-pre-wrap text-narration",
+          isNovelView && "min-w-0 flex-1",
+          textClassName,
+        )}
+      >
         {text}
       </p>
     </section>

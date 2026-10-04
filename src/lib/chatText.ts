@@ -41,6 +41,32 @@ export const splitActionSegments = (text: string): ChatTextSegment[] => {
   return segments;
 };
 
+/**
+ * 대사에서 행동 묘사를 떼어 내 대사 글자와 나레이션 줄로 나눈다.
+ * 행동은 대사 안에 끼워 두지 않고, 대사 아래 나레이션 박스에 줄바꿈으로 쌓아 보여 주기 위해서다.
+ * 행동이 없으면 원문을 그대로 돌려줘 대사 모양이 바뀌지 않는다.
+ */
+export const splitDialogueActions = (
+  text: string,
+): { speech: string; actions: string[] } => {
+  const segments = splitActionSegments(text);
+  const actions = segments
+    .filter((segment) => segment.type === "action")
+    .map((segment) => segment.value);
+  if (actions.length === 0) return { speech: text, actions };
+
+  // 행동이 빠진 자리에 남는 연속 공백·줄 끝 공백을 정리한다.
+  const speech = segments
+    .filter((segment) => segment.type === "text")
+    .map((segment) => segment.value)
+    .join("")
+    .replace(/[ \t]{2,}/g, " ")
+    .replace(/ *\n */g, "\n")
+    .trim();
+
+  return { speech, actions };
+};
+
 /** 이미지 같은 에셋 토큰. {{user}} 는 이름 자리라 남긴다. */
 const PREVIEW_ASSET_TOKEN = /\{\{(?!user\}\})[^}]*\}\}/g;
 

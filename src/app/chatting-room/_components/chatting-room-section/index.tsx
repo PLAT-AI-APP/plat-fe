@@ -20,6 +20,7 @@ import { useIntersectionObserver } from "@/hooks/dom/useIntersectionObserver";
 import { useScrollTimeout } from "@/hooks/dom/useScrollTiemout";
 import { toAiModel } from "@/lib/chatModel";
 import { toImageVariantUrl } from "@/lib/file";
+import { useChatViewStore } from "@/store/useChatViewStore";
 import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
 import { AIModelType, ChatMessageType } from "@/type/chat";
@@ -56,6 +57,7 @@ const toChatMessage = (
 
 const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
   const { onScroll } = useScrollTimeout();
+  const isNovelView = useChatViewStore((state) => state.isNovelView);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [scrollContainer, setScrollContainer] = useState<HTMLDivElement | null>(null);
 
@@ -252,6 +254,7 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
             <MessageList
               messages={messages}
               scrollContainer={scrollContainer}
+              isNovelView={isNovelView}
               suggestions={suggestions}
               onSuggestionSelect={handleSuggestionSelect}
               onDeleteMessage={isBusy ? undefined : handleDeleteMessage}

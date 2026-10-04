@@ -18,6 +18,8 @@ interface MessageListProps {
   messages: ChatMessageType[];
   scrollContainer: HTMLDivElement | null;
   isEditable?: boolean;
+  /** 소설로 보기. 말풍선·프로필 없이 글만 이어서 보여 준다. */
+  isNovelView?: boolean;
   onUpdateMessage?: (id: string, newContent: string) => void;
   /** 턴 삭제. 서버에 저장된 메시지에만 버튼이 뜬다. */
   onDeleteMessage?: (id: string) => void;
@@ -40,6 +42,7 @@ const EMPTY_SUGGESTIONS: string[] = [];
 interface MessageRowProps {
   message: ChatMessageType;
   isEditable: boolean;
+  isNovelView: boolean;
   /** 이 줄 아래에 붙일 추천 문장. 마지막 답에만 넘어온다. */
   suggestions: string[];
   onSuggestionSelect?: MessageListProps["onSuggestionSelect"];
@@ -53,6 +56,7 @@ const MessageRow = memo(
   ({
     message,
     isEditable,
+    isNovelView,
     suggestions,
     onSuggestionSelect,
     onUpdateMessage,
@@ -89,6 +93,7 @@ const MessageRow = memo(
             profileImage={message.profileImage || ""}
             isStreaming={message.isStreaming}
             isEditMode={isEditable}
+            isNovelView={isNovelView}
             onUpdate={handleUpdate}
             // 시나리오는 캐릭터가 만든 응답이 아니라 지우거나 다시 만들 대상이 아니다.
             // 처리 함수를 받지 않았으면 버튼도 띄우지 않는다.
@@ -116,6 +121,7 @@ const MessageRow = memo(
       <UserChatBubble
         text={message.content}
         isEditable={isEditable}
+        isNovelView={isNovelView}
         onUpdate={handleUpdate}
         onDelete={canDelete ? handleDelete : undefined}
       />
@@ -136,6 +142,7 @@ const MessageRow = memo(
     return (
       isSameMessage &&
       previous.isEditable === next.isEditable &&
+      previous.isNovelView === next.isNovelView &&
       previous.suggestions === next.suggestions &&
       previous.onSuggestionSelect === next.onSuggestionSelect &&
       previous.onUpdateMessage === next.onUpdateMessage &&
@@ -167,6 +174,7 @@ const MessageList = memo(
     messages,
     scrollContainer,
     isEditable = false,
+    isNovelView = false,
     onUpdateMessage,
     onDeleteMessage,
     onRetryMessage,
@@ -306,6 +314,7 @@ const MessageList = memo(
               <MessageRow
                 message={message}
                 isEditable={isEditable}
+                isNovelView={isNovelView}
                 suggestions={
                   virtualMessage.index === lastAssistantIndex
                     ? suggestions
