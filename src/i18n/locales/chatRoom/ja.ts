@@ -33,6 +33,7 @@ const ja: typeof ko = {
       assetGalleryEmpty: "まだアセットがありません",
       assetTotal: "合計  {count}件",
       suggestedReply: "おすすめ返信",
+      novelView: "小説で見る",
       assetView: "アセット表示",
       assetLocked: "ロックされたアセット",
       backToAssetGallery: "アセットギャラリーに戻る",

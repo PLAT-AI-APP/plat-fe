@@ -33,6 +33,7 @@ const th: typeof ko = {
       assetGalleryEmpty: "ยังไม่มีแอสเซ็ต",
       assetTotal: "ทั้งหมด  {count} รายการ",
       suggestedReply: "คำตอบแนะนำ",
+      novelView: "อ่านแบบนิยาย",
       assetView: "แสดงแอสเซ็ต",
       assetLocked: "แอสเซ็ตที่ล็อกอยู่",
       backToAssetGallery: "กลับไปที่แกลเลอรีแอสเซ็ต",

@@ -22,6 +22,7 @@ export { default as StatusSuccessLine } from "./StatusSuccessLine";
 export { default as Camera } from "./Camera";
 export { default as CameraFill } from "./CameraFill";
 export { default as Edit } from "./Edit";
+export { default as BookOpen } from "./BookOpen";
 export { default as GalleryViewLine } from "./GalleryViewLine";
 export { default as Pen } from "./Pen";
 export { default as PenSparkle } from "./PenSparkle";

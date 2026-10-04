@@ -14,7 +14,9 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
+  BookOpen,
   ChatPlus,
+  GalleryViewLine,
   ImageIcon,
   Logout,
   Pen,
@@ -31,6 +33,7 @@ import {
 import { usePatchRoomAnswerRecommendationMutation } from "@/api/room/patchRoomAnswerRecommendation";
 import { usePatchRoomPersonaMutation } from "@/api/room/patchRoomPersona";
 import { cn, formatWithCommas } from "@/lib/utils";
+import { useChatViewStore } from "@/store/useChatViewStore";
 import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
 import { useWalletStore } from "@/store/useWalletStore";
@@ -191,6 +194,16 @@ const ChattingSidebar = ({ roomId, toggleIsSidebar }: ChattingSidebarProps) => {
 
     patchAnswerRecommendation({ roomId, enabled: !isAnswerRecommendationOn });
   };
+
+  // 에셋 보기는 아직 채팅 화면과 연동 전이라 사이드바 안에서만 켜고 끈다.
+  const [isAssetViewOn, setIsAssetViewOn] = useState(true);
+  const handleAssetViewToggle = () =>
+    setIsAssetViewOn((prevState) => !prevState);
+  // 소설로 보기는 채팅 화면(메시지 목록)이 같은 값을 읽는다.
+  const isNovelViewOn = useChatViewStore((state) => state.isNovelView);
+  const handleNovelViewToggle = useChatViewStore(
+    (state) => state.toggleNovelView,
+  );
 
   const isDepthViewOpen = sidebarDepth !== "SETTINGS";
   const panelRef = useRef<HTMLDivElement>(null);
@@ -424,6 +437,32 @@ const ChattingSidebar = ({ roomId, toggleIsSidebar }: ChattingSidebarProps) => {
                                   isOn={isAnswerRecommendationOn}
                                   onClick={handleAnswerRecommendationToggle}
                                   label={t("suggestedReply")}
+                                />
+                              }
+                            />
+                          </li>
+                          <li>
+                            <SidebarMenuItem
+                              icon={GalleryViewLine}
+                              label={t("assetView")}
+                              trailing={
+                                <SidebarToggle
+                                  isOn={isAssetViewOn}
+                                  onClick={handleAssetViewToggle}
+                                  label={t("assetView")}
+                                />
+                              }
+                            />
+                          </li>
+                          <li>
+                            <SidebarMenuItem
+                              icon={BookOpen}
+                              label={t("novelView")}
+                              trailing={
+                                <SidebarToggle
+                                  isOn={isNovelViewOn}
+                                  onClick={handleNovelViewToggle}
+                                  label={t("novelView")}
                                 />
                               }
                             />
