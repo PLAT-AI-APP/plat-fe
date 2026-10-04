@@ -19,7 +19,7 @@ import {
   GalleryViewLine,
   ImageIcon,
   Logout,
-  Pen,
+  PenSparkle,
   Persona,
   Storage,
   Token,
@@ -430,7 +430,7 @@ const ChattingSidebar = ({ roomId, toggleIsSidebar }: ChattingSidebarProps) => {
                         <menu className="flex list-none flex-col gap-1">
                           <li>
                             <SidebarMenuItem
-                              icon={Pen}
+                              icon={PenSparkle}
                               label={t("suggestedReply")}
                               trailing={
                                 <SidebarToggle
