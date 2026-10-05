@@ -16,6 +16,8 @@ import {
   ArrowLeft,
   BookOpen,
   ChatPlus,
+  Eye,
+  EyeOff,
   GalleryViewLine,
   ImageIcon,
   Logout,
@@ -84,29 +86,42 @@ interface SidebarToggleProps {
   isOn: boolean;
   onClick: () => void;
   label: string;
+  /** 켜짐/꺼짐을 눈 아이콘으로도 보여 줄지. 보이기·숨기기 성격의 설정(추천 답변·에셋 보기)만 쓴다. */
+  hasEyeIcon?: boolean;
 }
 
-/** 켬/끔만 있는 설정 줄의 스위치. 지금은 답변 추천 하나가 쓴다. */
-const SidebarToggle = ({ isOn, onClick, label }: SidebarToggleProps) => (
-  <button
-    type="button"
-    onClick={onClick}
-    role="switch"
-    aria-checked={isOn}
-    aria-label={label}
-    className={cn(
-      "relative h-6 w-12 shrink-0 rounded-full border transition-colors",
-      isOn ? "border-brand/40 bg-brand-opacity-2" : "border-main/40 bg-darkest",
-    )}
-  >
-    <span
+/** 켬/끔만 있는 설정 줄의 스위치. */
+const SidebarToggle = ({
+  isOn,
+  onClick,
+  label,
+  hasEyeIcon = false,
+}: SidebarToggleProps) => {
+  const EyeStateIcon = isOn ? Eye : EyeOff;
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      role="switch"
+      aria-checked={isOn}
+      aria-label={label}
       className={cn(
-        "absolute left-0.5 top-0.5 size-5 rounded-full transition",
-        isOn ? "translate-x-6 bg-brand" : "translate-x-0 bg-font-disabled",
+        "relative h-6 w-12 shrink-0 rounded-full border transition-colors",
+        isOn ? "border-brand/40 bg-brand-opacity-2" : "border-main/40 bg-darkest",
       )}
-    />
-  </button>
-);
+    >
+      <span
+        className={cn(
+          "absolute left-0.5 top-0.5 flex size-5 items-center justify-center rounded-full transition",
+          isOn ? "translate-x-6 bg-brand" : "translate-x-0 bg-font-disabled",
+        )}
+      >
+        {hasEyeIcon && <EyeStateIcon className="size-4 text-on-brand" />}
+      </span>
+    </button>
+  );
+};
 
 /** 사이드바 오버레이 페이드 애니메이션 */
 const sidebarOverlayMotion = {
@@ -437,6 +452,7 @@ const ChattingSidebar = ({ roomId, toggleIsSidebar }: ChattingSidebarProps) => {
                                   isOn={isAnswerRecommendationOn}
                                   onClick={handleAnswerRecommendationToggle}
                                   label={t("suggestedReply")}
+                                  hasEyeIcon
                                 />
                               }
                             />
@@ -450,6 +466,7 @@ const ChattingSidebar = ({ roomId, toggleIsSidebar }: ChattingSidebarProps) => {
                                   isOn={isAssetViewOn}
                                   onClick={handleAssetViewToggle}
                                   label={t("assetView")}
+                                  hasEyeIcon
                                 />
                               }
                             />
