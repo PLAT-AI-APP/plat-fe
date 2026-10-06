@@ -215,6 +215,7 @@ const zh: typeof ko = {
       handoverTitle: "保留的角色",
       handoverNumber: "移交编号 {id}",
       copyMailSent: "已通过邮件发送同意书副本",
+      consentSummary: "已同意角色使用许可同意书 v{version} · {date}",
     },
     withdrawalConfirm: {
       title: "你确定要离开吗？",

@@ -1,5 +1,6 @@
 "use client";
 
+import dayjs from "@/lib/dayjs";
 import { useTranslations } from "next-intl";
 import type { WithdrawalCompleteDialogProps } from "@/type/dialog";
 import Dialog from "./Dialog";
@@ -9,6 +10,7 @@ const WithdrawalCompleteDialog = ({
   onConfirm,
   handovers = [],
   copyMailRequested = false,
+  consent = null,
 }: WithdrawalCompleteDialogProps) => {
   const t = useTranslations();
 
@@ -51,6 +53,15 @@ const WithdrawalCompleteDialog = ({
                     </li>
                   ))}
                 </ul>
+                {/* 무엇에 언제 동의했는지 남긴다. 사본 메일이 없는 계정은 이 화면이 유일한 확인이다. */}
+                {consent && (
+                  <p className="body-7 text-font-2">
+                    {t("dialog.withdrawalComplete.consentSummary", {
+                      version: consent.version,
+                      date: dayjs(consent.consentedAt).format("YYYY.MM.DD HH:mm"),
+                    })}
+                  </p>
+                )}
               </div>
             )}
 

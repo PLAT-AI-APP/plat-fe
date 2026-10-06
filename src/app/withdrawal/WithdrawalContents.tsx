@@ -114,6 +114,7 @@ const WithdrawalContents = () => {
     openDialog("WITHDRAWAL_COMPLETE", {
       handovers: result.handovers,
       copyMailRequested: result.copyMailRequested,
+      consent: result.consent,
       onConfirm: handleCompleteConfirm,
     });
   };

@@ -221,6 +221,7 @@ const en: typeof ko = {
       handoverTitle: "Characters you kept",
       handoverNumber: "Handover no. {id}",
       copyMailSent: "We've emailed you a copy of the consent form.",
+      consentSummary: "Agreed to Character License v{version} · {date}",
     },
     withdrawalConfirm: {
       title: "Are you sure you want to leave?",

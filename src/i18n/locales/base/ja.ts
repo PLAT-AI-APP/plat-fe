@@ -217,6 +217,7 @@ const ja: typeof ko = {
       handoverTitle: "残したキャラクター",
       handoverNumber: "引き継ぎ番号 {id}",
       copyMailSent: "同意書の写しをメールで送りました",
+      consentSummary: "キャラクター利用許諾同意書 v{version} · {date} 同意",
     },
     withdrawalConfirm: {
       title: "本当に退会しますか？",

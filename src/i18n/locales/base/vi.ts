@@ -218,6 +218,7 @@ const vi: typeof ko = {
       handoverTitle: "Nhân vật đã giữ lại",
       handoverNumber: "Mã chuyển giao {id}",
       copyMailSent: "Đã gửi bản sao văn bản đồng ý qua email",
+      consentSummary: "Đã đồng ý Giấy phép sử dụng nhân vật v{version} · {date}",
     },
     withdrawalConfirm: {
       title: "Bạn thật sự muốn rời đi chứ?",

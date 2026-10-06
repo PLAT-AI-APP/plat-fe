@@ -217,6 +217,7 @@ const ko = {
       handoverTitle: "남긴 캐릭터",
       handoverNumber: "인수 번호 {id}",
       copyMailSent: "동의서 사본을 이메일로 보냈어요",
+      consentSummary: "캐릭터 이용허락 동의서 v{version} · {date} 동의",
     },
     withdrawalConfirm: {
       title: "정말 떠나시나요?",

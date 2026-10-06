@@ -218,6 +218,7 @@ const th: typeof ko = {
       handoverTitle: "ตัวละครที่เก็บไว้",
       handoverNumber: "หมายเลขการโอน {id}",
       copyMailSent: "ส่งสำเนาหนังสือยินยอมไปทางอีเมลแล้ว",
+      consentSummary: "ยินยอมหนังสืออนุญาตใช้ตัวละคร v{version} · {date}",
     },
     withdrawalConfirm: {
       title: "คุณแน่ใจหรือว่าจะจากไป?",

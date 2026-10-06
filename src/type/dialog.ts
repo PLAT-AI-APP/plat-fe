@@ -110,6 +110,8 @@ export interface WithdrawalCompleteDialogProps {
   handovers?: Pick<WithdrawalHandover, "handoverId" | "title">[];
   /** 동의서 사본을 이메일로 보냈는지. */
   copyMailRequested?: boolean;
+  /** 남긴 캐릭터가 있을 때 동의한 이용허락 동의서 버전과 동의 시각. */
+  consent?: { version: string; consentedAt: string } | null;
 }
 
 export interface WithdrawalConfirmDialogProps {
