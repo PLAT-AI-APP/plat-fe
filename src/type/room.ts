@@ -49,6 +49,15 @@ export interface Room {
   characterName: string;
   /** 캐릭터(세계관)가 지워진 방. 대화는 볼 수 있고 새 대화·다시 만들기·신고는 막힌다. */
   closed: boolean;
+  /** 채팅 요청에 쓰는 세계관 안 캐릭터 ID. 닫힌 방은 null. */
+  universeCharacterId: string | null;
+  /** 캐릭터 프로필 이미지. 세계관 상세를 부르지 못하는 방(운영 심사 중)도 이 값으로 그린다. */
+  characterProfileImageUrl: string | null;
+  /**
+   * 제작자가 탈퇴하며 남긴 캐릭터가 운영 심사를 기다리는 방. 대화는 이어지지만
+   * 세계관 상세는 닫혀 있어(404) 부르지 않고, 이름은 characterName 스냅샷을 쓴다.
+   */
+  handoverPending: boolean;
   /** 이 방의 대화 언어. PATCH /rooms/{roomId}/language 로 바꾼다. */
   language: string;
   /** 켜면 응답 끝에 추천 문장 3개가 함께 온다. */

@@ -2,7 +2,7 @@ const ko = {
   common: {
     confirm: "확인",
     cancel: "취소",
-    optional: "(선택)",
+    optional: "(선택)", operatedByPlat: "운영 PLAT",
   },
   languages: {
     ko: "한국어",
@@ -214,6 +214,9 @@ const ko = {
       descriptionLine1: "그동안 PLAT과 함께해 주셔서 감사해요.",
       descriptionLine2: "언젠가 다시 만나길 바랄게요.",
       confirm: "확인",
+      handoverTitle: "남긴 캐릭터",
+      handoverNumber: "인수 번호 {id}",
+      copyMailSent: "동의서 사본을 이메일로 보냈어요",
     },
     withdrawalConfirm: {
       title: "정말 떠나시나요?",

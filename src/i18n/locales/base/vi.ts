@@ -3,7 +3,7 @@ import type ko from "./ko";
 
 const vi: typeof ko = {
   ...en,
-  common: { confirm: "Xác nhận", cancel: "Hủy", optional: "(Tùy chọn)" },
+  common: { confirm: "Xác nhận", cancel: "Hủy", optional: "(Tùy chọn)", operatedByPlat: "PLAT vận hành" },
   languages: {
     ko: "Tiếng Hàn",
     en: "English",
@@ -215,6 +215,9 @@ const vi: typeof ko = {
       descriptionLine1: "Cảm ơn bạn đã dành thời gian với PLAT.",
       descriptionLine2: "Hy vọng một ngày nào đó chúng ta sẽ gặp lại.",
       confirm: "Xác nhận",
+      handoverTitle: "Nhân vật đã giữ lại",
+      handoverNumber: "Mã chuyển giao {id}",
+      copyMailSent: "Đã gửi bản sao văn bản đồng ý qua email",
     },
     withdrawalConfirm: {
       title: "Bạn thật sự muốn rời đi chứ?",

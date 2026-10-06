@@ -3,7 +3,7 @@ import type ko from "./ko";
 
 const th: typeof ko = {
   ...en,
-  common: { confirm: "ยืนยัน", cancel: "ยกเลิก", optional: "(ไม่บังคับ)" },
+  common: { confirm: "ยืนยัน", cancel: "ยกเลิก", optional: "(ไม่บังคับ)", operatedByPlat: "ดูแลโดย PLAT" },
   languages: {
     ko: "เกาหลี",
     en: "English",
@@ -215,6 +215,9 @@ const th: typeof ko = {
       descriptionLine1: "ขอบคุณที่ใช้เวลาร่วมกับ PLAT",
       descriptionLine2: "หวังว่าเราจะได้พบกันอีกครั้ง",
       confirm: "ยืนยัน",
+      handoverTitle: "ตัวละครที่เก็บไว้",
+      handoverNumber: "หมายเลขการโอน {id}",
+      copyMailSent: "ส่งสำเนาหนังสือยินยอมไปทางอีเมลแล้ว",
     },
     withdrawalConfirm: {
       title: "คุณแน่ใจหรือว่าจะจากไป?",

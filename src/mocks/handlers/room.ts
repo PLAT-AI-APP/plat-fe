@@ -226,6 +226,9 @@ export const roomHandlers = [
       userNote: room.userNote,
       characterName: "",
       closed: false,
+      universeCharacterId: "9876543210987654321",
+      characterProfileImageUrl: null,
+      handoverPending: false,
       language: "KO",
       answerRecommendationEnabled: true,
     };

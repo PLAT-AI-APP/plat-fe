@@ -2,7 +2,7 @@
 
 import { useIsMutating } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { DELETE_USER_MUTATION_KEY } from "@/api/user/deleteUser";
+import { WITHDRAW_MUTATION_KEY } from "@/api/user/postWithdrawal";
 import type { WithdrawalConfirmDialogProps } from "@/type/dialog";
 import Dialog from "./Dialog";
 
@@ -13,7 +13,7 @@ const WithdrawalConfirmDialog = ({
   const t = useTranslations();
   // Dialog는 열릴 때 props가 고정되므로 진행 상태는 뮤테이션에서 직접 구독합니다.
   const isPending =
-    useIsMutating({ mutationKey: DELETE_USER_MUTATION_KEY }) > 0;
+    useIsMutating({ mutationKey: WITHDRAW_MUTATION_KEY }) > 0;
 
   return (
     <Dialog

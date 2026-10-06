@@ -14,6 +14,7 @@ import ChatForm, { type ChatFormHandle } from "@/components/chat/ChatForm";
 import MessageList from "@/components/chat/MessageList";
 import SkeletonChatMessages from "@/components/skeleton/SkeletonChatMessages";
 import { ErrorState } from "@/components/state";
+import { Info } from "@/icons";
 import { useChatTurn } from "@/hooks/chat/useChatTurn";
 import { useStoredChatModel } from "@/hooks/chat/useStoredChatModel";
 import { useIntersectionObserver } from "@/hooks/dom/useIntersectionObserver";
@@ -73,13 +74,16 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
     error: roomError,
     refetch: refetchRoom,
   } = useRoomDetailQuery(roomId);
-  // 캐릭터(세계관)가 지워진 방은 세계관을 부르지 않는다(404). 이름은 방에 남긴 스냅샷을 쓴다.
+  // 캐릭터(세계관)가 지워졌거나 운영 심사 중인 방은 세계관 상세가 닫혀 있어 부르지 않는다(404).
+  // 이름은 방에 남긴 스냅샷을, 캐릭터 ID·프로필은 방 응답의 값을 쓴다.
   const isClosed = room?.closed === true;
+  const isHandoverPending = room?.handoverPending === true;
+  const isUniverseOpen = !isClosed && !isHandoverPending;
   const { data: universe, isError: isUniverseError } = useUniverseDetailQuery(
-    isClosed ? undefined : room?.universeId,
+    isUniverseOpen ? room?.universeId : undefined,
   );
   // 방을 받기 전에는 세계관 쿼리가 꺼져 있어 isLoading 이 false 이므로, 데이터 유무로 판단한다.
-  const isCharacterLoading = !isClosed && !universe && !isUniverseError;
+  const isCharacterLoading = isUniverseOpen && !universe && !isUniverseError;
   const characterName = universe?.character.name ?? room?.characterName ?? "";
   const openModal = useModalStore((state) => state.openModal);
   // 신고 모달은 목록 밖에서 열리므로 함수가 매 렌더 바뀌면 메시지 행이 전부 다시 그려진다.
@@ -90,7 +94,10 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
   );
   // 말풍선 아바타는 36px 이라 원본 대신 정사각 140px 변형본이면 충분하다(2배 화면 기준 72px 이상).
   const profileImage =
-    toImageVariantUrl(universe?.character.profileImageUrl, "sq140") ?? "";
+    toImageVariantUrl(
+      room?.characterProfileImageUrl ?? universe?.character.profileImageUrl,
+      "sq140",
+    ) ?? "";
 
   const {
     data,
@@ -158,7 +165,8 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
     regenerateMessage,
   } = useChatTurn({
     roomId,
-    universeCharacterId: universe?.character.universeCharacterId,
+    universeCharacterId:
+      room?.universeCharacterId ?? universe?.character.universeCharacterId,
     personaId: room?.personaId,
     modelId: currentAi?.id,
     multiplier: room?.multiplier,
@@ -232,7 +240,8 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
         >
           <ChattingRoomHeader
             roomId={roomId}
-            universeId={room?.universeId}
+            // 세계관 상세가 닫힌 방은 제목을 링크로 두지 않는다.
+            universeId={isUniverseOpen ? room?.universeId : undefined}
             characterName={characterName}
             models={models}
             currentAi={currentAi}
@@ -275,12 +284,23 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
               {t("chatRoom.closedNotice")}
             </p>
           ) : (
-            <ChatForm
+            <>
+              {isHandoverPending && (
+                <p
+                  role="status"
+                  className="body-6 mb-2 flex items-center justify-center gap-1 text-center text-font-2"
+                >
+                  <Info className="size-3.5 shrink-0" />
+                  <span>{t("chatRoom.handoverPendingNotice")}</span>
+                </p>
+              )}
+              <ChatForm
               ref={chatFormRef}
               onSendMessage={sendMessage}
               disabled={isBusy}
               isPreparing={!canSend && !isRoomError && !isUniverseError}
-            />
+              />
+            </>
           )}
         </div>
       </div>

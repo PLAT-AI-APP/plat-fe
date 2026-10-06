@@ -4,6 +4,7 @@ const ja: typeof ko = {
   chatRoom: {
     closedNotice:
       "キャラクターが削除されたため、これ以上会話できません。これまでの会話は引き続き見られます。",
+    handoverPendingNotice: "運営審査中のキャラクターです。会話は続けられます。",
     generatedNotice: "AIが生成した会話です。実在の人物や事実と異なる場合があります。",
     sidebar: {
       title: "チャットルーム設定",

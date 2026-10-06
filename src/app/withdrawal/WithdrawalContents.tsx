@@ -1,13 +1,16 @@
 "use client";
 
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import ActiveButton from "@/components/ActiveButton";
-import Checkbox from "@/icons/Checkbox";
-import CheckboxEmpty from "@/icons/CheckboxEmpty";
 import useToggle from "@/hooks/common/useToggle";
 import { cn } from "@/lib/utils";
-import { useDeleteUserMutation } from "@/api/user/deleteUser";
+import { useWithdrawalPreviewQuery } from "@/api/user/getWithdrawalPreview";
+import {
+  WITHDRAWAL_PREVIEW_STALE_CODES,
+  useWithdrawMutation,
+} from "@/api/user/postWithdrawal";
 import { useEarningSummaryQuery } from "@/api/earning/getEarningSummary";
 import { useWalletBalanceQuery } from "@/api/wallet/getWalletBalance";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -15,6 +18,9 @@ import { useDialogStore } from "@/store/useDialogStore";
 import { useUserStore } from "@/store/useUserStore";
 import { useWalletStore } from "@/store/useWalletStore";
 import { SKIP_AUTH_ALERT_ONCE_KEY } from "@/constants/auth";
+import type { WithdrawalChoice, WithdrawalResult } from "@/type/withdrawal";
+import CharacterHandoverSection from "./_components/CharacterHandoverSection";
+import CheckboxRow from "./_components/CheckboxRow";
 
 const WithdrawalContents = () => {
   const t = useTranslations();
@@ -23,7 +29,7 @@ const WithdrawalContents = () => {
   const clearUser = useUserStore((state) => state.clearUser);
   const clearBalance = useWalletStore((state) => state.clearBalance);
   const logout = useAuthStore((state) => state.logout);
-  const { mutate: deleteUser, isPending } = useDeleteUserMutation();
+  const { mutate: withdraw, isPending } = useWithdrawMutation();
   const openDialog = useDialogStore((state) => state.openDialog);
   const closeDialog = useDialogStore((state) => state.closeDialog);
   const { isOpen: isConfirmed, toggle: toggleConfirmed } = useToggle();
@@ -41,21 +47,73 @@ const WithdrawalContents = () => {
     t("withdrawalPage.notices.rejoinRestricted"),
   ];
 
+  // 만든 캐릭터마다 남기기·삭제를 고른다. 기본값은 두지 않는다(미리 고른 것으로 치면 안 된다).
+  const {
+    data: preview,
+    isPending: isPreviewPending,
+    error: previewError,
+    refetch: refetchPreview,
+  } = useWithdrawalPreviewQuery();
+  const [decisions, setDecisions] = useState<Record<string, WithdrawalChoice>>({});
+  // 동의는 동의서 버전에 묶는다. 다시 받은 미리보기의 버전이 바뀌면 저절로 풀린다.
+  const [agreedConsentId, setAgreedConsentId] = useState<string | null>(null);
+  const [isAdultAttested, setIsAdultAttested] = useState(false);
+
+  const candidates = preview?.candidates ?? [];
+  const consent = preview?.consent ?? null;
+  const canKeep = Boolean(preview?.keepAllowed && consent);
+  // 남길 수 없게 바뀌었으면 예전에 고른 남기기는 고르지 않은 것으로 본다.
+  const getChoice = (universeId: string): WithdrawalChoice | undefined => {
+    const choice = decisions[universeId];
+    return choice === "KEEP" && !canKeep ? undefined : choice;
+  };
+  const isAllDecided = candidates.every((candidate) => getChoice(candidate.universeId));
+  const hasKeep = candidates.some((candidate) => getChoice(candidate.universeId) === "KEEP");
+  const isConsentAgreed = Boolean(consent) && agreedConsentId === consent?.documentId;
+  const needsAdult = hasKeep && Boolean(preview?.ageAttestationRequired);
+  const isKeepReady = !hasKeep || (isConsentAgreed && (!needsAdult || isAdultAttested));
+
+  const handleChoiceChange = (universeId: string, choice: WithdrawalChoice) =>
+    setDecisions((prev) => ({ ...prev, [universeId]: choice }));
+  const handleToggleConsent = () =>
+    setAgreedConsentId((prev) =>
+      consent && prev !== consent.documentId ? consent.documentId : null,
+    );
+
   const nickname = user?.nickname || t("withdrawalPage.defaultMember");
-  const canSubmit = isConfirmed && !isPending;
+  const canSubmit =
+    Boolean(preview) && isAllDecided && isKeepReady && isConfirmed && !isPending;
 
   const handleDeleteConfirm = () => {
-    if (isPending) return;
+    if (isPending || !preview) return;
 
-    deleteUser(undefined, {
-      onSuccess: openCompleteDialog,
-      // 실패 사유는 응답 인터셉터가 토스트로 안내하므로 확인 다이얼로그만 닫습니다.
-      onError: closeDialog,
-    });
+    withdraw(
+      {
+        decisions: candidates.map((candidate) => ({
+          universeId: candidate.universeId,
+          choice: getChoice(candidate.universeId) ?? "DELETE",
+        })),
+        consentDocumentId: hasKeep && consent ? consent.documentId : null,
+        adultAttested: needsAdult && isAdultAttested,
+      },
+      {
+        onSuccess: openCompleteDialog,
+        // 실패 사유는 전역 토스트가 서버 문구로 안내하므로 확인 다이얼로그만 닫습니다.
+        // 그사이 후보·동의서가 바뀐 실패는 미리보기를 다시 받아 화면을 맞춘다.
+        onError: (error) => {
+          closeDialog();
+          if (WITHDRAWAL_PREVIEW_STALE_CODES.includes(error.code)) {
+            void refetchPreview();
+          }
+        },
+      },
+    );
   };
 
-  const openCompleteDialog = () => {
+  const openCompleteDialog = (result: WithdrawalResult) => {
     openDialog("WITHDRAWAL_COMPLETE", {
+      handovers: result.handovers,
+      copyMailRequested: result.copyMailRequested,
       onConfirm: handleCompleteConfirm,
     });
   };
@@ -122,20 +180,26 @@ const WithdrawalContents = () => {
             </div>
           </div>
 
-          <button
-            type="button"
-            role="checkbox"
-            aria-checked={isConfirmed}
-            className="body-5 flex items-end gap-1.5 text-font-2 hover:text-font-1"
-            onClick={toggleConfirmed}
-          >
-            {isConfirmed ? (
-              <Checkbox className="size-5 shrink-0 text-font-1" />
-            ) : (
-              <CheckboxEmpty className="size-5 shrink-0 text-font-2" />
-            )}
-            <span>{t("withdrawalPage.agreement")}</span>
-          </button>
+          <CharacterHandoverSection
+            preview={preview}
+            isPending={isPreviewPending && !previewError}
+            error={previewError}
+            onRetry={() => void refetchPreview()}
+            canKeep={canKeep}
+            getChoice={getChoice}
+            onChange={handleChoiceChange}
+            hasKeep={hasKeep}
+            isConsentAgreed={isConsentAgreed}
+            onToggleConsent={handleToggleConsent}
+            isAdultAttested={isAdultAttested}
+            onToggleAdult={() => setIsAdultAttested((prev) => !prev)}
+          />
+
+          <CheckboxRow
+            checked={isConfirmed}
+            onToggle={toggleConfirmed}
+            label={t("withdrawalPage.agreement")}
+          />
         </div>
 
         <div className="flex w-full gap-4">

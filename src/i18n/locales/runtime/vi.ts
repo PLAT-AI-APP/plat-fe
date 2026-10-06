@@ -119,10 +119,8 @@ const vi: typeof en = {
         "Note chưa sử dụng sẽ không được hoàn tiền và sẽ bị xóa cùng lúc.",
       rejoinRestricted:
         "Bạn không thể đăng ký lại bằng cùng địa chỉ email trong 7 ngày.",
-      creationsDeleted:
-        "Nhân vật và thế giới bạn tự tạo sẽ bị xóa hoàn toàn sau khi rời đi.",
-      chatsReadOnly:
-        "Các phòng chat hiện có vẫn được giữ lại, nhưng bạn sẽ không thể gửi tin nhắn mới.",
+      creationsDeleted: "Nhân vật không được giữ lại sẽ bị xóa sau khi bạn rời đi",
+      chatsReadOnly: "Phòng chat hiện có của người dùng khác sẽ chỉ còn xem được",
     },
     remainingBalance:
       "{credits} note và {points}P điểm thu nhập còn lại sẽ không thể khôi phục sau khi rời đi. Nếu còn yêu cầu hoàn tiền đang xử lý hoặc đổi thẻ quà tặng đang chờ gửi, bạn có thể rời đi sau khi hoàn tất.",
@@ -132,6 +130,32 @@ const vi: typeof en = {
     back: "Tôi muốn suy nghĩ thêm",
     submit: "Tôi sẽ xóa tài khoản",
     submitPending: "Đang xử lý xóa tài khoản",
+    characters: {
+      title: "Nhân vật đã tạo",
+      description: "Chọn giữ lại hoặc xóa cho từng nhân vật",
+      keepUnavailable: "Hiện không thể giữ lại nên bạn chỉ có thể chọn xóa",
+      talking: "{count} người đang trò chuyện",
+      keep: "Giữ lại",
+      delete: "Xóa",
+      deletionsTitle: "Sẽ bị xóa",
+      reasons: {
+        INACTIVE: "Bị vô hiệu hóa",
+        PRIVATE: "Riêng tư",
+        NOT_APPROVED: "Không được duyệt",
+        UNDER_REVIEW: "Đang xét duyệt",
+        NO_OTHER_ROOMS: "Không có người dùng khác",
+      },
+      summary: {
+        copyright: "Bản quyền vẫn thuộc về tôi, chỉ dùng để vận hành trò chuyện trong PLAT",
+        anonymous: "Nhân vật được giữ lại không kèm tên tôi, dưới dạng 'PLAT vận hành'",
+        review: "Chỉ nhân vật vượt qua xét duyệt được giữ lại, phần còn lại bị xóa",
+        irreversible: "Nhân vật đã giữ lại không thể lấy lại",
+      },
+      viewConsent: "Xem toàn văn văn bản đồng ý",
+      hideConsent: "Thu gọn văn bản đồng ý",
+      consentAgree: "Tôi đồng ý với Văn bản đồng ý cấp phép sử dụng nhân vật (v{version})",
+      adultAttest: "Tôi từ 19 tuổi trở lên",
+    },
   },
   profile: {
     defaultName: "Tên",

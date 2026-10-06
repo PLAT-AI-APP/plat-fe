@@ -113,10 +113,8 @@ const ja: typeof en = {
       recordsRetained: "決済・返金記録のみ法令により5年間保管され、それ以外はすべて削除されます。",
       creditsRemoved: "未使用のノートは返金されず、一緒に削除されます。",
       rejoinRestricted: "同じメールアドレスでは7日間再登録できません。",
-      creationsDeleted:
-        "直接作成したキャラクターと世界観は退会後すべて削除されます。",
-      chatsReadOnly:
-        "既存のチャットルームは維持されますが、新しいメッセージは送信できません。",
+      creationsDeleted: "残さないキャラクターは退会後に削除されます",
+      chatsReadOnly: "ただし、他のユーザーの既存チャットルームは閲覧のみになります",
     },
     remainingBalance:
       "残っている{credits}ノートと収益ポイント{points}Pは、退会すると元に戻せません。処理中の返金や発送待ちのギフト券交換がある場合は、完了後に退会できます。",
@@ -126,6 +124,32 @@ const ja: typeof en = {
     back: "もう少し考えます",
     submit: "退会します",
     submitPending: "退会処理中",
+    characters: {
+      title: "作成したキャラクター",
+      description: "キャラクターごとに残すか削除するか選んでください",
+      keepUnavailable: "現在は残せないため、削除のみ選べます",
+      talking: "{count}人が会話中",
+      keep: "残す",
+      delete: "削除",
+      deletionsTitle: "削除されます",
+      reasons: {
+        INACTIVE: "運営により無効",
+        PRIVATE: "非公開",
+        NOT_APPROVED: "審査未通過",
+        UNDER_REVIEW: "審査中",
+        NO_OTHER_ROOMS: "会話したユーザーなし",
+      },
+      summary: {
+        copyright: "著作権は自分に残り、PLAT内の会話運営にのみ使われます",
+        anonymous: "名前は表示されず「運営 PLAT」のキャラクターとして残ります",
+        review: "運営審査を通過したものだけが残り、それ以外は削除されます",
+        irreversible: "残したキャラクターは取り戻せません",
+      },
+      viewConsent: "同意書の全文を見る",
+      hideConsent: "同意書を閉じる",
+      consentAgree: "キャラクター利用許諾同意書(v{version})に同意します",
+      adultAttest: "19歳以上です",
+    },
   },
   profile: {
     defaultName: "名前",

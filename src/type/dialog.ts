@@ -1,4 +1,5 @@
 import type React from "react";
+import type { WithdrawalHandover } from "@/type/withdrawal";
 
 export interface DialogProps {
   onClose: () => void;
@@ -105,6 +106,10 @@ export interface WelcomeCreditDialogProps {
 export interface WithdrawalCompleteDialogProps {
   onClose: () => void;
   onConfirm: () => void;
+  /** 남긴 캐릭터의 인수 접수. 없으면 목록을 그리지 않는다. */
+  handovers?: Pick<WithdrawalHandover, "handoverId" | "title">[];
+  /** 동의서 사본을 이메일로 보냈는지. */
+  copyMailRequested?: boolean;
 }
 
 export interface WithdrawalConfirmDialogProps {

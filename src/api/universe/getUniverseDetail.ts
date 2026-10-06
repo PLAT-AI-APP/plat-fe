@@ -59,8 +59,11 @@ export interface UniverseDetailResponse {
   /** 창작자(Creator) 도메인 식별자. 팔로우 등 유저 기능에는 creatorUserId를 씁니다. */
   creatorId: string;
   creatorUserId: string;
+  /** adopted 면 "" 다. */
   creatorName: string;
   creatorFollowerCount: number;
+  /** 제작자가 탈퇴하며 남겨 공식 계정이 운영하는 캐릭터. 제작자 자리에 "운영 PLAT" 을 적는다. */
+  adopted: boolean;
   editable: boolean;
   createdAt: string;
   updatedAt: string;
@@ -152,6 +155,7 @@ export const adaptUniverseDetailToCharacterDetail = (
       // 세계관 상세 응답에는 창작자 프로필 사진이 없다. 캐릭터 이미지로 대신 채우면 다른 사람의
       // 사진이 창작자인 것처럼 보이므로 여기 두지 않고, 화면이 공개 프로필 API 로 따로 가져온다.
       followerCount: universe.creatorFollowerCount,
+      adopted: universe.adopted ?? false,
       // 이 요청을 보낸 사람이 창작자를 팔로우하는지는 아직 상세 응답에 실려 오지 않습니다.
       isFollowing: false,
     },

@@ -3,7 +3,7 @@ import type ko from "./ko";
 
 const zh: typeof ko = {
   ...en,
-  common: { confirm: "确认", cancel: "取消", optional: "（可选）" },
+  common: { confirm: "确认", cancel: "取消", optional: "（可选）", operatedByPlat: "PLAT 运营" },
   languages: {
     ko: "韩语",
     en: "English",
@@ -212,6 +212,9 @@ const zh: typeof ko = {
       descriptionLine1: "感谢你一直以来对 PLAT 的支持。",
       descriptionLine2: "希望以后还能再次见到你。",
       confirm: "确认",
+      handoverTitle: "保留的角色",
+      handoverNumber: "移交编号 {id}",
+      copyMailSent: "已通过邮件发送同意书副本",
     },
     withdrawalConfirm: {
       title: "你确定要离开吗？",

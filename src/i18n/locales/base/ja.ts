@@ -3,7 +3,7 @@ import type ko from "./ko";
 
 const ja: typeof ko = {
   ...en,
-  common: { confirm: "確認", cancel: "キャンセル", optional: "（任意）" },
+  common: { confirm: "確認", cancel: "キャンセル", optional: "（任意）", operatedByPlat: "運営 PLAT" },
   languages: {
     ko: "韓国語",
     en: "English",
@@ -214,6 +214,9 @@ const ja: typeof ko = {
       descriptionLine1: "これまでPLATをご利用いただきありがとうございました。",
       descriptionLine2: "またお会いできることを願っています。",
       confirm: "確認",
+      handoverTitle: "残したキャラクター",
+      handoverNumber: "引き継ぎ番号 {id}",
+      copyMailSent: "同意書の写しをメールで送りました",
     },
     withdrawalConfirm: {
       title: "本当に退会しますか？",

@@ -4,7 +4,7 @@ const en: typeof ko = {
   common: {
     confirm: "Confirm",
     cancel: "Cancel",
-    optional: "(Optional)",
+    optional: "(Optional)", operatedByPlat: "Operated by PLAT",
   },
   languages: {
     ko: "Korean",
@@ -218,6 +218,9 @@ const en: typeof ko = {
       descriptionLine1: "Thank you for spending time with PLAT.",
       descriptionLine2: "We hope to meet you again someday.",
       confirm: "OK",
+      handoverTitle: "Characters you kept",
+      handoverNumber: "Handover no. {id}",
+      copyMailSent: "We've emailed you a copy of the consent form.",
     },
     withdrawalConfirm: {
       title: "Are you sure you want to leave?",

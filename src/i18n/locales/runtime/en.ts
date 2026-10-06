@@ -120,10 +120,8 @@ const en = {
         "Unused notes are not refunded and will be removed together.",
       rejoinRestricted:
         "You cannot sign up again with the same email address for 7 days.",
-      creationsDeleted:
-        "Characters and worlds you created will all be deleted after withdrawal.",
-      chatsReadOnly:
-        "Existing chat rooms stay, but you won't be able to send new messages.",
+      creationsDeleted: "Characters you don't keep will be deleted after you leave.",
+      chatsReadOnly: "Other users' existing chat rooms become read-only.",
     },
     remainingBalance:
       "Your remaining {credits} notes and {points}P in earnings can't be recovered after you leave. If a refund is in progress or a gift card exchange is still pending, you can leave once it's done.",
@@ -133,6 +131,32 @@ const en = {
     back: "I need more time",
     submit: "Delete my account",
     submitPending: "Deleting account",
+    characters: {
+      title: "Your characters",
+      description: "Choose whether to keep or delete each character.",
+      keepUnavailable: "Keeping isn't available right now, so you can only delete.",
+      talking: "{count} users chatting",
+      keep: "Keep",
+      delete: "Delete",
+      deletionsTitle: "Will be deleted",
+      reasons: {
+        INACTIVE: "Deactivated",
+        PRIVATE: "Private",
+        NOT_APPROVED: "Not approved",
+        UNDER_REVIEW: "Under review",
+        NO_OTHER_ROOMS: "No other users",
+      },
+      summary: {
+        copyright: "You keep the copyright; it's only used to run chats on PLAT.",
+        anonymous: "It stays without your name, as an 'Operated by PLAT' character.",
+        review: "Only characters that pass operator review stay; the rest are deleted.",
+        irreversible: "Kept characters can't be returned to you.",
+      },
+      viewConsent: "View full consent form",
+      hideConsent: "Hide consent form",
+      consentAgree: "I agree to the Character License Consent (v{version}).",
+      adultAttest: "I am 19 or older.",
+    },
   },
   profile: {
     defaultName: "Name",
