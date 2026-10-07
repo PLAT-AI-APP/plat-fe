@@ -17,8 +17,19 @@ import {
 import CheckboxRow from "./CheckboxRow";
 
 // 동의서 전문은 펼칠 때만 그린다. 약관 화면과 같은 렌더러를 쓴다.
+// loading 이 없으면 dynamic 이 자체 Suspense 경계를 두지 않아, 처음 펼칠 때 페이지 전체가 잠깐 교체되며
+// 스크롤이 맨 위로 튄다. 대기 자리를 이 상자 안에 둔다.
 const MarkdownDocument = dynamic(
   () => import("@/components/markdown/MarkdownDocument"),
+  {
+    loading: () => (
+      <div className="flex flex-col gap-2">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="skeleton h-4 w-full rounded" />
+        ))}
+      </div>
+    ),
+  },
 );
 
 const SUMMARY_KEYS = ["copyright", "anonymous", "review", "irreversible"] as const;
