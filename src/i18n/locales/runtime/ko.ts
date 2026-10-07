@@ -151,6 +151,12 @@ const ko: typeof en = {
       hideConsent: "동의서 접기",
       consentAgree: "캐릭터 이용허락 동의서(v{version})에 동의해요",
       adultAttest: "만 19세 이상이에요",
+      hints: {
+        KEEP: "운영 심사를 통과하면 '운영 PLAT' 캐릭터로 대화가 이어져요",
+        DELETE: "탈퇴하면 지워지고, 대화하던 방은 읽기만 할 수 있어요",
+      },
+      consentTitle: "캐릭터 이용허락",
+      consentSubtitle: "남기기를 고른 캐릭터에만 적용되는 별도 동의예요",
     },
   },
   profile: {

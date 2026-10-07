@@ -288,9 +288,9 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
               {isHandoverPending && (
                 <p
                   role="status"
-                  className="body-6 mb-2 flex items-center justify-center gap-1 text-center text-font-2"
+                  className="body-7 mx-auto mb-3 flex w-fit max-w-full items-center gap-1.5 rounded-full bg-info-bg px-3 py-1.5 text-info"
                 >
-                  <Info className="size-3.5 shrink-0" />
+                  <Info className="size-3.5 shrink-0" aria-hidden="true" />
                   <span>{t("chatRoom.handoverPendingNotice")}</span>
                 </p>
               )}

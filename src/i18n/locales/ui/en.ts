@@ -131,6 +131,7 @@ const en = {
       commentsCount: "({count})",
     },
     officialCharacter: "Official PLAT character",
+    operatedByPlatDescription: "A character PLAT continues to operate",
     chatStart: "Start chat",
     like: "Add to wishlist",
     unlike: "Remove from wishlist",

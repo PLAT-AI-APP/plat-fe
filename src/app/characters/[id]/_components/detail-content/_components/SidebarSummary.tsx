@@ -90,7 +90,10 @@ const SidebarSummary = ({
       <span aria-hidden="true" className="flex size-12 shrink-0 overflow-hidden rounded-full">
         <Logo className="size-12" />
       </span>
-      <p className="title-4 truncate text-font-1">{tCommon("operatedByPlat")}</p>
+      <div className="flex min-w-0 flex-col gap-1">
+        <p className="title-4 truncate text-font-1">{tCommon("operatedByPlat")}</p>
+        <p className="body-6 text-font-2">{t("operatedByPlatDescription")}</p>
+      </div>
     </>
   ) : (
     <>

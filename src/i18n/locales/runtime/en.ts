@@ -156,6 +156,12 @@ const en = {
       hideConsent: "Hide consent form",
       consentAgree: "I agree to the Character License Consent (v{version}).",
       adultAttest: "I am 19 or older.",
+      hints: {
+        KEEP: "If it passes our review, chats continue as an 'Operated by PLAT' character.",
+        DELETE: "It will be deleted when you leave, and existing chats become read-only.",
+      },
+      consentTitle: "Character license",
+      consentSubtitle: "A separate consent that applies only to the characters you keep.",
     },
   },
   profile: {

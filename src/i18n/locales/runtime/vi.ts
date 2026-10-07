@@ -155,6 +155,12 @@ const vi: typeof en = {
       hideConsent: "Thu gọn văn bản đồng ý",
       consentAgree: "Tôi đồng ý với Văn bản đồng ý cấp phép sử dụng nhân vật (v{version})",
       adultAttest: "Tôi từ 19 tuổi trở lên",
+      hints: {
+        KEEP: "Nếu vượt qua kiểm duyệt, cuộc trò chuyện sẽ tiếp tục với nhân vật 'PLAT vận hành'",
+        DELETE: "Nhân vật sẽ bị xóa khi bạn rời đi, các phòng chat hiện có chỉ có thể xem",
+      },
+      consentTitle: "Cấp phép sử dụng nhân vật",
+      consentSubtitle: "Đồng ý riêng, chỉ áp dụng cho các nhân vật bạn chọn giữ lại",
     },
   },
   profile: {

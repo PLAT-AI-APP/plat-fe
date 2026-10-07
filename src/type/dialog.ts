@@ -107,7 +107,7 @@ export interface WithdrawalCompleteDialogProps {
   onClose: () => void;
   onConfirm: () => void;
   /** 남긴 캐릭터의 인수 접수. 없으면 목록을 그리지 않는다. */
-  handovers?: Pick<WithdrawalHandover, "handoverId" | "title">[];
+  handovers?: Pick<WithdrawalHandover, "handoverId" | "title" | "deadlineAt">[];
   /** 동의서 사본을 이메일로 보냈는지. */
   copyMailRequested?: boolean;
   /** 남긴 캐릭터가 있을 때 동의한 이용허락 동의서 버전과 동의 시각. */
