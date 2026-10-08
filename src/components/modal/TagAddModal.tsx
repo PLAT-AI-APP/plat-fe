@@ -20,7 +20,8 @@ import { TagAddModalProps } from "@/type/modal";
 import IconButton from "@/components/ui/IconButton";
 import { EmptyState, ErrorState } from "@/components/state";
 
-type TagOption = { id: string; label: string };
+/** isAdult 는 화면 판단용이라 폼 값(tagIds)에는 id·label 만 담는다. */
+type TagOption = { id: string; label: string; isAdult?: boolean };
 
 interface TagFolderSection {
   title: string;
@@ -41,6 +42,9 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
   } = useHashtagListQuery();
   const { control, setValue } = useFormContext<CharacterCreateFormValues>();
   const currentTagsWatch = useWatch({ control, name: "tagIds" });
+  // 성인 해시태그는 성인 세계관에만 붙일 수 있다(서버 400). 설정 탭의 "성인 콘텐츠"를 켜야 고를 수 있다.
+  const isAdultUniverse = useWatch({ control, name: "adult" }) ?? false;
+  const adultT = useTranslations("adultVerification.create");
   const [localSelectedNames, setLocalSelectedNames] = useState<TagOption[]>(
     () => {
       const currentTags = currentTagsWatch || [];
@@ -63,7 +67,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
       const tagsByCategory = new Map<string, TagOption[]>();
       apiTags.forEach((tag) => {
         const tags = tagsByCategory.get(tag.category) ?? [];
-        tags.push({ id: tag.id, label: tag.label });
+        tags.push({ id: tag.id, label: tag.label, isAdult: tag.isAdult });
         tagsByCategory.set(tag.category, tags);
       });
 
@@ -106,7 +110,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
   const commitSelectedTags = (nextTags: TagOption[]) => {
     // 태그 선택 모달은 별도 완료 버튼이 없어서 선택 상태를 즉시 form 값에 반영합니다.
     setLocalSelectedNames(nextTags);
-    setValue("tagIds", nextTags, {
+    setValue("tagIds", nextTags.map(({ id, label }) => ({ id, label })), {
       shouldDirty: true,
       shouldValidate: true,
     });
@@ -116,6 +120,11 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
     const isAlreadySelected = localSelectedNames.some(
       (name) => name.id === tag.id,
     );
+
+    if (!isAlreadySelected && tag.isAdult && !isAdultUniverse) {
+      showAppToast("info", adultT("adultTagLocked"));
+      return;
+    }
 
     if (isAlreadySelected) {
       commitSelectedTags(
@@ -226,12 +235,16 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
                       <button
                         type="button"
                         onClick={() => handleTagToggle(tag)}
+                        aria-disabled={tag.isAdult && !isAdultUniverse && !isSelected}
+                        title={tag.isAdult && !isAdultUniverse ? adultT("adultTagLocked") : undefined}
                         className={cn(
-                          "body-7 flex h-7 items-center rounded-md border border-font-2 bg-dark px-2.5 text-font-1 hover:bg-card-hover",
+                          "body-7 flex h-7 items-center gap-0.5 rounded-md border border-font-2 bg-dark px-2.5 text-font-1 hover:bg-card-hover",
                           isSelected && "border-brand bg-brand/10 text-brand",
+                          tag.isAdult && !isAdultUniverse && !isSelected && "opacity-40",
                         )}
                       >
                         #{tag.label}
+                        {tag.isAdult && <span className="text-danger">19</span>}
                       </button>
                     </li>
                   );
@@ -285,13 +298,17 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
                           <button
                             type="button"
                             onClick={() => handleTagToggle(tag)}
+                            aria-disabled={tag.isAdult && !isAdultUniverse && !isSelected}
+                            title={tag.isAdult && !isAdultUniverse ? adultT("adultTagLocked") : undefined}
                             className={cn(
-                              "body-7 flex h-7 items-center rounded-md border border-transparent bg-card px-2.5 text-font-2 hover:bg-card-hover",
+                              "body-7 flex h-7 items-center gap-0.5 rounded-md border border-transparent bg-card px-2.5 text-font-2 hover:bg-card-hover",
                               isSelected &&
                                 "border-brand bg-brand/10 text-brand",
+                              tag.isAdult && !isAdultUniverse && !isSelected && "opacity-40",
                             )}
                           >
                             #{tag.label}
+                            {tag.isAdult && <span className="text-danger">19</span>}
                           </button>
                         </li>
                       );

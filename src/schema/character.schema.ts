@@ -117,6 +117,8 @@ export const characterCreateSchema = z.object({
 
   isPublic: z.boolean(),
   allowComments: z.boolean(),
+  /** 성인 세계관. 성인인증이 유효한 제작자만 켤 수 있고, 성인 해시태그는 켰을 때만 붙일 수 있다. */
+  adult: z.boolean().optional(),
   characterDescription: z
     .string()
     .min(1, FIELD_ERROR_MESSAGES.characterDescriptionRequired)
