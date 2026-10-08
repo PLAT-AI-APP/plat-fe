@@ -88,16 +88,15 @@ const IdentityVerificationModal = ({ onClose }: IdentityVerificationModalProps) 
   );
 
   const openMockWindow = (verificationId: string) => {
-    const url = `${DEV_IDENTITY_VERIFICATION_PATH}?vid=${encodeURIComponent(verificationId)}`;
+    // 돌아올 화면은 팝업에도 싣는다. 환경에 따라 팝업이 같은 탭으로 열리면(opener 없음) 인증 페이지가 이 값으로 돌려보낸다.
+    const returnTo = `${window.location.pathname}${window.location.search}`;
+    const url = `${DEV_IDENTITY_VERIFICATION_PATH}?vid=${encodeURIComponent(verificationId)}&returnTo=${encodeURIComponent(returnTo)}`;
     const popup = window.open(url, IDENTITY_VERIFICATION_WINDOW_NAME, POPUP_FEATURES);
 
     if (!popup) {
       // 팝업이 막혔다. 같은 탭에서 인증 페이지로 가고, 그 페이지가 확정까지 마친 뒤 이 화면으로 돌려보낸다.
-      const returnTo = `${window.location.pathname}${window.location.search}`;
       setStep({ kind: "waiting", verificationId, notice: t("popupBlocked") });
-      window.location.assign(
-        `${url}&mode=redirect&returnTo=${encodeURIComponent(returnTo)}`,
-      );
+      window.location.assign(`${url}&mode=redirect`);
       return;
     }
 
