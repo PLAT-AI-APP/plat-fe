@@ -20,6 +20,7 @@ import NicknameField from "../field/NicknameField";
 import BioField from "../field/BioField";
 import GenderField from "../field/GenderField";
 import AccountField from "../field/AccountField";
+import VerificationField from "../field/VerificationField";
 import { ProfileEditModalProps } from "@/type/modal";
 import { useModalStore } from "@/store/useModalStore";
 import { focusFirstFieldError } from "@/lib/formError";
@@ -40,12 +41,16 @@ const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
   const { setFieldErrors } = useFormServerError<ProfileEditFormType>();
   const openModal = useModalStore((state) => state.openModal);
   const birth = watch("birth");
+  // 본인인증으로 확정된 생년월일은 바꿀 수 없다(서버도 거절한다).
+  const isBirthLocked = useUserStore((state) => state.user?.birthLocked === true);
+  const verificationT = useTranslations("adultVerification.field");
 
   const onSave = (data: ProfileEditFormType) => {
     updateMyInfo(
       {
         bio: data.bio || "",
-        birth: data.birth,
+        // 잠긴 생년월일은 보내지 않는다(빈 값이면 요청에서 빠진다).
+        birth: isBirthLocked ? "" : data.birth,
         gender: data.gender,
         profileImgFile: data.profileImgFile || "",
         nickname: data.nickname,
@@ -82,11 +87,22 @@ const ProfileEditForm = ({ onClose }: ProfileEditModalProps) => {
         <div className="flex flex-col gap-6">
           <NicknameField />
           <BioField />
-          <BirthDateInput value={birth} />
+          <div className="flex flex-col gap-2">
+            <BirthDateInput
+              value={birth}
+              disabled={isBirthLocked}
+              aria-readonly={isBirthLocked}
+              className={isBirthLocked ? "opacity-70" : undefined}
+            />
+            {isBirthLocked && (
+              <p className="body-7 text-font-2">{verificationT("birthLocked")}</p>
+            )}
+          </div>
           <GenderField />
           {/* 선택 개인정보는 수집·이용 목적과 거부 권리를 입력하는 곳에서 알린다(개인정보보호법 제15·22조). */}
           <p className="body-7 -mt-3 text-font-2">{t("optionalInfoNotice")}</p>
           <AccountField />
+          <VerificationField />
         </div>
 
         <footer className="mt-4 flex justify-end gap-9">
