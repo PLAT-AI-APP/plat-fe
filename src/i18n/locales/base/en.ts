@@ -221,6 +221,8 @@ const en: typeof ko = {
       handoverTitle: "Characters you kept",
       handoverNumberLabel: "Handover no.",
       copyNumber: "Copy handover number",
+      copyAll: "Copy all",
+      allCopied: "Copied names and handover numbers for {count} characters",
       stepReceived: "Received",
       stepReview: "Review",
       stepReviewUntil: "by {date}",

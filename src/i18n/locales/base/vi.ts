@@ -218,6 +218,8 @@ const vi: typeof ko = {
       handoverTitle: "Nhân vật đã giữ lại",
       handoverNumberLabel: "Mã chuyển giao",
       copyNumber: "Sao chép mã chuyển giao",
+      copyAll: "Sao chép tất cả",
+      allCopied: "Đã sao chép tên và mã chuyển giao của {count} nhân vật",
       stepReceived: "Đã tiếp nhận",
       stepReview: "Kiểm duyệt",
       stepReviewUntil: "đến {date}",

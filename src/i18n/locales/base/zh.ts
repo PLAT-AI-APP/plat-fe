@@ -215,6 +215,8 @@ const zh: typeof ko = {
       handoverTitle: "保留的角色",
       handoverNumberLabel: "移交编号",
       copyNumber: "复制移交编号",
+      copyAll: "全部复制",
+      allCopied: "已复制 {count} 个保留角色的名称和移交编号",
       stepReceived: "已受理",
       stepReview: "运营审核",
       stepReviewUntil: "~{date}",

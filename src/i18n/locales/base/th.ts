@@ -218,6 +218,8 @@ const th: typeof ko = {
       handoverTitle: "ตัวละครที่เก็บไว้",
       handoverNumberLabel: "หมายเลขการโอน",
       copyNumber: "คัดลอกหมายเลขการโอน",
+      copyAll: "คัดลอกทั้งหมด",
+      allCopied: "คัดลอกชื่อและหมายเลขการโอนของตัวละคร {count} ตัวแล้ว",
       stepReceived: "รับเรื่องแล้ว",
       stepReview: "ตรวจสอบ",
       stepReviewUntil: "ถึง {date}",

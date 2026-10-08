@@ -95,6 +95,20 @@ const WithdrawalCompleteDialog = ({
     );
   };
 
+  // "이름 인수번호" 를 한 줄씩. 남긴 캐릭터가 많아도 한 번에 옮겨 둘 수 있게 한다.
+  const handleCopyAll = async () => {
+    const text = handovers
+      .map((handover) => `${handover.title} ${handover.handoverId}`)
+      .join("\n");
+    const isCopied = await copyText(text);
+    showAppToast(
+      isCopied ? "success" : "error",
+      isCopied
+        ? t("dialog.withdrawalComplete.allCopied", { count: handovers.length })
+        : t("dialog.withdrawalComplete.copyFailed"),
+    );
+  };
+
   const rise = (delay: number) =>
     reduceMotion
       ? {}
@@ -136,14 +150,21 @@ const WithdrawalCompleteDialog = ({
             <m.div {...rise(0.15)} className="relative w-full rounded-3xl border border-main bg-darkest">
               {/* 남긴 캐릭터와 인수 번호 */}
               <div className="flex flex-col gap-1 px-4 pt-4 pb-3">
-                <p className="body-7 flex items-center justify-between gap-2 text-font-2">
-                  {t("dialog.withdrawalComplete.handoverTitle")}
-                  {/* 이 번호들이 무엇인지 머리에서 알린다. 여럿이면 몇 개인지도 같이. */}
-                  <span className="body-8 text-font-disabled">
-                    {t("dialog.withdrawalComplete.handoverNumberLabel")}
-                    {handovers.length > 1 && ` · ${handovers.length}`}
-                  </span>
-                </p>
+                <div className="flex items-center justify-between gap-2">
+                  <p className="body-7 flex items-center gap-1.5 text-font-2">
+                    {t("dialog.withdrawalComplete.handoverTitle")}
+                    <span className="body-8 text-font-disabled tabular-nums">{handovers.length}</span>
+                  </p>
+                  {/* 이름과 인수 번호를 한 줄씩 묶어 한 번에 복사한다. 메모장 등에 붙여 두면 문의할 때 찾기 쉽다. */}
+                  <button
+                    type="button"
+                    onClick={() => void handleCopyAll()}
+                    className="body-7 flex h-7 items-center gap-1 rounded-full border border-main px-2.5 text-font-2 transition-colors hover:border-font-disabled hover:text-font-1"
+                  >
+                    <Copy size={12} aria-hidden="true" />
+                    {t("dialog.withdrawalComplete.copyAll")}
+                  </button>
+                </div>
                 <ul className="flex max-h-60 flex-col gap-3 overflow-y-auto pt-1 pr-1">
                   {handovers.map((handover) => (
                     <li key={handover.handoverId} className="flex items-center gap-3">

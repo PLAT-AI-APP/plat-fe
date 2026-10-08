@@ -217,6 +217,8 @@ const ko = {
       handoverTitle: "남긴 캐릭터",
       handoverNumberLabel: "인수 번호",
       copyNumber: "인수 번호 복사",
+      copyAll: "전체 복사",
+      allCopied: "남긴 캐릭터 {count}개의 이름과 인수 번호를 복사했어요",
       stepReceived: "접수 완료",
       stepReview: "운영 심사",
       stepReviewUntil: "~{date}",

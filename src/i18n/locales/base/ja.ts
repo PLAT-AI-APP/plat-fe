@@ -217,6 +217,8 @@ const ja: typeof ko = {
       handoverTitle: "残したキャラクター",
       handoverNumberLabel: "引き継ぎ番号",
       copyNumber: "引き継ぎ番号をコピー",
+      copyAll: "すべてコピー",
+      allCopied: "残したキャラクター{count}件の名前と引き継ぎ番号をコピーしました",
       stepReceived: "受付完了",
       stepReview: "運営審査",
       stepReviewUntil: "~{date}",
