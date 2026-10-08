@@ -54,3 +54,6 @@ export interface PersonaModalProps extends GlobalModalProps {
   /** 선택 모드에서 현재 골라져 있는 페르소나. 목록에서 체크 표시로 보여줍니다. */
   currentPersonaId?: string;
 }
+
+/** 본인인증(성인이면 성인인증까지) 진행 모달. */
+export type IdentityVerificationModalProps = GlobalModalProps;

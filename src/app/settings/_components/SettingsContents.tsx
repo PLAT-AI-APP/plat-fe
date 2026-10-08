@@ -15,7 +15,7 @@ import { useDialogStore } from "@/store/useDialogStore";
 import SettingLanguageSelect from "./SettingLanguageSelect";
 import SettingRow from "./SettingRow";
 import SettingSection from "./SettingSection";
-import SettingToggle from "./SettingToggle";
+import Switch from "@/components/ui/Switch";
 
 const subscribeToNothing = () => () => {};
 
@@ -69,7 +69,7 @@ const SettingsContents = () => {
         <div className="flex w-full flex-col gap-5">
           <SettingSection title={t("settings.sections.environment")}>
             <SettingRow title={t("settings.rows.theme")}>
-              <SettingToggle
+              <Switch
                 checked={isLightMode}
                 label={t("settings.rows.theme")}
                 onChange={handleThemeChange}
@@ -105,7 +105,7 @@ const SettingsContents = () => {
               {/* 광고성 정보 수신 동의는 언제든 철회할 수 있어야 한다(정보통신망법 제50조). */}
               <SettingSection title={t("settings.sections.consent")}>
                 <SettingRow title={t("settings.rows.marketing")}>
-                  <SettingToggle
+                  <Switch
                     checked={!!agreementStatus?.marketingAgreed}
                     label={t("settings.rows.marketing")}
                     onChange={handleMarketingChange}

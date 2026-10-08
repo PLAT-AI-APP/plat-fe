@@ -3,6 +3,7 @@ import React, { Suspense, useRef } from "react";
 import dynamic from "next/dynamic";
 import type { RefObject } from "react";
 import { SearchBar } from "./SearchBar";
+import AdultToggle from "./AdultToggle";
 import Profile from "./Profile";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
@@ -106,6 +107,9 @@ const Header = ({ handleFoldToggle, foldToggleRef }: HeaderProps) => {
           <div className="shrink-0">
             <SearchBar />
           </div>
+
+          {/* 19 토글. 목록에 성인 콘텐츠를 섞을지만 정한다. */}
+          <AdultToggle />
 
           {/* <LanguageSelector /> */}
 
