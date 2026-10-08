@@ -18,6 +18,12 @@ interface UserProfileResponse {
   birth: string | null;
   gender: Gender | null;
   provider: Provider;
+  identityVerifiedAt?: string | null;
+  identityVerifiedUntil?: string | null;
+  adultVerifiedAt?: string | null;
+  adultVerifiedUntil?: string | null;
+  adultContentEnabled?: boolean;
+  birthLocked?: boolean;
 }
 
 const normalizeUserInfo = (user: UserProfileResponse): UserInfo => ({
@@ -29,6 +35,12 @@ const normalizeUserInfo = (user: UserProfileResponse): UserInfo => ({
   gender: user.gender ?? "",
   provider: user.provider,
   email: user.email,
+  identityVerifiedAt: user.identityVerifiedAt ?? null,
+  identityVerifiedUntil: user.identityVerifiedUntil ?? null,
+  adultVerifiedAt: user.adultVerifiedAt ?? null,
+  adultVerifiedUntil: user.adultVerifiedUntil ?? null,
+  adultContentEnabled: user.adultContentEnabled ?? false,
+  birthLocked: user.birthLocked ?? false,
 });
 
 const GetMyInfo = async () => {

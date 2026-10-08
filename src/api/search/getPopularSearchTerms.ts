@@ -1,8 +1,10 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { axiosInstance } from "..";
+import { authAxios, axiosInstance } from "..";
 import { AppError } from "@/type/api";
+import { useAuthReady } from "@/hooks/data/useAuthReady";
+import { useAdultMode } from "@/hooks/data/useAdultAccess";
 import { searchQueryKeys } from "./queryKeys";
 
 /** 직전 갱신 대비 순위 등락. 이번에 처음 올라온 검색어는 NEW 입니다. */
@@ -16,8 +18,10 @@ export interface PopularSearchTerm {
   trend: SearchTermTrend;
 }
 
-const getPopularSearchTerms = async (size: number) => {
-  const response = await axiosInstance.get<PopularSearchTerm[]>(
+const getPopularSearchTerms = async (size: number, authenticated: boolean) => {
+  // 성인 콘텐츠 검색어를 섞을지 서버가 토큰으로 판단하므로, 로그인했으면 토큰을 싣는다.
+  const client = authenticated ? authAxios : axiosInstance;
+  const response = await client.get<PopularSearchTerm[]>(
     "/search/popular-terms",
     { params: { size } },
   );
@@ -30,9 +34,12 @@ const getPopularSearchTerms = async (size: number) => {
  * 같은 값이 옵니다. 결과가 0건이던 검색은 애초에 집계되지 않아 여기 오르지 않습니다.
  */
 export const usePopularSearchTermsQuery = (size = 10) => {
+  const authenticated = useAuthReady();
+  const adultMode = useAdultMode();
+
   return useQuery<PopularSearchTerm[], AppError>({
-    queryKey: searchQueryKeys.popularTerms(size),
-    queryFn: () => getPopularSearchTerms(size),
+    queryKey: searchQueryKeys.popularTerms(size, adultMode),
+    queryFn: () => getPopularSearchTerms(size, authenticated),
     staleTime: 1000 * 60,
   });
 };

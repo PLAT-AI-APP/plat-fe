@@ -5,6 +5,8 @@ import type { Tendency } from "@/store/useTendencyStore";
 interface HomeListKeyParams {
   locale: AppLocale;
   tendency: Tendency;
+  /** 성인 콘텐츠가 섞이는지(useAdultMode). 19 토글·성인인증이 바뀌면 다른 캐시를 쓴다. */
+  adultMode: boolean;
   page?: number;
   size?: number;
 }
@@ -16,32 +18,43 @@ interface HomeListKeyParams {
  * 그 값들을 훅마다 손으로 나열하지 않도록 여기서 순서까지 정한다.
  */
 export const homeQueryKeys = {
-  banners: (locale: AppLocale) => ["get-home-banners", locale] as const,
-  todayPick: ({ locale, tendency, page, size }: HomeListKeyParams) =>
-    ["get-today-pick", locale, tendency, page, size] as const,
-  popularTag: ({ locale, tendency, page, size }: HomeListKeyParams) =>
-    ["get-popular-tag", locale, tendency, page, size] as const,
-  newWork: ({ locale, tendency, page, size }: HomeListKeyParams) =>
-    ["get-new-work", locale, tendency, page, size] as const,
-  assetPreview: (locale: AppLocale, tendency: Tendency) =>
-    ["get-asset-preview", locale, tendency] as const,
+  banners: (locale: AppLocale, adultMode: boolean) =>
+    ["get-home-banners", locale, adultMode] as const,
+  todayPick: ({ locale, tendency, adultMode, page, size }: HomeListKeyParams) =>
+    ["get-today-pick", locale, tendency, adultMode, page, size] as const,
+  popularTag: ({ locale, tendency, adultMode, page, size }: HomeListKeyParams) =>
+    ["get-popular-tag", locale, tendency, adultMode, page, size] as const,
+  newWork: ({ locale, tendency, adultMode, page, size }: HomeListKeyParams) =>
+    ["get-new-work", locale, tendency, adultMode, page, size] as const,
+  assetPreview: (locale: AppLocale, tendency: Tendency, adultMode: boolean) =>
+    ["get-asset-preview", locale, tendency, adultMode] as const,
   /** 찜 여부가 실려 오므로 로그인 여부로도 캐시를 나눈다. */
   allCharacters: ({
     locale,
     authenticated,
     tendency,
+    adultMode,
     page,
     size,
   }: HomeListKeyParams & { authenticated: boolean }) =>
-    ["get-all-characters", locale, authenticated, tendency, page, size] as const,
+    [
+      "get-all-characters",
+      locale,
+      authenticated,
+      tendency,
+      adultMode,
+      page,
+      size,
+    ] as const,
   officialPreview: ({
     locale,
     tendency,
+    adultMode,
     sort,
     page,
     size,
   }: HomeListKeyParams & { sort?: string }) =>
-    ["get-official-preview", locale, tendency, sort, page, size] as const,
-  userRecommend: ({ locale, tendency, page, size }: HomeListKeyParams) =>
-    ["get-user-recommend", locale, tendency, page, size] as const,
+    ["get-official-preview", locale, tendency, adultMode, sort, page, size] as const,
+  userRecommend: ({ locale, tendency, adultMode, page, size }: HomeListKeyParams) =>
+    ["get-user-recommend", locale, tendency, adultMode, page, size] as const,
 };

@@ -5,6 +5,7 @@ import { authAxios } from "..";
 import { AppError } from "@/type/api";
 import { useLocaleStore } from "@/store/useLocaleStore";
 import { Tendency, useTendencyStore } from "@/store/useTendencyStore";
+import { useAdultMode } from "@/hooks/data/useAdultAccess";
 import { homeQueryKeys } from "./queryKeys";
 
 export interface AssetPreviewItem {
@@ -38,9 +39,11 @@ export const useAssetPreviewQuery = (params: GetAssetPreviewParams = {}) => {
   const locale = useLocaleStore((state) => state.locale);
   // 성향이 바뀌면 목록도 달라지므로 캐시를 분리합니다.
   const tendency = useTendencyStore((state) => state.tendency);
+  // 19 토글·성인인증이 바뀌면 서버가 섞어 주는 목록도 달라진다.
+  const adultMode = useAdultMode();
 
   return useQuery<AssetPreviewItem[], AppError>({
-    queryKey: homeQueryKeys.assetPreview(locale, tendency),
+    queryKey: homeQueryKeys.assetPreview(locale, tendency, adultMode),
     // 자주 바뀌는 목록이 아니므로 1분보다 짧게 잡을 이유가 없습니다.
     staleTime: 1000 * 60,
     queryFn: () => getAssetPreview({ ...params, tendency }),
