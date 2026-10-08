@@ -16,6 +16,8 @@ export interface AssetPreviewItem {
   isNew: boolean;
   isOfficial: boolean;
   chatCount: number;
+  /** 성인 세계관 */
+  adult?: boolean;
 }
 
 interface GetAssetPreviewParams {

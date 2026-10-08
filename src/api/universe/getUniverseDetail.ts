@@ -142,6 +142,7 @@ export const adaptUniverseDetailToCharacterDetail = (
     editable: universe.editable,
     tags: universe.hashtags.map((hashtag) => hashtag.label),
     isOfficial: false,
+    adult: universe.adult ?? false,
     images,
     mainImage: universe.profileImageUrl,
     profileImage: universe.character.profileImageUrl,

@@ -14,6 +14,8 @@ import ChatForm, { type ChatFormHandle } from "@/components/chat/ChatForm";
 import MessageList from "@/components/chat/MessageList";
 import SkeletonChatMessages from "@/components/skeleton/SkeletonChatMessages";
 import { ErrorState } from "@/components/state";
+import AdultGate from "@/components/adult/AdultGate";
+import { isAdultRestrictedError } from "@/lib/adultAccess";
 import { useChatTurn } from "@/hooks/chat/useChatTurn";
 import { useStoredChatModel } from "@/hooks/chat/useStoredChatModel";
 import { useIntersectionObserver } from "@/hooks/dom/useIntersectionObserver";
@@ -75,7 +77,11 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
   } = useRoomDetailQuery(roomId);
   // 캐릭터(세계관)가 지워진 방은 세계관을 부르지 않는다(404). 이름은 방에 남긴 스냅샷을 쓴다.
   const isClosed = room?.closed === true;
-  const { data: universe, isError: isUniverseError } = useUniverseDetailQuery(
+  const {
+    data: universe,
+    isError: isUniverseError,
+    error: universeError,
+  } = useUniverseDetailQuery(
     isClosed ? undefined : room?.universeId,
   );
   // 방을 받기 전에는 세계관 쿼리가 꺼져 있어 isLoading 이 false 이므로, 데이터 유무로 판단한다.
@@ -213,6 +219,36 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
     rootMargin: "600px 0px 0px 0px",
     enabled: Boolean(hasNextPage) && !isMessagesPending,
   });
+
+  // 성인 세계관 방인데 성인인증이 없거나 만료됐다(403). 메시지 대신 잠금 화면을 두고 입력을 막는다.
+  // 인증을 마치면 방·메시지 조회가 무효화되어 다시 받으므로 저절로 풀린다.
+  const isAdultLocked =
+    isAdultRestrictedError(roomError) ||
+    isAdultRestrictedError(messagesError) ||
+    isAdultRestrictedError(universeError);
+
+  if (isAdultLocked) {
+    return (
+      <section className="flex h-full min-h-0 flex-1 justify-center bg-dark pt-2">
+        <div className="flex h-full w-full max-w-[867px] flex-col">
+          <div className="flex flex-1 items-center justify-center overflow-y-auto">
+            <AdultGate
+              title={t("adultVerification.room.lockedRoomTitle")}
+              description={t("adultVerification.room.lockedRoomDescription")}
+            />
+          </div>
+          <div className="shrink-0 bg-dark px-4 py-4">
+            <p
+              role="status"
+              className="body-4 rounded-xl bg-darkest px-4 py-4 text-center text-font-disabled"
+            >
+              {t("adultVerification.room.inputLocked")}
+            </p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   if (isRoomError) {
     return (

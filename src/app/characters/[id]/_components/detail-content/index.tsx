@@ -13,6 +13,8 @@ import {
   useUniverseDetailQuery,
 } from "@/api/universe/getUniverseDetail";
 import { ErrorState } from "@/components/state";
+import AdultGate from "@/components/adult/AdultGate";
+import { isAdultRestrictedError } from "@/lib/adultAccess";
 import SkeletonCharacterDetail from "@/components/skeleton/SkeletonCharacterDetail";
 import CommentsPanel from "./_components/CommentsPanel";
 import DetailTabs, { CharacterDetailTab } from "./_components/DetailTabs";
@@ -165,6 +167,17 @@ const CharacterDetailContent = ({
 
   // 404(삭제된 캐릭터)와 5xx(서버 오류)를 같은 문구로 뭉개면 사용자가 무엇을 해야 할지 모른다.
   // ErrorState 는 서버가 준 사유를 그대로 보여주고, 재시도해 볼 값이 있을 때만 버튼을 낸다.
+  // 성인 세계관인데 비로그인이거나 성인인증이 없다. 서버가 내용 없이 거절했으니 게이트만 그린다.
+  if (isError && isAdultRestrictedError(error)) {
+    return (
+      <article className="flex w-full justify-center pb-16 pt-5">
+        <div className="w-full max-w-(--content-max-width)">
+          <AdultGate />
+        </div>
+      </article>
+    );
+  }
+
   if (isError) {
     return (
       <article className="flex w-full justify-center pb-16 pt-5">

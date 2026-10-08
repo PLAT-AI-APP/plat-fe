@@ -47,6 +47,7 @@ const CharacterCard = ({
   fluid = false,
   href,
   editHref,
+  adult = false,
 }: CharacterCardProps) => {
   const t = useTranslations("characterCard");
   // 상세로 가는 카드면 포인터를 올릴 때 상세를 미리 받는다(누를 때 스켈레톤 없이 바로 뜬다).
@@ -77,7 +78,9 @@ const CharacterCard = ({
     () => orderTagsBySelection(tagList, selectedTagSet),
     [selectedTagSet, tagList],
   );
-  const titleIcon = <TitleStatusIcon isOfficial={isOfficial} isNew={isNew} />;
+  const titleIcon = (
+    <TitleStatusIcon isOfficial={isOfficial} isNew={isNew} adult={adult} />
+  );
 
   // 카드 전체를 덮는 stretched link(href)와 형제로 깔아, 수정 배지를 눌러도
   // 상세페이지로 이동하는 카드 클릭과 겹치지 않게 합니다.

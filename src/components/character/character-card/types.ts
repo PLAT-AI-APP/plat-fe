@@ -33,6 +33,8 @@ export interface CharacterCardProps {
    * 별도 배지로 띄운다 — 없으면 배지 자체가 안 뜬다.
    */
   editHref?: string;
+  /** 성인 세계관. 제목 옆에 19 배지를 단다. */
+  adult?: boolean;
 }
 
 export interface SizeConfig {

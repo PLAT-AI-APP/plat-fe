@@ -23,6 +23,8 @@ export interface OfficialPreviewItem {
   chatCount: number;
   remainingFreeChatCount: number;
   scenarios: OfficialPreviewScenario[];
+  /** 성인 세계관 */
+  adult?: boolean;
 }
 
 /** 대화량순 / 찜순. 서버가 universes 의 누적 카운터로 줄 세웁니다. */

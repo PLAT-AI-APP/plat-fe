@@ -23,6 +23,8 @@ export type CategoryCardCreator = CardCreator;
 export interface CategoryCardTag {
   tagId: string;
   name: string;
+  /** 성인 태그 */
+  adult?: boolean;
 }
 
 /**
