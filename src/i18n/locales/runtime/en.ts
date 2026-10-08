@@ -138,7 +138,11 @@ const en = {
       talking: "{count} users chatting",
       keep: "Keep",
       delete: "Delete",
-      deletionsTitle: "Will be deleted",
+      keepCaption: "Chats continue after review",
+      deleteCaption: "Deleted when you leave",
+      keepUnavailableShort: "Can't be kept right now",
+      deletionsCaption: "Characters that are private or that no one else has chatted with are deleted when you leave.",
+      deletionsTitle: "Also deleted",
       reasons: {
         INACTIVE: "Deactivated",
         PRIVATE: "Private",
@@ -156,10 +160,6 @@ const en = {
       hideConsent: "Hide consent form",
       consentAgree: "I agree to the Character License Consent (v{version}).",
       adultAttest: "I am 19 or older.",
-      hints: {
-        KEEP: "If it passes our review, chats continue as an 'Operated by PLAT' character.",
-        DELETE: "It will be deleted when you leave, and existing chats become read-only.",
-      },
       consentTitle: "Character license",
       consentSubtitle: "A separate consent that applies only to the characters you keep.",
     },

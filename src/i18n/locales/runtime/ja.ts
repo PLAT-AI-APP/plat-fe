@@ -131,7 +131,11 @@ const ja: typeof en = {
       talking: "{count}人が会話中",
       keep: "残す",
       delete: "削除",
-      deletionsTitle: "削除されます",
+      keepCaption: "審査後も会話が続きます",
+      deleteCaption: "退会とともに削除",
+      keepUnavailableShort: "現在は残せません",
+      deletionsCaption: "非公開や、他のユーザーと会話していないキャラクターは退会とともに削除されます",
+      deletionsTitle: "一緒に削除されます",
       reasons: {
         INACTIVE: "運営により無効",
         PRIVATE: "非公開",
@@ -149,10 +153,6 @@ const ja: typeof en = {
       hideConsent: "同意書を閉じる",
       consentAgree: "キャラクター利用許諾同意書(v{version})に同意します",
       adultAttest: "19歳以上です",
-      hints: {
-        KEEP: "運営審査を通過すると「運営 PLAT」のキャラクターとして会話が続きます",
-        DELETE: "退会すると削除され、会話中のルームは閲覧のみになります",
-      },
       consentTitle: "キャラクター利用許諾",
       consentSubtitle: "「残す」を選んだキャラクターにだけ適用される別の同意です",
     },

@@ -2,7 +2,8 @@ const ko = {
   chatRoom: {
     closedNotice:
       "캐릭터가 삭제되어 더 이상 대화할 수 없어요. 지난 대화는 계속 볼 수 있어요.",
-    handoverPendingNotice: "운영 심사 중인 캐릭터예요. 대화는 이어갈 수 있어요.",
+    handoverPendingLabel: "운영 심사 중",
+    handoverPendingNotice: "대화는 그대로 이어갈 수 있어요",
     generatedNotice: "AI가 생성한 대화예요. 실제 인물·사실과 다를 수 있어요.",
     sidebar: {
       title: "채팅방 설정",

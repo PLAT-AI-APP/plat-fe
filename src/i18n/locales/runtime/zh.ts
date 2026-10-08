@@ -131,7 +131,11 @@ const zh: typeof en = {
       talking: "{count} 人正在对话",
       keep: "保留",
       delete: "删除",
-      deletionsTitle: "将被删除",
+      keepCaption: "审核后对话继续",
+      deleteCaption: "随注销一并删除",
+      keepUnavailableShort: "目前无法保留",
+      deletionsCaption: "未公开或没有其他用户对话过的角色将随注销一并删除",
+      deletionsTitle: "将一并删除",
       reasons: {
         INACTIVE: "已被停用",
         PRIVATE: "非公开",
@@ -149,10 +153,6 @@ const zh: typeof en = {
       hideConsent: "收起同意书",
       consentAgree: "我同意角色使用许可同意书（v{version}）",
       adultAttest: "我已年满 19 岁",
-      hints: {
-        KEEP: "通过运营审核后，将以“PLAT 运营”角色继续对话",
-        DELETE: "注销后将被删除，进行中的聊天室只能查看",
-      },
       consentTitle: "角色使用许可",
       consentSubtitle: "仅适用于选择保留的角色的单独同意",
     },

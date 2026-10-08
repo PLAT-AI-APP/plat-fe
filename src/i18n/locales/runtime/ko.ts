@@ -133,7 +133,11 @@ const ko: typeof en = {
       talking: "{count}명이 대화 중",
       keep: "남기기",
       delete: "삭제",
-      deletionsTitle: "삭제돼요",
+      keepCaption: "심사 후 대화가 이어져요",
+      deleteCaption: "탈퇴와 함께 지워져요",
+      keepUnavailableShort: "지금은 남길 수 없어요",
+      deletionsCaption: "대화한 유저가 없거나 공개되지 않은 캐릭터는 탈퇴와 함께 지워져요",
+      deletionsTitle: "함께 삭제돼요",
       reasons: {
         INACTIVE: "운영 비활성",
         PRIVATE: "비공개",
@@ -151,10 +155,6 @@ const ko: typeof en = {
       hideConsent: "동의서 접기",
       consentAgree: "캐릭터 이용허락 동의서(v{version})에 동의해요",
       adultAttest: "만 19세 이상이에요",
-      hints: {
-        KEEP: "운영 심사를 통과하면 '운영 PLAT' 캐릭터로 대화가 이어져요",
-        DELETE: "탈퇴하면 지워지고, 대화하던 방은 읽기만 할 수 있어요",
-      },
       consentTitle: "캐릭터 이용허락",
       consentSubtitle: "남기기를 고른 캐릭터에만 적용되는 별도 동의예요",
     },

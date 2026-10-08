@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import ActiveButton from "@/components/ActiveButton";
+import { Coin } from "@/icons";
 import useToggle from "@/hooks/common/useToggle";
 import { cn } from "@/lib/utils";
 import { useWithdrawalPreviewQuery } from "@/api/user/getWithdrawalPreview";
@@ -111,8 +112,15 @@ const WithdrawalContents = () => {
   };
 
   const openCompleteDialog = (result: WithdrawalResult) => {
+    // 접수증에 썸네일을 보이도록 미리보기에서 받아 둔 이미지를 붙인다(탈퇴 뒤에는 다시 받을 수 없다).
+    const imageByUniverse = new Map(
+      candidates.map((candidate) => [candidate.universeId, candidate.profileImageUrl]),
+    );
     openDialog("WITHDRAWAL_COMPLETE", {
-      handovers: result.handovers,
+      handovers: result.handovers.map((handover) => ({
+        ...handover,
+        profileImageUrl: imageByUniverse.get(handover.universeId) ?? null,
+      })),
       copyMailRequested: result.copyMailRequested,
       consent: result.consent,
       onConfirm: handleCompleteConfirm,
@@ -149,33 +157,41 @@ const WithdrawalContents = () => {
               </p>
             </header>
 
-            <div className="flex w-full flex-col gap-1">
-              <div className="rounded-2xl bg-darkest px-4 py-6">
-                <ul className="body-5 list-disc space-y-0 pl-5 text-font-disabled">
-                  {notices.map((notice) => (
-                    <li key={notice}>{notice}</li>
+            <div className="flex w-full flex-col gap-2">
+              <div className="rounded-3xl border border-main bg-darkest px-5 py-5">
+                <ul className="body-5 flex flex-col gap-2.5 text-font-2">
+                  {[
+                    ...notices,
+                    `${t("withdrawalPage.notices.creationsDeleted")}\n${t("withdrawalPage.notices.chatsReadOnly")}`,
+                  ].map((notice) => (
+                    <li key={notice} className="flex gap-2.5 break-keep">
+                      <span
+                        aria-hidden="true"
+                        className="mt-2 size-1.5 shrink-0 rounded-full bg-font-disabled"
+                      />
+                      <span className="whitespace-pre-line">{notice}</span>
+                    </li>
                   ))}
-                  <li>
-                    {t("withdrawalPage.notices.creationsDeleted")}
-                    <br />
-                    {t("withdrawalPage.notices.chatsReadOnly")}
-                  </li>
                 </ul>
               </div>
 
+              {/* 사라질 잔액은 숫자로, 경고색 칸에 따로 보인다. */}
               {hasRemaining && (
                 <p
                   role="note"
-                  className="body-5 rounded-xl border border-main px-4 py-3 text-font-1"
+                  className="body-5 flex items-start gap-3 rounded-2xl bg-warning-bg px-4 py-3.5 text-font-1"
                 >
-                  {t("withdrawalPage.remainingBalance", {
-                    credits: remainingCredits.toLocaleString(),
-                    points: remainingPoints.toLocaleString(),
-                  })}
+                  <Coin size={18} className="mt-px shrink-0 text-warning" aria-hidden="true" />
+                  <span className="break-keep">
+                    {t("withdrawalPage.remainingBalance", {
+                      credits: remainingCredits.toLocaleString(),
+                      points: remainingPoints.toLocaleString(),
+                    })}
+                  </span>
                 </p>
               )}
 
-              <p className="body-8 text-font-disabled">
+              <p className="body-8 break-keep px-1 text-font-disabled">
                 {t("withdrawalPage.legalNotice")}
               </p>
             </div>

@@ -4,7 +4,8 @@ const th: typeof ko = {
   chatRoom: {
     closedNotice:
       "ตัวละครถูกลบแล้ว จึงไม่สามารถแชตต่อได้ แต่ยังดูบทสนทนาเดิมได้",
-    handoverPendingNotice: "ตัวละครนี้อยู่ระหว่างการตรวจสอบของทีมงาน คุณยังแชตต่อได้",
+    handoverPendingLabel: "กำลังตรวจสอบ",
+    handoverPendingNotice: "ยังสนทนาต่อได้ตามปกติ",
     generatedNotice: "บทสนทนานี้สร้างโดย AI อาจไม่ตรงกับบุคคลหรือข้อเท็จจริงจริง",
     sidebar: {
       title: "ตั้งค่าห้องแชต",

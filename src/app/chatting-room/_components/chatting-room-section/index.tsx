@@ -14,7 +14,6 @@ import ChatForm, { type ChatFormHandle } from "@/components/chat/ChatForm";
 import MessageList from "@/components/chat/MessageList";
 import SkeletonChatMessages from "@/components/skeleton/SkeletonChatMessages";
 import { ErrorState } from "@/components/state";
-import { Info } from "@/icons";
 import { useChatTurn } from "@/hooks/chat/useChatTurn";
 import { useStoredChatModel } from "@/hooks/chat/useStoredChatModel";
 import { useIntersectionObserver } from "@/hooks/dom/useIntersectionObserver";
@@ -288,10 +287,20 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
               {isHandoverPending && (
                 <p
                   role="status"
-                  className="body-7 mx-auto mb-3 flex w-fit max-w-full items-center gap-1.5 rounded-full bg-info-bg px-3 py-1.5 text-info"
+                  className="body-7 mx-auto mb-3 flex w-fit max-w-full items-center gap-2 rounded-full border border-info/25 bg-info-bg py-1.5 pr-3.5 pl-3"
                 >
-                  <Info className="size-3.5 shrink-0" aria-hidden="true" />
-                  <span>{t("chatRoom.handoverPendingNotice")}</span>
+                  {/* 운영 심사가 진행 중이라는 살아 있는 표시 */}
+                  <span aria-hidden="true" className="relative flex size-2 shrink-0">
+                    <span className="absolute inline-flex size-full animate-ping rounded-full bg-info opacity-60" />
+                    <span className="relative inline-flex size-2 rounded-full bg-info" />
+                  </span>
+                  <span className="title-7 shrink-0 text-info">
+                    {t("chatRoom.handoverPendingLabel")}
+                  </span>
+                  <span aria-hidden="true" className="h-3 w-px shrink-0 bg-info/30" />
+                  <span className="truncate text-font-1">
+                    {t("chatRoom.handoverPendingNotice")}
+                  </span>
                 </p>
               )}
               <ChatForm
