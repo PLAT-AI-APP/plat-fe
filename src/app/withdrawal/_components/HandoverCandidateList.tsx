@@ -159,15 +159,22 @@ const HandoverCandidateList = ({
               {formatWithCommas(counts.ALL)}
             </span>
           </span>
-          <span className="body-7 flex flex-wrap items-center gap-x-2 text-font-2 tabular-nums">
-            <span>{t("counts.keep", { count: formatWithCommas(counts.KEEP) })}</span>
-            <span aria-hidden="true" className="text-font-disabled">·</span>
-            <span>{t("counts.delete", { count: formatWithCommas(counts.DELETE) })}</span>
-            <span aria-hidden="true" className="text-font-disabled">·</span>
-            <span className={cn(counts.UNDECIDED > 0 ? "text-brand" : "text-font-2")}>
-              {t("counts.undecided", { count: formatWithCommas(counts.UNDECIDED) })}
+          {/* 남길 수 없으면 모두 삭제라 남기기 · 미선택 수는 의미가 없다. */}
+          {canKeep ? (
+            <span className="body-7 flex flex-wrap items-center gap-x-2 text-font-2 tabular-nums">
+              <span>{t("counts.keep", { count: formatWithCommas(counts.KEEP) })}</span>
+              <span aria-hidden="true" className="text-font-disabled">·</span>
+              <span>{t("counts.delete", { count: formatWithCommas(counts.DELETE) })}</span>
+              <span aria-hidden="true" className="text-font-disabled">·</span>
+              <span className={cn(counts.UNDECIDED > 0 ? "text-brand" : "text-font-2")}>
+                {t("counts.undecided", { count: formatWithCommas(counts.UNDECIDED) })}
+              </span>
             </span>
-          </span>
+          ) : (
+            <span className="body-7 text-font-2 tabular-nums">
+              {t("counts.delete", { count: formatWithCommas(counts.DELETE) })}
+            </span>
+          )}
         </span>
         <ArrowDown
           size={16}
@@ -178,76 +185,81 @@ const HandoverCandidateList = ({
 
       {isOpen && (
         <>
-          <div className="flex flex-col gap-3 border-t border-main px-5 py-4">
-            {candidates.length > SEARCH_THRESHOLD && (
-              <label className="flex h-10 items-center gap-2 rounded-xl border border-main bg-dark px-3 focus-within:border-font-disabled">
-                <Search size={16} className="shrink-0 text-font-2" aria-hidden="true" />
-                <input
-                  type="search"
-                  value={keyword}
-                  onChange={(event) => {
-                    setKeyword(event.target.value);
-                    setVisibleCount(PAGE_SIZE);
-                  }}
-                  placeholder={t("searchPlaceholder")}
-                  className="body-5 min-w-0 flex-1 bg-transparent text-font-1 outline-none placeholder:text-font-disabled"
-                />
-              </label>
-            )}
+          {(canKeep || candidates.length > SEARCH_THRESHOLD) && (
+            <div className="flex flex-col gap-3 border-t border-main px-5 py-4">
+              {candidates.length > SEARCH_THRESHOLD && (
+                <label className="flex h-10 items-center gap-2 rounded-xl border border-main bg-dark px-3 focus-within:border-font-disabled">
+                  <Search size={16} className="shrink-0 text-font-2" aria-hidden="true" />
+                  <input
+                    type="search"
+                    value={keyword}
+                    onChange={(event) => {
+                      setKeyword(event.target.value);
+                      setVisibleCount(PAGE_SIZE);
+                    }}
+                    placeholder={t("searchPlaceholder")}
+                    className="body-5 min-w-0 flex-1 bg-transparent text-font-1 outline-none placeholder:text-font-disabled"
+                  />
+                </label>
+              )}
 
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div role="tablist" aria-label={t("listTitle")} className="flex flex-wrap gap-1.5">
-                {filters.map((item) => {
-                  const isActive = filter === item.value;
-                  return (
+              {/* 남길 수 없으면 고를 것이 없어 필터 · 일괄 선택을 두지 않는다. */}
+              {canKeep && (
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div role="tablist" aria-label={t("listTitle")} className="flex flex-wrap gap-1.5">
+                    {filters.map((item) => {
+                      const isActive = filter === item.value;
+                      return (
+                        <button
+                          key={item.value}
+                          type="button"
+                          role="tab"
+                          aria-selected={isActive}
+                          onClick={() => selectFilter(item.value)}
+                          className={cn(
+                            "body-7 flex h-8 items-center gap-1 rounded-full border px-3 transition-colors",
+                            isActive
+                              ? "border-font-2 bg-card text-font-1"
+                              : "border-main text-font-2 hover:text-font-1",
+                          )}
+                        >
+                          {item.label}
+                          <span className="tabular-nums text-font-disabled">
+                            {formatWithCommas(counts[item.value])}
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  <div className="flex gap-1.5">
                     <button
-                      key={item.value}
                       type="button"
-                      role="tab"
-                      aria-selected={isActive}
-                      onClick={() => selectFilter(item.value)}
-                      className={cn(
-                        "body-7 flex h-8 items-center gap-1 rounded-full border px-3 transition-colors",
-                        isActive
-                          ? "border-font-2 bg-card text-font-1"
-                          : "border-main text-font-2 hover:text-font-1",
-                      )}
+                      disabled={!canKeep || filtered.length === 0}
+                      onClick={() => applyToFiltered("KEEP")}
+                      className="body-7 h-8 rounded-lg border border-main px-3 text-font-1 transition-colors enabled:hover:bg-card disabled:text-font-disabled"
                     >
-                      {item.label}
-                      <span className="tabular-nums text-font-disabled">
-                        {formatWithCommas(counts[item.value])}
-                      </span>
+                      {t("bulk.keepAll")}
                     </button>
-                  );
-                })}
-              </div>
+                    <button
+                      type="button"
+                      disabled={filtered.length === 0}
+                      onClick={() => applyToFiltered("DELETE")}
+                      className="body-7 h-8 rounded-lg border border-main px-3 text-font-1 transition-colors enabled:hover:bg-card disabled:text-font-disabled"
+                    >
+                      {t("bulk.deleteAll")}
+                    </button>
+                  </div>
+                </div>
+              )}
 
-              <div className="flex gap-1.5">
-                <button
-                  type="button"
-                  disabled={!canKeep || filtered.length === 0}
-                  onClick={() => applyToFiltered("KEEP")}
-                  className="body-7 h-8 rounded-lg border border-main px-3 text-font-1 transition-colors enabled:hover:bg-card disabled:text-font-disabled"
-                >
-                  {t("bulk.keepAll")}
-                </button>
-                <button
-                  type="button"
-                  disabled={filtered.length === 0}
-                  onClick={() => applyToFiltered("DELETE")}
-                  className="body-7 h-8 rounded-lg border border-main px-3 text-font-1 transition-colors enabled:hover:bg-card disabled:text-font-disabled"
-                >
-                  {t("bulk.deleteAll")}
-                </button>
-              </div>
+              {canKeep && isNarrowed && filtered.length > 0 && (
+                <p className="body-8 text-font-disabled">
+                  {t("bulk.scope", { count: formatWithCommas(filtered.length) })}
+                </p>
+              )}
             </div>
-
-            {isNarrowed && filtered.length > 0 && (
-              <p className="body-8 text-font-disabled">
-                {t("bulk.scope", { count: formatWithCommas(filtered.length) })}
-              </p>
-            )}
-          </div>
+          )}
 
           {filtered.length === 0 ? (
             <p className="body-6 border-t border-main px-5 py-8 text-center text-font-2">
@@ -276,12 +288,18 @@ const HandoverCandidateList = ({
                       {t("talking", { count: formatWithCommas(candidate.otherRoomCount) })}
                     </p>
                   </div>
-                  <ChoiceSegment
-                    title={candidate.title}
-                    choice={getChoice(candidate.universeId)}
-                    canKeep={canKeep}
-                    onSelect={(choice) => onChange(candidate.universeId, choice)}
-                  />
+                  {canKeep ? (
+                    <ChoiceSegment
+                      title={candidate.title}
+                      choice={getChoice(candidate.universeId)}
+                      canKeep={canKeep}
+                      onSelect={(choice) => onChange(candidate.universeId, choice)}
+                    />
+                  ) : (
+                    <span className="body-8 shrink-0 rounded-full border border-main px-2.5 py-1 text-font-2">
+                      {t("willBeDeleted")}
+                    </span>
+                  )}
                 </li>
               ))}
             </ul>

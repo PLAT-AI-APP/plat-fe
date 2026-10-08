@@ -49,6 +49,8 @@ export interface HandoverConsentDocument {
 export interface WithdrawalPreview {
   /** false 면 남기기를 고를 수 없다(만 19세 미만이거나 동의서가 아직 없음). */
   keepAllowed: boolean;
+  /** 남기기를 고를 수 없는 이유. MINOR: 생일상 만 19세 미만, CONSENT_UNAVAILABLE: 동의서 미게시. */
+  keepBlockedReason: "MINOR" | "CONSENT_UNAVAILABLE" | null;
   /** 생일을 몰라 남기기를 고를 때 "만 19세 이상" 진술을 받아야 한다. */
   ageAttestationRequired: boolean;
   /** 후보가 없거나 남길 수 없으면 null. */

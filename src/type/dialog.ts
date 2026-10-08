@@ -120,6 +120,10 @@ export interface WithdrawalCompleteDialogProps {
 export interface WithdrawalConfirmDialogProps {
   onClose: () => void;
   onConfirm: () => void;
+  /** 남겨서 운영 심사를 거칠 캐릭터 수. 만든 캐릭터가 없으면 0. */
+  keepCount?: number;
+  /** 탈퇴와 함께 지워질 캐릭터 수. */
+  deleteCount?: number;
 }
 
 export interface AgreementResultItem {

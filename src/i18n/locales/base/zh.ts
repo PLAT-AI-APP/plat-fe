@@ -224,6 +224,7 @@ const zh: typeof ko = {
       numberCopied: "已复制移交编号",
       copyFailed: "复制失败",
       inquiryHint: "咨询时提供移交编号，即可查到您保留的角色。",
+      closeWarning: "该账号无法接收副本邮件，关闭后将无法再次查看。请使用“全部复制”保存移交编号。",
       copyMailSent: "已通过邮件发送同意书副本",
       consentSummary: "已同意角色使用许可同意书 v{version} · {date}",
     },
@@ -234,6 +235,9 @@ const zh: typeof ko = {
       cancel: "返回",
       confirm: "注销",
       confirmPending: "正在注销",
+      keepSummary: "保留并接受运营审核的角色",
+      deleteSummary: "随注销一并删除的角色",
+      countUnit: "{count} 个",
     },
   },
   field: {

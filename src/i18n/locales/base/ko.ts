@@ -226,6 +226,7 @@ const ko = {
       numberCopied: "인수 번호를 복사했어요",
       copyFailed: "복사하지 못했어요",
       inquiryHint: "문의할 때 인수 번호를 알려 주시면 남긴 캐릭터를 찾을 수 있어요.",
+      closeWarning: "사본 메일이 없는 계정이라 이 창을 닫으면 다시 볼 수 없어요. 전체 복사로 인수 번호를 남겨 두세요.",
       copyMailSent: "동의서 사본을 이메일로 보냈어요",
       consentSummary: "캐릭터 이용허락 동의서 v{version} · {date} 동의",
     },
@@ -236,6 +237,9 @@ const ko = {
       cancel: "돌아가기",
       confirm: "탈퇴하기",
       confirmPending: "탈퇴 처리 중",
+      keepSummary: "남겨서 운영 심사를 거칠 캐릭터",
+      deleteSummary: "탈퇴와 함께 지워질 캐릭터",
+      countUnit: "{count}개",
     },
   },
   field: {

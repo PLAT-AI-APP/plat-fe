@@ -226,6 +226,7 @@ const ja: typeof ko = {
       numberCopied: "引き継ぎ番号をコピーしました",
       copyFailed: "コピーできませんでした",
       inquiryHint: "お問い合わせの際に引き継ぎ番号をお伝えいただくと、残したキャラクターを確認できます。",
+      closeWarning: "写しメールが届かないアカウントのため、閉じると再表示できません。「すべてコピー」で引き継ぎ番号を保存してください。",
       copyMailSent: "同意書の写しをメールで送りました",
       consentSummary: "キャラクター利用許諾同意書 v{version} · {date} 同意",
     },
@@ -237,6 +238,9 @@ const ja: typeof ko = {
       cancel: "戻る",
       confirm: "退会する",
       confirmPending: "退会処理中",
+      keepSummary: "残して運営審査を受けるキャラクター",
+      deleteSummary: "退会とともに削除されるキャラクター",
+      countUnit: "{count}件",
     },
   },
   field: {

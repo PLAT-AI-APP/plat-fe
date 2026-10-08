@@ -7,6 +7,7 @@ import EmptyMascot from "@/components/state/EmptyMascot";
 import { EASE_OUT } from "@/constants/motion";
 import { Check, Email } from "@/icons";
 import CheckCircle from "@/icons/CheckCircle";
+import StatusWarning from "@/icons/StatusWarning";
 import Copy from "@/icons/Copy";
 import dayjs from "@/lib/dayjs";
 import { toImageVariantUrl } from "@/lib/file";
@@ -123,7 +124,9 @@ const WithdrawalCompleteDialog = ({
 
   return (
     <Dialog
-      onClose={handleConfirm}
+      // 닫히면 바로 로그아웃되어 인수 번호를 다시 볼 수 없다. 남긴 캐릭터가 있으면 바깥 터치 · Esc 로 닫지 않고
+      // "확인" 으로만 닫는다.
+      onClose={hasHandover ? () => {} : handleConfirm}
       label={
         <div className="relative flex w-full flex-col items-center gap-2 text-center">
           {/* 작별 인사. 어두운 창에 묻히지 않게 뒤에 옅은 빛을 깔고, 바닥은 창 배경으로 스며들게 자른다. */}
@@ -263,6 +266,13 @@ const WithdrawalCompleteDialog = ({
               <li className="body-8 break-keep pl-5 text-font-disabled">
                 {t("dialog.withdrawalComplete.inquiryHint")}
               </li>
+              {/* 사본 메일이 없으면 이 창이 유일한 기록이다. */}
+              {!copyMailRequested && (
+                <li className="body-7 mt-1 flex items-start gap-1.5 break-keep rounded-lg bg-warning-bg px-3 py-2 text-font-1">
+                  <StatusWarning size={14} className="mt-px shrink-0 text-warning" aria-hidden="true" />
+                  {t("dialog.withdrawalComplete.closeWarning")}
+                </li>
+              )}
             </m.ul>
           )}
         </div>

@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { ErrorState } from "@/components/state";
 import { EASE_OUT } from "@/constants/motion";
-import { ArrowDown, Trash } from "@/icons";
+import { ArrowDown, Info, Trash } from "@/icons";
 import { cn, formatWithCommas } from "@/lib/utils";
 import type { AppError } from "@/type/api";
 import {
@@ -85,12 +85,20 @@ const CharacterHandoverSection = ({
     <section className="flex w-full flex-col gap-4">
       <header className="flex flex-col gap-1.5">
         <h3 className="title-2 text-font-1">{t("title")}</h3>
-        {candidates.length > 0 && (
-          <p className="body-5 break-keep text-font-2">
-            {canKeep ? t("choiceGuide") : t("keepUnavailable")}
-          </p>
+        {candidates.length > 0 && canKeep && (
+          <p className="body-5 break-keep text-font-2">{t("choiceGuide")}</p>
         )}
       </header>
+
+      {/* 남기기가 왜 꺼져 있는지 먼저 알린다. 이유 없이 버튼만 꺼져 있으면 고장으로 읽힌다. */}
+      {candidates.length > 0 && !canKeep && (
+        <div role="note" className="flex items-start gap-3 rounded-2xl border border-main bg-darkest px-4 py-3.5">
+          <Info size={18} className="mt-px shrink-0 text-font-2" aria-hidden="true" />
+          <p className="body-5 break-keep text-font-1">
+            {preview.keepBlockedReason === "MINOR" ? t("keepBlocked.minor") : t("keepBlocked.unavailable")}
+          </p>
+        </div>
+      )}
 
       {candidates.length > 0 && (
         <HandoverCandidateList

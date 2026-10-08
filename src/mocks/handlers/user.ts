@@ -301,6 +301,7 @@ export const userHandlers = [
   http.get(endpoint("/users/me/withdrawal/preview"), () =>
     HttpResponse.json({
       keepAllowed: true,
+      keepBlockedReason: null,
       ageAttestationRequired: !mockUser.birth,
       consent: {
         documentId: "12",

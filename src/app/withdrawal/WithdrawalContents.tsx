@@ -64,10 +64,9 @@ const WithdrawalContents = () => {
   const consent = preview?.consent ?? null;
   const canKeep = Boolean(preview?.keepAllowed && consent);
   // 남길 수 없게 바뀌었으면 예전에 고른 남기기는 고르지 않은 것으로 본다.
-  const getChoice = (universeId: string): WithdrawalChoice | undefined => {
-    const choice = decisions[universeId];
-    return choice === "KEEP" && !canKeep ? undefined : choice;
-  };
+  // 남길 수 없으면(만 19세 미만 등) 고를 것이 삭제 하나뿐이라 묻지 않고 삭제로 둔다.
+  const getChoice = (universeId: string): WithdrawalChoice | undefined =>
+    canKeep ? decisions[universeId] : "DELETE";
   const isAllDecided = candidates.every((candidate) => getChoice(candidate.universeId));
   const hasKeep = candidates.some((candidate) => getChoice(candidate.universeId) === "KEEP");
   const isConsentAgreed = Boolean(consent) && agreedConsentId === consent?.documentId;
@@ -83,12 +82,25 @@ const WithdrawalContents = () => {
       ...Object.fromEntries(universeIds.map((universeId) => [universeId, choice])),
     }));
   const undecidedCount = candidates.filter((candidate) => !getChoice(candidate.universeId)).length;
+  const keepCount = candidates.filter((candidate) => getChoice(candidate.universeId) === "KEEP").length;
   const handleToggleConsent = () =>
     setAgreedConsentId((prev) =>
       consent && prev !== consent.documentId ? consent.documentId : null,
     );
 
   const nickname = user?.nickname || t("withdrawalPage.defaultMember");
+  const nextStep =
+    !preview || candidates.length === 0
+      ? null
+      : undecidedCount > 0
+        ? t("withdrawalPage.characters.undecidedLeft", { count: undecidedCount })
+        : hasKeep && !isConsentAgreed
+          ? t("withdrawalPage.blockers.consent")
+          : needsAdult && !isAdultAttested
+            ? t("withdrawalPage.blockers.adult")
+            : !isConfirmed
+              ? t("withdrawalPage.blockers.confirm")
+              : null;
   const canSubmit =
     Boolean(preview) && isAllDecided && isKeepReady && isConfirmed && !isPending;
 
@@ -137,6 +149,9 @@ const WithdrawalContents = () => {
   const openConfirmDialog = () => {
     openDialog("WITHDRAWAL_CONFIRM", {
       onConfirm: handleDeleteConfirm,
+      // 마지막으로 무엇이 남고 무엇이 지워지는지 숫자로 보인다.
+      keepCount,
+      deleteCount: candidates.length - keepCount + (preview?.deletions.length ?? 0),
     });
   };
 
@@ -227,11 +242,11 @@ const WithdrawalContents = () => {
           />
         </div>
 
-        {/* 고르지 않은 캐릭터가 남으면 탈퇴 버튼이 왜 꺼져 있는지 알린다. */}
-        {preview && undecidedCount > 0 && (
-          <p role="status" className="body-6 -mb-8 flex items-center justify-center gap-1.5 text-font-2">
-            <span aria-hidden="true" className="size-1.5 rounded-full bg-brand" />
-            {t("withdrawalPage.characters.undecidedLeft", { count: undecidedCount })}
+        {/* 캐릭터를 정해야 하는 탈퇴라면, 탈퇴 버튼이 왜 꺼져 있는지 남은 할 일을 하나씩 알린다. */}
+        {nextStep && (
+          <p role="status" className="body-6 -mb-8 flex items-center justify-center gap-1.5 text-center text-font-2">
+            <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-brand" />
+            {nextStep}
           </p>
         )}
 

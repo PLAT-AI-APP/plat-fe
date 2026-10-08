@@ -230,6 +230,7 @@ const en: typeof ko = {
       numberCopied: "Handover number copied.",
       copyFailed: "Couldn't copy.",
       inquiryHint: "Share your handover number when contacting us so we can find the characters you kept.",
+      closeWarning: "This account has no email copy, so you can't see this again after closing. Use Copy all to save your handover numbers.",
       copyMailSent: "We've emailed you a copy of the consent form.",
       consentSummary: "Agreed to Character License v{version} · {date}",
     },
@@ -241,6 +242,9 @@ const en: typeof ko = {
       cancel: "Go back",
       confirm: "Delete account",
       confirmPending: "Deleting",
+      keepSummary: "Characters kept for review",
+      deleteSummary: "Characters deleted with your account",
+      countUnit: "{count}",
     },
   },
   field: {
