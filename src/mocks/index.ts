@@ -20,12 +20,15 @@ import { rankingHandlers } from "./handlers/ranking";
 import { roomHandlers } from "./handlers/room";
 import { searchHandlers } from "./handlers/search";
 import { earningHandlers } from "./handlers/earning";
+import { verificationHandlers } from "./handlers/verification";
 
 /**
  * 모든 핸들러를 하나의 배열로 통합합니다.
  * 이 배열이 browser.ts와 server.ts에서 사용됩니다.
  */
 export const handlers = [
+  // /users/me/adult-content 가 user 핸들러의 /users/[^/]+ 정규식에 잡히지 않도록 먼저 둔다.
+  ...verificationHandlers,
   ...followHandlers,
   ...authHandlers,
   ...personaHandlers,
