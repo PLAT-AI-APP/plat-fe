@@ -2,18 +2,22 @@
 
 import { AnimatePresence, m, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 import { ErrorState } from "@/components/state";
 import { EASE_OUT } from "@/constants/motion";
-import { Trash } from "@/icons";
-import { formatWithCommas } from "@/lib/utils";
+import { ArrowDown, Trash } from "@/icons";
+import { cn, formatWithCommas } from "@/lib/utils";
 import type { AppError } from "@/type/api";
 import {
   WITHDRAWAL_DELETION_REASONS,
   type WithdrawalChoice,
   type WithdrawalPreview,
 } from "@/type/withdrawal";
-import HandoverCandidateCard from "./HandoverCandidateCard";
+import HandoverCandidateList from "./HandoverCandidateList";
 import HandoverConsentCard from "./HandoverConsentCard";
+
+/** 삭제될 캐릭터가 이보다 많으면 처음엔 접어 둔다. */
+const DELETIONS_OPEN_LIMIT = 5;
 
 interface CharacterHandoverSectionProps {
   preview?: WithdrawalPreview;
@@ -23,6 +27,7 @@ interface CharacterHandoverSectionProps {
   canKeep: boolean;
   getChoice: (universeId: string) => WithdrawalChoice | undefined;
   onChange: (universeId: string, choice: WithdrawalChoice) => void;
+  onChangeMany: (universeIds: string[], choice: WithdrawalChoice) => void;
   hasKeep: boolean;
   isConsentAgreed: boolean;
   onToggleConsent: () => void;
@@ -43,6 +48,7 @@ const CharacterHandoverSection = ({
   canKeep,
   getChoice,
   onChange,
+  onChangeMany,
   hasKeep,
   isConsentAgreed,
   onToggleConsent,
@@ -51,12 +57,13 @@ const CharacterHandoverSection = ({
 }: CharacterHandoverSectionProps) => {
   const t = useTranslations("withdrawalPage.characters");
   const reduceMotion = useReducedMotion();
+  const [isDeletionsOpen, setIsDeletionsOpen] = useState<boolean | null>(null);
 
   if (isPending) {
     return (
       <div aria-hidden="true" className="flex w-full flex-col gap-3">
         <div className="skeleton h-6 w-36 rounded-full" />
-        <div className="skeleton h-52 w-full rounded-3xl" />
+        <div className="skeleton h-64 w-full rounded-3xl" />
       </div>
     );
   }
@@ -71,6 +78,8 @@ const CharacterHandoverSection = ({
   // 모르는 이유가 오면 라벨 없이 제목만 둔다(번역 키가 없어 깨지지 않게).
   const isKnownReason = (reason: string) =>
     (WITHDRAWAL_DELETION_REASONS as readonly string[]).includes(reason);
+  // 사용자가 직접 열고 닫기 전까지는 개수로 정한다.
+  const deletionsOpen = isDeletionsOpen ?? deletions.length <= DELETIONS_OPEN_LIMIT;
 
   return (
     <section className="flex w-full flex-col gap-4">
@@ -78,23 +87,19 @@ const CharacterHandoverSection = ({
         <h3 className="title-2 text-font-1">{t("title")}</h3>
         {candidates.length > 0 && (
           <p className="body-5 break-keep text-font-2">
-            {canKeep ? t("description") : t("keepUnavailable")}
+            {canKeep ? t("choiceGuide") : t("keepUnavailable")}
           </p>
         )}
       </header>
 
       {candidates.length > 0 && (
-        <ul className="flex flex-col gap-3">
-          {candidates.map((candidate) => (
-            <HandoverCandidateCard
-              key={candidate.universeId}
-              candidate={candidate}
-              choice={getChoice(candidate.universeId)}
-              canKeep={canKeep}
-              onChange={onChange}
-            />
-          ))}
-        </ul>
+        <HandoverCandidateList
+          candidates={candidates}
+          canKeep={canKeep}
+          getChoice={getChoice}
+          onChange={onChange}
+          onChangeMany={onChangeMany}
+        />
       )}
 
       <AnimatePresence initial={false}>
@@ -120,31 +125,46 @@ const CharacterHandoverSection = ({
 
       {deletions.length > 0 && (
         <div className="overflow-hidden rounded-3xl border border-main bg-darkest">
-          <div className="flex flex-col gap-1 px-5 pt-4 pb-3">
-            <p className="title-5 flex items-center gap-2 text-font-1">
-              <Trash size={16} className="shrink-0 text-font-2" aria-hidden="true" />
-              {t("deletionsTitle")}
-              <span className="body-8 rounded-full bg-card px-2 py-0.5 text-font-2 tabular-nums">
-                {formatWithCommas(deletions.length)}
+          <button
+            type="button"
+            aria-expanded={deletionsOpen}
+            onClick={() => setIsDeletionsOpen(!deletionsOpen)}
+            className="flex w-full items-center gap-3 px-5 py-4 text-left transition-colors hover:bg-card/40"
+          >
+            <span className="flex min-w-0 flex-1 flex-col gap-1">
+              <span className="title-5 flex items-center gap-2 text-font-1">
+                <Trash size={16} className="shrink-0 text-font-2" aria-hidden="true" />
+                {t("deletionsTitle")}
+                <span className="body-8 rounded-full bg-card px-2 py-0.5 text-font-2 tabular-nums">
+                  {formatWithCommas(deletions.length)}
+                </span>
               </span>
-            </p>
-            <p className="body-7 break-keep text-font-disabled">{t("deletionsCaption")}</p>
-          </div>
-          <ul className="divide-y divide-main border-t border-main px-5">
-            {deletions.map((deletion) => (
-              <li
-                key={deletion.universeId}
-                className="flex items-center justify-between gap-3 py-3"
-              >
-                <span className="body-5 truncate text-font-1">{deletion.title}</span>
-                {isKnownReason(deletion.reason) && (
-                  <span className="body-8 shrink-0 rounded-full border border-main px-2.5 py-1 text-font-2">
-                    {t(`reasons.${deletion.reason}`)}
-                  </span>
-                )}
-              </li>
-            ))}
-          </ul>
+              <span className="body-7 break-keep text-font-disabled">{t("deletionsCaption")}</span>
+            </span>
+            <ArrowDown
+              size={16}
+              aria-hidden="true"
+              className={cn("shrink-0 text-font-2 transition-transform duration-200", deletionsOpen && "rotate-180")}
+            />
+          </button>
+
+          {deletionsOpen && (
+            <ul className="max-h-80 divide-y divide-main overflow-y-auto border-t border-main px-5">
+              {deletions.map((deletion) => (
+                <li
+                  key={deletion.universeId}
+                  className="flex items-center justify-between gap-3 py-3"
+                >
+                  <span className="body-5 truncate text-font-1">{deletion.title}</span>
+                  {isKnownReason(deletion.reason) && (
+                    <span className="body-8 shrink-0 rounded-full border border-main px-2.5 py-1 text-font-2">
+                      {t(`reasons.${deletion.reason}`)}
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       )}
     </section>

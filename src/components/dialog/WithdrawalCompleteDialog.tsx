@@ -45,14 +45,14 @@ const ProgressStep = ({
     <span
       className={cn(
         "relative z-10 flex size-6 items-center justify-center rounded-full",
-        state === "done" && "bg-font-1 text-dark",
-        state === "current" && "border-2 border-font-1 bg-dark",
+        state === "done" && "bg-brand text-on-brand",
+        state === "current" && "border-2 border-brand bg-dark",
         state === "next" && "border-2 border-main bg-dark",
       )}
     >
       {state === "done" && <Check size={13} />}
       {state === "current" && (
-        <span className="size-2 rounded-full bg-font-1" />
+        <span className="size-2 rounded-full bg-brand" />
       )}
     </span>
     <span
@@ -115,7 +115,7 @@ const WithdrawalCompleteDialog = ({
           {/* 작별 인사. 어두운 창에 묻히지 않게 뒤에 옅은 빛을 깔고, 바닥은 창 배경으로 스며들게 자른다. */}
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute top-2 left-1/2 h-20 w-44 -translate-x-1/2 rounded-full bg-font-1/10 blur-2xl"
+            className="pointer-events-none absolute top-2 left-1/2 h-20 w-44 -translate-x-1/2 rounded-full bg-brand/15 blur-2xl"
           />
           <EmptyMascot
             mood="wave"
@@ -136,48 +136,48 @@ const WithdrawalCompleteDialog = ({
             <m.div {...rise(0.15)} className="relative w-full rounded-3xl border border-main bg-darkest">
               {/* 남긴 캐릭터와 인수 번호 */}
               <div className="flex flex-col gap-1 px-4 pt-4 pb-3">
-                <p className="body-7 text-font-2">
+                <p className="body-7 flex items-center justify-between gap-2 text-font-2">
                   {t("dialog.withdrawalComplete.handoverTitle")}
+                  {/* 이 번호들이 무엇인지 머리에서 알린다. 여럿이면 몇 개인지도 같이. */}
+                  <span className="body-8 text-font-disabled">
+                    {t("dialog.withdrawalComplete.handoverNumberLabel")}
+                    {handovers.length > 1 && ` · ${handovers.length}`}
+                  </span>
                 </p>
-                <ul className="flex max-h-56 flex-col gap-4 overflow-y-auto pt-1">
+                <ul className="flex max-h-60 flex-col gap-3 overflow-y-auto pt-1 pr-1">
                   {handovers.map((handover) => (
-                    <li key={handover.handoverId} className="flex flex-col gap-2.5">
-                      <div className="flex items-center gap-3">
-                        {handover.profileImageUrl ? (
-                          <ResourceImage
-                            src={toImageVariantUrl(handover.profileImageUrl, "sq80")}
-                            alt=""
-                            width={44}
-                            height={44}
-                            unoptimized
-                            className="size-11 shrink-0 rounded-xl object-cover ring-1 ring-main"
-                          />
-                        ) : (
-                          <span aria-hidden="true" className="size-11 shrink-0 rounded-xl bg-card" />
-                        )}
-                        <span className="title-4 min-w-0 truncate text-font-1">{handover.title}</span>
-                      </div>
-
-                      {/* 인수 번호. 문의할 때 본인 확인에 쓰여서 잘리지 않게 한 줄을 통째로 준다. */}
-                      <div className="flex items-center justify-between gap-2 rounded-xl bg-dark py-2 pr-2 pl-3">
-                        <div className="flex min-w-0 flex-col">
-                          <span className="body-8 text-font-disabled">
-                            {t("dialog.withdrawalComplete.handoverNumberLabel")}
+                    <li key={handover.handoverId} className="flex items-center gap-3">
+                      {handover.profileImageUrl ? (
+                        <ResourceImage
+                          src={toImageVariantUrl(handover.profileImageUrl, "sq80")}
+                          alt=""
+                          width={40}
+                          height={40}
+                          unoptimized
+                          className="size-10 shrink-0 rounded-xl object-cover ring-1 ring-main"
+                        />
+                      ) : (
+                        <span aria-hidden="true" className="size-10 shrink-0 rounded-xl bg-card" />
+                      )}
+                      <div className="flex min-w-0 flex-1 flex-col">
+                        <span className="title-5 truncate text-font-1">{handover.title}</span>
+                        {/* 인수 번호. 문의할 때 본인 확인에 쓰여서 줄이지 않는다. */}
+                        <span className="body-8 whitespace-nowrap font-mono text-font-2 tabular-nums">
+                          <span className="sr-only">
+                            {t("dialog.withdrawalComplete.handoverNumberLabel")}{" "}
                           </span>
-                          <span className="title-6 whitespace-nowrap font-mono text-font-1 tabular-nums">
-                            {groupDigits(handover.handoverId)}
-                          </span>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => void handleCopy(handover.handoverId)}
-                          aria-label={t("dialog.withdrawalComplete.copyNumber")}
-                          title={t("dialog.withdrawalComplete.copyNumber")}
-                          className="flex size-9 shrink-0 items-center justify-center rounded-lg text-font-2 transition-colors hover:bg-btn-hover hover:text-font-1"
-                        >
-                          <Copy size={16} aria-hidden="true" />
-                        </button>
+                          {groupDigits(handover.handoverId)}
+                        </span>
                       </div>
+                      <button
+                        type="button"
+                        onClick={() => void handleCopy(handover.handoverId)}
+                        aria-label={t("dialog.withdrawalComplete.copyNumber")}
+                        title={t("dialog.withdrawalComplete.copyNumber")}
+                        className="flex size-8 shrink-0 items-center justify-center rounded-lg text-font-2 transition-colors hover:bg-btn-hover hover:text-font-1"
+                      >
+                        <Copy size={15} aria-hidden="true" />
+                      </button>
                     </li>
                   ))}
                 </ul>
@@ -195,7 +195,7 @@ const WithdrawalCompleteDialog = ({
                 <ol className="relative grid grid-cols-3">
                   <span
                     aria-hidden="true"
-                    className="absolute top-3 right-[16.66%] left-[16.66%] h-0.5 bg-linear-to-r from-font-1 via-font-2 to-main"
+                    className="absolute top-3 right-[16.66%] left-[16.66%] h-0.5 bg-linear-to-r from-brand via-brand/50 to-main"
                   />
                   <ProgressStep
                     state="done"

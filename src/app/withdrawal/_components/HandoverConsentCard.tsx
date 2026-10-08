@@ -70,7 +70,7 @@ const HandoverConsentCard = ({
     >
       <div className="relative flex flex-col gap-5 p-5 sm:p-6">
         <header className="flex items-start gap-3.5">
-          <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-card text-font-1">
+          <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-brand-opacity text-brand">
             <BookOpen size={22} aria-hidden="true" />
           </span>
           <div className="flex min-w-0 flex-col gap-1">

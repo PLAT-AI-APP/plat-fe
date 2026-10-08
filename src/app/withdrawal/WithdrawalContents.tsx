@@ -76,6 +76,13 @@ const WithdrawalContents = () => {
 
   const handleChoiceChange = (universeId: string, choice: WithdrawalChoice) =>
     setDecisions((prev) => ({ ...prev, [universeId]: choice }));
+  // 일괄 선택. 사용자가 직접 누른 선택이라 "미리 고른 것"과 다르다.
+  const handleChoiceChangeMany = (universeIds: string[], choice: WithdrawalChoice) =>
+    setDecisions((prev) => ({
+      ...prev,
+      ...Object.fromEntries(universeIds.map((universeId) => [universeId, choice])),
+    }));
+  const undecidedCount = candidates.filter((candidate) => !getChoice(candidate.universeId)).length;
   const handleToggleConsent = () =>
     setAgreedConsentId((prev) =>
       consent && prev !== consent.documentId ? consent.documentId : null,
@@ -205,6 +212,7 @@ const WithdrawalContents = () => {
             canKeep={canKeep}
             getChoice={getChoice}
             onChange={handleChoiceChange}
+            onChangeMany={handleChoiceChangeMany}
             hasKeep={hasKeep}
             isConsentAgreed={isConsentAgreed}
             onToggleConsent={handleToggleConsent}
@@ -218,6 +226,14 @@ const WithdrawalContents = () => {
             label={t("withdrawalPage.agreement")}
           />
         </div>
+
+        {/* 고르지 않은 캐릭터가 남으면 탈퇴 버튼이 왜 꺼져 있는지 알린다. */}
+        {preview && undecidedCount > 0 && (
+          <p role="status" className="body-6 -mb-8 flex items-center justify-center gap-1.5 text-font-2">
+            <span aria-hidden="true" className="size-1.5 rounded-full bg-brand" />
+            {t("withdrawalPage.characters.undecidedLeft", { count: undecidedCount })}
+          </p>
+        )}
 
         <div className="flex w-full gap-4">
           <button
