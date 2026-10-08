@@ -45,17 +45,14 @@ const ProgressStep = ({
     <span
       className={cn(
         "relative z-10 flex size-6 items-center justify-center rounded-full",
-        state === "done" && "bg-brand text-on-brand",
-        state === "current" && "border-2 border-brand bg-dark",
+        state === "done" && "bg-font-1 text-dark",
+        state === "current" && "border-2 border-font-1 bg-dark",
         state === "next" && "border-2 border-main bg-dark",
       )}
     >
       {state === "done" && <Check size={13} />}
       {state === "current" && (
-        <span className="relative flex size-2">
-          <span className="absolute inline-flex size-full animate-ping rounded-full bg-brand opacity-70" />
-          <span className="relative inline-flex size-2 rounded-full bg-brand" />
-        </span>
+        <span className="size-2 rounded-full bg-font-1" />
       )}
     </span>
     <span
@@ -115,10 +112,10 @@ const WithdrawalCompleteDialog = ({
       onClose={handleConfirm}
       label={
         <div className="relative flex w-full flex-col items-center gap-2 text-center">
-          {/* 작별 인사. 어두운 창에 묻히지 않게 뒤에 브랜드 빛을 깔고, 바닥은 창 배경으로 스며들게 자른다. */}
+          {/* 작별 인사. 어두운 창에 묻히지 않게 뒤에 옅은 빛을 깔고, 바닥은 창 배경으로 스며들게 자른다. */}
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute top-2 left-1/2 h-20 w-44 -translate-x-1/2 rounded-full bg-brand/40 blur-2xl"
+            className="pointer-events-none absolute top-2 left-1/2 h-20 w-44 -translate-x-1/2 rounded-full bg-font-1/10 blur-2xl"
           />
           <EmptyMascot
             mood="wave"
@@ -198,7 +195,7 @@ const WithdrawalCompleteDialog = ({
                 <ol className="relative grid grid-cols-3">
                   <span
                     aria-hidden="true"
-                    className="absolute top-3 right-[16.66%] left-[16.66%] h-0.5 bg-linear-to-r from-brand via-brand/60 to-main"
+                    className="absolute top-3 right-[16.66%] left-[16.66%] h-0.5 bg-linear-to-r from-font-1 via-font-2 to-main"
                   />
                   <ProgressStep
                     state="done"
@@ -229,7 +226,7 @@ const WithdrawalCompleteDialog = ({
             <m.ul {...rise(0.3)} className="body-7 flex flex-col gap-1.5 text-font-2">
               {consent && (
                 <li className="flex items-start gap-1.5 break-keep">
-                  <CheckCircle size={14} className="mt-px shrink-0 text-brand" aria-hidden="true" />
+                  <CheckCircle size={14} className="mt-px shrink-0" aria-hidden="true" />
                   {t("dialog.withdrawalComplete.consentSummary", {
                     version: consent.version,
                     date: dayjs(consent.consentedAt).format("YYYY.MM.DD HH:mm"),

@@ -28,7 +28,7 @@ const MarkdownDocument = dynamic(
   },
 );
 
-/** 동의서 요약. 약관 명시·설명의무 대상이라 굵게 보인다. 되돌릴 수 없음은 경고 칸으로 따로 칠한다. */
+/** 동의서 요약. 약관 명시·설명의무 대상이라 굵게 보인다. 되돌릴 수 없음은 경고 아이콘으로만 구분한다. */
 const SUMMARY_ITEMS: {
   key: "copyright" | "anonymous" | "review" | "irreversible";
   icon: ComponentType<IconProps>;
@@ -68,15 +68,9 @@ const HandoverConsentCard = ({
       aria-labelledby="handover-consent-title"
       className="relative overflow-hidden rounded-3xl border border-main bg-darkest"
     >
-      {/* 머리 쪽에만 브랜드 빛을 은은하게 깐다. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-linear-to-b from-brand-opacity-2 via-brand-opacity-3 to-transparent"
-      />
-
       <div className="relative flex flex-col gap-5 p-5 sm:p-6">
         <header className="flex items-start gap-3.5">
-          <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-brand text-on-brand shadow-[0_8px_24px_-8px_var(--color-brand)]">
+          <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-card text-font-1">
             <BookOpen size={22} aria-hidden="true" />
           </span>
           <div className="flex min-w-0 flex-col gap-1">
@@ -97,15 +91,12 @@ const HandoverConsentCard = ({
             return (
               <li
                 key={key}
-                className={cn(
-                  "flex items-start gap-3 rounded-2xl p-3.5",
-                  isWarning ? "bg-warning-bg" : "bg-card",
-                )}
+                className="flex items-start gap-3 rounded-2xl bg-card p-3.5"
               >
                 <span
                   className={cn(
                     "flex size-8 shrink-0 items-center justify-center rounded-xl",
-                    isWarning ? "bg-warning/15 text-warning" : "bg-dark text-font-1",
+                    isWarning ? "bg-dark text-warning" : "bg-dark text-font-1",
                   )}
                 >
                   <Icon size={16} aria-hidden="true" />
@@ -113,7 +104,7 @@ const HandoverConsentCard = ({
                 <span
                   className={cn(
                     "title-6 break-keep pt-1.5 leading-snug",
-                    isWarning ? "text-warning" : "text-font-1",
+                    "text-font-1",
                   )}
                 >
                   {t(`summary.${key}`)}

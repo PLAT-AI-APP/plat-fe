@@ -175,11 +175,11 @@ const WithdrawalContents = () => {
                 </ul>
               </div>
 
-              {/* 사라질 잔액은 숫자로, 경고색 칸에 따로 보인다. */}
+              {/* 사라질 잔액은 숫자로 따로 보인다. 경고색은 아이콘에만 쓴다. */}
               {hasRemaining && (
                 <p
                   role="note"
-                  className="body-5 flex items-start gap-3 rounded-2xl bg-warning-bg px-4 py-3.5 text-font-1"
+                  className="body-5 flex items-start gap-3 rounded-2xl border border-main bg-darkest px-4 py-3.5 text-font-1"
                 >
                   <Coin size={18} className="mt-px shrink-0 text-warning" aria-hidden="true" />
                   <span className="break-keep">

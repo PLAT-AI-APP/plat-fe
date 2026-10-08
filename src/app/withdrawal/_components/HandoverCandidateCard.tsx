@@ -3,14 +3,13 @@
 import { useTranslations } from "next-intl";
 import type { ComponentType } from "react";
 import ResourceImage from "@/components/ResourceImage";
-import { Check, ChatFill, Trash } from "@/icons";
+import { Chat, Check, ChatFill, Trash } from "@/icons";
 import type { IconProps } from "@/icons";
 import { toImageVariantUrl } from "@/lib/file";
 import { cn, formatWithCommas } from "@/lib/utils";
 import type { WithdrawalCandidate, WithdrawalChoice } from "@/type/withdrawal";
 
 interface ChoiceTileProps {
-  value: WithdrawalChoice;
   icon: ComponentType<IconProps>;
   title: string;
   caption: string;
@@ -21,7 +20,6 @@ interface ChoiceTileProps {
 
 /** 남기기·삭제 한 칸. 아이콘·제목·결과 한 줄로, 고르기 전에 무엇이 일어나는지 보이게 한다. */
 const ChoiceTile = ({
-  value,
   icon: Icon,
   title,
   caption,
@@ -29,8 +27,6 @@ const ChoiceTile = ({
   disabled,
   onSelect,
 }: ChoiceTileProps) => {
-  const isKeep = value === "KEEP";
-
   return (
     <button
       type="button"
@@ -41,11 +37,10 @@ const ChoiceTile = ({
       onClick={onSelect}
       className={cn(
         "group flex items-center gap-3 rounded-2xl border p-3.5 text-left transition-all duration-200",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-font-2",
+        // 선택은 무채색으로 또렷하게만 보인다. 탈퇴 화면에서 브랜드색은 주요 버튼에만 쓴다.
         isSelected
-          ? isKeep
-            ? "border-brand bg-linear-to-br from-brand-opacity-2 to-brand-opacity-3 shadow-[0_10px_30px_-14px_var(--color-brand)]"
-            : "border-font-2/50 bg-card"
+          ? "border-font-2 bg-card"
           : "border-main bg-dark enabled:hover:border-font-disabled enabled:hover:bg-card",
         disabled && "cursor-not-allowed opacity-40",
       )}
@@ -54,9 +49,7 @@ const ChoiceTile = ({
         className={cn(
           "flex size-10 shrink-0 items-center justify-center rounded-xl transition-colors",
           isSelected
-            ? isKeep
-              ? "bg-brand text-on-brand"
-              : "bg-btn-selected text-font-1"
+            ? "bg-btn-selected text-font-1"
             : "bg-card text-font-2 group-enabled:group-hover:text-font-1",
         )}
       >
@@ -73,11 +66,7 @@ const ChoiceTile = ({
         aria-hidden="true"
         className={cn(
           "flex size-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors",
-          isSelected
-            ? isKeep
-              ? "border-brand bg-brand text-on-brand"
-              : "border-font-1 bg-font-1 text-dark"
-            : "border-font-disabled",
+          isSelected ? "border-font-1 bg-font-1 text-dark" : "border-font-disabled",
         )}
       >
         {isSelected && <Check size={12} />}
@@ -109,7 +98,7 @@ const HandoverCandidateCard = ({
     <li
       className={cn(
         "flex flex-col gap-4 rounded-3xl border bg-darkest p-4 transition-colors duration-200 sm:p-5",
-        choice === "KEEP" ? "border-brand/60" : "border-main",
+        choice ? "border-font-disabled" : "border-main",
       )}
     >
       <div className="flex items-center gap-4">
@@ -128,12 +117,9 @@ const HandoverCandidateCard = ({
 
         <div className="flex min-w-0 flex-col gap-1.5">
           <p className="title-3 truncate text-font-1">{candidate.title}</p>
-          <p className="body-6 flex items-center gap-2 text-brand">
+          <p className="body-6 flex items-center gap-1.5 text-font-2">
             {/* 지금도 이어지는 대화. 남길지 정하는 이유가 여기 있다. */}
-            <span aria-hidden="true" className="relative flex size-2 shrink-0">
-              <span className="absolute inline-flex size-full animate-ping rounded-full bg-brand opacity-60" />
-              <span className="relative inline-flex size-2 rounded-full bg-brand" />
-            </span>
+            <Chat size={14} className="shrink-0" aria-hidden="true" />
             {t("talking", { count: formatWithCommas(candidate.otherRoomCount) })}
           </p>
         </div>
@@ -141,7 +127,6 @@ const HandoverCandidateCard = ({
 
       <div role="radiogroup" aria-label={candidate.title} className="grid grid-cols-1 gap-2 sm:grid-cols-2">
         <ChoiceTile
-          value="KEEP"
           icon={ChatFill}
           title={t("keep")}
           caption={canKeep ? t("keepCaption") : t("keepUnavailableShort")}
@@ -150,7 +135,6 @@ const HandoverCandidateCard = ({
           onSelect={() => onChange(candidate.universeId, "KEEP")}
         />
         <ChoiceTile
-          value="DELETE"
           icon={Trash}
           title={t("delete")}
           caption={t("deleteCaption")}

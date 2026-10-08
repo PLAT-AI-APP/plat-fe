@@ -31,7 +31,7 @@ const CheckboxRow = ({
         ? cn(
             "body-5 w-full rounded-2xl border px-4 py-3.5",
             checked
-              ? "border-brand/70 bg-brand-opacity text-font-1"
+              ? "border-font-disabled bg-card text-font-1"
               : "border-main bg-dark text-font-2 hover:bg-card hover:text-font-1",
           )
         : cn("body-5 hover:text-font-1", checked ? "text-font-1" : "text-font-2"),
