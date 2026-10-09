@@ -48,7 +48,7 @@ const AdultToggle = ({ className }: { className?: string }) => {
     return (
       <div
         aria-hidden="true"
-        className={cn("skeleton h-7 w-14 rounded-full", className)}
+        className={cn("skeleton h-7 w-[52px] rounded-full", className)}
       />
     );
   }
@@ -82,28 +82,20 @@ const AdultToggle = ({ className }: { className?: string }) => {
   };
 
   return (
-    <div
-      className={cn(
-        "flex h-10 shrink-0 items-center gap-1.5 rounded-xl px-1.5",
-        className,
-      )}
-    >
-      <span
-        aria-hidden="true"
-        className={cn(
-          "title-7 flex size-5 items-center justify-center rounded-full border text-[10px] leading-none",
-          enabled ? "border-danger text-danger" : "border-font-disabled text-font-2",
-        )}
-      >
-        {t("label")}
-      </span>
+    <div className={cn("flex h-10 shrink-0 items-center px-1", className)}>
       <Switch
-        size="sm"
+        size="label"
+        tone="danger"
         checked={enabled}
         label={t("ariaLabel")}
         onChange={handleChange}
         themeIcon={false}
         disabled={isPending}
+        thumbContent={
+          <span aria-hidden="true" className="text-[11px] font-extrabold leading-none tracking-[-0.04em]">
+            {t("label")}
+          </span>
+        }
       />
     </div>
   );
