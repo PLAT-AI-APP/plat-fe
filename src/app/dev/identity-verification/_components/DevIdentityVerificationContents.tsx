@@ -12,8 +12,11 @@ import {
   type CompleteDevIdentityVerificationRequest,
   type IdentityVerificationMessage,
 } from "@/api/verification/types";
+import AdultEmblem from "@/components/adult/AdultEmblem";
 import Button from "@/components/ui/Button";
 import StatusWarning from "@/icons/StatusWarning";
+import dayjs from "@/lib/dayjs";
+import { cn } from "@/lib/utils";
 import { resolveErrorMessage } from "@/lib/apiError";
 import { toSafeReturnPath } from "@/lib/safePath";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -23,7 +26,26 @@ type Gender = CompleteDevIdentityVerificationRequest["gender"];
 const BIRTH_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
 const fieldClassName =
-  "body-5 h-11 w-full rounded-xl border border-main bg-darkest px-4 text-font-1 outline-none focus:field-focus!";
+  "body-5 h-12 w-full rounded-xl border border-main bg-darkest px-4 text-font-1 outline-none transition-colors focus:field-focus!";
+
+/** 시험용 생년월일. 오늘(한국 날짜) 기준으로 만든다 — 생일 당일·하루 전 같은 경계를 손으로 계산하지 않게. */
+const presetBirth = (years: number, dayOffset = 0) => {
+  const kst = new Date(Date.now() + 9 * 60 * 60 * 1000);
+  const today = dayjs(kst.toISOString().slice(0, 10));
+  return today.subtract(years, "year").add(dayOffset, "day").format("YYYY-MM-DD");
+};
+
+const PRESETS = [
+  { key: "presetAdult", birth: () => presetBirth(25) },
+  { key: "presetBirthday", birth: () => presetBirth(19) },
+  { key: "presetMinor", birth: () => presetBirth(19, 1) },
+] as const;
+
+const GENDERS: { value: Gender; key: "genderNone" | "male" | "female" }[] = [
+  { value: null, key: "genderNone" },
+  { value: "MALE", key: "male" },
+  { value: "FEMALE", key: "female" },
+];
 
 /**
  * 개발용 가짜 본인인증. 서버의 dev 전용 API 로 인증 건을 "끝낸" 상태로 만든다.
@@ -46,7 +68,7 @@ const DevIdentityVerificationContents = () => {
   const [birth, setBirth] = useState("2000-01-01");
   const [gender, setGender] = useState<Gender>(null);
   const [inputError, setInputError] = useState<string | null>(null);
-  const [doneMessage, setDoneMessage] = useState<string | null>(null);
+  const [done, setDone] = useState<{ title: string; adult: boolean | null } | null>(null);
 
   const completeMutation = useCompleteDevIdentityVerificationMutation();
   const confirmMutation = useConfirmIdentityVerificationMutation();
@@ -79,16 +101,17 @@ const DevIdentityVerificationContents = () => {
       {
         onSuccess: () => {
           if (!isRedirectMode && notifyOpener()) {
-            setDoneMessage(t("popupDone"));
+            setDone({ title: t("popupDone"), adult: null });
             window.close();
             return;
           }
 
           confirmMutation.mutate(verificationId, {
             onSuccess: (result) =>
-              setDoneMessage(
-                result.adult ? modalT("adultDoneTitle") : modalT("identityOnlyTitle"),
-              ),
+              setDone({
+                title: result.adult ? modalT("adultDoneTitle") : modalT("identityOnlyTitle"),
+                adult: result.adult,
+              }),
           });
         },
       },
@@ -100,19 +123,18 @@ const DevIdentityVerificationContents = () => {
       return <p className="body-4 text-font-error">{t("missingId")}</p>;
     }
     if (!isAuthReady) {
-      return <div className="skeleton h-60 w-full rounded-xl" aria-hidden="true" />;
+      return <div className="skeleton h-80 w-full rounded-2xl" aria-hidden="true" />;
     }
     if (!isLoggedIn) {
       return <p className="body-4 text-font-error">{t("loginRequired")}</p>;
     }
-    if (doneMessage) {
+    if (done) {
       return (
-        <div className="flex flex-col gap-4">
-          <p className="body-4 text-font-1" role="status">
-            {doneMessage}
-          </p>
+        <div className="flex flex-col items-center gap-2 py-4 text-center" role="status">
+          <AdultEmblem size="md" badge={done.adult === false ? "warn" : "done"} />
+          <p className="title-2 mt-2 text-font-0">{done.title}</p>
           {(isRedirectMode || !window.opener) && (
-            <Button size="lg" fullWidth onClick={() => router.replace(returnTo)}>
+            <Button size="lg" fullWidth className="mt-6" onClick={() => router.replace(returnTo)}>
               {t("backToApp")}
             </Button>
           )}
@@ -121,7 +143,7 @@ const DevIdentityVerificationContents = () => {
     }
 
     return (
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
         <label className="flex flex-col gap-2">
           <span className="title-5 text-font-1">{t("name")}</span>
           <input
@@ -129,34 +151,64 @@ const DevIdentityVerificationContents = () => {
             onChange={(event) => setName(event.target.value)}
             placeholder={t("namePlaceholder")}
             maxLength={30}
+            autoComplete="off"
             className={fieldClassName}
           />
         </label>
 
-        <label className="flex flex-col gap-2">
-          <span className="title-5 text-font-1">{t("birth")}</span>
+        <div className="flex flex-col gap-2">
+          <label htmlFor="dev-birth" className="title-5 text-font-1">
+            {t("birth")}
+          </label>
           <input
+            id="dev-birth"
             type="date"
             value={birth}
             onChange={(event) => setBirth(event.target.value)}
             className={fieldClassName}
           />
-        </label>
+          <div className="flex flex-wrap gap-1.5" aria-label={t("presets")}>
+            {PRESETS.map((preset) => {
+              const value = preset.birth();
+              return (
+                <button
+                  key={preset.key}
+                  type="button"
+                  onClick={() => setBirth(value)}
+                  className={cn(
+                    "rounded-full border px-3 py-1.5 text-[12px] font-semibold transition-colors",
+                    birth === value
+                      ? "border-brand bg-brand-opacity text-brand"
+                      : "border-main text-font-2 hover:text-font-1",
+                  )}
+                >
+                  {t(preset.key)}
+                </button>
+              );
+            })}
+          </div>
+        </div>
 
-        <label className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2">
           <span className="title-5 text-font-1">{t("gender")}</span>
-          <select
-            value={gender ?? ""}
-            onChange={(event) =>
-              setGender((event.target.value || null) as Gender)
-            }
-            className={fieldClassName}
-          >
-            <option value="">{t("genderNone")}</option>
-            <option value="MALE">{t("male")}</option>
-            <option value="FEMALE">{t("female")}</option>
-          </select>
-        </label>
+          <div role="radiogroup" aria-label={t("gender")} className="grid grid-cols-3 gap-1 rounded-xl bg-darkest p-1">
+            {GENDERS.map((option) => (
+              <button
+                key={option.key}
+                type="button"
+                role="radio"
+                aria-checked={gender === option.value}
+                onClick={() => setGender(option.value)}
+                className={cn(
+                  "body-5 h-10 rounded-lg font-semibold transition-colors",
+                  gender === option.value ? "bg-card text-font-0 shadow-sm" : "text-font-2 hover:text-font-1",
+                )}
+              >
+                {t(option.key)}
+              </button>
+            ))}
+          </div>
+        </div>
 
         {(inputError || apiError) && (
           <p className="body-6 text-font-error" role="alert">
@@ -168,6 +220,7 @@ const DevIdentityVerificationContents = () => {
           type="submit"
           size="lg"
           fullWidth
+          className="mt-1"
           disabled={isPending}
           isPending={isPending}
         >
@@ -178,17 +231,30 @@ const DevIdentityVerificationContents = () => {
   };
 
   return (
-    <section className="flex w-full justify-center px-5 py-8">
-      <div className="flex w-full max-w-100 flex-col gap-6">
-        <p
-          role="note"
-          className="body-6 flex items-start gap-2 rounded-xl border border-danger bg-danger-bg px-4 py-3 text-danger"
-        >
-          <StatusWarning className="mt-0.5 size-4 shrink-0" />
-          {t("banner")}
-        </p>
-        <h1 className="heading-2 text-font-1">{t("title")}</h1>
-        {renderBody()}
+    <section className="flex w-full justify-center px-5 py-8 sm:py-14">
+      <div className="w-full max-w-110 overflow-hidden rounded-3xl border border-main bg-dark shadow-[0_24px_60px_rgba(0,0,0,0.35)]">
+        {/* 인증 창 머리 — 통신사 본인확인 창처럼 "지금 어디서 무엇을 하는지" 를 먼저 보여 준다 */}
+        <header className="flex items-center gap-3 border-b border-main bg-darkest px-5 py-4">
+          <AdultEmblem size="sm" />
+          <div className="flex min-w-0 flex-col">
+            <span className="title-4 text-font-0">{t("windowTitle")}</span>
+            <span className="body-7 text-font-2">{t("subtitle")}</span>
+          </div>
+          <span className="ml-auto rounded-md bg-danger px-2 py-0.5 text-[10px] font-bold tracking-wider text-white">
+            DEV
+          </span>
+        </header>
+
+        <div className="flex flex-col gap-5 px-5 py-6">
+          <p
+            role="note"
+            className="body-7 flex items-start gap-2 rounded-xl bg-danger-bg px-3.5 py-2.5 text-danger"
+          >
+            <StatusWarning className="mt-px size-3.5 shrink-0" />
+            {t("banner")}
+          </p>
+          {renderBody()}
+        </div>
       </div>
     </section>
   );

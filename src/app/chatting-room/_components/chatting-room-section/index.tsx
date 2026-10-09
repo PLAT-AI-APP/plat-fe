@@ -235,6 +235,8 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
             <AdultGate
               title={t("adultVerification.room.lockedRoomTitle")}
               description={t("adultVerification.room.lockedRoomDescription")}
+              backHref="/my-chatting"
+              backLabel={t("adultVerification.room.backToList")}
             />
           </div>
           <div className="shrink-0 bg-dark px-4 py-4">

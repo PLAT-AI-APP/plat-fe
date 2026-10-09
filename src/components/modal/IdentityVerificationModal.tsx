@@ -1,17 +1,21 @@
 "use client";
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { AnimatePresence, m, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { ModalLayout } from "@/components/ModalLayout";
+import AdultEmblem from "@/components/adult/AdultEmblem";
 import Button from "@/components/ui/Button";
 import IconButton from "@/components/ui/IconButton";
-import { Close } from "@/icons";
+import Switch from "@/components/ui/Switch";
+import { ConfettiBurst } from "@/app/payments/[provider]/[result]/_components/PaymentSuccess";
+import { Clock, Close, LockLine } from "@/icons";
 import StatusSuccess from "@/icons/StatusSuccess";
-import StatusWarning from "@/icons/StatusWarning";
 import {
   useConfirmIdentityVerificationMutation,
   useStartIdentityVerificationMutation,
 } from "@/api/verification/identityVerification";
+import { useAdultContentMutation } from "@/api/verification/patchAdultContent";
 import {
   IDENTITY_VERIFICATION_INCOMPLETE,
   IDENTITY_VERIFICATION_NOT_FOUND,
@@ -22,11 +26,15 @@ import {
   DEV_IDENTITY_VERIFICATION_PATH,
   IDENTITY_VERIFICATION_WINDOW_NAME,
 } from "@/constants/identityVerification";
+import { EASE_OUT } from "@/constants/motion";
 import dayjs from "@/lib/dayjs";
 import {
   PortOneIdentityNotReadyError,
   requestPortOneIdentityVerification,
 } from "@/lib/portOneIdentity";
+import { showAppToast } from "@/lib/toast";
+import { cn } from "@/lib/utils";
+import { useUserStore } from "@/store/useUserStore";
 import { IdentityVerificationModalProps } from "@/type/modal";
 
 type Step =
@@ -38,23 +46,141 @@ type Step =
 
 const POPUP_FEATURES = "popup=yes,width=480,height=760";
 
+/** 통합인증(KG이니시스)이 여는 간편인증 수단. 화면에 이름만 보여 준다. */
+const METHODS = ["PASS", "kakao", "naver", "toss", "bank"] as const;
+
 const formatDate = (value: string | null | undefined) =>
   value ? dayjs(value).format("YYYY.MM.DD") : "";
+
+/** 단계 표시줄의 위치. 기다림·확인은 둘 다 "인증" 단계다. */
+const stepIndex = (step: Step) => {
+  if (step.kind === "intro") return 0;
+  if (step.kind === "result") return 2;
+  return 1;
+};
+
+const Stepper = ({ step }: { step: Step }) => {
+  const t = useTranslations("adultVerification.modal.steps");
+  const current = stepIndex(step);
+  const labels = [t("intro"), t("verify"), t("done")];
+
+  return (
+    <ol className="flex items-center gap-2" aria-label={t("ariaLabel")}>
+      {labels.map((label, index) => {
+        const reached = index <= current;
+        return (
+          <li key={label} className="flex items-center gap-2">
+            <span
+              aria-current={index === current ? "step" : undefined}
+              className={cn(
+                "flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold transition-colors duration-slow",
+                index === current
+                  ? "bg-brand-opacity-2 text-brand"
+                  : reached
+                    ? "text-font-1"
+                    : "text-font-disabled",
+              )}
+            >
+              <span
+                className={cn(
+                  "flex size-4 items-center justify-center rounded-full text-[10px] leading-none",
+                  reached ? "bg-brand text-on-brand" : "bg-card text-font-disabled",
+                )}
+              >
+                {index + 1}
+              </span>
+              {label}
+            </span>
+            {index < labels.length - 1 && (
+              <span
+                aria-hidden
+                className={cn(
+                  "h-px w-4 transition-colors duration-slow",
+                  index < current ? "bg-brand" : "bg-main",
+                )}
+              />
+            )}
+          </li>
+        );
+      })}
+    </ol>
+  );
+};
+
+/** 제목 뒤에서 차례로 튀는 점 세 개(노트 결제 대기와 같은 신호) */
+const BouncingDots = () => (
+  <span aria-hidden className="ml-1 inline-flex gap-1 align-middle">
+    {[0, 1, 2].map((index) => (
+      <m.span
+        key={index}
+        className="size-1.5 rounded-full bg-brand"
+        animate={{ y: [0, -5, 0], opacity: [0.4, 1, 0.4] }}
+        transition={{ duration: 0.9, repeat: Infinity, delay: index * 0.15, ease: "easeInOut" }}
+      />
+    ))}
+  </span>
+);
+
+const ProgressBar = () => {
+  const reduceMotion = useReducedMotion() ?? false;
+  return (
+    <div aria-hidden className="relative h-1 w-40 overflow-hidden rounded-full bg-card">
+      <m.span
+        className="absolute inset-y-0 left-0 w-1/3 rounded-full bg-gradient-to-r from-transparent via-brand to-transparent"
+        animate={reduceMotion ? { x: "100%" } : { x: ["-100%", "300%"] }}
+        transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+      />
+    </div>
+  );
+};
+
+/** 결과 화면의 "언제까지 유효한가" 한 줄 */
+const ValidityRow = ({
+  label,
+  value,
+  active,
+}: {
+  label: string;
+  value: string;
+  active: boolean;
+}) => (
+  <div className="flex items-center justify-between gap-3 py-2.5">
+    <span className="flex items-center gap-2 body-5 text-font-2">
+      <span
+        className={cn(
+          "flex size-5 items-center justify-center rounded-full",
+          active ? "bg-brand text-on-brand" : "bg-card text-font-disabled",
+        )}
+      >
+        <StatusSuccess className="size-3" />
+      </span>
+      {label}
+    </span>
+    <span className={cn("body-5 font-semibold", active ? "text-font-1" : "text-font-disabled")}>
+      {value}
+    </span>
+  </div>
+);
 
 /**
  * 본인인증 모달. 본인인증 한 번으로 생년월일이 만 19세 이상이면 성인인증까지 기록된다(둘 다 1년).
  *
- * 흐름: 안내 → 인증 건 열기 → 인증 창(MOCK: dev 가짜 인증 팝업, PORTONE: 포트원 SDK) → 창이 끝났다고 알리면
- * 확정 → 새 토큰으로 교체 → 결과. 팝업이 막히면 같은 탭에서 인증 페이지로 넘어가고, 그 페이지가 확정까지 마친다.
+ * 흐름: 안내 → 인증 건 열기 → 인증 창(MOCK: dev 가짜 인증 창, PORTONE: 포트원 SDK) → 창이 끝났다고 알리면
+ * 확정 → 새 토큰으로 교체 → 결과(성인이면 그 자리에서 19 콘텐츠 표시를 켤 수 있다). 팝업이 막히면 같은 탭에서
+ * 인증 페이지로 넘어가고, 그 페이지가 확정까지 마친다.
  */
 const IdentityVerificationModal = ({ onClose }: IdentityVerificationModalProps) => {
   const t = useTranslations("adultVerification.modal");
+  const toggleT = useTranslations("adultVerification.toggle");
   const commonT = useTranslations("modalUi.common");
+  const reduceMotion = useReducedMotion() ?? false;
   const [step, setStep] = useState<Step>({ kind: "intro" });
   const popupRef = useRef<Window | null>(null);
   const { mutate: startVerification, isPending: isStarting } =
     useStartIdentityVerificationMutation();
   const { mutate: confirmVerification } = useConfirmIdentityVerificationMutation();
+  const { mutate: changeAdultContent, isPending: isToggling } = useAdultContentMutation();
+  const adultContentEnabled = useUserStore((state) => state.user?.adultContentEnabled ?? false);
 
   const confirm = useCallback(
     (verificationId: string) => {
@@ -67,19 +193,13 @@ const IdentityVerificationModal = ({ onClose }: IdentityVerificationModalProps) 
         onError: (error) => {
           if (error.code === IDENTITY_VERIFICATION_INCOMPLETE) {
             // 창에서 아직 끝내지 않았다. 기다리는 화면으로 돌아가 마저 하게 한다.
-            setStep({
-              kind: "waiting",
-              verificationId,
-              notice: t("errorIncomplete"),
-            });
+            setStep({ kind: "waiting", verificationId, notice: t("errorIncomplete") });
             return;
           }
           setStep({
             kind: "error",
             message:
-              error.code === IDENTITY_VERIFICATION_NOT_FOUND
-                ? t("errorExpired")
-                : t("errorDefault"),
+              error.code === IDENTITY_VERIFICATION_NOT_FOUND ? t("errorExpired") : t("errorDefault"),
           });
         },
       });
@@ -156,106 +276,198 @@ const IdentityVerificationModal = ({ onClose }: IdentityVerificationModalProps) 
     openMockWindow(step.verificationId);
   };
 
+  const handleToggle = (next: boolean) => {
+    changeAdultContent(next, {
+      onSuccess: (result) =>
+        showAppToast("success", result.adultContentEnabled ? toggleT("enabled") : toggleT("disabled")),
+      onError: () => showAppToast("error", toggleT("failed")),
+    });
+  };
+
+  const isAdultResult = step.kind === "result" && step.result.adult;
+
   return (
     <ModalLayout
       onClose={onClose}
       hasBackground
-      className="w-screen max-w-[calc(100vw-40px)] rounded-3xl p-5 sm:max-w-100"
+      className="w-screen max-w-[calc(100vw-32px)] overflow-hidden rounded-3xl p-0 sm:max-w-110"
     >
-      <header className="flex items-center justify-between">
-        <h2 className="title-1">{t("title")}</h2>
-        <IconButton size="xs" onClick={onClose} aria-label={commonT("close")}>
-          <Close className="size-3.5" />
-        </IconButton>
-      </header>
+      <div className="relative px-6 pt-5 pb-6">
+        <header className="flex items-center justify-between">
+          <Stepper step={step} />
+          <IconButton size="xs" onClick={onClose} aria-label={commonT("close")}>
+            <Close className="size-3.5" />
+          </IconButton>
+        </header>
 
-      {step.kind === "intro" && (
-        <section className="mt-6 flex flex-col gap-6">
-          <ul className="body-5 flex list-disc flex-col gap-2 pl-5 text-font-2">
-            <li>{t("description")}</li>
-            <li>{t("validity")}</li>
-            <li>{t("birthNotice")}</li>
-          </ul>
-          <Button
-            size="lg"
-            fullWidth
-            onClick={handleStart}
-            disabled={isStarting}
-            isPending={isStarting}
+        {isAdultResult && !reduceMotion && <ConfettiBurst />}
+
+        <AnimatePresence mode="wait" initial={false}>
+          <m.section
+            key={step.kind}
+            className="flex flex-col items-center text-center"
+            initial={reduceMotion ? false : { opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.25, ease: EASE_OUT }}
+            aria-live="polite"
           >
-            {t("start")}
-          </Button>
-        </section>
-      )}
+            {step.kind === "intro" && (
+              <>
+                <AdultEmblem className="mt-4" />
+                <h2 className="heading-3 mt-2 whitespace-pre-line text-font-0 break-keep">
+                  {t("headline")}
+                </h2>
+                <p className="body-5 mt-2 text-font-2 break-keep">{t("subtitle")}</p>
 
-      {step.kind === "waiting" && (
-        <section className="mt-6 flex flex-col gap-4" aria-live="polite">
-          <p className="body-4 text-font-1">{t("waiting")}</p>
-          {step.notice && (
-            <p className="body-6 rounded-xl bg-darkest px-4 py-3 text-font-2">
-              {step.notice}
-            </p>
-          )}
-          <div className="flex gap-2">
-            <Button variant="secondary" size="lg" fullWidth onClick={handleReopen}>
-              {t("reopen")}
-            </Button>
-            <Button
-              size="lg"
-              fullWidth
-              onClick={() => confirm(step.verificationId)}
-            >
-              {t("checkResult")}
-            </Button>
-          </div>
-        </section>
-      )}
+                <ul className="mt-6 flex w-full flex-col gap-3 rounded-2xl bg-darkest p-4 text-left">
+                  {[
+                    { icon: <Clock className="size-4" />, text: t("benefitTime") },
+                    { icon: <LockLine className="size-4" />, text: t("benefitPrivacy") },
+                    { icon: <StatusSuccess className="size-4" />, text: t("benefitToggle") },
+                  ].map(({ icon, text }) => (
+                    <li key={text} className="flex items-start gap-3">
+                      <span className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full bg-brand-opacity text-brand">
+                        {icon}
+                      </span>
+                      <span className="body-5 pt-1 text-font-1 break-keep">{text}</span>
+                    </li>
+                  ))}
+                </ul>
 
-      {step.kind === "confirming" && (
-        <section className="mt-6 flex flex-col items-center gap-3 py-6" aria-live="polite">
-          <div className="skeleton size-10 rounded-full" aria-hidden="true" />
-          <p className="body-4 text-font-2">{t("confirming")}</p>
-        </section>
-      )}
+                <div className="mt-5 flex w-full flex-col items-center gap-2">
+                  <span className="body-7 text-font-disabled">{t("methodsLabel")}</span>
+                  <div className="flex flex-wrap justify-center gap-1.5">
+                    {METHODS.map((method) => (
+                      <span
+                        key={method}
+                        className="rounded-full border border-main px-2.5 py-1 text-[11px] font-semibold text-font-2"
+                      >
+                        {t(`methods.${method}`)}
+                      </span>
+                    ))}
+                  </div>
+                </div>
 
-      {step.kind === "result" && (
-        <section className="mt-6 flex flex-col gap-6" aria-live="polite">
-          <div className="flex flex-col items-center gap-3 text-center">
-            {step.result.adult ? (
-              <StatusSuccess className="size-12 text-brand" />
-            ) : (
-              <StatusWarning className="size-12 text-font-2" />
+                <Button
+                  size="lg"
+                  fullWidth
+                  className="mt-6"
+                  onClick={handleStart}
+                  disabled={isStarting}
+                  isPending={isStarting}
+                >
+                  {t("start")}
+                </Button>
+                <p className="body-7 mt-3 text-font-disabled break-keep">{t("minorNote")}</p>
+              </>
             )}
-            <h3 className="title-3 text-font-1">
-              {step.result.adult ? t("adultDoneTitle") : t("identityOnlyTitle")}
-            </h3>
-            <p className="body-5 text-font-2">
-              {step.result.adult
-                ? t("adultDoneDescription", {
-                    date: formatDate(step.result.adultVerifiedUntil),
-                  })
-                : t("identityOnlyDescription")}
-            </p>
-            <p className="body-7 text-font-disabled">
-              {t("identityUntil", {
-                date: formatDate(step.result.identityVerifiedUntil),
-              })}
-            </p>
-          </div>
-          <Button size="lg" fullWidth onClick={onClose}>
-            {t("done")}
-          </Button>
-        </section>
-      )}
 
-      {step.kind === "error" && (
-        <section className="mt-6 flex flex-col gap-6" aria-live="assertive">
-          <p className="body-4 text-font-error">{step.message}</p>
-          <Button size="lg" fullWidth onClick={() => setStep({ kind: "intro" })}>
-            {t("retry")}
-          </Button>
-        </section>
-      )}
+            {(step.kind === "waiting" || step.kind === "confirming") && (
+              <>
+                <AdultEmblem className="mt-6" working />
+                <h2 className="heading-3 mt-2 text-font-0">
+                  {step.kind === "waiting" ? t("waitingTitle") : t("confirmingTitle")}
+                  <BouncingDots />
+                </h2>
+                <p className="body-5 mt-2 max-w-80 text-font-2 break-keep">
+                  {step.kind === "waiting" ? t("waitingHint") : t("confirmingHint")}
+                </p>
+                {step.kind === "waiting" && step.notice && (
+                  <p className="body-6 mt-4 w-full rounded-xl bg-warning-bg px-4 py-3 text-warning break-keep">
+                    {step.notice}
+                  </p>
+                )}
+                <div className="mt-6">
+                  <ProgressBar />
+                </div>
+                {step.kind === "waiting" && (
+                  <div className="mt-8 flex w-full flex-col gap-2.5">
+                    <Button size="lg" fullWidth onClick={() => confirm(step.verificationId)}>
+                      {t("checkResult")}
+                    </Button>
+                    <Button variant="secondary" size="lg" fullWidth onClick={handleReopen}>
+                      {t("reopen")}
+                    </Button>
+                  </div>
+                )}
+              </>
+            )}
+
+            {step.kind === "result" && (
+              <>
+                <AdultEmblem className="mt-6" badge={step.result.adult ? "done" : "warn"} />
+                <h2 className="heading-3 mt-2 text-font-0">
+                  {step.result.adult ? t("adultDoneTitle") : t("identityOnlyTitle")}
+                </h2>
+                <p className="body-5 mt-2 text-font-2 break-keep">
+                  {step.result.adult ? t("adultDoneDescription") : t("identityOnlyDescription")}
+                </p>
+
+                <div className="mt-6 w-full divide-y divide-main rounded-2xl bg-darkest px-4 py-1 text-left">
+                  <ValidityRow
+                    label={t("identityLabel")}
+                    value={t("until", { date: formatDate(step.result.identityVerifiedUntil) })}
+                    active
+                  />
+                  <ValidityRow
+                    label={t("adultLabel")}
+                    value={
+                      step.result.adult
+                        ? t("until", { date: formatDate(step.result.adultVerifiedUntil) })
+                        : t("adultUnavailable")
+                    }
+                    active={step.result.adult}
+                  />
+                </div>
+
+                {step.result.adult && (
+                  <div className="mt-3 flex w-full items-center justify-between gap-4 rounded-2xl border border-main px-4 py-3.5 text-left">
+                    <div className="flex flex-col gap-0.5">
+                      <span className="body-4 font-semibold text-font-1">{t("toggleTitle")}</span>
+                      <span className="body-7 text-font-2 break-keep">{t("toggleHint")}</span>
+                    </div>
+                    <Switch
+                      size="label"
+                      tone="danger"
+                      checked={adultContentEnabled}
+                      label={toggleT("ariaLabel")}
+                      onChange={handleToggle}
+                      themeIcon={false}
+                      disabled={isToggling}
+                      thumbContent={
+                        <span aria-hidden="true" className="text-[11px] font-extrabold leading-none tracking-[-0.04em]">
+                          {toggleT("label")}
+                        </span>
+                      }
+                    />
+                  </div>
+                )}
+
+                <Button size="lg" fullWidth className="mt-6" onClick={onClose}>
+                  {t("done")}
+                </Button>
+              </>
+            )}
+
+            {step.kind === "error" && (
+              <>
+                <AdultEmblem className="mt-6" badge="warn" />
+                <h2 className="heading-3 mt-2 text-font-0">{t("errorTitle")}</h2>
+                <p className="body-5 mt-2 max-w-80 text-font-2 break-keep">{step.message}</p>
+                <div className="mt-8 flex w-full flex-col gap-2.5">
+                  <Button size="lg" fullWidth onClick={() => setStep({ kind: "intro" })}>
+                    {t("retry")}
+                  </Button>
+                  <Button variant="secondary" size="lg" fullWidth onClick={onClose}>
+                    {t("close")}
+                  </Button>
+                </div>
+              </>
+            )}
+          </m.section>
+        </AnimatePresence>
+      </div>
     </ModalLayout>
   );
 };
