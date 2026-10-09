@@ -53,7 +53,10 @@ const CharacterDetailContent = ({
     [universe],
   );
   // CommentsPanel도 같은 쿼리를 구독하므로 react-query 캐시를 공유해 요청이 중복되지 않는다.
-  const { data: commentsData } = useUniverseCommentsInfiniteQuery(characterId);
+  // 세계관을 받은 뒤에만 부른다 — 성인 세계관 게이트처럼 상세가 막힌 화면에서 댓글까지 403 을 받지 않게.
+  const { data: commentsData } = useUniverseCommentsInfiniteQuery(
+    universe ? characterId : undefined,
+  );
   const commentsCount = commentsData?.pages[0]?.page.totalElements ?? 0;
   const t = useTranslations("characterDetail");
   const openModal = useModalStore((state) => state.openModal);

@@ -1,5 +1,7 @@
 "use client";
 
+import AdultBadge from "@/components/adult/AdultBadge";
+import Switch from "@/components/ui/Switch";
 import React, { MouseEvent, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
@@ -187,24 +189,28 @@ const Setting = () => {
 
       <section className="flex flex-col gap-2">
         <div className="flex items-start justify-between gap-4">
-          <label
-            htmlFor="universe-adult-checkbox"
-            className={cn(
-              "flex flex-col gap-1",
-              isAdultToggleDisabled ? "cursor-not-allowed" : "cursor-pointer",
-            )}
-          >
-            <span className="title-3 text-font-1">{adultT("label")}</span>
+          <div className="flex flex-col gap-1">
+            <span className="title-3 flex items-center gap-1.5 text-font-1">
+              {adultT("label")}
+              <AdultBadge />
+            </span>
             <p className="body-7 text-font-2">{adultT("help")}</p>
-          </label>
+          </div>
 
-          <input
-            id="universe-adult-checkbox"
-            type="checkbox"
+          <Switch
+            size="label"
+            tone="danger"
             checked={isAdult}
+            label={adultT("label")}
             disabled={isAdultToggleDisabled}
-            onChange={(event) => handleAdult(event.target.checked)}
-            className="mt-1 size-5 shrink-0 cursor-pointer accent-brand disabled:cursor-not-allowed disabled:opacity-50"
+            onChange={handleAdult}
+            themeIcon={false}
+            className="mt-1 disabled:cursor-not-allowed"
+            thumbContent={
+              <span aria-hidden="true" className="text-[11px] font-extrabold leading-none tracking-[-0.04em]">
+                19
+              </span>
+            }
           />
         </div>
 
