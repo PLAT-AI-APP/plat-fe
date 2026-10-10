@@ -167,7 +167,6 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
     universeCharacterId: universe?.character.universeCharacterId,
     personaId: room?.personaId,
     modelId: currentAi?.id,
-    multiplier: room?.multiplier,
     characterName,
     profileImage,
     onTurnFailed: handleTurnFailed,

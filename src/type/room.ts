@@ -1,4 +1,5 @@
 import type { AppLocale } from "@/i18n/config";
+import type { ChatResponseLength } from "@/type/chat";
 
 /** 백엔드 LanguageType. 채팅방 응답 언어를 가리킵니다. */
 export type RoomLanguage = "KO" | "EN" | "JA" | "ZH" | "TH" | "VI";
@@ -7,10 +8,10 @@ export type RoomLanguage = "KO" | "EN" | "JA" | "ZH" | "TH" | "VI";
  * 프롬프트 배수. 백엔드가 숫자로 직렬화하므로 요청·응답 모두 숫자를 씁니다.
  * 허용 집합 밖의 값은 서버가 기본값(1.0)으로 되돌립니다.
  */
-export type PromptMultiplier = 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 4.5 | 5;
+export type PromptMultiplier = 0.8 | 1 | 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 4.5 | 5;
 
 export const PROMPT_MULTIPLIERS: PromptMultiplier[] = [
-  1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5,
+  0.8, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5,
 ];
 
 /** 앱 로케일을 채팅방 언어 코드로 변환합니다. */
@@ -50,6 +51,11 @@ export interface Room {
   /** 이 방에서 쓰는 페르소나. 페르소나 선택 모달의 현재 선택 상태로 씁니다. */
   personaId: string;
   multiplier: PromptMultiplier;
+  /**
+   * 방에서 고른 답변 길이. 서버의 배수 0.8/1.0/2.0 에 대응한다.
+   * 예전에 직접 정한 배수(1.5 등)는 세 선택지에 없어 null 이고, 이때 실제 배수는 multiplier 로 온다.
+   */
+  responseLength?: ChatResponseLength | null;
   /** AI 가 대화를 요약해 쌓은 장기기억. 사용자가 고칠 수 있고 다음 요약은 고친 내용 위에 합쳐진다. */
   memory: string;
   /** 사용자가 적은 유저노트. 매 턴 프롬프트에 들어간다. */

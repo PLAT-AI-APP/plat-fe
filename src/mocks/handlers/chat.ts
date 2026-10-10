@@ -35,8 +35,52 @@ const chatAssetGallery: ChatAssetGalleryResponse = {
   visibleCount: 4,
 };
 
+/** 서버의 길이별 배수(PromptMultiplier 0.8/1.0/2.0). 크레딧은 기본 요금에 곱해 올림한다. */
+const RESPONSE_LENGTH_FACTORS = { SHORT: 0.8, MEDIUM: 1, LONG: 2 } as const;
+
+const withLengthCosts = (
+  option: Omit<ChatCatalog["models"][number], "responseLengthCreditCosts">,
+): ChatCatalog["models"][number] => ({
+  ...option,
+  responseLengthCreditCosts: (
+    Object.keys(RESPONSE_LENGTH_FACTORS) as (keyof typeof RESPONSE_LENGTH_FACTORS)[]
+  ).map((responseLength) => ({
+    responseLength,
+    creditCost: Math.ceil(
+      option.creditCost * RESPONSE_LENGTH_FACTORS[responseLength],
+    ),
+  })),
+});
+
+const RESPONSE_LENGTH_OPTIONS: NonNullable<ChatCatalog["responseLengths"]> = [
+  {
+    value: "SHORT",
+    label: "짧게",
+    description: "크레딧을 아끼며 캐릭터와 오래 채팅해보세요.",
+    creditMultiplier: 0.8,
+    creditNotice:
+      "선택한 모델 기본 요금의 0.8배 크레딧이 소모됩니다. 답변이 길수록 더 많은 크레딧이 소모됩니다.",
+  },
+  {
+    value: "MEDIUM",
+    label: "보통",
+    description: "캐릭터와 자연스럽게 대화를 나눠보세요.",
+    creditMultiplier: 1,
+    creditNotice:
+      "선택한 모델 기본 요금의 1배 크레딧이 소모됩니다. 답변이 길수록 더 많은 크레딧이 소모됩니다.",
+  },
+  {
+    value: "LONG",
+    label: "길게",
+    description: "대화의 답변이 더욱 풍부해집니다.",
+    creditMultiplier: 2,
+    creditNotice:
+      "선택한 모델 기본 요금의 2배 크레딧이 소모됩니다. 답변이 길수록 더 많은 크레딧이 소모됩니다.",
+  },
+];
+
 /** 백엔드 ChatModel enum 중 화면 테스트에 필요한 일부만 추립니다. */
-const CHAT_CATALOG: ChatCatalog = {
+const BASE_CATALOG: ChatCatalog = {
   models: [
     {
       name: "CLAUDE_SONNET_5_5",
@@ -82,6 +126,12 @@ const CHAT_CATALOG: ChatCatalog = {
     { name: "X4_5", value: 4.5 },
     { name: "X5_0", value: 5 },
   ],
+};
+
+const CHAT_CATALOG: ChatCatalog = {
+  ...BASE_CATALOG,
+  models: BASE_CATALOG.models.map(withLengthCosts),
+  responseLengths: RESPONSE_LENGTH_OPTIONS,
 };
 
 const SUPPORTED_CHAT_MODELS = new Set(CHAT_CATALOG.models.map((model) => model.name));

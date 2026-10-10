@@ -47,7 +47,6 @@ interface UseChatTurnParams {
   personaId?: string;
   /** ChatModelOption.name. 모델 목록을 받기 전에는 없습니다. */
   modelId?: string;
-  multiplier?: number;
   characterName: string;
   profileImage: string;
   /** 응답을 하나도 받지 못하고 실패한 턴의 원문. 입력창에 되돌려 글을 잃지 않게 한다. */
@@ -81,7 +80,6 @@ export const useChatTurn = ({
   universeCharacterId,
   personaId,
   modelId,
-  multiplier,
   characterName,
   profileImage,
   onTurnFailed,
@@ -439,7 +437,6 @@ export const useChatTurn = ({
             generation: {
               message,
               model: modelId,
-              multiplier: multiplier ?? 1,
             },
           }),
         { restoreMessage: message },
@@ -451,7 +448,6 @@ export const useChatTurn = ({
       universeCharacterId,
       personaId,
       modelId,
-      multiplier,
       roomId,
       startChat,
       runTurn,
@@ -497,7 +493,7 @@ export const useChatTurn = ({
             chatTurnId,
             context: { roomId, universeCharacterId, personaId },
             messageId,
-            generation: { model: modelId, multiplier: multiplier ?? 1 },
+            generation: { model: modelId },
           }),
         { replacesMessageId: messageId },
       );
@@ -506,7 +502,6 @@ export const useChatTurn = ({
       universeCharacterId,
       personaId,
       modelId,
-      multiplier,
       roomId,
       startRegenerate,
       runTurn,

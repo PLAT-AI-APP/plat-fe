@@ -135,6 +135,18 @@ const toThumbnail = (room: MockRoom): ThumbnailRoom => ({
 });
 
 /** 허용 집합 밖의 배수는 서버가 조용히 기본값(1.0)으로 되돌립니다. */
+/** 답변 길이 → 서버 배수. 이 셋에 없는 배수(1.5 등)는 responseLength 가 null 이다. */
+const RESPONSE_LENGTH_MULTIPLIERS: Record<string, PromptMultiplier> = {
+  SHORT: 0.8,
+  MEDIUM: 1,
+  LONG: 2,
+};
+
+const toResponseLength = (multiplier: PromptMultiplier) =>
+  Object.entries(RESPONSE_LENGTH_MULTIPLIERS).find(
+    ([, factor]) => factor === multiplier,
+  )?.[0] ?? null;
+
 const resolveMultiplier = (value: unknown): PromptMultiplier =>
   PROMPT_MULTIPLIERS.includes(value as PromptMultiplier)
     ? (value as PromptMultiplier)
@@ -222,6 +234,7 @@ export const roomHandlers = [
       universeId: room.universeId,
       personaId: room.personaId,
       multiplier: room.multiplier,
+      responseLength: toResponseLength(room.multiplier) as Room["responseLength"],
       memory: room.memory,
       userNote: room.userNote,
       characterName: "",
@@ -351,6 +364,26 @@ export const roomHandlers = [
     room.personaId = personaId;
     return new HttpResponse(null, { status: 204 });
   }),
+
+  // 채팅방 답변 길이 수정. SHORT/MEDIUM/LONG 은 서버의 배수 0.8/1.0/2.0 에 대응합니다.
+  http.patch(
+    /\/rooms\/([^/]+)\/response-length(?:\?.*)?$/,
+    async ({ request }) => {
+      const room = findRoom(request, /\/rooms\/([^/]+)\/response-length$/);
+      if (!room) return roomNotFound();
+
+      const { responseLength } = (await request.json()) as {
+        responseLength?: string;
+      };
+      const factor = RESPONSE_LENGTH_MULTIPLIERS[responseLength ?? ""];
+      if (factor === undefined) {
+        return invalidInput({ responseLength: "답변 길이는 필수입니다." });
+      }
+
+      room.multiplier = factor;
+      return new HttpResponse(null, { status: 204 });
+    },
+  ),
 
   // 채팅방 프롬프트 배수 수정. 허용 집합 밖 값은 조용히 1.0으로 되돌립니다(서버와 동일).
   http.patch(/\/rooms\/([^/]+)\/multiplier(?:\?.*)?$/, async ({ request }) => {
