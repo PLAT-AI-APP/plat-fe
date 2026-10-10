@@ -132,6 +132,30 @@ const vi: typeof en = {
     back: "Tôi muốn suy nghĩ thêm",
     submit: "Tôi sẽ xóa tài khoản",
     submitPending: "Đang xử lý xóa tài khoản",
+    handover: {
+      title: "Bạn muốn xử lý các nhân vật đã tạo như thế nào?",
+      description:
+        "Nhân vật còn cuộc trò chuyện với người khác có thể được giữ lại hoặc xóa. Vui lòng chọn cho từng nhân vật.",
+      keep: "Giữ lại",
+      delete: "Xóa",
+      otherRooms: "{count} cuộc trò chuyện với người khác",
+      chooseAll: "Vui lòng chọn Giữ lại hoặc Xóa cho từng nhân vật",
+      keepBlockedMinor:
+        "Thành viên dưới 19 tuổi không thể giữ lại nhân vật. Tất cả nhân vật bên dưới sẽ bị xóa.",
+      keepBlockedConsent:
+        "Hiện chưa có thỏa thuận cấp phép cần thiết để giữ lại nhân vật nên không thể giữ. Tất cả nhân vật bên dưới sẽ bị xóa. Hãy liên hệ nếu bạn muốn giữ lại.",
+      deletionsTitle: "Nhân vật không thể giữ lại và sẽ bị xóa",
+      reasonINACTIVE: "Đã bị bên vận hành gỡ xuống",
+      reasonPRIVATE: "Chưa từng được công khai",
+      reasonNOT_APPROVED: "Không vượt qua đợt duyệt công khai",
+      reasonUNDER_REVIEW: "Có nhân vật vẫn đang được kiểm duyệt",
+      reasonNO_OTHER_ROOMS: "Không có cuộc trò chuyện với người khác",
+      consentTitle: "Thỏa thuận cấp phép",
+      consentAgree: "Tôi đã đọc và đồng ý với thỏa thuận",
+      ageAttest: "Tôi từ 19 tuổi trở lên",
+      previewFailed:
+        "Không thể tải thông tin xử lý nhân vật. Nếu tiếp tục, tất cả nhân vật có thể bị xóa.",
+    },
   },
   profile: {
     defaultName: "Tên",

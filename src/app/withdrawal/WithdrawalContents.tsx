@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import ActiveButton from "@/components/ActiveButton";
@@ -8,6 +9,8 @@ import CheckboxEmpty from "@/icons/CheckboxEmpty";
 import useToggle from "@/hooks/common/useToggle";
 import { cn } from "@/lib/utils";
 import { useDeleteUserMutation } from "@/api/user/deleteUser";
+import { useWithdrawalPreviewQuery } from "@/api/user/getWithdrawalPreview";
+import { usePostWithdrawalMutation } from "@/api/user/postWithdrawal";
 import { useEarningSummaryQuery } from "@/api/earning/getEarningSummary";
 import { useWalletBalanceQuery } from "@/api/wallet/getWalletBalance";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -15,6 +18,8 @@ import { useDialogStore } from "@/store/useDialogStore";
 import { useUserStore } from "@/store/useUserStore";
 import { useWalletStore } from "@/store/useWalletStore";
 import { SKIP_AUTH_ALERT_ONCE_KEY } from "@/constants/auth";
+import type { HandoverChoice } from "@/type/withdrawal";
+import HandoverSection from "./_components/HandoverSection";
 
 const WithdrawalContents = () => {
   const t = useTranslations();
@@ -23,7 +28,22 @@ const WithdrawalContents = () => {
   const clearUser = useUserStore((state) => state.clearUser);
   const clearBalance = useWalletStore((state) => state.clearBalance);
   const logout = useAuthStore((state) => state.logout);
-  const { mutate: deleteUser, isPending } = useDeleteUserMutation();
+  const { mutate: deleteUser, isPending: isDeletePending } =
+    useDeleteUserMutation();
+  const { mutate: postWithdrawal, isPending: isPostPending } =
+    usePostWithdrawalMutation();
+  const isPending = isDeletePending || isPostPending;
+  // 남기기/삭제를 고를 캐릭터와 남길 수 없는 이유. 받지 못하면 예전처럼 바로 탈퇴를 시도한다(서버가 막으면 안내).
+  const {
+    data: preview,
+    isPending: isPreviewPending,
+    isError: isPreviewError,
+  } = useWithdrawalPreviewQuery();
+  const [decisions, setDecisions] = useState<
+    Record<string, HandoverChoice | undefined>
+  >({});
+  const [isConsentChecked, setIsConsentChecked] = useState(false);
+  const [isAgeAttested, setIsAgeAttested] = useState(false);
   const openDialog = useDialogStore((state) => state.openDialog);
   const closeDialog = useDialogStore((state) => state.closeDialog);
   const { isOpen: isConfirmed, toggle: toggleConfirmed } = useToggle();
@@ -42,16 +62,61 @@ const WithdrawalContents = () => {
   ];
 
   const nickname = user?.nickname || t("withdrawalPage.defaultMember");
-  const canSubmit = isConfirmed && !isPending;
+
+  const candidates = preview?.candidates ?? [];
+  const keepAllowed = preview?.keepAllowed ?? false;
+  // 남길 수 없으면 후보는 모두 삭제로 처리한다.
+  const getChoice = (universeId: string): HandoverChoice | undefined =>
+    keepAllowed ? decisions[universeId] : "DELETE";
+  const isAllChosen = candidates.every((candidate) =>
+    getChoice(candidate.universeId),
+  );
+  const hasKeep = candidates.some(
+    (candidate) => getChoice(candidate.universeId) === "KEEP",
+  );
+  const needsConsent = hasKeep && Boolean(preview?.consent);
+  const needsAgeAttest = hasKeep && Boolean(preview?.ageAttestationRequired);
+
+  const canSubmit =
+    isConfirmed &&
+    !isPending &&
+    !isPreviewPending &&
+    isAllChosen &&
+    (!needsConsent || isConsentChecked) &&
+    (!needsAgeAttest || isAgeAttested);
+
+  const handleChoose = (universeId: string, choice: HandoverChoice) => {
+    setDecisions((previous) => ({ ...previous, [universeId]: choice }));
+  };
 
   const handleDeleteConfirm = () => {
     if (isPending) return;
 
-    deleteUser(undefined, {
+    const handlers = {
       onSuccess: openCompleteDialog,
       // 실패 사유는 응답 인터셉터가 토스트로 안내하므로 확인 다이얼로그만 닫습니다.
       onError: closeDialog,
-    });
+    };
+
+    // 고를 캐릭터가 있으면 선택을 담아 보낸다. 빠진 후보가 있으면 서버가 409 로 거절한다.
+    if (candidates.length > 0) {
+      postWithdrawal(
+        {
+          decisions: candidates.map((candidate) => ({
+            universeId: candidate.universeId,
+            choice: getChoice(candidate.universeId) ?? "DELETE",
+          })),
+          consentDocumentId: hasKeep
+            ? (preview?.consent?.documentId ?? null)
+            : null,
+          adultAttested: hasKeep && isAgeAttested,
+        },
+        handlers,
+      );
+      return;
+    }
+
+    deleteUser(undefined, handlers);
   };
 
   const openCompleteDialog = () => {
@@ -97,8 +162,13 @@ const WithdrawalContents = () => {
                     <li key={notice}>{notice}</li>
                   ))}
                   <li>
-                    {t("withdrawalPage.notices.creationsDeleted")}
-                    <br />
+                    {/* 남길 캐릭터를 고를 수 있으면 "모두 지워진다"는 안내가 맞지 않아 뺀다. */}
+                    {candidates.length === 0 && (
+                      <>
+                        {t("withdrawalPage.notices.creationsDeleted")}
+                        <br />
+                      </>
+                    )}
                     {t("withdrawalPage.notices.chatsReadOnly")}
                   </li>
                 </ul>
@@ -121,6 +191,28 @@ const WithdrawalContents = () => {
               </p>
             </div>
           </div>
+
+          {preview && (
+            <HandoverSection
+              preview={preview}
+              decisions={decisions}
+              onChoose={handleChoose}
+              hasKeep={hasKeep}
+              isConsentChecked={isConsentChecked}
+              onConsentChange={() => setIsConsentChecked((value) => !value)}
+              isAgeAttested={isAgeAttested}
+              onAgeAttestChange={() => setIsAgeAttested((value) => !value)}
+            />
+          )}
+
+          {isPreviewError && (
+            <p
+              role="note"
+              className="body-5 w-full rounded-xl border border-main px-4 py-3 text-font-1"
+            >
+              {t("withdrawalPage.handover.previewFailed")}
+            </p>
+          )}
 
           <button
             type="button"

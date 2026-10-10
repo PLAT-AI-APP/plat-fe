@@ -3,6 +3,8 @@ const userProfileRootKey = ["get-user-profile"] as const;
 /** 유저 관련 캐시 키의 단일 출처. */
 export const userQueryKeys = {
   myInfo: () => ["get-my-info"] as const,
+  /** 탈퇴 화면의 인수 후보·남기기 가능 여부. */
+  withdrawalPreview: () => ["get-withdrawal-preview"] as const,
   /** 모든 유저의 공개 프로필. 내 프로필을 고친 뒤 통째로 무효화할 때 씁니다. */
   profiles: () => userProfileRootKey,
   /** 특정 유저의 공개 프로필 */

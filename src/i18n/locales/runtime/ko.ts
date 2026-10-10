@@ -127,6 +127,30 @@ const ko: typeof en = {
     back: "좀 더 생각할래요",
     submit: "탈퇴할게요",
     submitPending: "탈퇴 처리 중",
+    handover: {
+      title: "제작한 캐릭터는 어떻게 할까요?",
+      description:
+        "다른 사람과 대화가 남아 있는 캐릭터는 남기거나 삭제할 수 있어요. 캐릭터마다 골라 주세요.",
+      keep: "남기기",
+      delete: "삭제하기",
+      otherRooms: "다른 사람과 나눈 대화 {count}개",
+      chooseAll: "캐릭터마다 남기기나 삭제하기를 골라 주세요",
+      keepBlockedMinor:
+        "만 19세 미만 회원은 캐릭터를 남길 수 없어요. 아래 캐릭터는 모두 삭제돼요.",
+      keepBlockedConsent:
+        "지금은 캐릭터를 남기는 데 필요한 이용허락 동의서가 준비되지 않아 남길 수 없어요. 아래 캐릭터는 모두 삭제돼요. 남기고 싶다면 문의해 주세요.",
+      deletionsTitle: "남길 수 없어 삭제되는 캐릭터",
+      reasonINACTIVE: "운영에서 내린 캐릭터예요",
+      reasonPRIVATE: "공개된 적 없는 캐릭터예요",
+      reasonNOT_APPROVED: "공개 심사를 통과하지 못했어요",
+      reasonUNDER_REVIEW: "검수가 끝나지 않은 캐릭터가 있어요",
+      reasonNO_OTHER_ROOMS: "다른 사람과 나눈 대화가 없어요",
+      consentTitle: "이용허락 동의서",
+      consentAgree: "동의서 내용을 확인했고 동의해요",
+      ageAttest: "저는 만 19세 이상이에요",
+      previewFailed:
+        "캐릭터 처리 정보를 불러오지 못했어요. 그래도 탈퇴하면 캐릭터는 모두 삭제될 수 있어요.",
+    },
   },
   profile: {
     defaultName: "이름",

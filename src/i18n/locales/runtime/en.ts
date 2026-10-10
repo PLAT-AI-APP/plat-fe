@@ -133,6 +133,30 @@ const en = {
     back: "I need more time",
     submit: "Delete my account",
     submitPending: "Deleting account",
+    handover: {
+      title: "What should happen to your characters?",
+      description:
+        "Characters that still have conversations with other people can be kept or deleted. Please choose for each one.",
+      keep: "Keep",
+      delete: "Delete",
+      otherRooms: "{count} chats with other people",
+      chooseAll: "Choose Keep or Delete for each character",
+      keepBlockedMinor:
+        "Members under 19 can't keep characters. All characters below will be deleted.",
+      keepBlockedConsent:
+        "The license agreement needed to keep characters isn't available right now, so they can't be kept. All characters below will be deleted. Contact us if you want to keep them.",
+      deletionsTitle: "Characters that can't be kept and will be deleted",
+      reasonINACTIVE: "Taken down by the operators",
+      reasonPRIVATE: "Never made public",
+      reasonNOT_APPROVED: "Did not pass the public review",
+      reasonUNDER_REVIEW: "Has a character still under review",
+      reasonNO_OTHER_ROOMS: "No chats with other people",
+      consentTitle: "License agreement",
+      consentAgree: "I have read and agree to the agreement",
+      ageAttest: "I am 19 or older",
+      previewFailed:
+        "Couldn't load how your characters will be handled. If you continue, they may all be deleted.",
+    },
   },
   profile: {
     defaultName: "Name",

@@ -126,6 +126,30 @@ const ja: typeof en = {
     back: "もう少し考えます",
     submit: "退会します",
     submitPending: "退会処理中",
+    handover: {
+      title: "制作したキャラクターはどうしますか?",
+      description:
+        "他の人との会話が残っているキャラクターは、残すか削除するか選べます。キャラクターごとに選んでください。",
+      keep: "残す",
+      delete: "削除する",
+      otherRooms: "他の人との会話 {count}件",
+      chooseAll: "キャラクターごとに「残す」か「削除する」を選んでください",
+      keepBlockedMinor:
+        "19歳未満の会員はキャラクターを残せません。以下のキャラクターはすべて削除されます。",
+      keepBlockedConsent:
+        "キャラクターを残すために必要な利用許諾書が現在ご用意できていないため、残せません。以下のキャラクターはすべて削除されます。残したい場合はお問い合わせください。",
+      deletionsTitle: "残せないため削除されるキャラクター",
+      reasonINACTIVE: "運営により非公開になったキャラクターです",
+      reasonPRIVATE: "公開されたことがないキャラクターです",
+      reasonNOT_APPROVED: "公開審査を通過していません",
+      reasonUNDER_REVIEW: "審査中のキャラクターがあります",
+      reasonNO_OTHER_ROOMS: "他の人との会話がありません",
+      consentTitle: "利用許諾書",
+      consentAgree: "利用許諾書の内容を確認し、同意します",
+      ageAttest: "私は19歳以上です",
+      previewFailed:
+        "キャラクターの扱いに関する情報を読み込めませんでした。このまま退会すると、キャラクターはすべて削除される場合があります。",
+    },
   },
   profile: {
     defaultName: "名前",

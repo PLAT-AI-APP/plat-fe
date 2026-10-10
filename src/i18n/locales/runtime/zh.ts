@@ -124,6 +124,30 @@ const zh: typeof en = {
     back: "我再想想",
     submit: "我要注销",
     submitPending: "正在处理注销",
+    handover: {
+      title: "您创建的角色要如何处理?",
+      description:
+        "仍有与他人对话的角色可以选择保留或删除。请为每个角色分别选择。",
+      keep: "保留",
+      delete: "删除",
+      otherRooms: "与他人的对话 {count} 个",
+      chooseAll: "请为每个角色选择保留或删除",
+      keepBlockedMinor:
+        "未满 19 岁的会员无法保留角色。以下角色将全部删除。",
+      keepBlockedConsent:
+        "目前尚无保留角色所需的使用许可协议,因此无法保留。以下角色将全部删除。如需保留请联系我们。",
+      deletionsTitle: "无法保留而将被删除的角色",
+      reasonINACTIVE: "已被运营下架的角色",
+      reasonPRIVATE: "从未公开过的角色",
+      reasonNOT_APPROVED: "未通过公开审核",
+      reasonUNDER_REVIEW: "有尚未完成审核的角色",
+      reasonNO_OTHER_ROOMS: "没有与他人的对话",
+      consentTitle: "使用许可协议",
+      consentAgree: "我已阅读并同意协议内容",
+      ageAttest: "我已满 19 岁",
+      previewFailed:
+        "无法加载角色处理信息。继续的话,角色可能会全部被删除。",
+    },
   },
   profile: {
     defaultName: "姓名",
