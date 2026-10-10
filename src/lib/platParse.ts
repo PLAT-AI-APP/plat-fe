@@ -51,6 +51,19 @@ const ASSET_BLOCK_REGEX = /^\{\{([^}]+)\}\}$/;
 const startsWithAt = (source: string, index: number, token: string) =>
   source.startsWith(token, index);
 
+/**
+ * 일반 텍스트 한가운데의 {{user}} 는 이미지·메타 같은 블록의 시작이 아니라 이름 자리다.
+ * 블록으로 잘라 내면 한 문장이 세 줄로 갈라지고, 떨어져 나온 토큰은 이름으로 바뀌지 않는다.
+ */
+const isUserTokenAt = (source: string, index: number) =>
+  startsWithAt(source, index, "{{user}}");
+
+/** index 에서 시작하는 블록 기호. {{user}} 는 블록이 아니므로 없는 것으로 본다. */
+const findDelimiterAt = (source: string, index: number) =>
+  isUserTokenAt(source, index)
+    ? undefined
+    : BLOCK_DELIMITERS.find((rule) => startsWithAt(source, index, rule.open));
+
 /** "img:fileId" 처럼 "타입:코드" 형태인 토큰 내용을 나눕니다. 콜론이 없으면 null. */
 const splitAssetToken = (
   inner: string,
@@ -93,7 +106,8 @@ const unescapeDelimiters = (raw: string) => raw.replace(/\\(.)/g, "$1");
  * 대사류 블록(DIALOGUE / USER_DIALOGUE / NARRATIVE) 내부 문자열에서
  * {{user}}, {{img:code}} 같은 인라인 토큰을 찾아 일반 텍스트와 분리합니다.
  */
-function parseInlineTokens(raw: string): PlatSegment[] {
+function parseInlineTokens(raw: string, shouldUnescape = true): PlatSegment[] {
+  const unescape = shouldUnescape ? unescapeDelimiters : (value: string) => value;
   const segments: PlatSegment[] = [];
   let cursor = 0;
   let match: RegExpExecArray | null;
@@ -103,7 +117,7 @@ function parseInlineTokens(raw: string): PlatSegment[] {
     if (match.index > cursor) {
       segments.push({
         type: "TEXT",
-        value: unescapeDelimiters(raw.slice(cursor, match.index)),
+        value: unescape(raw.slice(cursor, match.index)),
       });
     }
 
@@ -121,7 +135,7 @@ function parseInlineTokens(raw: string): PlatSegment[] {
   }
 
   if (cursor < raw.length) {
-    segments.push({ type: "TEXT", value: unescapeDelimiters(raw.slice(cursor)) });
+    segments.push({ type: "TEXT", value: unescape(raw.slice(cursor)) });
   }
 
   return segments;
@@ -166,7 +180,8 @@ function parseBlock(raw: string): PlatBlock | null {
   }
 
   // 위 어떤 형식에도 안 맞는 텍스트는 그냥 지문(NARRATIVE)으로 취급합니다.
-  return { type: "NARRATIVE", segments: [{ type: "TEXT", value: trimmed }] };
+  // 기호 없는 글에 섞인 {{user}} 도 이름으로 바뀌도록 인라인 토큰을 나눈다. 원문의 역슬래시는 그대로 둔다.
+  return { type: "NARRATIVE", segments: parseInlineTokens(trimmed, false) };
 }
 
 type BlockDelimiter = (typeof BLOCK_DELIMITERS)[number];
@@ -208,19 +223,15 @@ export function parsePlat(source: string): PlatBlock[] {
     if (i >= source.length) break;
 
     const start = i;
-    const delimiter = BLOCK_DELIMITERS.find((rule) =>
-      startsWithAt(source, i, rule.open),
-    );
+    const delimiter = findDelimiterAt(source, i);
 
     if (delimiter) {
       i = findBlockEnd(source, i, delimiter).end;
     } else {
       // 다음 블록의 시작 기호를 만날 때까지 일반 텍스트로 취급합니다.
-      while (
-        i < source.length &&
-        !BLOCK_DELIMITERS.some((rule) => startsWithAt(source, i, rule.open))
-      ) {
-        i++;
+      while (i < source.length && !findDelimiterAt(source, i)) {
+        // {{user}} 는 한 덩어리로 건너뛴다. 안의 글자가 블록 기호로 오인되지 않게 한다.
+        i += isUserTokenAt(source, i) ? "{{user}}".length : 1;
       }
     }
 
@@ -253,9 +264,7 @@ const closePendingBlock = (source: string) => {
     if (i >= source.length) break;
 
     lastStart = i;
-    const delimiter = BLOCK_DELIMITERS.find((rule) =>
-      startsWithAt(source, i, rule.open),
-    );
+    const delimiter = findDelimiterAt(source, i);
 
     if (delimiter) {
       const { end, closed } = findBlockEnd(source, i, delimiter);
@@ -263,11 +272,8 @@ const closePendingBlock = (source: string) => {
       lastDelimiter = delimiter;
       isLastClosed = closed;
     } else {
-      while (
-        i < source.length &&
-        !BLOCK_DELIMITERS.some((rule) => startsWithAt(source, i, rule.open))
-      ) {
-        i++;
+      while (i < source.length && !findDelimiterAt(source, i)) {
+        i += isUserTokenAt(source, i) ? "{{user}}".length : 1;
       }
       lastDelimiter = null;
       isLastClosed = false;
