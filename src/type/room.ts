@@ -60,7 +60,7 @@ export interface Room {
   closed: boolean;
   /** 채팅 요청에 쓰는 세계관 안 캐릭터 ID. 닫힌 방은 null. */
   universeCharacterId: string | null;
-  /** 캐릭터 프로필 이미지. 세계관 상세를 부르지 못하는 방(운영 심사 중)도 이 값으로 그린다. */
+  /** 캐릭터 프로필 이미지(정사각 140px). 세계관 상세를 부르지 못하는 방(운영 심사 중)도 이 값으로 그린다. */
   characterProfileImageUrl: string | null;
   /**
    * 제작자가 탈퇴하며 남긴 캐릭터가 운영 심사를 기다리는 방. 대화는 이어지지만

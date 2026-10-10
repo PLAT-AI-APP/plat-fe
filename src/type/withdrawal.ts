@@ -24,6 +24,7 @@ export const WITHDRAWAL_DELETION_REASONS: readonly WithdrawalDeletionReason[] = 
 export interface WithdrawalCandidate {
   universeId: string;
   title: string;
+  /** 정사각 80px 썸네일. 성인 캐릭터는 서명 URL 이라 크기를 바꿀 수 없다. */
   profileImageUrl: string | null;
   visibility: "PUBLIC" | "UNLISTED";
   /** 이 캐릭터와 대화 중인 다른 유저의 방 수. */

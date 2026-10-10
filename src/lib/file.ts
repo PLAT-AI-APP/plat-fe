@@ -16,6 +16,9 @@ export type ImageVariant = "origin" | "sq40" | "sq80" | "sq140";
 /** /images/{type}/{fileId}/{variant} 의 마지막 세그먼트 */
 const IMAGE_VARIANT_PATH = /(\/images\/[^/]+\/[^/?#]+\/)([a-z0-9]+)(?=$|[?#])/;
 
+/** 성인 이미지의 서명 URL. 서명이 크기까지 묶여 있어 크기를 바꾸면 서버가 404 로 막는다. */
+const SIGNED_IMAGE_QUERY = /[?&]sig=/;
+
 /**
  * 업로드 API가 돌려준 fileId를 실제 이미지를 서빙하는
  * GET /images/{type}/{fileId}/{variant} URL로 변환합니다.
@@ -38,11 +41,15 @@ export const getResourceImageUrl = (
  * 36px 아바타에 원본(최대 수 MB 업로드를 크기 그대로 webp 로만 바꾼 파일)을 받을 이유가 없다.
  * `unoptimized` 라 next/image 가 줄여 주지도 않는 자리에서 쓴다.
  * /images/... 형태가 아닌 값(업로드 미리보기 blob:, 로컬 기본 이미지 등)은 그대로 둔다.
+ * 서명 URL(성인 이미지)도 그대로 둔다 — 서버가 그 자리에 맞는 크기로 서명해 준다.
  */
 export const toImageVariantUrl = <T extends string | null | undefined>(
   url: T,
   variant: ImageVariant,
-): T => (url ? (url.replace(IMAGE_VARIANT_PATH, `$1${variant}`) as T) : url);
+): T =>
+  url && !SIGNED_IMAGE_QUERY.test(url)
+    ? (url.replace(IMAGE_VARIANT_PATH, `$1${variant}`) as T)
+    : url;
 
 /**
  * 유저 프로필 이미지처럼 백엔드가 `/image/{id}?type=...` 상대 경로로 내려주는 값을
