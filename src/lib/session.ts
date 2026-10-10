@@ -2,6 +2,7 @@ import type { QueryClient } from "@tanstack/react-query";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useUserStore } from "@/store/useUserStore";
 import { useWalletStore } from "@/store/useWalletStore";
+import { resetAdultClaimsCache } from "@/lib/adultAccess";
 
 /**
  * React 밖(axios 인터셉터)에서도 캐시를 비울 수 있게 앱의 QueryClient 를 기억해 둔다.
@@ -37,6 +38,8 @@ export const clearSession = ({ reason }: ClearSessionOptions) => {
   logout();
   useUserStore.getState().clearUser();
   useWalletStore.getState().clearBalance();
+  // 본인·성인인증 상태는 user 와 함께 비워졌다. 토큰에서 풀어 둔 인증 클레임도 남기지 않는다.
+  resetAdultClaimsCache();
 
   // 이미 비운 뒤 늦게 도착한 만료 응답들은 캐시를 다시 건드리지 않는다.
   if (!hadSession || !sessionQueryClient) return;

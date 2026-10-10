@@ -9,6 +9,8 @@ const rankingRootKey = ["get-ranking"] as const;
 interface RankingKeyParams {
   locale: string;
   tendency: string;
+  /** 성인 콘텐츠가 섞이는지(useAdultMode). */
+  adultMode: boolean;
   period?: string;
   sort?: string;
   scope?: string;
@@ -19,6 +21,25 @@ interface RankingKeyParams {
 export const rankingQueryKeys = {
   /** 모든 랭킹(언어·성향·기간과 무관). 찜 수가 바뀐 뒤 통째로 무효화할 때 씁니다. */
   all: () => rankingRootKey,
-  list: ({ locale, tendency, period, sort, scope, page, size }: RankingKeyParams) =>
-    [...rankingRootKey, locale, tendency, period, sort, scope, page, size] as const,
+  list: ({
+    locale,
+    tendency,
+    adultMode,
+    period,
+    sort,
+    scope,
+    page,
+    size,
+  }: RankingKeyParams) =>
+    [
+      ...rankingRootKey,
+      locale,
+      tendency,
+      adultMode,
+      period,
+      sort,
+      scope,
+      page,
+      size,
+    ] as const,
 };

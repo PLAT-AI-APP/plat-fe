@@ -4,6 +4,7 @@ import {
   ChattingStartModalProps,
   FindPasswordModalProps,
   FollowModalProps,
+  IdentityVerificationModalProps,
   LoginModalProps,
   PersonaAddModalProps,
   PersonaModalProps,
@@ -26,6 +27,7 @@ export type ModalTypeMap = {
   TAG_ADD: TagAddModalProps;
   TAG_SUGGESTIONS: TagSuggestionsModalProps;
   PERSONA: PersonaModalProps;
+  IDENTITY_VERIFICATION: IdentityVerificationModalProps;
 };
 
 type ModalInstanceUnion = {
@@ -64,6 +66,7 @@ const requiresAuthModalTypes: (keyof ModalTypeMap)[] = [
   "TAG_SUGGESTIONS",
   "REPORT",
   "CHATTING_START",
+  "IDENTITY_VERIFICATION",
 ];
 
 export const useModalStore = create<ModalState>((set, get) => ({

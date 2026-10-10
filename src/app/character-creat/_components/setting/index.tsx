@@ -1,5 +1,7 @@
 "use client";
 
+import AdultBadge from "@/components/adult/AdultBadge";
+import Switch from "@/components/ui/Switch";
 import React, { MouseEvent, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
@@ -7,6 +9,13 @@ import TagAddModal from "@/components/modal/TagAddModal";
 import { ArrowRight } from "@/icons";
 import { cn } from "@/lib/utils";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
+import { useHashtagListQuery } from "@/api/hashtag/getHashtagList";
+import Button from "@/components/ui/Button";
+import { useAdultAccess } from "@/hooks/data/useAdultAccess";
+import { isVerificationValid } from "@/lib/adultAccess";
+import { showAppToast } from "@/lib/toast";
+import { useModalStore } from "@/store/useModalStore";
+import { useUserStore } from "@/store/useUserStore";
 import type {
   UniverseCreateCategory,
   UniverseCreateTendency,
@@ -40,6 +49,19 @@ const Setting = () => {
   const allowComments = useWatch({ control, name: "allowComments" });
   const tendency = useWatch({ control, name: "tendency" });
   const categoryWatch = useWatch({ control, name: "category" });
+  const adultT = useTranslations("adultVerification.create");
+  const isAdult = useWatch({ control, name: "adult" }) ?? false;
+  const openModal = useModalStore((state) => state.openModal);
+  // /users/me 가 오기 전에는 토큰 클레임으로 판단한다. 서버도 토큰으로 판단한다.
+  const adultVerifiedUntil = useUserStore((state) => state.user?.adultVerifiedUntil);
+  const tokenAdultAccess = useAdultAccess();
+  const isAdultVerified =
+    adultVerifiedUntil !== undefined
+      ? isVerificationValid(adultVerifiedUntil)
+      : tokenAdultAccess;
+  // 켜기는 성인인증이 유효해야 한다. 이미 켜진 세계관을 끄는 것은 언제나 된다.
+  const isAdultToggleDisabled = !isAdultVerified && !isAdult;
+  const { data: hashtagList } = useHashtagListQuery();
   const tendencyLabelByValue: Record<UniverseCreateTendency, string> = {
     ALL: selectorT("all"),
     MALE_ORIENTED: selectorT("male"),
@@ -65,6 +87,25 @@ const Setting = () => {
       shouldDirty: true,
       shouldValidate: true,
     });
+  };
+
+  const handleAdult = (nextAdult: boolean) => {
+    if (nextAdult && !isAdultVerified) {
+      openModal("IDENTITY_VERIFICATION");
+      return;
+    }
+    setValue("adult", nextAdult, { shouldDirty: true, shouldValidate: true });
+
+    if (nextAdult) return;
+    // 성인 해시태그는 성인 세계관에만 붙는다(서버 400). 끄면 고른 성인 태그를 함께 뺀다.
+    const adultTagIds = new Set(
+      (hashtagList?.tags ?? []).filter((tag) => tag.isAdult).map((tag) => tag.id),
+    );
+    const remainingTags = tagList.filter((tag) => !adultTagIds.has(tag.id));
+    if (remainingTags.length !== tagList.length) {
+      setValue("tagIds", remainingTags, { shouldDirty: true, shouldValidate: true });
+      showAppToast("info", adultT("adultTagsRemoved"));
+    }
   };
 
   const handleTendency = (nextTendency: UniverseCreateTendency) => {
@@ -144,6 +185,47 @@ const Setting = () => {
             aria-hidden="true"
           />
         </button>
+      </section>
+
+      <section className="flex flex-col gap-2">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex flex-col gap-1">
+            <span className="title-3 flex items-center gap-1.5 text-font-1">
+              {adultT("label")}
+              <AdultBadge />
+            </span>
+            <p className="body-7 text-font-2">{adultT("help")}</p>
+          </div>
+
+          <Switch
+            size="label"
+            tone="danger"
+            checked={isAdult}
+            label={adultT("label")}
+            disabled={isAdultToggleDisabled}
+            onChange={handleAdult}
+            themeIcon={false}
+            className="mt-1 disabled:cursor-not-allowed"
+            thumbContent={
+              <span aria-hidden="true" className="text-[11px] font-extrabold leading-none tracking-[-0.04em]">
+                19
+              </span>
+            }
+          />
+        </div>
+
+        {!isAdultVerified && (
+          <div className="flex items-center justify-between gap-3 rounded-xl bg-darkest px-4 py-3">
+            <p className="body-7 text-font-2">{adultT("requiresVerification")}</p>
+            <Button
+              size="sm"
+              variant="brandSoft"
+              onClick={() => openModal("IDENTITY_VERIFICATION")}
+            >
+              {adultT("verify")}
+            </Button>
+          </div>
+        )}
       </section>
 
       <section className="flex flex-col gap-4">

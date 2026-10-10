@@ -77,6 +77,7 @@ const NewTabContents = () => {
               images={card.images}
               isNew
               isOfficial={card.isOfficial}
+              adult={card.adult}
               href={`/characters/${card.universeId}`}
             />
           ))}

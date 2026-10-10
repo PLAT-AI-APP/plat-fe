@@ -105,6 +105,7 @@ export default function ProfileContent({ id }: { id: string }) {
         isAdopted: card.creator.adopted,
         isNew: card.isNew,
         isOfficial: card.isOfficial,
+        adult: card.adult,
       })),
     [likedItems],
   );
@@ -147,6 +148,7 @@ export default function ProfileContent({ id }: { id: string }) {
         isAdopted: card.creator.adopted,
         isNew: card.isNew,
         isOfficial: card.isOfficial,
+        adult: card.adult,
       })),
     [createdItems],
   );

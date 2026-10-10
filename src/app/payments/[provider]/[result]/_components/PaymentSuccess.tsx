@@ -68,7 +68,7 @@ const CONFETTI: ConfettiPiece[] = (() => {
   });
 })();
 
-const ConfettiBurst = () => (
+export const ConfettiBurst = () => (
   <div
     aria-hidden
     className="pointer-events-none absolute top-1/2 left-1/2 z-10"

@@ -7,6 +7,8 @@ services:
       - "3000:3000"
     environment:
       NODE_ENV: production
+      # NEXT_PUBLIC_* 는 빌드 때 번들에 박힌다. 이미지도 같은 값(--build-arg NEXT_PUBLIC_APP_ENV=dev)으로 빌드해야 한다.
+      NEXT_PUBLIC_APP_ENV: dev
     networks:
       - app_network
 

@@ -48,6 +48,7 @@ const CharacterCard = ({
   fluid = false,
   href,
   editHref,
+  adult = false,
 }: CharacterCardProps) => {
   const t = useTranslations("characterCard");
   const tCommon = useTranslations("common");
@@ -79,7 +80,9 @@ const CharacterCard = ({
     () => orderTagsBySelection(tagList, selectedTagSet),
     [selectedTagSet, tagList],
   );
-  const titleIcon = <TitleStatusIcon isOfficial={isOfficial} isNew={isNew} />;
+  const titleIcon = (
+    <TitleStatusIcon isOfficial={isOfficial} isNew={isNew} adult={adult} />
+  );
 
   // 카드 전체를 덮는 stretched link(href)와 형제로 깔아, 수정 배지를 눌러도
   // 상세페이지로 이동하는 카드 클릭과 겹치지 않게 합니다.

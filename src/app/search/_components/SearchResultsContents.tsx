@@ -50,6 +50,7 @@ const SearchCardGrid = ({ items, isLoading }: SearchCardGridProps) => (
             images={item.images}
             isNew={item.isNew}
             isOfficial={item.isOfficial}
+            adult={item.adult}
             href={`/characters/${item.universeId}`}
           />
         ))}

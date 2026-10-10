@@ -7,6 +7,7 @@ import { getNextPageNumber } from "@/lib/pagination";
 import { useAuthReady } from "@/hooks/data/useAuthReady";
 import { useAuthStore } from "@/store/useAuthStore";
 import type { LikableCard } from "@/type/card";
+import { useAdultMode } from "@/hooks/data/useAdultAccess";
 import { userQueryKeys } from "./queryKeys";
 
 /** 백엔드 BaseCard. 로그인 없이 조회 가능하고, 그때는 liked가 전부 false로 옵니다. */
@@ -41,9 +42,11 @@ export const useUserUniversesInfiniteQuery = (
 ) => {
   const authenticated = useAuthReady();
   const isAuthChecked = useAuthStore((state) => state.isAuthReady);
+  // 성인 세계관을 목록에 섞을지(19 토글·성인인증)도 응답을 바꾼다.
+  const adultMode = useAdultMode();
 
   return useInfiniteQuery<PageWith<UserUniverseCard>, AppError>({
-    queryKey: [...userQueryKeys.universes(userId), authenticated],
+    queryKey: [...userQueryKeys.universes(userId), authenticated, adultMode],
     initialPageParam: 0,
     queryFn: ({ pageParam }) =>
       getUserUniverses(userId ?? "", pageParam as number, authenticated),

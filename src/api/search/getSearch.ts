@@ -7,6 +7,7 @@ import { useAuthStore } from "@/store/useAuthStore";
 import { useLocaleStore } from "@/store/useLocaleStore";
 import { useAuthReady } from "@/hooks/data/useAuthReady";
 import type { BaseCard, CardCreator } from "@/type/card";
+import { useAdultMode } from "@/hooks/data/useAdultAccess";
 import { searchQueryKeys } from "./queryKeys";
 
 /**
@@ -71,11 +72,14 @@ export const useSearchQuery = (params: GetSearchParams) => {
   const authenticated = useAuthReady();
   // 언어가 바뀌면 Accept-Language 헤더로 나가는 응답도 달라지므로 캐시 키에 반영합니다.
   const locale = useLocaleStore((state) => state.locale);
+  // 19 토글·성인인증이 바뀌면 서버가 섞어 주는 결과도 달라진다.
+  const adultMode = useAdultMode();
 
   return useQuery<SearchResponse, AppError>({
     queryKey: searchQueryKeys.results({
       locale,
       authenticated,
+      adultMode,
       q: params.q,
       page: params.page,
       size: params.size,

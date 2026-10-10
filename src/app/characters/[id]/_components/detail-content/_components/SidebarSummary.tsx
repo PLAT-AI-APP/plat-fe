@@ -21,6 +21,7 @@ import { useRequireLogin } from "@/hooks/common/useRequireLogin";
 import { useFollowToggle } from "@/hooks/follow/useFollowToggle";
 import { universeQueryKeys } from "@/api/universe/queryKeys";
 import UniverseMenuButton from "./UniverseMenuButton";
+import AdultBadge from "@/components/adult/AdultBadge";
 
 /** 창작자가 사진을 올리지 않았거나 불러오지 못했을 때 쓰는 기본 프로필 이미지 */
 const DEFAULT_CREATOR_IMAGE = "/p1.png";
@@ -151,7 +152,10 @@ const SidebarSummary = ({
         </div>
 
         <div className="flex flex-col gap-2">
-          <h1 className="heading-2 text-font-1">{character.title}</h1>
+          <h1 className="heading-2 flex items-center gap-2 text-font-1">
+            {character.title}
+            {character.adult && <AdultBadge className="size-6 text-xs" />}
+          </h1>
           <p className="body-2 text-font-1">{character.introduce}</p>
           <div className="flex flex-col gap-0.5">
             <div className="body-4 flex flex-wrap gap-x-2 gap-y-1 text-font-2">

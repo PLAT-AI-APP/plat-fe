@@ -15,6 +15,18 @@ export interface UserInfo {
   gender: Gender;
   provider: Provider;
   email: string;
+  /**
+   * 본인인증·성인인증 상태(/users/me). 새로고침 직후(복원된 값)에는 없을 수 있어 선택값이다.
+   * 개인정보라 localStorage 에 남기지 않는다(partialize 참고).
+   */
+  identityVerifiedAt?: string | null;
+  identityVerifiedUntil?: string | null;
+  adultVerifiedAt?: string | null;
+  adultVerifiedUntil?: string | null;
+  /** 19 토글. 목록 노출만 정한다. */
+  adultContentEnabled?: boolean;
+  /** 본인인증으로 생년월일이 확정돼 바꿀 수 없다. */
+  birthLocked?: boolean;
 }
 
 interface UserState {

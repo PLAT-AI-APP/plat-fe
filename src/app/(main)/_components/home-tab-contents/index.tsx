@@ -22,6 +22,7 @@ interface HomeCardSource {
   chatCount?: number;
   isNew?: boolean;
   isOfficial?: boolean;
+  adult?: boolean;
 }
 
 const toShowcaseItem = (
@@ -37,6 +38,7 @@ const toShowcaseItem = (
   isAdopted: item.creator?.adopted,
   isNew: item.isNew,
   isOfficial: item.isOfficial,
+  adult: item.adult,
   ...overrides,
 });
 

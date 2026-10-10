@@ -81,6 +81,7 @@ const RankingTabContents = () => {
               images={card.images}
               isNew={card.isNew}
               isOfficial={card.isOfficial}
+              adult={card.adult}
               href={`/characters/${card.universeId}`}
             />
           ))}

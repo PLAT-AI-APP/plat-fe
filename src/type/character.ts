@@ -51,6 +51,8 @@ export interface CharacterDetail {
   editable: boolean;
   tags: string[];
   isOfficial: boolean;
+  /** 성인 세계관. 제목 옆에 19 배지를 단다. */
+  adult?: boolean;
   images: CharacterImageItem[];
   mainImage: string;
   profileImage: string;

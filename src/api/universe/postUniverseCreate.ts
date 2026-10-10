@@ -43,6 +43,8 @@ export interface UniverseCreateRequest {
   scenarios: UniverseCreateScenario[];
   visibility: UniverseCreateVisibility;
   commentEnabled: boolean;
+  /** 성인 세계관. 성인인증이 유효하지 않은 제작자가 true 로 보내면 403 ADULT_VERIFICATION_REQUIRED. */
+  adult?: boolean;
   description: string;
   tendency: UniverseCreateTendency;
   category: UniverseCreateCategory;

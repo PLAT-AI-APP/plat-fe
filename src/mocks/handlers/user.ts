@@ -1,6 +1,7 @@
 import { http, HttpResponse } from "msw";
 import type { UserInfo } from "@/store/useUserStore";
 import { endpoint, pathValue } from "../utils";
+import { mockVerificationFields } from "./verification";
 
 interface MockUserProfileResponse {
   id: string;
@@ -175,7 +176,7 @@ export const userHandlers = [
   }),
 
   http.get(endpoint("/users/me"), async () => {
-    return HttpResponse.json(mockUser);
+    return HttpResponse.json({ ...mockUser, ...mockVerificationFields() });
   }),
 
   http.patch(endpoint("/users/me"), async ({ request }) => {

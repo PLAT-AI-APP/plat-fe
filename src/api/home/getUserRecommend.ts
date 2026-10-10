@@ -7,6 +7,7 @@ import { useLocaleStore } from "@/store/useLocaleStore";
 import { Tendency, useTendencyStore } from "@/store/useTendencyStore";
 import { useAuthReady } from "@/hooks/data/useAuthReady";
 import type { BaseCard, CardCreator } from "@/type/card";
+import { useAdultMode } from "@/hooks/data/useAdultAccess";
 import { homeQueryKeys } from "./queryKeys";
 
 export type UserRecommendCreator = CardCreator;
@@ -66,12 +67,15 @@ export const useUserRecommendQuery = (params: GetUserRecommendParams = {}) => {
   const locale = useLocaleStore((state) => state.locale);
   // 성향이 바뀌면 목록도 달라지므로 캐시를 분리합니다.
   const tendency = useTendencyStore((state) => state.tendency);
+  // 19 토글·성인인증이 바뀌면 서버가 섞어 주는 목록도 달라진다.
+  const adultMode = useAdultMode();
   const authReady = useAuthReady();
 
   return useQuery<UserRecommendItem[], AppError>({
     queryKey: homeQueryKeys.userRecommend({
       locale,
       tendency,
+      adultMode,
       page: params.page,
       size: params.size,
     }),
