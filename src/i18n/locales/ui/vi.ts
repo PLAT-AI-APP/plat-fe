@@ -131,6 +131,7 @@ const vi = {
       commentsCount: "({count})",
     },
     officialCharacter: "Nhân vật chính thức của PLAT",
+    operatedByPlatDescription: "Nhân vật được PLAT tiếp tục vận hành",
     chatStart: "Bắt đầu chat",
     like: "Thêm vào yêu thích",
     unlike: "Bỏ khỏi yêu thích",

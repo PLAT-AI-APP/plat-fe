@@ -12,6 +12,7 @@ import {
 import { useUniverseDetailQuery } from "@/api/universe/getUniverseDetail";
 import ChatForm, { type ChatFormHandle } from "@/components/chat/ChatForm";
 import MessageList from "@/components/chat/MessageList";
+import { AssetImageUrlContext } from "@/components/chat/AssetImageUrlContext";
 import SkeletonChatMessages from "@/components/skeleton/SkeletonChatMessages";
 import { ErrorState } from "@/components/state";
 import AdultGate from "@/components/adult/AdultGate";
@@ -75,17 +76,20 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
     error: roomError,
     refetch: refetchRoom,
   } = useRoomDetailQuery(roomId);
-  // 캐릭터(세계관)가 지워진 방은 세계관을 부르지 않는다(404). 이름은 방에 남긴 스냅샷을 쓴다.
+  // 캐릭터(세계관)가 지워졌거나 운영 심사 중인 방은 세계관 상세가 닫혀 있어 부르지 않는다(404).
+  // 이름은 방에 남긴 스냅샷을, 캐릭터 ID·프로필은 방 응답의 값을 쓴다.
   const isClosed = room?.closed === true;
+  const isHandoverPending = room?.handoverPending === true;
+  const isUniverseOpen = !isClosed && !isHandoverPending;
   const {
     data: universe,
     isError: isUniverseError,
     error: universeError,
   } = useUniverseDetailQuery(
-    isClosed ? undefined : room?.universeId,
+    isUniverseOpen ? room?.universeId : undefined,
   );
   // 방을 받기 전에는 세계관 쿼리가 꺼져 있어 isLoading 이 false 이므로, 데이터 유무로 판단한다.
-  const isCharacterLoading = !isClosed && !universe && !isUniverseError;
+  const isCharacterLoading = isUniverseOpen && !universe && !isUniverseError;
   const characterName = universe?.character.name ?? room?.characterName ?? "";
   const openModal = useModalStore((state) => state.openModal);
   // 신고 모달은 목록 밖에서 열리므로 함수가 매 렌더 바뀌면 메시지 행이 전부 다시 그려진다.
@@ -96,7 +100,10 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
   );
   // 말풍선 아바타는 36px 이라 원본 대신 정사각 140px 변형본이면 충분하다(2배 화면 기준 72px 이상).
   const profileImage =
-    toImageVariantUrl(universe?.character.profileImageUrl, "sq140") ?? "";
+    toImageVariantUrl(
+      room?.characterProfileImageUrl ?? universe?.character.profileImageUrl,
+      "sq140",
+    ) ?? "";
 
   const {
     data,
@@ -164,7 +171,8 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
     regenerateMessage,
   } = useChatTurn({
     roomId,
-    universeCharacterId: universe?.character.universeCharacterId,
+    universeCharacterId:
+      room?.universeCharacterId ?? universe?.character.universeCharacterId,
     personaId: room?.personaId,
     modelId: currentAi?.id,
     multiplier: room?.multiplier,
@@ -270,7 +278,8 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
         >
           <ChattingRoomHeader
             roomId={roomId}
-            universeId={room?.universeId}
+            // 세계관 상세가 닫힌 방은 제목을 링크로 두지 않는다.
+            universeId={isUniverseOpen ? room?.universeId : undefined}
             characterName={characterName}
             models={models}
             currentAi={currentAi}
@@ -284,22 +293,26 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
             <div ref={topSentinelRef} aria-hidden="true" className="h-px" />
           )}
 
-          {isMessagesPending ? (
+          {/* 방 정보가 와야 아바타·성인 에셋 주소가 정해진다. 먼저 그리면 파일 ID 로 만든 주소를 한 번 헛되이 받는다. */}
+          {isMessagesPending || !room ? (
             <SkeletonChatMessages />
           ) : isMessagesError && serverMessages.length === 0 ? (
             <ErrorState error={messagesError} onRetry={refetchMessages} />
           ) : (
-            <MessageList
-              messages={messages}
-              scrollContainer={scrollContainer}
-              isNovelView={isNovelView}
-              suggestions={suggestions}
-              onSuggestionSelect={handleSuggestionSelect}
-              onDeleteMessage={isBusy ? undefined : handleDeleteMessage}
-              onRetryMessage={isBusy || !canSend || isClosed ? undefined : handleRetryMessage}
-              // 지워진 캐릭터의 답은 신고할 대상이 사라졌다.
-              onReportMessage={isClosed ? undefined : handleReportMessage}
-            />
+            // 성인 세계관 에셋은 보호 경로라 방 응답의 서명 URL 로 그린다.
+            <AssetImageUrlContext.Provider value={room?.assetImageUrls}>
+              <MessageList
+                messages={messages}
+                scrollContainer={scrollContainer}
+                isNovelView={isNovelView}
+                suggestions={suggestions}
+                onSuggestionSelect={handleSuggestionSelect}
+                onDeleteMessage={isBusy ? undefined : handleDeleteMessage}
+                onRetryMessage={isBusy || !canSend || isClosed ? undefined : handleRetryMessage}
+                // 지워진 캐릭터의 답은 신고할 대상이 사라졌다.
+                onReportMessage={isClosed ? undefined : handleReportMessage}
+              />
+            </AssetImageUrlContext.Provider>
           )}
         </div>
 
@@ -313,12 +326,33 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
               {t("chatRoom.closedNotice")}
             </p>
           ) : (
-            <ChatForm
+            <>
+              {isHandoverPending && (
+                <p
+                  role="status"
+                  className="body-7 mx-auto mb-3 flex w-fit max-w-full items-center gap-2 rounded-full border border-info/25 bg-info-bg py-1.5 pr-3.5 pl-3"
+                >
+                  {/* 운영 심사가 진행 중이라는 살아 있는 표시 */}
+                  <span aria-hidden="true" className="relative flex size-2 shrink-0">
+                    <span className="absolute inline-flex size-full animate-ping rounded-full bg-info opacity-60" />
+                    <span className="relative inline-flex size-2 rounded-full bg-info" />
+                  </span>
+                  <span className="title-7 shrink-0 text-info">
+                    {t("chatRoom.handoverPendingLabel")}
+                  </span>
+                  <span aria-hidden="true" className="h-3 w-px shrink-0 bg-info/30" />
+                  <span className="truncate text-font-1">
+                    {t("chatRoom.handoverPendingNotice")}
+                  </span>
+                </p>
+              )}
+              <ChatForm
               ref={chatFormRef}
               onSendMessage={sendMessage}
               disabled={isBusy}
               isPreparing={!canSend && !isRoomError && !isUniverseError}
-            />
+              />
+            </>
           )}
         </div>
       </div>

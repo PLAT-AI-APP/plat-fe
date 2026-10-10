@@ -3,7 +3,7 @@ import type ko from "./ko";
 
 const vi: typeof ko = {
   ...en,
-  common: { confirm: "Xác nhận", cancel: "Hủy", optional: "(Tùy chọn)" },
+  common: { confirm: "Xác nhận", cancel: "Hủy", optional: "(Tùy chọn)", operatedByPlat: "PLAT vận hành" },
   languages: {
     ko: "Tiếng Hàn",
     en: "English",
@@ -215,6 +215,21 @@ const vi: typeof ko = {
       descriptionLine1: "Cảm ơn bạn đã dành thời gian với PLAT.",
       descriptionLine2: "Hy vọng một ngày nào đó chúng ta sẽ gặp lại.",
       confirm: "Xác nhận",
+      handoverTitle: "Nhân vật đã giữ lại",
+      handoverNumberLabel: "Mã chuyển giao",
+      copyNumber: "Sao chép mã chuyển giao",
+      copyAll: "Sao chép tất cả",
+      allCopied: "Đã sao chép tên và mã chuyển giao của {count} nhân vật",
+      stepReceived: "Đã tiếp nhận",
+      stepReview: "Kiểm duyệt",
+      stepReviewUntil: "đến {date}",
+      stepContinue: "Tiếp tục trò chuyện",
+      numberCopied: "Đã sao chép mã chuyển giao",
+      copyFailed: "Không thể sao chép",
+      inquiryHint: "Khi liên hệ, hãy cung cấp mã chuyển giao để chúng tôi tìm được nhân vật bạn đã giữ lại.",
+      closeWarning: "Tài khoản này không có email bản sao nên sau khi đóng sẽ không xem lại được. Hãy dùng Sao chép tất cả để lưu mã chuyển giao.",
+      copyMailSent: "Đã gửi bản sao văn bản đồng ý qua email",
+      consentSummary: "Đã đồng ý Giấy phép sử dụng nhân vật v{version} · {date}",
     },
     withdrawalConfirm: {
       title: "Bạn thật sự muốn rời đi chứ?",
@@ -224,6 +239,9 @@ const vi: typeof ko = {
       cancel: "Quay lại",
       confirm: "Xóa tài khoản",
       confirmPending: "Đang xóa tài khoản",
+      keepSummary: "Nhân vật được giữ lại chờ kiểm duyệt",
+      deleteSummary: "Nhân vật bị xóa cùng tài khoản",
+      countUnit: "{count}",
     },
   },
   field: {

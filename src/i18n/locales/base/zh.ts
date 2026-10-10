@@ -3,7 +3,7 @@ import type ko from "./ko";
 
 const zh: typeof ko = {
   ...en,
-  common: { confirm: "确认", cancel: "取消", optional: "（可选）" },
+  common: { confirm: "确认", cancel: "取消", optional: "（可选）", operatedByPlat: "PLAT 运营" },
   languages: {
     ko: "韩语",
     en: "English",
@@ -212,6 +212,21 @@ const zh: typeof ko = {
       descriptionLine1: "感谢你一直以来对 PLAT 的支持。",
       descriptionLine2: "希望以后还能再次见到你。",
       confirm: "确认",
+      handoverTitle: "保留的角色",
+      handoverNumberLabel: "移交编号",
+      copyNumber: "复制移交编号",
+      copyAll: "全部复制",
+      allCopied: "已复制 {count} 个保留角色的名称和移交编号",
+      stepReceived: "已受理",
+      stepReview: "运营审核",
+      stepReviewUntil: "~{date}",
+      stepContinue: "对话继续",
+      numberCopied: "已复制移交编号",
+      copyFailed: "复制失败",
+      inquiryHint: "咨询时提供移交编号，即可查到您保留的角色。",
+      closeWarning: "该账号无法接收副本邮件，关闭后将无法再次查看。请使用“全部复制”保存移交编号。",
+      copyMailSent: "已通过邮件发送同意书副本",
+      consentSummary: "已同意角色使用许可同意书 v{version} · {date}",
     },
     withdrawalConfirm: {
       title: "你确定要离开吗？",
@@ -220,6 +235,9 @@ const zh: typeof ko = {
       cancel: "返回",
       confirm: "注销",
       confirmPending: "正在注销",
+      keepSummary: "保留并接受运营审核的角色",
+      deleteSummary: "随注销一并删除的角色",
+      countUnit: "{count} 个",
     },
   },
   field: {

@@ -94,7 +94,7 @@ const likedUniversePage = (page: number, size: number) => {
         images: [`https://picsum.photos/seed/liked-${order}/374/490`],
         title: `${seed.title} ${order + 1}`,
         description: seed.description,
-        creator: { creatorId: `creator-${order}`, nickname: seed.nickname },
+        creator: { creatorId: `creator-${order}`, nickname: seed.nickname, adopted: false },
         chatCount: 40 + order * 3,
         isNew: order % 5 === 0,
         isOfficial: order % 7 === 0,
@@ -140,7 +140,7 @@ const userUniversePage = (
         images: [`https://picsum.photos/seed/user-${userId}-${order}/374/490`],
         title: `${userId}의 세계관 ${order + 1}`,
         description: "프로필 작품 탭에서 보이는 세계관입니다.",
-        creator: { creatorId: userId, nickname: `유저_${userId}` },
+        creator: { creatorId: userId, nickname: `유저_${userId}`, adopted: false },
         chatCount: 10 + order * 5,
         isNew: order === 0,
         isOfficial: false,
@@ -298,12 +298,61 @@ export const userHandlers = [
     });
   }),
 
-  http.delete(endpoint("/users/me"), async () => {
-    return new HttpResponse(null, {
-      status: 204,
-      headers: {
-        "Set-Cookie": "refreshToken=; Path=/; Max-Age=0; SameSite=Lax",
+  /** 탈퇴 전 캐릭터 처리 미리보기. 남기기 후보 하나와 삭제될 캐릭터 하나를 돌려준다. */
+  http.get(endpoint("/users/me/withdrawal/preview"), () =>
+    HttpResponse.json({
+      keepAllowed: true,
+      keepBlockedReason: null,
+      ageAttestationRequired: !mockUser.birth,
+      consent: {
+        documentId: "12",
+        version: "1.0.0",
+        content: "# 캐릭터 이용허락 동의서\n\n목업 동의서 원문입니다.",
       },
-    });
+      candidates: [
+        {
+          universeId: "mock-universe-1",
+          title: "당신을 기다려온 소꿉친구",
+          profileImageUrl: null,
+          visibility: "PUBLIC",
+          otherRoomCount: 12,
+        },
+      ],
+      deletions: [
+        { universeId: "mock-universe-2", title: "비공개 습작", reason: "PRIVATE" },
+      ],
+    }),
+  ),
+
+  http.post(endpoint("/users/me/withdrawal"), async ({ request }) => {
+    const body = (await request.json()) as {
+      decisions: { universeId: string; choice: "KEEP" | "DELETE" }[];
+      consentDocumentId: string | null;
+    };
+    const kept = body.decisions.filter((decision) => decision.choice === "KEEP");
+
+    return HttpResponse.json(
+      {
+        handovers: kept.map((decision, index) => ({
+          handoverId: `${Date.now()}${index}`,
+          universeId: decision.universeId,
+          title: "당신을 기다려온 소꿉친구",
+          deadlineAt: new Date(Date.now() + 14 * 86_400_000).toISOString(),
+        })),
+        consent: body.consentDocumentId
+          ? {
+              documentId: body.consentDocumentId,
+              version: "1.0.0",
+              consentedAt: new Date().toISOString(),
+            }
+          : null,
+        copyMailRequested: kept.length > 0,
+      },
+      {
+        headers: {
+          "Set-Cookie": "refreshToken=; Path=/; Max-Age=0; SameSite=Lax",
+        },
+      },
+    );
   }),
 ];

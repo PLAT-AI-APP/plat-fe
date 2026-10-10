@@ -35,6 +35,7 @@ const CharacterCard = ({
   title,
   description,
   creatorName,
+  isAdopted = false,
   chatCount,
   images,
   size = "M",
@@ -50,6 +51,7 @@ const CharacterCard = ({
   adult = false,
 }: CharacterCardProps) => {
   const t = useTranslations("characterCard");
+  const tCommon = useTranslations("common");
   // 상세로 가는 카드면 포인터를 올릴 때 상세를 미리 받는다(누를 때 스켈레톤 없이 바로 뜬다).
   const prefetchUniverseDetail = usePrefetchUniverseDetail();
   const detailUniverseId = href?.match(/^\/characters\/([^/?#]+)/)?.[1];
@@ -327,7 +329,7 @@ const CharacterCard = ({
 
         <div className="inline-flex items-start justify-start gap-0.5">
           <span className={cn("line-clamp-1", config.creatorName)}>
-            @ {creatorName}
+            {isAdopted ? tCommon("operatedByPlat") : `@ ${creatorName}`}
           </span>
         </div>
 

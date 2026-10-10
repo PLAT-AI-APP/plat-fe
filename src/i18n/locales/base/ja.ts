@@ -3,7 +3,7 @@ import type ko from "./ko";
 
 const ja: typeof ko = {
   ...en,
-  common: { confirm: "確認", cancel: "キャンセル", optional: "（任意）" },
+  common: { confirm: "確認", cancel: "キャンセル", optional: "（任意）", operatedByPlat: "運営 PLAT" },
   languages: {
     ko: "韓国語",
     en: "English",
@@ -214,6 +214,21 @@ const ja: typeof ko = {
       descriptionLine1: "これまでPLATをご利用いただきありがとうございました。",
       descriptionLine2: "またお会いできることを願っています。",
       confirm: "確認",
+      handoverTitle: "残したキャラクター",
+      handoverNumberLabel: "引き継ぎ番号",
+      copyNumber: "引き継ぎ番号をコピー",
+      copyAll: "すべてコピー",
+      allCopied: "残したキャラクター{count}件の名前と引き継ぎ番号をコピーしました",
+      stepReceived: "受付完了",
+      stepReview: "運営審査",
+      stepReviewUntil: "~{date}",
+      stepContinue: "会話が続く",
+      numberCopied: "引き継ぎ番号をコピーしました",
+      copyFailed: "コピーできませんでした",
+      inquiryHint: "お問い合わせの際に引き継ぎ番号をお伝えいただくと、残したキャラクターを確認できます。",
+      closeWarning: "写しメールが届かないアカウントのため、閉じると再表示できません。「すべてコピー」で引き継ぎ番号を保存してください。",
+      copyMailSent: "同意書の写しをメールで送りました",
+      consentSummary: "キャラクター利用許諾同意書 v{version} · {date} 同意",
     },
     withdrawalConfirm: {
       title: "本当に退会しますか？",
@@ -223,6 +238,9 @@ const ja: typeof ko = {
       cancel: "戻る",
       confirm: "退会する",
       confirmPending: "退会処理中",
+      keepSummary: "残して運営審査を受けるキャラクター",
+      deleteSummary: "退会とともに削除されるキャラクター",
+      countUnit: "{count}件",
     },
   },
   field: {

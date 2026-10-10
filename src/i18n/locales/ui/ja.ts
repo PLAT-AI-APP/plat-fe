@@ -131,6 +131,7 @@ const ja = {
       commentsCount: "({count}件)",
     },
     officialCharacter: "PLAT公式キャラクター",
+    operatedByPlatDescription: "PLATが引き続き運営しているキャラクターです",
     chatStart: "会話する",
     like: "お気に入りに追加",
     unlike: "お気に入りを解除",

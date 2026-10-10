@@ -4,6 +4,8 @@ export interface CharacterCardProps {
   title: string;
   description: string;
   creatorName: string;
+  /** 공식 계정이 운영하는 캐릭터. "@닉네임" 대신 "운영 PLAT" 으로 적는다. */
+  isAdopted?: boolean;
   chatCount?: number;
   images: string[] | string;
   size?: CardSize;

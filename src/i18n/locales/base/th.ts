@@ -3,7 +3,7 @@ import type ko from "./ko";
 
 const th: typeof ko = {
   ...en,
-  common: { confirm: "ยืนยัน", cancel: "ยกเลิก", optional: "(ไม่บังคับ)" },
+  common: { confirm: "ยืนยัน", cancel: "ยกเลิก", optional: "(ไม่บังคับ)", operatedByPlat: "ดูแลโดย PLAT" },
   languages: {
     ko: "เกาหลี",
     en: "English",
@@ -215,6 +215,21 @@ const th: typeof ko = {
       descriptionLine1: "ขอบคุณที่ใช้เวลาร่วมกับ PLAT",
       descriptionLine2: "หวังว่าเราจะได้พบกันอีกครั้ง",
       confirm: "ยืนยัน",
+      handoverTitle: "ตัวละครที่เก็บไว้",
+      handoverNumberLabel: "หมายเลขการโอน",
+      copyNumber: "คัดลอกหมายเลขการโอน",
+      copyAll: "คัดลอกทั้งหมด",
+      allCopied: "คัดลอกชื่อและหมายเลขการโอนของตัวละคร {count} ตัวแล้ว",
+      stepReceived: "รับเรื่องแล้ว",
+      stepReview: "ตรวจสอบ",
+      stepReviewUntil: "ถึง {date}",
+      stepContinue: "สนทนาต่อ",
+      numberCopied: "คัดลอกหมายเลขการโอนแล้ว",
+      copyFailed: "คัดลอกไม่สำเร็จ",
+      inquiryHint: "แจ้งหมายเลขการโอนเมื่อติดต่อเรา เพื่อให้เราค้นหาตัวละครที่คุณเก็บไว้ได้",
+      closeWarning: "บัญชีนี้ไม่มีอีเมลสำเนา หากปิดหน้าต่างนี้จะดูอีกไม่ได้ โปรดใช้คัดลอกทั้งหมดเพื่อเก็บหมายเลขการโอน",
+      copyMailSent: "ส่งสำเนาหนังสือยินยอมไปทางอีเมลแล้ว",
+      consentSummary: "ยินยอมหนังสืออนุญาตใช้ตัวละคร v{version} · {date}",
     },
     withdrawalConfirm: {
       title: "คุณแน่ใจหรือว่าจะจากไป?",
@@ -224,6 +239,9 @@ const th: typeof ko = {
       cancel: "กลับไป",
       confirm: "ลบบัญชี",
       confirmPending: "กำลังลบบัญชี",
+      keepSummary: "ตัวละครที่เก็บไว้รอตรวจสอบ",
+      deleteSummary: "ตัวละครที่จะถูกลบพร้อมบัญชี",
+      countUnit: "{count} ตัว",
     },
   },
   field: {

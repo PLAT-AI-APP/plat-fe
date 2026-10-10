@@ -193,7 +193,11 @@ const ChattingSidebar = ({ roomId, toggleIsSidebar }: ChattingSidebarProps) => {
   );
   const { data: room } = useRoomDetailQuery(roomId);
   // 채팅방 화면이 이미 받아 둔 세계관 상세를 캐시에서 그대로 쓴다.
-  const { data: universe } = useUniverseDetailQuery(room?.universeId);
+  // 지워졌거나 운영 심사 중인 캐릭터의 방은 세계관 상세가 닫혀 있어 부르지 않는다.
+  const isUniverseOpen = !room?.closed && !room?.handoverPending;
+  const { data: universe } = useUniverseDetailQuery(
+    isUniverseOpen ? room?.universeId : undefined,
+  );
   const scenarios = universe
     ? adaptUniverseDetailToCharacterDetail(universe).scenarios
     : [];
@@ -484,14 +488,16 @@ const ChattingSidebar = ({ roomId, toggleIsSidebar }: ChattingSidebarProps) => {
                               }
                             />
                           </li>
-                          <li>
-                            <SidebarMenuItem
-                              icon={ChatPlus}
-                              label={t("restartChat")}
-                              onClick={handleRestartChat}
-                              disabled={!universe}
-                            />
-                          </li>
+                          {isUniverseOpen && (
+                            <li>
+                              <SidebarMenuItem
+                                icon={ChatPlus}
+                                label={t("restartChat")}
+                                onClick={handleRestartChat}
+                                disabled={!universe}
+                              />
+                            </li>
+                          )}
                         </menu>
                       </section>
                     </nav>

@@ -106,6 +106,11 @@ const en = {
     updatedAt: "As of {datetime}:00",
   },
   withdrawalPage: {
+    blockers: {
+      consent: "Please agree to the Character License",
+      adult: "Please confirm you are 19 or older",
+      confirm: "Please check that you've read the notice above",
+    },
     title: "Delete account",
     defaultMember: "Member",
     heading: "{nickname}, we'll miss you",
@@ -120,10 +125,8 @@ const en = {
         "Unused notes are not refunded and will be removed together.",
       rejoinRestricted:
         "You cannot sign up again with the same email address for 7 days.",
-      creationsDeleted:
-        "Characters and worlds you created will all be deleted after withdrawal.",
-      chatsReadOnly:
-        "Existing chat rooms stay, but you won't be able to send new messages.",
+      creationsDeleted: "Characters you don't keep will be deleted after you leave.",
+      chatsReadOnly: "Other users' existing chat rooms become read-only.",
     },
     remainingBalance:
       "Your remaining {credits} notes and {points}P in earnings can't be recovered after you leave. If a refund is in progress or a gift card exchange is still pending, you can leave once it's done.",
@@ -133,6 +136,61 @@ const en = {
     back: "I need more time",
     submit: "Delete my account",
     submitPending: "Deleting account",
+    characters: {
+      title: "Your characters",
+      choiceGuide: "Kept characters continue chatting after our review; deleted ones are removed when you leave. Choose for each character.",
+      listTitle: "Characters with active chats",
+      counts: {
+        keep: "Keep {count}",
+        delete: "Delete {count}",
+        undecided: "Undecided {count}",
+      },
+      filters: {
+        all: "All",
+        undecided: "Undecided",
+      },
+      searchPlaceholder: "Search by character name",
+      bulk: {
+        keepAll: "Keep all",
+        deleteAll: "Delete all",
+        scope: "Bulk actions apply to the {count} shown",
+      },
+      noMatch: "No characters match",
+      willBeDeleted: "Will be deleted",
+      showMore: "Show {count} more",
+      remaining: "{count} left",
+      showRest: "Show the other {count}",
+      showLess: "Collapse",
+      undecidedLeft: "{count} characters still need a choice",
+      keepBlocked: {
+        minor: "Users under 19 can't keep characters. Characters with active chats will also be deleted, and those chats become read-only.",
+        unavailable: "Keeping isn't available right now, so you can only delete.",
+      },
+      talking: "{count} users chatting",
+      keep: "Keep",
+      delete: "Delete",
+      deletionsCaption: "Characters that are private or that no one else has chatted with are deleted when you leave.",
+      deletionsTitle: "Also deleted",
+      reasons: {
+        INACTIVE: "Deactivated",
+        PRIVATE: "Private",
+        NOT_APPROVED: "Not approved",
+        UNDER_REVIEW: "Under review",
+        NO_OTHER_ROOMS: "No other users",
+      },
+      summary: {
+        copyright: "You keep the copyright; it's only used to run chats on PLAT.",
+        anonymous: "It stays without your name, as an 'Operated by PLAT' character.",
+        review: "Only characters that pass operator review stay; the rest are deleted.",
+        irreversible: "Kept characters can't be returned to you.",
+      },
+      viewConsent: "View full consent form",
+      hideConsent: "Hide consent form",
+      consentAgree: "I agree to the Character License Consent (v{version}).",
+      adultAttest: "I am 19 or older.",
+      consentTitle: "Character license",
+      consentSubtitle: "A separate consent that applies only to the characters you keep.",
+    },
   },
   profile: {
     defaultName: "Name",

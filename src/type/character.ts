@@ -63,6 +63,8 @@ export interface CharacterDetail {
     nickname: string;
     followerCount: number;
     isFollowing: boolean;
+    /** 공식 계정이 운영하는 캐릭터(제작자 탈퇴 후 인수). 프로필·팔로우 없이 "운영 PLAT" 으로 적는다. */
+    adopted: boolean;
   };
   scenarios: CharacterScenario[];
   comments: CharacterDetailComment[];

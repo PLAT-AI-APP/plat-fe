@@ -105,6 +105,11 @@ const vi: typeof en = {
     updatedAt: "Tính đến {datetime} giờ",
   },
   withdrawalPage: {
+    blockers: {
+      consent: "Vui lòng đồng ý với giấy phép sử dụng nhân vật",
+      adult: "Vui lòng xác nhận bạn từ 19 tuổi trở lên",
+      confirm: "Vui lòng đánh dấu đã đọc nội dung ở trên",
+    },
     title: "Xóa tài khoản",
     defaultMember: "Thành viên",
     heading: "Thật tiếc khi phải chia tay với {nickname}",
@@ -119,10 +124,8 @@ const vi: typeof en = {
         "Note chưa sử dụng sẽ không được hoàn tiền và sẽ bị xóa cùng lúc.",
       rejoinRestricted:
         "Bạn không thể đăng ký lại bằng cùng địa chỉ email trong 7 ngày.",
-      creationsDeleted:
-        "Nhân vật và thế giới bạn tự tạo sẽ bị xóa hoàn toàn sau khi rời đi.",
-      chatsReadOnly:
-        "Các phòng chat hiện có vẫn được giữ lại, nhưng bạn sẽ không thể gửi tin nhắn mới.",
+      creationsDeleted: "Nhân vật không được giữ lại sẽ bị xóa sau khi bạn rời đi",
+      chatsReadOnly: "Phòng chat hiện có của người dùng khác sẽ chỉ còn xem được",
     },
     remainingBalance:
       "{credits} note và {points}P điểm thu nhập còn lại sẽ không thể khôi phục sau khi rời đi. Nếu còn yêu cầu hoàn tiền đang xử lý hoặc đổi thẻ quà tặng đang chờ gửi, bạn có thể rời đi sau khi hoàn tất.",
@@ -132,6 +135,61 @@ const vi: typeof en = {
     back: "Tôi muốn suy nghĩ thêm",
     submit: "Tôi sẽ xóa tài khoản",
     submitPending: "Đang xử lý xóa tài khoản",
+    characters: {
+      title: "Nhân vật đã tạo",
+      choiceGuide: "Nhân vật được giữ lại sẽ tiếp tục trò chuyện sau kiểm duyệt; nhân vật bị xóa sẽ biến mất khi bạn rời đi. Hãy chọn cho từng nhân vật",
+      listTitle: "Nhân vật đang được trò chuyện",
+      counts: {
+        keep: "Giữ lại {count}",
+        delete: "Xóa {count}",
+        undecided: "Chưa chọn {count}",
+      },
+      filters: {
+        all: "Tất cả",
+        undecided: "Chưa chọn",
+      },
+      searchPlaceholder: "Tìm theo tên nhân vật",
+      bulk: {
+        keepAll: "Giữ lại tất cả",
+        deleteAll: "Xóa tất cả",
+        scope: "Thao tác hàng loạt áp dụng cho {count} mục đang hiển thị",
+      },
+      noMatch: "Không có nhân vật phù hợp",
+      willBeDeleted: "Sẽ bị xóa",
+      showMore: "Xem thêm {count}",
+      remaining: "Còn {count}",
+      showRest: "Xem {count} mục còn lại",
+      showLess: "Thu gọn",
+      undecidedLeft: "Còn {count} nhân vật chưa chọn",
+      keepBlocked: {
+        minor: "Người dưới 19 tuổi không thể giữ lại nhân vật. Các nhân vật đang được trò chuyện cũng sẽ bị xóa và phòng chat chỉ có thể xem.",
+        unavailable: "Hiện không thể giữ lại nên bạn chỉ có thể chọn xóa",
+      },
+      talking: "{count} người đang trò chuyện",
+      keep: "Giữ lại",
+      delete: "Xóa",
+      deletionsCaption: "Nhân vật không công khai hoặc chưa có người dùng khác trò chuyện sẽ bị xóa khi bạn rời đi",
+      deletionsTitle: "Cũng sẽ bị xóa",
+      reasons: {
+        INACTIVE: "Bị vô hiệu hóa",
+        PRIVATE: "Riêng tư",
+        NOT_APPROVED: "Không được duyệt",
+        UNDER_REVIEW: "Đang xét duyệt",
+        NO_OTHER_ROOMS: "Không có người dùng khác",
+      },
+      summary: {
+        copyright: "Bản quyền vẫn thuộc về tôi, chỉ dùng để vận hành trò chuyện trong PLAT",
+        anonymous: "Nhân vật được giữ lại không kèm tên tôi, dưới dạng 'PLAT vận hành'",
+        review: "Chỉ nhân vật vượt qua xét duyệt được giữ lại, phần còn lại bị xóa",
+        irreversible: "Nhân vật đã giữ lại không thể lấy lại",
+      },
+      viewConsent: "Xem toàn văn văn bản đồng ý",
+      hideConsent: "Thu gọn văn bản đồng ý",
+      consentAgree: "Tôi đồng ý với Văn bản đồng ý cấp phép sử dụng nhân vật (v{version})",
+      adultAttest: "Tôi từ 19 tuổi trở lên",
+      consentTitle: "Cấp phép sử dụng nhân vật",
+      consentSubtitle: "Đồng ý riêng, chỉ áp dụng cho các nhân vật bạn chọn giữ lại",
+    },
   },
   profile: {
     defaultName: "Tên",
