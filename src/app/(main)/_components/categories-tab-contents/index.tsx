@@ -51,6 +51,7 @@ const CategoryCharacterCard = memo(({ card, selectedTagIds }: CategoryCharacterC
       selectedTags={selectedTags}
       isNew={card.isNew}
       isOfficial={card.isOfficial}
+      adult={card.adult}
       href={`/characters/${card.universeId}`}
     />
   );

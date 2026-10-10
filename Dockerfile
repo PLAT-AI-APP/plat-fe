@@ -6,6 +6,10 @@ RUN npm ci --legacy-peer-deps
 COPY . .
 ARG NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+# 배포 환경(dev | prod). dev·prod 모두 NODE_ENV=production 이라 개발용 화면(/dev/**)은 이 값으로만 가른다.
+# 비우거나 dev·local 이 아니면 운영처럼 닫힌다. dev 배포 빌드는 --build-arg NEXT_PUBLIC_APP_ENV=dev 로 넣는다.
+ARG NEXT_PUBLIC_APP_ENV=prod
+ENV NEXT_PUBLIC_APP_ENV=$NEXT_PUBLIC_APP_ENV
 # 오류 수집(Sentry). 값은 배포 때만 넣는다. DSN 이 비어 있으면 수집이 꺼진다.
 # NEXT_PUBLIC_* 는 빌드 시점에 번들에 박히므로 런타임 env 가 아니라 build-arg 로 받는다.
 ARG NEXT_PUBLIC_SENTRY_DSN

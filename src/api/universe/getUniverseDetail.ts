@@ -11,6 +11,7 @@ import type {
 import { universeQueryKeys } from "./queryKeys";
 import { useAuthReady } from "@/hooks/data/useAuthReady";
 import { useAuthStore } from "@/store/useAuthStore";
+import { useAdultAccess } from "@/hooks/data/useAdultAccess";
 
 export type UniverseDetailVisibility = "PUBLIC" | "PRIVATE";
 export type UniverseDetailTendency =
@@ -79,6 +80,8 @@ export interface UniverseDetailResponse {
   profileImageUrl: string;
   character: UniverseDetailCharacter;
   hashtags: UniverseDetailHashtag[];
+  /** 성인 세계관. 성인인증이 유효한 로그인 유저만 받을 수 있다(아니면 403 ADULT_CONTENT_RESTRICTED). */
+  adult?: boolean;
   assets: UniverseDetailAsset[];
   scenarios: UniverseDetailScenario[];
 }
@@ -139,6 +142,7 @@ export const adaptUniverseDetailToCharacterDetail = (
     editable: universe.editable,
     tags: universe.hashtags.map((hashtag) => hashtag.label),
     isOfficial: false,
+    adult: universe.adult ?? false,
     images,
     mainImage: universe.profileImageUrl,
     profileImage: universe.character.profileImageUrl,
@@ -161,9 +165,14 @@ export const adaptUniverseDetailToCharacterDetail = (
 };
 
 /** 조회 훅과 미리 받기(prefetch)가 같은 키·요청을 쓰도록 한곳에서 만든다. */
-const universeDetailQueryOptions = (universeId: string | undefined, authReady: boolean) =>
+const universeDetailQueryOptions = (
+  universeId: string | undefined,
+  authReady: boolean,
+  adultAccess: boolean,
+) =>
   queryOptions<UniverseDetailResponse, AppError>({
-    queryKey: [...universeQueryKeys.detail(universeId), authReady],
+    // 성인 세계관은 성인인증이 유효해야 열린다. 인증을 마치면 키가 바뀌어 막혔던 상세를 다시 받는다.
+    queryKey: [...universeQueryKeys.detail(universeId), authReady, adultAccess],
     queryFn: () => getUniverseDetail(universeId ?? ""),
   });
 
@@ -173,9 +182,10 @@ export const useUniverseDetailQuery = (universeId?: string) => {
   // 로그인했을 때 키가 바뀌면서 자동으로 재요청된다 — 새로고침 없이도 내용이 채워진다.
   const authReady = useAuthReady();
   const isAuthChecked = useAuthStore((state) => state.isAuthReady);
+  const adultAccess = useAdultAccess();
 
   return useQuery({
-    ...universeDetailQueryOptions(universeId, authReady),
+    ...universeDetailQueryOptions(universeId, authReady, adultAccess),
     // 인증 확인 전에 먼저 받으면, 확인이 끝나 키가 바뀔 때 처음부터 다시 로딩한다.
     enabled: Boolean(universeId) && isAuthChecked,
   });
@@ -189,14 +199,15 @@ export const useUniverseDetailQuery = (universeId?: string) => {
 export const usePrefetchUniverseDetail = () => {
   const queryClient = useQueryClient();
   const authReady = useAuthReady();
+  const adultAccess = useAdultAccess();
 
   return useCallback(
     (universeId: string) => {
       if (!authReady) return;
       void queryClient.prefetchQuery(
-        universeDetailQueryOptions(universeId, authReady),
+        universeDetailQueryOptions(universeId, authReady, adultAccess),
       );
     },
-    [queryClient, authReady],
+    [queryClient, authReady, adultAccess],
   );
 };

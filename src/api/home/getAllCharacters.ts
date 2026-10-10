@@ -8,6 +8,7 @@ import { useLocaleStore } from "@/store/useLocaleStore";
 import { Tendency, useTendencyStore } from "@/store/useTendencyStore";
 import { useAuthReady } from "@/hooks/data/useAuthReady";
 import type { CardCreator, LikableCard } from "@/type/card";
+import { useAdultMode } from "@/hooks/data/useAdultAccess";
 import { homeQueryKeys } from "./queryKeys";
 
 /** 백엔드 BaseCard. 랭킹·카테고리 검색과 같은 모양입니다. */
@@ -43,12 +44,15 @@ export const useAllCharactersQuery = (params: GetAllCharactersParams = {}) => {
   const locale = useLocaleStore((state) => state.locale);
   // 성향이 바뀌면 목록도 달라지므로 캐시를 분리합니다.
   const tendency = useTendencyStore((state) => state.tendency);
+  // 19 토글·성인인증이 바뀌면 서버가 섞어 주는 목록도 달라진다.
+  const adultMode = useAdultMode();
 
   return useQuery<SliceWith<AllCharacterItem>, AppError>({
     queryKey: homeQueryKeys.allCharacters({
       locale,
       authenticated,
       tendency,
+      adultMode,
       page: params.page,
       size: params.size,
     }),

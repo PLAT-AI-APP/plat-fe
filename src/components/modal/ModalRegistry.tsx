@@ -27,6 +27,7 @@ const MODAL_LOADERS = {
   TAG_ADD: () => import("./TagAddModal"),
   TAG_SUGGESTIONS: () => import("./TagSuggestionsModal"),
   PERSONA: () => import("./persona"),
+  IDENTITY_VERIFICATION: () => import("./IdentityVerificationModal"),
 } satisfies Record<keyof ModalTypeMap, () => Promise<unknown>>;
 
 const MODAL_COMPONENTS = {
@@ -41,6 +42,7 @@ const MODAL_COMPONENTS = {
   TAG_ADD: dynamic(MODAL_LOADERS.TAG_ADD),
   TAG_SUGGESTIONS: dynamic(MODAL_LOADERS.TAG_SUGGESTIONS),
   PERSONA: dynamic(MODAL_LOADERS.PERSONA),
+  IDENTITY_VERIFICATION: dynamic(MODAL_LOADERS.IDENTITY_VERIFICATION),
 } as {
   [K in keyof ModalTypeMap]: ComponentType<ModalTypeMap[K]>;
 };

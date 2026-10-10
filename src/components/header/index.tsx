@@ -3,6 +3,7 @@ import React, { Suspense, useRef } from "react";
 import dynamic from "next/dynamic";
 import type { RefObject } from "react";
 import { SearchBar } from "./SearchBar";
+import AdultToggle from "./AdultToggle";
 import Profile from "./Profile";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
@@ -85,11 +86,12 @@ const Header = ({ handleFoldToggle, foldToggleRef }: HeaderProps) => {
         className="flex h-10 min-w-0 flex-1 items-center justify-end gap-2"
       >
         <div id="header-utility-group" className="flex items-center gap-2">
-          {/* 포인트 표시 영역 */}
+          {/* 포인트 표시 영역. 휴대폰 폭에서는 19 토글까지 들어갈 자리가 없어 로고를 덮으므로 숨긴다 —
+              잔액은 프로필 메뉴의 "노트 충전" 과 사이드바에서 볼 수 있다. */}
           {isLoggedIn && (
             <Link
               href={`/token-charge`}
-              className="flex cursor-pointer items-center gap-1 transition-colors hover:bg-btn-hover rounded-lg p-1 pr-2.5"
+              className="hidden cursor-pointer items-center gap-1 transition-colors hover:bg-btn-hover rounded-lg p-1 pr-2.5 sm:flex"
             >
               <Token className="w-5 h-5" />
               {/* 잔액은 자릿수가 늘어날 수 있다. 그대로 두면 좁은 화면에서
@@ -106,6 +108,9 @@ const Header = ({ handleFoldToggle, foldToggleRef }: HeaderProps) => {
           <div className="shrink-0">
             <SearchBar />
           </div>
+
+          {/* 19 토글. 목록에 성인 콘텐츠를 섞을지만 정한다. */}
+          <AdultToggle />
 
           {/* <LanguageSelector /> */}
 

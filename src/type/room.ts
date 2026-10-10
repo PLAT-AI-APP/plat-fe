@@ -17,20 +17,29 @@ export const PROMPT_MULTIPLIERS: PromptMultiplier[] = [
 export const toRoomLanguage = (locale: AppLocale): RoomLanguage =>
   locale.toUpperCase() as RoomLanguage;
 
+/** 채팅방 목록에서 내용을 가린 이유. 성인인증이 만료된 성인 세계관 방이다. */
+export type RoomLockReason = "ADULT_VERIFICATION_REQUIRED";
+
 /** 채팅방 목록의 한 줄 */
 export interface ThumbnailRoom {
   roomId: string;
-  title: string;
+  /** locked 면 null. */
+  title: string | null;
   thumbnailUrl: string | null;
   personaName: string;
   /** 아직 주고받은 말이 없는 방은 null. */
   lastMessage: string | null;
   lastUsedAt: string | null;
   isPinned: boolean;
-  /** 방을 열 때 남긴 캐릭터 이름. */
-  characterName: string;
+  /** 방을 열 때 남긴 캐릭터 이름. locked 면 null. */
+  characterName: string | null;
   /** 캐릭터(세계관)가 지워진 방. 대화는 볼 수 있고 새 대화만 막힌다. */
   isClosed: boolean;
+  /**
+   * 내용을 가린 방. 목록에는 남지만 title·characterName·thumbnailUrl·lastMessage 가 null 로 오고,
+   * 들어가면 403 ADULT_CONTENT_RESTRICTED 다. 다시 성인인증하면 풀린다.
+   */
+  locked?: RoomLockReason | null;
 }
 
 /** 채팅방 단건 */

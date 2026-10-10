@@ -13,6 +13,8 @@ import {
   useUniverseDetailQuery,
 } from "@/api/universe/getUniverseDetail";
 import { ErrorState } from "@/components/state";
+import AdultGate from "@/components/adult/AdultGate";
+import { isAdultRestrictedError } from "@/lib/adultAccess";
 import SkeletonCharacterDetail from "@/components/skeleton/SkeletonCharacterDetail";
 import CommentsPanel from "./_components/CommentsPanel";
 import DetailTabs, { CharacterDetailTab } from "./_components/DetailTabs";
@@ -51,7 +53,10 @@ const CharacterDetailContent = ({
     [universe],
   );
   // CommentsPanel도 같은 쿼리를 구독하므로 react-query 캐시를 공유해 요청이 중복되지 않는다.
-  const { data: commentsData } = useUniverseCommentsInfiniteQuery(characterId);
+  // 세계관을 받은 뒤에만 부른다 — 성인 세계관 게이트처럼 상세가 막힌 화면에서 댓글까지 403 을 받지 않게.
+  const { data: commentsData } = useUniverseCommentsInfiniteQuery(
+    universe ? characterId : undefined,
+  );
   const commentsCount = commentsData?.pages[0]?.page.totalElements ?? 0;
   const t = useTranslations("characterDetail");
   const openModal = useModalStore((state) => state.openModal);
@@ -165,6 +170,17 @@ const CharacterDetailContent = ({
 
   // 404(삭제된 캐릭터)와 5xx(서버 오류)를 같은 문구로 뭉개면 사용자가 무엇을 해야 할지 모른다.
   // ErrorState 는 서버가 준 사유를 그대로 보여주고, 재시도해 볼 값이 있을 때만 버튼을 낸다.
+  // 성인 세계관인데 비로그인이거나 성인인증이 없다. 서버가 내용 없이 거절했으니 게이트만 그린다.
+  if (isError && isAdultRestrictedError(error)) {
+    return (
+      <article className="flex w-full justify-center pb-16 pt-5">
+        <div className="w-full max-w-(--content-max-width)">
+          <AdultGate />
+        </div>
+      </article>
+    );
+  }
+
   if (isError) {
     return (
       <article className="flex w-full justify-center pb-16 pt-5">

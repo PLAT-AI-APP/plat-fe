@@ -65,6 +65,7 @@ const OfficialTabContents = () => {
             img: card.images,
             isNew: card.isNew,
             isOfficial: true,
+            adult: card.adult,
           }))}
           cardSize="S"
           isLoading={isPending}

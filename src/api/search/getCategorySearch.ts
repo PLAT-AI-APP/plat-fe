@@ -8,6 +8,7 @@ import { useLocaleStore } from "@/store/useLocaleStore";
 import { Tendency, useTendencyStore } from "@/store/useTendencyStore";
 import { useAuthReady } from "@/hooks/data/useAuthReady";
 import type { CardCreator, LikableCard } from "@/type/card";
+import { useAdultMode } from "@/hooks/data/useAdultAccess";
 import { searchQueryKeys } from "./queryKeys";
 
 /** 대화량순=누적 대화 수, 최신순=등록순. 서버 CategorySort 와 같은 값입니다. */
@@ -22,6 +23,8 @@ export type CategoryCardCreator = CardCreator;
 export interface CategoryCardTag {
   tagId: string;
   name: string;
+  /** 성인 태그 */
+  adult?: boolean;
 }
 
 /**
@@ -78,11 +81,14 @@ export const useCategorySearchQuery = (
   const locale = useLocaleStore((state) => state.locale);
   // 성향이 바뀌면 목록도 달라지므로 캐시를 분리합니다.
   const tendency = useTendencyStore((state) => state.tendency);
+  // 19 토글·성인인증이 바뀌면 서버가 섞어 주는 결과도 달라진다.
+  const adultMode = useAdultMode();
 
   return useQuery<PageWith<CategoryCardItem>, AppError>({
     queryKey: searchQueryKeys.category({
       locale,
       authenticated,
+      adultMode,
       tendency,
       tagIds: params.tagIds ?? [],
       sort: params.sort,

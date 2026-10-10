@@ -30,6 +30,8 @@ export interface CharacterShowcaseItem {
   creatorName?: string;
   isNew?: boolean;
   isOfficial?: boolean;
+  /** 성인 세계관. 카드 제목 옆에 19 배지를 단다. */
+  adult?: boolean;
   rank?: number;
 }
 
@@ -138,6 +140,7 @@ const CharacterShowcase = ({
               currentTag={currentTag}
               isNew={char.isNew}
               isOfficial={char.isOfficial}
+              adult={char.adult}
               rank={char.rank}
               selectedTags={selectedTags}
               fluid={isFluid}

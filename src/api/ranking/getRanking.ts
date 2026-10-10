@@ -1,11 +1,13 @@
 "use client";
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { axiosInstance } from "..";
+import { authAxios, axiosInstance } from "..";
 import { AppError, PageWith } from "@/type/api";
 import { useLocaleStore } from "@/store/useLocaleStore";
 import { Tendency, useTendencyStore } from "@/store/useTendencyStore";
 import type { BaseCard, CardCreator } from "@/type/card";
+import { useAuthReady } from "@/hooks/data/useAuthReady";
+import { useAdultMode } from "@/hooks/data/useAdultAccess";
 import { rankingQueryKeys } from "./queryKeys";
 
 /** 백엔드 StatPeriod. 실시간은 오늘 0시부터 지금까지고 1분마다 갱신됩니다. */
@@ -41,16 +43,23 @@ interface GetRankingParams {
   size?: number;
 }
 
-/** 랭킹은 보는 사람에 따라 달라지지 않아 인증을 태우지 않는다. */
-const getRanking = async ({
+/**
+ * 랭킹 자체는 보는 사람에 따라 달라지지 않지만, 성인 콘텐츠를 섞을지는 서버가 토큰(19 토글·성인인증)으로
+ * 판단한다. 그래서 로그인했으면 토큰을 싣는다.
+ */
+const getRanking = async (
+  {
   period = "REALTIME",
   sort = "CHAT",
   scope = "ALL",
   tendency = "ALL",
   page = 0,
   size = 24,
-}: GetRankingParams) => {
-  const response = await axiosInstance.get<PageWith<RankedCardItem>>(
+  }: GetRankingParams,
+  authenticated: boolean,
+) => {
+  const client = authenticated ? authAxios : axiosInstance;
+  const response = await client.get<PageWith<RankedCardItem>>(
     "/ranking",
     { params: { period, sort, scope, tendency, page, size } },
   );
@@ -62,18 +71,21 @@ const getRanking = async ({
 export const useRankingQuery = (params: GetRankingParams = {}) => {
   const locale = useLocaleStore((state) => state.locale);
   const tendency = useTendencyStore((state) => state.tendency);
+  const authenticated = useAuthReady();
+  const adultMode = useAdultMode();
 
   return useQuery<PageWith<RankedCardItem>, AppError>({
     queryKey: rankingQueryKeys.list({
       locale,
       tendency,
+      adultMode,
       period: params.period,
       sort: params.sort,
       scope: params.scope,
       page: params.page,
       size: params.size,
     }),
-    queryFn: () => getRanking({ ...params, tendency }),
+    queryFn: () => getRanking({ ...params, tendency }, authenticated),
     // 실시간 랭킹이 1분마다 갱신되므로 그보다 짧게 잡을 이유가 없습니다.
     staleTime: 1000 * 60,
     // 정렬·기간을 바꿀 때 목록이 통째로 스켈레톤으로 돌아가지 않고, 새 목록이 올 때까지 이전 목록을 둔다.

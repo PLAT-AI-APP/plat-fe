@@ -337,6 +337,7 @@ const CreateHeader = ({
         const request: UniverseUpdateRequest = {
           language: LANGUAGE_BY_LOCALE[locale] ?? "KO",
           commentEnabled: currentFormData.allowComments,
+          adult: currentFormData.adult ?? false,
           scenarios,
           assets,
           tendency: toUniverseTendency(currentFormData.tendency),
@@ -387,6 +388,7 @@ const CreateHeader = ({
 
       const request: UniverseCreateRequest = {
         commentEnabled: currentFormData.allowComments,
+        adult: currentFormData.adult ?? false,
         scenarios,
         assets,
         tendency: toUniverseTendency(currentFormData.tendency),

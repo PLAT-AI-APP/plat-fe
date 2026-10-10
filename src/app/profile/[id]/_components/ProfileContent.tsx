@@ -104,6 +104,7 @@ export default function ProfileContent({ id }: { id: string }) {
         creatorName: card.creator.nickname,
         isNew: card.isNew,
         isOfficial: card.isOfficial,
+        adult: card.adult,
       })),
     [likedItems],
   );
@@ -145,6 +146,7 @@ export default function ProfileContent({ id }: { id: string }) {
         creatorName: card.creator.nickname,
         isNew: card.isNew,
         isOfficial: card.isOfficial,
+        adult: card.adult,
       })),
     [createdItems],
   );

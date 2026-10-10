@@ -38,6 +38,7 @@ npx tsc --noEmit             # 타입 검사
 | `NEXT_PUBLIC_BASE_URI` | `https://api-dev.plat.so/` | 사용자 API(plat-app-api) 오리진. 운영은 `https://api.plat.so` |
 | `NEXT_PUBLIC_CHAT_BASE_URI` | `https://ai-dev.plat.so` | AI 채팅(`/chat/**`, plat-app-ai) 오리진. 비우면 `NEXT_PUBLIC_BASE_URI` 를 쓴다. 운영은 `https://ai.plat.so` |
 | `NEXT_PUBLIC_API_MOCKING` | `disabled` | MSW 목업. `enabled`·`true`·`1`·`on` 이면 켠다. 바꾼 뒤 dev 서버 재시작. 끄면 남은 목업 서비스 워커를 정리한다 |
+| `NEXT_PUBLIC_APP_ENV` | (비어 있음) | 배포 환경. `dev`·`local` 일 때만 개발용 화면(`/dev/**`, 가짜 본인인증 창)이 열린다. 비우거나 다른 값이면 운영처럼 닫힌다. **dev 배포는 `dev` 를 꼭 넣는다** — 빠지면 dev 서버(가짜 인증)에서 본인인증을 끝낼 수 없다 |
 | `NEXT_PUBLIC_ALLOW_INDEXING` | (빈 값) | `true` 일 때만 검색 엔진 수집을 연다. 클로즈베타 동안은 비워 둔다 |
 | `NEXT_PUBLIC_SITE_URL` | (빈 값) | 공유 미리보기 기준 주소(`metadataBase`). 비우면 `https://plat.so` |
 | `NEXT_PUBLIC_BETA_BANNER` | (빈 값) | 클로즈베타 안내 띠. `off` 일 때만 숨긴다(비우면 보인다). 정식 출시 때 `off` |

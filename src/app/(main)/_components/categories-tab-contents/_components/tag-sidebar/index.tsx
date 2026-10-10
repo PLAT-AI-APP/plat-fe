@@ -1,6 +1,7 @@
 "use client";
 
 import { useHashtagListQuery } from "@/api/hashtag/getHashtagList";
+import { useAdultMode } from "@/hooks/data/useAdultAccess";
 import { EmptyState, ErrorState } from "@/components/state";
 import {
   HASHTAG_CATEGORY_FOLDER_TITLE_KEYS,
@@ -45,11 +46,15 @@ const TagSidebar = ({
     isLoading,
     refetch,
   } = useHashtagListQuery();
+  // 성인 태그는 성인인증만 유효해도 내려온다. 둘러보기는 19 토글을 켠 사람에게만 보여 준다.
+  const adultMode = useAdultMode();
   // 검색어는 사이드바 내부 UI 상태로 관리합니다.
   // 선택 태그는 CategoriesTabContents에서 내려받아 결과 영역과 같은 기준으로 공유합니다.
   const [query, setQuery] = useState("");
   const tagFolders = useMemo(() => {
-    const apiTags = hashtagList?.tags ?? [];
+    const apiTags = (hashtagList?.tags ?? []).filter(
+      (tag) => adultMode || !tag.isAdult,
+    );
 
     if (apiTags.length === 0) return [];
 
@@ -66,7 +71,7 @@ const TagSidebar = ({
       title: HASHTAG_CATEGORY_FOLDER_TITLE_KEYS[category],
       tags: tagsByCategory.get(category) ?? [],
     }));
-  }, [hashtagList]);
+  }, [adultMode, hashtagList]);
 
   // 선택 태그 영역은 id 만 들고 있어 라벨을 되찾아야 합니다.
   const labelById = useMemo(() => {
