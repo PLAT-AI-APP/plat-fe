@@ -20,6 +20,8 @@ interface MessageListProps {
   isEditable?: boolean;
   /** 소설로 보기. 말풍선·프로필 없이 글만 이어서 보여 준다. */
   isNovelView?: boolean;
+  /** 성인 세계관 에셋의 서명 URL(파일 ID → URL). 일반 세계관은 없다. */
+  assetImageUrls?: Record<string, string>;
   onUpdateMessage?: (id: string, newContent: string) => void;
   /** 턴 삭제. 서버에 저장된 메시지에만 버튼이 뜬다. */
   onDeleteMessage?: (id: string) => void;
@@ -43,6 +45,7 @@ interface MessageRowProps {
   message: ChatMessageType;
   isEditable: boolean;
   isNovelView: boolean;
+  assetImageUrls?: Record<string, string>;
   /** 이 줄 아래에 붙일 추천 문장. 마지막 답에만 넘어온다. */
   suggestions: string[];
   onSuggestionSelect?: MessageListProps["onSuggestionSelect"];
@@ -57,6 +60,7 @@ const MessageRow = memo(
     message,
     isEditable,
     isNovelView,
+    assetImageUrls,
     suggestions,
     onSuggestionSelect,
     onUpdateMessage,
@@ -94,6 +98,7 @@ const MessageRow = memo(
             isStreaming={message.isStreaming}
             isEditMode={isEditable}
             isNovelView={isNovelView}
+            assetImageUrls={assetImageUrls}
             onUpdate={handleUpdate}
             // 시나리오는 캐릭터가 만든 응답이 아니라 지우거나 다시 만들 대상이 아니다.
             // 처리 함수를 받지 않았으면 버튼도 띄우지 않는다.
@@ -143,6 +148,7 @@ const MessageRow = memo(
       isSameMessage &&
       previous.isEditable === next.isEditable &&
       previous.isNovelView === next.isNovelView &&
+      previous.assetImageUrls === next.assetImageUrls &&
       previous.suggestions === next.suggestions &&
       previous.onSuggestionSelect === next.onSuggestionSelect &&
       previous.onUpdateMessage === next.onUpdateMessage &&
@@ -175,6 +181,7 @@ const MessageList = memo(
     scrollContainer,
     isEditable = false,
     isNovelView = false,
+    assetImageUrls,
     onUpdateMessage,
     onDeleteMessage,
     onRetryMessage,
@@ -315,6 +322,7 @@ const MessageList = memo(
                 message={message}
                 isEditable={isEditable}
                 isNovelView={isNovelView}
+                assetImageUrls={assetImageUrls}
                 suggestions={
                   virtualMessage.index === lastAssistantIndex
                     ? suggestions

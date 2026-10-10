@@ -33,16 +33,27 @@ export const getResourceImageUrl = (
 };
 
 /**
+ * 서명이 붙은 보호 이미지 URL인지(성인 세계관 이미지). 서명은 크기(변형본)까지 묶여 있어,
+ * 변형본 이름만 바꾸면 서명이 어긋나 열리지 않는다.
+ */
+export const isSignedImageUrl = (url: string | null | undefined) =>
+  Boolean(url && /[?&]sig=/.test(url));
+
+/**
  * 백엔드가 내려준 이미지 URL(대개 origin)을 같은 파일의 작은 변형본 URL로 바꿉니다.
  *
  * 36px 아바타에 원본(최대 수 MB 업로드를 크기 그대로 webp 로만 바꾼 파일)을 받을 이유가 없다.
  * `unoptimized` 라 next/image 가 줄여 주지도 않는 자리에서 쓴다.
  * /images/... 형태가 아닌 값(업로드 미리보기 blob:, 로컬 기본 이미지 등)은 그대로 둔다.
+ * 서명 URL(성인 세계관)도 그대로 둔다 — 서버가 화면이 쓰는 크기로 이미 발급했다.
  */
 export const toImageVariantUrl = <T extends string | null | undefined>(
   url: T,
   variant: ImageVariant,
-): T => (url ? (url.replace(IMAGE_VARIANT_PATH, `$1${variant}`) as T) : url);
+): T =>
+  url && !isSignedImageUrl(url)
+    ? (url.replace(IMAGE_VARIANT_PATH, `$1${variant}`) as T)
+    : url;
 
 /**
  * 유저 프로필 이미지처럼 백엔드가 `/image/{id}?type=...` 상대 경로로 내려주는 값을

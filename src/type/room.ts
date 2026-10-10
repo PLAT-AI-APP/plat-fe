@@ -62,6 +62,11 @@ export interface Room {
   language: string;
   /** 켜면 응답 끝에 추천 문장 3개가 함께 온다. */
   answerRecommendationEnabled: boolean;
+  /**
+   * 성인 세계관 에셋 이미지의 서명 URL(파일 ID → URL). 대화 속 {{img:파일 ID}} 를 그릴 때 먼저 쓴다 —
+   * 성인 에셋은 보호 경로라 파일 ID 로 만든 주소로는 열리지 않는다. 일반 세계관은 비어 있다.
+   */
+  assetImageUrls?: Record<string, string>;
 }
 
 export type MessageSender = "USER" | "AI";

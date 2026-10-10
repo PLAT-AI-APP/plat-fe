@@ -31,6 +31,8 @@ interface ChatContentBlockProps {
   isEditMode?: boolean;
   /** 소설로 보기. 프로필·말풍선·나레이션 아이콘 없이 글만 이어서 보여 준다. */
   isNovelView?: boolean;
+  /** 성인 세계관 에셋의 서명 URL(파일 ID → URL). 있으면 파일 ID 로 만든 주소보다 먼저 쓴다. */
+  assetImageUrls?: Record<string, string>;
   onUpdate?: (newContent: string) => void;
   onDelete?: () => void;
   onRetry?: () => void;
@@ -119,6 +121,7 @@ const ChatContentBlock = ({
   isStreaming = false,
   isEditMode = false,
   isNovelView = false,
+  assetImageUrls,
   onUpdate,
   onDelete,
   onRetry,
@@ -209,7 +212,11 @@ const ChatContentBlock = ({
             <Image
               key={index}
               // block.code는 세계관 에셋 업로드로 받은 fileId이므로, 렌더링용 URL로 변환해야 합니다.
-              src={getResourceImageUrl(block.code, "UNIVERSE_ASSET")}
+              // 성인 세계관 에셋은 보호 경로라 서버가 준 서명 URL 을 먼저 쓴다.
+              src={
+                assetImageUrls?.[block.code] ??
+                getResourceImageUrl(block.code, "UNIVERSE_ASSET")
+              }
               alt={t("chatUI.chatAssetAlt")}
               width={171}
               height={250}

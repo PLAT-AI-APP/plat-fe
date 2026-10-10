@@ -293,6 +293,7 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
               messages={messages}
               scrollContainer={scrollContainer}
               isNovelView={isNovelView}
+              assetImageUrls={room?.assetImageUrls}
               suggestions={suggestions}
               onSuggestionSelect={handleSuggestionSelect}
               onDeleteMessage={isBusy ? undefined : handleDeleteMessage}
