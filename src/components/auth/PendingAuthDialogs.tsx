@@ -16,6 +16,8 @@ const PendingAuthDialogs = () => {
   const clearModals = useModalStore((state) => state.clearModals);
   const openModal = useModalStore((state) => state.openModal);
   const openDialog = useDialogStore((state) => state.openDialog);
+  // 다른 안내(가입 동의 결과 등)가 떠 있으면 웰컴 안내는 그 창이 닫힌 뒤에 띄운다 — 한 번에 하나만 보이므로 덮어쓰지 않게.
+  const hasDialog = useDialogStore((state) => state.currentDialog !== null);
 
   useEffect(() => {
     if (pathname !== "/") return;
@@ -61,6 +63,8 @@ const PendingAuthDialogs = () => {
       return;
     }
 
+    if (hasDialog) return;
+
     const shouldOpenWelcomeDialog =
       sessionStorage.getItem(PENDING_WELCOME_CREDIT_DIALOG_KEY) === "true";
 
@@ -68,7 +72,7 @@ const PendingAuthDialogs = () => {
       sessionStorage.removeItem(PENDING_WELCOME_CREDIT_DIALOG_KEY);
       openDialog("WELCOME_CREDIT", {});
     }
-  }, [clearModals, openDialog, openModal, pathname]);
+  }, [clearModals, hasDialog, openDialog, openModal, pathname]);
 
   useEffect(() => {
     if (pathname !== "/") return;

@@ -67,6 +67,8 @@ const ko = {
       revisedDescription: "바뀐 약관을 확인하고 동의하면 계속 이용할 수 있어요.",
       submit: "동의하고 계속하기",
       logout: "로그아웃",
+      cancelSignup: "가입 취소",
+      signupCancelled: "가입을 취소했어요. 동의하기 전에는 계정이 만들어지지 않아요.",
       failed: "동의를 저장하지 못했어요. 잠시 뒤 다시 시도해 주세요.",
     },
     signup: {
