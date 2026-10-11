@@ -95,3 +95,20 @@ export const searchDocsOnServer = cache(
     );
   },
 );
+
+/**
+ * 지금 언어에 없는 문서가 다른 언어로는 있는지 찾는다. 언어를 바꿔 들어온 문서가 그 언어로 번역되지 않았을 때
+ * "다른 언어로 보기" 안내를 그리는 데 쓴다. 어느 언어에도 없으면 빈 배열(진짜 없는 문서 → 404).
+ */
+export const findDocsInOtherLocales = async <T>(
+  locale: DocsLocale,
+  load: (other: DocsLocale) => Promise<T | null>,
+): Promise<{ locale: DocsLocale; name: string; item: T }[]> => {
+  const { locales } = await getDocsLocales();
+  const found = await Promise.all(
+    locales
+      .filter((each) => each.code !== locale)
+      .map(async (each) => ({ locale: each.code, name: each.name, item: await load(each.code) })),
+  );
+  return found.flatMap((each) => (each.item ? [{ ...each, item: each.item }] : []));
+};

@@ -31,6 +31,9 @@ const en: DocsMessages = {
   backToApp: "Go to PLAT",
   themeToLight: "Switch to light mode",
   themeToDark: "Switch to dark mode",
+  untranslatedTitle: "This page isn't available in {language} yet",
+  untranslatedDescription: "Read it in another language, or browse other pages from the docs home.",
+  untranslatedHome: "Go to docs home",
 };
 
 export default en;
