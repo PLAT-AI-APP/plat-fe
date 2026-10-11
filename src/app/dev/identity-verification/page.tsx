@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import { isDevToolsEnabled } from "@/constants/identityVerification";
+import { isDevToolsEnabledFor } from "@/constants/identityVerification";
 import DevIdentityVerificationContents from "./_components/DevIdentityVerificationContents";
 
 export const metadata: Metadata = {
@@ -11,10 +12,11 @@ export const metadata: Metadata = {
 
 /**
  * dev 가짜 본인인증 페이지. 본인인증 모달이 provider=MOCK 일 때 띄운다.
- * 운영 빌드에서는 없는 페이지다(proxy 도 /dev/** 를 404 로 막는다).
+ * 운영(운영 호스트·운영 API)에서는 없는 페이지다(proxy 도 /dev/** 를 404 로 막는다).
  */
-export default function DevIdentityVerificationPage() {
-  if (!isDevToolsEnabled(process.env.NEXT_PUBLIC_APP_ENV)) notFound();
+export default async function DevIdentityVerificationPage() {
+  const host = (await headers()).get("host");
+  if (!isDevToolsEnabledFor(host)) notFound();
 
   return (
     <Suspense fallback={null}>
