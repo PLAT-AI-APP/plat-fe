@@ -235,6 +235,7 @@ const en = {
   },
   profilePopover: {
     notice: "Notice",
+    guide: "User guide",
     customerService: "Customer service",
     myReports: "My reports",
     bugReport: "Report a bug",
@@ -410,7 +411,8 @@ const en = {
       },
       empty: "No questions yet.",
       moreHelpTitle: "Didn't find your answer?",
-      moreHelpDescription: "Send us a message and our team will get back to you.",
+      moreHelpDescription: "Check the user guide, or send us a message and our team will get back to you.",
+      guide: "User guide",
       ask: "Contact us",
     },
     qna: {

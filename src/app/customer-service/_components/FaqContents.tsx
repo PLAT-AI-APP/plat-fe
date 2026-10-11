@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { useFaqListQuery } from "@/api/qna/getFaqList";
 import { ChipButton } from "@/components/ui/Button";
 import { buttonStyles } from "@/components/ui/buttonStyles";
+import { DOCS_BASE_PATH } from "@/components/docs/docsPath";
 import { QueryStateBoundary } from "@/components/state";
 import { FAQ_CATEGORIES, type FaqCategory } from "@/type/qna";
 import CustomerServiceHeader from "./CustomerServiceHeader";
@@ -67,12 +68,20 @@ const FaqContents = () => {
           <strong className="title-5 text-font-1">{t("moreHelpTitle")}</strong>
           <p className="body-6 text-font-2">{t("moreHelpDescription")}</p>
         </div>
-        <Link
-          href="/customer-service/qna/new"
-          className={buttonStyles({ variant: "primary", size: "sm" })}
-        >
-          {t("ask")}
-        </Link>
+        <div className="flex shrink-0 items-center gap-2">
+          <Link
+            href={DOCS_BASE_PATH}
+            className={buttonStyles({ variant: "secondary", size: "sm" })}
+          >
+            {t("guide")}
+          </Link>
+          <Link
+            href="/customer-service/qna/new"
+            className={buttonStyles({ variant: "primary", size: "sm" })}
+          >
+            {t("ask")}
+          </Link>
+        </div>
       </div>
     </section>
   );

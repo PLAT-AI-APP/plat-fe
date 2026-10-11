@@ -64,6 +64,7 @@ const vi: typeof en = {
     menu: "Menu chân trang",
     about: "Giới thiệu công ty",
     support: "Trung tâm hỗ trợ",
+    guide: "Hướng dẫn sử dụng",
     terms: "Điều khoản sử dụng",
     privacy: "Chính sách quyền riêng tư",
     youth: "Chính sách bảo vệ thanh thiếu niên",
