@@ -421,6 +421,7 @@ const ja = {
       statuses: {
         OPEN: "回答待ち",
         ANSWERED: "回答済み",
+        CANCELLED: "取り消し済み",
       },
       askedAt: "{date} お問い合わせ",
       myContentLabel: "お問い合わせ内容",
@@ -435,6 +436,10 @@ const ja = {
       answerLabel: "運営チームからの回答",
       waitingAnswer: "運営チームが確認しています。回答が登録されたらここでお知らせします。",
       answeredAt: "回答日 {date}",
+      cancel: "お問い合わせを取り消す",
+      cancelSuccess: "お問い合わせを取り消しました",
+      cancelledAt: "取り消し日 {date}",
+      cancelledNotice: "回答前に取り消したお問い合わせです。",
     },
     refund: {
       productLabel: "決済商品",

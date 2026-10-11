@@ -427,6 +427,7 @@ const en = {
       statuses: {
         OPEN: "Awaiting reply",
         ANSWERED: "Answered",
+        CANCELLED: "Canceled",
       },
       askedAt: "Asked {date}",
       myContentLabel: "Your message",
@@ -441,6 +442,10 @@ const en = {
       answerLabel: "Reply from PLAT",
       waitingAnswer: "Our team is looking into it. We'll let you know here once we reply.",
       answeredAt: "Replied {date}",
+      cancel: "Cancel inquiry",
+      cancelSuccess: "Your inquiry has been canceled",
+      cancelledAt: "Canceled {date}",
+      cancelledNotice: "You canceled this inquiry before it was answered.",
     },
     refund: {
       productLabel: "Product",

@@ -6,12 +6,21 @@ import { useTranslations } from "next-intl";
 import dayjs from "@/lib/dayjs";
 import { cn, formatWithCommas, toMajorAmount } from "@/lib/utils";
 import { ArrowDown } from "@/icons";
-import type { MyQnaItem as MyQnaItemType, QnaStatus } from "@/type/qna";
+import { buttonStyles } from "@/components/ui/buttonStyles";
+import { useCancelQnaMutation } from "@/api/qna/postQnaCancel";
+import { showAppToast } from "@/lib/toast";
+import { useDialogStore } from "@/store/useDialogStore";
+import {
+  isQnaCancellable,
+  type MyQnaItem as MyQnaItemType,
+  type QnaStatus,
+} from "@/type/qna";
 
-/** 답변 대기는 진행 중이라는 정보색, 답변 완료는 성공색. */
+/** 답변 대기는 진행 중이라는 정보색, 답변 완료는 성공색, 취소는 끝났지만 결과가 없어 무채색. */
 const STATUS_BADGE_CLASS: Record<QnaStatus, string> = {
   OPEN: "bg-info-bg text-info",
   ANSWERED: "bg-success-bg text-success",
+  CANCELLED: "bg-card text-font-2",
 };
 
 const DATE_FORMAT = "YYYY.MM.DD";
@@ -24,12 +33,29 @@ interface MyQnaItemProps {
 /**
  * 문의 한 건. 접힌 상태는 유형·상태·제목, 펼치면 내가 쓴 내용과 운영팀 답변을 보여준다.
  * 환불 문의는 신청 내역을 함께 보여 주고, 환불 결과는 운영팀 답변으로 전달된다.
+ * 답변 대기 중인 일반 문의는 펼친 자리에서 취소할 수 있다(환불 문의는 환불 신청에 묶여 있어 취소할 수 없다).
  */
 const MyQnaItem = ({ item }: MyQnaItemProps) => {
   const t = useTranslations("customerService.qna");
   const unitT = useTranslations("tokenCharge");
   const [isOpen, setIsOpen] = useState(false);
   const { refund } = item;
+  const isCancelled = item.status === "CANCELLED";
+  const openDialog = useDialogStore((state) => state.openDialog);
+  const closeDialog = useDialogStore((state) => state.closeDialog);
+  const { mutate: cancelQna } = useCancelQnaMutation();
+
+  // 실패하면 전역 토스트가 서버 사유를 알리고 목록을 다시 받아 지금 상태(답변 완료 등)를 보여 준다.
+  const handleCancel = () => {
+    openDialog("QNA_CANCEL", {
+      onConfirm: () => {
+        cancelQna(item.qnaId, {
+          onSuccess: () => showAppToast("success", t("cancelSuccess")),
+          onSettled: closeDialog,
+        });
+      },
+    });
+  };
 
   return (
     <li
@@ -129,7 +155,8 @@ const MyQnaItem = ({ item }: MyQnaItemProps) => {
                     item.answer ? "text-font-1" : "text-font-2",
                   )}
                 >
-                  {item.answer ?? t("waitingAnswer")}
+                  {item.answer ??
+                    (isCancelled ? t("cancelledNotice") : t("waitingAnswer"))}
                 </p>
                 {item.answeredAt && (
                   <time
@@ -141,7 +168,32 @@ const MyQnaItem = ({ item }: MyQnaItemProps) => {
                     })}
                   </time>
                 )}
+                {item.cancelledAt && (
+                  <time
+                    dateTime={item.cancelledAt}
+                    className="body-7 text-font-2"
+                  >
+                    {t("cancelledAt", {
+                      date: dayjs(item.cancelledAt).format(DATE_TIME_FORMAT),
+                    })}
+                  </time>
+                )}
               </section>
+
+              {isQnaCancellable(item) && (
+                <div className="flex justify-end">
+                  <button
+                    type="button"
+                    onClick={handleCancel}
+                    className={buttonStyles({
+                      variant: "secondary",
+                      size: "sm",
+                    })}
+                  >
+                    {t("cancel")}
+                  </button>
+                </div>
+              )}
             </div>
           </m.div>
         )}

@@ -162,6 +162,12 @@ const zh: typeof ko = {
       replyTitle: "要删除您发表的回复吗？",
       replyDescription: "删除后的回复将无法恢复。",
     },
+    qnaCancel: {
+      title: "要撤销这条咨询吗？",
+      description: "撤销后无法恢复，也不会收到运营团队的回复。",
+      cancel: "关闭",
+      confirm: "撤销",
+    },
     personaDelete: {
       title: "要删除这个人格吗？",
       description: "删除后将无法恢复。",

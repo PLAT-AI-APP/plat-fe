@@ -417,6 +417,7 @@ const ko = {
       statuses: {
         OPEN: "답변 대기",
         ANSWERED: "답변 완료",
+        CANCELLED: "취소됨",
       },
       askedAt: "{date} 문의",
       myContentLabel: "내 문의 내용",
@@ -431,6 +432,10 @@ const ko = {
       answerLabel: "운영팀 답변",
       waitingAnswer: "운영팀이 확인하고 있어요. 답변이 등록되면 여기에서 알려드릴게요.",
       answeredAt: "답변일 {date}",
+      cancel: "문의 취소",
+      cancelSuccess: "문의를 취소했어요",
+      cancelledAt: "취소일 {date}",
+      cancelledNotice: "답변 전에 취소한 문의예요.",
     },
     refund: {
       productLabel: "결제 상품",

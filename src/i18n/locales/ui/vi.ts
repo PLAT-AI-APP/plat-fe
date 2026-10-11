@@ -421,6 +421,7 @@ const vi = {
       statuses: {
         OPEN: "Chờ phản hồi",
         ANSWERED: "Đã phản hồi",
+        CANCELLED: "Đã hủy",
       },
       askedAt: "Hỏi ngày {date}",
       myContentLabel: "Nội dung của bạn",
@@ -435,6 +436,10 @@ const vi = {
       answerLabel: "Phản hồi từ PLAT",
       waitingAnswer: "Đội ngũ đang kiểm tra. Chúng tôi sẽ thông báo tại đây khi có phản hồi.",
       answeredAt: "Phản hồi ngày {date}",
+      cancel: "Hủy yêu cầu",
+      cancelSuccess: "Đã hủy yêu cầu hỗ trợ",
+      cancelledAt: "Hủy ngày {date}",
+      cancelledNotice: "Bạn đã hủy yêu cầu này trước khi được phản hồi.",
     },
     refund: {
       productLabel: "Sản phẩm",

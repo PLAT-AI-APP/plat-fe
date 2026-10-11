@@ -163,6 +163,12 @@ const ja: typeof ko = {
       replyTitle: "作成した返信を削除しますか？",
       replyDescription: "削除した返信は復元できません。",
     },
+    qnaCancel: {
+      title: "お問い合わせを取り消しますか？",
+      description: "取り消したお問い合わせは元に戻せず、運営チームからの回答も届きません。",
+      cancel: "閉じる",
+      confirm: "取り消す",
+    },
     personaDelete: {
       title: "ペルソナを削除しますか？",
       description: "は削除後に復元できません。",
