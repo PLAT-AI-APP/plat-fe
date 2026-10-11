@@ -27,7 +27,8 @@ import { m, AnimatePresence } from "framer-motion";
 import { TRANSITION_COLLAPSE } from "@/constants/motion";
 import { PopoverLayout } from "./layout";
 import { BUG_REPORT_PATH } from "@/components/layout/BetaBanner";
-import { DOCS_BASE_PATH } from "@/components/docs/docsPath";
+import { docsEntryPath } from "@/components/docs/docsPath";
+import { useLocaleStore } from "@/store/useLocaleStore";
 import useToggle from "@/hooks/common/useToggle";
 import { useModalStore } from "@/store/useModalStore";
 import useRouteEffect from "@/hooks/navigation/useRouteEffect";
@@ -62,11 +63,12 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const openModal = useModalStore((state) => state.openModal);
   const tendency = useToggle();
+  const appLocale = useLocaleStore((state) => state.locale);
 
   const supportArray = [
     { name: t("notice"), link: "/notification", icon: Megaphone },
     // 고객센터에 묻기 전에 먼저 찾아볼 곳이라 그 앞에 둔다.
-    { name: t("guide"), link: DOCS_BASE_PATH, icon: BookOpen },
+    { name: t("guide"), link: docsEntryPath(appLocale), icon: BookOpen },
     {
       name: t("customerService"),
       link: "/customer-service",

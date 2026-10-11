@@ -24,6 +24,20 @@ export const parseSlugId = (value: string): { slug: string; id: string } | null 
   return { slug: match[1] ?? "", id: match[2] };
 };
 
+/** 앱에서 문서로 들어갈 때 붙이는 앱 언어. 문서가 그 언어를 지원하면 그 언어 홈으로, 아니면 기본 언어로 간다. */
+export const DOCS_ENTRY_LANG_PARAM = "lang";
+
+/** 앱 → 문서 진입 주소(`/docs?lang=en`). 실제 언어는 지원 목록을 아는 proxy · /docs 페이지가 고른다. */
+export const docsEntryPath = (appLocale: string) =>
+  `${DOCS_BASE_PATH}?${new URLSearchParams({ [DOCS_ENTRY_LANG_PARAM]: appLocale })}`;
+
+/** 진입 언어가 지원 목록에 있으면 그 언어, 없으면 기본 언어. */
+export const pickDocsEntryLocale = (
+  requested: string | null | undefined,
+  supported: { defaultLocale: DocsLocale; locales: { code: DocsLocale }[] },
+): DocsLocale =>
+  supported.locales.some((item) => item.code === requested) ? (requested as DocsLocale) : supported.defaultLocale;
+
 export const docsPath = {
   home: (locale: DocsLocale) => `${DOCS_BASE_PATH}/${locale}`,
   category: (locale: DocsLocale, slug: string | null | undefined, id: string) =>

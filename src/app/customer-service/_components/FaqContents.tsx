@@ -6,7 +6,8 @@ import { useTranslations } from "next-intl";
 import { useFaqListQuery } from "@/api/qna/getFaqList";
 import { ChipButton } from "@/components/ui/Button";
 import { buttonStyles } from "@/components/ui/buttonStyles";
-import { DOCS_BASE_PATH } from "@/components/docs/docsPath";
+import { docsEntryPath } from "@/components/docs/docsPath";
+import { useLocaleStore } from "@/store/useLocaleStore";
 import { QueryStateBoundary } from "@/components/state";
 import { FAQ_CATEGORIES, type FaqCategory } from "@/type/qna";
 import CustomerServiceHeader from "./CustomerServiceHeader";
@@ -17,6 +18,7 @@ const SKELETON_ITEM_COUNT = 6;
 /** 자주 하는 질문. 카테고리 칩으로 거르고, 못 찾으면 1:1 문의로 넘긴다. */
 const FaqContents = () => {
   const t = useTranslations("customerService.faq");
+  const appLocale = useLocaleStore((state) => state.locale);
   const [category, setCategory] = useState<FaqCategory | "ALL">("ALL");
   const { data, isLoading, isError, error, refetch } = useFaqListQuery();
 
@@ -70,7 +72,7 @@ const FaqContents = () => {
         </div>
         <div className="flex shrink-0 items-center gap-2">
           <Link
-            href={DOCS_BASE_PATH}
+            href={docsEntryPath(appLocale)}
             className={buttonStyles({ variant: "secondary", size: "sm" })}
           >
             {t("guide")}

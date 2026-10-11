@@ -1,6 +1,12 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { getDocsLocales } from "@/api/docs/server";
-import { DOCS_BASE_PATH, docsPath, isDocsPathname } from "@/components/docs/docsPath";
+import {
+  DOCS_BASE_PATH,
+  DOCS_ENTRY_LANG_PARAM,
+  docsPath,
+  isDocsPathname,
+  pickDocsEntryLocale,
+} from "@/components/docs/docsPath";
 import { isDevToolsEnabledFor } from "@/constants/identityVerification";
 
 const MAINTENANCE_PATH = "/maintenance";
@@ -20,14 +26,15 @@ export async function proxy(request: NextRequest) {
   ) {
     return new NextResponse(null, { status: 404 });
   }
-  // 문서 기준 경로는 서버가 정한 기본 언어 홈으로 보낸다. 페이지(app/docs/page.tsx)에서도 보내지만, 루트 레이아웃의
+  // 문서 기준 경로는 앱에서 넘긴 언어(?lang=)가 지원되면 그 언어, 아니면 서버가 정한 기본 언어 홈으로 보낸다. 페이지(app/docs/page.tsx)에서도 보내지만, 루트 레이아웃의
   // Suspense 안에서는 응답이 이미 시작돼 200 + 클라이언트 이동이 되므로 여기서 진짜 307 로 보낸다.
   // 언어 목록을 못 받으면 그대로 넘겨 페이지가 오류 화면을 보이게 한다.
   if (request.nextUrl.pathname === DOCS_BASE_PATH) {
     const locales = await getDocsLocales().catch(() => null);
     if (locales) {
       const url = request.nextUrl.clone();
-      url.pathname = docsPath.home(locales.defaultLocale);
+      url.pathname = docsPath.home(pickDocsEntryLocale(url.searchParams.get(DOCS_ENTRY_LANG_PARAM), locales));
+      url.search = "";
       return NextResponse.redirect(url);
     }
   }

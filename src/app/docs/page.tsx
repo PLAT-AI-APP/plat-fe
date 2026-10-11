@@ -1,9 +1,27 @@
 import { redirect } from "next/navigation";
 import { getDocsLocales } from "@/api/docs/server";
-import { docsPath } from "@/components/docs/docsPath";
+import {
+  DOCS_ENTRY_LANG_PARAM,
+  docsPath,
+  pickDocsEntryLocale,
+} from "@/components/docs/docsPath";
 
-/** /docs 는 서버가 정한 기본 언어의 문서 홈으로 보낸다. */
-export default async function DocsIndexPage() {
-  const { defaultLocale } = await getDocsLocales();
-  redirect(docsPath.home(defaultLocale));
+interface DocsIndexPageProps {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}
+
+/** /docs 는 앱에서 넘긴 언어(?lang=)가 지원되면 그 언어, 아니면 서버가 정한 기본 언어의 문서 홈으로 보낸다. */
+export default async function DocsIndexPage({
+  searchParams,
+}: DocsIndexPageProps) {
+  const [locales, params] = await Promise.all([getDocsLocales(), searchParams]);
+  const requested = params[DOCS_ENTRY_LANG_PARAM];
+  redirect(
+    docsPath.home(
+      pickDocsEntryLocale(
+        typeof requested === "string" ? requested : null,
+        locales,
+      ),
+    ),
+  );
 }
