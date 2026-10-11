@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { isDevToolsEnabled } from "@/constants/identityVerification";
+import { isDevToolsEnabledFor } from "@/constants/identityVerification";
 
 const MAINTENANCE_PATH = "/maintenance";
 
@@ -11,10 +11,10 @@ export const isMaintenanceMode = (value: string | undefined) => value === "on";
  * 정적 자원·이미지·점검 화면 자신은 matcher 에서 빠져 있어 그대로 나간다.
  */
 export function proxy(request: NextRequest) {
-  // 개발용 화면(/dev/**, 가짜 본인인증 등)은 운영 빌드에서 없는 주소로 둔다. 페이지도 notFound 로 한 번 더 막는다.
+  // 개발용 화면(/dev/**, 가짜 본인인증 등)은 운영(운영 호스트·운영 API)에서 없는 주소로 둔다. 페이지도 notFound 로 한 번 더 막는다.
   if (
     request.nextUrl.pathname.startsWith("/dev/") &&
-    !isDevToolsEnabled(process.env.NEXT_PUBLIC_APP_ENV)
+    !isDevToolsEnabledFor(request.headers.get("host") ?? request.nextUrl.hostname)
   ) {
     return new NextResponse(null, { status: 404 });
   }

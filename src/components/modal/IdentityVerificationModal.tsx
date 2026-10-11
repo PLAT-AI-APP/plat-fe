@@ -25,6 +25,7 @@ import {
 import {
   DEV_IDENTITY_VERIFICATION_PATH,
   IDENTITY_VERIFICATION_WINDOW_NAME,
+  isDevToolsEnabledFor,
 } from "@/constants/identityVerification";
 import { EASE_OUT } from "@/constants/motion";
 import dayjs from "@/lib/dayjs";
@@ -35,7 +36,10 @@ import {
 import { showAppToast } from "@/lib/toast";
 import { cn } from "@/lib/utils";
 import { useUserStore } from "@/store/useUserStore";
-import { IdentityVerificationModalProps } from "@/type/modal";
+import type {
+  IdentityVerificationModalProps,
+  IdentityVerificationPurpose,
+} from "@/type/modal";
 
 type Step =
   | { kind: "intro" }
@@ -59,13 +63,16 @@ const stepIndex = (step: Step) => {
   return 1;
 };
 
-const Stepper = ({ step }: { step: Step }) => {
+const Stepper = ({ step, purpose }: { step: Step; purpose: IdentityVerificationPurpose }) => {
   const t = useTranslations("adultVerification.modal.steps");
   const current = stepIndex(step);
   const labels = [t("intro"), t("verify"), t("done")];
 
   return (
-    <ol className="flex items-center gap-2" aria-label={t("ariaLabel")}>
+    <ol
+      className="flex items-center gap-2"
+      aria-label={purpose === "identity" ? t("ariaLabelIdentity") : t("ariaLabel")}
+    >
       {labels.map((label, index) => {
         const reached = index <= current;
         return (
@@ -165,12 +172,21 @@ const ValidityRow = ({
 /**
  * 본인인증 모달. 본인인증 한 번으로 생년월일이 만 19세 이상이면 성인인증까지 기록된다(둘 다 1년).
  *
+ * 여는 목적(purpose)에 따라 보여 주는 것만 다르다 — 서버 흐름은 같다.
+ * - adult(기본): 19 토글·성인 콘텐츠 게이트 등. 성인인증을 말하고, 미성년 결과면 "성인 아님"을 알린다.
+ * - identity: 본인인증 버튼. 성인·19 를 말하지 않고, 결과도 나이와 상관없이 본인인증 완료로 끝낸다.
+ *
  * 흐름: 안내 → 인증 건 열기 → 인증 창(MOCK: dev 가짜 인증 창, PORTONE: 포트원 SDK) → 창이 끝났다고 알리면
  * 확정 → 새 토큰으로 교체 → 결과(성인이면 그 자리에서 19 콘텐츠 표시를 켤 수 있다). 팝업이 막히면 같은 탭에서
  * 인증 페이지로 넘어가고, 그 페이지가 확정까지 마친다.
  */
-const IdentityVerificationModal = ({ onClose }: IdentityVerificationModalProps) => {
+const IdentityVerificationModal = ({
+  onClose,
+  purpose = "adult",
+}: IdentityVerificationModalProps) => {
   const t = useTranslations("adultVerification.modal");
+  const isIdentityOnly = purpose === "identity";
+  const mark = isIdentityOnly ? "identity" : "adult";
   const toggleT = useTranslations("adultVerification.toggle");
   const commonT = useTranslations("modalUi.common");
   const reduceMotion = useReducedMotion() ?? false;
@@ -210,7 +226,7 @@ const IdentityVerificationModal = ({ onClose }: IdentityVerificationModalProps) 
   const openMockWindow = (verificationId: string) => {
     // 돌아올 화면은 팝업에도 싣는다. 환경에 따라 팝업이 같은 탭으로 열리면(opener 없음) 인증 페이지가 이 값으로 돌려보낸다.
     const returnTo = `${window.location.pathname}${window.location.search}`;
-    const url = `${DEV_IDENTITY_VERIFICATION_PATH}?vid=${encodeURIComponent(verificationId)}&returnTo=${encodeURIComponent(returnTo)}`;
+    const url = `${DEV_IDENTITY_VERIFICATION_PATH}?vid=${encodeURIComponent(verificationId)}&purpose=${purpose}&returnTo=${encodeURIComponent(returnTo)}`;
     const popup = window.open(url, IDENTITY_VERIFICATION_WINDOW_NAME, POPUP_FEATURES);
 
     if (!popup) {
@@ -243,6 +259,11 @@ const IdentityVerificationModal = ({ onClose }: IdentityVerificationModalProps) 
           return;
         }
 
+        // 서버가 가짜 제공자(MOCK)를 주더라도 운영 사이트·운영 API 에서는 가짜 인증 창을 열지 않는다(없는 주소다).
+        if (!isDevToolsEnabledFor(window.location.host)) {
+          setStep({ kind: "error", message: t("errorDefault") });
+          return;
+        }
         openMockWindow(verificationId);
       },
       onError: () => setStep({ kind: "error", message: t("errorDefault") }),
@@ -284,7 +305,8 @@ const IdentityVerificationModal = ({ onClose }: IdentityVerificationModalProps) 
     });
   };
 
-  const isAdultResult = step.kind === "result" && step.result.adult;
+  // 축하는 목적을 이룬 결과에만 — 성인 흐름은 성인인증, 본인 흐름은 본인인증 완료.
+  const isCelebrated = step.kind === "result" && (isIdentityOnly || step.result.adult);
 
   return (
     <ModalLayout
@@ -294,13 +316,13 @@ const IdentityVerificationModal = ({ onClose }: IdentityVerificationModalProps) 
     >
       <div className="relative px-6 pt-5 pb-6">
         <header className="flex items-center justify-between">
-          <Stepper step={step} />
+          <Stepper step={step} purpose={purpose} />
           <IconButton size="xs" onClick={onClose} aria-label={commonT("close")}>
             <Close className="size-3.5" />
           </IconButton>
         </header>
 
-        {isAdultResult && !reduceMotion && <ConfettiBurst />}
+        {isCelebrated && !reduceMotion && <ConfettiBurst />}
 
         <AnimatePresence mode="wait" initial={false}>
           <m.section
@@ -314,17 +336,22 @@ const IdentityVerificationModal = ({ onClose }: IdentityVerificationModalProps) 
           >
             {step.kind === "intro" && (
               <>
-                <AdultEmblem className="mt-4" />
+                <AdultEmblem className="mt-4" mark={mark} />
                 <h2 className="heading-3 mt-2 whitespace-pre-line text-font-0 break-keep">
-                  {t("headline")}
+                  {isIdentityOnly ? t("identity.headline") : t("headline")}
                 </h2>
-                <p className="body-5 mt-2 text-font-2 break-keep">{t("subtitle")}</p>
+                <p className="body-5 mt-2 text-font-2 break-keep">
+                  {isIdentityOnly ? t("identity.subtitle") : t("subtitle")}
+                </p>
 
                 <ul className="mt-6 flex w-full flex-col gap-3 rounded-2xl bg-darkest p-4 text-left">
                   {[
                     { icon: <Clock className="size-4" />, text: t("benefitTime") },
                     { icon: <LockLine className="size-4" />, text: t("benefitPrivacy") },
-                    { icon: <StatusSuccess className="size-4" />, text: t("benefitToggle") },
+                    {
+                      icon: <StatusSuccess className="size-4" />,
+                      text: isIdentityOnly ? t("identity.benefitBirth") : t("benefitToggle"),
+                    },
                   ].map(({ icon, text }) => (
                     <li key={text} className="flex items-start gap-3">
                       <span className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full bg-brand-opacity text-brand">
@@ -359,13 +386,15 @@ const IdentityVerificationModal = ({ onClose }: IdentityVerificationModalProps) 
                 >
                   {t("start")}
                 </Button>
-                <p className="body-7 mt-3 text-font-disabled break-keep">{t("minorNote")}</p>
+                {!isIdentityOnly && (
+                  <p className="body-7 mt-3 text-font-disabled break-keep">{t("minorNote")}</p>
+                )}
               </>
             )}
 
             {(step.kind === "waiting" || step.kind === "confirming") && (
               <>
-                <AdultEmblem className="mt-6" working />
+                <AdultEmblem className="mt-6" mark={mark} working />
                 <h2 className="heading-3 mt-2 text-font-0">
                   {step.kind === "waiting" ? t("waitingTitle") : t("confirmingTitle")}
                   <BouncingDots />
@@ -394,7 +423,27 @@ const IdentityVerificationModal = ({ onClose }: IdentityVerificationModalProps) 
               </>
             )}
 
-            {step.kind === "result" && (
+            {step.kind === "result" && isIdentityOnly && (
+              <>
+                <AdultEmblem className="mt-6" mark="identity" badge="done" />
+                <h2 className="heading-3 mt-2 text-font-0">{t("identity.doneTitle")}</h2>
+                <p className="body-5 mt-2 text-font-2 break-keep">{t("identity.doneDescription")}</p>
+
+                <div className="mt-6 w-full divide-y divide-main rounded-2xl bg-darkest px-4 py-1 text-left">
+                  <ValidityRow
+                    label={t("identityLabel")}
+                    value={t("until", { date: formatDate(step.result.identityVerifiedUntil) })}
+                    active
+                  />
+                </div>
+
+                <Button size="lg" fullWidth className="mt-6" onClick={onClose}>
+                  {t("done")}
+                </Button>
+              </>
+            )}
+
+            {step.kind === "result" && !isIdentityOnly && (
               <>
                 <AdultEmblem className="mt-6" badge={step.result.adult ? "done" : "warn"} />
                 <h2 className="heading-3 mt-2 text-font-0">
@@ -452,7 +501,7 @@ const IdentityVerificationModal = ({ onClose }: IdentityVerificationModalProps) 
 
             {step.kind === "error" && (
               <>
-                <AdultEmblem className="mt-6" badge="warn" />
+                <AdultEmblem className="mt-6" mark={mark} badge="warn" />
                 <h2 className="heading-3 mt-2 text-font-0">{t("errorTitle")}</h2>
                 <p className="body-5 mt-2 max-w-80 text-font-2 break-keep">{step.message}</p>
                 <div className="mt-8 flex w-full flex-col gap-2.5">

@@ -13,6 +13,9 @@ import { cn } from "@/lib/utils";
 
 export type AdultEmblemBadge = "done" | "locked" | "warn";
 
+/** 방패에 새기는 표시. 성인인증은 "19", 본인인증만 하는 흐름은 사람 실루엣 — 성인을 말하지 않는다. */
+export type AdultEmblemMark = "adult" | "identity";
+
 const SIZE = {
   /** 모달·결과 화면의 주인공 */
   lg: { stage: "size-44", shield: 88, badge: "size-9", glow: true },
@@ -63,7 +66,15 @@ const BADGE: Record<AdultEmblemBadge, { className: string; icon: React.ReactNode
 };
 
 /** 방패 그림. 그라데이션 id 가 화면에 여러 개 떠도 겹치지 않게 useId 로 만든다. */
-const Shield = ({ size, tone }: { size: number; tone: "vivid" | "dim" | "muted" }) => {
+const Shield = ({
+  size,
+  tone,
+  mark,
+}: {
+  size: number;
+  tone: "vivid" | "dim" | "muted";
+  mark: AdultEmblemMark;
+}) => {
   const id = useId().replace(/:/g, "");
   return (
     <svg
@@ -103,18 +114,27 @@ const Shield = ({ size, tone }: { size: number; tone: "vivid" | "dim" | "muted" 
         strokeOpacity="0.35"
         strokeWidth="1.6"
       />
-      <text
-        x="50"
-        y="66"
-        textAnchor="middle"
-        fill="#fff"
-        fontSize="38"
-        fontWeight="800"
-        letterSpacing="-1.5"
-        fontFamily="Pretendard, system-ui, sans-serif"
-      >
-        19
-      </text>
+      {mark === "adult" ? (
+        <text
+          x="50"
+          y="66"
+          textAnchor="middle"
+          fill="#fff"
+          fontSize="38"
+          fontWeight="800"
+          letterSpacing="-1.5"
+          fontFamily="Pretendard, system-ui, sans-serif"
+        >
+          19
+        </text>
+      ) : (
+        // 프로필 본인인증 줄의 아이콘(사람 실루엣 위 체크)과 같은 모양을 방패 크기에 맞춰 새긴다.
+        <g transform="translate(23 30) scale(2.25)" fill="none" stroke="#fff" strokeLinecap="round">
+          <circle cx="10" cy="8" r="3.4" strokeWidth="1.9" />
+          <path d="M3.8 19.2c.6-3.3 3.2-5.4 6.2-5.4 1.2 0 2.3.3 3.2.9" strokeWidth="1.9" />
+          <path d="m14.6 17.4 2.1 2.1 4-4.4" strokeWidth="2" strokeLinejoin="round" />
+        </g>
+      )}
     </svg>
   );
 };
@@ -124,10 +144,18 @@ interface AdultEmblemProps {
   /** 인증 창·서버의 답을 기다리는 중. 빛줄기가 돌고 방패가 둥실 뜬다. */
   working?: boolean;
   badge?: AdultEmblemBadge;
+  /** 방패에 새길 표시. 기본은 성인인증("19"). */
+  mark?: AdultEmblemMark;
   className?: string;
 }
 
-const AdultEmblem = ({ size = "lg", working = false, badge, className }: AdultEmblemProps) => {
+const AdultEmblem = ({
+  size = "lg",
+  working = false,
+  badge,
+  mark = "adult",
+  className,
+}: AdultEmblemProps) => {
   const reduceMotion = useReducedMotion() ?? false;
   const config = SIZE[size];
   const moving = working && !reduceMotion;
@@ -197,7 +225,7 @@ const AdultEmblem = ({ size = "lg", working = false, badge, className }: AdultEm
           animate={moving ? { y: [0, -6, 0] } : { y: 0 }}
           transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
         >
-          <Shield size={config.shield} tone={tone} />
+          <Shield size={config.shield} tone={tone} mark={mark} />
         </m.div>
 
         <AnimatePresence>

@@ -91,7 +91,7 @@ const Setting = () => {
 
   const handleAdult = (nextAdult: boolean) => {
     if (nextAdult && !isAdultVerified) {
-      openModal("IDENTITY_VERIFICATION");
+      openModal("IDENTITY_VERIFICATION", { purpose: "adult" });
       return;
     }
     setValue("adult", nextAdult, { shouldDirty: true, shouldValidate: true });
@@ -220,7 +220,7 @@ const Setting = () => {
             <Button
               size="sm"
               variant="brandSoft"
-              onClick={() => openModal("IDENTITY_VERIFICATION")}
+              onClick={() => openModal("IDENTITY_VERIFICATION", { purpose: "adult" })}
             >
               {adultT("verify")}
             </Button>

@@ -67,6 +67,8 @@ const zh: typeof ko = {
       revisedDescription: "请查看并同意更新后的条款以继续使用。",
       submit: "同意并继续",
       logout: "退出登录",
+      cancelSignup: "取消注册",
+      signupCancelled: "已取消注册。在您同意之前不会创建账号。",
       failed: "未能保存您的同意，请稍后重试。",
     },
     signup: {

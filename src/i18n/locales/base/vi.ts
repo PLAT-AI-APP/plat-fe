@@ -67,6 +67,8 @@ const vi: typeof ko = {
       revisedDescription: "Hãy xem và đồng ý với điều khoản mới để tiếp tục sử dụng.",
       submit: "Đồng ý và tiếp tục",
       logout: "Đăng xuất",
+      cancelSignup: "Hủy đăng ký",
+      signupCancelled: "Đã hủy đăng ký. Tài khoản chỉ được tạo sau khi bạn đồng ý.",
       failed: "Không thể lưu sự đồng ý của bạn. Vui lòng thử lại sau.",
     },
     signup: {

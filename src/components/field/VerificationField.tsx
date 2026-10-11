@@ -109,7 +109,7 @@ const VerificationRow = ({
           <Button
             size="sm"
             variant={status === "unverified" || status === "expired" ? "primary" : "brandSoft"}
-            onClick={() => openModal("IDENTITY_VERIFICATION")}
+            onClick={() => openModal("IDENTITY_VERIFICATION", { purpose: kind })}
           >
             {status === "unverified" ? t("field.verify") : t("field.renew")}
           </Button>
@@ -142,7 +142,10 @@ const VerificationRow = ({
   );
 };
 
-/** 프로필 수정의 본인인증·성인인증 상태. 인증·갱신은 본인인증 모달 하나로 한다(성인이면 성인인증도 함께). */
+/**
+ * 프로필 수정의 본인인증·성인인증 상태. 인증·갱신은 본인인증 모달 하나로 한다(성인이면 성인인증도 함께).
+ * 본인인증 줄은 본인인증 화면으로, 성인인증 줄은 성인인증 화면으로 연다 — 미성년이 본인인증을 눌렀는데 성인인증을 말하지 않게.
+ */
 const VerificationField = () => {
   const t = useTranslations("adultVerification.field");
   const user = useUserStore((state) => state.user);

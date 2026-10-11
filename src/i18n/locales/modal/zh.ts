@@ -143,6 +143,13 @@ const zh: typeof ko = {
       birthLocked: "出生日期已通过实名认证，无法修改。",
     },
     modal: {
+      identity: {
+        headline: "完成一次实名认证\n一年内安心使用",
+        subtitle: "通过手机或简易认证确认是本人名义。",
+        benefitBirth: "认证完成后，个人资料中的出生日期将固定为认证结果。",
+        doneTitle: "实名认证完成！",
+        doneDescription: "现在可以使用需要实名认证的功能了。",
+      },
       headline: "完成一次成人认证\n即可解锁所有故事",
       subtitle: "通过实名认证确认您已年满19周岁。",
       benefitTime: "约1分钟即可完成，有效期1年。",
@@ -179,6 +186,7 @@ const zh: typeof ko = {
         verify: "认证",
         done: "完成",
         ariaLabel: "成人认证步骤",
+        ariaLabelIdentity: "实名认证步骤",
       },
       title: "实名认证",
       description: "完成实名认证后会同时确认是否成年。年满19周岁即可使用成人内容。",
@@ -250,7 +258,7 @@ const zh: typeof ko = {
       adultTagsRemoved: "已关闭成人内容设置，成人标签已移除。",
     },
     studio: {
-      verify: "进行实名认证",
+      verify: "进行成人认证",
     },
   },
 };

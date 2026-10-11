@@ -148,6 +148,13 @@ const en: typeof ko = {
       birthLocked: "This date of birth was verified and can't be changed.",
     },
     modal: {
+      identity: {
+        headline: "Verify your identity once,\nstay covered for a year",
+        subtitle: "Confirm it's really you with your phone or a simple sign-in app.",
+        benefitBirth: "Once verified, your profile's date of birth is set to the verified value and locked.",
+        doneTitle: "Identity verified!",
+        doneDescription: "You can now use features that require identity verification.",
+      },
       headline: "One adult verification\nunlocks every story",
       subtitle: "We check you're 19 or older with an identity verification.",
       benefitTime: "Takes about a minute and stays valid for a year.",
@@ -184,6 +191,7 @@ const en: typeof ko = {
         verify: "Verify",
         done: "Done",
         ariaLabel: "Adult verification steps",
+        ariaLabelIdentity: "Identity verification steps",
       },
       title: "Identity verification",
       description: "Verifying your identity also confirms your age. If you are 19 or older, you can access adult content.",
@@ -255,7 +263,7 @@ const en: typeof ko = {
       adultTagsRemoved: "Adult content was turned off, so adult hashtags were removed.",
     },
     studio: {
-      verify: "Verify identity",
+      verify: "Verify age",
     },
   },
 };
