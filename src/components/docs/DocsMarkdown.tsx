@@ -1,9 +1,12 @@
 "use client";
 
+import { useCallback, useMemo, useState } from "react";
 import Link from "next/link";
 import type { Components } from "react-markdown";
 import MarkdownDocument from "@/components/markdown/MarkdownDocument";
 import { cn } from "@/lib/utils";
+import DocsImageLightbox, { type DocsLightboxImage } from "./DocsImageLightbox";
+import { useDocs } from "./DocsProvider";
 
 /**
  * react-markdown 이 넘기는 mdast node 는 DOM 속성으로 새지 않게 뺀다(MarkdownDocument 와 같은 처리).
@@ -52,15 +55,6 @@ const docsComponents: Partial<Components> = {
       />
     );
   },
-  img: ({ className, alt, ...props }) => (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
-      alt={alt ?? ""}
-      loading="lazy"
-      className={cn("my-2 h-auto max-w-full rounded-xl border border-main", className)}
-      {...withoutNode(props)}
-    />
-  ),
   blockquote: ({ className, ...props }) => (
     <blockquote
       className={cn(
@@ -72,8 +66,52 @@ const docsComponents: Partial<Components> = {
   ),
 };
 
-const DocsMarkdown = ({ content }: { content: string }) => (
-  <MarkdownDocument content={content} anchorHeadings components={docsComponents} />
-);
+/**
+ * 문서 본문. 이미지는 누르면 라이트박스로 크게 본다(본문에 든 주소 그대로).
+ */
+const DocsMarkdown = ({ content }: { content: string }) => {
+  const { messages } = useDocs();
+  const [zoomed, setZoomed] = useState<DocsLightboxImage | null>(null);
+  const close = useCallback(() => setZoomed(null), []);
+
+  const components = useMemo<Partial<Components>>(
+    () => ({
+      ...docsComponents,
+      img: ({ className, alt, src, ...props }) => {
+        const imageSrc = typeof src === "string" ? src : "";
+        const image = (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            alt={alt ?? ""}
+            src={imageSrc || undefined}
+            loading="lazy"
+            className={cn("h-auto max-w-full rounded-xl border border-main", className)}
+            {...withoutNode(props)}
+          />
+        );
+        if (!imageSrc) return image;
+        return (
+          <button
+            type="button"
+            aria-haspopup="dialog"
+            aria-label={alt ? `${messages.imageZoom}: ${alt}` : messages.imageZoom}
+            onClick={() => setZoomed({ src: imageSrc, alt: alt ?? "" })}
+            className="my-2 inline-block max-w-full cursor-zoom-in rounded-xl align-top focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+          >
+            {image}
+          </button>
+        );
+      },
+    }),
+    [messages.imageZoom],
+  );
+
+  return (
+    <>
+      <MarkdownDocument content={content} anchorHeadings components={components} />
+      {zoomed && <DocsImageLightbox image={zoomed} onClose={close} />}
+    </>
+  );
+};
 
 export default DocsMarkdown;
