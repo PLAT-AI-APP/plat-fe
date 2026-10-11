@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import AdultBadge from "@/components/adult/AdultBadge";
 import Switch from "@/components/ui/Switch";
 import React, { MouseEvent, useState } from "react";
@@ -7,6 +8,9 @@ import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
 import TagAddModal from "@/components/modal/TagAddModal";
 import { ArrowRight } from "@/icons";
+import CheckboxEmpty from "@/icons/CheckboxEmpty";
+import CheckboxFill from "@/icons/CheckboxFill";
+import { LEGAL_LINKS } from "@/constants/legal";
 import { cn } from "@/lib/utils";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
 import { useHashtagListQuery } from "@/api/hashtag/getHashtagList";
@@ -16,10 +20,7 @@ import { isVerificationValid } from "@/lib/adultAccess";
 import { showAppToast } from "@/lib/toast";
 import { useModalStore } from "@/store/useModalStore";
 import { useUserStore } from "@/store/useUserStore";
-import type {
-  UniverseCreateCategory,
-  UniverseCreateTendency,
-} from "@/api/universe/postUniverseCreate";
+import type { UniverseCreateTendency } from "@/api/universe/postUniverseCreate";
 
 const TENDENCY_LIST: UniverseCreateTendency[] = [
   "ALL",
@@ -27,28 +28,21 @@ const TENDENCY_LIST: UniverseCreateTendency[] = [
   "FEMALE_ORIENTED",
 ];
 
-const CATEGORIES: UniverseCreateCategory[] = [
-  "ROMANCE",
-  "FANTASY",
-  "DRAMA",
-  "MARTIAL_ARTS",
-  "GL",
-  "BL",
-  "HORROR",
-  "MYSTERY",
-];
+interface SettingProps {
+  /** 수정 화면에는 권리 책임 동의 항목이 없다. */
+  isEditMode: boolean;
+}
 
-const Setting = () => {
+const Setting = ({ isEditMode }: SettingProps) => {
   const t = useTranslations("characterCreate.settings");
   const selectorT = useTranslations("selector");
-  const categoryT = useTranslations("category");
   const { setValue, control } = useFormContext<CharacterCreateFormValues>();
   const tagList = useWatch({ control, name: "tagIds" });
   const isTagFull = tagList.length >= 5;
   const isPublicWatch = useWatch({ control, name: "isPublic" });
   const allowComments = useWatch({ control, name: "allowComments" });
   const tendency = useWatch({ control, name: "tendency" });
-  const categoryWatch = useWatch({ control, name: "category" });
+  const rightsAgreed = useWatch({ control, name: "rightsAgreed" }) ?? false;
   const adultT = useTranslations("adultVerification.create");
   const isAdult = useWatch({ control, name: "adult" }) ?? false;
   const openModal = useModalStore((state) => state.openModal);
@@ -66,16 +60,6 @@ const Setting = () => {
     ALL: selectorT("all"),
     MALE_ORIENTED: selectorT("male"),
     FEMALE_ORIENTED: selectorT("female"),
-  };
-  const categoryLabelByValue: Record<UniverseCreateCategory, string> = {
-    ROMANCE: categoryT("romance"),
-    FANTASY: categoryT("fantasySf"),
-    DRAMA: categoryT("drama"),
-    MARTIAL_ARTS: categoryT("martialArts"),
-    GL: categoryT("gl"),
-    BL: categoryT("bl"),
-    HORROR: categoryT("horror"),
-    MYSTERY: categoryT("mystery"),
   };
 
   const handleIsPublic = (isPublic: boolean) => {
@@ -108,20 +92,13 @@ const Setting = () => {
     }
   };
 
-  const handleTendency = (nextTendency: UniverseCreateTendency) => {
-    setValue("tendency", nextTendency, {
-      shouldDirty: true,
-      shouldValidate: true,
-    });
+  // 임시저장 기준과 비교하지 않도록 dirty 로 치지 않는다(초안에 싣지 않는 값이다).
+  const toggleRightsAgreed = () => {
+    setValue("rightsAgreed", !rightsAgreed);
   };
 
-  const handleCategory = (category: UniverseCreateCategory) => {
-    const selectedCategories = categoryWatch ?? [];
-    const nextCategory = selectedCategories.includes(category)
-      ? []
-      : [category];
-
-    setValue("category", nextCategory, {
+  const handleTendency = (nextTendency: UniverseCreateTendency) => {
+    setValue("tendency", nextTendency, {
       shouldDirty: true,
       shouldValidate: true,
     });
@@ -259,39 +236,6 @@ const Setting = () => {
         </div>
       </section>
 
-      <section className="flex flex-col gap-4">
-        <div className="flex flex-col gap-1">
-          <h3 className="title-3 text-font-1">
-            {t("categoryLabel")} <span className="text-font-accents">*</span>
-          </h3>
-          <p className="body-6 text-font-2">{t("categoryHelp")}</p>
-        </div>
-
-        <div className="flex flex-wrap gap-x-1.5 gap-y-2">
-          {CATEGORIES.map((category) => {
-            const selectedCategories = categoryWatch ?? [];
-            const isActive = selectedCategories.includes(category);
-            const isInactive = selectedCategories.length > 0 && !isActive;
-
-            return (
-              <button
-                key={category}
-                type="button"
-                onClick={() => handleCategory(category)}
-                className={cn(
-                  "body-5 flex h-8 items-center rounded-full border border-main bg-dark px-3",
-                  isActive && "bg-brand/10 text-brand-dark",
-                  selectedCategories.length === 0 && "text-font-1",
-                  isInactive && "text-font-disabled",
-                )}
-              >
-                {categoryLabelByValue[category]}
-              </button>
-            );
-          })}
-        </div>
-      </section>
-
       <form>
         <section className="flex flex-col gap-2">
           <h3 className="title-3 text-font-1">
@@ -327,6 +271,49 @@ const Setting = () => {
           )}
         </div>
       </form>
+
+      {/* 마지막 탭의 마지막 항목 = 등록 직전 단계. 동의해야 등록 버튼이 열린다. */}
+      {!isEditMode && (
+        <section className="flex flex-col gap-2">
+          <div className="flex items-center justify-between gap-4">
+            <h3 className="title-3 text-font-1">
+              {t("rightsLabel")} <span className="text-font-accents">*</span>
+            </h3>
+            <Link
+              href={LEGAL_LINKS.terms}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="body-7 flex shrink-0 items-center gap-1 text-font-2 hover:text-font-1"
+            >
+              {t("rightsTermsLink")}
+              <ArrowRight className="size-2.5" aria-hidden="true" />
+            </Link>
+          </div>
+
+          <button
+            id="rights-agreement"
+            type="button"
+            role="checkbox"
+            aria-checked={rightsAgreed}
+            onClick={toggleRightsAgreed}
+            className={cn(
+              "flex w-full items-start gap-2.5 rounded-xl border px-4 py-3.5 text-left transition-colors",
+              rightsAgreed
+                ? "border-font-disabled bg-card text-font-1"
+                : "border-main bg-darkest text-font-2 hover:bg-btn-hover hover:text-font-1",
+            )}
+          >
+            {rightsAgreed ? (
+              <CheckboxFill className="size-5 shrink-0 text-brand" />
+            ) : (
+              <CheckboxEmpty className="size-5 shrink-0 text-font-2" />
+            )}
+            <span className="body-6 break-keep">{t("rightsAgreement")}</span>
+          </button>
+
+          <p className="body-7 text-font-2">{t("rightsHelp")}</p>
+        </section>
+      )}
 
       {isTagModal && <TagAddModal onClose={toggleIsTagModal} />}
     </section>

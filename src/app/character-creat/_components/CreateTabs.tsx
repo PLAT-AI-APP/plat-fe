@@ -33,6 +33,8 @@ const TAB_WIDTH_CLASS_BY_ID: Record<TabId, string> = {
 };
 
 interface CreateTabsProps {
+  /** 수정 화면에는 권리 책임 동의 항목이 없다. 처음 만들 때 한 번만 받는다. */
+  isEditMode: boolean;
   currentTabId: TabId;
   setCurrentTabId: (id: TabId) => void;
   activeScenarioIndex: number;
@@ -45,6 +47,7 @@ interface CreateTabsProps {
 }
 
 const CreateTabs = ({
+  isEditMode,
   currentTabId,
   setCurrentTabId,
   activeScenarioIndex,
@@ -74,7 +77,7 @@ const CreateTabs = ({
           />
         );
       case "settings":
-        return <Setting />;
+        return <Setting isEditMode={isEditMode} />;
       default:
         return null;
     }

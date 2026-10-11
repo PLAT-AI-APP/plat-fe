@@ -12,9 +12,9 @@ import type {
 import { DOCS_SEARCH_MAX_LENGTH } from "./types";
 
 /*
- * 가이드 문서 서버 데이터 레이어. 서버 컴포넌트에서만 부른다(검색 엔진이 본문을 읽도록 서버에서 그린다).
+ * 문서 사이트 서버 데이터 레이어. 서버 컴포넌트에서만 부른다(검색 엔진이 본문을 읽도록 서버에서 그린다).
  *
- * - 공개 API 라 로그인 토큰 없이 fetch 로 부르고 60초 캐시한다. axios 인스턴스(src/api/index.ts)는
+ * - 공개 API 라 로그인 토큰 없이 fetch 로 부르고 30초 캐시한다(문서 화면의 ISR 주기와 같다). axios 인스턴스(src/api/index.ts)는
  *   브라우저 인증·토스트 인터셉터가 붙어 있어 쓰지 않는다.
  * - 목업 모드(NEXT_PUBLIC_API_MOCKING)에서는 MSW 브라우저 워커가 서버 요청을 잡지 못하므로
  *   같은 목업 원본(./mockData)으로 응답을 직접 만든다.
@@ -22,7 +22,7 @@ import { DOCS_SEARCH_MAX_LENGTH } from "./types";
  * - 같은 렌더 안에서 레이아웃·페이지·generateMetadata 가 같은 데이터를 여러 번 부르므로 cache 로 묶는다.
  */
 
-const REVALIDATE_SECONDS = 60;
+const REVALIDATE_SECONDS = 30;
 const REQUEST_TIMEOUT_MS = 10_000;
 
 const baseUri = () => process.env.NEXT_PUBLIC_BASE_URI?.replace(/\/$/, "") ?? "";
@@ -95,3 +95,20 @@ export const searchDocsOnServer = cache(
     );
   },
 );
+
+/**
+ * 지금 언어에 없는 문서가 다른 언어로는 있는지 찾는다. 언어를 바꿔 들어온 문서가 그 언어로 번역되지 않았을 때
+ * "다른 언어로 보기" 안내를 그리는 데 쓴다. 어느 언어에도 없으면 빈 배열(진짜 없는 문서 → 404).
+ */
+export const findDocsInOtherLocales = async <T>(
+  locale: DocsLocale,
+  load: (other: DocsLocale) => Promise<T | null>,
+): Promise<{ locale: DocsLocale; name: string; item: T }[]> => {
+  const { locales } = await getDocsLocales();
+  const found = await Promise.all(
+    locales
+      .filter((each) => each.code !== locale)
+      .map(async (each) => ({ locale: each.code, name: each.name, item: await load(each.code) })),
+  );
+  return found.flatMap((each) => (each.item ? [{ ...each, item: each.item }] : []));
+};

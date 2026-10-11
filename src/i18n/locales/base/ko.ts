@@ -340,7 +340,6 @@ const ko = {
       profileSituationMaxLength:
         "프롤로그 소개는 최대 2000자까지 입력할 수 있어요",
       tendencyRequired: "성향을 선택해 주세요",
-      categoryRequired: "카테고리를 선택해 주세요",
       tagRequired: "태그를 1개 이상 선택해 주세요",
       tagMaxCount: "태그는 최대 5개까지 등록할 수 있어요",
     },

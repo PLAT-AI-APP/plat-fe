@@ -4,7 +4,7 @@ import React, { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useIsMutating } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { FieldErrors, FieldPath, useFormContext } from "react-hook-form";
+import { FieldErrors, FieldPath, useFormContext, useWatch } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import ActiveButton from "@/components/ActiveButton";
 import ArrowLineLeft from "@/icons/ArrowLineLeft";
@@ -14,7 +14,6 @@ import { showAppToast } from "@/lib/toast";
 import { useLocaleStore } from "@/store/useLocaleStore";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
 import {
-  UniverseCreateCategory,
   UniverseCreateLanguage,
   UniverseCreateRequest,
   UniverseCreateTendency,
@@ -60,17 +59,6 @@ const UNIVERSE_TENDENCIES: UniverseCreateTendency[] = [
   "FEMALE_ORIENTED",
 ];
 
-const UNIVERSE_CATEGORIES: UniverseCreateCategory[] = [
-  "ROMANCE",
-  "FANTASY",
-  "DRAMA",
-  "MARTIAL_ARTS",
-  "GL",
-  "BL",
-  "HORROR",
-  "MYSTERY",
-];
-
 const LANGUAGE_BY_LOCALE: Record<string, UniverseCreateLanguage> = {
   ko: "KO",
   en: "EN",
@@ -88,16 +76,6 @@ const toUniverseTendency = (tendency: string): UniverseCreateTendency => {
   return "ALL";
 };
 
-const toUniverseCategory = (categories: string[]): UniverseCreateCategory => {
-  const category = categories[0];
-
-  if (UNIVERSE_CATEGORIES.includes(category as UniverseCreateCategory)) {
-    return category as UniverseCreateCategory;
-  }
-
-  return "ROMANCE";
-};
-
 const isApiErrorLike = (error: unknown) =>
   typeof error === "object" &&
   error !== null &&
@@ -107,7 +85,7 @@ const isApiErrorLike = (error: unknown) =>
 /**
  * 탭 순서(profile → details → assets → scenario → settings)와 각 탭 안의
  * 입력 순서를 기준으로 가장 먼저 걸리는 에러를 찾습니다.
- * 대표/프로필 이미지, 성향/카테고리, 시나리오 대화 콘텐츠는 실제 등록된
+ * 대표/프로필 이미지, 성향, 시나리오 대화 콘텐츠는 실제 등록된
  * input이 아니라(버튼 선택이거나, 시나리오 프리뷰에서 편집모드로 들어가야
  * 나타나는 textarea) 포커스는 불가능해 탭 이동 + 토스트로만 안내합니다.
  */
@@ -230,9 +208,6 @@ const findFirstValidationTarget = (
   if (errors.tendency) {
     return { tabId: "settings", message: errors.tendency.message ?? "" };
   }
-  if (errors.category) {
-    return { tabId: "settings", message: errors.category.message ?? "" };
-  }
   if (errors.tagIds) {
     return { tabId: "settings", message: errors.tagIds.message ?? "" };
   }
@@ -254,13 +229,17 @@ const CreateHeader = ({
   const translateText = useTranslateText();
   const router = useRouter();
   const locale = useLocaleStore((state) => state.locale);
-  const { getValues, handleSubmit, setFocus } =
+  const { getValues, handleSubmit, setFocus, control } =
     useFormContext<CharacterCreateFormValues>();
   const { mutateAsync: createUniverse, isPending: isCreatePending } =
     useUniverseCreateMutation();
   const { mutateAsync: updateUniverse, isPending: isUpdatePending } =
     useUniverseUpdateMutation();
   const isEditMode = Boolean(universeId);
+  // 새로 만들 때는 권리 책임에 동의해야 등록할 수 있다(설정 탭 마지막 항목). 수정에는 없다.
+  const rightsAgreed =
+    useWatch({ control, name: "rightsAgreed" }) ?? false;
+  const canSubmit = isEditMode || rightsAgreed;
   const isMutationPending = isCreatePending || isUpdatePending;
   // 이미지는 고르는 즉시 미리보기에 뜨고 업로드는 뒤에서 이어진다. 끝나야 fileId 가 채워지므로
   // 그동안은 등록·임시저장을 대기 상태로 둔다(누르면 이미지 없이 저장되거나 검증에 걸렸다).
@@ -345,7 +324,6 @@ const CreateHeader = ({
           title: currentFormData.title,
           description,
           tagIds: currentFormData.tagIds.map((tag) => tag.id),
-          category: toUniverseCategory(currentFormData.category),
           detailSetting: currentFormData.profileSituationDescription,
           introduce: currentFormData.characterIntroduce,
           // 이미지를 새로 업로드해 fileId를 발급받은 경우에만 전달합니다. 없으면 기존 이미지를 유지합니다.
@@ -378,6 +356,11 @@ const CreateHeader = ({
         return;
       }
 
+      if (!currentFormData.rightsAgreed) {
+        showAppToast("warning", t("rightsRequired"));
+        return;
+      }
+
       if (
         !currentFormData.representativeImageId ||
         !currentFormData.characterProfileImageId
@@ -397,7 +380,6 @@ const CreateHeader = ({
         language: LANGUAGE_BY_LOCALE[locale] ?? "KO",
         description,
         tagIds: currentFormData.tagIds.map((tag) => tag.id),
-        category: toUniverseCategory(currentFormData.category),
         detailSetting: currentFormData.profileSituationDescription,
         introduce: currentFormData.characterIntroduce,
         profileImageFileId: String(currentFormData.representativeImageId),
@@ -409,6 +391,7 @@ const CreateHeader = ({
           description: currentFormData.characterDescription,
           detailSetting: currentFormData.characterDetailSetting,
         },
+        rightsAgreed: true,
         // 이 초안에서 만든 경우에만 실어 보냅니다 — 성공하면 백엔드가 해당 초안을 자동 삭제합니다.
         ...(draftId ? { draftId } : {}),
       };
@@ -427,7 +410,7 @@ const CreateHeader = ({
   };
 
   const handleRegisterClick = async () => {
-    if (isSubmitLockedRef.current || isUploadingImages) return;
+    if (isSubmitLockedRef.current || isUploadingImages || !canSubmit) return;
 
     isSubmitLockedRef.current = true;
     setIsSubmitting(true);
@@ -488,7 +471,8 @@ const CreateHeader = ({
         )}
 
         <ActiveButton
-          isActive
+          isActive={canSubmit}
+          disabled={!canSubmit}
           text={
             // 이미지 업로드를 기다리는 동안은 스피너만 돌고 문구는 그대로 둔다("등록 중"이 아니다).
             isEditMode

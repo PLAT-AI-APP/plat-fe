@@ -1,10 +1,10 @@
 /**
- * 가이드 문서(/docs) 문구. 앱 번역(next-intl, 클라이언트 언어 store)과 달리 문서는 주소의 locale 로
+ * 문서 사이트(/docs) 문구. 앱 번역(next-intl, 클라이언트 언어 store)과 달리 문서는 주소의 locale 로
  * 서버에서 언어를 정하므로 따로 둔다. 키 집합은 en.ts 와 같아야 한다(DocsMessages 타입이 맞춘다).
  */
 const ko = {
-  siteName: "PLAT 가이드",
-  serviceLabel: "가이드",
+  siteName: "PLAT 문서",
+  serviceLabel: "문서",
   metaDescription: "PLAT 이용 방법과 자주 묻는 질문을 안내합니다.",
   searchPlaceholder: "아티클 제목, 내용",
   searchOpen: "검색 열기",
@@ -24,6 +24,10 @@ const ko = {
   emptyCategory: "이 카테고리에는 아직 아티클이 없습니다.",
   tableOfContents: "이 페이지의 내용",
   updatedAt: "{date} 업데이트",
+  loading: "불러오는 중…",
+  imageZoom: "이미지 크게 보기",
+  imageViewer: "이미지 보기",
+  imageClose: "닫기",
   language: "언어",
   menuOpen: "메뉴 열기",
   menuClose: "메뉴 닫기",
@@ -33,6 +37,9 @@ const ko = {
   backToApp: "PLAT 바로가기",
   themeToLight: "라이트 모드로 보기",
   themeToDark: "다크 모드로 보기",
+  untranslatedTitle: "이 문서는 아직 {language} 번역이 없습니다",
+  untranslatedDescription: "다른 언어로 읽거나 문서 홈에서 다른 문서를 찾아보세요.",
+  untranslatedHome: "문서 홈으로",
 };
 
 export default ko;

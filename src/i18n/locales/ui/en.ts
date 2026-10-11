@@ -235,7 +235,7 @@ const en = {
   },
   profilePopover: {
     notice: "Notice",
-    guide: "User guide",
+    docs: "Docs",
     customerService: "Customer service",
     myReports: "My reports",
     bugReport: "Report a bug",
@@ -249,16 +249,6 @@ const en = {
     inquiryAndSettings: "Support & settings",
     logout: "Log out",
     profileImageAlt: "Profile image",
-  },
-  category: {
-    romance: "Romance",
-    fantasySf: "Fantasy/SF",
-    drama: "Drama",
-    martialArts: "Martial arts",
-    gl: "GL",
-    bl: "BL",
-    horror: "Horror",
-    mystery: "Mystery",
   },
   report: {
     targetTypes: {
@@ -402,17 +392,21 @@ const en = {
     faq: {
       filters: {
         ALL: "All",
-        REFUND: "Refunds",
-        PAYMENT: "Payments",
+        SERVICE: "Using PLAT",
         ACCOUNT: "Account",
+        VERIFICATION: "Verification",
+        PAYMENT: "Payments & Notes",
+        REFUND: "Refunds",
         CHARACTER: "Characters",
         CHAT: "Chat",
+        CREATOR: "Creating & Earnings",
+        REPORT: "Reports & Restrictions",
         ETC: "Other",
       },
       empty: "No questions yet.",
       moreHelpTitle: "Didn't find your answer?",
-      moreHelpDescription: "Check the user guide, or send us a message and our team will get back to you.",
-      guide: "User guide",
+      moreHelpDescription: "Check the docs, or send us a message and our team will get back to you.",
+      docs: "Docs",
       ask: "Contact us",
     },
     qna: {

@@ -225,7 +225,7 @@ const ko = {
   },
   profilePopover: {
     notice: "공지사항",
-    guide: "이용 가이드",
+    docs: "문서",
     customerService: "고객센터",
     myReports: "신고 내역",
     bugReport: "버그 제보",
@@ -239,16 +239,6 @@ const ko = {
     inquiryAndSettings: "문의 및 설정",
     logout: "로그아웃",
     profileImageAlt: "프로필 이미지",
-  },
-  category: {
-    romance: "로맨스",
-    fantasySf: "판타지/SF",
-    drama: "드라마",
-    martialArts: "무협",
-    gl: "GL",
-    bl: "BL",
-    horror: "공포",
-    mystery: "추리",
   },
   report: {
     targetTypes: {
@@ -392,17 +382,21 @@ const ko = {
     faq: {
       filters: {
         ALL: "전체",
-        REFUND: "환불",
-        PAYMENT: "결제",
+        SERVICE: "서비스 이용",
         ACCOUNT: "계정",
+        VERIFICATION: "본인·성인인증",
+        PAYMENT: "결제·노트",
+        REFUND: "환불",
         CHARACTER: "캐릭터",
         CHAT: "대화",
+        CREATOR: "제작·수익",
+        REPORT: "신고·제재",
         ETC: "기타",
       },
       empty: "등록된 질문이 없어요",
       moreHelpTitle: "원하는 답을 찾지 못했나요?",
-      moreHelpDescription: "이용 가이드를 찾아보거나 1:1 문의를 남겨 주세요.",
-      guide: "이용 가이드",
+      moreHelpDescription: "문서에서 찾아보거나 1:1 문의를 남겨 주세요.",
+      docs: "문서",
       ask: "1:1 문의하기",
     },
     qna: {

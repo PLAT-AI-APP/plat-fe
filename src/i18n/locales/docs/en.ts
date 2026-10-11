@@ -1,8 +1,8 @@
 import type { DocsMessages } from ".";
 
 const en: DocsMessages = {
-  siteName: "PLAT Guide",
-  serviceLabel: "Guide",
+  siteName: "PLAT Docs",
+  serviceLabel: "Docs",
   metaDescription: "Learn how to use PLAT and find answers to common questions.",
   searchPlaceholder: "Search articles",
   searchOpen: "Open search",
@@ -22,6 +22,10 @@ const en: DocsMessages = {
   emptyCategory: "There are no articles in this category yet.",
   tableOfContents: "On this page",
   updatedAt: "Updated {date}",
+  loading: "Loading…",
+  imageZoom: "View larger image",
+  imageViewer: "Image viewer",
+  imageClose: "Close",
   language: "Language",
   menuOpen: "Open menu",
   menuClose: "Close menu",
@@ -31,6 +35,9 @@ const en: DocsMessages = {
   backToApp: "Go to PLAT",
   themeToLight: "Switch to light mode",
   themeToDark: "Switch to dark mode",
+  untranslatedTitle: "This page isn't available in {language} yet",
+  untranslatedDescription: "Read it in another language, or browse other pages from the docs home.",
+  untranslatedHome: "Go to docs home",
 };
 
 export default en;

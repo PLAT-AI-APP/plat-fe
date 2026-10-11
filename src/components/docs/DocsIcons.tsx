@@ -1,7 +1,7 @@
 import { IconWrapper, type IconProps } from "@/icons";
 
 /*
- * 가이드 문서에서만 쓰는 아이콘. 앱 아이콘 배럴(@/icons)에는 같은 모양이 없어 여기 둔다.
+ * 문서 사이트에서만 쓰는 아이콘. 앱 아이콘 배럴(@/icons)에는 같은 모양이 없어 여기 둔다.
  * 틀(IconWrapper·24 격자·currentColor)은 앱 아이콘과 같다.
  */
 

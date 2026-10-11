@@ -229,7 +229,7 @@ const ja = {
   },
   profilePopover: {
     notice: "お知らせ",
-    guide: "利用ガイド",
+    docs: "ドキュメント",
     customerService: "カスタマーセンター",
     myReports: "通報履歴",
     bugReport: "不具合を報告",
@@ -243,16 +243,6 @@ const ja = {
     inquiryAndSettings: "お問い合わせ・設定",
     logout: "ログアウト",
     profileImageAlt: "プロフィール画像",
-  },
-  category: {
-    romance: "ロマンス",
-    fantasySf: "ファンタジー/SF",
-    drama: "ドラマ",
-    martialArts: "武侠",
-    gl: "GL",
-    bl: "BL",
-    horror: "ホラー",
-    mystery: "ミステリー",
   },
   report: {
     targetTypes: {
@@ -396,17 +386,21 @@ const ja = {
     faq: {
       filters: {
         ALL: "すべて",
-        REFUND: "返金",
-        PAYMENT: "決済",
+        SERVICE: "サービス利用",
         ACCOUNT: "アカウント",
+        VERIFICATION: "本人・成人認証",
+        PAYMENT: "決済・ノート",
+        REFUND: "返金",
         CHARACTER: "キャラクター",
         CHAT: "会話",
+        CREATOR: "制作・収益",
+        REPORT: "通報・利用制限",
         ETC: "その他",
       },
       empty: "登録された質問はありません",
       moreHelpTitle: "お探しの答えが見つかりませんか？",
-      moreHelpDescription: "利用ガイドをご覧いただくか、お問い合わせください。",
-      guide: "利用ガイド",
+      moreHelpDescription: "ドキュメントをご覧いただくか、お問い合わせください。",
+      docs: "ドキュメント",
       ask: "お問い合わせ",
     },
     qna: {

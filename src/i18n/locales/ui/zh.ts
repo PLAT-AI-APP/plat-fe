@@ -225,7 +225,7 @@ const zh = {
   },
   profilePopover: {
     notice: "公告",
-    guide: "使用指南",
+    docs: "文档",
     customerService: "客服中心",
     myReports: "举报记录",
     bugReport: "反馈问题",
@@ -239,16 +239,6 @@ const zh = {
     inquiryAndSettings: "咨询与设置",
     logout: "退出登录",
     profileImageAlt: "个人资料图片",
-  },
-  category: {
-    romance: "恋爱",
-    fantasySf: "奇幻/SF",
-    drama: "剧情",
-    martialArts: "武侠",
-    gl: "GL",
-    bl: "BL",
-    horror: "恐怖",
-    mystery: "推理",
   },
   report: {
     targetTypes: {
@@ -392,17 +382,21 @@ const zh = {
     faq: {
       filters: {
         ALL: "全部",
-        REFUND: "退款",
-        PAYMENT: "支付",
+        SERVICE: "服务使用",
         ACCOUNT: "账号",
+        VERIFICATION: "实名・成人认证",
+        PAYMENT: "支付・笔记",
+        REFUND: "退款",
         CHARACTER: "角色",
         CHAT: "对话",
+        CREATOR: "创作・收益",
+        REPORT: "举报・处罚",
         ETC: "其他",
       },
       empty: "暂无问题",
       moreHelpTitle: "没有找到想要的答案？",
-      moreHelpDescription: "可以先查看使用指南，或留下咨询。",
-      guide: "使用指南",
+      moreHelpDescription: "可以先查看文档，或留下咨询。",
+      docs: "文档",
       ask: "一对一咨询",
     },
     qna: {

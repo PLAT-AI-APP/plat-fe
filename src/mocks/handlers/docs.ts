@@ -11,7 +11,7 @@ import {
 import type { DocsLocale } from "@/api/docs/types";
 
 /*
- * 가이드 문서 공개 API 목업. 응답은 서버 컴포넌트 목업과 같은 원본(@/api/docs/mockData)에서 만든다.
+ * 문서 사이트 공개 API 목업. 응답은 서버 컴포넌트 목업과 같은 원본(@/api/docs/mockData)에서 만든다.
  * 서버 컴포넌트 fetch 는 이 워커를 거치지 않으므로, 브라우저에서 부르는 검색 자동완성이 주로 쓴다.
  */
 

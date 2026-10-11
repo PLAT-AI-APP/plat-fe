@@ -1,14 +1,25 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
-import { getDocsPage } from "@/api/docs/server";
+import { findDocsInOtherLocales, getDocsLocales, getDocsPage } from "@/api/docs/server";
 import DocsMarkdown from "@/components/docs/DocsMarkdown";
-import { DocsPageLocales } from "@/components/docs/DocsProvider";
 import DocsToc from "@/components/docs/DocsToc";
+import DocsUntranslated from "@/components/docs/DocsUntranslated";
 import { buildDocsMetadata, readDocsLocale } from "@/components/docs/docsMetadata";
 import { docsPath, parseSlugId } from "@/components/docs/docsPath";
 import { ChevronIcon } from "@/components/docs/DocsIcons";
 import { formatDocsMessage, getDocsMessages } from "@/i18n/locales/docs";
+
+/*
+ * 첫 요청 때 그려 둔 화면을 30초 동안 그대로 내준다(ISR). 문서 사이 이동마다 서버가 다시 그리지 않고,
+ * 링크 prefetch 가 화면 전체를 미리 받아 둔다. 미리 만들 주소는 없다(빌드 때 문서 서버에 묻지 않는다).
+ * 게시 변경은 길어야 30초 남짓 뒤에 보인다(server.ts 의 데이터 캐시와 같은 주기).
+ */
+export const revalidate = 30;
+
+export async function generateStaticParams(): Promise<{ locale: string; slug?: string }[]> {
+  return [];
+}
 
 interface ArticlePageProps {
   params: Promise<{ locale: string; slug: string }>;
@@ -22,13 +33,19 @@ const loadArticle = async (params: ArticlePageProps["params"]) => {
   const parsed = parseSlugId(slug);
   if (!locale || !parsed) return null;
   const page = await getDocsPage(locale, parsed.id);
-  return page ? { locale, parsed, page } : null;
+  if (page) return { locale, parsed, page, translations: [] };
+  // 이 언어로는 없는 문서 — 다른 언어로 있으면 번역 없음 안내를, 어디에도 없으면 404 를 그린다.
+  const translations = await findDocsInOtherLocales(locale, (other) => getDocsPage(other, parsed.id));
+  return translations.length ? { locale, parsed, page: null, translations } : null;
 };
 
 export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
   const loaded = await loadArticle(params);
   if (!loaded) return {};
-  const { locale, page } = loaded;
+  const { locale, page, translations } = loaded;
+  if (!page) {
+    return { title: translations[0].item.title, robots: { index: false, follow: true } };
+  }
   return buildDocsMetadata({
     locale,
     title: page.title,
@@ -44,7 +61,23 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
 export default async function DocsArticlePage({ params }: ArticlePageProps) {
   const loaded = await loadArticle(params);
   if (!loaded) notFound();
-  const { locale, parsed, page } = loaded;
+  const { locale, parsed, page, translations } = loaded;
+
+  if (!page) {
+    const { locales } = await getDocsLocales();
+    return (
+      <DocsUntranslated
+        locale={locale}
+        languageName={locales.find((each) => each.code === locale)?.name ?? locale}
+        translations={translations.map((each) => ({
+          locale: each.locale,
+          languageName: each.name,
+          title: each.item.title,
+          href: docsPath.article(each.locale, each.item.slug, each.item.id),
+        }))}
+      />
+    );
+  }
 
   if (parsed.slug !== page.slug) {
     permanentRedirect(docsPath.article(locale, page.slug, page.id));
@@ -58,7 +91,6 @@ export default async function DocsArticlePage({ params }: ArticlePageProps) {
 
   return (
     <>
-      <DocsPageLocales locales={page.availableLocales} />
       <div className="mx-auto flex w-full max-w-[1100px] gap-12 px-4 pt-6 pb-24 sm:px-8 lg:pt-10">
         <article className="min-w-0 flex-1">
           {page.breadcrumbs.length > 0 && (

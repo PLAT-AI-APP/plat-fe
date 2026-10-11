@@ -31,7 +31,6 @@ const createMockUniverseDetail = (
   visibility: "PUBLIC",
   commentEnabled: true,
   tendency: "MALE_ORIENTED",
-  category: "ROMANCE",
   chatCount: 12,
   likeCount: 3,
   liked: false,
@@ -156,7 +155,6 @@ const createUpdatedUniverseDetail = (
   visibility: body.visibility ?? current.visibility,
   commentEnabled: body.commentEnabled ?? current.commentEnabled,
   tendency: body.tendency ?? current.tendency,
-  category: body.category ?? current.category,
   title: body.title ?? current.title,
   introduce: body.introduce ?? current.introduce,
   detailSetting: body.detailSetting ?? current.detailSetting,
@@ -336,6 +334,9 @@ export const universeHandlers = [
       fields["character.detailSetting"] = "캐릭터 상세 설정을 입력해 주세요.";
     if (!body.character?.profileImageFileId)
       fields["character.profileImageFileId"] = "캐릭터 프로필 이미지를 업로드해 주세요.";
+    // rightsAgreed: @NotNull @AssertTrue — 권리 책임에 동의하지 않으면 만들 수 없다.
+    if ((body as { rightsAgreed?: boolean }).rightsAgreed !== true)
+      fields.rightsAgreed = "저작권 등 권리 책임에 동의해야 캐릭터를 만들 수 있습니다.";
 
     if (Object.keys(fields).length > 0) {
       return invalidInput(fields);

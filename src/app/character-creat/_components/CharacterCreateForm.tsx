@@ -55,9 +55,9 @@ const createCharacterCreateDefaultValues = (
   isPublic: true,
   allowComments: true,
   adult: false,
+  rightsAgreed: false,
   characterDescription: "",
   tendency: "",
-  category: [],
   tagIds: [],
 });
 
@@ -108,7 +108,6 @@ const createCharacterEditDefaultValues = (
   adult: universe.adult ?? false,
   characterDescription: universe.description,
   tendency: universe.tendency,
-  category: [universe.category],
   tagIds: universe.hashtags.map((hashtag) => ({
     id: hashtag.hashtagId,
     label: hashtag.label,
@@ -421,6 +420,7 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
           ) : (
             <div className="flex min-h-0 min-w-0 flex-1 items-start justify-center gap-4 lg:grid lg:grid-cols-[491fr_693fr]">
               <CreateTabs
+                isEditMode={isEditMode}
                 currentTabId={currentTabId}
                 setCurrentTabId={setCurrentTabId}
                 activeScenarioIndex={activeScenarioIndex}

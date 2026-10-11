@@ -87,7 +87,6 @@ export const FIELD_ERROR_MESSAGES = {
   characterDescriptionRequired: "field.error.characterDescriptionRequired",
   characterDescriptionMaxLength: "field.error.characterDescriptionMaxLength",
   tendencyRequired: "field.error.tendencyRequired",
-  categoryRequired: "field.error.categoryRequired",
   tagRequired: "field.error.tagRequired",
   tagMaxCount: "field.error.tagMaxCount",
 } as const;

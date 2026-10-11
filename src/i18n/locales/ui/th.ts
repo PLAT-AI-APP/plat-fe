@@ -228,7 +228,7 @@ const th = {
   },
   profilePopover: {
     notice: "ประกาศ",
-    guide: "คู่มือการใช้งาน",
+    docs: "เอกสาร",
     customerService: "ศูนย์ลูกค้า",
     myReports: "ประวัติการรายงาน",
     bugReport: "รายงานปัญหา",
@@ -242,16 +242,6 @@ const th = {
     inquiryAndSettings: "สอบถามและตั้งค่า",
     logout: "ออกจากระบบ",
     profileImageAlt: "รูปโปรไฟล์",
-  },
-  category: {
-    romance: "โรแมนซ์",
-    fantasySf: "แฟนตาซี/SF",
-    drama: "ดราม่า",
-    martialArts: "กำลังภายใน",
-    gl: "GL",
-    bl: "BL",
-    horror: "สยองขวัญ",
-    mystery: "สืบสวน",
   },
   report: {
     targetTypes: {
@@ -395,17 +385,21 @@ const th = {
     faq: {
       filters: {
         ALL: "ทั้งหมด",
-        REFUND: "การคืนเงิน",
-        PAYMENT: "การชำระเงิน",
+        SERVICE: "การใช้บริการ",
         ACCOUNT: "บัญชี",
+        VERIFICATION: "การยืนยันตัวตนและอายุ",
+        PAYMENT: "การชำระเงินและโน้ต",
+        REFUND: "การคืนเงิน",
         CHARACTER: "ตัวละคร",
         CHAT: "แชท",
+        CREATOR: "การสร้างและรายได้",
+        REPORT: "การรายงานและบทลงโทษ",
         ETC: "อื่นๆ",
       },
       empty: "ยังไม่มีคำถาม",
       moreHelpTitle: "ไม่พบคำตอบที่ต้องการใช่ไหม?",
-      moreHelpDescription: "ดูคู่มือการใช้งาน หรือส่งข้อความถึงเรา",
-      guide: "คู่มือการใช้งาน",
+      moreHelpDescription: "ดูเอกสาร หรือส่งข้อความถึงเรา",
+      docs: "เอกสาร",
       ask: "ติดต่อเรา",
     },
     qna: {

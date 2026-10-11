@@ -229,7 +229,7 @@ const vi = {
   },
   profilePopover: {
     notice: "Thông báo",
-    guide: "Hướng dẫn sử dụng",
+    docs: "Tài liệu",
     customerService: "Trung tâm khách hàng",
     myReports: "Lịch sử báo cáo",
     bugReport: "Báo lỗi",
@@ -243,16 +243,6 @@ const vi = {
     inquiryAndSettings: "Hỗ trợ & cài đặt",
     logout: "Đăng xuất",
     profileImageAlt: "Ảnh hồ sơ",
-  },
-  category: {
-    romance: "Lãng mạn",
-    fantasySf: "Fantasy/SF",
-    drama: "Chính kịch",
-    martialArts: "Võ hiệp",
-    gl: "GL",
-    bl: "BL",
-    horror: "Kinh dị",
-    mystery: "Suy luận",
   },
   report: {
     targetTypes: {
@@ -396,17 +386,21 @@ const vi = {
     faq: {
       filters: {
         ALL: "Tất cả",
-        REFUND: "Hoàn tiền",
-        PAYMENT: "Thanh toán",
+        SERVICE: "Sử dụng dịch vụ",
         ACCOUNT: "Tài khoản",
+        VERIFICATION: "Xác minh danh tính & tuổi",
+        PAYMENT: "Thanh toán & Note",
+        REFUND: "Hoàn tiền",
         CHARACTER: "Nhân vật",
         CHAT: "Trò chuyện",
+        CREATOR: "Sáng tạo & Thu nhập",
+        REPORT: "Báo cáo & Xử phạt",
         ETC: "Khác",
       },
       empty: "Chưa có câu hỏi nào",
       moreHelpTitle: "Không tìm thấy câu trả lời?",
-      moreHelpDescription: "Xem hướng dẫn sử dụng hoặc gửi câu hỏi cho chúng tôi.",
-      guide: "Hướng dẫn sử dụng",
+      moreHelpDescription: "Xem tài liệu hoặc gửi câu hỏi cho chúng tôi.",
+      docs: "Tài liệu",
       ask: "Liên hệ",
     },
     qna: {

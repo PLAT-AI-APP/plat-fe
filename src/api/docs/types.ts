@@ -1,5 +1,5 @@
 /**
- * 가이드 문서(/docs) 공개 API 응답 타입.
+ * 문서 사이트(/docs) 공개 API 응답 타입.
  * 기준은 .worktrees/docs/DOCS_API_CONTRACT.md 의 "공개 API" 절이다. ID 는 문자열.
  */
 

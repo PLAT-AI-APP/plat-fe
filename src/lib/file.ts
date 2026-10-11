@@ -2,8 +2,10 @@ import { FileUploadType } from "@/api/file/postFileUpload";
 
 /**
  * 백엔드가 업로드 때 미리 만들어 두는 이미지 크기 변형본 (plat-be ImageVariant).
+ * lg = 긴 변 최대 1600px 로 줄인 표시용 큰 이미지(모든 타입 공통, 작은 이미지는 원래 크기).
  * sq = 정사각 크롭, 숫자는 한 변 px.
  *
+ * 원본 해상도(origin)는 공개로 열리지 않는다(서명 없으면 404) — 화면은 lg 를 쓴다.
  * 파일 타입마다 만드는 변형본이 다르다(FileTypePolicy). 없는 변형본을 요청하면 404 이므로
  * 타입에 맞는 것만 쓴다.
  * - USER_PROFILE: sq40, sq80
@@ -11,7 +13,7 @@ import { FileUploadType } from "@/api/file/postFileUpload";
  * - UNIVERSE_PROFILE: sq80, sq140
  * - UNIVERSE_ASSET: sq80 (정사각 크롭이라 비율을 지켜야 하는 에셋 본문에는 못 쓴다)
  */
-export type ImageVariant = "origin" | "sq40" | "sq80" | "sq140";
+export type ImageVariant = "lg" | "sq40" | "sq80" | "sq140";
 
 /** /images/{type}/{fileId}/{variant} 의 마지막 세그먼트 */
 const IMAGE_VARIANT_PATH = /(\/images\/[^/]+\/[^/?#]+\/)([a-z0-9]+)(?=$|[?#])/;
@@ -32,7 +34,7 @@ export const isSignedImageUrl = (url: string | null | undefined) =>
 export const getResourceImageUrl = (
   fileId: string,
   fileType: FileUploadType,
-  variant: ImageVariant = "origin",
+  variant: ImageVariant = "lg",
 ) => {
   const baseUrl = (process.env.NEXT_PUBLIC_BASE_URI ?? "").replace(/\/$/, "");
 
@@ -49,9 +51,9 @@ export const resolveAssetImageUrl = (
 ) => assetImageUrls?.[fileId] ?? getResourceImageUrl(fileId, "UNIVERSE_ASSET");
 
 /**
- * 백엔드가 내려준 이미지 URL(대개 origin)을 같은 파일의 작은 변형본 URL로 바꿉니다.
+ * 백엔드가 내려준 이미지 URL(대개 lg)을 같은 파일의 작은 변형본 URL로 바꿉니다.
  *
- * 36px 아바타에 원본(최대 수 MB 업로드를 크기 그대로 webp 로만 바꾼 파일)을 받을 이유가 없다.
+ * 36px 아바타에 표시용 큰 이미지(긴 변 최대 1600px)를 받을 이유가 없다.
  * `unoptimized` 라 next/image 가 줄여 주지도 않는 자리에서 쓴다.
  * /images/... 형태가 아닌 값(업로드 미리보기 blob:, 로컬 기본 이미지 등)은 그대로 둔다.
  * 서명 URL(성인 이미지)도 그대로 둔다 — 서버가 그 자리에 맞는 크기로 서명해 준다.
