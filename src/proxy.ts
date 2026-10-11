@@ -1,4 +1,12 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { getDocsLocales } from "@/api/docs/server";
+import {
+  DOCS_BASE_PATH,
+  DOCS_ENTRY_LANG_PARAM,
+  docsPath,
+  isDocsPathname,
+  pickDocsEntryLocale,
+} from "@/components/docs/docsPath";
 import { isDevToolsEnabledFor } from "@/constants/identityVerification";
 
 const MAINTENANCE_PATH = "/maintenance";
@@ -10,7 +18,7 @@ export const isMaintenanceMode = (value: string | undefined) => value === "on";
  * 점검 모드. 켜지면 화면 요청을 전부 점검 안내로 돌린다(주소는 그대로 두고 내용만 바꾼다).
  * 정적 자원·이미지·점검 화면 자신은 matcher 에서 빠져 있어 그대로 나간다.
  */
-export function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   // 개발용 화면(/dev/**, 가짜 본인인증 등)은 운영(운영 호스트·운영 API)에서 없는 주소로 둔다. 페이지도 notFound 로 한 번 더 막는다.
   if (
     request.nextUrl.pathname.startsWith("/dev/") &&
@@ -18,10 +26,23 @@ export function proxy(request: NextRequest) {
   ) {
     return new NextResponse(null, { status: 404 });
   }
+  // 문서 기준 경로는 앱에서 넘긴 언어(?lang=)가 지원되면 그 언어, 아니면 서버가 정한 기본 언어 홈으로 보낸다. 페이지(app/docs/page.tsx)에서도 보내지만, 루트 레이아웃의
+  // Suspense 안에서는 응답이 이미 시작돼 200 + 클라이언트 이동이 되므로 여기서 진짜 307 로 보낸다.
+  // 언어 목록을 못 받으면 그대로 넘겨 페이지가 오류 화면을 보이게 한다.
+  if (request.nextUrl.pathname === DOCS_BASE_PATH) {
+    const locales = await getDocsLocales().catch(() => null);
+    if (locales) {
+      const url = request.nextUrl.clone();
+      url.pathname = docsPath.home(pickDocsEntryLocale(url.searchParams.get(DOCS_ENTRY_LANG_PARAM), locales));
+      url.search = "";
+      return NextResponse.redirect(url);
+    }
+  }
   if (!isMaintenanceMode(process.env.NEXT_PUBLIC_MAINTENANCE_MODE)) {
     return NextResponse.next();
   }
-  if (request.nextUrl.pathname === MAINTENANCE_PATH) {
+  // 점검 화면 자신과 가이드 문서(/docs)는 점검 중에도 연다. 문서는 점검 안내·이용 방법을 볼 수 있어야 한다.
+  if (request.nextUrl.pathname === MAINTENANCE_PATH || isDocsPathname(request.nextUrl.pathname)) {
     return NextResponse.next();
   }
   const url = request.nextUrl.clone();

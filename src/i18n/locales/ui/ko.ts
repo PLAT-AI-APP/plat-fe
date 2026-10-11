@@ -225,6 +225,7 @@ const ko = {
   },
   profilePopover: {
     notice: "공지사항",
+    guide: "이용 가이드",
     customerService: "고객센터",
     myReports: "신고 내역",
     bugReport: "버그 제보",
@@ -400,7 +401,8 @@ const ko = {
       },
       empty: "등록된 질문이 없어요",
       moreHelpTitle: "원하는 답을 찾지 못했나요?",
-      moreHelpDescription: "1:1 문의를 남겨 주시면 운영팀이 답변드려요.",
+      moreHelpDescription: "이용 가이드를 찾아보거나 1:1 문의를 남겨 주세요.",
+      guide: "이용 가이드",
       ask: "1:1 문의하기",
     },
     qna: {

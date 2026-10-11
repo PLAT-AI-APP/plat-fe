@@ -66,6 +66,7 @@ const en = {
     menu: "Footer menu",
     about: "About",
     support: "Support",
+    guide: "User guide",
     terms: "Terms of Service",
     privacy: "Privacy Policy",
     youth: "Youth Protection Policy",

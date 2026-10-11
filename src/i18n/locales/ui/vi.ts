@@ -229,6 +229,7 @@ const vi = {
   },
   profilePopover: {
     notice: "Thông báo",
+    guide: "Hướng dẫn sử dụng",
     customerService: "Trung tâm khách hàng",
     myReports: "Lịch sử báo cáo",
     bugReport: "Báo lỗi",
@@ -404,7 +405,8 @@ const vi = {
       },
       empty: "Chưa có câu hỏi nào",
       moreHelpTitle: "Không tìm thấy câu trả lời?",
-      moreHelpDescription: "Hãy gửi câu hỏi, đội ngũ vận hành sẽ phản hồi bạn.",
+      moreHelpDescription: "Xem hướng dẫn sử dụng hoặc gửi câu hỏi cho chúng tôi.",
+      guide: "Hướng dẫn sử dụng",
       ask: "Liên hệ",
     },
     qna: {

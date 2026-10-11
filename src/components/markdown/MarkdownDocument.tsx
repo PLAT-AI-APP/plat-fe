@@ -7,7 +7,59 @@ import { cn } from "@/lib/utils";
 
 interface MarkdownDocumentProps {
   content: string;
+  /**
+   * 본문 `##`·`###` 제목에 id 를 붙여 목차 앵커로 쓸 수 있게 한다(가이드 문서).
+   * 끄면(기본) 지금까지와 같다.
+   */
+  anchorHeadings?: boolean;
+  /** 화면별로 일부 요소 모양만 바꿀 때. 넘긴 요소만 기본 모양을 덮는다. */
+  components?: Partial<Components>;
 }
+
+/** 목차 앵커를 붙일 마크다운 제목 깊이(## · ###). */
+const ANCHOR_HEADING_DEPTHS = [2, 3];
+
+interface MdastNode {
+  type: string;
+  depth?: number;
+  value?: string;
+  children?: MdastNode[];
+  data?: { hProperties?: Record<string, unknown> };
+}
+
+const textOf = (node: MdastNode): string =>
+  node.value ?? (node.children ?? []).map(textOf).join("");
+
+/** 제목 글자로 id 를 만든다. 한글 등 글자·숫자는 남기고 나머지는 - 로 잇는다. */
+const toHeadingId = (text: string) =>
+  text
+    .trim()
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}\s-]/gu, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "") || "section";
+
+/**
+ * `##`·`###` 제목에 id 를 붙이는 remark 플러그인. 같은 제목이 여러 번이면 -1, -2 를 붙여 겹치지 않게 한다.
+ * rehype-slug 를 들이지 않으려고 직접 둔다(제목만 훑으면 되어 짧다).
+ */
+const remarkHeadingIds = () => (tree: MdastNode) => {
+  const used = new Map<string, number>();
+  const visit = (node: MdastNode) => {
+    if (node.type === "heading" && ANCHOR_HEADING_DEPTHS.includes(node.depth ?? 0)) {
+      const base = toHeadingId(textOf(node));
+      const count = used.get(base) ?? 0;
+      used.set(base, count + 1);
+      node.data = {
+        ...node.data,
+        hProperties: { ...node.data?.hProperties, id: count ? `${base}-${count}` : base },
+      };
+    }
+    node.children?.forEach(visit);
+  };
+  visit(tree);
+};
 
 /**
  * react-markdown 은 각 요소에 mdast node 를 함께 넘긴다. 그대로 펼치면 DOM 속성으로 새어
@@ -158,10 +210,18 @@ const markdownComponents: Partial<Components> = {
   ),
 };
 
-const MarkdownDocument = ({ content }: MarkdownDocumentProps) => (
+const MarkdownDocument = ({
+  content,
+  anchorHeadings = false,
+  components,
+}: MarkdownDocumentProps) => (
   <ReactMarkdown
-    remarkPlugins={[remarkGfm, remarkBreaks]}
-    components={markdownComponents}
+    remarkPlugins={
+      anchorHeadings
+        ? [remarkGfm, remarkBreaks, remarkHeadingIds]
+        : [remarkGfm, remarkBreaks]
+    }
+    components={components ? { ...markdownComponents, ...components } : markdownComponents}
   >
     {content}
   </ReactMarkdown>
