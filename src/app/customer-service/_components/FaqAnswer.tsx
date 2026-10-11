@@ -89,9 +89,10 @@ const components: Partial<Components> = {
 /**
  * 고객센터 FAQ 답변. 관리자가 마크다운으로 쓴 원문을 그린다.
  * 마크다운을 쓰지 않은 예전 평문도 줄바꿈이 그대로 보이도록 remark-breaks 를 건다.
+ * 줄바꿈은 <br> 이 맡으므로 부모의 pre-wrap 을 끊는다(남겨 두면 <br> 뒤 개행이 빈 줄로 한 번 더 보인다).
  */
 const FaqAnswer = ({ content, className }: FaqAnswerProps) => (
-  <div className={cn("flex flex-col gap-2 break-keep", className)}>
+  <div className={cn("flex flex-col gap-2 whitespace-normal break-keep", className)}>
     <ReactMarkdown
       remarkPlugins={[remarkBreaks]}
       allowedElements={ALLOWED_ELEMENTS}
