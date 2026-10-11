@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getDocsHome } from "@/api/docs/server";
-import { DocsPageLocales } from "@/components/docs/DocsProvider";
 import DocsSearchBox from "@/components/docs/DocsSearchBox";
 import DocsThumbnail from "@/components/docs/DocsThumbnail";
 import { allLocaleAlternates, buildDocsMetadata, readDocsLocale } from "@/components/docs/docsMetadata";
@@ -33,8 +32,6 @@ export default async function DocsHomePage({ params }: DocsHomeProps) {
 
   return (
     <>
-      <DocsPageLocales locales={null} />
-
       {/* 배너도 테마를 따른다. 바탕은 본문보다 한 단계 짙은 면에 브랜드 빛을 얹는다(라이트에서는 옅은 주황). */}
       <section className="relative overflow-hidden border-b border-main bg-darker text-font-1">
         <div

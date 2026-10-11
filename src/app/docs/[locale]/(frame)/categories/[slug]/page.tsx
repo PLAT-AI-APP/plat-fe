@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
-import { getDocsGroup } from "@/api/docs/server";
-import { DocsPageLocales } from "@/components/docs/DocsProvider";
+import { findDocsInOtherLocales, getDocsGroup, getDocsLocales } from "@/api/docs/server";
 import DocsThumbnail from "@/components/docs/DocsThumbnail";
+import DocsUntranslated from "@/components/docs/DocsUntranslated";
 import { buildDocsMetadata, readDocsLocale } from "@/components/docs/docsMetadata";
 import { docsPath, parseSlugId } from "@/components/docs/docsPath";
 import { formatDocsCount, getDocsMessages } from "@/i18n/locales/docs";
@@ -18,13 +18,19 @@ const loadCategory = async (params: CategoryPageProps["params"]) => {
   const parsed = parseSlugId(slug);
   if (!locale || !parsed) return null;
   const group = await getDocsGroup(locale, parsed.id);
-  return group ? { locale, parsed, group } : null;
+  if (group) return { locale, parsed, group, translations: [] };
+  // 이 언어로는 보이지 않는 카테고리 — 다른 언어로 있으면 번역 없음 안내를, 어디에도 없으면 404 를 그린다.
+  const translations = await findDocsInOtherLocales(locale, (other) => getDocsGroup(other, parsed.id));
+  return translations.length ? { locale, parsed, group: null, translations } : null;
 };
 
 export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
   const loaded = await loadCategory(params);
   if (!loaded) return {};
-  const { locale, group } = loaded;
+  const { locale, group, translations } = loaded;
+  if (!group) {
+    return { title: translations[0].item.name, robots: { index: false, follow: true } };
+  }
   return buildDocsMetadata({
     locale,
     title: group.name,
@@ -40,7 +46,23 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
 export default async function DocsCategoryPage({ params }: CategoryPageProps) {
   const loaded = await loadCategory(params);
   if (!loaded) notFound();
-  const { locale, parsed, group } = loaded;
+  const { locale, parsed, group, translations } = loaded;
+
+  if (!group) {
+    const { locales } = await getDocsLocales();
+    return (
+      <DocsUntranslated
+        locale={locale}
+        languageName={locales.find((each) => each.code === locale)?.name ?? locale}
+        translations={translations.map((each) => ({
+          locale: each.locale,
+          languageName: each.name,
+          title: each.item.name,
+          href: docsPath.category(each.locale, each.item.slug, each.item.id),
+        }))}
+      />
+    );
+  }
 
   // slug 가 바뀌었거나 빠진 옛 주소는 정규 주소로 보낸다(같은 문서가 여러 주소로 색인되지 않게).
   if (parsed.slug !== group.slug) {
@@ -53,7 +75,6 @@ export default async function DocsCategoryPage({ params }: CategoryPageProps) {
 
   return (
     <>
-      <DocsPageLocales locales={group.availableLocales} />
       <article className="mx-auto w-full max-w-[800px] px-4 pt-6 pb-24 sm:px-8 lg:pt-10">
         <DocsThumbnail
           src={group.coverImageUrl}

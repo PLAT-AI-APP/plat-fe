@@ -33,6 +33,9 @@ const ko = {
   backToApp: "PLAT 바로가기",
   themeToLight: "라이트 모드로 보기",
   themeToDark: "다크 모드로 보기",
+  untranslatedTitle: "이 문서는 아직 {language} 번역이 없습니다",
+  untranslatedDescription: "다른 언어로 읽거나 문서 홈에서 다른 문서를 찾아보세요.",
+  untranslatedHome: "문서 홈으로",
 };
 
 export default ko;

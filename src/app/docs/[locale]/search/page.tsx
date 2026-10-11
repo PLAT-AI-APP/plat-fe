@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { searchDocsOnServer } from "@/api/docs/server";
-import { DocsPageLocales } from "@/components/docs/DocsProvider";
 import DocsSearchBox from "@/components/docs/DocsSearchBox";
 import { readDocsLocale } from "@/components/docs/docsMetadata";
 import { docsPath } from "@/components/docs/docsPath";
@@ -37,7 +36,6 @@ export default async function DocsSearchPage({ params, searchParams }: SearchPag
 
   return (
     <section className="mx-auto w-full max-w-[800px] px-4 pt-8 pb-24 sm:px-6 sm:pt-12">
-      <DocsPageLocales locales={null} />
       {/* 같은 검색어로 다시 올 때도 입력값이 맞도록 검색어마다 새로 그린다. */}
       <DocsSearchBox key={query} size="lg" defaultValue={query} />
 

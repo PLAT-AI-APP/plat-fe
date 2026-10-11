@@ -6,11 +6,13 @@ import type { DocsLocale } from "@/api/docs/types";
 import { ArrowDown, Check, Global } from "@/icons";
 import { cn } from "@/lib/utils";
 import { useDocs } from "./DocsProvider";
-import { docsPath, swapDocsLocale } from "./docsPath";
+import { swapDocsLocale } from "./docsPath";
 
 /**
- * 문서 언어 전환. 지금 문서가 고른 언어로도 있으면 같은 문서로, 없으면 그 언어의 홈으로 간다.
- * 홈·검색은 언어와 무관해 같은 화면을 그 언어로 연다.
+ * 문서 언어 전환. 어느 화면이든 같은 주소의 언어만 바꿔 연다.
+ * 번역이 있는지는 여기서 판단하지 않는다 — 지금 화면의 응답은 캐시(서버 데이터 캐시 · 라우터 캐시)에 남은 옛 값일 수 있어
+ * 번역을 나중에 추가한 문서를 "번역 없음" 으로 잘못 보고 홈으로 보냈다. 고른 언어로 없는 문서는 그 화면이
+ * 번역 없음 안내(다른 언어 판 · 문서 홈 링크)를 그린다.
  */
 const DocsLanguageMenu = ({
   variant = "dropdown",
@@ -19,7 +21,7 @@ const DocsLanguageMenu = ({
   variant?: "dropdown" | "list";
   onNavigate?: () => void;
 }) => {
-  const { locale, locales, messages, availableLocales } = useDocs();
+  const { locale, locales, messages } = useDocs();
   const nameOf = (code: DocsLocale) =>
     locales.find((item) => item.code === code)?.name ?? code.toUpperCase();
   const router = useRouter();
@@ -48,13 +50,8 @@ const DocsLanguageMenu = ({
     setIsOpen(false);
     onNavigate?.();
     if (next === locale) return;
-    const hasSameDocument = availableLocales === null || availableLocales.includes(next);
     const query = searchParams.toString();
-    router.push(
-      hasSameDocument
-        ? swapDocsLocale(pathname, query ? `?${query}` : "", next)
-        : docsPath.home(next),
-    );
+    router.push(swapDocsLocale(pathname, query ? `?${query}` : "", next));
   };
 
   const options = (
