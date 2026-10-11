@@ -8,7 +8,7 @@ import DocsThumbnail from "@/components/docs/DocsThumbnail";
 import { allLocaleAlternates, buildDocsMetadata, readDocsLocale } from "@/components/docs/docsMetadata";
 import { docsPath } from "@/components/docs/docsPath";
 import { LogoWordmark } from "@/icons";
-import { formatDocsMessage, getDocsMessages } from "@/i18n/locales/docs";
+import { formatDocsCount, getDocsMessages } from "@/i18n/locales/docs";
 
 interface DocsHomeProps {
   params: Promise<{ locale: string }>;
@@ -68,7 +68,7 @@ export default async function DocsHomePage({ params }: DocsHomeProps) {
                       <p className="body-5 line-clamp-2 text-font-2">{group.description}</p>
                     )}
                     <p className="body-7 text-font-disabled">
-                      {formatDocsMessage(messages.articleCount, { count: group.pageCount })}
+                      {formatDocsCount(locale, messages.articleCount, group.pageCount)}
                     </p>
                   </div>
                   <DocsThumbnail

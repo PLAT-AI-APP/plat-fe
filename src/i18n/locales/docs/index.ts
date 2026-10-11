@@ -14,3 +14,15 @@ export const formatDocsMessage = (
   template: string,
   values: Record<string, string | number>,
 ) => template.replace(/\{(\w+)\}/g, (whole, key: string) => String(values[key] ?? whole));
+
+/** 개수에 따라 단수·복수를 고르는 문구. 한국어처럼 가르지 않는 언어는 둘을 같게 둔다. */
+export interface DocsCountMessage {
+  one: string;
+  other: string;
+}
+
+/** 개수 문구를 locale 의 복수 규칙으로 골라 "{count}" 를 채운다. */
+export const formatDocsCount = (locale: DocsLocale, message: DocsCountMessage, count: number) =>
+  formatDocsMessage(new Intl.PluralRules(locale).select(count) === "one" ? message.one : message.other, {
+    count,
+  });

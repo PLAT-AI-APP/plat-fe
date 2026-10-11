@@ -6,7 +6,7 @@ import { DocsPageLocales } from "@/components/docs/DocsProvider";
 import DocsSearchBox from "@/components/docs/DocsSearchBox";
 import { readDocsLocale } from "@/components/docs/docsMetadata";
 import { docsPath } from "@/components/docs/docsPath";
-import { formatDocsMessage, getDocsMessages } from "@/i18n/locales/docs";
+import { formatDocsCount, formatDocsMessage, getDocsMessages } from "@/i18n/locales/docs";
 
 interface SearchPageProps {
   params: Promise<{ locale: string }>;
@@ -48,7 +48,7 @@ export default async function DocsSearchPage({ params, searchParams }: SearchPag
               {formatDocsMessage(messages.searchResultHeading, { query })}
             </h1>
             <p className="body-6 shrink-0 text-font-2">
-              {formatDocsMessage(messages.searchResultCount, { count: items.length })}
+              {formatDocsCount(locale, messages.searchResultCount, items.length)}
             </p>
           </div>
           {items.length === 0 ? (

@@ -7,7 +7,7 @@ import { DocsPageLocales } from "@/components/docs/DocsProvider";
 import DocsThumbnail from "@/components/docs/DocsThumbnail";
 import { buildDocsMetadata, readDocsLocale } from "@/components/docs/docsMetadata";
 import { docsPath, parseSlugId } from "@/components/docs/docsPath";
-import { formatDocsMessage, getDocsMessages } from "@/i18n/locales/docs";
+import { formatDocsCount, getDocsMessages } from "@/i18n/locales/docs";
 
 interface CategoryPageProps {
   params: Promise<{ locale: string; slug: string }>;
@@ -90,7 +90,7 @@ export default async function DocsCategoryPage({ params }: CategoryPageProps) {
                       <p className="body-5 line-clamp-2 text-font-2">{child.description}</p>
                     )}
                     <p className="body-7 text-font-disabled">
-                      {formatDocsMessage(messages.articleCount, { count: child.pageCount })}
+                      {formatDocsCount(locale, messages.articleCount, child.pageCount)}
                     </p>
                   </div>
                   <DocsThumbnail
