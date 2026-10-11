@@ -40,7 +40,6 @@ export interface DocsHomeGroup {
   slug: string;
   name: string;
   description: string | null;
-  iconUrl: string | null;
   coverImageUrl: string | null;
   pageCount: number;
 }
@@ -78,7 +77,6 @@ export interface DocsGroupResponse {
   slug: string;
   name: string;
   description: string | null;
-  iconUrl: string | null;
   coverImageUrl: string | null;
   breadcrumbs: DocsBreadcrumb[];
   children: DocsGroupChild[];
