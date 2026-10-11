@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import type { Components } from "react-markdown";
 import MarkdownDocument from "@/components/markdown/MarkdownDocument";
 import { cn } from "@/lib/utils";
@@ -34,13 +35,18 @@ const docsComponents: Partial<Components> = {
   p: ({ className, ...props }) => (
     <p className={cn("leading-[1.75]", className)} {...withoutNode(props)} />
   ),
-  // 문서 안 링크는 같은 탭에서, 외부 링크는 새 탭에서 연다.
+  // 사이트 안 주소(/docs/... 등)는 next/link 로 열어 화면 전체를 다시 받지 않는다(일반 <a> 는 문서를 처음부터 다시 불러왔다).
+  // 같은 문서 안 앵커(#...)는 그대로, 외부 링크는 새 탭에서 연다.
   a: ({ className, href, ...props }) => {
+    const linkClassName = cn("text-brand-dark underline underline-offset-2", className);
+    if (href?.startsWith("/") && !href.startsWith("//")) {
+      return <Link href={href} className={linkClassName} {...withoutNode(props)} />;
+    }
     const isExternal = /^https?:\/\//.test(href ?? "");
     return (
       <a
         href={href}
-        className={cn("text-brand-dark underline underline-offset-2", className)}
+        className={linkClassName}
         {...(isExternal ? { target: "_blank", rel: "noreferrer" } : {})}
         {...withoutNode(props)}
       />

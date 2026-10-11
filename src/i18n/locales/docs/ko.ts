@@ -24,6 +24,7 @@ const ko = {
   emptyCategory: "이 카테고리에는 아직 아티클이 없습니다.",
   tableOfContents: "이 페이지의 내용",
   updatedAt: "{date} 업데이트",
+  loading: "불러오는 중…",
   language: "언어",
   menuOpen: "메뉴 열기",
   menuClose: "메뉴 닫기",

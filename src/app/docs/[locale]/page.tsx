@@ -9,6 +9,17 @@ import { docsPath } from "@/components/docs/docsPath";
 import { LogoWordmark } from "@/icons";
 import { formatDocsCount, getDocsMessages } from "@/i18n/locales/docs";
 
+/*
+ * 첫 요청 때 그려 둔 화면을 30초 동안 그대로 내준다(ISR). 문서 사이 이동마다 서버가 다시 그리지 않고,
+ * 링크 prefetch 가 화면 전체를 미리 받아 둔다. 미리 만들 주소는 없다(빌드 때 문서 서버에 묻지 않는다).
+ * 게시 변경은 길어야 30초 남짓 뒤에 보인다(server.ts 의 데이터 캐시와 같은 주기).
+ */
+export const revalidate = 30;
+
+export async function generateStaticParams(): Promise<{ locale: string }[]> {
+  return [];
+}
+
 interface DocsHomeProps {
   params: Promise<{ locale: string }>;
 }
