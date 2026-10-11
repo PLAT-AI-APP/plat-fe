@@ -7,8 +7,8 @@ import { useTranslations } from "next-intl";
 import React from "react";
 
 /**
- * 서버의 CategorySort 하나가 항목 하나다. 예전에 있던 "관련도순"은 고른 태그를 전부 가진 것만
- * 결과에 오르는 지금 규칙에서는 모든 줄의 일치 태그 수가 같아 순서를 만들지 못해 뺐다.
+ * 서버의 CategorySort 하나가 항목 하나다. 태그를 골랐으면 서버가 맞은 태그 수 순으로 먼저 줄 세우고,
+ * 여기서 고른 정렬은 같은 수 안의 2차 기준이 된다. 그래서 따로 "관련도순" 항목은 두지 않는다.
  */
 const SORT_OPTIONS: { id: CategorySort; messageKey: string }[] = [
   { id: "CHAT", messageKey: "chats" },

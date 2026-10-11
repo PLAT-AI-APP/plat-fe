@@ -34,7 +34,7 @@ export interface CategoryCardTag {
 export type CategoryCardItem = LikableCard & { tags: CategoryCardTag[] };
 
 interface GetCategorySearchParams {
-  /** 고른 태그 id. 고른 것을 전부 가진 세계관만 나오므로 더할수록 결과가 좁아집니다. */
+  /** 고른 태그 id. 하나라도 가진 세계관이 많이 맞은 순으로 나오므로 더할수록 결과가 넓어집니다. */
   tagIds?: string[];
   sort?: CategorySort;
   tendency?: Tendency;

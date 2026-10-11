@@ -71,7 +71,8 @@ const CategoriesTabContents = () => {
   const isTablet = useMediaQuery(TABLET_MAX_WIDTH_QUERY);
   const [isTagSidebarOpen, setIsTagSidebarOpen] = useState(false);
 
-  // 고른 태그를 전부 가진 세계관만 내려옵니다. 태그를 하나도 안 고르면 전체가 내려옵니다.
+  // 고른 태그 중 하나라도 가진 세계관이 많이 맞은 순으로 내려옵니다(같은 수 안에서는 정렬 기준 순).
+  // 태그를 하나도 안 고르면 전체가 내려옵니다.
   const { data, isPending, isPlaceholderData, isError, error, refetch } = useCategorySearchQuery({
     tagIds: selectedTagIds,
     sort,
