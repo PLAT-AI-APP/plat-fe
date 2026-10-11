@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { ArrowDown } from "@/icons";
 import type { FaqItem } from "@/type/qna";
+import FaqAnswer from "./FaqAnswer";
 
 interface FaqAccordionItemProps {
   item: FaqItem;
@@ -53,9 +54,10 @@ const FaqAccordionItem = ({ item }: FaqAccordionItemProps) => {
             transition={{ duration: 0.2, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <p className="body-6 mx-5 whitespace-pre-wrap break-keep border-t border-main pb-4 pt-4 text-font-1">
-              {item.answer}
-            </p>
+            <FaqAnswer
+              content={item.answer}
+              className="body-6 mx-5 border-t border-main pb-4 pt-4 text-font-1"
+            />
           </m.div>
         )}
       </AnimatePresence>
