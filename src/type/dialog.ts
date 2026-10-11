@@ -78,6 +78,12 @@ export interface PersonaDeleteDialogProps {
   errorMessage?: string;
 }
 
+/** 답변 대기 중인 1:1 문의 취소 확인 */
+export interface QnaCancelDialogProps {
+  onClose: () => void;
+  onConfirm: () => void;
+}
+
 export interface SignupCompleteDialogProps {
   nickname: string;
   /** 가입 때 받은 동의의 처리 결과. 있으면 창 아래에 함께 보여 준다. */
@@ -159,6 +165,7 @@ export type DialogTypeMap = {
   DRAFT_SAVE_OVERWRITE: DialogWithoutManagerClose<DraftSaveOverwriteDialogProps>;
   LOGIN_REQUIRED: DialogWithoutManagerClose<LoginRequiredDialogProps>;
   PERSONA_DELETE: DialogWithoutManagerClose<PersonaDeleteDialogProps>;
+  QNA_CANCEL: DialogWithoutManagerClose<QnaCancelDialogProps>;
   SIGNUP_COMPLETE: DialogWithoutManagerClose<SignupCompleteDialogProps>;
   UNSAVED_CHANGES: DialogWithoutManagerClose<UnsavedChangesDialogProps>;
   USER_BLOCK: DialogWithoutManagerClose<UserBlockDialogProps>;

@@ -417,6 +417,7 @@ const zh = {
       statuses: {
         OPEN: "等待回复",
         ANSWERED: "已回复",
+        CANCELLED: "已撤销",
       },
       askedAt: "{date} 咨询",
       myContentLabel: "我的咨询内容",
@@ -431,6 +432,10 @@ const zh = {
       answerLabel: "运营团队回复",
       waitingAnswer: "运营团队正在确认，回复后会在这里通知您。",
       answeredAt: "回复日期 {date}",
+      cancel: "撤销咨询",
+      cancelSuccess: "已撤销咨询",
+      cancelledAt: "撤销日期 {date}",
+      cancelledNotice: "这条咨询已在回复前撤销。",
     },
     refund: {
       productLabel: "购买商品",

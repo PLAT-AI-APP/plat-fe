@@ -420,6 +420,7 @@ const th = {
       statuses: {
         OPEN: "รอการตอบกลับ",
         ANSWERED: "ตอบกลับแล้ว",
+        CANCELLED: "ยกเลิกแล้ว",
       },
       askedAt: "ถามเมื่อ {date}",
       myContentLabel: "ข้อความของคุณ",
@@ -434,6 +435,10 @@ const th = {
       answerLabel: "คำตอบจากทีมงาน",
       waitingAnswer: "ทีมงานกำลังตรวจสอบ เราจะแจ้งที่นี่เมื่อมีคำตอบ",
       answeredAt: "ตอบกลับเมื่อ {date}",
+      cancel: "ยกเลิกการสอบถาม",
+      cancelSuccess: "ยกเลิกการสอบถามแล้ว",
+      cancelledAt: "ยกเลิกเมื่อ {date}",
+      cancelledNotice: "คุณยกเลิกการสอบถามนี้ก่อนได้รับคำตอบ",
     },
     refund: {
       productLabel: "สินค้าที่ชำระ",

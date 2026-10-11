@@ -169,6 +169,12 @@ const en: typeof ko = {
       replyTitle: "Delete your reply?",
       replyDescription: "A deleted reply cannot be restored.",
     },
+    qnaCancel: {
+      title: "Cancel this inquiry?",
+      description: "A canceled inquiry can't be restored, and you won't receive a reply from our team.",
+      cancel: "Close",
+      confirm: "Cancel inquiry",
+    },
     personaDelete: {
       title: "Delete this persona?",
       description: " cannot be restored after deletion.",

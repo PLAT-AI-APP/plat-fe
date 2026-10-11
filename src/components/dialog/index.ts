@@ -7,6 +7,7 @@ export { default as DraftOverwriteDialog } from "./DraftOverwriteDialog";
 export { default as DraftSaveOverwriteDialog } from "./DraftSaveOverwriteDialog";
 export { default as LoginRequiredDialog } from "./LoginRequiredDialog";
 export { default as PersonaDeleteDialog } from "./PersonaDeleteDialog";
+export { default as QnaCancelDialog } from "./QnaCancelDialog";
 export { default as SignupCompleteDialog } from "./SignupCompleteDialog";
 export { default as UnsavedChangesDialog } from "./UnsavedChangesDialog";
 export { default as UserBlockDialog } from "./UserBlockDialog";

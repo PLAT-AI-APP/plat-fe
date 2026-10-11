@@ -166,6 +166,12 @@ const vi: typeof ko = {
       replyTitle: "Xóa phản hồi bạn đã viết?",
       replyDescription: "Phản hồi đã xóa sẽ không thể khôi phục.",
     },
+    qnaCancel: {
+      title: "Hủy yêu cầu hỗ trợ này?",
+      description: "Yêu cầu đã hủy không thể khôi phục và bạn sẽ không nhận được phản hồi từ đội ngũ vận hành.",
+      cancel: "Đóng",
+      confirm: "Hủy yêu cầu",
+    },
     personaDelete: {
       title: "Xóa persona này?",
       description: " sẽ không thể khôi phục sau khi xóa.",

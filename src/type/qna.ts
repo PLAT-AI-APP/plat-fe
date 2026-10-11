@@ -19,8 +19,8 @@ export const QNA_WRITABLE_CATEGORIES = [
 export type QnaWritableCategory = (typeof QNA_WRITABLE_CATEGORIES)[number];
 export type QnaCategory = "REFUND" | QnaWritableCategory;
 
-/** OPEN: 답변 대기 · ANSWERED: 답변 완료 */
-export type QnaStatus = "OPEN" | "ANSWERED";
+/** OPEN: 답변 대기 · ANSWERED: 답변 완료 · CANCELLED: 답변 전에 내가 취소함 */
+export type QnaStatus = "OPEN" | "ANSWERED" | "CANCELLED";
 
 /**
  * 유저에게 보이는 환불 진행 상태.
@@ -47,11 +47,21 @@ export interface MyQnaItem {
   /** 운영팀이 직접 쓴 답변. 환불 결과도 여기로 온다. */
   answer: string | null;
   answeredAt: string | null;
+  /** 취소한 문의에만 있다. */
+  cancelledAt: string | null;
   /** `REFUND` 문의에만 있고 나머지는 null 이다. */
   refund: QnaRefundSummary | null;
 }
 
 export type MyQnaListResponse = SliceWith<MyQnaItem>;
+
+/**
+ * 유저가 취소할 수 있는 문의인가. 답변 대기 중이어야 하고, 환불 신청에 묶인 `REFUND` 문의는 취소할 수 없다
+ * (서버도 같은 규칙으로 거절한다).
+ */
+export const isQnaCancellable = (
+  item: Pick<MyQnaItem, "status" | "category">,
+) => item.status === "OPEN" && item.category !== "REFUND";
 
 /** POST /qna 요청 */
 export interface QnaCreateRequest {

@@ -22,6 +22,7 @@ const DIALOG_LOADERS = {
   DRAFT_SAVE_OVERWRITE: () => import("./DraftSaveOverwriteDialog"),
   LOGIN_REQUIRED: () => import("./LoginRequiredDialog"),
   PERSONA_DELETE: () => import("./PersonaDeleteDialog"),
+  QNA_CANCEL: () => import("./QnaCancelDialog"),
   SIGNUP_COMPLETE: () => import("./SignupCompleteDialog"),
   UNSAVED_CHANGES: () => import("./UnsavedChangesDialog"),
   USER_BLOCK: () => import("./UserBlockDialog"),

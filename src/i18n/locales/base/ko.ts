@@ -165,6 +165,12 @@ const ko = {
       replyTitle: "작성 답글을 삭제할까요?",
       replyDescription: "삭제한 답글은 복구할 수 없어요.",
     },
+    qnaCancel: {
+      title: "문의를 취소할까요?",
+      description: "취소한 문의는 되돌릴 수 없고, 운영팀 답변도 받을 수 없어요.",
+      cancel: "닫기",
+      confirm: "취소하기",
+    },
     personaDelete: {
       title: "페르소나를 삭제할까요?",
       description: "는 삭제 후 복구할 수 없어요.",
