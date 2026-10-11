@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { getDocsPage } from "@/api/docs/server";
-import DocsFrame from "@/components/docs/DocsFrame";
 import DocsMarkdown from "@/components/docs/DocsMarkdown";
 import { DocsPageLocales } from "@/components/docs/DocsProvider";
 import DocsToc from "@/components/docs/DocsToc";
@@ -19,7 +18,7 @@ const ARTICLE_BODY_ID = "docs-article-body";
 
 const loadArticle = async (params: ArticlePageProps["params"]) => {
   const { locale: rawLocale, slug } = await params;
-  const locale = readDocsLocale(rawLocale);
+  const locale = await readDocsLocale(rawLocale);
   const parsed = parseSlugId(slug);
   if (!locale || !parsed) return null;
   const page = await getDocsPage(locale, parsed.id);
@@ -41,7 +40,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
   });
 }
 
-/** 아티클 화면: 왼쪽 트리(DocsFrame) · 가운데 본문 · 오른쪽 목차(xl 이상). */
+/** 아티클 화면: 가운데 본문 · 오른쪽 목차(xl 이상). 왼쪽 트리는 (frame) 레이아웃이 그린다. */
 export default async function DocsArticlePage({ params }: ArticlePageProps) {
   const loaded = await loadArticle(params);
   if (!loaded) notFound();
@@ -58,7 +57,7 @@ export default async function DocsArticlePage({ params }: ArticlePageProps) {
   }).format(new Date(page.updatedAt));
 
   return (
-    <DocsFrame messages={messages}>
+    <>
       <DocsPageLocales locales={page.availableLocales} />
       <div className="mx-auto flex w-full max-w-[1100px] gap-12 px-4 pt-6 pb-24 sm:px-8 lg:pt-10">
         <article className="min-w-0 flex-1">
@@ -103,6 +102,6 @@ export default async function DocsArticlePage({ params }: ArticlePageProps) {
           </div>
         </aside>
       </div>
-    </DocsFrame>
+    </>
   );
 }

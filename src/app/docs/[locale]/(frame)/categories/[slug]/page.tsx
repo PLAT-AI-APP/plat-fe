@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { getDocsGroup } from "@/api/docs/server";
-import DocsFrame from "@/components/docs/DocsFrame";
 import { DocsPageLocales } from "@/components/docs/DocsProvider";
 import DocsThumbnail from "@/components/docs/DocsThumbnail";
 import { buildDocsMetadata, readDocsLocale } from "@/components/docs/docsMetadata";
@@ -15,7 +14,7 @@ interface CategoryPageProps {
 
 const loadCategory = async (params: CategoryPageProps["params"]) => {
   const { locale: rawLocale, slug } = await params;
-  const locale = readDocsLocale(rawLocale);
+  const locale = await readDocsLocale(rawLocale);
   const parsed = parseSlugId(slug);
   if (!locale || !parsed) return null;
   const group = await getDocsGroup(locale, parsed.id);
@@ -53,7 +52,7 @@ export default async function DocsCategoryPage({ params }: CategoryPageProps) {
   const pages = group.children.filter((child) => child.type === "PAGE");
 
   return (
-    <DocsFrame messages={messages}>
+    <>
       <DocsPageLocales locales={group.availableLocales} />
       <article className="mx-auto w-full max-w-[800px] px-4 pt-6 pb-24 sm:px-8 lg:pt-10">
         <DocsThumbnail
@@ -123,6 +122,6 @@ export default async function DocsCategoryPage({ params }: CategoryPageProps) {
           </ul>
         )}
       </article>
-    </DocsFrame>
+    </>
   );
 }
