@@ -76,12 +76,17 @@ export interface QnaCreated {
 }
 
 /** 자주 하는 질문 */
+/** 서버 enum 선언 순서와 같다(= 고객센터 칩 순서). */
 export const FAQ_CATEGORIES = [
-  "REFUND",
-  "PAYMENT",
+  "SERVICE",
   "ACCOUNT",
+  "VERIFICATION",
+  "PAYMENT",
+  "REFUND",
   "CHARACTER",
   "CHAT",
+  "CREATOR",
+  "REPORT",
   "ETC",
 ] as const;
 export type FaqCategory = (typeof FAQ_CATEGORIES)[number];

@@ -392,11 +392,15 @@ const zh = {
     faq: {
       filters: {
         ALL: "全部",
-        REFUND: "退款",
-        PAYMENT: "支付",
+        SERVICE: "服务使用",
         ACCOUNT: "账号",
+        VERIFICATION: "实名・成人认证",
+        PAYMENT: "支付・笔记",
+        REFUND: "退款",
         CHARACTER: "角色",
         CHAT: "对话",
+        CREATOR: "创作・收益",
+        REPORT: "举报・处罚",
         ETC: "其他",
       },
       empty: "暂无问题",
