@@ -63,7 +63,7 @@ const ja: typeof en = {
     menu: "フッターメニュー",
     about: "会社紹介",
     support: "サポート",
-    guide: "利用ガイド",
+    docs: "ドキュメント",
     terms: "利用規約",
     privacy: "プライバシーポリシー",
     youth: "青少年保護方針",

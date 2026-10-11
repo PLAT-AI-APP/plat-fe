@@ -228,7 +228,7 @@ const th = {
   },
   profilePopover: {
     notice: "ประกาศ",
-    guide: "คู่มือการใช้งาน",
+    docs: "เอกสาร",
     customerService: "ศูนย์ลูกค้า",
     myReports: "ประวัติการรายงาน",
     bugReport: "รายงานปัญหา",
@@ -404,8 +404,8 @@ const th = {
       },
       empty: "ยังไม่มีคำถาม",
       moreHelpTitle: "ไม่พบคำตอบที่ต้องการใช่ไหม?",
-      moreHelpDescription: "ดูคู่มือการใช้งาน หรือส่งข้อความถึงเรา",
-      guide: "คู่มือการใช้งาน",
+      moreHelpDescription: "ดูเอกสาร หรือส่งข้อความถึงเรา",
+      docs: "เอกสาร",
       ask: "ติดต่อเรา",
     },
     qna: {

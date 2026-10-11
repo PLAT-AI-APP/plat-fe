@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: DocsLayoutProps): Promise<Met
 }
 
 /**
- * 가이드 문서 레이아웃. 앱 셸(헤더·사이드바·하단탭)은 AppShell 이 /docs 에서 그리지 않고, 여기서 문서 헤더만 그린다.
+ * 문서 사이트 레이아웃. 앱 셸(헤더·사이드바·하단탭)은 AppShell 이 /docs 에서 그리지 않고, 여기서 문서 헤더만 그린다.
  * 언어는 주소의 locale 로 정한다(앱의 언어 store 와 무관). 사이드바·드로어가 쓰는 트리는 여기서 한 번 받는다.
  */
 export default async function DocsLocaleLayout({ children, params }: DocsLayoutProps) {

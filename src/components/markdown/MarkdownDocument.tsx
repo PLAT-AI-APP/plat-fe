@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 interface MarkdownDocumentProps {
   content: string;
   /**
-   * 본문 `##`·`###` 제목에 id 를 붙여 목차 앵커로 쓸 수 있게 한다(가이드 문서).
+   * 본문 `##`·`###` 제목에 id 를 붙여 목차 앵커로 쓸 수 있게 한다(문서 사이트).
    * 끄면(기본) 지금까지와 같다.
    */
   anchorHeadings?: boolean;

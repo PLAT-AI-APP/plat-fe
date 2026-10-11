@@ -64,7 +64,7 @@ const zh: typeof en = {
     menu: "页脚菜单",
     about: "公司介绍",
     support: "客服中心",
-    guide: "使用指南",
+    docs: "文档",
     terms: "使用条款",
     privacy: "隐私政策",
     youth: "青少年保护政策",

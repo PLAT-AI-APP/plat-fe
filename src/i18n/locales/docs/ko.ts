@@ -1,10 +1,10 @@
 /**
- * 가이드 문서(/docs) 문구. 앱 번역(next-intl, 클라이언트 언어 store)과 달리 문서는 주소의 locale 로
+ * 문서 사이트(/docs) 문구. 앱 번역(next-intl, 클라이언트 언어 store)과 달리 문서는 주소의 locale 로
  * 서버에서 언어를 정하므로 따로 둔다. 키 집합은 en.ts 와 같아야 한다(DocsMessages 타입이 맞춘다).
  */
 const ko = {
-  siteName: "PLAT 가이드",
-  serviceLabel: "가이드",
+  siteName: "PLAT 문서",
+  serviceLabel: "문서",
   metaDescription: "PLAT 이용 방법과 자주 묻는 질문을 안내합니다.",
   searchPlaceholder: "아티클 제목, 내용",
   searchOpen: "검색 열기",

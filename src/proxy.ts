@@ -41,7 +41,7 @@ export async function proxy(request: NextRequest) {
   if (!isMaintenanceMode(process.env.NEXT_PUBLIC_MAINTENANCE_MODE)) {
     return NextResponse.next();
   }
-  // 점검 화면 자신과 가이드 문서(/docs)는 점검 중에도 연다. 문서는 점검 안내·이용 방법을 볼 수 있어야 한다.
+  // 점검 화면 자신과 문서 사이트(/docs)는 점검 중에도 연다. 문서는 점검 안내·이용 방법을 볼 수 있어야 한다.
   if (request.nextUrl.pathname === MAINTENANCE_PATH || isDocsPathname(request.nextUrl.pathname)) {
     return NextResponse.next();
   }

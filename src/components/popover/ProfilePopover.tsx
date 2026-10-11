@@ -68,7 +68,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
   const supportArray = [
     { name: t("notice"), link: "/notification", icon: Megaphone },
     // 고객센터에 묻기 전에 먼저 찾아볼 곳이라 그 앞에 둔다.
-    { name: t("guide"), link: docsEntryPath(appLocale), icon: BookOpen },
+    { name: t("docs"), link: docsEntryPath(appLocale), icon: BookOpen },
     {
       name: t("customerService"),
       link: "/customer-service",
