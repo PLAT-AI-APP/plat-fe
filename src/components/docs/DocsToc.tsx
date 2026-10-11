@@ -46,8 +46,10 @@ const DocsToc = ({ containerId, title }: { containerId: string; title: string })
         else break;
       }
       // 맨 아래까지 내렸으면 마지막 제목이 기준선에 닿지 못해도 마지막을 강조한다.
+      // 스크롤이 없는 짧은 문서는 처음부터 "맨 아래"라서, 실제로 내렸을 때만 이 규칙을 쓴다.
       if (
         headings.length &&
+        window.scrollY > 0 &&
         window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2
       ) {
         current = headings[headings.length - 1].id;
