@@ -3,7 +3,7 @@ import type ko from "./ko";
 
 const th: typeof ko = {
   ...en,
-  common: { confirm: "ยืนยัน", cancel: "ยกเลิก", optional: "(ไม่บังคับ)", operatedByPlat: "ดูแลโดย PLAT" },
+  common: { confirm: "ยืนยัน", cancel: "ยกเลิก", optional: "(ไม่บังคับ)" },
   languages: {
     ko: "เกาหลี",
     en: "English",
@@ -229,7 +229,7 @@ const th: typeof ko = {
       inquiryHint: "แจ้งหมายเลขการโอนเมื่อติดต่อเรา เพื่อให้เราค้นหาตัวละครที่คุณเก็บไว้ได้",
       closeWarning: "บัญชีนี้ไม่มีอีเมลสำเนา หากปิดหน้าต่างนี้จะดูอีกไม่ได้ โปรดใช้คัดลอกทั้งหมดเพื่อเก็บหมายเลขการโอน",
       copyMailSent: "ส่งสำเนาหนังสือยินยอมไปทางอีเมลแล้ว",
-      consentSummary: "ยินยอมหนังสืออนุญาตใช้ตัวละคร v{version} · {date}",
+      consentSummary: "ยินยอมหนังสืออนุญาตใช้ตัวละคร · {date}",
     },
     withdrawalConfirm: {
       title: "คุณแน่ใจหรือว่าจะจากไป?",

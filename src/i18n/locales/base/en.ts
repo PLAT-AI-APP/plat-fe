@@ -4,7 +4,7 @@ const en: typeof ko = {
   common: {
     confirm: "Confirm",
     cancel: "Cancel",
-    optional: "(Optional)", operatedByPlat: "Operated by PLAT",
+    optional: "(Optional)",
   },
   languages: {
     ko: "Korean",
@@ -232,7 +232,7 @@ const en: typeof ko = {
       inquiryHint: "Share your handover number when contacting us so we can find the characters you kept.",
       closeWarning: "This account has no email copy, so you can't see this again after closing. Use Copy all to save your handover numbers.",
       copyMailSent: "We've emailed you a copy of the consent form.",
-      consentSummary: "Agreed to Character License v{version} · {date}",
+      consentSummary: "Agreed to Character License · {date}",
     },
     withdrawalConfirm: {
       title: "Are you sure you want to leave?",

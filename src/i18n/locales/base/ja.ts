@@ -3,7 +3,7 @@ import type ko from "./ko";
 
 const ja: typeof ko = {
   ...en,
-  common: { confirm: "確認", cancel: "キャンセル", optional: "（任意）", operatedByPlat: "運営 PLAT" },
+  common: { confirm: "確認", cancel: "キャンセル", optional: "（任意）" },
   languages: {
     ko: "韓国語",
     en: "English",
@@ -228,7 +228,7 @@ const ja: typeof ko = {
       inquiryHint: "お問い合わせの際に引き継ぎ番号をお伝えいただくと、残したキャラクターを確認できます。",
       closeWarning: "写しメールが届かないアカウントのため、閉じると再表示できません。「すべてコピー」で引き継ぎ番号を保存してください。",
       copyMailSent: "同意書の写しをメールで送りました",
-      consentSummary: "キャラクター利用許諾同意書 v{version} · {date} 同意",
+      consentSummary: "キャラクター利用許諾同意書 · {date} 同意",
     },
     withdrawalConfirm: {
       title: "本当に退会しますか？",

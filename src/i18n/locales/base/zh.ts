@@ -3,7 +3,7 @@ import type ko from "./ko";
 
 const zh: typeof ko = {
   ...en,
-  common: { confirm: "确认", cancel: "取消", optional: "（可选）", operatedByPlat: "PLAT 运营" },
+  common: { confirm: "确认", cancel: "取消", optional: "（可选）" },
   languages: {
     ko: "韩语",
     en: "English",
@@ -226,7 +226,7 @@ const zh: typeof ko = {
       inquiryHint: "咨询时提供移交编号，即可查到您保留的角色。",
       closeWarning: "该账号无法接收副本邮件，关闭后将无法再次查看。请使用“全部复制”保存移交编号。",
       copyMailSent: "已通过邮件发送同意书副本",
-      consentSummary: "已同意角色使用许可同意书 v{version} · {date}",
+      consentSummary: "已同意角色使用许可同意书 · {date}",
     },
     withdrawalConfirm: {
       title: "你确定要离开吗？",

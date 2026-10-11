@@ -53,7 +53,8 @@ const ChoiceSegment = ({ title, choice, canKeep, onSelect }: ChoiceSegmentProps)
                 ? option.value === "KEEP"
                   ? // 줄이 수십 개여도 주황이 목록을 덮지 않게, 남기기는 옅은 주황 바탕에 주황 글씨로 둔다.
                     "bg-brand-opacity-2 text-brand"
-                  : "bg-btn-selected text-font-1"
+                  : // 삭제는 되돌릴 수 없어 빨강 계열로 둔다.
+                    "bg-danger-bg text-danger"
                 : "text-font-2 enabled:hover:text-font-1",
               option.disabled && "cursor-not-allowed text-font-disabled",
             )}

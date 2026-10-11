@@ -2,7 +2,7 @@ const ko = {
   common: {
     confirm: "확인",
     cancel: "취소",
-    optional: "(선택)", operatedByPlat: "운영 PLAT",
+    optional: "(선택)",
   },
   languages: {
     ko: "한국어",
@@ -228,7 +228,7 @@ const ko = {
       inquiryHint: "문의할 때 인수 번호를 알려 주시면 남긴 캐릭터를 찾을 수 있어요.",
       closeWarning: "사본 메일이 없는 계정이라 이 창을 닫으면 다시 볼 수 없어요. 전체 복사로 인수 번호를 남겨 두세요.",
       copyMailSent: "동의서 사본을 이메일로 보냈어요",
-      consentSummary: "캐릭터 이용허락 동의서 v{version} · {date} 동의",
+      consentSummary: "캐릭터 이용허락 동의서 · {date} 동의",
     },
     withdrawalConfirm: {
       title: "정말 떠나시나요?",

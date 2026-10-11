@@ -252,7 +252,6 @@ const WithdrawalCompleteDialog = ({
                 <li className="flex items-start gap-1.5 break-keep">
                   <CheckCircle size={14} className="mt-px shrink-0" aria-hidden="true" />
                   {t("dialog.withdrawalComplete.consentSummary", {
-                    version: consent.version,
                     date: dayjs(consent.consentedAt).format("YYYY.MM.DD HH:mm"),
                   })}
                 </li>
