@@ -22,6 +22,7 @@ const en: DocsMessages = {
   emptyCategory: "There are no articles in this category yet.",
   tableOfContents: "On this page",
   updatedAt: "Updated {date}",
+  loading: "Loading…",
   language: "Language",
   menuOpen: "Open menu",
   menuClose: "Close menu",
