@@ -240,16 +240,6 @@ const ko = {
     logout: "로그아웃",
     profileImageAlt: "프로필 이미지",
   },
-  category: {
-    romance: "로맨스",
-    fantasySf: "판타지/SF",
-    drama: "드라마",
-    martialArts: "무협",
-    gl: "GL",
-    bl: "BL",
-    horror: "공포",
-    mystery: "추리",
-  },
   report: {
     targetTypes: {
       COMMENT: "댓글",

@@ -7,15 +7,6 @@ import { invalidateUniverseLists } from "./invalidateUniverseLists";
 export type UniverseCreateVisibility = "PUBLIC" | "PRIVATE";
 export type UniverseCreateTendency = "ALL" | "MALE_ORIENTED" | "FEMALE_ORIENTED";
 export type UniverseCreateLanguage = "KO" | "EN" | "JA" | "ZH" | "TH" | "VI";
-export type UniverseCreateCategory =
-  | "ROMANCE"
-  | "FANTASY"
-  | "DRAMA"
-  | "MARTIAL_ARTS"
-  | "GL"
-  | "BL"
-  | "HORROR"
-  | "MYSTERY";
 
 export interface UniverseCreateScenario {
   name: string;
@@ -47,7 +38,6 @@ export interface UniverseCreateRequest {
   adult?: boolean;
   description: string;
   tendency: UniverseCreateTendency;
-  category: UniverseCreateCategory;
   language: UniverseCreateLanguage;
   tagIds: string[];
   character: UniverseCreateCharacter;

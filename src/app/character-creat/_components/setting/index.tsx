@@ -20,26 +20,12 @@ import { isVerificationValid } from "@/lib/adultAccess";
 import { showAppToast } from "@/lib/toast";
 import { useModalStore } from "@/store/useModalStore";
 import { useUserStore } from "@/store/useUserStore";
-import type {
-  UniverseCreateCategory,
-  UniverseCreateTendency,
-} from "@/api/universe/postUniverseCreate";
+import type { UniverseCreateTendency } from "@/api/universe/postUniverseCreate";
 
 const TENDENCY_LIST: UniverseCreateTendency[] = [
   "ALL",
   "MALE_ORIENTED",
   "FEMALE_ORIENTED",
-];
-
-const CATEGORIES: UniverseCreateCategory[] = [
-  "ROMANCE",
-  "FANTASY",
-  "DRAMA",
-  "MARTIAL_ARTS",
-  "GL",
-  "BL",
-  "HORROR",
-  "MYSTERY",
 ];
 
 interface SettingProps {
@@ -50,14 +36,12 @@ interface SettingProps {
 const Setting = ({ isEditMode }: SettingProps) => {
   const t = useTranslations("characterCreate.settings");
   const selectorT = useTranslations("selector");
-  const categoryT = useTranslations("category");
   const { setValue, control } = useFormContext<CharacterCreateFormValues>();
   const tagList = useWatch({ control, name: "tagIds" });
   const isTagFull = tagList.length >= 5;
   const isPublicWatch = useWatch({ control, name: "isPublic" });
   const allowComments = useWatch({ control, name: "allowComments" });
   const tendency = useWatch({ control, name: "tendency" });
-  const categoryWatch = useWatch({ control, name: "category" });
   const rightsAgreed = useWatch({ control, name: "rightsAgreed" }) ?? false;
   const adultT = useTranslations("adultVerification.create");
   const isAdult = useWatch({ control, name: "adult" }) ?? false;
@@ -76,16 +60,6 @@ const Setting = ({ isEditMode }: SettingProps) => {
     ALL: selectorT("all"),
     MALE_ORIENTED: selectorT("male"),
     FEMALE_ORIENTED: selectorT("female"),
-  };
-  const categoryLabelByValue: Record<UniverseCreateCategory, string> = {
-    ROMANCE: categoryT("romance"),
-    FANTASY: categoryT("fantasySf"),
-    DRAMA: categoryT("drama"),
-    MARTIAL_ARTS: categoryT("martialArts"),
-    GL: categoryT("gl"),
-    BL: categoryT("bl"),
-    HORROR: categoryT("horror"),
-    MYSTERY: categoryT("mystery"),
   };
 
   const handleIsPublic = (isPublic: boolean) => {
@@ -125,18 +99,6 @@ const Setting = ({ isEditMode }: SettingProps) => {
 
   const handleTendency = (nextTendency: UniverseCreateTendency) => {
     setValue("tendency", nextTendency, {
-      shouldDirty: true,
-      shouldValidate: true,
-    });
-  };
-
-  const handleCategory = (category: UniverseCreateCategory) => {
-    const selectedCategories = categoryWatch ?? [];
-    const nextCategory = selectedCategories.includes(category)
-      ? []
-      : [category];
-
-    setValue("category", nextCategory, {
       shouldDirty: true,
       shouldValidate: true,
     });
@@ -268,39 +230,6 @@ const Setting = ({ isEditMode }: SettingProps) => {
                 )}
               >
                 {tendencyLabelByValue[item]}
-              </button>
-            );
-          })}
-        </div>
-      </section>
-
-      <section className="flex flex-col gap-4">
-        <div className="flex flex-col gap-1">
-          <h3 className="title-3 text-font-1">
-            {t("categoryLabel")} <span className="text-font-accents">*</span>
-          </h3>
-          <p className="body-6 text-font-2">{t("categoryHelp")}</p>
-        </div>
-
-        <div className="flex flex-wrap gap-x-1.5 gap-y-2">
-          {CATEGORIES.map((category) => {
-            const selectedCategories = categoryWatch ?? [];
-            const isActive = selectedCategories.includes(category);
-            const isInactive = selectedCategories.length > 0 && !isActive;
-
-            return (
-              <button
-                key={category}
-                type="button"
-                onClick={() => handleCategory(category)}
-                className={cn(
-                  "body-5 flex h-8 items-center rounded-full border border-main bg-dark px-3",
-                  isActive && "bg-brand/10 text-brand-dark",
-                  selectedCategories.length === 0 && "text-font-1",
-                  isInactive && "text-font-disabled",
-                )}
-              >
-                {categoryLabelByValue[category]}
               </button>
             );
           })}

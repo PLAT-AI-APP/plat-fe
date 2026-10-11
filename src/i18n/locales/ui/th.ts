@@ -243,16 +243,6 @@ const th = {
     logout: "ออกจากระบบ",
     profileImageAlt: "รูปโปรไฟล์",
   },
-  category: {
-    romance: "โรแมนซ์",
-    fantasySf: "แฟนตาซี/SF",
-    drama: "ดราม่า",
-    martialArts: "กำลังภายใน",
-    gl: "GL",
-    bl: "BL",
-    horror: "สยองขวัญ",
-    mystery: "สืบสวน",
-  },
   report: {
     targetTypes: {
       COMMENT: "ความคิดเห็น",

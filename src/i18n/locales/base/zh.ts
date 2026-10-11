@@ -332,7 +332,6 @@ const zh: typeof ko = {
       profileSituationRequired: "请输入场景说明",
       profileSituationMaxLength: "序章介绍最多可输入 2000 个字符",
       tendencyRequired: "请选择倾向",
-      categoryRequired: "请选择分类",
       tagRequired: "请至少选择一个标签",
       tagMaxCount: "标签最多可注册 5 个",
     },

@@ -352,7 +352,6 @@ const en: typeof ko = {
       profileSituationMaxLength:
         "Prologue intro can be up to 2000 characters long.",
       tendencyRequired: "Please select a preference.",
-      categoryRequired: "Please select a category.",
       tagRequired: "Please select at least one tag.",
       tagMaxCount: "You can register up to 5 tags.",
     },

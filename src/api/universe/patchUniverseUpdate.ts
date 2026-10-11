@@ -3,7 +3,6 @@ import { authAxios } from "..";
 import { AppError } from "@/type/api";
 import type {
   UniverseCreateAsset,
-  UniverseCreateCategory,
   UniverseCreateLanguage,
   UniverseCreateScenario,
   UniverseCreateTendency,
@@ -15,7 +14,6 @@ import { invalidateUniverseLists } from "./invalidateUniverseLists";
 export type UniverseUpdateVisibility = UniverseCreateVisibility;
 export type UniverseUpdateTendency = UniverseCreateTendency;
 export type UniverseUpdateLanguage = UniverseCreateLanguage;
-export type UniverseUpdateCategory = UniverseCreateCategory;
 export type UniverseUpdateScenario = UniverseCreateScenario;
 export type UniverseUpdateAsset = UniverseCreateAsset;
 
@@ -39,7 +37,6 @@ export interface UniverseUpdateRequest {
   title?: string | null;
   description?: string | null;
   tagIds?: string[] | null;
-  category?: UniverseUpdateCategory | null;
   detailSetting?: string | null;
   introduce?: string | null;
   character?: UniverseUpdateCharacter | null;

@@ -244,16 +244,6 @@ const vi = {
     logout: "Đăng xuất",
     profileImageAlt: "Ảnh hồ sơ",
   },
-  category: {
-    romance: "Lãng mạn",
-    fantasySf: "Fantasy/SF",
-    drama: "Chính kịch",
-    martialArts: "Võ hiệp",
-    gl: "GL",
-    bl: "BL",
-    horror: "Kinh dị",
-    mystery: "Suy luận",
-  },
   report: {
     targetTypes: {
       COMMENT: "Bình luận",

@@ -240,16 +240,6 @@ const zh = {
     logout: "退出登录",
     profileImageAlt: "个人资料图片",
   },
-  category: {
-    romance: "恋爱",
-    fantasySf: "奇幻/SF",
-    drama: "剧情",
-    martialArts: "武侠",
-    gl: "GL",
-    bl: "BL",
-    horror: "恐怖",
-    mystery: "推理",
-  },
   report: {
     targetTypes: {
       COMMENT: "评论",

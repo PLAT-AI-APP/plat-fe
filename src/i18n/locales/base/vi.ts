@@ -346,7 +346,6 @@ const vi: typeof ko = {
       profileSituationMaxLength:
         "Phần giới thiệu mở đầu có thể dài tối đa 2000 ký tự.",
       tendencyRequired: "Vui lòng chọn xu hướng",
-      categoryRequired: "Vui lòng chọn danh mục",
       tagRequired: "Vui lòng chọn ít nhất 1 thẻ",
       tagMaxCount: "Bạn có thể đăng tối đa 5 thẻ",
     },
