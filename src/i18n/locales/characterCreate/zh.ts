@@ -19,6 +19,7 @@ const zh: typeof ko = {
     untitledDraftTitle: "无标题草稿",
     createSuccess: "角色已成功创建！",
     createFailed: "角色创建失败，请重试。",
+    rightsRequired: "需同意权利责任声明后才能创建角色。",
     validationFailed: "请检查输入的内容。",
     updateSuccess: "角色已成功修改！",
     updateFailed: "角色修改失败，请重试。",
@@ -81,6 +82,12 @@ const zh: typeof ko = {
       selectedTagCount: "已选标签 {count} 个",
       tagMaxAlert: "最多可注册 5 个标签。",
       tagDuplicateAlert: "该标签已添加。",
+      rightsLabel: "权利责任声明",
+      rightsAgreement:
+        "我确认上传的图片、设定和文字不侵犯他人的著作权、肖像权、商标权等权利，并同意由本人承担由此产生的全部责任。",
+      rightsHelp:
+        "同意后才能创建角色。同意时间将被记录，如确认存在侵权，角色可能被设为不公开或删除。",
+      rightsTermsLink: "查看服务条款",
     },
     asset: {
       header: "素材注册 ({count}/50)",

@@ -19,6 +19,7 @@ const vi: typeof ko = {
     untitledDraftTitle: "Bản nháp chưa có tiêu đề",
     createSuccess: "Đã tạo nhân vật thành công!",
     createFailed: "Không thể tạo nhân vật. Vui lòng thử lại.",
+    rightsRequired: "Bạn cần đồng ý chịu trách nhiệm về quyền nội dung để tạo nhân vật.",
     validationFailed: "Vui lòng kiểm tra lại nội dung đã nhập.",
     updateSuccess: "Đã cập nhật nhân vật thành công!",
     updateFailed: "Không thể cập nhật nhân vật. Vui lòng thử lại.",
@@ -85,6 +86,12 @@ const vi: typeof ko = {
       selectedTagCount: "Thẻ đã chọn {count}",
       tagMaxAlert: "Bạn có thể đăng ký tối đa 5 thẻ.",
       tagDuplicateAlert: "Thẻ này đã được thêm.",
+      rightsLabel: "Cam kết về quyền nội dung",
+      rightsAgreement:
+        "Tôi xác nhận hình ảnh, thiết lập và văn bản tôi tải lên không xâm phạm quyền của người khác như quyền tác giả, quyền hình ảnh cá nhân, nhãn hiệu, và tôi chịu hoàn toàn trách nhiệm về những nội dung này.",
+      rightsHelp:
+        "Bạn cần đồng ý để tạo nhân vật. Thời điểm đồng ý sẽ được ghi lại, và nhân vật vi phạm quyền có thể bị ẩn hoặc xóa.",
+      rightsTermsLink: "Xem Điều khoản dịch vụ",
     },
     asset: {
       header: "Đăng ký tài sản ({count}/50)",

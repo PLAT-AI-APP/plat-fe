@@ -17,6 +17,7 @@ const ko = {
     untitledDraftTitle: "제목 없는 초안",
     createSuccess: "캐릭터가 성공적으로 등록되었습니다!",
     createFailed: "캐릭터 등록에 실패했습니다. 다시 시도해주세요.",
+    rightsRequired: "권리 책임에 동의해야 캐릭터를 등록할 수 있어요.",
     validationFailed: "입력한 내용을 다시 확인해 주세요.",
     updateSuccess: "캐릭터가 성공적으로 수정되었습니다!",
     updateFailed: "캐릭터 수정에 실패했습니다. 다시 시도해주세요.",
@@ -83,6 +84,12 @@ const ko = {
       selectedTagCount: "선택 태그 {count}개",
       tagMaxAlert: "태그는 최대 5개까지 등록 가능합니다.",
       tagDuplicateAlert: "이미 등록된 태그입니다.",
+      rightsLabel: "권리 책임 동의",
+      rightsAgreement:
+        "업로드하는 이미지·설정·텍스트가 타인의 저작권·초상권·상표권 등 권리를 침해하지 않으며, 이에 대한 모든 책임이 본인에게 있음에 동의합니다.",
+      rightsHelp:
+        "동의해야 캐릭터를 등록할 수 있어요. 동의 시각은 기록되며, 권리 침해가 확인되면 캐릭터가 비공개·삭제될 수 있어요.",
+      rightsTermsLink: "이용약관 보기",
     },
     asset: {
       header: "에셋 등록 ({count}/50)",

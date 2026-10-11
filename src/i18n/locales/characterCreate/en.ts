@@ -19,6 +19,7 @@ const en: typeof ko = {
     untitledDraftTitle: "Untitled draft",
     createSuccess: "Character has been created successfully!",
     createFailed: "Failed to create the character. Please try again.",
+    rightsRequired: "You need to accept responsibility for content rights to create a character.",
     validationFailed: "Please check what you entered.",
     updateSuccess: "Character has been updated successfully!",
     updateFailed: "Failed to update the character. Please try again.",
@@ -87,6 +88,12 @@ const en: typeof ko = {
       selectedTagCount: "Selected tags {count}",
       tagMaxAlert: "You can register up to 5 tags.",
       tagDuplicateAlert: "This tag is already added.",
+      rightsLabel: "Content rights",
+      rightsAgreement:
+        "I confirm that the images, settings, and text I upload do not infringe anyone else's rights, including copyright, portrait rights, and trademarks, and I accept full responsibility for them.",
+      rightsHelp:
+        "You must agree to create a character. The time you agree is recorded, and characters found to infringe rights may be hidden or removed.",
+      rightsTermsLink: "View Terms of Service",
     },
     asset: {
       header: "Assets ({count}/50)",
