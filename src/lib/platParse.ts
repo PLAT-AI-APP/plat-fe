@@ -210,11 +210,88 @@ const findBlockEnd = (
 };
 
 /**
+ * 줄 머리말 형식. 한 줄(또는 이어진 줄)이 `[행동] …` 이면 지문, `[대사] …` 이면 캐릭터 대사다.
+ * 시나리오 시드처럼 따옴표·별표 없이 쓴 글이 이 형식이라, 모르면 통째로 지문 하나로 그려진다.
+ * 이 형식에서는 글 안의 따옴표·별표가 기호가 아니라 그냥 글자다(`'작별 인사하기'` 등).
+ */
+const LABELED_START_REGEX = /^\s*\[(행동|대사)\]/;
+const LABEL_LINE_REGEX = /(?:^|\n)[ \t]*\[(행동|대사)\][ \t]*/g;
+
+const isLabeledSource = (source: string) => LABELED_START_REGEX.test(source);
+
+/** 대사 안쪽을 감싼 따옴표는 말풍선이 따로 그리므로 벗긴다. */
+const stripWrappingQuotes = (text: string) => {
+  const match = /^["“”]([\s\S]*)["“”]$/.exec(text);
+  return match ? match[1] : text;
+};
+
+function parseLabeled(source: string): PlatBlock[] {
+  const blocks: PlatBlock[] = [];
+  const pushText = (label: string, raw: string) => {
+    const text = raw.trim();
+    if (!text) return;
+
+    if (label === "대사") {
+      blocks.push({
+        type: "DIALOGUE",
+        segments: parseInlineTokens(stripWrappingQuotes(text), false),
+      });
+      return;
+    }
+
+    blocks.push({ type: "NARRATIVE", segments: parseInlineTokens(text, false) });
+  };
+
+  const pushChunk = (label: string, raw: string) => {
+    // 이미지 토큰만 있는 줄은 글 사이에서 이미지 블록으로 따로 그린다.
+    let pending: string[] = [];
+    const flush = () => {
+      pushText(label, pending.join("\n"));
+      pending = [];
+    };
+
+    for (const line of raw.split("\n")) {
+      const assetMatch = ASSET_BLOCK_REGEX.exec(line.trim());
+      const asset = assetMatch ? splitAssetToken(assetMatch[1]) : null;
+
+      if (!asset) {
+        pending.push(line);
+        continue;
+      }
+
+      flush();
+      blocks.push(
+        asset.assetType === "img"
+          ? { type: "ASSET_IMG", code: asset.code }
+          : { type: "ASSET_BLOCK", assetType: asset.assetType, code: asset.code },
+      );
+    }
+
+    flush();
+  };
+
+  let label = "행동";
+  let cursor = 0;
+  for (const match of source.matchAll(LABEL_LINE_REGEX)) {
+    const index = match.index ?? 0;
+    // 머리말 앞에 남은 글은 앞선 머리말의 이어진 줄이다.
+    pushChunk(label, source.slice(cursor, index));
+    label = match[1];
+    cursor = index + match[0].length;
+  }
+  pushChunk(label, source.slice(cursor));
+
+  return blocks;
+}
+
+/**
  * 메인 파서: 공백을 건너뛰며 각 위치가 BLOCK_DELIMITERS 중 어떤 기호로
  * 시작하는지 보고, 맞는 게 있으면 그 블록의 끝까지, 없으면(순수 텍스트)
  * 다음 블록이 시작되기 전까지를 한 덩어리로 잘라 parseBlock에 넘깁니다.
  */
 export function parsePlat(source: string): PlatBlock[] {
+  if (isLabeledSource(source)) return parseLabeled(source);
+
   const blocks: PlatBlock[] = [];
   let i = 0;
 
@@ -307,6 +384,11 @@ const closePendingBlock = (source: string) => {
  * parsePlatCached의 캐시를 쓰지 않습니다(한 응답이 캐시를 전부 밀어낸다).
  */
 export function parsePlatStreaming(source: string): PlatBlock[] {
+  // 줄 머리말 형식은 따옴표가 기호가 아니라 미리 닫을 블록이 없다. 반쯤 온 토큰만 숨긴다.
+  if (isLabeledSource(source)) {
+    return parsePlat(source.replace(PARTIAL_INLINE_TOKEN_REGEX, ""));
+  }
+
   return parsePlat(closePendingBlock(source));
 }
 
