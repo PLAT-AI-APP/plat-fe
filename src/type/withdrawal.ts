@@ -1,56 +1,106 @@
-/** 탈퇴 때 인수 후보 세계관을 남길지 지울지. */
-export type HandoverChoice = "KEEP" | "DELETE";
+/**
+ * 탈퇴할 때 만든 캐릭터(세계관)마다 고르는 처리.
+ * 미리 골라 두거나 고른 것으로 치면 안 되므로(법적 요건) 화면에도 기본값이 없다.
+ */
+export type WithdrawalChoice = "KEEP" | "DELETE";
 
-/** 남기기를 고를 수 없는 이유. */
-export type KeepBlockedReason = "MINOR" | "CONSENT_UNAVAILABLE";
-
-/** 남길 수 없어 지워지는 세계관의 이유. */
-export type HandoverIneligibility =
+/** 고를 수 없이 지워지는 캐릭터의 이유. */
+export type WithdrawalDeletionReason =
   | "INACTIVE"
   | "PRIVATE"
   | "NOT_APPROVED"
   | "UNDER_REVIEW"
   | "NO_OTHER_ROOMS";
 
+export const WITHDRAWAL_DELETION_REASONS: readonly WithdrawalDeletionReason[] = [
+  "INACTIVE",
+  "PRIVATE",
+  "NOT_APPROVED",
+  "UNDER_REVIEW",
+  "NO_OTHER_ROOMS",
+];
+
+/** 남길지 지울지 골라야 하는 캐릭터. 다른 유저와의 대화가 남아 있는 공개 캐릭터다. */
 export interface WithdrawalCandidate {
   universeId: string;
   title: string;
+  /** 정사각 80px 썸네일. 성인 캐릭터는 서명 URL 이라 크기를 바꿀 수 없다. */
   profileImageUrl: string | null;
-  /** 제작자 말고 이 세계관에서 대화한 방의 수. */
+  visibility: "PUBLIC" | "UNLISTED";
+  /** 이 캐릭터와 대화 중인 다른 유저의 방 수. */
   otherRoomCount: number;
 }
 
+/** 고를 수 없이 지워지는 캐릭터. */
 export interface WithdrawalDeletion {
   universeId: string;
   title: string;
-  reason: HandoverIneligibility;
+  reason: WithdrawalDeletionReason;
 }
 
-export interface WithdrawalConsent {
+/** 캐릭터 이용허락 동의서. 남기기를 고르면 이 버전에 동의해야 한다. */
+export interface HandoverConsentDocument {
   documentId: string;
   version: string;
+  /** 마크다운 원문. */
   content: string;
 }
 
-/** GET /users/me/withdrawal/preview 응답 */
+/** GET /users/me/withdrawal/preview */
 export interface WithdrawalPreview {
-  /** 남기기를 고를 수 있는지. 만 19세 미만이거나 동의서가 없으면 false. */
+  /** false 면 남기기를 고를 수 없다(만 19세 미만이거나 동의서가 아직 없음). */
   keepAllowed: boolean;
-  /** 남길 후보가 있는데 남기기를 고를 수 없는 이유. */
-  keepBlockedReason: KeepBlockedReason | null;
-  /** 생일이 없어 남기려면 만 19세 이상 진술이 필요한지. */
+  /** 남기기를 고를 수 없는 이유. MINOR: 생일상 만 19세 미만, CONSENT_UNAVAILABLE: 동의서 미게시. */
+  keepBlockedReason: "MINOR" | "CONSENT_UNAVAILABLE" | null;
+  /** 생일을 몰라 남기기를 고를 때 "만 19세 이상" 진술을 받아야 한다. */
   ageAttestationRequired: boolean;
-  /** 남길 후보가 있고 남길 수 있을 때의 동의서. */
-  consent: WithdrawalConsent | null;
+  /** 후보가 없거나 남길 수 없으면 null. */
+  consent: HandoverConsentDocument | null;
   candidates: WithdrawalCandidate[];
   deletions: WithdrawalDeletion[];
 }
 
-/** POST /users/me/withdrawal 요청. 후보마다 선택이 하나씩 있어야 하고, 빠지면 409 다. */
+export interface WithdrawalDecision {
+  universeId: string;
+  choice: WithdrawalChoice;
+}
+
+/** POST /users/me/withdrawal 요청 */
 export interface WithdrawalRequest {
-  decisions: { universeId: string; choice: HandoverChoice }[];
-  /** 남기기를 하나라도 골랐을 때 미리보기의 동의서 ID. */
+  /** 후보 전부에 대한 선택. 하나라도 빠지거나 남으면 서버가 409 로 막는다. */
+  decisions: WithdrawalDecision[];
+  /** 남기기가 있을 때 동의한 동의서 id. 없으면 null. */
   consentDocumentId: string | null;
-  /** 나이 진술을 요구받았고 남기기를 골랐으면 true. */
   adultAttested: boolean;
+}
+
+/** 남긴 캐릭터 한 편의 인수 접수. */
+export interface WithdrawalHandover {
+  handoverId: string;
+  universeId: string;
+  title: string;
+  /** 운영 심사 기한(ISO). */
+  deadlineAt: string;
+}
+
+/** POST /users/me/withdrawal 응답 */
+export interface WithdrawalResult {
+  handovers: WithdrawalHandover[];
+  consent: {
+    documentId: string;
+    version: string;
+    consentedAt: string;
+  } | null;
+  /** 동의서 사본을 이메일로 보내도록 접수했는지. */
+  copyMailRequested: boolean;
+}
+
+/** GET /users/me/withdrawal/checks — 탈퇴 전 확인 */
+export interface WithdrawalChecks {
+  /** 처리 중인 환불이 있다. 끝나야 탈퇴할 수 있다(서버가 409 로 막는다). */
+  refundPending: boolean;
+  /** 발송을 기다리는 상품권 교환이 있다. 발송돼야 탈퇴할 수 있다. */
+  redemptionPending: boolean;
+  /** 답변을 기다리는 문의 수. 탈퇴는 막지 않고, 탈퇴하면 답변을 볼 수 없다고 알린다. */
+  unansweredInquiryCount: number;
 }

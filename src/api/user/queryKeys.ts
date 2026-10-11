@@ -3,8 +3,6 @@ const userProfileRootKey = ["get-user-profile"] as const;
 /** 유저 관련 캐시 키의 단일 출처. */
 export const userQueryKeys = {
   myInfo: () => ["get-my-info"] as const,
-  /** 탈퇴 화면의 인수 후보·남기기 가능 여부. */
-  withdrawalPreview: () => ["get-withdrawal-preview"] as const,
   /** 모든 유저의 공개 프로필. 내 프로필을 고친 뒤 통째로 무효화할 때 씁니다. */
   profiles: () => userProfileRootKey,
   /** 특정 유저의 공개 프로필 */
@@ -16,4 +14,9 @@ export const userQueryKeys = {
    * 조회 훅이 이 접두사 뒤에 그 값을 덧붙입니다.
    */
   universes: (userId?: string) => ["get-user-universes", userId] as const,
+  /** 탈퇴 전 캐릭터 처리 미리보기. 동의서 원문이 언어마다 달라 언어를 함께 둔다. */
+  withdrawalPreview: (locale: string) =>
+    ["get-withdrawal-preview", locale] as const,
+  /** 탈퇴 전 확인(처리 중인 환불·상품권 교환, 답변 대기 문의). */
+  withdrawalChecks: () => ["get-withdrawal-checks"] as const,
 };

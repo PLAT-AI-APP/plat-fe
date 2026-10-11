@@ -4,6 +4,8 @@ export interface CharacterCardProps {
   title: string;
   description: string;
   creatorName: string;
+  /** 탈퇴한 제작자가 남겨 PLAT 이 운영하는 캐릭터. 제작자 이름을 적지 않는다. */
+  isAdopted?: boolean;
   chatCount?: number;
   images: string[] | string;
   size?: CardSize;

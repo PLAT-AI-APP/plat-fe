@@ -24,6 +24,7 @@ const createMockUniverseDetail = (
   creatorUserId: "1234567890123456789",
   creatorName: "흐물거리는달팽이",
   creatorFollowerCount: 24,
+  adopted: false,
   editable: universeId !== FORBIDDEN_UNIVERSE_ID,
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),

@@ -1,4 +1,4 @@
-import { getResourceImageUrl } from "@/lib/file";
+import { resolveAssetImageUrl } from "@/lib/file";
 import { PlatBlock, PlatSegment, parsePlat } from "@/lib/platParse";
 
 /**
@@ -82,6 +82,8 @@ export const encodeScenarioContent = (scenario: ScenarioFormValue): string => {
  */
 export const decodeScenarioContent = (
   content: string,
+  /** 세계관 상세가 준 에셋 주소(파일 ID → URL). 성인 세계관 에셋은 서명 URL 이라 이것으로만 열린다. */
+  assetImageUrls?: Record<string, string>,
 ): DecodedScenarioContent => {
   const blocks = parsePlat(content);
 
@@ -113,11 +115,11 @@ export const decodeScenarioContent = (
         value: segmentsToText(block.segments),
       });
     } else if (block.type === "ASSET_IMG") {
-      // 미리보기는 fileId로 렌더링용 URL을 다시 만들어 채웁니다.
+      // 미리보기는 fileId로 렌더링용 URL을 다시 만들어 채웁니다. 서버가 준 주소가 있으면 그것을 씁니다.
       contents.push({
         id,
         type: "asset",
-        value: getResourceImageUrl(block.code, "UNIVERSE_ASSET"),
+        value: resolveAssetImageUrl(block.code, assetImageUrls),
         assetImageFileId: block.code,
       });
     }

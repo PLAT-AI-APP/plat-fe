@@ -35,6 +35,7 @@ const CharacterCard = ({
   title,
   description,
   creatorName,
+  isAdopted = false,
   chatCount,
   images,
   size = "M",
@@ -326,8 +327,12 @@ const CharacterCard = ({
         )}
 
         <div className="inline-flex items-start justify-start gap-0.5">
-          <span className={cn("line-clamp-1", config.creatorName)}>
-            @ {creatorName}
+          {/* 인수 캐릭터는 제작자 이름을 적지 않는다. 자리는 남겨 다른 카드와 높이를 맞춘다. */}
+          <span
+            aria-hidden={isAdopted || undefined}
+            className={cn("line-clamp-1", config.creatorName, isAdopted && "invisible")}
+          >
+            {isAdopted ? "@" : `@ ${creatorName}`}
           </span>
         </div>
 

@@ -56,6 +56,7 @@ const NEW_WORK_ITEMS = Array.from({ length: 24 }, (_, index) => {
     description: seed.description,
     creator: {
       creatorId: `creator-${index}`,
+      adopted: false,
       nickname: seed.nickname,
     },
   };
@@ -73,6 +74,7 @@ const USER_RECOMMEND_ITEMS = Array.from({ length: 24 }, (_, index) => {
     description: seed.description,
     creator: {
       creatorId: `creator-${index}`,
+      adopted: false,
       nickname: seed.nickname,
     },
     chatCount: seed.chatCount,
@@ -137,6 +139,7 @@ const POPULAR_TAG_ITEMS = Array.from({ length: 24 }, (_, index) => {
     description: seed.description,
     creator: {
       creatorId: `creator-${index}`,
+      adopted: false,
       nickname: seed.nickname,
     },
     chatCount: seed.chatCount,
@@ -157,6 +160,7 @@ const TODAY_PICK_ITEMS = Array.from({ length: 24 }, (_, index) => {
     description: seed.description,
     creator: {
       creatorId: `creator-${index}`,
+      adopted: false,
       nickname: seed.nickname,
     },
     chatCount: seed.chatCount,

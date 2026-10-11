@@ -11,7 +11,7 @@ import {
 import { useUserProfileQuery } from "@/api/user/getUserProfile";
 import ActiveButton from "@/components/ActiveButton";
 import ResourceImage from "@/components/ResourceImage";
-import { ChatFill, Gear, Heart, HeartFill } from "@/icons";
+import { ChatFill, Gear, Heart, HeartFill, Info } from "@/icons";
 import { toImageVariantUrl } from "@/lib/file";
 import { cn, formatStatCount } from "@/lib/utils";
 import { useLocaleStore } from "@/store/useLocaleStore";
@@ -39,7 +39,9 @@ const SidebarSummary = ({
   const t = useTranslations("characterDetail");
   const locale = useLocaleStore((state) => state.locale);
   const router = useRouter();
-  const creatorId = character.creator.id;
+  // 탈퇴한 제작자가 남겨 PLAT 이 운영하는 캐릭터는 제작자 프로필·팔로우 대신 안내 문구만 둔다.
+  const isAdopted = character.creator.adopted;
+  const creatorId = isAdopted ? null : character.creator.id;
   const canUseCreatorActions = Boolean(creatorId);
   // 본인 소유 여부는 백엔드가 판단해 내려주는 값을 그대로 씁니다(viewerId와 creatorId를
   // 서버에서 비교) — 클라이언트가 userId를 따로 비교하면 관리자 권한 같은 예외 케이스를
@@ -82,7 +84,12 @@ const SidebarSummary = ({
 
   // 프로필 이동 가능 여부(canUseCreatorActions)에 따라 링크로도, 그냥 div로도
   // 감싸야 해서 내용만 따로 빼둔다.
-  const creatorInfoContent = (
+  const creatorInfoContent = isAdopted ? (
+    <p className="body-5 flex items-start gap-2 break-keep text-font-2">
+      <Info className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+      {t("adoptedNotice")}
+    </p>
+  ) : (
     <>
       {isCreatorProfileLoading ? (
         // 기본 이미지를 먼저 그렸다가 실제 사진으로 바꾸면 남의 얼굴이 잠깐 보이는 것처럼 깜빡인다.

@@ -1,8 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { authAxios } from "..";
-import type { AppError } from "@/type/api";
+import { AppError } from "@/type/api";
 import type { WithdrawalPreview } from "@/type/withdrawal";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useAuthReady } from "@/hooks/data/useAuthReady";
+import { useLocaleStore } from "@/store/useLocaleStore";
 import { userQueryKeys } from "./queryKeys";
 
 const getWithdrawalPreview = async () => {
@@ -14,17 +15,19 @@ const getWithdrawalPreview = async () => {
 };
 
 /**
- * 탈퇴 미리보기. 남기기/삭제를 고를 세계관과, 남길 수 없는 이유를 알려 준다.
- * 탈퇴 화면에서만 쓰고, 열 때마다 최신 상태를 받는다.
+ * 탈퇴 전 캐릭터 처리 미리보기.
+ *
+ * 탈퇴 요청은 이 목록과 똑같은 후보에 대한 선택을 보내야 통과한다(다르면 409).
+ * 그래서 오래된 캐시를 쓰지 않고 화면에 들어올 때마다 다시 받는다.
  */
 export const useWithdrawalPreviewQuery = () => {
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+  const authReady = useAuthReady();
+  const locale = useLocaleStore((state) => state.locale);
 
   return useQuery<WithdrawalPreview, AppError>({
-    queryKey: userQueryKeys.withdrawalPreview(),
+    queryKey: userQueryKeys.withdrawalPreview(locale),
     queryFn: getWithdrawalPreview,
-    enabled: isLoggedIn,
+    enabled: authReady,
     staleTime: 0,
-    gcTime: 0,
   });
 };

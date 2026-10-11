@@ -16,6 +16,13 @@ export type ImageVariant = "origin" | "sq40" | "sq80" | "sq140";
 /** /images/{type}/{fileId}/{variant} 의 마지막 세그먼트 */
 const IMAGE_VARIANT_PATH = /(\/images\/[^/]+\/[^/?#]+\/)([a-z0-9]+)(?=$|[?#])/;
 
+/** 성인 이미지의 서명 URL. 서명이 크기까지 묶여 있어 크기를 바꾸면 서버가 404 로 막는다. */
+const SIGNED_IMAGE_QUERY = /[?&]sig=/;
+
+/** 서명 URL(성인 이미지)인지. 서명은 1~2시간 뒤 만료된다. */
+export const isSignedImageUrl = (url: string | null | undefined) =>
+  Boolean(url && SIGNED_IMAGE_QUERY.test(url));
+
 /**
  * 업로드 API가 돌려준 fileId를 실제 이미지를 서빙하는
  * GET /images/{type}/{fileId}/{variant} URL로 변환합니다.
@@ -33,11 +40,13 @@ export const getResourceImageUrl = (
 };
 
 /**
- * 서명이 붙은 보호 이미지 URL인지(성인 세계관 이미지). 서명은 크기(변형본)까지 묶여 있어,
- * 변형본 이름만 바꾸면 서명이 어긋나 열리지 않는다.
+ * 대화·시나리오 속 {{img:파일 ID}} 의 이미지 주소. 서버가 준 주소(성인 에셋은 서명 URL)가 있으면 그것을 쓴다 —
+ * 성인 에셋은 보호 경로라 파일 ID 로 만든 주소로는 열리지 않는다.
  */
-export const isSignedImageUrl = (url: string | null | undefined) =>
-  Boolean(url && /[?&]sig=/.test(url));
+export const resolveAssetImageUrl = (
+  fileId: string,
+  assetImageUrls?: Record<string, string>,
+) => assetImageUrls?.[fileId] ?? getResourceImageUrl(fileId, "UNIVERSE_ASSET");
 
 /**
  * 백엔드가 내려준 이미지 URL(대개 origin)을 같은 파일의 작은 변형본 URL로 바꿉니다.
@@ -45,7 +54,7 @@ export const isSignedImageUrl = (url: string | null | undefined) =>
  * 36px 아바타에 원본(최대 수 MB 업로드를 크기 그대로 webp 로만 바꾼 파일)을 받을 이유가 없다.
  * `unoptimized` 라 next/image 가 줄여 주지도 않는 자리에서 쓴다.
  * /images/... 형태가 아닌 값(업로드 미리보기 blob:, 로컬 기본 이미지 등)은 그대로 둔다.
- * 서명 URL(성인 세계관)도 그대로 둔다 — 서버가 화면이 쓰는 크기로 이미 발급했다.
+ * 서명 URL(성인 이미지)도 그대로 둔다 — 서버가 그 자리에 맞는 크기로 서명해 준다.
  */
 export const toImageVariantUrl = <T extends string | null | undefined>(
   url: T,

@@ -131,6 +131,7 @@ const ja = {
       commentsCount: "({count}件)",
     },
     officialCharacter: "PLAT公式キャラクター",
+    adoptedNotice: "制作者が退会したため、PLATが運営を引き継いだキャラクターです",
     chatStart: "会話する",
     like: "お気に入りに追加",
     unlike: "お気に入りを解除",

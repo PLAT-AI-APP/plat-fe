@@ -28,6 +28,8 @@ export interface CharacterShowcaseItem {
   tag?: string[];
   img: string[] | string;
   creatorName?: string;
+  /** 공식 계정이 운영하는 캐릭터(제작자 탈퇴 후 인수). */
+  isAdopted?: boolean;
   isNew?: boolean;
   isOfficial?: boolean;
   /** 성인 세계관. 카드 제목 옆에 19 배지를 단다. */
@@ -134,6 +136,7 @@ const CharacterShowcase = ({
               title={char.name}
               description={char.dec}
               creatorName={char.creatorName || unknownCreator}
+              isAdopted={char.isAdopted}
               chatCount={char.chatCount}
               images={char.img}
               tagList={char.tag}

@@ -1,4 +1,5 @@
 import type React from "react";
+import type { WithdrawalHandover } from "@/type/withdrawal";
 
 export interface DialogProps {
   onClose: () => void;
@@ -105,11 +106,24 @@ export interface WelcomeCreditDialogProps {
 export interface WithdrawalCompleteDialogProps {
   onClose: () => void;
   onConfirm: () => void;
+  /** 남긴 캐릭터의 인수 접수. 없으면 목록을 그리지 않는다. */
+  handovers?: (Pick<WithdrawalHandover, "handoverId" | "title" | "deadlineAt"> & {
+    /** 탈퇴 화면 미리보기에서 받아 둔 대표 이미지. 접수증에 썸네일로 보인다. */
+    profileImageUrl?: string | null;
+  })[];
+  /** 동의서 사본을 이메일로 보냈는지. */
+  copyMailRequested?: boolean;
+  /** 남긴 캐릭터가 있을 때 동의한 이용허락 동의서 버전과 동의 시각. */
+  consent?: { version: string; consentedAt: string } | null;
 }
 
 export interface WithdrawalConfirmDialogProps {
   onClose: () => void;
   onConfirm: () => void;
+  /** 남겨서 운영 심사를 거칠 캐릭터 수. 만든 캐릭터가 없으면 0. */
+  keepCount?: number;
+  /** 탈퇴와 함께 지워질 캐릭터 수. */
+  deleteCount?: number;
 }
 
 export interface AgreementResultItem {

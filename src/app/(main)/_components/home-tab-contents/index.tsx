@@ -18,7 +18,7 @@ interface HomeCardSource {
   title: string;
   description: string;
   images: string[];
-  creator?: { nickname: string };
+  creator?: { nickname: string; adopted?: boolean };
   chatCount?: number;
   isNew?: boolean;
   isOfficial?: boolean;
@@ -35,6 +35,7 @@ const toShowcaseItem = (
   dec: item.description,
   img: item.images,
   creatorName: item.creator?.nickname,
+  isAdopted: item.creator?.adopted,
   isNew: item.isNew,
   isOfficial: item.isOfficial,
   adult: item.adult,

@@ -89,6 +89,7 @@ const mockCharacterDetail: CharacterDetail = {
     nickname: "@plat_creator",
     followerCount: 24,
     isFollowing: true,
+    adopted: false,
   },
   scenarios: mockCharacterScenarios,
   comments: [

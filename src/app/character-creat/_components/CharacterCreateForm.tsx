@@ -87,7 +87,13 @@ const createCharacterEditDefaultValues = (
       ? universe.scenarios.map((scenario) => ({
           name: scenario.name,
           description: scenario.description,
-          ...decodeScenarioContent(scenario.content),
+          // 성인 세계관 에셋은 보호 경로라 세계관 상세가 준 서명 URL 로 미리 보여 준다.
+          ...decodeScenarioContent(
+            scenario.content,
+            Object.fromEntries(
+              universe.assets.map((asset) => [asset.assetImageFileId, asset.originalUrl]),
+            ),
+          ),
         }))
       : [
           {

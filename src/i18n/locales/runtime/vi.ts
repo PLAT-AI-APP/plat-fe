@@ -105,56 +105,113 @@ const vi: typeof en = {
     updatedAt: "Tính đến {datetime} giờ",
   },
   withdrawalPage: {
+    blockers: {
+      pending: "Bạn có thể rời đi khi hoàn tiền hoặc đổi thẻ quà tặng hoàn tất",
+      checking: "Vui lòng chờ kiểm tra xong",
+      balance: "Vui lòng xác nhận note và điểm thu nhập sẽ mất",
+      consent: "Vui lòng đồng ý với giấy phép sử dụng nhân vật",
+      adult: "Vui lòng xác nhận bạn từ 19 tuổi trở lên",
+    },
     title: "Xóa tài khoản",
     defaultMember: "Thành viên",
     heading: "Thật tiếc khi phải chia tay với {nickname}",
     description:
       "Chúng tôi thật sự rất tiếc khi phải chia tay. Trước khi rời PLAT, vui lòng kiểm tra kỹ nội dung bên dưới.",
+    checks: {
+      title: "Kiểm tra trước khi rời đi",
+      checking: "Đang kiểm tra {item}",
+      failed: "Không kiểm tra được {item}",
+      retry: "Kiểm tra lại",
+      items: {
+        refund: "hoàn tiền",
+        redemption: "đổi thẻ quà tặng",
+        inquiry: "câu hỏi",
+        credits: "note",
+        points: "điểm thu nhập",
+      },
+      refundOk: "Không có yêu cầu hoàn tiền đang xử lý",
+      refundPending: "Bạn có thể rời đi khi yêu cầu hoàn tiền đang xử lý hoàn tất",
+      redemptionOk: "Không có yêu cầu đổi thẻ quà tặng đang chờ gửi",
+      redemptionPending: "Bạn có thể rời đi khi thẻ quà tặng được gửi",
+      inquiryOk: "Không có câu hỏi nào đang chờ trả lời",
+      inquiryPending: "Có {count} câu hỏi đang chờ trả lời",
+      inquiryView: "Xem câu hỏi",
+      creditsNone: "Không còn note nào",
+      creditsLost: "{count} note còn lại sẽ mất",
+      pointsNone: "Không còn điểm thu nhập",
+      pointsLost: "{points}P điểm thu nhập còn lại sẽ mất",
+      acknowledge: "Đã hiểu",
+    },
     notices: {
       dataDeleted:
         "Tất cả dữ liệu và thông tin cá nhân sẽ bị xóa và không thể khôi phục.",
       recordsRetained:
         "Chỉ lịch sử thanh toán và hoàn tiền được lưu 5 năm theo quy định pháp luật, mọi dữ liệu khác đều bị xóa.",
-      creditsRemoved:
-        "Note chưa sử dụng sẽ không được hoàn tiền và sẽ bị xóa cùng lúc.",
       rejoinRestricted:
         "Bạn không thể đăng ký lại bằng cùng địa chỉ email trong 7 ngày.",
-      creationsDeleted:
-        "Nhân vật và thế giới bạn tự tạo sẽ bị xóa hoàn toàn sau khi rời đi.",
-      chatsReadOnly:
-        "Các phòng chat hiện có vẫn được giữ lại, nhưng bạn sẽ không thể gửi tin nhắn mới.",
+      creationsDeleted: "Nhân vật không được giữ lại sẽ bị xóa sau khi bạn rời đi",
+      chatsReadOnly: "Phòng chat hiện có của người dùng khác sẽ chỉ còn xem được",
     },
-    remainingBalance:
-      "{credits} note và {points}P điểm thu nhập còn lại sẽ không thể khôi phục sau khi rời đi. Nếu còn yêu cầu hoàn tiền đang xử lý hoặc đổi thẻ quà tặng đang chờ gửi, bạn có thể rời đi sau khi hoàn tất.",
     legalNotice:
       "Lịch sử thanh toán và hoàn tiền sẽ không bị xóa ngay vì có nghĩa vụ lưu trữ theo quy định pháp luật liên quan (5 năm). Lịch sử note và thu nhập sẽ bị xóa hoàn toàn sau 3 ngày kể từ khi rời đi.",
     agreement: "Tôi đã kiểm tra toàn bộ nội dung ở trên",
     back: "Tôi muốn suy nghĩ thêm",
     submit: "Tôi sẽ xóa tài khoản",
     submitPending: "Đang xử lý xóa tài khoản",
-    handover: {
-      title: "Bạn muốn xử lý các nhân vật đã tạo như thế nào?",
-      description:
-        "Nhân vật còn cuộc trò chuyện với người khác có thể được giữ lại hoặc xóa. Vui lòng chọn cho từng nhân vật.",
+    characters: {
+      title: "Nhân vật đã tạo",
+      choiceGuide: "Nhân vật được giữ lại sẽ tiếp tục trò chuyện sau kiểm duyệt; nhân vật bị xóa sẽ biến mất khi bạn rời đi. Hãy chọn cho từng nhân vật",
+      listTitle: "Nhân vật đang được trò chuyện",
+      counts: {
+        keep: "Giữ lại {count}",
+        delete: "Xóa {count}",
+        undecided: "Chưa chọn {count}",
+      },
+      filters: {
+        all: "Tất cả",
+        undecided: "Chưa chọn",
+      },
+      searchPlaceholder: "Tìm theo tên nhân vật",
+      bulk: {
+        keepAll: "Giữ lại tất cả",
+        deleteAll: "Xóa tất cả",
+        scope: "Thao tác hàng loạt áp dụng cho {count} mục đang hiển thị",
+      },
+      noMatch: "Không có nhân vật phù hợp",
+      willBeDeleted: "Sẽ bị xóa",
+      showMore: "Xem thêm {count}",
+      remaining: "Còn {count}",
+      showRest: "Xem {count} mục còn lại",
+      showLess: "Thu gọn",
+      undecidedLeft: "Còn {count} nhân vật chưa chọn",
+      keepBlocked: {
+        minor: "Người dưới 19 tuổi không thể giữ lại nhân vật. Các nhân vật đang được trò chuyện cũng sẽ bị xóa và phòng chat chỉ có thể xem.",
+        unavailable: "Hiện không thể giữ lại nên bạn chỉ có thể chọn xóa",
+      },
+      talking: "{count} người đang trò chuyện",
       keep: "Giữ lại",
       delete: "Xóa",
-      otherRooms: "{count} cuộc trò chuyện với người khác",
-      chooseAll: "Vui lòng chọn Giữ lại hoặc Xóa cho từng nhân vật",
-      keepBlockedMinor:
-        "Thành viên dưới 19 tuổi không thể giữ lại nhân vật. Tất cả nhân vật bên dưới sẽ bị xóa.",
-      keepBlockedConsent:
-        "Hiện chưa có thỏa thuận cấp phép cần thiết để giữ lại nhân vật nên không thể giữ. Tất cả nhân vật bên dưới sẽ bị xóa. Hãy liên hệ nếu bạn muốn giữ lại.",
-      deletionsTitle: "Nhân vật không thể giữ lại và sẽ bị xóa",
-      reasonINACTIVE: "Đã bị bên vận hành gỡ xuống",
-      reasonPRIVATE: "Chưa từng được công khai",
-      reasonNOT_APPROVED: "Không vượt qua đợt duyệt công khai",
-      reasonUNDER_REVIEW: "Có nhân vật vẫn đang được kiểm duyệt",
-      reasonNO_OTHER_ROOMS: "Không có cuộc trò chuyện với người khác",
-      consentTitle: "Thỏa thuận cấp phép",
-      consentAgree: "Tôi đã đọc và đồng ý với thỏa thuận",
-      ageAttest: "Tôi từ 19 tuổi trở lên",
-      previewFailed:
-        "Không thể tải thông tin xử lý nhân vật. Nếu tiếp tục, tất cả nhân vật có thể bị xóa.",
+      deletionsCaption: "Nhân vật không công khai hoặc chưa có người dùng khác trò chuyện sẽ bị xóa khi bạn rời đi",
+      deletionsTitle: "Cũng sẽ bị xóa",
+      reasons: {
+        INACTIVE: "Bị vô hiệu hóa",
+        PRIVATE: "Riêng tư",
+        NOT_APPROVED: "Không được duyệt",
+        UNDER_REVIEW: "Đang xét duyệt",
+        NO_OTHER_ROOMS: "Không có người dùng khác",
+      },
+      summary: {
+        copyright: "Bản quyền vẫn thuộc về tôi, chỉ dùng để vận hành trò chuyện trong PLAT",
+        anonymous: "Nhân vật được giữ lại không kèm tên tôi, do PLAT vận hành",
+        review: "Chỉ nhân vật vượt qua xét duyệt được giữ lại, phần còn lại bị xóa",
+        irreversible: "Nhân vật đã giữ lại không thể lấy lại",
+      },
+      viewConsent: "Xem toàn văn văn bản đồng ý",
+      hideConsent: "Thu gọn văn bản đồng ý",
+      consentAgree: "Tôi đồng ý với Văn bản đồng ý cấp phép sử dụng nhân vật",
+      adultAttest: "Tôi từ 19 tuổi trở lên",
+      consentTitle: "Cấp phép sử dụng nhân vật",
+      consentSubtitle: "Đồng ý riêng, chỉ áp dụng cho các nhân vật bạn chọn giữ lại",
     },
   },
   profile: {

@@ -12,7 +12,7 @@ import UserChatBubble from "@/components/chat/UserChatBubble";
 import { ChatRetry, ChatTrash, Flag, Pen, Trash } from "@/icons";
 import { useAutoResizeTextarea } from "@/hooks/form/useAutoResizeTextarea";
 import { useInlineTextEdit } from "@/hooks/form/useInlineTextEdit";
-import { getResourceImageUrl } from "@/lib/file";
+import { resolveAssetImageUrl } from "@/lib/file";
 import { cn } from "@/lib/utils";
 import {
   parsePlatCached,
@@ -213,10 +213,7 @@ const ChatContentBlock = ({
               key={index}
               // block.code는 세계관 에셋 업로드로 받은 fileId이므로, 렌더링용 URL로 변환해야 합니다.
               // 성인 세계관 에셋은 보호 경로라 서버가 준 서명 URL 을 먼저 쓴다.
-              src={
-                assetImageUrls?.[block.code] ??
-                getResourceImageUrl(block.code, "UNIVERSE_ASSET")
-              }
+              src={resolveAssetImageUrl(block.code, assetImageUrls)}
               alt={t("chatUI.chatAssetAlt")}
               width={171}
               height={250}

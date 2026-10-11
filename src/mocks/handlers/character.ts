@@ -149,6 +149,7 @@ const mockCharacterDetail: CharacterDetail = {
     nickname: "@흐물거리는달팽이",
     followerCount: 24,
     isFollowing: true,
+    adopted: false,
   },
   scenarios: mockScenarios,
   comments: [

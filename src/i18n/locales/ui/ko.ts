@@ -127,6 +127,7 @@ const ko = {
       commentsCount: "({count})",
     },
     officialCharacter: "PLAT 공식 캐릭터",
+    adoptedNotice: "제작자가 떠난 뒤 PLAT이 운영을 이어받은 캐릭터예요",
     chatStart: "대화하기",
     like: "찜하기",
     unlike: "찜 취소",

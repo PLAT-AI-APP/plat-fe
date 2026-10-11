@@ -9,7 +9,7 @@ import CharacterChat from "@/components/chat/CharacterChat";
 import Scenario from "@/components/chat/Scenario";
 import UserChatBubble from "@/components/chat/UserChatBubble";
 import { ArrowDown } from "@/icons";
-import { getResourceImageUrl } from "@/lib/file";
+import { resolveAssetImageUrl } from "@/lib/file";
 import { parsePlat, segmentsToDisplayText } from "@/lib/platParse";
 import { cn } from "@/lib/utils";
 import { useUserDisplayName } from "@/hooks/data/useUserDisplayName";
@@ -41,6 +41,11 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
     [character.scenarios, selectedScenarioId],
   );
   const userDisplayName = useUserDisplayName();
+  // 시나리오 속 에셋은 세계관 상세가 준 주소로 그린다. 성인 세계관 에셋은 보호 경로라 서명 URL 로만 열린다.
+  const assetImageUrls = useMemo(
+    () => Object.fromEntries(character.images.map((image) => [image.id, image.url])),
+    [character.images],
+  );
   // situation에는 원본 .plat 마크업 전체(대사/유저대사/지문/에셋 태그)가 그대로 들어 있습니다.
   const scenarioBlocks = useMemo(
     () => parsePlat(selectedScenario?.situation ?? ""),
@@ -138,7 +143,7 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
                 return (
                   <Image
                     key={index}
-                    src={getResourceImageUrl(block.code, "UNIVERSE_ASSET")}
+                    src={resolveAssetImageUrl(block.code, assetImageUrls)}
                     alt={t("assetAlt", { name: selectedScenario.name })}
                     width={482}
                     height={289}

@@ -3,6 +3,8 @@ import type ko from "./ko";
 const zh: typeof ko = {
   chatRoom: {
     closedNotice: "角色已被删除，无法继续聊天。之前的对话仍可查看。",
+    handoverPendingLabel: "运营审核中",
+    handoverPendingNotice: "可以继续对话",
     generatedNotice: "对话由 AI 生成，可能与真实人物或事实不符。",
     sidebar: {
       title: "聊天室设置",
