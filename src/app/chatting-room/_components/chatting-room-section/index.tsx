@@ -12,7 +12,6 @@ import {
 import { useUniverseDetailQuery } from "@/api/universe/getUniverseDetail";
 import ChatForm, { type ChatFormHandle } from "@/components/chat/ChatForm";
 import MessageList from "@/components/chat/MessageList";
-import { AssetImageUrlContext } from "@/components/chat/AssetImageUrlContext";
 import SkeletonChatMessages from "@/components/skeleton/SkeletonChatMessages";
 import { ErrorState } from "@/components/state";
 import AdultGate from "@/components/adult/AdultGate";
@@ -175,7 +174,6 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
       room?.universeCharacterId ?? universe?.character.universeCharacterId,
     personaId: room?.personaId,
     modelId: currentAi?.id,
-    multiplier: room?.multiplier,
     characterName,
     profileImage,
     onTurnFailed: handleTurnFailed,
@@ -299,20 +297,18 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
           ) : isMessagesError && serverMessages.length === 0 ? (
             <ErrorState error={messagesError} onRetry={refetchMessages} />
           ) : (
-            // 성인 세계관 에셋은 보호 경로라 방 응답의 서명 URL 로 그린다.
-            <AssetImageUrlContext.Provider value={room?.assetImageUrls}>
-              <MessageList
-                messages={messages}
-                scrollContainer={scrollContainer}
-                isNovelView={isNovelView}
-                suggestions={suggestions}
-                onSuggestionSelect={handleSuggestionSelect}
-                onDeleteMessage={isBusy ? undefined : handleDeleteMessage}
-                onRetryMessage={isBusy || !canSend || isClosed ? undefined : handleRetryMessage}
-                // 지워진 캐릭터의 답은 신고할 대상이 사라졌다.
-                onReportMessage={isClosed ? undefined : handleReportMessage}
-              />
-            </AssetImageUrlContext.Provider>
+            <MessageList
+              messages={messages}
+              scrollContainer={scrollContainer}
+              isNovelView={isNovelView}
+              assetImageUrls={room?.assetImageUrls}
+              suggestions={suggestions}
+              onSuggestionSelect={handleSuggestionSelect}
+              onDeleteMessage={isBusy ? undefined : handleDeleteMessage}
+              onRetryMessage={isBusy || !canSend || isClosed ? undefined : handleRetryMessage}
+              // 지워진 캐릭터의 답은 신고할 대상이 사라졌다.
+              onReportMessage={isClosed ? undefined : handleReportMessage}
+            />
           )}
         </div>
 

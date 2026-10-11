@@ -85,8 +85,30 @@ export interface ChatModelOption {
   displayName: string;
   /** 서버가 주는 모델 설명. 한국어 한 벌만 내려옵니다. */
   description: string;
-  /** 한 턴 기본 크레딧 비용 */
+  /** 한 턴 기본 크레딧 비용. 답변 길이 "보통" 기준이다. */
   creditCost: number;
+  /** 답변 길이별 한 턴 크레딧. 기본 요금에 길이 배수를 곱해 올림한 값이다. */
+  responseLengthCreditCosts?: ResponseLengthCreditCost[];
+}
+
+/** 방에서 고르는 답변 길이. 서버의 프롬프트 배수 0.8/1.0/2.0 에 각각 대응한다. */
+export type ChatResponseLength = "SHORT" | "MEDIUM" | "LONG";
+
+/** 모델 한 줄이 가진 답변 길이별 요금 */
+export interface ResponseLengthCreditCost {
+  responseLength: ChatResponseLength;
+  creditCost: number;
+}
+
+/** GET /chat/models 의 답변 길이 선택지. 문구는 한국어 한 벌만 내려온다. */
+export interface ChatResponseLengthOption {
+  value: ChatResponseLength;
+  label: string;
+  description: string;
+  /** 기본 요금에 곱하는 배수(0.8 / 1 / 2) */
+  creditMultiplier: number;
+  /** 크레딧 소모 안내 문구 */
+  creditNotice: string;
 }
 
 /** 프롬프트 배수 선택지 */
@@ -101,6 +123,8 @@ export interface PromptMultiplierOption {
 export interface ChatCatalog {
   models: ChatModelOption[];
   multipliers: PromptMultiplierOption[];
+  /** 방에서 고르는 답변 길이 선택지(짧게·보통·길게). 서버가 주지 않으면 선택 UI를 그리지 않는다. */
+  responseLengths?: ChatResponseLengthOption[];
 }
 
 /** POST /chat 요청 */
@@ -118,8 +142,11 @@ export interface ChatStartRequest {
     message: string;
     /** ChatModelOption.name 값 */
     model: string;
-    /** 배수 값(숫자). 허용 집합 밖이면 서버가 1.0으로 되돌립니다. */
-    multiplier: number;
+    /**
+     * 호환용 필드. 서버는 방에 저장된 답변 길이만 쓰므로 보내지 않는다(PATCH /rooms/{id}/response-length).
+     * @deprecated
+     */
+    multiplier?: number;
   };
 }
 

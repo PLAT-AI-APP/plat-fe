@@ -41,6 +41,7 @@ import { useModalStore } from "@/store/useModalStore";
 import { useWalletStore } from "@/store/useWalletStore";
 import { TRANSITION } from "@/constants/motion";
 import { useFocusTrap } from "@/hooks/dom/useFocusTrap";
+import ResponseLengthSetting from "./ResponseLengthSetting";
 
 /*
  * 유저노트 화면은 react-hook-form·zod 를 쓰는데, 그대로 가져오면 두 라이브러리(약 126KB)가
@@ -487,6 +488,9 @@ const ChattingSidebar = ({ roomId, toggleIsSidebar }: ChattingSidebarProps) => {
                                 />
                               }
                             />
+                          </li>
+                          <li>
+                            <ResponseLengthSetting roomId={roomId} />
                           </li>
                           {isUniverseOpen && (
                             <li>
