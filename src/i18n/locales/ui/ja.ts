@@ -229,7 +229,7 @@ const ja = {
   },
   profilePopover: {
     notice: "お知らせ",
-    guide: "利用ガイド",
+    docs: "ドキュメント",
     customerService: "カスタマーセンター",
     myReports: "通報履歴",
     bugReport: "不具合を報告",
@@ -405,8 +405,8 @@ const ja = {
       },
       empty: "登録された質問はありません",
       moreHelpTitle: "お探しの答えが見つかりませんか？",
-      moreHelpDescription: "利用ガイドをご覧いただくか、お問い合わせください。",
-      guide: "利用ガイド",
+      moreHelpDescription: "ドキュメントをご覧いただくか、お問い合わせください。",
+      docs: "ドキュメント",
       ask: "お問い合わせ",
     },
     qna: {

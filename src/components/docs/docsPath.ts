@@ -1,7 +1,7 @@
 import type { DocsLocale } from "@/api/docs/types";
 
 /*
- * 가이드 문서 내부 링크는 전부 여기서 만든다.
+ * 문서 사이트 내부 링크는 전부 여기서 만든다.
  * 나중에 docs.plat.so 서브도메인을 proxy 의 host rewrite 로 붙이면 이 기준 경로만 "" 로 바꾸면 된다.
  */
 export const DOCS_BASE_PATH = "/docs";
@@ -80,6 +80,6 @@ export const swapDocsLocale = (pathname: string, search: string, locale: DocsLoc
   return `${DOCS_BASE_PATH}${rest.join("/")}${search}`;
 };
 
-/** 가이드 문서 주소인지. 앱 셸·동의 게이트·점검 모드가 문서를 앱 화면과 구분할 때 쓴다. */
+/** 문서 사이트 주소인지. 앱 셸·동의 게이트·점검 모드가 문서를 앱 화면과 구분할 때 쓴다. */
 export const isDocsPathname = (pathname: string) =>
   pathname === DOCS_BASE_PATH || pathname.startsWith(`${DOCS_BASE_PATH}/`);

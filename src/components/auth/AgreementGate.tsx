@@ -31,7 +31,7 @@ const AgreementGate = () => {
 
   const pending = status?.pending ?? [];
   // 약관 페이지는 동의하기 전에 읽어야 하는 화면이라 가리지 않는다. 동의 창의 링크가 새 탭으로 여기를 연다.
-  // 가이드 문서(/docs)도 로그인과 무관한 공개 안내라 가리지 않는다.
+  // 문서 사이트(/docs)도 로그인과 무관한 공개 안내라 가리지 않는다.
   const isOpen =
     pending.length > 0 &&
     !pathname.startsWith("/legal/") &&

@@ -75,7 +75,7 @@ const FaqContents = () => {
             href={docsEntryPath(appLocale)}
             className={buttonStyles({ variant: "secondary", size: "sm" })}
           >
-            {t("guide")}
+            {t("docs")}
           </Link>
           <Link
             href="/customer-service/qna/new"

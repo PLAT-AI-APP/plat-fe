@@ -225,7 +225,7 @@ const zh = {
   },
   profilePopover: {
     notice: "公告",
-    guide: "使用指南",
+    docs: "文档",
     customerService: "客服中心",
     myReports: "举报记录",
     bugReport: "反馈问题",
@@ -401,8 +401,8 @@ const zh = {
       },
       empty: "暂无问题",
       moreHelpTitle: "没有找到想要的答案？",
-      moreHelpDescription: "可以先查看使用指南，或留下咨询。",
-      guide: "使用指南",
+      moreHelpDescription: "可以先查看文档，或留下咨询。",
+      docs: "文档",
       ask: "一对一咨询",
     },
     qna: {

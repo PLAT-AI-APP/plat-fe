@@ -65,7 +65,7 @@ const ko: typeof en = {
     menu: "푸터 메뉴",
     about: "회사 소개",
     support: "고객센터",
-    guide: "이용 가이드",
+    docs: "문서",
     terms: "이용약관",
     privacy: "개인정보처리방침",
     youth: "청소년 보호정책",

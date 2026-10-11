@@ -18,7 +18,7 @@ const withoutNode = <T extends { node?: unknown }>(props: T): Omit<T, "node"> =>
 };
 
 /*
- * 가이드 문서용 요소 모양. 공지·약관과 달리 문서 제목(h1)과 본문 제목 단계를 그대로 맞춰
+ * 문서 사이트용 요소 모양. 공지·약관과 달리 문서 제목(h1)과 본문 제목 단계를 그대로 맞춰
  * `##` → h2, `###` → h3 로 그린다(목차가 h2·h3 를 읽는다). 앵커로 이동해도 고정 헤더에 가리지 않게
  * scroll-margin 을 준다. 나머지 요소는 MarkdownDocument 기본 모양을 쓴다.
  */

@@ -1,8 +1,8 @@
 import type { DocsMessages } from ".";
 
 const en: DocsMessages = {
-  siteName: "PLAT Guide",
-  serviceLabel: "Guide",
+  siteName: "PLAT Docs",
+  serviceLabel: "Docs",
   metaDescription: "Learn how to use PLAT and find answers to common questions.",
   searchPlaceholder: "Search articles",
   searchOpen: "Open search",

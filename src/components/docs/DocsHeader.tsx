@@ -17,7 +17,7 @@ import { docsPath, parseDocsPathname } from "./docsPath";
  * 문서 상단 헤더. 왼쪽 로고 | 서비스명, 데스크톱은 오른쪽에 검색창·언어 선택,
  * 모바일은 검색 아이콘(헤더 아래로 검색창을 펼침)과 햄버거(트리 드로어)만 둔다.
  * 라이트 · 다크 전환은 화면 크기와 상관없이 맨 오른쪽(모바일은 햄버거 앞)에 둔다.
- * 로고는 PLAT 메인으로, 옆의 "가이드" 는 문서 홈으로 간다.
+ * 로고는 PLAT 메인으로, 옆의 "문서" 는 문서 홈으로 간다.
  */
 const DocsHeader = () => {
   const { locale, messages } = useDocs();
