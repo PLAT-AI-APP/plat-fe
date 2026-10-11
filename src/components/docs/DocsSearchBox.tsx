@@ -113,8 +113,9 @@ const DocsSearchBox = ({
           submit();
         }}
         className={cn(
-          "flex items-center gap-2 rounded-xl border border-transparent bg-card text-font-1 transition-colors focus-within:border-brand",
-          isLarge ? "h-13 px-4" : "h-10 px-3",
+          "flex items-center gap-2 rounded-xl border text-font-1 transition-colors focus-within:border-brand",
+          // 큰 검색창은 배너 · 검색 화면 바탕 위에 놓여, 바탕과 구분되게 한 단계 밝은 면에 테두리를 둔다.
+          isLarge ? "h-13 border-main bg-dark px-4" : "h-10 border-transparent bg-card px-3",
         )}
       >
         <Search size={isLarge ? 22 : 18} className="shrink-0 text-font-2" aria-hidden="true" />

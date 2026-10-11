@@ -15,18 +15,18 @@ interface DocsHomeProps {
 }
 
 export async function generateMetadata({ params }: DocsHomeProps): Promise<Metadata> {
-  const locale = readDocsLocale((await params).locale);
+  const locale = await readDocsLocale((await params).locale);
   if (!locale) return {};
   return buildDocsMetadata({
     locale,
     path: docsPath.home(locale),
-    alternates: allLocaleAlternates(docsPath.home),
+    alternates: await allLocaleAlternates(docsPath.home),
   });
 }
 
 /** 문서 홈: 어두운 배너(로고·검색) + 최상위 카테고리 목록. */
 export default async function DocsHomePage({ params }: DocsHomeProps) {
-  const locale = readDocsLocale((await params).locale);
+  const locale = await readDocsLocale((await params).locale);
   if (!locale) notFound();
 
   const [{ groups }, messages] = [await getDocsHome(locale), getDocsMessages(locale)];
@@ -35,8 +35,8 @@ export default async function DocsHomePage({ params }: DocsHomeProps) {
     <>
       <DocsPageLocales locales={null} />
 
-      {/* 배너는 테마와 무관하게 어둡다. dark 클래스로 안쪽 토큰(로고 글자색·검색창)을 다크 값으로 맞춘다. */}
-      <section className="dark relative overflow-hidden bg-scrim text-font-1">
+      {/* 배너도 테마를 따른다. 바탕은 본문보다 한 단계 짙은 면에 브랜드 빛을 얹는다(라이트에서는 옅은 주황). */}
+      <section className="relative overflow-hidden border-b border-main bg-darker text-font-1">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_20%_0%,var(--brand-opacity-2),transparent_55%),radial-gradient(ellipse_at_85%_100%,var(--brand-opacity),transparent_60%)]"

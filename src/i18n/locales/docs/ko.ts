@@ -31,7 +31,8 @@ const ko = {
   collapse: "접기",
   poweredBy: "Powered by PLAT",
   backToApp: "PLAT 바로가기",
-  languageNames: { ko: "한국어", en: "English" },
+  themeToLight: "라이트 모드로 보기",
+  themeToDark: "다크 모드로 보기",
 };
 
 export default ko;

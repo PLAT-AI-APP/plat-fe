@@ -29,7 +29,8 @@ const en: DocsMessages = {
   collapse: "Collapse",
   poweredBy: "Powered by PLAT",
   backToApp: "Go to PLAT",
-  languageNames: { ko: "한국어", en: "English" },
+  themeToLight: "Switch to light mode",
+  themeToDark: "Switch to dark mode",
 };
 
 export default en;
