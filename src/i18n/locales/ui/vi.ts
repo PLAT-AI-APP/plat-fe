@@ -396,11 +396,15 @@ const vi = {
     faq: {
       filters: {
         ALL: "Tất cả",
-        REFUND: "Hoàn tiền",
-        PAYMENT: "Thanh toán",
+        SERVICE: "Sử dụng dịch vụ",
         ACCOUNT: "Tài khoản",
+        VERIFICATION: "Xác minh danh tính & tuổi",
+        PAYMENT: "Thanh toán & Note",
+        REFUND: "Hoàn tiền",
         CHARACTER: "Nhân vật",
         CHAT: "Trò chuyện",
+        CREATOR: "Sáng tạo & Thu nhập",
+        REPORT: "Báo cáo & Xử phạt",
         ETC: "Khác",
       },
       empty: "Chưa có câu hỏi nào",

@@ -402,11 +402,15 @@ const en = {
     faq: {
       filters: {
         ALL: "All",
-        REFUND: "Refunds",
-        PAYMENT: "Payments",
+        SERVICE: "Using PLAT",
         ACCOUNT: "Account",
+        VERIFICATION: "Verification",
+        PAYMENT: "Payments & Notes",
+        REFUND: "Refunds",
         CHARACTER: "Characters",
         CHAT: "Chat",
+        CREATOR: "Creating & Earnings",
+        REPORT: "Reports & Restrictions",
         ETC: "Other",
       },
       empty: "No questions yet.",

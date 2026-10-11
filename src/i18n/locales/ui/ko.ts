@@ -392,11 +392,15 @@ const ko = {
     faq: {
       filters: {
         ALL: "전체",
-        REFUND: "환불",
-        PAYMENT: "결제",
+        SERVICE: "서비스 이용",
         ACCOUNT: "계정",
+        VERIFICATION: "본인·성인인증",
+        PAYMENT: "결제·노트",
+        REFUND: "환불",
         CHARACTER: "캐릭터",
         CHAT: "대화",
+        CREATOR: "제작·수익",
+        REPORT: "신고·제재",
         ETC: "기타",
       },
       empty: "등록된 질문이 없어요",

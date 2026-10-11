@@ -396,11 +396,15 @@ const ja = {
     faq: {
       filters: {
         ALL: "すべて",
-        REFUND: "返金",
-        PAYMENT: "決済",
+        SERVICE: "サービス利用",
         ACCOUNT: "アカウント",
+        VERIFICATION: "本人・成人認証",
+        PAYMENT: "決済・ノート",
+        REFUND: "返金",
         CHARACTER: "キャラクター",
         CHAT: "会話",
+        CREATOR: "制作・収益",
+        REPORT: "通報・利用制限",
         ETC: "その他",
       },
       empty: "登録された質問はありません",
