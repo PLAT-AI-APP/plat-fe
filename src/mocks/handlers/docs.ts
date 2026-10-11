@@ -1,12 +1,14 @@
 import { http, HttpResponse } from "msw";
 import {
+  isMockDocsLocale,
   mockDocsGroup,
   mockDocsHome,
+  mockDocsLocales,
   mockDocsPage,
   mockDocsSearch,
   mockDocsTree,
 } from "@/api/docs/mockData";
-import { isDocsLocale, type DocsLocale } from "@/api/docs/types";
+import type { DocsLocale } from "@/api/docs/types";
 
 /*
  * 가이드 문서 공개 API 목업. 응답은 서버 컴포넌트 목업과 같은 원본(@/api/docs/mockData)에서 만든다.
@@ -22,7 +24,7 @@ const notFound = () =>
 const withLocale = (
   locale: string | readonly string[] | undefined,
   respond: (locale: DocsLocale) => Response,
-) => (typeof locale === "string" && isDocsLocale(locale) ? respond(locale) : notFound());
+) => (typeof locale === "string" && isMockDocsLocale(locale) ? respond(locale) : notFound());
 
 /*
  * API 주소까지 붙여 잡는다. 경로만으로 잡으면 같은 모양인 화면 주소(/docs/ko/search?q=… 의 RSC 요청)까지
@@ -31,6 +33,7 @@ const withLocale = (
 const API_BASE = process.env.NEXT_PUBLIC_BASE_URI?.replace(/\/$/, "") ?? "";
 
 export const docsHandlers = [
+  http.get(`${API_BASE}/docs/locales`, () => HttpResponse.json(mockDocsLocales())),
   http.get(`${API_BASE}/docs/:locale/tree`, ({ params }) =>
     withLocale(params.locale, (locale) => HttpResponse.json(mockDocsTree(locale))),
   ),

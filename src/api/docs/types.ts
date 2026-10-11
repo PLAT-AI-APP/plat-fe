@@ -3,12 +3,23 @@
  * 기준은 .worktrees/docs/DOCS_API_CONTRACT.md 의 "공개 API" 절이다. ID 는 문자열.
  */
 
-export const DOCS_LOCALES = ["ko", "en"] as const;
-export type DocsLocale = (typeof DOCS_LOCALES)[number];
-export const DEFAULT_DOCS_LOCALE: DocsLocale = "ko";
+/**
+ * 문서 언어 코드(`ko` · `en` …). 어떤 언어가 있는지는 서버(`GET /docs/locales`)가 정한다 —
+ * 사이트는 언어 목록을 들고 있지 않는다. 화면 문구(헤더 · 버튼)만 사이트가 언어별로 갖는다.
+ */
+export type DocsLocale = string;
 
-export const isDocsLocale = (value: string): value is DocsLocale =>
-  (DOCS_LOCALES as readonly string[]).includes(value);
+export interface DocsLocaleInfo {
+  code: DocsLocale;
+  /** 그 언어로 적은 이름(한국어 · English). 언어 메뉴에 그대로 쓴다. */
+  name: string;
+}
+
+/** GET /docs/locales. `locales` 순서가 언어 메뉴 순서다. */
+export interface DocsLocalesResponse {
+  defaultLocale: DocsLocale;
+  locales: DocsLocaleInfo[];
+}
 
 /** GET /docs/{locale}/tree 의 노드. GROUP 은 name, PAGE 는 title 을 쓴다. */
 export interface DocsTreeNode {

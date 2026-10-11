@@ -17,7 +17,7 @@ const readQuery = (value: string | string[] | undefined) =>
   (Array.isArray(value) ? value[0] : value)?.trim() ?? "";
 
 export async function generateMetadata({ params }: SearchPageProps): Promise<Metadata> {
-  const locale = readDocsLocale((await params).locale);
+  const locale = await readDocsLocale((await params).locale);
   if (!locale) return {};
   // 검색 결과 화면은 색인하지 않는다(질의마다 주소가 달라 중복 문서가 된다).
   return {
@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: SearchPageProps): Promise<Met
 
 /** 검색 결과 화면. 헤더 검색창에서 Enter 로 온다. */
 export default async function DocsSearchPage({ params, searchParams }: SearchPageProps) {
-  const locale = readDocsLocale((await params).locale);
+  const locale = await readDocsLocale((await params).locale);
   if (!locale) notFound();
 
   const query = readQuery((await searchParams).q);

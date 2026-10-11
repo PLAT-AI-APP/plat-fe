@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { DOCS_LOCALES, type DocsLocale } from "@/api/docs/types";
+import type { DocsLocale } from "@/api/docs/types";
 import { ArrowDown, Check, Global } from "@/icons";
 import { cn } from "@/lib/utils";
 import { useDocs } from "./DocsProvider";
@@ -19,7 +19,9 @@ const DocsLanguageMenu = ({
   variant?: "dropdown" | "list";
   onNavigate?: () => void;
 }) => {
-  const { locale, messages, availableLocales } = useDocs();
+  const { locale, locales, messages, availableLocales } = useDocs();
+  const nameOf = (code: DocsLocale) =>
+    locales.find((item) => item.code === code)?.name ?? code.toUpperCase();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -57,7 +59,7 @@ const DocsLanguageMenu = ({
 
   const options = (
     <ul role="listbox" aria-label={messages.language} className="flex flex-col py-1">
-      {DOCS_LOCALES.map((option) => (
+      {locales.map(({ code: option, name }) => (
         <li key={option} role="option" aria-selected={option === locale}>
           <button
             type="button"
@@ -68,7 +70,7 @@ const DocsLanguageMenu = ({
               option === locale ? "font-semibold text-font-1" : "text-font-2",
             )}
           >
-            {messages.languageNames[option]}
+            {name}
             {option === locale && <Check size={16} className="text-brand" aria-hidden="true" />}
           </button>
         </li>
@@ -99,7 +101,7 @@ const DocsLanguageMenu = ({
         className="body-5 flex h-10 items-center gap-1.5 rounded-lg px-2.5 text-font-1 hover:bg-btn-hover"
       >
         <Global size={18} className="text-font-2" aria-hidden="true" />
-        {messages.languageNames[locale]}
+        {nameOf(locale)}
         <ArrowDown
           size={16}
           className={cn("text-font-2 transition-transform", isOpen && "rotate-180")}

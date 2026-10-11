@@ -6,8 +6,12 @@ export type DocsMessages = typeof ko;
 
 const MESSAGES: Record<DocsLocale, DocsMessages> = { ko, en };
 
-/** 주소 locale 에 맞는 문서 문구. 서버 컴포넌트에서 골라 클라이언트 컴포넌트에 props 로 넘긴다. */
-export const getDocsMessages = (locale: DocsLocale): DocsMessages => MESSAGES[locale];
+/**
+ * 주소 locale 에 맞는 문서 화면 문구. 서버 컴포넌트에서 골라 클라이언트 컴포넌트에 props 로 넘긴다.
+ * 지원 언어는 서버가 정하므로, 서버가 언어를 먼저 늘려 사이트에 문구가 아직 없으면 영어 문구를 쓴다
+ * (본문 · 제목은 서버가 그 언어로 준다).
+ */
+export const getDocsMessages = (locale: DocsLocale): DocsMessages => MESSAGES[locale] ?? MESSAGES.en;
 
 /** "{name}" 자리표시자를 채운다. */
 export const formatDocsMessage = (

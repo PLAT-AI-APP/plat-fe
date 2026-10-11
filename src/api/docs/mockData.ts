@@ -4,12 +4,13 @@ import type {
   DocsGroupResponse,
   DocsHomeResponse,
   DocsLocale,
+  DocsLocalesResponse,
   DocsPageResponse,
   DocsSearchResponse,
   DocsTreeNode,
   DocsTreeResponse,
 } from "./types";
-import { DOCS_LOCALES, DOCS_SEARCH_MAX_LENGTH } from "./types";
+import { DOCS_SEARCH_MAX_LENGTH } from "./types";
 
 /*
  * 가이드 문서 목업 원본.
@@ -405,6 +406,21 @@ const buildTreeNodes = (groupId: string | null, locale: DocsLocale): DocsTreeNod
     ];
   });
 
+/** 서버 `GET /docs/locales` 와 같은 모양. 실서버에서는 서버 enum 이 정한다. */
+const MOCK_DOCS_LOCALES: DocsLocalesResponse = {
+  defaultLocale: "ko",
+  locales: [
+    { code: "ko", name: "한국어" },
+    { code: "en", name: "English" },
+  ],
+};
+
+const MOCK_LOCALE_CODES = MOCK_DOCS_LOCALES.locales.map((locale) => locale.code);
+
+export const mockDocsLocales = (): DocsLocalesResponse => MOCK_DOCS_LOCALES;
+
+export const isMockDocsLocale = (value: string) => MOCK_LOCALE_CODES.includes(value);
+
 export const mockDocsTree = (locale: DocsLocale): DocsTreeResponse => ({
   items: buildTreeNodes(null, locale),
 });
@@ -474,7 +490,7 @@ export const mockDocsGroup = (
     coverImageUrl: group.coverImageUrl,
     breadcrumbs: breadcrumbsOf(group.id, locale).slice(0, -1),
     children,
-    availableLocales: DOCS_LOCALES.filter((candidate) => isGroupPublic(group, candidate)),
+    availableLocales: MOCK_LOCALE_CODES.filter((candidate) => isGroupPublic(group, candidate)),
   };
 };
 
@@ -496,7 +512,7 @@ export const mockDocsPage = (
     updatedAt: page.updatedAt,
     groupId: page.groupId,
     breadcrumbs: breadcrumbsOf(page.groupId, locale),
-    availableLocales: DOCS_LOCALES.filter((candidate) => isPagePublic(page, candidate)),
+    availableLocales: MOCK_LOCALE_CODES.filter((candidate) => isPagePublic(page, candidate)),
   };
 };
 

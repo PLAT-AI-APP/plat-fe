@@ -1,7 +1,7 @@
 import type { CSSProperties, ReactNode } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getDocsTree } from "@/api/docs/server";
+import { getDocsLocales, getDocsTree } from "@/api/docs/server";
 import DocsHeader from "@/components/docs/DocsHeader";
 import { readDocsLocale } from "@/components/docs/docsMetadata";
 import { DocsProvider } from "@/components/docs/DocsProvider";
@@ -13,7 +13,7 @@ interface DocsLayoutProps {
 }
 
 export async function generateMetadata({ params }: DocsLayoutProps): Promise<Metadata> {
-  const locale = readDocsLocale((await params).locale);
+  const locale = await readDocsLocale((await params).locale);
   if (!locale) return {};
   const messages = getDocsMessages(locale);
   return {
@@ -28,14 +28,14 @@ export async function generateMetadata({ params }: DocsLayoutProps): Promise<Met
  * 언어는 주소의 locale 로 정한다(앱의 언어 store 와 무관). 사이드바·드로어가 쓰는 트리는 여기서 한 번 받는다.
  */
 export default async function DocsLocaleLayout({ children, params }: DocsLayoutProps) {
-  const locale = readDocsLocale((await params).locale);
+  const locale = await readDocsLocale((await params).locale);
   if (!locale) notFound();
 
-  const tree = await getDocsTree(locale);
+  const [tree, { locales }] = await Promise.all([getDocsTree(locale), getDocsLocales()]);
   const messages = getDocsMessages(locale);
 
   return (
-    <DocsProvider locale={locale} messages={messages} tree={tree.items}>
+    <DocsProvider locale={locale} locales={locales} messages={messages} tree={tree.items}>
       <div
         lang={locale}
         className="min-h-dvh bg-dark whitespace-normal text-font-1"

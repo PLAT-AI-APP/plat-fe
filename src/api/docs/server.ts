@@ -4,6 +4,7 @@ import type {
   DocsGroupResponse,
   DocsHomeResponse,
   DocsLocale,
+  DocsLocalesResponse,
   DocsPageResponse,
   DocsSearchResponse,
   DocsTreeResponse,
@@ -43,6 +44,17 @@ const fetchDocs = async <T>(path: string): Promise<T | null> => {
 
 /** URL 경로의 id 는 숫자만 받는다. 숫자가 아니면 서버에 묻지 않고 404 로 본다. */
 const isNumericId = (id: string) => /^\d+$/.test(id);
+
+/**
+ * 지원 언어. 주소 검사 · 언어 메뉴 · hreflang · `/docs` 기본 언어가 모두 이것을 쓴다.
+ * 서버가 답하지 않으면 문서를 그릴 수 없으므로 던진다(오류 화면).
+ */
+export const getDocsLocales = cache(async (): Promise<DocsLocalesResponse> => {
+  if (isMockingEnabled) return (await loadMock()).mockDocsLocales();
+  const locales = await fetchDocs<DocsLocalesResponse>("/docs/locales");
+  if (!locales?.locales.length) throw new Error("[docs] /docs/locales 응답이 비었습니다.");
+  return locales;
+});
 
 export const getDocsTree = cache(async (locale: DocsLocale): Promise<DocsTreeResponse> => {
   if (isMockingEnabled) return (await loadMock()).mockDocsTree(locale);

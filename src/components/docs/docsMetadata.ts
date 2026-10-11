@@ -1,10 +1,19 @@
 import type { Metadata } from "next";
-import { DOCS_LOCALES, isDocsLocale, type DocsLocale } from "@/api/docs/types";
+import { getDocsLocales } from "@/api/docs/server";
+import type { DocsLocale } from "@/api/docs/types";
 import { getDocsMessages } from "@/i18n/locales/docs";
 
-/** 주소의 locale 조각을 문서 언어로 읽는다. 지원하지 않으면 null(페이지가 notFound). */
-export const readDocsLocale = (value: string): DocsLocale | null =>
-  isDocsLocale(value) ? value : null;
+/**
+ * 주소의 locale 조각을 문서 언어로 읽는다. 서버가 지원하는 언어가 아니면 null(페이지가 notFound).
+ * 언어 목록은 요청 하나에서 한 번만 받는다(getDocsLocales 가 cache 로 묶여 있다).
+ */
+export const readDocsLocale = async (value: string): Promise<DocsLocale | null> => {
+  const { locales } = await getDocsLocales();
+  return locales.some((locale) => locale.code === value) ? value : null;
+};
+
+/** og:locale 표기. 모르는 언어는 코드 그대로 둔다. */
+const OG_LOCALE: Record<string, string> = { ko: "ko_KR", en: "en_US" };
 
 /**
  * 문서 화면 공통 메타데이터. canonical 은 정규 주소(slug-id), 같은 문서가 있는 다른 언어는 hreflang 으로 잇는다.
@@ -36,7 +45,7 @@ export const buildDocsMetadata = ({
     openGraph: {
       type: "website",
       siteName: messages.siteName,
-      locale: locale === "ko" ? "ko_KR" : "en_US",
+      locale: OG_LOCALE[locale] ?? locale,
       title: title ? `${title} | ${messages.siteName}` : messages.siteName,
       description: desc,
       url: path,
@@ -45,8 +54,9 @@ export const buildDocsMetadata = ({
 };
 
 /** 모든 언어 주소(홈처럼 언어마다 반드시 있는 화면). */
-export const allLocaleAlternates = (toPath: (locale: DocsLocale) => string) =>
-  Object.fromEntries(DOCS_LOCALES.map((locale) => [locale, toPath(locale)])) as Record<
-    DocsLocale,
-    string
-  >;
+export const allLocaleAlternates = async (
+  toPath: (locale: DocsLocale) => string,
+): Promise<Record<DocsLocale, string>> => {
+  const { locales } = await getDocsLocales();
+  return Object.fromEntries(locales.map(({ code }) => [code, toPath(code)]));
+};

@@ -8,11 +8,13 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { DocsLocale, DocsTreeNode } from "@/api/docs/types";
+import type { DocsLocale, DocsLocaleInfo, DocsTreeNode } from "@/api/docs/types";
 import type { DocsMessages } from "@/i18n/locales/docs";
 
 interface DocsContextValue {
   locale: DocsLocale;
+  /** 서버가 정한 지원 언어(메뉴 순서). */
+  locales: DocsLocaleInfo[];
   messages: DocsMessages;
   tree: DocsTreeNode[];
   /** 지금 보는 문서가 번역돼 있는 언어. null 이면 언어와 무관한 화면(홈·검색)이다. */
@@ -25,11 +27,13 @@ const DocsContext = createContext<DocsContextValue | null>(null);
 /** 문서 레이아웃이 서버에서 받은 언어·문구·트리를 클라이언트 컴포넌트(헤더·사이드바)에 나눠 준다. */
 export const DocsProvider = ({
   locale,
+  locales,
   messages,
   tree,
   children,
 }: {
   locale: DocsLocale;
+  locales: DocsLocaleInfo[];
   messages: DocsMessages;
   tree: DocsTreeNode[];
   children: ReactNode;
@@ -42,8 +46,8 @@ export const DocsProvider = ({
   }, [locale]);
 
   const value = useMemo(
-    () => ({ locale, messages, tree, availableLocales, setAvailableLocales }),
-    [locale, messages, tree, availableLocales],
+    () => ({ locale, locales, messages, tree, availableLocales, setAvailableLocales }),
+    [locale, locales, messages, tree, availableLocales],
   );
 
   return <DocsContext.Provider value={value}>{children}</DocsContext.Provider>;
