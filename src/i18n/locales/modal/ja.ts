@@ -258,6 +258,8 @@ const ja: typeof ko = {
       verify: "成人認証する",
       adultTagLocked: "成人向けコンテンツに設定すると選択できるタグです。",
       adultTagsRemoved: "成人向けコンテンツ設定をオフにしたため、成人向けハッシュタグを外しました。",
+      releaseNotice: "成人向け分類を解除すると、管理者が承認するまで一般の一覧には表示されません。",
+      releaseToast: "成人向け分類を解除しました。承認されるまで一覧には表示されません。",
     },
     studio: {
       verify: "成人認証する",

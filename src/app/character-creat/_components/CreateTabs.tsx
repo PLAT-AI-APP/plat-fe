@@ -35,6 +35,8 @@ const TAB_WIDTH_CLASS_BY_ID: Record<TabId, string> = {
 interface CreateTabsProps {
   /** 수정 화면에는 권리 책임 동의 항목이 없다. 처음 만들 때 한 번만 받는다. */
   isEditMode: boolean;
+  /** 저장된 세계관이 성인이었는지. 성인 분류를 풀 때 검수 대기 안내를 띄우는 기준이다. */
+  wasAdult?: boolean;
   currentTabId: TabId;
   setCurrentTabId: (id: TabId) => void;
   activeScenarioIndex: number;
@@ -48,6 +50,7 @@ interface CreateTabsProps {
 
 const CreateTabs = ({
   isEditMode,
+  wasAdult = false,
   currentTabId,
   setCurrentTabId,
   activeScenarioIndex,
@@ -77,7 +80,7 @@ const CreateTabs = ({
           />
         );
       case "settings":
-        return <Setting isEditMode={isEditMode} />;
+        return <Setting isEditMode={isEditMode} wasAdult={wasAdult} />;
       default:
         return null;
     }

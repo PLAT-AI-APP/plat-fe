@@ -46,6 +46,14 @@ export interface ChatLeaveDialogProps {
   onConfirm: () => void;
 }
 
+export interface AdultReleaseConfirmDialogProps {
+  onClose: () => void;
+  /** 해제하고 저장하기로 했을 때. */
+  onConfirm: () => void;
+  /** 취소하거나 창을 닫았을 때. 저장을 이어 가지 않게 호출부가 기다리는 약속을 풀어 준다. */
+  onCancel?: () => void;
+}
+
 export interface ChatDeleteDialogProps {
   onClose: () => void;
   onConfirm: () => void;
@@ -154,6 +162,7 @@ type DialogWithoutManagerClose<T extends { onClose: () => void }> = Omit<
 
 export type DialogTypeMap = {
   AGREEMENT_RESULT: DialogWithoutManagerClose<AgreementResultDialogProps>;
+  ADULT_RELEASE_CONFIRM: DialogWithoutManagerClose<AdultReleaseConfirmDialogProps>;
   CHAT_DELETE: DialogWithoutManagerClose<ChatDeleteDialogProps>;
   CHAT_LEAVE: DialogWithoutManagerClose<ChatLeaveDialogProps>;
   CHAT_RESTART: DialogWithoutManagerClose<ChatRestartDialogProps>;

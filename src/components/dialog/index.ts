@@ -1,4 +1,5 @@
 export { default } from "./Dialog";
+export { default as AdultReleaseConfirmDialog } from "./AdultReleaseConfirmDialog";
 export { default as ChatDeleteDialog } from "./ChatDeleteDialog";
 export { default as ChatLeaveDialog } from "./ChatLeaveDialog";
 export { default as ChatRestartDialog } from "./ChatRestartDialog";
