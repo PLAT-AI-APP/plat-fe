@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowRight, Close, LogoWordmark, Search } from "@/icons";
+import { Close, LogoWordmark, Search } from "@/icons";
 import { cn } from "@/lib/utils";
 import DocsLanguageMenu from "./DocsLanguageMenu";
 import { MenuIcon } from "./DocsIcons";
@@ -14,28 +14,11 @@ import DocsTree from "./DocsTree";
 import { docsPath, parseDocsPathname } from "./docsPath";
 
 /**
- * 문서 상단 헤더. 왼쪽 로고+서비스명(문서 홈), 데스크톱은 오른쪽에 검색창·언어 선택,
+ * 문서 상단 헤더. 왼쪽 로고 | 서비스명, 데스크톱은 오른쪽에 검색창·언어 선택,
  * 모바일은 검색 아이콘(헤더 아래로 검색창을 펼침)과 햄버거(트리 드로어)만 둔다.
  * 라이트 · 다크 전환은 화면 크기와 상관없이 맨 오른쪽(모바일은 햄버거 앞)에 둔다.
- * 앱에서 넘어온 사용자가 돌아갈 수 있게 PLAT 바로가기를 둔다(데스크톱은 헤더, 모바일은 드로어 아래).
+ * 로고는 PLAT 메인으로, 옆의 "가이드" 는 문서 홈으로 간다.
  */
-const BackToAppLink = ({ className }: { className?: string }) => {
-  const { messages } = useDocs();
-
-  return (
-    <Link
-      href="/"
-      className={cn(
-        "flex h-10 items-center gap-1 rounded-lg px-2.5 body-5 text-font-2 hover:bg-btn-hover hover:text-font-1",
-        className,
-      )}
-    >
-      {messages.backToApp}
-      <ArrowRight size={16} />
-    </Link>
-  );
-};
-
 const DocsHeader = () => {
   const { locale, messages } = useDocs();
   const pathname = usePathname();
@@ -72,22 +55,22 @@ const DocsHeader = () => {
     <>
       <header className="sticky top-0 z-20 border-b border-main bg-dark">
         <div className="mx-auto flex h-[var(--docs-header-height)] w-full max-w-[1440px] items-center gap-4 px-4 lg:px-6">
-          <Link
-            href={docsPath.home(locale)}
-            className="flex shrink-0 items-center gap-2.5"
-            aria-label={messages.siteName}
-          >
-            <LogoWordmark className="h-5.5 w-auto" aria-hidden="true" />
-            <span className="title-3 border-l border-main pl-2.5 text-font-1">
+          <div className="flex shrink-0 items-center gap-2.5">
+            <Link href="/" aria-label={messages.backToApp}>
+              <LogoWordmark className="h-5.5 w-auto" aria-hidden="true" />
+            </Link>
+            <Link
+              href={docsPath.home(locale)}
+              className="title-3 border-l border-main pl-2.5 text-font-1"
+            >
               {messages.serviceLabel}
-            </span>
-          </Link>
+            </Link>
+          </div>
 
           <div className="ml-auto flex items-center gap-1 md:gap-2">
             <div className="hidden items-center gap-2 md:flex">
               {!hasPageSearch && <DocsSearchBox className="w-72" />}
               <DocsLanguageMenu />
-              <BackToAppLink />
             </div>
             <button
               type="button"
@@ -162,9 +145,6 @@ const DocsHeader = () => {
           </div>
           <div className="border-t border-main py-3">
             <DocsLanguageMenu variant="list" onNavigate={() => setIsDrawerOpen(false)} />
-          </div>
-          <div className="border-t border-main p-3">
-            <BackToAppLink className="w-full justify-between px-3" />
           </div>
         </div>
       </div>
