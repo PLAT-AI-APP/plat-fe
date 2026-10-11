@@ -119,6 +119,11 @@ export const characterCreateSchema = z.object({
   allowComments: z.boolean(),
   /** 성인 세계관. 성인인증이 유효한 제작자만 켤 수 있고, 성인 해시태그는 켰을 때만 붙일 수 있다. */
   adult: z.boolean().optional(),
+  /**
+   * 권리 책임 동의(새로 만들 때만). 업로드 콘텐츠가 남의 권리를 침해하지 않으며 책임은 본인에게 있다는 동의다.
+   * 수정 화면에는 없어 스키마로 막지 않고, 등록 버튼을 잠가 막는다. 임시저장에는 싣지 않는다.
+   */
+  rightsAgreed: z.boolean().optional(),
   characterDescription: z
     .string()
     .min(1, FIELD_ERROR_MESSAGES.characterDescriptionRequired)

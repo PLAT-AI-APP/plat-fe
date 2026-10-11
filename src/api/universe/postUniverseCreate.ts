@@ -53,6 +53,11 @@ export interface UniverseCreateRequest {
   character: UniverseCreateCharacter;
   profileImageFileId: string;
   assets?: UniverseCreateAsset[];
+  /**
+   * 권리 책임 동의. 반드시 true — false·누락이면 400 INVALID_INPUT(fields.rightsAgreed).
+   * 동의 시각은 서버가 세계관에 기록한다.
+   */
+  rightsAgreed: true;
   /** 이 초안에서 세계관을 만든 경우 삭제할 본인 소유 UNIVERSE 임시 저장 ID. 일반 생성은 생략합니다. */
   draftId?: string;
 }

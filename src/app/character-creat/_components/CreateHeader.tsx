@@ -4,7 +4,7 @@ import React, { useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useIsMutating } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
-import { FieldErrors, FieldPath, useFormContext } from "react-hook-form";
+import { FieldErrors, FieldPath, useFormContext, useWatch } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import ActiveButton from "@/components/ActiveButton";
 import ArrowLineLeft from "@/icons/ArrowLineLeft";
@@ -254,13 +254,17 @@ const CreateHeader = ({
   const translateText = useTranslateText();
   const router = useRouter();
   const locale = useLocaleStore((state) => state.locale);
-  const { getValues, handleSubmit, setFocus } =
+  const { getValues, handleSubmit, setFocus, control } =
     useFormContext<CharacterCreateFormValues>();
   const { mutateAsync: createUniverse, isPending: isCreatePending } =
     useUniverseCreateMutation();
   const { mutateAsync: updateUniverse, isPending: isUpdatePending } =
     useUniverseUpdateMutation();
   const isEditMode = Boolean(universeId);
+  // 새로 만들 때는 권리 책임에 동의해야 등록할 수 있다(설정 탭 마지막 항목). 수정에는 없다.
+  const rightsAgreed =
+    useWatch({ control, name: "rightsAgreed" }) ?? false;
+  const canSubmit = isEditMode || rightsAgreed;
   const isMutationPending = isCreatePending || isUpdatePending;
   // 이미지는 고르는 즉시 미리보기에 뜨고 업로드는 뒤에서 이어진다. 끝나야 fileId 가 채워지므로
   // 그동안은 등록·임시저장을 대기 상태로 둔다(누르면 이미지 없이 저장되거나 검증에 걸렸다).
@@ -378,6 +382,11 @@ const CreateHeader = ({
         return;
       }
 
+      if (!currentFormData.rightsAgreed) {
+        showAppToast("warning", t("rightsRequired"));
+        return;
+      }
+
       if (
         !currentFormData.representativeImageId ||
         !currentFormData.characterProfileImageId
@@ -409,6 +418,7 @@ const CreateHeader = ({
           description: currentFormData.characterDescription,
           detailSetting: currentFormData.characterDetailSetting,
         },
+        rightsAgreed: true,
         // 이 초안에서 만든 경우에만 실어 보냅니다 — 성공하면 백엔드가 해당 초안을 자동 삭제합니다.
         ...(draftId ? { draftId } : {}),
       };
@@ -427,7 +437,7 @@ const CreateHeader = ({
   };
 
   const handleRegisterClick = async () => {
-    if (isSubmitLockedRef.current || isUploadingImages) return;
+    if (isSubmitLockedRef.current || isUploadingImages || !canSubmit) return;
 
     isSubmitLockedRef.current = true;
     setIsSubmitting(true);
@@ -488,7 +498,8 @@ const CreateHeader = ({
         )}
 
         <ActiveButton
-          isActive
+          isActive={canSubmit}
+          disabled={!canSubmit}
           text={
             // 이미지 업로드를 기다리는 동안은 스피너만 돌고 문구는 그대로 둔다("등록 중"이 아니다).
             isEditMode

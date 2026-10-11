@@ -55,6 +55,7 @@ const createCharacterCreateDefaultValues = (
   isPublic: true,
   allowComments: true,
   adult: false,
+  rightsAgreed: false,
   characterDescription: "",
   tendency: "",
   category: [],
@@ -421,6 +422,7 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
           ) : (
             <div className="flex min-h-0 min-w-0 flex-1 items-start justify-center gap-4 lg:grid lg:grid-cols-[491fr_693fr]">
               <CreateTabs
+                isEditMode={isEditMode}
                 currentTabId={currentTabId}
                 setCurrentTabId={setCurrentTabId}
                 activeScenarioIndex={activeScenarioIndex}
