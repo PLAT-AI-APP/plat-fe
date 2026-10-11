@@ -244,16 +244,6 @@ const ja = {
     logout: "ログアウト",
     profileImageAlt: "プロフィール画像",
   },
-  category: {
-    romance: "ロマンス",
-    fantasySf: "ファンタジー/SF",
-    drama: "ドラマ",
-    martialArts: "武侠",
-    gl: "GL",
-    bl: "BL",
-    horror: "ホラー",
-    mystery: "ミステリー",
-  },
   report: {
     targetTypes: {
       COMMENT: "コメント",

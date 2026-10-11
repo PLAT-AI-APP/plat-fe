@@ -14,7 +14,6 @@ import { showAppToast } from "@/lib/toast";
 import { useLocaleStore } from "@/store/useLocaleStore";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
 import {
-  UniverseCreateCategory,
   UniverseCreateLanguage,
   UniverseCreateRequest,
   UniverseCreateTendency,
@@ -60,17 +59,6 @@ const UNIVERSE_TENDENCIES: UniverseCreateTendency[] = [
   "FEMALE_ORIENTED",
 ];
 
-const UNIVERSE_CATEGORIES: UniverseCreateCategory[] = [
-  "ROMANCE",
-  "FANTASY",
-  "DRAMA",
-  "MARTIAL_ARTS",
-  "GL",
-  "BL",
-  "HORROR",
-  "MYSTERY",
-];
-
 const LANGUAGE_BY_LOCALE: Record<string, UniverseCreateLanguage> = {
   ko: "KO",
   en: "EN",
@@ -88,16 +76,6 @@ const toUniverseTendency = (tendency: string): UniverseCreateTendency => {
   return "ALL";
 };
 
-const toUniverseCategory = (categories: string[]): UniverseCreateCategory => {
-  const category = categories[0];
-
-  if (UNIVERSE_CATEGORIES.includes(category as UniverseCreateCategory)) {
-    return category as UniverseCreateCategory;
-  }
-
-  return "ROMANCE";
-};
-
 const isApiErrorLike = (error: unknown) =>
   typeof error === "object" &&
   error !== null &&
@@ -107,7 +85,7 @@ const isApiErrorLike = (error: unknown) =>
 /**
  * 탭 순서(profile → details → assets → scenario → settings)와 각 탭 안의
  * 입력 순서를 기준으로 가장 먼저 걸리는 에러를 찾습니다.
- * 대표/프로필 이미지, 성향/카테고리, 시나리오 대화 콘텐츠는 실제 등록된
+ * 대표/프로필 이미지, 성향, 시나리오 대화 콘텐츠는 실제 등록된
  * input이 아니라(버튼 선택이거나, 시나리오 프리뷰에서 편집모드로 들어가야
  * 나타나는 textarea) 포커스는 불가능해 탭 이동 + 토스트로만 안내합니다.
  */
@@ -230,9 +208,6 @@ const findFirstValidationTarget = (
   if (errors.tendency) {
     return { tabId: "settings", message: errors.tendency.message ?? "" };
   }
-  if (errors.category) {
-    return { tabId: "settings", message: errors.category.message ?? "" };
-  }
   if (errors.tagIds) {
     return { tabId: "settings", message: errors.tagIds.message ?? "" };
   }
@@ -349,7 +324,6 @@ const CreateHeader = ({
           title: currentFormData.title,
           description,
           tagIds: currentFormData.tagIds.map((tag) => tag.id),
-          category: toUniverseCategory(currentFormData.category),
           detailSetting: currentFormData.profileSituationDescription,
           introduce: currentFormData.characterIntroduce,
           // 이미지를 새로 업로드해 fileId를 발급받은 경우에만 전달합니다. 없으면 기존 이미지를 유지합니다.
@@ -406,7 +380,6 @@ const CreateHeader = ({
         language: LANGUAGE_BY_LOCALE[locale] ?? "KO",
         description,
         tagIds: currentFormData.tagIds.map((tag) => tag.id),
-        category: toUniverseCategory(currentFormData.category),
         detailSetting: currentFormData.profileSituationDescription,
         introduce: currentFormData.characterIntroduce,
         profileImageFileId: String(currentFormData.representativeImageId),

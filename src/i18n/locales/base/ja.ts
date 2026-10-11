@@ -340,7 +340,6 @@ const ja: typeof ko = {
       profileSituationRequired: "状況説明を入力してください",
       profileSituationMaxLength: "プロローグ紹介は最大2000文字まで入力できます",
       tendencyRequired: "傾向を選択してください",
-      categoryRequired: "カテゴリを選択してください",
       tagRequired: "タグを1つ以上選択してください",
       tagMaxCount: "タグは最大5個まで登録できます",
     },

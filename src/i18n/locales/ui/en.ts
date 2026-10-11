@@ -250,16 +250,6 @@ const en = {
     logout: "Log out",
     profileImageAlt: "Profile image",
   },
-  category: {
-    romance: "Romance",
-    fantasySf: "Fantasy/SF",
-    drama: "Drama",
-    martialArts: "Martial arts",
-    gl: "GL",
-    bl: "BL",
-    horror: "Horror",
-    mystery: "Mystery",
-  },
   report: {
     targetTypes: {
       COMMENT: "Comment",

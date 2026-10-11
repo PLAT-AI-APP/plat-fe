@@ -58,7 +58,6 @@ const createCharacterCreateDefaultValues = (
   rightsAgreed: false,
   characterDescription: "",
   tendency: "",
-  category: [],
   tagIds: [],
 });
 
@@ -109,7 +108,6 @@ const createCharacterEditDefaultValues = (
   adult: universe.adult ?? false,
   characterDescription: universe.description,
   tendency: universe.tendency,
-  category: [universe.category],
   tagIds: universe.hashtags.map((hashtag) => ({
     id: hashtag.hashtagId,
     label: hashtag.label,

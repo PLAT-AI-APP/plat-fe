@@ -130,7 +130,6 @@ export const characterCreateSchema = z.object({
     .max(1000, FIELD_ERROR_MESSAGES.characterDescriptionMaxLength),
 
   tendency: z.string().min(1, FIELD_ERROR_MESSAGES.tendencyRequired),
-  category: z.array(z.string()).min(1, FIELD_ERROR_MESSAGES.categoryRequired),
   tagIds: z
     .array(
       z.object({

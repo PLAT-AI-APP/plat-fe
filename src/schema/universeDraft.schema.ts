@@ -56,7 +56,6 @@ export const universeDraftV1Schema = z.object({
   allowComments: z.boolean().catch(true),
   adult: z.boolean().catch(false),
   tendency: z.string().catch(""),
-  category: z.array(z.string()).catch([]),
   tagIds: z.array(draftTagSchema).catch([]),
   representativeImageFileId: fileIdSchema,
   characterProfileImageFileId: fileIdSchema,
@@ -117,7 +116,6 @@ export const buildUniverseDraft = (
   allowComments: values.allowComments,
   adult: values.adult ?? false,
   tendency: values.tendency,
-  category: values.category,
   tagIds: values.tagIds,
   representativeImageFileId: toFileId(values.representativeImageId),
   characterProfileImageFileId: toFileId(values.characterProfileImageId),
@@ -171,7 +169,6 @@ export const applyUniverseDraft = (
   allowComments: draft.allowComments ?? true,
   adult: draft.adult ?? false,
   tendency: draft.tendency ?? "",
-  category: draft.category ?? [],
   tagIds: draft.tagIds ?? [],
   representativeImage: draft.representativeImageFileId
     ? getResourceImageUrl(draft.representativeImageFileId, "UNIVERSE_PROFILE")

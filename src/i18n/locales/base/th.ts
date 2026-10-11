@@ -343,7 +343,6 @@ const th: typeof ko = {
       profileSituationRequired: "กรุณากรอกคำอธิบายสถานการณ์",
       profileSituationMaxLength: "แนะนำบทนำสามารถกรอกได้สูงสุด 2000 ตัวอักษร",
       tendencyRequired: "กรุณาเลือกแนวโน้ม",
-      categoryRequired: "กรุณาเลือกหมวดหมู่",
       tagRequired: "กรุณาเลือกแท็กอย่างน้อย 1 รายการ",
       tagMaxCount: "สามารถลงทะเบียนแท็กได้สูงสุด 5 รายการ",
     },

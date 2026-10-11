@@ -78,10 +78,7 @@ const en: typeof ko = {
         "Write detailed information such as the character's personality, narrative, or key events.",
       tendencyLabel: "Audience",
       tendencyHelp: "Recommended to users with similar preferences",
-      categoryLabel: "Category",
       noCategory: "[No selection]",
-      categoryHelp:
-        "Choose a category that fits the story and background of the work",
       tagPlaceholder: "Select tags",
       tagFullPlaceholder: "All tags are selected",
       tagLabel: "Tags ({count}/5)",
