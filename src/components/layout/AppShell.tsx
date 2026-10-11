@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import LazyLayerManagers from "@/components/LazyLayerManagers";
+import { isDocsPathname } from "@/components/docs/docsPath";
 import ProtectedRouteGate from "@/components/auth/ProtectedRouteGate";
 import ModalNavigationGuard from "@/components/modal/ModalNavigationGuard";
 import DocumentTitle from "./DocumentTitle";
@@ -14,6 +15,9 @@ const HIDE_HEADER_PATHS = ["/chatting-room"];
 
 const AppShell = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname();
+  // 가이드 문서(/docs)는 앱 셸 없이 문서 전용 레이아웃(app/docs/[locale]/layout)만 그린다.
+  if (isDocsPathname(pathname)) return <>{children}</>;
+
   const isSidebarHidden = HIDE_SIDEBAR_PATHS.some((path) =>
     pathname.startsWith(path),
   );

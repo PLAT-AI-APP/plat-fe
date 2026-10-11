@@ -1,0 +1,35 @@
+import type { DocsMessages } from ".";
+
+const en: DocsMessages = {
+  siteName: "PLAT Guide",
+  serviceLabel: "Guide",
+  metaDescription: "Learn how to use PLAT and find answers to common questions.",
+  searchPlaceholder: "Search articles",
+  searchOpen: "Open search",
+  searchClose: "Close search",
+  searchEmpty: "No results found.",
+  searchLoading: "Searching…",
+  searchError: "Search failed. Please try again later.",
+  searchSeeAll: "See all results",
+  searchTitle: "Search",
+  searchResultHeading: "Results for '{query}'",
+  searchResultCount: "{count} articles",
+  searchPrompt: "Type what you are looking for.",
+  allCategories: "All categories",
+  categoryLabel: "Category",
+  articleCount: "{count} articles",
+  emptyHome: "No articles have been published yet.",
+  emptyCategory: "There are no articles in this category yet.",
+  tableOfContents: "On this page",
+  updatedAt: "Updated {date}",
+  language: "Language",
+  menuOpen: "Open menu",
+  menuClose: "Close menu",
+  expand: "Expand",
+  collapse: "Collapse",
+  poweredBy: "Powered by PLAT",
+  backToApp: "Go to PLAT",
+  languageNames: { ko: "한국어", en: "English" },
+};
+
+export default en;
