@@ -226,7 +226,7 @@ export const searchHandlers = [
     });
   }),
 
-  // 카테고리(태그) 검색. 고른 태그를 전부 가진 세계관만 남는다.
+  // 카테고리(태그) 검색. 고른 태그 중 하나라도 가진 세계관이 맞은 태그 수 → 정렬 기준 순으로 남는다.
   http.get(endpoint("/search/category"), ({ request }) => {
     const url = new URL(request.url);
     const tagIds = (url.searchParams.get("tagIds") ?? "").split(",").filter(Boolean);
@@ -250,13 +250,17 @@ export const searchHandlers = [
     let filtered = SEED_UNIVERSES.filter((universe, index) =>
       tendency === "ALL" ? true : index % 2 === 0,
     );
+    const matched = (universe: SeedUniverse) =>
+      tagIds.filter((tagId) => universe.tagIds.includes(tagId)).length;
     if (tagIds.length > 0) {
-      filtered = filtered.filter((universe) => tagIds.every((tagId) => universe.tagIds.includes(tagId)));
+      filtered = filtered.filter((universe) => matched(universe) > 0);
     }
-    const sorted =
+    const bySort =
       sort === "LATEST"
         ? [...filtered].reverse()
         : [...filtered].sort((a, b) => b.chatCount - a.chatCount);
+    // 정렬은 안정적이라 같은 매칭 수 안에서는 위에서 정한 순서가 그대로 남는다.
+    const sorted = tagIds.length > 0 ? bySort.sort((a, b) => matched(b) - matched(a)) : bySort;
 
     const authenticated = isAuthenticated(request);
     const content: CategoryCardItem[] = sorted.map((universe) =>
