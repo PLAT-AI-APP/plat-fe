@@ -51,7 +51,6 @@ const CharacterCard = ({
   adult = false,
 }: CharacterCardProps) => {
   const t = useTranslations("characterCard");
-  const tCommon = useTranslations("common");
   // 상세로 가는 카드면 포인터를 올릴 때 상세를 미리 받는다(누를 때 스켈레톤 없이 바로 뜬다).
   const prefetchUniverseDetail = usePrefetchUniverseDetail();
   const detailUniverseId = href?.match(/^\/characters\/([^/?#]+)/)?.[1];
@@ -328,8 +327,12 @@ const CharacterCard = ({
         )}
 
         <div className="inline-flex items-start justify-start gap-0.5">
-          <span className={cn("line-clamp-1", config.creatorName)}>
-            {isAdopted ? tCommon("operatedByPlat") : `@ ${creatorName}`}
+          {/* 인수 캐릭터는 제작자 이름을 적지 않는다. 자리는 남겨 다른 카드와 높이를 맞춘다. */}
+          <span
+            aria-hidden={isAdopted || undefined}
+            className={cn("line-clamp-1", config.creatorName, isAdopted && "invisible")}
+          >
+            {isAdopted ? "@" : `@ ${creatorName}`}
           </span>
         </div>
 

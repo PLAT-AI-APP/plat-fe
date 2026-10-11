@@ -11,8 +11,7 @@ import {
 import { useUserProfileQuery } from "@/api/user/getUserProfile";
 import ActiveButton from "@/components/ActiveButton";
 import ResourceImage from "@/components/ResourceImage";
-import { ChatFill, Gear, Heart, HeartFill } from "@/icons";
-import Logo from "@/icons/Logo";
+import { ChatFill, Gear, Heart, HeartFill, Info } from "@/icons";
 import { toImageVariantUrl } from "@/lib/file";
 import { cn, formatStatCount } from "@/lib/utils";
 import { useLocaleStore } from "@/store/useLocaleStore";
@@ -38,10 +37,9 @@ const SidebarSummary = ({
   onStartChat,
 }: SidebarSummaryProps) => {
   const t = useTranslations("characterDetail");
-  const tCommon = useTranslations("common");
   const locale = useLocaleStore((state) => state.locale);
   const router = useRouter();
-  // 공식 계정이 운영하는 캐릭터는 제작자 대신 "운영 PLAT" 으로 적고, 프로필·팔로우를 두지 않는다.
+  // 탈퇴한 제작자가 남겨 PLAT 이 운영하는 캐릭터는 제작자 프로필·팔로우 대신 안내 문구만 둔다.
   const isAdopted = character.creator.adopted;
   const creatorId = isAdopted ? null : character.creator.id;
   const canUseCreatorActions = Boolean(creatorId);
@@ -87,15 +85,10 @@ const SidebarSummary = ({
   // 프로필 이동 가능 여부(canUseCreatorActions)에 따라 링크로도, 그냥 div로도
   // 감싸야 해서 내용만 따로 빼둔다.
   const creatorInfoContent = isAdopted ? (
-    <>
-      <span aria-hidden="true" className="flex size-12 shrink-0 overflow-hidden rounded-full">
-        <Logo className="size-12" />
-      </span>
-      <div className="flex min-w-0 flex-col gap-1">
-        <p className="title-4 truncate text-font-1">{tCommon("operatedByPlat")}</p>
-        <p className="body-6 text-font-2">{t("operatedByPlatDescription")}</p>
-      </div>
-    </>
+    <p className="body-5 flex items-start gap-2 break-keep text-font-2">
+      <Info className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
+      {t("adoptedNotice")}
+    </p>
   ) : (
     <>
       {isCreatorProfileLoading ? (

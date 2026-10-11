@@ -130,7 +130,7 @@ const th = {
       commentsCount: "({count})",
     },
     officialCharacter: "ตัวละครทางการของ PLAT",
-    operatedByPlatDescription: "ตัวละครที่ PLAT ดูแลต่อ",
+    adoptedNotice: "ผู้สร้างออกไปแล้ว ตอนนี้ PLAT ดูแลตัวละครนี้ต่อ",
     chatStart: "เริ่มแชท",
     like: "เพิ่มในรายการโปรด",
     unlike: "ลบออกจากรายการโปรด",

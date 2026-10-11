@@ -127,7 +127,7 @@ const zh = {
       commentsCount: "({count})",
     },
     officialCharacter: "PLAT 官方角色",
-    operatedByPlatDescription: "由 PLAT 继续运营的角色",
+    adoptedNotice: "创作者离开后，由 PLAT 接手运营的角色",
     chatStart: "开始聊天",
     like: "加入收藏",
     unlike: "取消收藏",
