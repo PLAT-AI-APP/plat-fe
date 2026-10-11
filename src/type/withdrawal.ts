@@ -94,3 +94,13 @@ export interface WithdrawalResult {
   /** 동의서 사본을 이메일로 보내도록 접수했는지. */
   copyMailRequested: boolean;
 }
+
+/** GET /users/me/withdrawal/checks — 탈퇴 전 확인 */
+export interface WithdrawalChecks {
+  /** 처리 중인 환불이 있다. 끝나야 탈퇴할 수 있다(서버가 409 로 막는다). */
+  refundPending: boolean;
+  /** 발송을 기다리는 상품권 교환이 있다. 발송돼야 탈퇴할 수 있다. */
+  redemptionPending: boolean;
+  /** 답변을 기다리는 문의 수. 탈퇴는 막지 않고, 탈퇴하면 답변을 볼 수 없다고 알린다. */
+  unansweredInquiryCount: number;
+}

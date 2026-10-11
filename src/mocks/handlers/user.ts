@@ -298,6 +298,15 @@ export const userHandlers = [
     });
   }),
 
+  /** 탈퇴 전 확인. 답변 대기 문의 하나만 있다. */
+  http.get(endpoint("/users/me/withdrawal/checks"), () =>
+    HttpResponse.json({
+      refundPending: false,
+      redemptionPending: false,
+      unansweredInquiryCount: 1,
+    }),
+  ),
+
   /** 탈퇴 전 캐릭터 처리 미리보기. 남기기 후보 하나와 삭제될 캐릭터 하나를 돌려준다. */
   http.get(endpoint("/users/me/withdrawal/preview"), () =>
     HttpResponse.json({

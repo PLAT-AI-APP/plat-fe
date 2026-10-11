@@ -107,29 +107,52 @@ const en = {
   },
   withdrawalPage: {
     blockers: {
+      pending: "You can leave once refunds and gift card exchanges are done",
+      checking: "Please wait until the check is done",
+      balance: "Please confirm the notes and earning points you'll lose",
       consent: "Please agree to the Character License",
       adult: "Please confirm you are 19 or older",
-      confirm: "Please check that you've read the notice above",
     },
     title: "Delete account",
     defaultMember: "Member",
     heading: "{nickname}, we'll miss you",
     description:
       "We're truly sorry to see you go. Before leaving PLAT, please make sure to review the information below.",
+    checks: {
+      title: "Before you leave",
+      checking: "Checking {item}…",
+      failed: "Couldn't check {item}",
+      retry: "Check again",
+      items: {
+        refund: "refunds",
+        redemption: "gift card exchanges",
+        inquiry: "inquiries",
+        credits: "notes",
+        points: "earning points",
+      },
+      refundOk: "No refunds in progress",
+      refundPending: "You can leave once your refund in progress is done",
+      redemptionOk: "No gift card exchanges waiting to be sent",
+      redemptionPending: "You can leave once your gift card is sent",
+      inquiryOk: "No inquiries waiting for an answer",
+      inquiryPending: "{count, plural, one {# inquiry is} other {# inquiries are}} waiting for an answer",
+      inquiryView: "View inquiries",
+      creditsNone: "No notes left",
+      creditsLost: "Your remaining {count} notes will be lost",
+      pointsNone: "No earning points left",
+      pointsLost: "Your remaining {points}P in earnings will be lost",
+      acknowledge: "Got it",
+    },
     notices: {
       dataDeleted:
         "All data and personal information will be deleted and cannot be recovered.",
       recordsRetained:
         "Only payment and refund records are kept for 5 years as required by law. Everything else is deleted.",
-      creditsRemoved:
-        "Unused notes are not refunded and will be removed together.",
       rejoinRestricted:
         "You cannot sign up again with the same email address for 7 days.",
       creationsDeleted: "Characters you don't keep will be deleted after you leave.",
       chatsReadOnly: "Other users' existing chat rooms become read-only.",
     },
-    remainingBalance:
-      "Your remaining {credits} notes and {points}P in earnings can't be recovered after you leave. If a refund is in progress or a gift card exchange is still pending, you can leave once it's done.",
     legalNotice:
       "Payment and refund records are not deleted immediately because applicable commerce and tax laws require them to be kept for 5 years. Note and earnings records are all deleted 3 days after you leave.",
     agreement: "I have checked everything written above.",
@@ -180,13 +203,13 @@ const en = {
       },
       summary: {
         copyright: "You keep the copyright; it's only used to run chats on PLAT.",
-        anonymous: "It stays without your name, as an 'Operated by PLAT' character.",
+        anonymous: "It stays without your name, as a character PLAT operates.",
         review: "Only characters that pass operator review stay; the rest are deleted.",
         irreversible: "Kept characters can't be returned to you.",
       },
       viewConsent: "View full consent form",
       hideConsent: "Hide consent form",
-      consentAgree: "I agree to the Character License Consent (v{version}).",
+      consentAgree: "I agree to the Character License Consent.",
       adultAttest: "I am 19 or older.",
       consentTitle: "Character license",
       consentSubtitle: "A separate consent that applies only to the characters you keep.",

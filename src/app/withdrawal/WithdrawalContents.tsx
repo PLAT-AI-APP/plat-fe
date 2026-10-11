@@ -4,9 +4,9 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import ActiveButton from "@/components/ActiveButton";
-import { Coin } from "@/icons";
 import useToggle from "@/hooks/common/useToggle";
 import { cn } from "@/lib/utils";
+import { useWithdrawalChecksQuery } from "@/api/user/getWithdrawalChecks";
 import { useWithdrawalPreviewQuery } from "@/api/user/getWithdrawalPreview";
 import {
   WITHDRAWAL_PREVIEW_STALE_CODES,
@@ -22,6 +22,7 @@ import { SKIP_AUTH_ALERT_ONCE_KEY } from "@/constants/auth";
 import type { WithdrawalChoice, WithdrawalResult } from "@/type/withdrawal";
 import CharacterHandoverSection from "./_components/CharacterHandoverSection";
 import CheckboxRow from "./_components/CheckboxRow";
+import WithdrawalChecklist from "./_components/WithdrawalChecklist";
 
 const WithdrawalContents = () => {
   const t = useTranslations();
@@ -34,19 +35,31 @@ const WithdrawalContents = () => {
   const openDialog = useDialogStore((state) => state.openDialog);
   const closeDialog = useDialogStore((state) => state.closeDialog);
   const { isOpen: isConfirmed, toggle: toggleConfirmed } = useToggle();
-  // 사라질 잔액을 숫자로 먼저 보여 준다. "크레딧이 지워진다"는 문장만으로는 얼마를 잃는지 알 수 없다.
-  const { data: wallet } = useWalletBalanceQuery();
-  const { data: earning } = useEarningSummaryQuery();
-  const remainingCredits = wallet?.balance ?? 0;
-  const remainingPoints = earning?.available ?? 0;
-  const hasRemaining = remainingCredits > 0 || remainingPoints > 0;
-
   const notices = [
     t("withdrawalPage.notices.dataDeleted"),
     t("withdrawalPage.notices.recordsRetained"),
-    t("withdrawalPage.notices.creditsRemoved"),
     t("withdrawalPage.notices.rejoinRestricted"),
   ];
+
+  // 탈퇴 전 확인. 환불·상품권 교환이 처리 중이면 서버가 탈퇴를 막고, 답변 대기 문의는 알리기만 한다.
+  // 사라질 노트·수익 포인트는 숫자로 보이고 직접 확인을 받는다. 못 받은 잔액은 0 으로 보고 막지 않는다.
+  const {
+    data: checks,
+    isError: isChecksError,
+    refetch: refetchChecks,
+  } = useWithdrawalChecksQuery();
+  const { data: wallet, isError: isWalletError } = useWalletBalanceQuery();
+  const { data: earning, isError: isEarningError } = useEarningSummaryQuery();
+  const credits = wallet ? wallet.balance : isWalletError ? 0 : undefined;
+  const points = earning ? earning.available : isEarningError ? 0 : undefined;
+  const [isCreditsAcknowledged, setIsCreditsAcknowledged] = useState(false);
+  const [isPointsAcknowledged, setIsPointsAcknowledged] = useState(false);
+  const isChecksBlocked = Boolean(checks?.refundPending || checks?.redemptionPending);
+  const isChecksReady = (Boolean(checks) || isChecksError) && credits !== undefined && points !== undefined;
+  const isBalanceAcknowledged =
+    (credits === 0 || isCreditsAcknowledged) && (points === 0 || isPointsAcknowledged);
+  // 남은 할 일은 꺼진 탈퇴 버튼을 눌렀을 때부터 알린다. 아무것도 안 했는데 안내부터 뜨면 재촉으로 읽힌다.
+  const [hasTriedSubmit, setHasTriedSubmit] = useState(false);
 
   // 만든 캐릭터마다 남기기·삭제를 고른다. 기본값은 두지 않는다(미리 고른 것으로 치면 안 된다).
   const {
@@ -89,20 +102,45 @@ const WithdrawalContents = () => {
     );
 
   const nickname = user?.nickname || t("withdrawalPage.defaultMember");
-  const nextStep =
-    !preview || candidates.length === 0
-      ? null
-      : undecidedCount > 0
-        ? t("withdrawalPage.characters.undecidedLeft", { count: undecidedCount })
-        : hasKeep && !isConsentAgreed
-          ? t("withdrawalPage.blockers.consent")
-          : needsAdult && !isAdultAttested
-            ? t("withdrawalPage.blockers.adult")
-            : !isConfirmed
-              ? t("withdrawalPage.blockers.confirm")
-              : null;
+  // 남은 할 일 하나와, 안내가 가리킬 자리. 위에서부터 순서대로 하나만 알린다.
+  // isError: 할 일이 남은 게 아니라 탈퇴 자체가 막힌 이유라 빨강으로 보인다.
+  const blocker: { message: string | null; targetId: string; isError?: boolean } | null = isChecksBlocked
+    ? { message: t("withdrawalPage.blockers.pending"), targetId: "withdrawal-checks", isError: true }
+    : !isChecksReady
+      ? { message: t("withdrawalPage.blockers.checking"), targetId: "withdrawal-checks" }
+      : !isBalanceAcknowledged
+        ? { message: t("withdrawalPage.blockers.balance"), targetId: "withdrawal-checks" }
+        : undecidedCount > 0
+          ? {
+              message: t("withdrawalPage.characters.undecidedLeft", { count: undecidedCount }),
+              targetId: "withdrawal-characters",
+            }
+          : hasKeep && !isConsentAgreed
+            ? { message: t("withdrawalPage.blockers.consent"), targetId: "handover-consent" }
+            : needsAdult && !isAdultAttested
+              ? { message: t("withdrawalPage.blockers.adult"), targetId: "handover-consent" }
+              : !isConfirmed
+                ? // 확인 체크는 버튼 바로 위라 문구 없이 그 자리로만 옮긴다.
+                  { message: null, targetId: "withdrawal-confirm" }
+                : null;
+  const nextStep = hasTriedSubmit ? (blocker?.message ?? null) : null;
   const canSubmit =
-    Boolean(preview) && isAllDecided && isKeepReady && isConfirmed && !isPending;
+    Boolean(preview) &&
+    isAllDecided &&
+    isKeepReady &&
+    isConfirmed &&
+    isChecksReady &&
+    !isChecksBlocked &&
+    isBalanceAcknowledged &&
+    !isPending;
+
+  const handleBlockedSubmit = () => {
+    if (!blocker) return;
+    setHasTriedSubmit(true);
+    const target = document.getElementById(blocker.targetId);
+    target?.scrollIntoView({ behavior: "smooth", block: "center" });
+    if (blocker.targetId === "withdrawal-confirm") target?.focus({ preventScroll: true });
+  };
 
   const handleDeleteConfirm = () => {
     if (isPending || !preview) return;
@@ -197,21 +235,17 @@ const WithdrawalContents = () => {
                 </ul>
               </div>
 
-              {/* 사라질 잔액은 숫자로 따로 보인다. 경고색은 아이콘에만 쓴다. */}
-              {hasRemaining && (
-                <p
-                  role="note"
-                  className="body-5 flex items-start gap-3 rounded-2xl border border-main bg-darkest px-4 py-3.5 text-font-1"
-                >
-                  <Coin size={18} className="mt-px shrink-0 text-warning" aria-hidden="true" />
-                  <span className="break-keep">
-                    {t("withdrawalPage.remainingBalance", {
-                      credits: remainingCredits.toLocaleString(),
-                      points: remainingPoints.toLocaleString(),
-                    })}
-                  </span>
-                </p>
-              )}
+              <WithdrawalChecklist
+                checks={checks}
+                checksFailed={isChecksError}
+                onRetry={refetchChecks}
+                credits={credits}
+                points={points}
+                creditsAcknowledged={isCreditsAcknowledged}
+                pointsAcknowledged={isPointsAcknowledged}
+                onAcknowledgeCredits={() => setIsCreditsAcknowledged(true)}
+                onAcknowledgePoints={() => setIsPointsAcknowledged(true)}
+              />
 
               <p className="body-8 break-keep px-1 text-font-disabled">
                 {t("withdrawalPage.legalNotice")}
@@ -236,6 +270,7 @@ const WithdrawalContents = () => {
           />
 
           <CheckboxRow
+            id="withdrawal-confirm"
             checked={isConfirmed}
             onToggle={toggleConfirmed}
             label={t("withdrawalPage.agreement")}
@@ -244,8 +279,17 @@ const WithdrawalContents = () => {
 
         {/* 캐릭터를 정해야 하는 탈퇴라면, 탈퇴 버튼이 왜 꺼져 있는지 남은 할 일을 하나씩 알린다. */}
         {nextStep && (
-          <p role="status" className="body-6 -mb-8 flex items-center justify-center gap-1.5 text-center text-font-2">
-            <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-brand" />
+          <p
+            role="status"
+            className={cn(
+              "body-6 -mb-8 flex items-center justify-center gap-1.5 text-center",
+              blocker?.isError ? "text-danger" : "text-font-2",
+            )}
+          >
+            <span
+              aria-hidden="true"
+              className={cn("size-1.5 shrink-0 rounded-full", blocker?.isError ? "bg-danger" : "bg-brand")}
+            />
             {nextStep}
           </p>
         )}
@@ -259,20 +303,26 @@ const WithdrawalContents = () => {
             {t("withdrawalPage.back")}
           </button>
 
-          <ActiveButton
-            type="button"
-            isActive={canSubmit}
-            text={
-              isPending
-                ? t("withdrawalPage.submitPending")
-                : t("withdrawalPage.submit")
-            }
-            onClick={openConfirmDialog}
-            className={cn(
-              "h-13 flex-1 rounded-xl",
-              !canSubmit && "text-font-disabled",
-            )}
-          />
+          {/* 꺼진 버튼은 눌리지 않으므로 감싼 칸이 누름을 받아 남은 할 일로 안내한다. */}
+          <div
+            className="flex flex-1"
+            onClick={!canSubmit && !isPending ? handleBlockedSubmit : undefined}
+          >
+            <ActiveButton
+              type="button"
+              isActive={canSubmit}
+              text={
+                isPending
+                  ? t("withdrawalPage.submitPending")
+                  : t("withdrawalPage.submit")
+              }
+              onClick={openConfirmDialog}
+              className={cn(
+                "h-13 flex-1 rounded-xl",
+                !canSubmit && "text-font-disabled",
+              )}
+            />
+          </div>
         </div>
       </div>
     </section>

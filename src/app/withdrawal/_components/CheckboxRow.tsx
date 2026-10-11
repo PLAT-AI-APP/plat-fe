@@ -10,6 +10,7 @@ interface CheckboxRowProps {
   onToggle: () => void;
   /** plain: 문장 한 줄. card: 눌러 고르는 칸(동의 항목처럼 하나씩 확인시킬 때). */
   variant?: "plain" | "card";
+  id?: string;
   className?: string;
 }
 
@@ -19,9 +20,11 @@ const CheckboxRow = ({
   label,
   onToggle,
   variant = "plain",
+  id,
   className,
 }: CheckboxRowProps) => (
   <button
+    id={id}
     type="button"
     role="checkbox"
     aria-checked={checked}

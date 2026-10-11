@@ -61,7 +61,7 @@ const CharacterHandoverSection = ({
 
   if (isPending) {
     return (
-      <div aria-hidden="true" className="flex w-full flex-col gap-3">
+      <div aria-hidden="true" className="mt-4 flex w-full flex-col gap-3">
         <div className="skeleton h-6 w-36 rounded-full" />
         <div className="skeleton h-64 w-full rounded-3xl" />
       </div>
@@ -69,7 +69,7 @@ const CharacterHandoverSection = ({
   }
 
   if (error || !preview) {
-    return <ErrorState error={error} onRetry={onRetry} variant="inline" className="w-full" />;
+    return <ErrorState error={error} onRetry={onRetry} variant="inline" className="mt-4 w-full" />;
   }
 
   const { candidates, deletions, consent } = preview;
@@ -82,8 +82,9 @@ const CharacterHandoverSection = ({
   const deletionsOpen = isDeletionsOpen ?? deletions.length <= DELETIONS_OPEN_LIMIT;
 
   return (
-    <section className="flex w-full flex-col gap-4">
-      <header className="flex flex-col gap-1.5">
+    // 위 안내 묶음과 다른 이야기라 한 칸 더 띄운다.
+    <section id="withdrawal-characters" className="mt-4 flex w-full flex-col gap-4">
+      <header className="flex flex-col gap-0.5">
         <h3 className="title-2 text-font-1">{t("title")}</h3>
         {candidates.length > 0 && canKeep && (
           <p className="body-5 break-keep text-font-2">{t("choiceGuide")}</p>

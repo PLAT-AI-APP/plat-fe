@@ -106,29 +106,52 @@ const vi: typeof en = {
   },
   withdrawalPage: {
     blockers: {
+      pending: "Bạn có thể rời đi khi hoàn tiền hoặc đổi thẻ quà tặng hoàn tất",
+      checking: "Vui lòng chờ kiểm tra xong",
+      balance: "Vui lòng xác nhận note và điểm thu nhập sẽ mất",
       consent: "Vui lòng đồng ý với giấy phép sử dụng nhân vật",
       adult: "Vui lòng xác nhận bạn từ 19 tuổi trở lên",
-      confirm: "Vui lòng đánh dấu đã đọc nội dung ở trên",
     },
     title: "Xóa tài khoản",
     defaultMember: "Thành viên",
     heading: "Thật tiếc khi phải chia tay với {nickname}",
     description:
       "Chúng tôi thật sự rất tiếc khi phải chia tay. Trước khi rời PLAT, vui lòng kiểm tra kỹ nội dung bên dưới.",
+    checks: {
+      title: "Kiểm tra trước khi rời đi",
+      checking: "Đang kiểm tra {item}",
+      failed: "Không kiểm tra được {item}",
+      retry: "Kiểm tra lại",
+      items: {
+        refund: "hoàn tiền",
+        redemption: "đổi thẻ quà tặng",
+        inquiry: "câu hỏi",
+        credits: "note",
+        points: "điểm thu nhập",
+      },
+      refundOk: "Không có yêu cầu hoàn tiền đang xử lý",
+      refundPending: "Bạn có thể rời đi khi yêu cầu hoàn tiền đang xử lý hoàn tất",
+      redemptionOk: "Không có yêu cầu đổi thẻ quà tặng đang chờ gửi",
+      redemptionPending: "Bạn có thể rời đi khi thẻ quà tặng được gửi",
+      inquiryOk: "Không có câu hỏi nào đang chờ trả lời",
+      inquiryPending: "Có {count} câu hỏi đang chờ trả lời",
+      inquiryView: "Xem câu hỏi",
+      creditsNone: "Không còn note nào",
+      creditsLost: "{count} note còn lại sẽ mất",
+      pointsNone: "Không còn điểm thu nhập",
+      pointsLost: "{points}P điểm thu nhập còn lại sẽ mất",
+      acknowledge: "Đã hiểu",
+    },
     notices: {
       dataDeleted:
         "Tất cả dữ liệu và thông tin cá nhân sẽ bị xóa và không thể khôi phục.",
       recordsRetained:
         "Chỉ lịch sử thanh toán và hoàn tiền được lưu 5 năm theo quy định pháp luật, mọi dữ liệu khác đều bị xóa.",
-      creditsRemoved:
-        "Note chưa sử dụng sẽ không được hoàn tiền và sẽ bị xóa cùng lúc.",
       rejoinRestricted:
         "Bạn không thể đăng ký lại bằng cùng địa chỉ email trong 7 ngày.",
       creationsDeleted: "Nhân vật không được giữ lại sẽ bị xóa sau khi bạn rời đi",
       chatsReadOnly: "Phòng chat hiện có của người dùng khác sẽ chỉ còn xem được",
     },
-    remainingBalance:
-      "{credits} note và {points}P điểm thu nhập còn lại sẽ không thể khôi phục sau khi rời đi. Nếu còn yêu cầu hoàn tiền đang xử lý hoặc đổi thẻ quà tặng đang chờ gửi, bạn có thể rời đi sau khi hoàn tất.",
     legalNotice:
       "Lịch sử thanh toán và hoàn tiền sẽ không bị xóa ngay vì có nghĩa vụ lưu trữ theo quy định pháp luật liên quan (5 năm). Lịch sử note và thu nhập sẽ bị xóa hoàn toàn sau 3 ngày kể từ khi rời đi.",
     agreement: "Tôi đã kiểm tra toàn bộ nội dung ở trên",
@@ -179,13 +202,13 @@ const vi: typeof en = {
       },
       summary: {
         copyright: "Bản quyền vẫn thuộc về tôi, chỉ dùng để vận hành trò chuyện trong PLAT",
-        anonymous: "Nhân vật được giữ lại không kèm tên tôi, dưới dạng 'PLAT vận hành'",
+        anonymous: "Nhân vật được giữ lại không kèm tên tôi, do PLAT vận hành",
         review: "Chỉ nhân vật vượt qua xét duyệt được giữ lại, phần còn lại bị xóa",
         irreversible: "Nhân vật đã giữ lại không thể lấy lại",
       },
       viewConsent: "Xem toàn văn văn bản đồng ý",
       hideConsent: "Thu gọn văn bản đồng ý",
-      consentAgree: "Tôi đồng ý với Văn bản đồng ý cấp phép sử dụng nhân vật (v{version})",
+      consentAgree: "Tôi đồng ý với Văn bản đồng ý cấp phép sử dụng nhân vật",
       adultAttest: "Tôi từ 19 tuổi trở lên",
       consentTitle: "Cấp phép sử dụng nhân vật",
       consentSubtitle: "Đồng ý riêng, chỉ áp dụng cho các nhân vật bạn chọn giữ lại",

@@ -17,4 +17,6 @@ export const userQueryKeys = {
   /** 탈퇴 전 캐릭터 처리 미리보기. 동의서 원문이 언어마다 달라 언어를 함께 둔다. */
   withdrawalPreview: (locale: string) =>
     ["get-withdrawal-preview", locale] as const,
+  /** 탈퇴 전 확인(처리 중인 환불·상품권 교환, 답변 대기 문의). */
+  withdrawalChecks: () => ["get-withdrawal-checks"] as const,
 };

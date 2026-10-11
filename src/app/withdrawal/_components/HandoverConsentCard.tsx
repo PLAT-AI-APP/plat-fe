@@ -65,6 +65,7 @@ const HandoverConsentCard = ({
 
   return (
     <section
+      id="handover-consent"
       aria-labelledby="handover-consent-title"
       className="relative overflow-hidden rounded-3xl border border-main bg-darkest"
     >
@@ -73,12 +74,9 @@ const HandoverConsentCard = ({
           <span className="flex size-11 shrink-0 items-center justify-center rounded-2xl bg-brand-opacity text-brand">
             <BookOpen size={22} aria-hidden="true" />
           </span>
-          <div className="flex min-w-0 flex-col gap-1">
-            <h4 id="handover-consent-title" className="title-2 flex flex-wrap items-center gap-2 text-font-1">
+          <div className="flex min-w-0 flex-col gap-0.5">
+            <h4 id="handover-consent-title" className="title-2 text-font-1">
               {t("consentTitle")}
-              <span className="body-8 rounded-full border border-main bg-dark/60 px-2 py-0.5 font-medium text-font-2">
-                v{consent.version}
-              </span>
             </h4>
             <p className="body-6 break-keep text-font-2">{t("consentSubtitle")}</p>
           </div>
@@ -91,7 +89,7 @@ const HandoverConsentCard = ({
             return (
               <li
                 key={key}
-                className="flex items-start gap-3 rounded-2xl bg-card p-3.5"
+                className="flex items-center gap-3 rounded-2xl bg-card p-3.5"
               >
                 <span
                   className={cn(
@@ -103,7 +101,7 @@ const HandoverConsentCard = ({
                 </span>
                 <span
                   className={cn(
-                    "title-6 break-keep pt-1.5 leading-snug",
+                    "title-6 break-keep leading-snug",
                     "text-font-1",
                   )}
                 >
@@ -151,7 +149,7 @@ const HandoverConsentCard = ({
             variant="card"
             checked={isConsentAgreed}
             onToggle={onToggleConsent}
-            label={t("consentAgree", { version: consent.version })}
+            label={t("consentAgree")}
           />
           {ageAttestationRequired && (
             <CheckboxRow
