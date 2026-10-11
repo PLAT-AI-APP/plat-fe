@@ -45,7 +45,7 @@ const AdultGate = ({ title, description, backHref = "/", backLabel, className }:
       </p>
       <div className="mt-8 flex w-full max-w-72 flex-col gap-2.5">
         {isLoggedIn ? (
-          <Button size="lg" fullWidth onClick={() => openModal("IDENTITY_VERIFICATION")}>
+          <Button size="lg" fullWidth onClick={() => openModal("IDENTITY_VERIFICATION", { purpose: "adult" })}>
             {t("verify")}
           </Button>
         ) : (

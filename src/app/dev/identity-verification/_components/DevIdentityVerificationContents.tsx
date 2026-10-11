@@ -60,6 +60,9 @@ const DevIdentityVerificationContents = () => {
   const searchParams = useSearchParams();
   const verificationId = searchParams.get("vid") ?? "";
   const isRedirectMode = searchParams.get("mode") === "redirect";
+  // 본인인증만 하려고 연 창이면 성인을 말하지 않는다(모달의 purpose 와 같다).
+  const isIdentityOnly = searchParams.get("purpose") === "identity";
+  const mark = isIdentityOnly ? "identity" : "adult";
   const returnTo = toSafeReturnPath(searchParams.get("returnTo"));
   const isAuthReady = useAuthStore((state) => state.isAuthReady);
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn) && isAuthReady;
@@ -108,10 +111,14 @@ const DevIdentityVerificationContents = () => {
 
           confirmMutation.mutate(verificationId, {
             onSuccess: (result) =>
-              setDone({
-                title: result.adult ? modalT("adultDoneTitle") : modalT("identityOnlyTitle"),
-                adult: result.adult,
-              }),
+              setDone(
+                isIdentityOnly
+                  ? { title: modalT("identity.doneTitle"), adult: null }
+                  : {
+                      title: result.adult ? modalT("adultDoneTitle") : modalT("identityOnlyTitle"),
+                      adult: result.adult,
+                    },
+              ),
           });
         },
       },
@@ -131,7 +138,7 @@ const DevIdentityVerificationContents = () => {
     if (done) {
       return (
         <div className="flex flex-col items-center gap-2 py-4 text-center" role="status">
-          <AdultEmblem size="md" badge={done.adult === false ? "warn" : "done"} />
+          <AdultEmblem size="md" mark={mark} badge={done.adult === false ? "warn" : "done"} />
           <p className="title-2 mt-2 text-font-0">{done.title}</p>
           {(isRedirectMode || !window.opener) && (
             <Button size="lg" fullWidth className="mt-6" onClick={() => router.replace(returnTo)}>
@@ -235,7 +242,7 @@ const DevIdentityVerificationContents = () => {
       <div className="w-full max-w-110 overflow-hidden rounded-3xl border border-main bg-dark shadow-[0_24px_60px_rgba(0,0,0,0.35)]">
         {/* 인증 창 머리 — 통신사 본인확인 창처럼 "지금 어디서 무엇을 하는지" 를 먼저 보여 준다 */}
         <header className="flex items-center gap-3 border-b border-main bg-darkest px-5 py-4">
-          <AdultEmblem size="sm" />
+          <AdultEmblem size="sm" mark={mark} />
           <div className="flex min-w-0 flex-col">
             <span className="title-4 text-font-0">{t("windowTitle")}</span>
             <span className="body-7 text-font-2">{t("subtitle")}</span>

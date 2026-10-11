@@ -149,6 +149,13 @@ const vi: typeof ko = {
       birthLocked: "Ngày sinh này đã được xác minh danh tính nên không thể thay đổi.",
     },
     modal: {
+      identity: {
+        headline: "Xác minh danh tính một lần\nyên tâm suốt 1 năm",
+        subtitle: "Xác nhận chính chủ qua điện thoại hoặc xác thực nhanh.",
+        benefitBirth: "Sau khi xác minh, ngày sinh trong hồ sơ sẽ được cố định theo giá trị đã xác minh.",
+        doneTitle: "Đã xác minh danh tính!",
+        doneDescription: "Bạn có thể dùng ngay các tính năng cần xác minh danh tính.",
+      },
       headline: "Xác minh tuổi một lần\nmở khóa mọi câu chuyện",
       subtitle: "Chúng tôi xác minh danh tính để kiểm tra bạn đủ 19 tuổi.",
       benefitTime: "Chỉ mất khoảng 1 phút và có hiệu lực 1 năm.",
@@ -185,6 +192,7 @@ const vi: typeof ko = {
         verify: "Xác minh",
         done: "Xong",
         ariaLabel: "Các bước xác minh tuổi",
+        ariaLabelIdentity: "Các bước xác minh danh tính",
       },
       title: "Xác minh danh tính",
       description: "Khi xác minh danh tính, độ tuổi của bạn cũng được xác nhận. Nếu từ 19 tuổi trở lên, bạn có thể dùng nội dung người lớn.",
@@ -256,7 +264,7 @@ const vi: typeof ko = {
       adultTagsRemoved: "Đã tắt nội dung người lớn nên các hashtag người lớn đã bị gỡ.",
     },
     studio: {
-      verify: "Xác minh danh tính",
+      verify: "Xác minh độ tuổi",
     },
   },
 };

@@ -67,7 +67,7 @@ const StudioStats = () => {
           <button
             type="button"
             aria-label={verificationT("verify")}
-            onClick={() => openModal("IDENTITY_VERIFICATION")}
+            onClick={() => openModal("IDENTITY_VERIFICATION", { purpose: "adult" })}
             className="rounded-lg p-1 transition-colors hover:bg-btn-hover"
           >
             <ArrowRight className="h-3 w-3 text-font-2" />

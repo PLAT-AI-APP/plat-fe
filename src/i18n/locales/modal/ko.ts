@@ -141,6 +141,13 @@ const ko = {
       birthLocked: "본인인증된 생년월일이라 바꿀 수 없어요.",
     },
     modal: {
+      identity: {
+        headline: "본인인증 한 번이면\n1년 동안 든든해요",
+        subtitle: "휴대폰·간편인증으로 본인 명의인지 확인해요.",
+        benefitBirth: "인증을 마치면 프로필 생년월일이 인증된 값으로 고정돼요.",
+        doneTitle: "본인인증 완료!",
+        doneDescription: "본인인증이 필요한 기능을 바로 이용할 수 있어요.",
+      },
       headline: "성인인증 한 번이면\n모든 이야기가 열려요",
       subtitle: "본인인증으로 만 19세 이상인지 확인해요.",
       benefitTime: "1분이면 끝나고, 1년 동안 유효해요.",
@@ -177,6 +184,7 @@ const ko = {
         verify: "인증",
         done: "완료",
         ariaLabel: "성인인증 단계",
+        ariaLabelIdentity: "본인인증 단계",
       },
       title: "본인인증",
       description: "본인인증을 하면 성인 여부도 함께 확인돼요. 만 19세 이상이면 성인 콘텐츠를 이용할 수 있어요.",
@@ -248,7 +256,7 @@ const ko = {
       adultTagsRemoved: "성인 콘텐츠 설정을 꺼서 성인 해시태그를 뺐어요.",
     },
     studio: {
-      verify: "본인인증 하기",
+      verify: "성인인증 하기",
     },
   },
 };

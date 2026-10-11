@@ -145,6 +145,13 @@ const ja: typeof ko = {
       birthLocked: "本人認証済みの生年月日のため変更できません。",
     },
     modal: {
+      identity: {
+        headline: "本人認証は一度だけ\n1年間安心です",
+        subtitle: "携帯電話や簡単認証で、ご本人の名義か確認します。",
+        benefitBirth: "認証が完了すると、プロフィールの生年月日が認証された値で固定されます。",
+        doneTitle: "本人認証が完了しました！",
+        doneDescription: "本人認証が必要な機能をすぐにご利用いただけます。",
+      },
       headline: "成人認証ひとつで\nすべての物語が開きます",
       subtitle: "本人認証で19歳以上かを確認します。",
       benefitTime: "約1分で完了し、1年間有効です。",
@@ -181,6 +188,7 @@ const ja: typeof ko = {
         verify: "認証",
         done: "完了",
         ariaLabel: "成人認証のステップ",
+        ariaLabelIdentity: "本人認証のステップ",
       },
       title: "本人認証",
       description: "本人認証をすると成人かどうかも確認されます。満19歳以上なら成人向けコンテンツを利用できます。",
@@ -252,7 +260,7 @@ const ja: typeof ko = {
       adultTagsRemoved: "成人向けコンテンツ設定をオフにしたため、成人向けハッシュタグを外しました。",
     },
     studio: {
-      verify: "本人認証する",
+      verify: "成人認証する",
     },
   },
 };

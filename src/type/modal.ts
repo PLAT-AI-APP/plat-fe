@@ -55,5 +55,15 @@ export interface PersonaModalProps extends GlobalModalProps {
   currentPersonaId?: string;
 }
 
+/**
+ * 본인인증을 여는 목적. 인증 자체(성인이면 성인인증까지 기록)는 같고 화면·문구·결과 안내만 다르다.
+ * - adult: 성인인증이 필요한 자리(19 토글·성인 콘텐츠 게이트·성인 캐릭터 설정 등)
+ * - identity: 본인인증만 하려는 자리(프로필의 본인인증 버튼 등). 성인·19 를 말하지 않는다
+ */
+export type IdentityVerificationPurpose = "identity" | "adult";
+
 /** 본인인증(성인이면 성인인증까지) 진행 모달. */
-export type IdentityVerificationModalProps = GlobalModalProps;
+export interface IdentityVerificationModalProps extends GlobalModalProps {
+  /** 기본은 adult. */
+  purpose?: IdentityVerificationPurpose;
+}

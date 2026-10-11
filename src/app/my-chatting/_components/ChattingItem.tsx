@@ -174,7 +174,7 @@ const ChattingItem = ({
               {isLocked && (
                 <button
                   type="button"
-                  onClick={() => openModal("IDENTITY_VERIFICATION")}
+                  onClick={() => openModal("IDENTITY_VERIFICATION", { purpose: "adult" })}
                   className="body-7 h-7 rounded-lg bg-brand-opacity px-2.5 text-brand-dark hover:bg-brand-opacity-2"
                 >
                   {lockT("reverify")}

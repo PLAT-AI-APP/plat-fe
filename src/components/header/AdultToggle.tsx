@@ -60,7 +60,7 @@ const AdultToggle = ({ className }: { className?: string }) => {
     }
     // 끄기는 언제나 된다. 켜기만 성인인증이 필요하다.
     if (next && !isAdultValid) {
-      openModal("IDENTITY_VERIFICATION");
+      openModal("IDENTITY_VERIFICATION", { purpose: "adult" });
       return;
     }
 
@@ -73,7 +73,7 @@ const AdultToggle = ({ className }: { className?: string }) => {
       onError: (error) => {
         if (error.code === ADULT_VERIFICATION_REQUIRED) {
           // 화면이 아는 것보다 먼저 인증이 만료됐다. 다시 인증하게 한다.
-          openModal("IDENTITY_VERIFICATION");
+          openModal("IDENTITY_VERIFICATION", { purpose: "adult" });
           return;
         }
         showAppToast("error", t("failed"));
