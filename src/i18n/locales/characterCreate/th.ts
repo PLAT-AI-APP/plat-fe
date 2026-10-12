@@ -127,6 +127,10 @@ const th: typeof ko = {
       nameLabel: "ชื่อสถานการณ์",
       descriptionLabel: "คำอธิบายสถานการณ์",
       descriptionPlaceholder: "อธิบายว่านี่เป็นสถานการณ์แบบไหน",
+      responseFormatLabel: "รูปแบบคำตอบ",
+      responseFormatGuide: "รูปแบบที่เลือกได้ในห้องแชต โน้ตถูกหักตามการใช้งานจริง รูปแบบที่สั้นกว่าจึงใช้น้อยกว่า",
+      defaultResponseFormatLabel: "รูปแบบเริ่มต้น",
+      responseFormatMinAlert: "ต้องมีอย่างน้อยหนึ่งรูปแบบ",
       difficultyLabel: "ความยากของสถานการณ์",
       difficultyOptions: {
         EASY: {

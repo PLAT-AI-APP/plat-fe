@@ -6,6 +6,7 @@ import { Pen, Trash } from "@/icons";
 import Scenario from "@/components/chat/Scenario";
 import { splitDialogueActions } from "@/lib/chatText";
 import { cn } from "@/lib/utils";
+import { HOVER_REVEAL } from "./hoverReveal";
 
 interface UserChatBubbleProps {
   text: string;
@@ -61,7 +62,7 @@ const UserChatBubble = ({
   // 고치기는 미리보기처럼 글을 직접 바꿀 수 있는 자리에서만, 지우기는 지울 대상(서버 메시지)이 있으면 늘 보인다.
   // 채팅방에서는 내 말을 지우면 그 턴과 뒤 대화가 함께 지워진다.
   const actions = (isEditable || onDelete) && (
-    <div className="flex gap-1">
+    <div className={cn("flex gap-1", HOVER_REVEAL)}>
       {isEditable && (
         <button
           type="button"
@@ -111,7 +112,7 @@ const UserChatBubble = ({
   if (narrationLines.length === 0) return bubble;
 
   return (
-    <div className={cn("flex flex-col", isNovelView ? "gap-5" : "gap-6")}>
+    <div className={cn("group flex flex-col", isNovelView ? "gap-5" : "gap-6")}>
       {hasSpeech && bubble}
       <Scenario text={narrationLines.join("\n")} isNovelView={isNovelView} />
       {/* 말이 없어 말풍선이 빠져도 지우기·고치기 버튼은 남겨 둔다. */}

@@ -68,6 +68,8 @@ const createMockUniverseDetail = (
       name: "기본 시나리오",
       description: "입학식 날 처음 마주치는 장면입니다.",
       content: "문이 열리자 연우는 놀란 표정으로 고개를 들었다.",
+      defaultResponseFormat: "NOVEL",
+      allowedResponseFormats: ["CHAT", "NOVEL"],
     },
   ],
 });
@@ -203,6 +205,11 @@ const createUpdatedUniverseDetail = (
           name: scenario.name,
           description: scenario.description,
           content: scenario.content,
+          // 서버처럼 둘 다 비면 소설형 하나만 허용한다.
+          defaultResponseFormat: scenario.defaultResponseFormat ?? "NOVEL",
+          allowedResponseFormats: scenario.allowedResponseFormats?.length
+            ? scenario.allowedResponseFormats
+            : ["NOVEL"],
         })),
 });
 

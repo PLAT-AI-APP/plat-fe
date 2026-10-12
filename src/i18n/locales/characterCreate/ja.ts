@@ -130,6 +130,10 @@ const ja: typeof ko = {
       nameLabel: "シナリオ名",
       descriptionLabel: "シナリオ説明",
       descriptionPlaceholder: "どのようなシナリオか説明してください",
+      responseFormatLabel: "返信スタイル",
+      responseFormatGuide: "チャットルームで選べるスタイルです。ノートは使った分だけ消費されるため、短いスタイルほど少なく済みます。",
+      defaultResponseFormatLabel: "基本スタイル",
+      responseFormatMinAlert: "スタイルは少なくとも1つ必要です。",
       difficultyLabel: "シナリオ難易度",
       difficultyOptions: {
         EASY: {

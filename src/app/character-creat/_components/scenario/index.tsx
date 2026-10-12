@@ -8,6 +8,7 @@ import { Close, Plus } from "@/icons";
 import { cn } from "@/lib/utils";
 import { showAppToast } from "@/lib/toast";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
+import ScenarioResponseFormatField from "./ScenarioResponseFormatField";
 
 interface ScenarioProps {
   activeScenarioIndex: number;
@@ -171,6 +172,8 @@ const Scenario = ({
         counterClassName="text-font-disabled"
         value={currentScenarioDescription}
       />
+
+      <ScenarioResponseFormatField key={fields[currentIndex]?.id} scenarioIndex={currentIndex} />
 
       {/* 난이도 UI 임시 비노출
       <div className="flex flex-col gap-1">

@@ -21,6 +21,7 @@ import {
 } from "@/lib/platParse";
 import { useUserDisplayName } from "@/hooks/data/useUserDisplayName";
 import { TRANSITION_FAST, slideUpVariants } from "@/constants/motion";
+import { HOVER_REVEAL } from "./hoverReveal";
 
 interface ChatContentBlockProps {
   rawData: string;
@@ -183,7 +184,7 @@ const ChatContentBlock = ({
   }
 
   return (
-    <div className={cn("flex w-full flex-col", isNovelView ? "gap-5" : "gap-6")}>
+    <div className={cn("group flex w-full flex-col", isNovelView ? "gap-5" : "gap-6")}>
       {blocks.map((block, index) => {
         if (block.type === "DIALOGUE") {
           return (
@@ -263,7 +264,7 @@ const ChatContentBlock = ({
       {/* 받는 중인 응답은 아직 서버에 없어 지우거나 다시 만들 대상이 없다.
           응답이 사용자 대사로 끝나도 그 턴의 답이므로 버튼은 캐릭터 쪽(왼쪽)에 그대로 둔다. */}
       {!isEditMode && !isStreaming && (onDelete || onRetry || onReport) && (
-        <div className={cn("-mt-4 flex gap-1", !isNovelView && "pl-11")}>
+        <div className={cn("-mt-4 flex gap-1", !isNovelView && "pl-11", HOVER_REVEAL)}>
           {onDelete && (
             <button
               type="button"

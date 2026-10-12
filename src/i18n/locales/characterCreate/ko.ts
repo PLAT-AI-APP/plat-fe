@@ -125,6 +125,10 @@ const ko = {
       nameLabel: "시나리오명",
       descriptionLabel: "시나리오 설명",
       descriptionPlaceholder: "어떤 시나리오인지 설명해 주세요",
+      responseFormatLabel: "응답 형식",
+      responseFormatGuide: "채팅방에서 고를 수 있는 형식이에요. 노트는 쓴 만큼 빠져서 짧은 형식일수록 적게 들어요.",
+      defaultResponseFormatLabel: "기본 형식",
+      responseFormatMinAlert: "형식은 최소 한 개는 있어야 합니다.",
       difficultyLabel: "시나리오 난이도",
       difficultyOptions: {
         EASY: {

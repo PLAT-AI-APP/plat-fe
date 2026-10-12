@@ -157,11 +157,10 @@ function parseBlock(raw: string): PlatBlock | null {
     };
   }
 
-  if (trimmed.startsWith("*") && trimmed.endsWith("*")) {
-    return {
-      type: "NARRATIVE",
-      segments: parseInlineTokens(trimmed.slice(1, -1)),
-    };
+  if (trimmed.startsWith("*")) {
+    // 닫는 별표가 빠진 묘사도 묘사다. 별표는 기호일 뿐 글자로 보여 주지 않는다.
+    const inner = trimmed.endsWith("*") && trimmed.length > 1 ? trimmed.slice(1, -1) : trimmed.slice(1);
+    return { type: "NARRATIVE", segments: parseInlineTokens(inner.trim()) };
   }
 
   const metaMatch = META_REGEX.exec(trimmed);
@@ -198,6 +197,10 @@ const findBlockEnd = (
 ) => {
   let i = index + open.length;
   while (i < source.length && !startsWithAt(source, i, close)) {
+    // 상황 묘사는 닫는 별표를 빠뜨려도 다음 블록을 삼키지 않게, 빈 줄 뒤에 새 블록이 시작되면 거기서 끊는다.
+    if (open === "*") {
+      if (paragraphBreakBeforeBlockAt(source, i) !== null) return { end: i, closed: false };
+    }
     // 역슬래시로 이스케이프된 문자(예: \")는 닫는 기호로 오인하지 않도록
     // 한 쌍(역슬래시+다음 한 글자)을 통째로 건너뜁니다.
     i += source[i] === "\\" ? 2 : 1;
@@ -207,6 +210,19 @@ const findBlockEnd = (
   if (closed) i += close.length; // 닫는 기호까지 포함
 
   return { end: i, closed };
+};
+
+/**
+ * index 가 빈 줄(문단 경계)이고 그 뒤 첫 글자가 새 블록의 여는 기호면 그 기호의 위치, 아니면 null.
+ *
+ * 모델이 `*묘사` 를 닫지 않고 빈 줄 뒤에 다음 블록을 쓰면, 닫는 별표를 다음 묘사의 여는 별표에서 찾아 그 사이 대사까지
+ * 한 묘사로 묶고 뒤로 별표 짝이 하나씩 밀린다. 묘사 안의 빈 줄은 허용하므로, 빈 줄 뒤가 새 블록일 때만 끊는다.
+ */
+const paragraphBreakBeforeBlockAt = (source: string, index: number) => {
+  const match = /^\n[ \t]*\n\s*/.exec(source.slice(index));
+  if (!match) return null;
+  const next = index + match[0].length;
+  return next < source.length && findDelimiterAt(source, next) ? next : null;
 };
 
 /**
@@ -303,7 +319,19 @@ export function parsePlat(source: string): PlatBlock[] {
     const delimiter = findDelimiterAt(source, i);
 
     if (delimiter) {
-      i = findBlockEnd(source, i, delimiter).end;
+      const { end, closed } = findBlockEnd(source, i, delimiter);
+      i = end;
+      // 닫히지 않은 묘사 끝에 대사가 붙어 있으면(`*문을 나선다 (웃으며) "또 와요"`) 묘사와 대사로 나눈다.
+      if (delimiter.open === "*" && !closed) {
+        const body = source.slice(start + 1, end);
+        const quoteAt = body.indexOf('"');
+        if (quoteAt > 0) {
+          const narrative = parseBlock(`*${body.slice(0, quoteAt).trimEnd()}*`);
+          if (narrative) blocks.push(narrative);
+          blocks.push(...parsePlat(body.slice(quoteAt)));
+          continue;
+        }
+      }
     } else {
       // 다음 블록의 시작 기호를 만날 때까지 일반 텍스트로 취급합니다.
       while (i < source.length && !findDelimiterAt(source, i)) {

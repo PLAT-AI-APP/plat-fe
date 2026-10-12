@@ -305,6 +305,12 @@ const CreateHeader = ({
         name: scenario.name || `Scenario ${index + 1}`,
         description: scenario.description ?? "",
         content: encodeScenarioContent(scenario),
+        ...(scenario.allowedResponseFormats && scenario.allowedResponseFormats.length > 0
+          ? {
+              allowedResponseFormats: scenario.allowedResponseFormats,
+              defaultResponseFormat: scenario.defaultResponseFormat,
+            }
+          : {}),
       }));
       const assets =
         currentFormData.asset

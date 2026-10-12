@@ -36,6 +36,10 @@ export interface UniverseDetailScenario {
   name: string;
   description: string;
   content: string;
+  /** 이 시나리오의 기본 응답 형식 코드 */
+  defaultResponseFormat: string;
+  /** 이 시나리오가 허용하는 응답 형식 코드(노출 순서) */
+  allowedResponseFormats: string[];
 }
 
 export interface UniverseDetailCharacter {

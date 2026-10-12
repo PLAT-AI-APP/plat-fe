@@ -20,6 +20,8 @@ const draftScenarioContentSchema = z.object({
 const draftScenarioSchema = z.object({
   name: z.string().catch(""),
   description: z.string().catch(""),
+  defaultResponseFormat: z.string().optional().catch(undefined),
+  allowedResponseFormats: z.array(z.string()).optional().catch(undefined),
   contents: z.array(draftScenarioContentSchema).catch([]),
 });
 
@@ -128,6 +130,8 @@ export const buildUniverseDraft = (
   scenarios: values.scenarios.map((scenario) => ({
     name: scenario.name,
     description: scenario.description,
+    defaultResponseFormat: scenario.defaultResponseFormat,
+    allowedResponseFormats: scenario.allowedResponseFormats,
     contents: (scenario.contents ?? []).map((content) => ({
       id: content.id,
       type: content.type,
@@ -193,6 +197,8 @@ export const applyUniverseDraft = (
       ? draft.scenarios.map((scenario) => ({
           name: scenario.name,
           description: scenario.description ?? "",
+          defaultResponseFormat: scenario.defaultResponseFormat,
+          allowedResponseFormats: scenario.allowedResponseFormats,
           contents: (scenario.contents ?? []).map((content) => ({
             id: content.id,
             type: content.type,

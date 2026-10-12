@@ -81,6 +81,9 @@ export const characterCreateSchema = z.object({
           // 난이도 UI/전송을 임시로 껐습니다. 폼에 남은 기본값은 계속 허용하되
           // 필수는 아니게 해서, 이 값을 더 이상 채우지 않는 복원 로직도 통과합니다.
           difficulty: z.enum(SCENARIO_DIFFICULTY_LEVELS).optional(),
+          // 응답 형식(채팅형·소설형 등). 비우면 서버가 소설형 하나로 둔다. 기본은 늘 허용 안에 있도록 화면이 맞춘다.
+          defaultResponseFormat: z.string().optional(),
+          allowedResponseFormats: z.array(z.string()).optional(),
           contents: z.array(
             z
               .object({

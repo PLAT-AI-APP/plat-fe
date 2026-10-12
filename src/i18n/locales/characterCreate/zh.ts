@@ -123,6 +123,10 @@ const zh: typeof ko = {
       nameLabel: "场景名称",
       descriptionLabel: "场景说明",
       descriptionPlaceholder: "请说明这是怎样的场景",
+      responseFormatLabel: "回复形式",
+      responseFormatGuide: "聊天室中可选择的形式。笔记按实际使用量扣除，形式越短花费越少。",
+      defaultResponseFormatLabel: "默认形式",
+      responseFormatMinAlert: "至少需要保留一种形式。",
       difficultyLabel: "场景难度",
       difficultyOptions: {
         EASY: {
