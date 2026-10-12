@@ -1,4 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
+import { AnimatePresence } from "framer-motion";
+import ListMotion from "@/components/motion/ListMotion";
 import PersonaHeader from "./PersonaHeader";
 import PersonaItem from "./PersonaItem";
 import PersonaFooter from "./PersonaFooter";
@@ -81,23 +83,30 @@ const PersonaModal = ({
         ) : !hasPersonas ? (
           <PersonaEmptyState />
         ) : (
-          <ul className={cn("flex flex-col gap-4", fadeInClassName)}>
-            {personas?.map((persona) => (
-              <PersonaItem
-                key={persona.personaId}
-                persona={persona}
-                isActive={
-                  isSelectMode
-                    ? currentPersonaId === persona.personaId
-                    : selectedId === persona.personaId
-                }
-                hasSelectedPersona={
-                  isSelectMode ? currentPersonaId != null : selectedId !== null
-                }
-                onSelect={handleCurrentPersona}
-              />
-            ))}
-          </ul>
+          <ListMotion>
+            <ul className={cn("flex flex-col gap-4", fadeInClassName)}>
+              {/* 지우면 옆으로 밀려나며 접히고 아래 항목이 올라와 자리를 메운다 */}
+              <AnimatePresence initial={false}>
+                {personas?.map((persona) => (
+                  <PersonaItem
+                    key={persona.personaId}
+                    persona={persona}
+                    isActive={
+                      isSelectMode
+                        ? currentPersonaId === persona.personaId
+                        : selectedId === persona.personaId
+                    }
+                    hasSelectedPersona={
+                      isSelectMode
+                        ? currentPersonaId != null
+                        : selectedId !== null
+                    }
+                    onSelect={handleCurrentPersona}
+                  />
+                ))}
+              </AnimatePresence>
+            </ul>
+          </ListMotion>
         )}
         {!isDataLoading && !isError && (
           <PersonaFooter isMaxPersona={(personas?.length ?? 0) >= 5} />

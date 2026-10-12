@@ -386,6 +386,7 @@ const ja: typeof en = {
     characterTyping: "{name}が入力中",
     characterProfileAlt: "{name}のプロフィール画像",
     chatAssetAlt: "会話シーン画像",
+    assetUnlocked: "新しいアセットを解放しました · ギャラリーに追加されました",
     lightChatDescription: "気軽な会話を素早く楽しめる軽量モデル",
     balancedChatDescription: "速さと表現力のバランスが取れたモデル",
     gemini31Description: "性能と表現力が向上した最新AIモデル",

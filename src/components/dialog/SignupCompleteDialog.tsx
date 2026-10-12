@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import type { SignupCompleteDialogProps } from "@/type/dialog";
 import AgreementResultSummary from "./AgreementResultSummary";
 import Dialog from "./Dialog";
+import DialogHero from "./DialogHero";
 
 const SignupCompleteDialog = ({
   nickname,
@@ -21,6 +22,7 @@ const SignupCompleteDialog = ({
   return (
     <Dialog
       onClose={onClose}
+      hero={<DialogHero variant="cheer" />}
       label={
         <div className="flex w-full flex-col items-start justify-end gap-3 break-words">
           <div className="flex w-full flex-col items-start gap-1">

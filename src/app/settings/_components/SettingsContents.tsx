@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useSyncExternalStore } from "react";
 import { useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
+import { changeThemeWithReveal } from "@/lib/themeReveal";
 // import { ArrowDown } from "@/icons"; // [차단 관리] 후순위로 보류
 import {
   useAgreementStatusQuery,
@@ -56,7 +57,10 @@ const SettingsContents = () => {
 
   const handleThemeChange = (checked: boolean) => {
     // 스위치 checked 값을 실제 next-themes 테마 값으로 변환합니다.
-    setTheme(checked ? "light" : "dark");
+    // 누른 스위치 자리에서 새 테마가 원으로 번진다
+    changeThemeWithReveal(document.activeElement, () =>
+      setTheme(checked ? "light" : "dark"),
+    );
   };
 
   return (

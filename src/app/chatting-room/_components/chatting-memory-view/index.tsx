@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { ArrowLeft, Storage } from "@/icons";
+import EmptyState from "@/components/state/EmptyState";
 import type { ChatMemoryEntry } from "@/type/chat";
 import MemoryItem from "./_components/MemoryItem";
 
@@ -133,9 +134,12 @@ const ChattingMemoryView = ({
         </header>
 
         {memories.length === 0 ? (
-          <p className="body-6 flex flex-1 items-center justify-center text-font-disabled">
-            {t("memoryEmpty")}
-          </p>
+          <EmptyState
+            size="sm"
+            mood="sleep"
+            message={t("memoryEmpty")}
+            className="flex-1"
+          />
         ) : (
           <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto">
             {memories.map((memory) => (

@@ -1,6 +1,8 @@
 "use client";
 
 import { Fragment, useMemo } from "react";
+import { AnimatePresence } from "framer-motion";
+import ListMotion from "@/components/motion/ListMotion";
 import { useTranslations } from "next-intl";
 import { useRoomListInfiniteQuery } from "@/api/room/getRoomList";
 import { useInfiniteList } from "@/hooks/data/useInfiniteList";
@@ -76,29 +78,34 @@ const ChattingList = ({ searchQuery }: ChattingListProps) => {
         emptyMood="chat"
         emptyMessage={t("empty")}
       >
-        <ul className="flex flex-col gap-2">
-          {/* eslint-disable-next-line @typescript-eslint/no-unused-vars -- 아래 구분선 주석과 함께 index도 임시로 미사용 */}
-          {filteredItems.map((room, index) => (
-            <Fragment key={room.roomId}>
-              <ChattingItem
-                roomId={room.roomId}
-                title={room.title}
-                thumbnailUrl={room.thumbnailUrl}
-                personaName={room.personaName}
-                lastMessage={room.lastMessage}
-                lastUsedAt={room.lastUsedAt}
-                isPinned={room.isPinned}
-                isClosed={room.isClosed}
-                locked={room.locked ?? null}
-              />
+        {/* 고정하면 맨 위로 미끄러져 올라가고, 지우면 접히며 아래 항목이 자리를 메운다 */}
+        <ListMotion>
+          <ul className="flex flex-col gap-2">
+            <AnimatePresence initial={false}>
+              {/* eslint-disable-next-line @typescript-eslint/no-unused-vars -- 아래 구분선 주석과 함께 index도 임시로 미사용 */}
+              {filteredItems.map((room, index) => (
+                <Fragment key={room.roomId}>
+                  <ChattingItem
+                    roomId={room.roomId}
+                    title={room.title}
+                    thumbnailUrl={room.thumbnailUrl}
+                    personaName={room.personaName}
+                    lastMessage={room.lastMessage}
+                    lastUsedAt={room.lastUsedAt}
+                    isPinned={room.isPinned}
+                    isClosed={room.isClosed}
+                    locked={room.locked ?? null}
+                  />
 
-              {/* 추후 다시 필요해질 수 있어 삭제 대신 주석 처리합니다.
-              {index < filteredItems.length - 1 && (
-                <li className="mx-10 h-px bg-main" aria-hidden="true" />
-              )} */}
-            </Fragment>
-          ))}
-        </ul>
+                  {/* 추후 다시 필요해질 수 있어 삭제 대신 주석 처리합니다.
+                  {index < filteredItems.length - 1 && (
+                    <li className="mx-10 h-px bg-main" aria-hidden="true" />
+                  )} */}
+                </Fragment>
+              ))}
+            </AnimatePresence>
+          </ul>
+        </ListMotion>
 
         {hasNextPage && <div ref={sentinelRef} aria-hidden="true" className="h-px" />}
       </InfiniteQueryBoundary>

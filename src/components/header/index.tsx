@@ -12,8 +12,8 @@ import { useLayoutStore } from "@/store/useLayoutStore";
 import { useUserStore } from "@/store/useUserStore";
 import { useWalletStore } from "@/store/useWalletStore";
 import useToggle from "@/hooks/common/useToggle";
+import AnimatedBalance from "@/components/motion/AnimatedBalance";
 import Token from "@/icons/Token";
-import { formatWithCommas } from "@/lib/utils";
 
 const loadProfilePopover = () => import("../popover/ProfilePopover");
 const ProfilePopover = dynamic(loadProfilePopover);
@@ -44,8 +44,9 @@ const Header = ({ handleFoldToggle, foldToggleRef }: HeaderProps) => {
 
   const profileImage = useUserStore((state) => state.user?.profileImage);
   // 헤더의 보유 캐시는 전역 지갑 잔액 기준으로 표시합니다.
+  // 아직 모르면 undefined — 처음 불러올 때 0 → 잔액으로 "충전" 연출이 돌지 않게 한다.
   const availableBalance = useWalletStore(
-    (state) => state.balance?.availableBalance ?? 0,
+    (state) => state.balance?.availableBalance,
   );
   return (
     <header
@@ -93,14 +94,14 @@ const Header = ({ handleFoldToggle, foldToggleRef }: HeaderProps) => {
               href={`/token-charge`}
               className="hidden cursor-pointer items-center gap-1 transition-colors hover:bg-btn-hover rounded-lg p-1 pr-2.5 sm:flex"
             >
-              <Token className="w-5 h-5" />
               {/* 잔액은 자릿수가 늘어날 수 있다. 그대로 두면 좁은 화면에서
-                  오른쪽 버튼들을 화면 밖으로 밀어낸다. */}
-              <span
-                id="user-point-value"
-                className="body-3 max-w-24 truncate"
-              >
-                {formatWithCommas(availableBalance)}
+                  오른쪽 버튼들을 화면 밖으로 밀어낸다. 쓰고·충전할 때 숫자가 굴러 바뀐다. */}
+              <span id="user-point-value" className="flex min-w-0">
+                <AnimatedBalance
+                  value={availableBalance}
+                  icon={<Token className="w-5 h-5" />}
+                  className="body-3 max-w-24"
+                />
               </span>
             </Link>
           )}

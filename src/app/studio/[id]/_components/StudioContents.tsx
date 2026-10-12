@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import React from "react";
 import CharacterShowcase from "@/components/character/CharacterShowcase";
 import SortFilter from "@/components/character/SortFilter";
+import EmptyState from "@/components/state/EmptyState";
 import { useChangeQueryString } from "@/hooks/navigation/useChangeQueryString";
 import CharacterCreateBanner from "./CharacterCreateBanner";
 import EarningsBanner from "./EarningsBanner";
@@ -58,14 +59,11 @@ const StudioContents = ({ id }: StudioContentsProps) => {
           </header>
 
           {charArray.length <= 0 ? (
-            <div className="flex h-50 w-full items-center justify-center">
-              <div className="flex flex-col gap-1 text-center">
-                <span className="text-font-2">{t("emptyTitle")}</span>
-                <span className="body-7 text-font-disabled">
-                  {t("emptyDescription")}
-                </span>
-              </div>
-            </div>
+            <EmptyState mood="peek" message={t("emptyTitle")}>
+              <span className="body-7 -mt-2 text-font-disabled">
+                {t("emptyDescription")}
+              </span>
+            </EmptyState>
           ) : viewMode === "list" ? (
             <CharacterList char={charArray} />
           ) : (

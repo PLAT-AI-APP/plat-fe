@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import type { CreditInsufficientDialogProps } from "@/type/dialog";
 import Dialog from "./Dialog";
+import DialogHero from "./DialogHero";
 
 /** 노트가 모자라 채팅을 시작하지 못했을 때. 보낸 말은 입력창에 돌아가 있으니 충전하고 다시 보내면 된다. */
 const CreditInsufficientDialog = ({ onClose }: CreditInsufficientDialogProps) => {
@@ -11,6 +12,7 @@ const CreditInsufficientDialog = ({ onClose }: CreditInsufficientDialogProps) =>
   return (
     <Dialog
       onClose={onClose}
+      hero={<DialogHero variant="creditEmpty" />}
       cancelFn={onClose}
       cancelText="dialog.creditInsufficient.cancel"
       confirmText="dialog.creditInsufficient.confirm"

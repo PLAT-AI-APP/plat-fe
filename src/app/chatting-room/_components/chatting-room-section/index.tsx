@@ -1,6 +1,9 @@
 "use client";
 
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useChatAssetGalleryQuery } from "@/api/chat/getChatAssetGallery";
+import { DISSOLVE_MS } from "@/components/chat/MessageList";
+import { isRoomFresh } from "@/lib/freshRoom";
 import { useTranslations } from "next-intl";
 import { useChatModelsQuery } from "@/api/chat/getChatModels";
 import { useDeleteRoomMessageMutation } from "@/api/room/deleteRoomMessage";
@@ -179,15 +182,54 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
     profileImage,
     onTurnFailed: handleTurnFailed,
   });
+  // 이미 풀린 에셋을 알아 두면, 받는 중인 답에 처음 나온 에셋에만 해금 연출을 틀 수 있다.
+  // 갤러리(사이드바)와 같은 조회라 캐시를 같이 쓴다. 답을 다 받으면 훅이 갤러리를 다시 받는다.
+  const { data: assetGallery } = useChatAssetGalleryQuery(roomId);
+  const unlockedAssetIds = useMemo(
+    () =>
+      assetGallery
+        ? new Set(
+            assetGallery.items.flatMap((item) =>
+              !item.isLocked && item.fileId ? [item.fileId] : [],
+            ),
+          )
+        : undefined,
+    [assetGallery],
+  );
+
+  // 방을 막 만들고 들어왔으면 시나리오를 한 줄씩 올린다. 처음 그릴 때 한 번만 정한다.
+  const [playScenarioIntro] = useState(() => isRoomFresh(roomId));
+
+  // 다시 만들기를 누르면 옛 답과 그 뒤 대화가 잠깐 흐려지며 가라앉은 다음 목록에서 빠진다.
+  // 그동안은 새로 받는 답(입력 중 표시)을 붙이지 않아, 빠진 자리에 바로 이어 나타난다.
+  const [hiddenFromMessageId, setHiddenFromMessageId] = useState<string>();
+  useEffect(() => {
+    if (!replacingFromMessageId) return;
+    const timer = setTimeout(
+      () => setHiddenFromMessageId(replacingFromMessageId),
+      DISSOLVE_MS,
+    );
+    return () => clearTimeout(timer);
+  }, [replacingFromMessageId]);
+  const isDissolving =
+    replacingFromMessageId !== undefined &&
+    hiddenFromMessageId !== replacingFromMessageId;
+
   // 다시 만드는 중인 옛 답과 그 뒤 대화는 가리고(확정되면 서버가 지운다), 목록 끝에 새로 받는 답을 잇는다.
   const messages = useMemo(() => {
-    const visible = replacingFromMessageId
-      ? serverMessages.filter(
-          (message) => !isMessageAtOrAfter(message.id, replacingFromMessageId),
-        )
-      : serverMessages;
+    if (!replacingFromMessageId) return [...serverMessages, ...pendingMessages];
+    if (isDissolving) {
+      return serverMessages.map((message) =>
+        isMessageAtOrAfter(message.id, replacingFromMessageId)
+          ? { ...message, isDissolving: true }
+          : message,
+      );
+    }
+    const visible = serverMessages.filter(
+      (message) => !isMessageAtOrAfter(message.id, replacingFromMessageId),
+    );
     return [...visible, ...pendingMessages];
-  }, [serverMessages, pendingMessages, replacingFromMessageId]);
+  }, [serverMessages, pendingMessages, replacingFromMessageId, isDissolving]);
 
   const openDialog = useDialogStore((state) => state.openDialog);
   const { mutate: deleteRoomMessage } = useDeleteRoomMessageMutation();
@@ -303,6 +345,8 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
               scrollContainer={scrollContainer}
               isNovelView={isNovelView}
               assetImageUrls={room?.assetImageUrls}
+              unlockedAssetIds={unlockedAssetIds}
+              playScenarioIntro={playScenarioIntro}
               suggestions={suggestions}
               onSuggestionSelect={handleSuggestionSelect}
               onDeleteMessage={isBusy ? undefined : handleDeleteMessage}

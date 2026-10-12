@@ -1,6 +1,7 @@
 "use client";
 
 import React, { ChangeEvent, useState } from "react";
+import UploadStatusOverlay from "@/components/motion/UploadStatusOverlay";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Draggable } from "@hello-pangea/dnd";
@@ -166,18 +167,13 @@ const AssetItem = ({ id, index, remove }: AssetItemProps) => {
                     className="object-cover"
                   />
                 ) : null}
-                {isUploading ? (
-                  <span
-                    role="status"
-                    aria-label={t("uploading")}
-                    className="absolute inset-0 flex items-center justify-center bg-scrim/40"
-                  >
-                    <span
-                      aria-hidden="true"
-                      className="size-5 animate-spin rounded-full border-2 border-white/40 border-t-white"
-                    />
-                  </span>
-                ) : assetImage ? null : (
+                <UploadStatusOverlay
+                  isUploading={isUploading}
+                  label={t("uploading")}
+                  spinnerClassName="size-5"
+                  checkSize={26}
+                />
+                {!isUploading && !assetImage && (
                   <ImageIcon className="h-6 w-6 text-font-disabled" />
                 )}
                 <input

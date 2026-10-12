@@ -18,6 +18,13 @@ const zh: typeof ko = {
     draftNotFound: "没有可加载的草稿。",
     untitledDraftTitle: "无标题草稿",
     createSuccess: "角色已成功创建！",
+    publish: {
+      titlePublic: "角色已公开",
+      titlePrivate: "角色已创建",
+      descriptionPublic: "现在任何人都可以开始对话了",
+      descriptionPrivate: "已保存为仅自己可见的角色",
+      goToCharacter: "查看角色",
+    },
     createFailed: "角色创建失败，请重试。",
     rightsRequired: "需同意权利责任声明后才能创建角色。",
     validationFailed: "请检查输入的内容。",

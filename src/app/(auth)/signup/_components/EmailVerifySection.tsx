@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
-import { AnimatePresence, m } from "framer-motion";
+import { AnimatePresence, m, useAnimate } from "framer-motion";
+import DrawCheck from "@/components/motion/DrawCheck";
 import { TRANSITION_COLLAPSE } from "@/constants/motion";
 import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
@@ -129,6 +130,17 @@ const EmailVerifySection = ({
     });
   };
 
+  // 인증번호가 틀리면 입력칸이 좌우로 흔들린다(칸을 다시 그리지 않아 입력·포커스는 그대로)
+  const [codeFieldScope, animateCodeField] = useAnimate<HTMLDivElement>();
+  const shakeCodeField = () => {
+    if (!codeFieldScope.current) return;
+    void animateCodeField(
+      codeFieldScope.current,
+      { x: [0, -8, 7, -5, 3, 0] },
+      { duration: 0.4 },
+    );
+  };
+
   const handleVerifyOtp = () => {
     // 응답 전까지 버튼이 그대로라 다시 누르면 confirm 이 중복으로 나갔다.
     if (isEmailVerifyConfirmPending) return;
@@ -161,6 +173,7 @@ const EmailVerifySection = ({
             type: "manual",
             message: confirmErrorMessage(error.code) ?? error.message,
           });
+          shakeCodeField();
         },
       },
     );
@@ -228,6 +241,14 @@ const EmailVerifySection = ({
             )}
             disabled={isEmailVerified}
             helperMessage={emailHelperMessage}
+            // 인증을 마치면 칸 안에 체크가 그려진다
+            rightElement={
+              isEmailVerified ? (
+                <span className="flex text-success">
+                  <DrawCheck bare size={20} />
+                </span>
+              ) : undefined
+            }
           />
           <ActiveButton
             type="button"
@@ -280,34 +301,36 @@ const EmailVerifySection = ({
           >
             <div className="mt-5 flex flex-col gap-2">
               <div className="flex items-start gap-2">
-                <SmartInput
-                  {...register("code", {
-                    onChange: () => {
-                      clearFeedback("email");
-                      clearErrors("code");
-                    },
-                  })}
-                  label="auth.emailVerification.codeLabel"
-                  labelFontSize="title-5"
-                  value={code}
-                  placeholder="000000"
-                  inputMode="numeric"
-                  onInput={(event) => {
-                    event.currentTarget.value = event.currentTarget.value.slice(
-                      0,
-                      6,
-                    );
-                  }}
-                  inputClassName={cn(
-                    "body-5 h-11 rounded-lg bg-darkest px-4 py-3 pr-16 text-font-1",
-                    "placeholder:text-font-2/50 focus:border-brand transition-colors",
-                    errors.code &&
-                      "border-font-accents focus:border-font-accents",
-                  )}
-                  rightElement={
-                    <span className="body-5 text-font-2">{formatTime()}</span>
-                  }
-                />
+                <div ref={codeFieldScope} className="min-w-0 flex-1">
+                  <SmartInput
+                    {...register("code", {
+                      onChange: () => {
+                        clearFeedback("email");
+                        clearErrors("code");
+                      },
+                    })}
+                    label="auth.emailVerification.codeLabel"
+                    labelFontSize="title-5"
+                    value={code}
+                    placeholder="000000"
+                    inputMode="numeric"
+                    onInput={(event) => {
+                      event.currentTarget.value = event.currentTarget.value.slice(
+                        0,
+                        6,
+                      );
+                    }}
+                    inputClassName={cn(
+                      "body-5 h-11 rounded-lg bg-darkest px-4 py-3 pr-16 text-font-1",
+                      "placeholder:text-font-2/50 focus:border-brand transition-colors",
+                      errors.code &&
+                        "border-font-accents focus:border-font-accents",
+                    )}
+                    rightElement={
+                      <span className="body-5 text-font-2">{formatTime()}</span>
+                    }
+                  />
+                </div>
                 <ActiveButton
                   type="button"
                   isActive={(code?.length ?? 0) >= 6 && timeLeft > 0}

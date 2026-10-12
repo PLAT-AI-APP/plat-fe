@@ -134,3 +134,10 @@ html {
     scroll-behavior: auto !important;
   }
 }
+
+/* 테마 전환 — 새 테마가 원으로 번진다(lib/themeReveal). 기본 교차 페이드는 끈다. */
+html.theme-reveal::view-transition-old(root),
+html.theme-reveal::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}

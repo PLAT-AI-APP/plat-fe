@@ -387,6 +387,7 @@ const ko: typeof en = {
     characterTyping: "{name} 입력 중",
     characterProfileAlt: "{name} 프로필 이미지",
     chatAssetAlt: "대화 상황 이미지",
+    assetUnlocked: "새 에셋을 해금했어요 · 갤러리에 담겼어요",
     lightChatDescription: "빠르고 가볍게 대화를 주고받기 좋은 모델",
     balancedChatDescription: "속도와 표현력의 균형이 잡힌 모델",
     gemini31Description: "향상된 성능과 표현력을 갖춘 최신 AI 모델",

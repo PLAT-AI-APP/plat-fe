@@ -28,6 +28,8 @@ interface AssistantMessageType {
   isStreaming?: boolean;
   /** 방을 만들 때 서버가 첫 메시지로 넣어 둔 시나리오. 캐릭터 응답이 아니라 삭제·다시하기 대상이 아닙니다. */
   isScenario?: boolean;
+  /** 다시 만들기로 곧 가려질 옛 답. 흐려지며 사라지는 연출만 하고 잠시 뒤 목록에서 빠집니다. */
+  isDissolving?: boolean;
 }
 
 /** 유저 응답 타입 */
@@ -35,6 +37,8 @@ interface UserMessageType {
   id: string;
   role: "user";
   content: string; // 일반 텍스트
+  /** 다시 만들기로 곧 가려질 뒤 대화. 흐려지며 사라지는 연출만 하고 잠시 뒤 목록에서 빠집니다. */
+  isDissolving?: boolean;
 }
 
 /** 최종 메시지 유니온 타입 */

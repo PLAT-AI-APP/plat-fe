@@ -11,6 +11,8 @@ export interface DialogProps {
   confirmText?: string;
   /** 확인을 누른 뒤 요청이 오가는 중. 확인 버튼에 대기 표시를 하고 다시 눌리지 않게 한다. */
   isConfirmPending?: boolean;
+  /** 제목 위 연출 띠(DialogHero). 있으면 제목·설명이 띠 뒤로 차례로 떠오른다. */
+  hero?: React.ReactNode;
 }
 
 export interface CreditInsufficientDialogProps {

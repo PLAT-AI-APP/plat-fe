@@ -391,6 +391,8 @@ const en = {
         "Your number is used only to send the gift card and is masked (last 4 digits kept) 30 days after processing.",
       giftNotice: "Sent by text within 3 days",
       requested: "Request submitted",
+      requestedDescription: "We'll text it to {phone} within 3 days",
+      done: "OK",
     },
     conversion: {
       title: "Convert to notes",
@@ -402,6 +404,8 @@ const en = {
       remainPoints: "Points left",
       done: "Converted to {count} notes",
       granting: "Your notes are on the way",
+      doneDescription: "You can use them in chats right away",
+      confirm: "OK",
     },
     bannerTitle: "My earnings",
   },

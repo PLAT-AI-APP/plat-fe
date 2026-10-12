@@ -393,6 +393,7 @@ const vi: typeof en = {
     characterTyping: "{name} đang nhập",
     characterProfileAlt: "Ảnh hồ sơ của {name}",
     chatAssetAlt: "Ảnh tình huống trong chat",
+    assetUnlocked: "Đã mở khóa tài nguyên mới · Đã thêm vào thư viện",
     lightChatDescription: "Mô hình nhẹ và nhanh cho những cuộc trò chuyện thường ngày.",
     balancedChatDescription: "Mô hình cân bằng giữa tốc độ và khả năng diễn đạt.",
     gemini31Description:

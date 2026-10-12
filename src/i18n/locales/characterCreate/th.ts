@@ -18,6 +18,13 @@ const th: typeof ko = {
     draftNotFound: "ไม่มีร่างให้โหลด",
     untitledDraftTitle: "ร่างไม่มีชื่อ",
     createSuccess: "สร้างตัวละครสำเร็จแล้ว!",
+    publish: {
+      titlePublic: "เผยแพร่ตัวละครแล้ว",
+      titlePrivate: "สร้างตัวละครแล้ว",
+      descriptionPublic: "ตอนนี้ทุกคนเริ่มคุยได้แล้ว",
+      descriptionPrivate: "บันทึกเป็นตัวละครส่วนตัวที่มีแค่คุณเห็น",
+      goToCharacter: "ดูตัวละคร",
+    },
     createFailed: "สร้างตัวละครไม่สำเร็จ กรุณาลองอีกครั้ง",
     rightsRequired: "ต้องยอมรับความรับผิดชอบด้านลิขสิทธิ์ก่อนจึงจะสร้างตัวละครได้",
     validationFailed: "กรุณาตรวจสอบข้อมูลที่กรอก",

@@ -1,6 +1,11 @@
 import React from "react";
 import { useTranslations } from "next-intl";
+import EmptyMascot from "@/components/state/EmptyMascot";
 import { FollowTab } from "./constants";
+
+/** 다른 빈 목록과 같은 마스코트. 바닥은 잘라내는 대신 배경으로 스며들게 한다. */
+const MASCOT_CLASS =
+  "w-36 [mask-image:linear-gradient(to_bottom,#000_72%,transparent)]";
 
 interface FollowEmptyStateProps {
   activeTab: FollowTab;
@@ -100,6 +105,7 @@ const FollowEmptyState = ({
     return (
       <div className="flex min-h-[min(23.75rem,45dvh)] items-center justify-center">
         <div className="flex w-full flex-col items-center justify-center gap-4 text-center">
+          <EmptyMascot mood="chat" className={MASCOT_CLASS} />
           <div className="body-3 text-font-1">
             {state.lines.map((line) => (
               <p key={line}>{line}</p>
@@ -125,6 +131,7 @@ const FollowEmptyState = ({
   return (
     <div className="flex min-h-[min(23.75rem,45dvh)] items-center justify-center">
       <div className="flex w-full flex-col items-center gap-4 text-center">
+        <EmptyMascot mood="peek" className={MASCOT_CLASS} />
         <div className="flex flex-col items-center gap-1">
           <p className="body-7 max-w-[280px] text-font-2">
             {state.lines.map((line) => (

@@ -1,5 +1,6 @@
 import type { LoginRequiredDialogProps } from "@/type/dialog";
 import Dialog from "./Dialog";
+import DialogHero from "./DialogHero";
 
 const LoginRequiredDialog = ({
   confirmText = "dialog.loginRequired.confirm",
@@ -16,6 +17,7 @@ const LoginRequiredDialog = ({
   return (
     <Dialog
       onClose={onClose}
+      hero={<DialogHero variant="wave" />}
       label={label}
       description={description}
       confirmText={confirmText}

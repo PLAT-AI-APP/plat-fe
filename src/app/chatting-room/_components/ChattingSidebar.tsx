@@ -34,7 +34,8 @@ import {
 } from "@/api/universe/getUniverseDetail";
 import { usePatchRoomAnswerRecommendationMutation } from "@/api/room/patchRoomAnswerRecommendation";
 import { usePatchRoomPersonaMutation } from "@/api/room/patchRoomPersona";
-import { cn, formatWithCommas } from "@/lib/utils";
+import AnimatedBalance from "@/components/motion/AnimatedBalance";
+import { cn } from "@/lib/utils";
 import { useChatViewStore } from "@/store/useChatViewStore";
 import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
@@ -189,8 +190,9 @@ const ChattingSidebar = ({ roomId, toggleIsSidebar }: ChattingSidebarProps) => {
   const router = useRouter();
   const openDialog = useDialogStore((state) => state.openDialog);
   const openModal = useModalStore((state) => state.openModal);
+  // 아직 모르면 undefined — 처음 불러올 때 0 → 잔액으로 "충전" 연출이 돌지 않게 한다.
   const availableBalance = useWalletStore(
-    (state) => state.balance?.availableBalance ?? 0,
+    (state) => state.balance?.availableBalance,
   );
   const { data: room } = useRoomDetailQuery(roomId);
   // 채팅방 화면이 이미 받아 둔 세계관 상세를 캐시에서 그대로 쓴다.
@@ -388,10 +390,12 @@ const ChattingSidebar = ({ roomId, toggleIsSidebar }: ChattingSidebarProps) => {
                         href="/token-charge"
                         className="flex items-center gap-1.5 rounded-lg bg-card px-3 py-2 transition-colors hover:bg-card-hover"
                       >
-                        <Token className="size-[21px]" />
-                        <span className="body-5 whitespace-nowrap text-font-1">
-                          {formatWithCommas(availableBalance)}
-                        </span>
+                        {/* 대화 한 턴마다 쓴 노트가 옅게 빠지며 숫자가 굴러 줄어든다 */}
+                        <AnimatedBalance
+                          value={availableBalance}
+                          icon={<Token className="size-[21px]" />}
+                          className="body-5 whitespace-nowrap text-font-1"
+                        />
                       </Link>
                     </header>
 

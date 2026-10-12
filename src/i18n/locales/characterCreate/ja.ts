@@ -18,6 +18,13 @@ const ja: typeof ko = {
     draftNotFound: "読み込める下書きがありません。",
     untitledDraftTitle: "無題の下書き",
     createSuccess: "キャラクターが正常に登録されました！",
+    publish: {
+      titlePublic: "キャラクターを公開しました",
+      titlePrivate: "キャラクターを作成しました",
+      descriptionPublic: "誰でも会話を始められるようになりました",
+      descriptionPrivate: "自分だけが見られるキャラクターとして保存しました",
+      goToCharacter: "キャラクターを見る",
+    },
     createFailed: "キャラクター登録に失敗しました。もう一度お試しください。",
     rightsRequired: "権利に関する責任に同意すると、キャラクターを登録できます。",
     validationFailed: "入力内容をご確認ください。",

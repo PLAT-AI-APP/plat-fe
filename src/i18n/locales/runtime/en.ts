@@ -395,6 +395,7 @@ const en = {
     characterTyping: "{name} is typing",
     characterProfileAlt: "{name} profile image",
     chatAssetAlt: "Chat scene image",
+    assetUnlocked: "New asset unlocked · Added to your gallery",
     lightChatDescription: "A quick, lightweight model for casual conversations.",
     balancedChatDescription: "A model balancing speed and expressiveness.",
     gemini31Description:

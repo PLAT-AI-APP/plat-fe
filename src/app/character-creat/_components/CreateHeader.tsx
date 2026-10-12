@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useIsMutating } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
@@ -27,6 +27,7 @@ import { useTranslateText } from "@/hooks/i18n/useTranslateText";
 import { useSafeBack } from "@/hooks/navigation/useSafeBack";
 import { useDialogStore } from "@/store/useDialogStore";
 import { TabId } from "./CreateTabs";
+import PublishCelebration from "./PublishCelebration";
 
 interface CreateHeaderProps {
   universeId?: string;
@@ -263,6 +264,19 @@ const CreateHeader = ({
     hasSubmittedRef.current = true;
     markSubmitSuccess();
   };
+  // 새로 등록하면 토스트 대신 전체 화면 연출을 띄우고, 연출이 끝나거나 버튼을 누르면 상세로 넘어간다.
+  const [published, setPublished] = useState<{
+    universeId: string | number;
+    imageUrl: string;
+    isPublic: boolean;
+  } | null>(null);
+  const hasLeftRef = useRef(false);
+  const publishedUniverseId = published?.universeId;
+  const leaveToPublished = useCallback(() => {
+    if (publishedUniverseId === undefined || hasLeftRef.current) return;
+    hasLeftRef.current = true;
+    router.push(`/characters/${publishedUniverseId}`);
+  }, [publishedUniverseId, router]);
   const isSubmitInFlight = isMutationPending || isSubmitting;
   const isPending = isSubmitInFlight || isUploadingImages;
 
@@ -417,9 +431,12 @@ const CreateHeader = ({
 
       const created = await createUniverse(request);
 
-      showAppToast("success", t("createSuccess"));
       markSubmitted();
-      router.push(`/characters/${created.universeId}`);
+      setPublished({
+        universeId: created.universeId,
+        imageUrl: currentFormData.representativeImage,
+        isPublic: currentFormData.isPublic,
+      });
     } catch (error) {
       if (!isApiErrorLike(error)) {
         showAppToast("error", t(isEditMode ? "updateFailed" : "createFailed"));
@@ -474,6 +491,13 @@ const CreateHeader = ({
 
   return (
     <header className="flex h-[37px] shrink-0 items-center justify-between">
+      {published && (
+        <PublishCelebration
+          imageUrl={published.imageUrl}
+          isPublic={published.isPublic}
+          onLeave={leaveToPublished}
+        />
+      )}
       <h1 className="title-1 flex items-center gap-2">
         <ArrowLineLeft
           onClick={() => handleSafeBack("/")}

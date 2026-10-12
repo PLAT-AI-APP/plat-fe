@@ -381,6 +381,8 @@ const ko = {
         "받는 번호는 상품권 발송에만 쓰고, 처리 후 30일이 지나면 끝 4자리만 남기고 파기해요.",
       giftNotice: "3일 내 문자 발송",
       requested: "교환을 신청했어요",
+      requestedDescription: "{phone} 로 3일 안에 문자로 보내 드려요",
+      done: "확인",
     },
     conversion: {
       title: "노트로 전환",
@@ -392,6 +394,8 @@ const ko = {
       remainPoints: "남는 포인트",
       done: "{count}노트로 전환했어요",
       granting: "노트 지급 중이에요. 잠시 뒤 들어와요",
+      doneDescription: "바로 대화에 쓸 수 있어요",
+      confirm: "확인",
     },
     bannerTitle: "나의 수익",
   },

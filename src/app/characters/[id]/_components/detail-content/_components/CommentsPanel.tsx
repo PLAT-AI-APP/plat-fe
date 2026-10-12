@@ -5,6 +5,8 @@ import { useTranslations } from "next-intl";
 import { useUniverseCommentsInfiniteQuery } from "@/api/comment/getUniverseComments";
 import { EmptyState, InfiniteQueryBoundary } from "@/components/state";
 import CommentInputBox from "./CommentInputBox";
+import { AnimatePresence } from "framer-motion";
+import ListMotion from "@/components/motion/ListMotion";
 import CommentListItem from "./CommentListItem";
 
 interface CommentsPanelProps {
@@ -73,16 +75,20 @@ const CommentsPanel = ({
           <EmptyState size="sm" mood="chat" message={t("commentEmpty")} />
         }
       >
-        <ul className="flex flex-col gap-5">
-          {comments.map((comment) => (
-            <CommentListItem
-              key={comment.commentId}
-              comment={comment}
-              universeId={universeId}
-              creatorId={creatorId}
-            />
-          ))}
-        </ul>
+        <ListMotion>
+          <ul className="flex flex-col gap-5">
+            <AnimatePresence initial={false}>
+              {comments.map((comment) => (
+                <CommentListItem
+                  key={comment.commentId}
+                  comment={comment}
+                  universeId={universeId}
+                  creatorId={creatorId}
+                />
+              ))}
+            </AnimatePresence>
+          </ul>
+        </ListMotion>
 
         {hasNextPage && (
           <button

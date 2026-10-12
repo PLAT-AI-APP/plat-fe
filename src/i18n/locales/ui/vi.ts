@@ -385,6 +385,8 @@ const vi = {
         "Số điện thoại chỉ dùng để gửi thẻ quà tặng và sẽ bị hủy, chỉ giữ 4 số cuối, sau 30 ngày kể từ khi xử lý.",
       giftNotice: "Gửi SMS trong 3 ngày",
       requested: "Đã gửi yêu cầu đổi",
+      requestedDescription: "Chúng tôi sẽ gửi tin nhắn đến {phone} trong 3 ngày",
+      done: "Xác nhận",
     },
     conversion: {
       title: "Chuyển thành note",
@@ -396,6 +398,8 @@ const vi = {
       remainPoints: "Điểm còn lại",
       done: "Đã chuyển thành {count} note",
       granting: "Đang cộng note, vui lòng chờ giây lát",
+      doneDescription: "Bạn có thể dùng ngay trong trò chuyện",
+      confirm: "Xác nhận",
     },
     bannerTitle: "Thu nhập của tôi",
   },
