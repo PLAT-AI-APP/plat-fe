@@ -133,6 +133,7 @@ const mockCharacterDetail: CharacterDetail = {
   editable: false,
   tags: ["학원", "일상", "로맨스", "소꿉친구", "츤데레"],
   isOfficial: true,
+  isNew: false,
   images: [
     { id: "preview-1", url: CHARACTER_PREVIEW_IMAGES.first },
     { id: "preview-2", url: CHARACTER_PREVIEW_IMAGES.second },
@@ -150,6 +151,7 @@ const mockCharacterDetail: CharacterDetail = {
     followerCount: 24,
     isFollowing: true,
     adopted: false,
+    tier: "PLANET",
   },
   scenarios: mockScenarios,
   comments: [

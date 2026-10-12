@@ -3,16 +3,23 @@
 import ShallowLink from "@/components/navigation/ShallowLink";
 import React from "react";
 import { useTranslations } from "next-intl";
-import Logo from "@/icons/Logo";
-import New from "@/icons/New";
+import { StatusBadge } from "@/components/character/character-card/TitleStatusIcon";
 
 const MenuTab = ({ currentTab }: { currentTab: string }) => {
   const t = useTranslations();
   const categoryArray = [
     { id: "all", name: t("mainTabs.home") },
     { id: "ranking", name: t("mainTabs.ranking") },
-    { id: "new", name: t("mainTabs.new"), icon: New },
-    { id: "official", name: t("mainTabs.official"), icon: Logo },
+    {
+      id: "new",
+      name: t("mainTabs.new"),
+      badge: <StatusBadge isNew isOfficial={false} />,
+    },
+    {
+      id: "official",
+      name: t("mainTabs.official"),
+      badge: <StatusBadge isNew={false} isOfficial />,
+    },
     { id: "categories", name: t("mainTabs.categories") },
   ];
 
@@ -22,7 +29,7 @@ const MenuTab = ({ currentTab }: { currentTab: string }) => {
       aria-label={t("mainTabs.navigation")}
       className="tab-strip mt-6 w-full gap-2"
     >
-      {categoryArray.map(({ id, name, icon: Icon }) => {
+      {categoryArray.map(({ id, name, badge }) => {
         const isActive = currentTab === id;
 
         return (
@@ -36,7 +43,7 @@ const MenuTab = ({ currentTab }: { currentTab: string }) => {
             }`}
           >
             {name}
-            {Icon && <Icon className="inline h-4.5 w-4.5 text-font-1" />}
+            {badge}
 
             {isActive && (
               <div className="absolute bottom-0 left-0 h-0.5 w-full bg-brand" />

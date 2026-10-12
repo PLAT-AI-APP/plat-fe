@@ -3,6 +3,7 @@ import type {
   CreatorTierInfo,
   TierBenefit,
 } from "@/type/earning";
+import { CREATOR_TIER_BADGE } from "@/constants/creatorTier";
 
 /**
  * 제작자 등급 화면 모델. 등급 자체(이름·뱃지·색)는 고정이라 화면 상수로 두고, 조건·비율·혜택·달성일은 서버 값을 쓴다.
@@ -21,12 +22,12 @@ export const LADDER: LadderCode[] = [
 
 /** 등급 색은 뱃지와 카드 뒤 은은한 빛·승급 연출에만 쓴다. */
 const VISUAL: Record<TierCode, { color: string; badge: string }> = {
-  DUST: { color: "#8590A6", badge: "/images/creator-tier/1-dust.svg" },
-  COMET: { color: "#19B26B", badge: "/images/creator-tier/2-comet.svg" },
-  PLANET: { color: "#2E6FF0", badge: "/images/creator-tier/3-planet.svg" },
-  NOVA: { color: "#7C44F5", badge: "/images/creator-tier/4-nova.svg" },
-  GALAXY: { color: "#FF7A00", badge: "/images/creator-tier/5-galaxy.svg" },
-  ORIGIN: { color: "#A98BFF", badge: "/images/creator-tier/6-origin.svg" },
+  DUST: { color: "#8590A6", badge: CREATOR_TIER_BADGE.DUST },
+  COMET: { color: "#19B26B", badge: CREATOR_TIER_BADGE.COMET },
+  PLANET: { color: "#2E6FF0", badge: CREATOR_TIER_BADGE.PLANET },
+  NOVA: { color: "#7C44F5", badge: CREATOR_TIER_BADGE.NOVA },
+  GALAXY: { color: "#FF7A00", badge: CREATOR_TIER_BADGE.GALAXY },
+  ORIGIN: { color: "#A98BFF", badge: CREATOR_TIER_BADGE.ORIGIN },
 };
 
 export interface Tier {

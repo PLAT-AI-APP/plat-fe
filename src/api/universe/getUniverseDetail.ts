@@ -1,4 +1,5 @@
 import { useCallback } from "react";
+import type { BadgeTierCode } from "@/constants/creatorTier";
 import { queryOptions, useQuery, useQueryClient } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
@@ -81,6 +82,12 @@ export interface UniverseDetailResponse {
   adult?: boolean;
   assets: UniverseDetailAsset[];
   scenarios: UniverseDetailScenario[];
+  /** 제작자 등급 뱃지. 등급이 없거나 인수한 캐릭터면 null. */
+  creatorTier?: BadgeTierCode | null;
+  /** 공식 계정의 캐릭터(공식 뱃지). */
+  official?: boolean;
+  /** 만든 지 30일 안의 신작(신작 뱃지). */
+  newRelease?: boolean;
 }
 
 export const getUniverseDetail = async (universeId: string) => {
@@ -138,7 +145,8 @@ export const adaptUniverseDetailToCharacterDetail = (
     liked: universe.liked,
     editable: universe.editable,
     tags: universe.hashtags.map((hashtag) => hashtag.label),
-    isOfficial: false,
+    isOfficial: universe.official ?? false,
+    isNew: universe.newRelease ?? false,
     adult: universe.adult ?? false,
     images,
     mainImage: universe.profileImageUrl,
@@ -154,6 +162,7 @@ export const adaptUniverseDetailToCharacterDetail = (
       // 사진이 창작자인 것처럼 보이므로 여기 두지 않고, 화면이 공개 프로필 API 로 따로 가져온다.
       followerCount: universe.creatorFollowerCount,
       adopted: universe.adopted ?? false,
+      tier: universe.creatorTier ?? null,
       // 이 요청을 보낸 사람이 창작자를 팔로우하는지는 아직 상세 응답에 실려 오지 않습니다.
       isFollowing: false,
     },

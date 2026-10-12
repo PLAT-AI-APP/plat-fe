@@ -116,6 +116,8 @@ const zh = {
     otherLooksPrompt: "想看看这个角色的另一面吗？",
     viewProfile: "查看资料",
     editButtonLabel: "编辑角色",
+    officialBadge: "官方",
+    newBadge: "新作",
   },
   characterDetail: {
     scenarioImageAlt: "场景图片",
@@ -126,7 +128,6 @@ const zh = {
       comments: "评论",
       commentsCount: "({count})",
     },
-    officialCharacter: "PLAT 官方角色",
     adoptedNotice: "创作者离开后，由 PLAT 接手运营的角色",
     chatStart: "开始聊天",
     like: "加入收藏",

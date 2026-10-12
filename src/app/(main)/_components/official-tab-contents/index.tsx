@@ -61,6 +61,7 @@ const OfficialTabContents = () => {
             name: card.title,
             dec: card.description,
             creatorName: card.creator.nickname,
+            creatorTier: card.creator.tier,
             isAdopted: card.creator.adopted,
             chatCount: card.chatCount,
             img: card.images,

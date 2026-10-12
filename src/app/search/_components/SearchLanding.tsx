@@ -252,6 +252,7 @@ const SearchLanding = () => {
                   title={card.title}
                   description={card.description}
                   creatorName={card.creator.nickname}
+                  creatorTier={card.creator.tier}
                   isAdopted={card.creator.adopted}
                   chatCount={card.chatCount}
                   images={card.images}

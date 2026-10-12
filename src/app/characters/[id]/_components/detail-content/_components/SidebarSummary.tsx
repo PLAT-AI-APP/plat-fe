@@ -21,6 +21,8 @@ import { useFollowToggle } from "@/hooks/follow/useFollowToggle";
 import { universeQueryKeys } from "@/api/universe/queryKeys";
 import UniverseMenuButton from "./UniverseMenuButton";
 import AdultBadge from "@/components/adult/AdultBadge";
+import CreatorTierBadge from "@/components/creator/CreatorTierBadge";
+import { StatusBadge } from "@/components/character/character-card/TitleStatusIcon";
 
 /** 창작자가 사진을 올리지 않았거나 불러오지 못했을 때 쓰는 기본 프로필 이미지 */
 const DEFAULT_CREATOR_IMAGE = "/p1.png";
@@ -112,8 +114,11 @@ const SidebarSummary = ({
         />
       )}
       <div className="flex min-w-0 flex-col gap-1">
-        <p className="title-4 truncate text-font-1">
-          {character.creator.nickname}
+        <p className="title-4 flex min-w-0 items-center gap-1 text-font-1">
+          <span className="truncate">{character.creator.nickname}</span>
+          {character.creator.tier && (
+            <CreatorTierBadge tier={character.creator.tier} size={18} />
+          )}
         </p>
         <p className="body-6 text-font-2">
           {t("followerCount", { count: character.creator.followerCount })}
@@ -125,12 +130,6 @@ const SidebarSummary = ({
   return (
     <aside className="flex w-full shrink-0 flex-col gap-5 self-start min-[900px]:sticky min-[900px]:top-(--header-height) min-[900px]:w-[389px]">
       <section className="flex flex-col gap-4">
-        {!isCreator && character.isOfficial && (
-          <span className="body-7 w-fit rounded-xl bg-brand/10 px-3 py-2 text-brand-dark">
-            {t("officialCharacter")}
-          </span>
-        )}
-
         {/* lg 미만에서는 이 열이 한 줄을 통째로 쓴다. 상한이 없으면 정사각형이 콘텐츠 폭을
             그대로 따라가 940px 화면에서 812×812 로 그려졌다. 데스크탑 열 폭이 곧 상한이다. */}
         <div className="relative aspect-square w-full max-w-[389px] overflow-hidden rounded-2xl bg-card">
@@ -148,6 +147,11 @@ const SidebarSummary = ({
           <h1 className="heading-2 flex items-center gap-2 text-font-1">
             {character.title}
             {character.adult && <AdultBadge className="size-6 text-xs" />}
+            <StatusBadge
+              isOfficial={character.isOfficial}
+              isNew={character.isNew}
+              size={24}
+            />
           </h1>
           <p className="body-2 text-font-1">{character.introduce}</p>
           <div className="flex flex-col gap-0.5">

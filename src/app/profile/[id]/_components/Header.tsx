@@ -2,6 +2,7 @@
 
 // 공유하기·차단 기능은 후순위로 미뤄 화면에서 뺐다. 다시 켤 때 아래 [공유·차단] 주석을 되살린다.
 // import { AnimatePresence } from "framer-motion";
+import CreatorTierBadge from "@/components/creator/CreatorTierBadge";
 import Image from "next/image";
 // import { useRef } from "react";
 import { useTranslations } from "next-intl";
@@ -184,6 +185,10 @@ const Header = ({ userId, profile }: HeaderProps) => {
                 >
                   {nickname}
                 </h1>
+              )}
+
+              {!isProfileLoading && profile?.creatorTier && (
+                <CreatorTierBadge tier={profile.creatorTier} size={22} />
               )}
 
               {/* [공유·차단] 후순위로 보류: 더보기 메뉴(공유하기·차단하기)는 두 항목뿐이라 메뉴째 뺀다.

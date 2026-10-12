@@ -116,6 +116,8 @@ const ko = {
     otherLooksPrompt: "캐릭터의 다른 모습을 보고 싶다면?",
     viewProfile: "프로필 보기",
     editButtonLabel: "캐릭터 수정하기",
+    officialBadge: "공식",
+    newBadge: "신작",
   },
   characterDetail: {
     scenarioImageAlt: "시나리오 이미지",
@@ -126,7 +128,6 @@ const ko = {
       comments: "댓글",
       commentsCount: "({count})",
     },
-    officialCharacter: "PLAT 공식 캐릭터",
     adoptedNotice: "제작자가 떠난 뒤 PLAT이 운영을 이어받은 캐릭터예요",
     chatStart: "대화하기",
     like: "찜하기",

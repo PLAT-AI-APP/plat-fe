@@ -1,6 +1,6 @@
 "use client";
 
-import New from "@/icons/New";
+import { StatusBadge } from "@/components/character/character-card/TitleStatusIcon";
 import { useTranslations } from "next-intl";
 import { useMemo } from "react";
 import CharacterShowcase, {
@@ -12,13 +12,14 @@ import { useAllCharactersQuery } from "@/api/home/getAllCharacters";
 import { useAssetPreviewQuery } from "@/api/home/getAssetPreview";
 import { usePopularTagQuery } from "@/api/home/getPopularTag";
 import { useNewWorkQuery } from "@/api/home/getNewWork";
+import type { CardCreator } from "@/type/card";
 
 interface HomeCardSource {
   universeId: string;
   title: string;
   description: string;
   images: string[];
-  creator?: { nickname: string; adopted?: boolean };
+  creator?: Pick<CardCreator, "nickname" | "tier"> & { adopted?: boolean };
   chatCount?: number;
   isNew?: boolean;
   isOfficial?: boolean;
@@ -35,6 +36,7 @@ const toShowcaseItem = (
   dec: item.description,
   img: item.images,
   creatorName: item.creator?.nickname,
+  creatorTier: item.creator?.tier,
   isAdopted: item.creator?.adopted,
   isNew: item.isNew,
   isOfficial: item.isOfficial,
@@ -42,7 +44,7 @@ const toShowcaseItem = (
   ...overrides,
 });
 
-const NEW_WORK_TITLE_LOGO = <New className="h-4.5 w-4.5" />;
+const NEW_WORK_TITLE_LOGO = <StatusBadge isNew isOfficial={false} />;
 
 const HomeTabContents = () => {
   // 홈 탭 언어는 설정 변경 직후 바로 반영되어야 하므로 클라이언트 번역 컨텍스트를 사용합니다.

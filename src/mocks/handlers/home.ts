@@ -1,6 +1,18 @@
 import { http, HttpResponse } from "msw";
 import { endpoint } from "../utils";
 
+/** 목업 카드의 제작자 등급. 등급 없는 제작자('@')도 섞이게 둔다. */
+const MOCK_TIERS = [
+  null,
+  "DUST",
+  "COMET",
+  "PLANET",
+  "NOVA",
+  "GALAXY",
+  "ORIGIN",
+] as const;
+const mockTier = (index: number) => MOCK_TIERS[index % MOCK_TIERS.length];
+
 const NEW_WORK_SEEDS = [
   {
     title: "흐물거리는 무말랭이",
@@ -58,6 +70,7 @@ const NEW_WORK_ITEMS = Array.from({ length: 24 }, (_, index) => {
       creatorId: `creator-${index}`,
       adopted: false,
       nickname: seed.nickname,
+      tier: mockTier(index),
     },
   };
 });
@@ -76,6 +89,7 @@ const USER_RECOMMEND_ITEMS = Array.from({ length: 24 }, (_, index) => {
       creatorId: `creator-${index}`,
       adopted: false,
       nickname: seed.nickname,
+      tier: mockTier(index),
     },
     chatCount: seed.chatCount,
     isNew: index % 5 === 0,
@@ -141,6 +155,7 @@ const POPULAR_TAG_ITEMS = Array.from({ length: 24 }, (_, index) => {
       creatorId: `creator-${index}`,
       adopted: false,
       nickname: seed.nickname,
+      tier: mockTier(index),
     },
     chatCount: seed.chatCount,
     isNew: index % 5 === 0,
@@ -162,6 +177,7 @@ const TODAY_PICK_ITEMS = Array.from({ length: 24 }, (_, index) => {
       creatorId: `creator-${index}`,
       adopted: false,
       nickname: seed.nickname,
+      tier: mockTier(index),
     },
     chatCount: seed.chatCount,
     isNew: index % 5 === 0,

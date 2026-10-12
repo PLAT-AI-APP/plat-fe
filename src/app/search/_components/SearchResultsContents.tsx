@@ -45,6 +45,7 @@ const SearchCardGrid = ({ items, isLoading }: SearchCardGridProps) => (
             title={item.title}
             description={item.description}
             creatorName={item.creator.nickname}
+            creatorTier={item.creator.tier}
             isAdopted={item.creator.adopted}
             chatCount={item.chatCount}
             images={item.images}

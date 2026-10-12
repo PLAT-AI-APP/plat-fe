@@ -120,6 +120,8 @@ const en = {
     otherLooksPrompt: "Want to see another side of this character?",
     viewProfile: "View profile",
     editButtonLabel: "Edit character",
+    officialBadge: "Official",
+    newBadge: "New",
   },
   characterDetail: {
     scenarioImageAlt: "Scenario image",
@@ -130,7 +132,6 @@ const en = {
       comments: "Comments",
       commentsCount: "({count})",
     },
-    officialCharacter: "Official PLAT character",
     adoptedNotice: "Its creator has left, and PLAT now keeps this character running.",
     chatStart: "Start chat",
     like: "Add to wishlist",

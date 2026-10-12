@@ -119,6 +119,8 @@ const th = {
     otherLooksPrompt: "อยากดูอีกมุมของตัวละครนี้ไหม?",
     viewProfile: "ดูโปรไฟล์",
     editButtonLabel: "แก้ไขตัวละคร",
+    officialBadge: "ทางการ",
+    newBadge: "ผลงานใหม่",
   },
   characterDetail: {
     scenarioImageAlt: "รูปภาพสถานการณ์",
@@ -129,7 +131,6 @@ const th = {
       comments: "ความคิดเห็น",
       commentsCount: "({count})",
     },
-    officialCharacter: "ตัวละครทางการของ PLAT",
     adoptedNotice: "ผู้สร้างออกไปแล้ว ตอนนี้ PLAT ดูแลตัวละครนี้ต่อ",
     chatStart: "เริ่มแชท",
     like: "เพิ่มในรายการโปรด",

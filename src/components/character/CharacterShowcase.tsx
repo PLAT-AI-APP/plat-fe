@@ -1,5 +1,6 @@
 "use client";
 
+import type { BadgeTierCode } from "@/constants/creatorTier";
 import { ArrowLeft, ArrowRight } from "@/icons";
 import { useFadeInAfterLoading } from "@/hooks/common/useFadeInAfterLoading";
 import { useCarousel } from "@/hooks/dom/useCarousel";
@@ -28,6 +29,7 @@ export interface CharacterShowcaseItem {
   tag?: string[];
   img: string[] | string;
   creatorName?: string;
+  creatorTier?: BadgeTierCode | null;
   /** 공식 계정이 운영하는 캐릭터(제작자 탈퇴 후 인수). */
   isAdopted?: boolean;
   isNew?: boolean;
@@ -136,6 +138,7 @@ const CharacterShowcase = ({
               title={char.name}
               description={char.dec}
               creatorName={char.creatorName || unknownCreator}
+              creatorTier={char.creatorTier}
               isAdopted={char.isAdopted}
               chatCount={char.chatCount}
               images={char.img}

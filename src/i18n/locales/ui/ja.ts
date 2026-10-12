@@ -120,6 +120,8 @@ const ja = {
     otherLooksPrompt: "キャラクターの別の姿を見たいですか？",
     viewProfile: "プロフィールを見る",
     editButtonLabel: "キャラクターを編集",
+    officialBadge: "公式",
+    newBadge: "新作",
   },
   characterDetail: {
     scenarioImageAlt: "シナリオ画像",
@@ -130,7 +132,6 @@ const ja = {
       comments: "コメント",
       commentsCount: "({count}件)",
     },
-    officialCharacter: "PLAT公式キャラクター",
     adoptedNotice: "制作者が退会したため、PLATが運営を引き継いだキャラクターです",
     chatStart: "会話する",
     like: "お気に入りに追加",

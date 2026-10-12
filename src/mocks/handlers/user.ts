@@ -94,7 +94,7 @@ const likedUniversePage = (page: number, size: number) => {
         images: [`https://picsum.photos/seed/liked-${order}/374/490`],
         title: `${seed.title} ${order + 1}`,
         description: seed.description,
-        creator: { creatorId: `creator-${order}`, nickname: seed.nickname, adopted: false },
+        creator: { creatorId: `creator-${order}`, nickname: seed.nickname, adopted: false, tier: "GALAXY" },
         chatCount: 40 + order * 3,
         isNew: order % 5 === 0,
         isOfficial: order % 7 === 0,
@@ -140,7 +140,7 @@ const userUniversePage = (
         images: [`https://picsum.photos/seed/user-${userId}-${order}/374/490`],
         title: `${userId}의 세계관 ${order + 1}`,
         description: "프로필 작품 탭에서 보이는 세계관입니다.",
-        creator: { creatorId: userId, nickname: `유저_${userId}`, adopted: false },
+        creator: { creatorId: userId, nickname: `유저_${userId}`, adopted: false, tier: "NOVA" },
         chatCount: 10 + order * 5,
         isNew: order === 0,
         isOfficial: false,
@@ -287,6 +287,7 @@ export const userHandlers = [
         profileImageUrl: mockUser.profileImageUrl?.startsWith("http")
           ? mockUser.profileImageUrl
           : fallbackImageUrl,
+        creatorTier: "COMET",
       });
     }
 
@@ -295,6 +296,7 @@ export const userHandlers = [
       nickname: `유저_${userId}`,
       bio: `${userId} 님의 자기소개입니다.\n캐릭터를 만들며 이야기를 나누고 있어요.`,
       profileImageUrl: fallbackImageUrl,
+      creatorTier: "NOVA",
     });
   }),
 
