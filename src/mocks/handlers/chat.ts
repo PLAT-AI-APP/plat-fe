@@ -35,52 +35,20 @@ const chatAssetGallery: ChatAssetGalleryResponse = {
   visibleCount: 4,
 };
 
-/** 서버의 길이별 배수(PromptMultiplier 0.8/1.0/2.0). 크레딧은 기본 요금에 곱해 올림한다. */
-const RESPONSE_LENGTH_FACTORS = { SHORT: 0.8, MEDIUM: 1, LONG: 2 } as const;
+/** 서버 시드와 같은 응답 형식(채팅형·소설형). 이름·설명은 서버가 한국어 한 벌로 준다. */
+export const MOCK_RESPONSE_FORMATS: ChatCatalog["responseFormats"] = [
+  { code: "CHAT", name: "채팅형", description: "메신저처럼 짧게 주고받는 대화" },
+  { code: "NOVEL", name: "소설형", description: "지문과 묘사가 풍부한 서술" },
+];
 
-const withLengthCosts = (
-  option: Omit<ChatCatalog["models"][number], "responseLengthCreditCosts">,
-): ChatCatalog["models"][number] => ({
-  ...option,
-  responseLengthCreditCosts: (
-    Object.keys(RESPONSE_LENGTH_FACTORS) as (keyof typeof RESPONSE_LENGTH_FACTORS)[]
-  ).map((responseLength) => ({
-    responseLength,
-    creditCost: Math.ceil(
-      option.creditCost * RESPONSE_LENGTH_FACTORS[responseLength],
-    ),
-  })),
-});
-
-const RESPONSE_LENGTH_OPTIONS: NonNullable<ChatCatalog["responseLengths"]> = [
-  {
-    value: "SHORT",
-    label: "짧게",
-    description: "크레딧을 아끼며 캐릭터와 오래 채팅해보세요.",
-    creditMultiplier: 0.8,
-    creditNotice:
-      "선택한 모델 기본 요금의 0.8배 크레딧이 소모됩니다. 답변이 길수록 더 많은 크레딧이 소모됩니다.",
-  },
-  {
-    value: "MEDIUM",
-    label: "보통",
-    description: "캐릭터와 자연스럽게 대화를 나눠보세요.",
-    creditMultiplier: 1,
-    creditNotice:
-      "선택한 모델 기본 요금의 1배 크레딧이 소모됩니다. 답변이 길수록 더 많은 크레딧이 소모됩니다.",
-  },
-  {
-    value: "LONG",
-    label: "길게",
-    description: "대화의 답변이 더욱 풍부해집니다.",
-    creditMultiplier: 2,
-    creditNotice:
-      "선택한 모델 기본 요금의 2배 크레딧이 소모됩니다. 답변이 길수록 더 많은 크레딧이 소모됩니다.",
-  },
+/** 형식별 한 턴 예상 노트(채팅형, 소설형). 값은 AI 모델 단가표 기준 서버 계산과 같다. */
+const estimates = (chat: number, novel: number) => [
+  { responseFormat: "CHAT", estimatedNotes: chat },
+  { responseFormat: "NOVEL", estimatedNotes: novel },
 ];
 
 /** 백엔드 ChatModel enum 중 화면 테스트에 필요한 일부만 추립니다. */
-const BASE_CATALOG: ChatCatalog = {
+const CHAT_CATALOG: ChatCatalog = {
   models: [
     {
       name: "CLAUDE_SONNET_5_5",
@@ -88,7 +56,7 @@ const BASE_CATALOG: ChatCatalog = {
       provider: "ANTHROPIC",
       displayName: "Claude Sonnet 5.5",
       description: "자연스럽고 세심한 대화와 균형 잡힌 창작 응답에 적합한 모델.",
-      creditCost: 10,
+      formatNoteEstimates: estimates(6, 22),
     },
     {
       name: "CLAUDE_HAIKU_4_5",
@@ -96,7 +64,7 @@ const BASE_CATALOG: ChatCatalog = {
       provider: "ANTHROPIC",
       displayName: "Claude Haiku 4.5",
       description: "빠른 응답이 필요한 가벼운 일상 대화에 적합한 모델.",
-      creditCost: 0,
+      formatNoteEstimates: estimates(3, 11),
     },
     {
       name: "GEMINI_3_8_FLASH",
@@ -104,7 +72,7 @@ const BASE_CATALOG: ChatCatalog = {
       provider: "GOOGLE",
       displayName: "Gemini 3.8 Flash",
       description: "빠른 속도로 아이디어를 주고받는 경쾌한 대화에 적합한 모델.",
-      creditCost: 5,
+      formatNoteEstimates: estimates(3, 9),
     },
     {
       name: "GPT_6_SOL",
@@ -112,26 +80,10 @@ const BASE_CATALOG: ChatCatalog = {
       provider: "OPENAI",
       displayName: "GPT-6 Sol",
       description: "복잡한 요청을 이해하고 안정적으로 대화를 이어가는 데 적합한 모델.",
-      creditCost: 15,
+      formatNoteEstimates: estimates(6, 22),
     },
   ],
-  multipliers: [
-    { name: "X1_0", value: 1 },
-    { name: "X1_5", value: 1.5 },
-    { name: "X2_0", value: 2 },
-    { name: "X2_5", value: 2.5 },
-    { name: "X3_0", value: 3 },
-    { name: "X3_5", value: 3.5 },
-    { name: "X4_0", value: 4 },
-    { name: "X4_5", value: 4.5 },
-    { name: "X5_0", value: 5 },
-  ],
-};
-
-const CHAT_CATALOG: ChatCatalog = {
-  ...BASE_CATALOG,
-  models: BASE_CATALOG.models.map(withLengthCosts),
-  responseLengths: RESPONSE_LENGTH_OPTIONS,
+  responseFormats: MOCK_RESPONSE_FORMATS,
 };
 
 const SUPPORTED_CHAT_MODELS = new Set(CHAT_CATALOG.models.map((model) => model.name));
@@ -164,6 +116,9 @@ const chatStartError = (code: string, message: string, status: number) =>
   HttpResponse.json({ code, message }, { status });
 
 export const chatHandlers = [
+  // 시나리오에 붙일 수 있는 응답 형식(plat-app-api)
+  http.get(/\/response-formats(?:\?.*)?$/, () => HttpResponse.json(MOCK_RESPONSE_FORMATS)),
+
   http.get(/\/rooms\/([^/]+)\/assets(?:\?.*)?$/, () => {
     return HttpResponse.json(chatAssetGallery);
   }),

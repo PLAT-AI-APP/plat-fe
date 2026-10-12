@@ -85,46 +85,34 @@ export interface ChatModelOption {
   displayName: string;
   /** 서버가 주는 모델 설명. 한국어 한 벌만 내려옵니다. */
   description: string;
-  /** 한 턴 기본 크레딧 비용. 답변 길이 "보통" 기준이다. */
-  creditCost: number;
-  /** 답변 길이별 한 턴 크레딧. 기본 요금에 길이 배수를 곱해 올림한 값이다. */
-  responseLengthCreditCosts?: ResponseLengthCreditCost[];
+  /**
+   * 응답 형식별 한 턴 예상 노트("약 N노트"). 요금은 쓴 토큰만큼이라 실제 차감은 대화 길이에 따라 다르다.
+   */
+  formatNoteEstimates: FormatNoteEstimate[];
 }
 
-/** 방에서 고르는 답변 길이. 서버의 프롬프트 배수 0.8/1.0/2.0 에 각각 대응한다. */
-export type ChatResponseLength = "SHORT" | "MEDIUM" | "LONG";
-
-/** 모델 한 줄이 가진 답변 길이별 요금 */
-export interface ResponseLengthCreditCost {
-  responseLength: ChatResponseLength;
-  creditCost: number;
+/** 응답 형식 하나의 기준 대화 한 턴 노트 */
+export interface FormatNoteEstimate {
+  /** ResponseFormatOption.code */
+  responseFormat: string;
+  estimatedNotes: number;
 }
 
-/** GET /chat/models 의 답변 길이 선택지. 문구는 한국어 한 벌만 내려온다. */
-export interface ChatResponseLengthOption {
-  value: ChatResponseLength;
-  label: string;
-  description: string;
-  /** 기본 요금에 곱하는 배수(0.8 / 1 / 2) */
-  creditMultiplier: number;
-  /** 크레딧 소모 안내 문구 */
-  creditNotice: string;
-}
-
-/** 프롬프트 배수 선택지 */
-export interface PromptMultiplierOption {
-  /** enum 이름 (예: X1_5) */
+/**
+ * 응답 형식(채팅형·소설형 등). 한 턴의 분량·문체·출력 상한을 정하고, 요금은 쓴 토큰만큼이라 형식이 곧 가격대다.
+ * 이름·설명은 서버가 한국어 한 벌로 준다.
+ */
+export interface ResponseFormatOption {
+  code: string;
   name: string;
-  /** 배수 값 (예: 1.5) */
-  value: number;
+  description: string;
 }
 
 /** GET /chat/models 응답 */
 export interface ChatCatalog {
   models: ChatModelOption[];
-  multipliers: PromptMultiplierOption[];
-  /** 방에서 고르는 답변 길이 선택지(짧게·보통·길게). 서버가 주지 않으면 선택 UI를 그리지 않는다. */
-  responseLengths?: ChatResponseLengthOption[];
+  /** 켜진 응답 형식 전체. 방에서 고를 수 있는 형식은 방 정보의 allowedResponseFormats 다. */
+  responseFormats: ResponseFormatOption[];
 }
 
 /** POST /chat 요청 */
@@ -140,13 +128,8 @@ export interface ChatStartRequest {
   generation: {
     /** 최대 4000자 */
     message: string;
-    /** ChatModelOption.name 값 */
+    /** ChatModelOption.name 값. 분량·요금은 방이 고른 응답 형식을 따른다(PATCH /rooms/{id}/response-format). */
     model: string;
-    /**
-     * 호환용 필드. 서버는 방에 저장된 답변 길이만 쓰므로 보내지 않는다(PATCH /rooms/{id}/response-length).
-     * @deprecated
-     */
-    multiplier?: number;
   };
 }
 

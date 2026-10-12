@@ -2,13 +2,12 @@ import { http, HttpResponse } from "msw";
 import { endpoint, pathValue } from "../utils";
 import type {
   CreateRoomRequest,
-  PromptMultiplier,
   Room,
   RoomLanguage,
   RoomMessage,
   ThumbnailRoom,
 } from "@/type/room";
-import { PROMPT_MULTIPLIERS } from "@/type/room";
+import { MOCK_RESPONSE_FORMATS } from "./chat";
 
 export interface MockRoom {
   roomId: string;
@@ -18,7 +17,8 @@ export interface MockRoom {
   thumbnailUrl: string | null;
   personaName: string;
   isPinned: boolean;
-  multiplier: PromptMultiplier;
+  /** 방이 고른 응답 형식 코드 */
+  responseFormatCode: string;
   language: RoomLanguage;
   memory: string;
   userNote: string;
@@ -53,7 +53,7 @@ export const rooms = new Map<string, MockRoom>([
       thumbnailUrl: "/images/sample.png",
       personaName: "왓슨",
       isPinned: true,
-      multiplier: 1,
+      responseFormatCode: "NOVEL",
       language: "KO",
       memory: "",
       userNote: "",
@@ -74,7 +74,7 @@ export const rooms = new Map<string, MockRoom>([
       thumbnailUrl: "/images/sample.png",
       personaName: "학생회장",
       isPinned: false,
-      multiplier: 1.5,
+      responseFormatCode: "NOVEL",
       language: "KO",
       memory: "",
       userNote: "",
@@ -94,7 +94,7 @@ export const rooms = new Map<string, MockRoom>([
       thumbnailUrl: "/images/sample.png",
       personaName: "견습 마법사",
       isPinned: false,
-      multiplier: 1,
+      responseFormatCode: "NOVEL",
       language: "KO",
       memory: "",
       userNote: "",
@@ -133,24 +133,6 @@ const toThumbnail = (room: MockRoom): ThumbnailRoom => ({
   characterName: "",
   isClosed: false,
 });
-
-/** 허용 집합 밖의 배수는 서버가 조용히 기본값(1.0)으로 되돌립니다. */
-/** 답변 길이 → 서버 배수. 이 셋에 없는 배수(1.5 등)는 responseLength 가 null 이다. */
-const RESPONSE_LENGTH_MULTIPLIERS: Record<string, PromptMultiplier> = {
-  SHORT: 0.8,
-  MEDIUM: 1,
-  LONG: 2,
-};
-
-const toResponseLength = (multiplier: PromptMultiplier) =>
-  Object.entries(RESPONSE_LENGTH_MULTIPLIERS).find(
-    ([, factor]) => factor === multiplier,
-  )?.[0] ?? null;
-
-const resolveMultiplier = (value: unknown): PromptMultiplier =>
-  PROMPT_MULTIPLIERS.includes(value as PromptMultiplier)
-    ? (value as PromptMultiplier)
-    : 1;
 
 const ALLOWED_LANGUAGES: RoomLanguage[] = ["KO", "EN", "JA", "ZH", "TH", "VI"];
 
@@ -213,7 +195,7 @@ export const roomHandlers = [
       thumbnailUrl: "/images/sample.png",
       personaName: "페르소나",
       isPinned: false,
-      multiplier: 1,
+      responseFormatCode: "NOVEL",
       language: "KO",
       memory: "",
       userNote: "",
@@ -233,8 +215,9 @@ export const roomHandlers = [
       roomId: room.roomId,
       universeId: room.universeId,
       personaId: room.personaId,
-      multiplier: room.multiplier,
-      responseLength: toResponseLength(room.multiplier) as Room["responseLength"],
+      // 목 시나리오는 모두 채팅형·소설형을 허용한다.
+      responseFormatCode: room.responseFormatCode,
+      allowedResponseFormats: MOCK_RESPONSE_FORMATS,
       memory: room.memory,
       userNote: room.userNote,
       characterName: "",
@@ -368,35 +351,22 @@ export const roomHandlers = [
     return new HttpResponse(null, { status: 204 });
   }),
 
-  // 채팅방 답변 길이 수정. SHORT/MEDIUM/LONG 은 서버의 배수 0.8/1.0/2.0 에 대응합니다.
+  // 채팅방 응답 형식 변경. 지금 시나리오가 허용하지 않는 형식이면 400(서버와 동일)
   http.patch(
-    /\/rooms\/([^/]+)\/response-length(?:\?.*)?$/,
+    /\/rooms\/([^/]+)\/response-format(?:\?.*)?$/,
     async ({ request }) => {
-      const room = findRoom(request, /\/rooms\/([^/]+)\/response-length$/);
+      const room = findRoom(request, /\/rooms\/([^/]+)\/response-format$/);
       if (!room) return roomNotFound();
 
-      const { responseLength } = (await request.json()) as {
-        responseLength?: string;
-      };
-      const factor = RESPONSE_LENGTH_MULTIPLIERS[responseLength ?? ""];
-      if (factor === undefined) {
-        return invalidInput({ responseLength: "답변 길이는 필수입니다." });
+      const { responseFormat } = (await request.json()) as { responseFormat?: string };
+      if (!MOCK_RESPONSE_FORMATS.some((format) => format.code === responseFormat)) {
+        return invalidInput({ responseFormat: "이 시나리오에서는 고를 수 없는 응답 형식입니다." });
       }
 
-      room.multiplier = factor;
+      room.responseFormatCode = responseFormat!;
       return new HttpResponse(null, { status: 204 });
     },
   ),
-
-  // 채팅방 프롬프트 배수 수정. 허용 집합 밖 값은 조용히 1.0으로 되돌립니다(서버와 동일).
-  http.patch(/\/rooms\/([^/]+)\/multiplier(?:\?.*)?$/, async ({ request }) => {
-    const room = findRoom(request, /\/rooms\/([^/]+)\/multiplier$/);
-    if (!room) return roomNotFound();
-
-    const { multiplier } = (await request.json()) as { multiplier?: number };
-    room.multiplier = resolveMultiplier(multiplier);
-    return new HttpResponse(null, { status: 204 });
-  }),
 
   // 채팅방 응답 언어 수정
   http.patch(/\/rooms\/([^/]+)\/language(?:\?.*)?$/, async ({ request }) => {

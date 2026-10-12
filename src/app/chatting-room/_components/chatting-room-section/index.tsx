@@ -134,9 +134,10 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
   }, [data, hasNextPage, characterName, profileImage]);
 
   const { data: chatCatalog, isPending: isModelsPending } = useChatModelsQuery();
+  const responseFormatCode = room?.responseFormatCode;
   const models = useMemo(
-    () => chatCatalog?.models.map(toAiModel) ?? [],
-    [chatCatalog],
+    () => chatCatalog?.models.map((option) => toAiModel(option, responseFormatCode)) ?? [],
+    [chatCatalog, responseFormatCode],
   );
   // 서버에 방별 모델 저장이 없어 브라우저에 기억한다. 고른 적이 없거나 그 모델이 카탈로그에서
   // 빠졌으면 목록 첫 모델을 쓴다.

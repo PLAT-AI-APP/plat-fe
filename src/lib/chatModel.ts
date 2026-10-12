@@ -23,8 +23,11 @@ const DESCRIPTION_KEY: Record<string, string> = {
   GPT_5_6_LUNA: "lightChatDescription",
 };
 
-/** 백엔드 모델 카탈로그 한 줄을 화면용 모델로 바꿉니다. */
-export const toAiModel = (option: ChatModelOption): AIModelType => {
+/**
+ * 백엔드 모델 카탈로그 한 줄을 화면용 모델로 바꿉니다. 가격은 방이 쓰는 응답 형식의 한 턴 예상 노트다 — 노트는 쓴 토큰만큼
+ * 빠지므로 같은 모델도 형식에 따라 다르다. 형식을 모르면(방 정보 전) 첫 형식 값을 쓴다.
+ */
+export const toAiModel = (option: ChatModelOption, responseFormatCode?: string): AIModelType => {
   const label = option.displayName;
   // 제공사 이름은 아이콘이 말해 주므로, 좁은 선택 버튼에서는 뺀다.
   const name =
@@ -38,6 +41,9 @@ export const toAiModel = (option: ChatModelOption): AIModelType => {
     icon: PROVIDER_ICON[option.provider],
     descriptionKey: DESCRIPTION_KEY[option.name],
     description: option.description,
-    price: option.creditCost,
+    price: (
+      option.formatNoteEstimates.find((entry) => entry.responseFormat === responseFormatCode) ??
+      option.formatNoteEstimates[0]
+    )?.estimatedNotes,
   };
 };
