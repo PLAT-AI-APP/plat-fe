@@ -122,6 +122,8 @@ const zh = {
       pending: "审核中",
       awaitingAdmin: "运营确认中",
       rejected: "未通过",
+      rejectedHint: "点击查看原因",
+      pendingHint: "点击查看详情",
       private: "不公开",
       unlisted: "部分公开",
     },

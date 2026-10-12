@@ -126,6 +126,8 @@ const ja = {
       pending: "審査中",
       awaitingAdmin: "運営確認中",
       rejected: "差し戻し",
+      rejectedHint: "タップして理由を見る",
+      pendingHint: "タップして詳細を見る",
       private: "非公開",
       unlisted: "限定公開",
     },

@@ -162,6 +162,10 @@ export default function ProfileContent({ id }: { id: string }) {
                 ? t("characterCard.reviewStatus.awaitingAdmin")
                 : t("characterCard.reviewStatus.pending"),
           tone: review.status === "REJECTED" ? ("danger" as const) : ("pending" as const),
+          hint:
+            review.status === "REJECTED"
+              ? t("characterCard.reviewStatus.rejectedHint")
+              : t("characterCard.reviewStatus.pendingHint"),
         },
         onClick: () => openDialog("CONTENT_REVIEW", { review, editHref }),
       };

@@ -7,7 +7,8 @@ import Link from "next/link";
 import { usePrefetchUniverseDetail } from "@/api/universe/getUniverseDetail";
 import { useTranslations } from "next-intl";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Pen } from "@/icons";
+import { Clock, Pen } from "@/icons";
+import StatusError from "@/icons/StatusError";
 // import { useAuthStore } from "@/store/useAuthStore";
 // import { useDialogStore } from "@/store/useDialogStore";
 // import { useModalStore } from "@/store/useModalStore";
@@ -100,19 +101,33 @@ const CharacterCard = ({
     </Link>
   );
 
-  // 상태 칩은 이미지 위에 얹기만 한다 — 눌러도 카드 클릭으로 그대로 넘어간다.
-  const statusChipElement = statusChip && (
-    <span
-      className={cn(
-        // 이미지 위라 옅은 색 바탕은 묻힌다. 바탕은 어둡게 두고 글자색으로만 상태를 가른다.
-        "title-7 pointer-events-none absolute left-2 top-2 z-10 rounded-full bg-scrim/80 px-2 py-0.5 backdrop-blur-sm",
-        statusChip.tone === "danger" && "text-danger",
-        statusChip.tone === "pending" && "text-brand",
-        statusChip.tone === "muted" && "text-overlay-font",
-      )}
-    >
+  // 상태 표시는 이미지 위에 얹기만 한다(pointer-events-none) — 눌러도 카드 클릭으로 그대로 넘어간다.
+  const isStatusOverlay = statusChip && statusChip.tone !== "muted";
+  const StatusIcon = statusChip?.tone === "danger" ? StatusError : Clock;
+  const statusChipElement = statusChip && !isStatusOverlay && (
+    <span className="title-7 pointer-events-none absolute left-2 top-2 z-10 rounded-full bg-scrim/80 px-2 py-0.5 text-overlay-font backdrop-blur-sm">
       {statusChip.label}
     </span>
+  );
+  // 이미지 영역을 덮는다. 부모(이미지 영역)가 relative·overflow-hidden 이라 모서리 둥글기를 그대로 따른다.
+  const statusOverlayElement = statusChip && isStatusOverlay && (
+    <div className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center gap-1.5 bg-scrim/75 px-3 text-center backdrop-blur-[2px]">
+      <StatusIcon
+        aria-hidden="true"
+        className={cn("size-7", statusChip.tone === "danger" ? "text-danger" : "text-brand")}
+      />
+      <span
+        className={cn(
+          "title-5 break-keep",
+          statusChip.tone === "danger" ? "text-danger" : "text-brand",
+        )}
+      >
+        {statusChip.label}
+      </span>
+      {statusChip.hint && (
+        <span className="body-8 break-keep text-overlay-font/70">{statusChip.hint}</span>
+      )}
+    </div>
   );
 
   // 카드 전체를 덮는 클릭 영역. onCardClick 이 있으면 이동 대신 버튼으로 깐다.
@@ -262,6 +277,8 @@ const CharacterCard = ({
           </div>
         </div>
 
+        {statusOverlayElement}
+
         <LastImageActionOverlay isVisible={isLastActionVisible} />
 
         <div className="pointer-events-none relative z-10 flex h-36 self-stretch flex-col items-start justify-end gap-1 bg-[linear-gradient(180deg,rgba(0,0,0,0)_0%,rgba(0,0,0,0.4)_20%,rgba(0,0,0,0.8)_100%)] px-4 pb-5 pt-6">
@@ -319,6 +336,8 @@ const CharacterCard = ({
           // 6열 기준 1200px에서 187px. 예전 33vw는 실제 표시 폭의 두 배가 넘는 이미지를 받아왔다.
           sizes="(max-width: 447px) 45vw, (max-width: 895px) 30vw, (max-width: 1279px) 20vw, 240px"
         />
+
+        {statusOverlayElement}
 
         {typeof rank === "number" && (
           <span className="display-1 pointer-events-none absolute bottom-3 left-3 leading-none text-overlay-font [text-shadow:0px_4px_6.7px_rgba(0,0,0,0.4)]">

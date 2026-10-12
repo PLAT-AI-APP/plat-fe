@@ -121,7 +121,9 @@ const ko = {
     reviewStatus: {
       pending: "검수 중",
       awaitingAdmin: "운영자 확인 중",
-      rejected: "반려",
+      rejected: "반려됨",
+      rejectedHint: "눌러서 사유 보기",
+      pendingHint: "눌러서 자세히 보기",
       private: "비공개",
       unlisted: "일부공개",
     },

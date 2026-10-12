@@ -125,6 +125,8 @@ const th = {
       pending: "กำลังตรวจสอบ",
       awaitingAdmin: "ผู้ดูแลตรวจสอบ",
       rejected: "ไม่ผ่าน",
+      rejectedHint: "แตะเพื่อดูเหตุผล",
+      pendingHint: "แตะเพื่อดูรายละเอียด",
       private: "ส่วนตัว",
       unlisted: "บางส่วน",
     },
