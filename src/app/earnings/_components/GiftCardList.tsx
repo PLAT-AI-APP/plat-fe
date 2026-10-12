@@ -1,12 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
+import { m } from "framer-motion";
 import { useTranslations } from "next-intl";
+import DrawCheck from "@/components/motion/DrawCheck";
+import MiniConfetti from "@/components/motion/MiniConfetti";
+import { EASE_OUT } from "@/constants/motion";
 import { ModalLayout } from "@/components/ModalLayout";
 import Button from "@/components/ui/Button";
 import { QueryStateBoundary } from "@/components/state";
 import { cn, formatWithCommas } from "@/lib/utils";
-import { showAppToast } from "@/lib/toast";
 import { useRewardProductsQuery } from "@/api/earning/getRewardProducts";
 import { usePostRedemptionMutation } from "@/api/earning/postRedemption";
 import type { RewardProduct } from "@/type/earning";
@@ -170,14 +173,86 @@ interface ConfirmModalProps {
   product: RewardProduct;
   available: number;
   isSubmitting: boolean;
+  /** 신청이 끝났으면 받는 번호. 있으면 확인 화면을 보여 준다. */
+  requestedPhone?: string;
   onClose: () => void;
   onConfirm: (recipientPhone: string) => void;
 }
+
+/** 010-1234-5678 → 010-****-5678. 완료 화면에 번호 전체를 다시 띄우지 않는다. */
+const maskPhone = (phone: string) => {
+  const digits = phone.replace(/\D/g, "");
+  if (digits.length < 8) return phone;
+  return `${digits.slice(0, 3)}-****-${digits.slice(-4)}`;
+};
+
+/** 신청 완료 — 상품권이 뒤집히며 체크가 그려지고 발송 안내가 떠오른다 */
+const ExchangeDone = ({
+  product,
+  phone,
+  onClose,
+}: {
+  product: RewardProduct;
+  phone: string;
+  onClose: () => void;
+}) => {
+  const t = useTranslations("earnings");
+  return (
+    <div className="flex flex-col items-center gap-6 pt-2">
+      <div className="relative size-28 [perspective:800px]">
+        <m.div
+          className="relative size-full [transform-style:preserve-3d]"
+          initial={{ rotateY: 0 }}
+          animate={{ rotateY: 180, y: [0, -14, 0] }}
+          transition={{ duration: 0.75, ease: EASE_OUT }}
+        >
+          <div className="absolute inset-0 [backface-visibility:hidden]">
+            <RewardThumb
+              product={product}
+              className="size-full rounded-3xl text-4xl"
+            />
+          </div>
+          <div className="absolute inset-0 flex items-center justify-center rounded-3xl border border-main bg-card text-brand [transform:rotateY(180deg)] [backface-visibility:hidden]">
+            <DrawCheck size={52} delay={0.45} />
+          </div>
+        </m.div>
+        <MiniConfetti
+          className="top-1/2 left-1/2"
+          count={18}
+          spread={130}
+          delay={0.6}
+        />
+      </div>
+      <m.div
+        role="status"
+        className="flex flex-col items-center gap-1 text-center"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5, duration: 0.4, ease: EASE_OUT }}
+      >
+        <h2 className="title-2 text-font-1">{t("exchange.requested")}</h2>
+        <p className="body-5 text-font-2 break-keep">
+          {t("exchange.requestedDescription", { phone: maskPhone(phone) })}
+        </p>
+      </m.div>
+      <Button
+        type="button"
+        variant="secondary"
+        size="lg"
+        fullWidth
+        onClick={onClose}
+      >
+        {t("exchange.done")}
+      </Button>
+    </div>
+  );
+};
 
 const ExchangeConfirmModal = ({
   product,
   available,
   isSubmitting,
+  requestedPhone,
   onClose,
   onConfirm,
 }: ConfirmModalProps) => {
@@ -205,84 +280,93 @@ const ExchangeConfirmModal = ({
       onClose={onClose}
       className="w-[calc(100%-32px)] max-w-90 p-6"
     >
-      <form
-        className="flex flex-col gap-5"
-        onSubmit={(event) => {
-          event.preventDefault();
-          if (!isPhoneValid) return;
-          onConfirm(phone);
-        }}
-      >
-        <div className="flex items-center gap-3">
-          <RewardThumb product={product} />
-          <h2 className="title-3 truncate">{product.name}</h2>
-        </div>
+      {requestedPhone ? (
+        <ExchangeDone
+          product={product}
+          phone={requestedPhone}
+          onClose={onClose}
+        />
+      ) : (
+        <form
+          className="flex flex-col gap-5"
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (!isPhoneValid) return;
+            onConfirm(phone);
+          }}
+        >
+          <div className="flex items-center gap-3">
+            <RewardThumb product={product} />
+            <h2 className="title-3 truncate">{product.name}</h2>
+          </div>
 
-        <dl className="flex flex-col gap-2.5 body-5 rounded-2xl bg-darkest px-4 py-3.5">
-          {rows.map((row) => (
-            <div key={row.label} className="flex justify-between gap-4">
-              <dt className="text-font-2">{row.label}</dt>
-              <dd className="truncate">{row.value}</dd>
-            </div>
-          ))}
-        </dl>
+          <dl className="flex flex-col gap-2.5 body-5 rounded-2xl bg-darkest px-4 py-3.5">
+            {rows.map((row) => (
+              <div key={row.label} className="flex justify-between gap-4">
+                <dt className="text-font-2">{row.label}</dt>
+                <dd className="truncate">{row.value}</dd>
+              </div>
+            ))}
+          </dl>
 
-        <div className="flex flex-col gap-1.5">
-          <label
-            htmlFor="earning-recipient-phone"
-            className="body-6 text-font-2"
-          >
-            {t("exchange.phone")}
-          </label>
-          <input
-            id="earning-recipient-phone"
-            type="tel"
-            inputMode="tel"
-            autoComplete="tel"
-            value={phone}
-            maxLength={13}
-            placeholder="010-0000-0000"
-            onChange={(event) => setPhone(event.target.value.trim())}
-            aria-invalid={showPhoneError}
-            className={cn(
-              "body-5 h-11 rounded-lg border border-main bg-darkest px-4 text-font-1",
-              "placeholder:text-font-2/50 focus:border-brand transition-colors",
-              showPhoneError && "border-font-accents focus:border-font-accents",
-            )}
-          />
-          <p
-            className={cn(
-              "body-7",
-              showPhoneError ? "text-font-accents" : "text-font-2",
-            )}
-          >
-            {showPhoneError
-              ? t("exchange.phoneInvalid")
-              : t("exchange.giftNotice")}
-          </p>
-          <p className="body-7 text-font-2">{t("exchange.phonePrivacy")}</p>
-        </div>
+          <div className="flex flex-col gap-1.5">
+            <label
+              htmlFor="earning-recipient-phone"
+              className="body-6 text-font-2"
+            >
+              {t("exchange.phone")}
+            </label>
+            <input
+              id="earning-recipient-phone"
+              type="tel"
+              inputMode="tel"
+              autoComplete="tel"
+              value={phone}
+              maxLength={13}
+              placeholder="010-0000-0000"
+              onChange={(event) => setPhone(event.target.value.trim())}
+              aria-invalid={showPhoneError}
+              className={cn(
+                "body-5 h-11 rounded-lg border border-main bg-darkest px-4 text-font-1",
+                "placeholder:text-font-2/50 focus:border-brand transition-colors",
+                showPhoneError &&
+                  "border-font-accents focus:border-font-accents",
+              )}
+            />
+            <p
+              className={cn(
+                "body-7",
+                showPhoneError ? "text-font-accents" : "text-font-2",
+              )}
+            >
+              {showPhoneError
+                ? t("exchange.phoneInvalid")
+                : t("exchange.giftNotice")}
+            </p>
+            <p className="body-7 text-font-2">{t("exchange.phonePrivacy")}</p>
+          </div>
 
-        <div className="grid grid-cols-2 gap-2">
-          <Button
-            type="button"
-            variant="secondary"
-            size="lg"
-            fullWidth
-            onClick={onClose}
-          >
-            {t("cancel")}
-          </Button>
-          <Button
-            type="submit"
-            size="lg"
-            fullWidth
-            disabled={isSubmitting || !isPhoneValid}
-          >
-            {t("exchange.button")}
-          </Button>
-        </div>
-      </form>
+          <div className="grid grid-cols-2 gap-2">
+            <Button
+              type="button"
+              variant="secondary"
+              size="lg"
+              fullWidth
+              onClick={onClose}
+            >
+              {t("cancel")}
+            </Button>
+            <Button
+              type="submit"
+              size="lg"
+              fullWidth
+              disabled={isSubmitting || !isPhoneValid}
+            >
+              {t("exchange.button")}
+            </Button>
+          </div>
+        </form>
+      )}
     </ModalLayout>
   );
 };
@@ -291,6 +375,12 @@ const ExchangeConfirmModal = ({
 const GiftCardList = ({ available, identityVerified }: GiftCardListProps) => {
   const t = useTranslations("earnings");
   const [selected, setSelected] = useState<RewardProduct | null>(null);
+  // 신청이 끝나면 모달을 닫지 않고 그 안에서 완료 화면을 보여 준다
+  const [requestedPhone, setRequestedPhone] = useState<string>();
+  const closeModal = () => {
+    setSelected(null);
+    setRequestedPhone(undefined);
+  };
   const {
     data: products = [],
     isPending,
@@ -305,10 +395,7 @@ const GiftCardList = ({ available, identityVerified }: GiftCardListProps) => {
     redeem(
       { productId: product.productId, recipientPhone },
       {
-        onSuccess: () => {
-          setSelected(null);
-          showAppToast("success", t("exchange.requested"));
-        },
+        onSuccess: () => setRequestedPhone(recipientPhone),
       },
     );
   };
@@ -344,7 +431,8 @@ const GiftCardList = ({ available, identityVerified }: GiftCardListProps) => {
           product={selected}
           available={available}
           isSubmitting={isSubmitting}
-          onClose={() => setSelected(null)}
+          requestedPhone={requestedPhone}
+          onClose={closeModal}
           onConfirm={(recipientPhone) =>
             handleConfirm(selected, recipientPhone)
           }

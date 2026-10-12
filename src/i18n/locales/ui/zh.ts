@@ -381,6 +381,8 @@ const zh = {
         "号码仅用于发送礼品卡，处理 30 天后仅保留后 4 位并销毁其余部分。",
       giftNotice: "3天内短信发送",
       requested: "已提交兑换申请",
+      requestedDescription: "将在3天内以短信发送至 {phone}",
+      done: "确认",
     },
     conversion: {
       title: "转换为笔记",
@@ -392,6 +394,8 @@ const zh = {
       remainPoints: "剩余积分",
       done: "已转换为{count}笔记",
       granting: "正在发放笔记，请稍候",
+      doneDescription: "可以立即在对话中使用",
+      confirm: "确认",
     },
     bannerTitle: "我的收益",
   },

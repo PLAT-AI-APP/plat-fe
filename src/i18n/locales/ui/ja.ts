@@ -385,6 +385,8 @@ const ja = {
         "番号はギフト券の送付にのみ使用し、処理から30日後に末尾4桁を残して破棄します。",
       giftNotice: "3日以内にSMSで送信",
       requested: "交換を申請しました",
+      requestedDescription: "{phone} に3日以内にSMSでお送りします",
+      done: "確認",
     },
     conversion: {
       title: "ノートに変換",
@@ -396,6 +398,8 @@ const ja = {
       remainPoints: "残りポイント",
       done: "{count}ノートに変換しました",
       granting: "ノートを付与しています。まもなく反映されます",
+      doneDescription: "すぐに会話で使えます",
+      confirm: "確認",
     },
     bannerTitle: "マイ収益",
   },
