@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import CreatorTierContents from "./_components/CreatorTierContents";
 
 export const metadata: Metadata = {
-  title: "제작자 등급",
+  title: "크리에이터 등급",
 };
 
 const CreatorTierPage = () => <CreatorTierContents />;

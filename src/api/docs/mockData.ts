@@ -101,7 +101,7 @@ const GROUPS: MockGroup[] = [
     status: "VISIBLE",
     coverImageUrl: null,
     translations: {
-      ko: { name: "제작자 가이드", description: "캐릭터를 만드는 제작자를 위한 안내" },
+      ko: { name: "크리에이터 가이드", description: "캐릭터를 만드는 크리에이터를 위한 안내" },
       en: { name: "Creator Guide", description: "For creators who build characters" },
     },
   },
@@ -298,7 +298,7 @@ const PAGES: MockPage[] = [
     status: "PUBLISHED",
     updatedAt: "2026-10-03T03:00:00Z",
     translations: {
-      ko: { title: "수익 정산", summary: "제작자 수익이 쌓이고 정산되는 방식", content: "## 수익 계산\n\n내 캐릭터와 나눈 대화에서 수익이 쌓여요.\n\n## 정산 신청\n\n수익 화면에서 정산을 신청할 수 있어요.\n" },
+      ko: { title: "수익 정산", summary: "크리에이터 수익이 쌓이고 정산되는 방식", content: "## 수익 계산\n\n내 캐릭터와 나눈 대화에서 수익이 쌓여요.\n\n## 정산 신청\n\n수익 화면에서 정산을 신청할 수 있어요.\n" },
     },
   },
   {

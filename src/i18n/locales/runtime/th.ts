@@ -369,7 +369,6 @@ const th: typeof en = {
   chatUI: {
     modelSelect: "เลือกโมเดล AI",
     modelIcon: "ไอคอน {name}",
-    coin: "เหรียญ",
     free: "ฟรี",
     modelPrice: "ประมาณ {price} โน้ต",
     perChat: "ต่อรอบ",

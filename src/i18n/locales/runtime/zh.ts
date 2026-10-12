@@ -363,7 +363,6 @@ const zh: typeof en = {
   chatUI: {
     modelSelect: "选择 AI 模型",
     modelIcon: "{name} 图标",
-    coin: "金币",
     free: "免费",
     modelPrice: "约{price}笔记",
     perChat: "每轮",

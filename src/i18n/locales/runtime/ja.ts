@@ -366,7 +366,6 @@ const ja: typeof en = {
   chatUI: {
     modelSelect: "AIモデル選択",
     modelIcon: "{name} アイコン",
-    coin: "コイン",
     free: "無料",
     modelPrice: "約{price}ノート",
     perChat: "1ターン",
