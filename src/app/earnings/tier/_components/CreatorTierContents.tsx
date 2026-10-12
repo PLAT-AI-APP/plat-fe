@@ -233,21 +233,16 @@ const TierSlider = ({
                     </span>
                   )}
                 </span>
-                <span className="body-6 truncate text-font-2">
-                  {locked ? (
-                    t("conditions", {
+                {/* 수익률·부스트는 아래 혜택 목록에 있으니 카드에는 잠긴 등급의 조건만 적는다. */}
+                {locked && (
+                  <span className="body-6 truncate text-font-2">
+                    {t("conditions", {
                       characters: formatCount(tier.publicCharacters, locale),
                       chats: formatCount(tier.paidChats, locale),
                       followers: formatCount(tier.followers, locale),
-                    })
-                  ) : (
-                    <>
-                      {t("summaryRate")}{" "}
-                      <b className="text-font-1">{tier.rate}%</b> ·{" "}
-                      {t("summaryBoost", { boost: tier.boost })}
-                    </>
-                  )}
-                </span>
+                    })}
+                  </span>
+                )}
               </div>
             </div>
           );
@@ -479,11 +474,12 @@ const TierBody = ({ data }: { data: CreatorTierStatus }) => {
   );
   const [viewIndex, setViewIndex] = useState(Math.max(tierIndex, 0));
   const [celebration, setCelebration] = useState<Celebration | null>(() =>
-    data.celebrationPending
+    data.celebration
       ? {
-          from: null,
+          from:
+            ladder.find((tier) => tier.code === data.celebration?.from) ?? null,
           to: sliderTiers[Math.max(tierIndex, 0)],
-          giftNotes: 0,
+          giftNotes: data.celebration.giftNotes,
           kind: "pending",
         }
       : null,
@@ -527,7 +523,7 @@ const TierBody = ({ data }: { data: CreatorTierStatus }) => {
   };
 
   return (
-    <>
+    <div className="flex flex-col gap-8">
       {devTools && (
         <div className="flex flex-wrap gap-2">
           {[...ladder, origin].map((tier, index) => (
@@ -632,7 +628,7 @@ const TierBody = ({ data }: { data: CreatorTierStatus }) => {
           onClose={handleCelebrationDone}
         />
       )}
-    </>
+    </div>
   );
 };
 

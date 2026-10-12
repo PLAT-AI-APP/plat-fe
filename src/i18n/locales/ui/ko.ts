@@ -287,8 +287,6 @@ const ko = {
       nextTier: "다음 등급",
       stepsAbove: "{count}단계 위",
       achievedOn: "{date} 달성",
-      summaryRate: "수익률",
-      summaryBoost: "신작 +{boost}%",
       conditions: "캐릭터 {characters} · 유료 대화 {chats} · 팔로워 {followers}",
       prevTierAria: "이전 등급",
       nextTierAria: "다음 등급",

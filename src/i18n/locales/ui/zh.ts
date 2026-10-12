@@ -287,8 +287,6 @@ const zh = {
       nextTier: "下一等级",
       stepsAbove: "高{count}级",
       achievedOn: "{date} 达成",
-      summaryRate: "收益率",
-      summaryBoost: "新作 +{boost}%",
       conditions: "角色 {characters} · 付费对话 {chats} · 粉丝 {followers}",
       prevTierAria: "上一等级",
       nextTierAria: "下一等级",

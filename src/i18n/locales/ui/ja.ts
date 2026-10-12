@@ -291,8 +291,6 @@ const ja = {
       nextTier: "次のランク",
       stepsAbove: "{count}段階上",
       achievedOn: "{date} 達成",
-      summaryRate: "収益率",
-      summaryBoost: "新作 +{boost}%",
       conditions: "キャラクター {characters} · 有料会話 {chats} · フォロワー {followers}",
       prevTierAria: "前のランク",
       nextTierAria: "次のランク",

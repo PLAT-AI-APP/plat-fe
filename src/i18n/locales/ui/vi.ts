@@ -291,8 +291,6 @@ const vi = {
       nextTier: "Cấp tiếp theo",
       stepsAbove: "Cao hơn {count} cấp",
       achievedOn: "Đạt ngày {date}",
-      summaryRate: "Tỷ lệ chia",
-      summaryBoost: "Tác phẩm mới +{boost}%",
       conditions: "Nhân vật {characters} · Trò chuyện trả phí {chats} · Người theo dõi {followers}",
       prevTierAria: "Cấp trước",
       nextTierAria: "Cấp tiếp theo",

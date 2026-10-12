@@ -297,8 +297,6 @@ const en = {
       nextTier: "Next tier",
       stepsAbove: "{count} tiers up",
       achievedOn: "Reached {date}",
-      summaryRate: "Share",
-      summaryBoost: "New release +{boost}%",
       conditions: "Characters {characters} · Paid chats {chats} · Followers {followers}",
       prevTierAria: "Previous tier",
       nextTierAria: "Next tier",

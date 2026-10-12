@@ -81,7 +81,7 @@ const tierInfos: CreatorTierInfo[] = (
 const tierStatus: CreatorTierStatus = {
   currentTier: "PLANET",
   locked: false,
-  celebrationPending: false,
+  celebration: null,
   canPromote: false,
   publicUniverses: 5,
   paidTurns: 523_400,

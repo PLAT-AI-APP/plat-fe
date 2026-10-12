@@ -290,8 +290,6 @@ const th = {
       nextTier: "ระดับถัดไป",
       stepsAbove: "สูงกว่า {count} ระดับ",
       achievedOn: "สำเร็จเมื่อ {date}",
-      summaryRate: "ส่วนแบ่ง",
-      summaryBoost: "ผลงานใหม่ +{boost}%",
       conditions: "ตัวละคร {characters} · แชทแบบชำระเงิน {chats} · ผู้ติดตาม {followers}",
       prevTierAria: "ระดับก่อนหน้า",
       nextTierAria: "ระดับถัดไป",

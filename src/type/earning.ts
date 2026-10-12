@@ -53,11 +53,17 @@ export interface CreatorTierInfo {
   achievedAt: string | null;
 }
 
-/** 제작자 등급 화면. baseShareBps·baseHoldDays 는 등급이 없을 때의 값. */
+/** 관리자가 올린 등급의 연출. from 은 직전 등급, giftNotes 는 그 등급을 처음 얻었을 때의 축하 노트. */
+export interface PendingTierCelebration {
+  from: CreatorTierCode;
+  giftNotes: number;
+}
+
+/** 제작자 등급 화면. baseShareBps·baseHoldDays 는 등급이 없을 때의 값. celebration 은 연출 대기가 없으면 null. */
 export interface CreatorTierStatus {
   currentTier: CreatorTierCode;
   locked: boolean;
-  celebrationPending: boolean;
+  celebration: PendingTierCelebration | null;
   canPromote: boolean;
   publicUniverses: number;
   paidTurns: number;
