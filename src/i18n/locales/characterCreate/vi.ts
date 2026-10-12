@@ -18,6 +18,13 @@ const vi: typeof ko = {
     draftNotFound: "Không có bản nháp để tải.",
     untitledDraftTitle: "Bản nháp chưa có tiêu đề",
     createSuccess: "Đã tạo nhân vật thành công!",
+    publish: {
+      titlePublic: "Đã công khai nhân vật",
+      titlePrivate: "Đã tạo nhân vật",
+      descriptionPublic: "Giờ ai cũng có thể bắt đầu trò chuyện",
+      descriptionPrivate: "Đã lưu thành nhân vật riêng tư chỉ bạn thấy",
+      goToCharacter: "Xem nhân vật",
+    },
     createFailed: "Không thể tạo nhân vật. Vui lòng thử lại.",
     rightsRequired: "Bạn cần đồng ý chịu trách nhiệm về quyền nội dung để tạo nhân vật.",
     validationFailed: "Vui lòng kiểm tra lại nội dung đã nhập.",

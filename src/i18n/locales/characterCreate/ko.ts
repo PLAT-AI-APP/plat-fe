@@ -16,6 +16,13 @@ const ko = {
     draftNotFound: "불러올 초안이 없어요.",
     untitledDraftTitle: "제목 없는 초안",
     createSuccess: "캐릭터가 성공적으로 등록되었습니다!",
+    publish: {
+      titlePublic: "캐릭터를 공개했어요",
+      titlePrivate: "캐릭터를 만들었어요",
+      descriptionPublic: "이제 누구나 대화를 시작할 수 있어요",
+      descriptionPrivate: "나만 볼 수 있는 캐릭터로 저장했어요",
+      goToCharacter: "캐릭터 보러 가기",
+    },
     createFailed: "캐릭터 등록에 실패했습니다. 다시 시도해주세요.",
     rightsRequired: "권리 책임에 동의해야 캐릭터를 등록할 수 있어요.",
     validationFailed: "입력한 내용을 다시 확인해 주세요.",

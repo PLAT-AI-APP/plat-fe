@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import UploadStatusOverlay from "@/components/motion/UploadStatusOverlay";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
@@ -73,19 +74,11 @@ const CharacterProfileImage = () => {
           ) : (
             <ImageIcon className="h-7.5 w-7.5 text-font-disabled" />
           )}
-          {isUploading && (
-            // 미리보기는 이미 바뀌었고 업로드만 뒤에서 이어진다. 끝날 때까지 등록은 막힌다.
-            <span
-              role="status"
-              aria-label={uploadingLabel}
-              className="absolute inset-0 flex items-center justify-center bg-scrim/40"
-            >
-              <span
-                aria-hidden="true"
-                className="size-6 animate-spin rounded-full border-2 border-white/40 border-t-white"
-              />
-            </span>
-          )}
+          {/* 미리보기는 이미 바뀌었고 업로드만 뒤에서 이어진다. 끝날 때까지 등록은 막힌다. */}
+          <UploadStatusOverlay
+            isUploading={isUploading}
+            label={uploadingLabel}
+          />
         </div>
 
         <span

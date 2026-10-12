@@ -18,6 +18,13 @@ const en: typeof ko = {
     draftNotFound: "There's no draft to load.",
     untitledDraftTitle: "Untitled draft",
     createSuccess: "Character has been created successfully!",
+    publish: {
+      titlePublic: "Your character is live",
+      titlePrivate: "Character created",
+      descriptionPublic: "Anyone can start chatting with it now",
+      descriptionPrivate: "Saved as a private character only you can see",
+      goToCharacter: "View character",
+    },
     createFailed: "Failed to create the character. Please try again.",
     rightsRequired: "You need to accept responsibility for content rights to create a character.",
     validationFailed: "Please check what you entered.",
