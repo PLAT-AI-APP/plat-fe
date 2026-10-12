@@ -3,6 +3,7 @@ import type { BadgeTierCode } from "@/constants/creatorTier";
 import { queryOptions, useQuery, useQueryClient } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
+import type { ChatViewMode } from "@/type/chat";
 import type {
   CharacterDetail,
   CharacterDetailComment,
@@ -88,6 +89,8 @@ export interface UniverseDetailResponse {
   official?: boolean;
   /** 만든 지 30일 안의 신작(신작 뱃지). */
   newRelease?: boolean;
+  /** 채팅방에 처음 들어왔을 때 보이는 형식(제작자가 정함). 서버가 아직 주지 않으면 대화형(CHAT)으로 본다. */
+  defaultViewMode?: ChatViewMode | null;
 }
 
 export const getUniverseDetail = async (universeId: string) => {

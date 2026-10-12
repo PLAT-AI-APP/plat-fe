@@ -82,6 +82,11 @@ const ko = {
         "캐릭터의 성격이나 서사, 사건 등 상세한 내용을 작성해주세요.",
       tendencyLabel: "성향",
       tendencyHelp: "비슷한 성향의 유저에게 추천돼요",
+      defaultViewModeLabel: "채팅방 기본 보기",
+      defaultViewModeHelp:
+        "채팅방에 처음 들어왔을 때 보이는 형식이에요. 유저가 채팅방에서 바꿀 수 있어요.",
+      defaultViewModeChat: "대화형",
+      defaultViewModeNovel: "소설형",
       noCategory: "[선택 없음]",
       tagPlaceholder: "태그를 선택해 주세요",
       tagFullPlaceholder: "태그를 전부 선택했어요",

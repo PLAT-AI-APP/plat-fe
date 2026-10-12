@@ -8,6 +8,9 @@ const SCENARIO_CONTENT_TOTAL_MAX_LENGTH = 5000;
 // 파일 업로드 ID는 백엔드 직렬화 정책에 따라 숫자 또는 문자열로 올 수 있어 두 타입을 모두 허용합니다.
 const fileUploadIdSchema = z.union([z.number(), z.string()]);
 
+/** 채팅방 기본 보기. 말풍선(대화형) 또는 소설 문장(소설형). */
+export const CHAT_VIEW_MODES = ["CHAT", "NOVEL"] as const;
+
 /** 시나리오 난이도. 자유 서술 대신 정해진 네 단계 중 하나를 고릅니다. */
 export const SCENARIO_DIFFICULTY_LEVELS = [
   "EASY",
@@ -82,6 +85,7 @@ export const characterCreateSchema = z.object({
           // 필수는 아니게 해서, 이 값을 더 이상 채우지 않는 복원 로직도 통과합니다.
           difficulty: z.enum(SCENARIO_DIFFICULTY_LEVELS).optional(),
           // 응답 형식(채팅형·소설형 등). 비우면 서버가 소설형 하나로 둔다. 기본은 늘 허용 안에 있도록 화면이 맞춘다.
+          // 지금은 고르는 화면을 꺼 두고 저장할 때 소설형으로 고정한다(constants/responseFormat). 그래서 검증하지 않는다.
           defaultResponseFormat: z.string().optional(),
           allowedResponseFormats: z.array(z.string()).optional(),
           contents: z.array(
@@ -127,6 +131,8 @@ export const characterCreateSchema = z.object({
 
   isPublic: z.boolean(),
   allowComments: z.boolean(),
+  /** 채팅방에 처음 들어왔을 때 보이는 형식(대화형·소설형). 유저가 채팅방에서 바꿀 수 있다. */
+  defaultViewMode: z.enum(CHAT_VIEW_MODES),
   /** 성인 세계관. 성인인증이 유효한 제작자만 켤 수 있고, 성인 해시태그는 켰을 때만 붙일 수 있다. */
   adult: z.boolean().optional(),
   /**

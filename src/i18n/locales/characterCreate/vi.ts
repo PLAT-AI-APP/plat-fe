@@ -84,6 +84,11 @@ const vi: typeof ko = {
         "Hãy viết nội dung chi tiết như tính cách, cốt truyện hoặc sự kiện của nhân vật.",
       tendencyLabel: "Khuynh hướng",
       tendencyHelp: "Được đề xuất cho người dùng có khuynh hướng tương tự",
+      defaultViewModeLabel: "Chế độ xem mặc định của phòng chat",
+      defaultViewModeHelp:
+        "Định dạng hiển thị khi người dùng vào phòng chat lần đầu. Người dùng có thể thay đổi trong phòng chat.",
+      defaultViewModeChat: "Hội thoại",
+      defaultViewModeNovel: "Tiểu thuyết",
       noCategory: "[Chưa chọn]",
       tagPlaceholder: "Chọn thẻ",
       tagFullPlaceholder: "Đã chọn đủ thẻ",

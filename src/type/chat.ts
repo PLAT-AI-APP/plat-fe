@@ -154,3 +154,9 @@ export interface ChatRegenerateRequest {
 export interface ChatStartResponse {
   turnId: string;
 }
+
+/**
+ * 채팅방 메시지를 보여 주는 모양. FE 전용 보기 방식이라 응답 형식(서버가 답의 분량·문체를 바꾸는 것)과 다르다.
+ * CHAT=말풍선(대화형), NOVEL=소설 문장처럼 이어서(소설형). 제작자가 세계관 기본값을 정하고 유저가 방에서 바꾼다.
+ */
+export type ChatViewMode = "CHAT" | "NOVEL";

@@ -85,6 +85,11 @@ const ja: typeof ko = {
         "性格や叙事、事件などキャラクターの詳しい内容を入力してください。",
       tendencyLabel: "傾向",
       tendencyHelp: "似た傾向のユーザーにおすすめされます",
+      defaultViewModeLabel: "チャットルームの基本表示",
+      defaultViewModeHelp:
+        "チャットルームに初めて入ったときの表示形式です。ユーザーはチャットルームで変更できます。",
+      defaultViewModeChat: "会話形式",
+      defaultViewModeNovel: "小説形式",
       noCategory: "[未選択]",
       tagPlaceholder: "タグを選択してください",
       tagFullPlaceholder: "タグをすべて選択しました",

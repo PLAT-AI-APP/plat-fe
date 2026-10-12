@@ -54,6 +54,7 @@ const createCharacterCreateDefaultValues = (
   ],
   isPublic: true,
   allowComments: true,
+  defaultViewMode: "CHAT",
   adult: false,
   rightsAgreed: false,
   characterDescription: "",
@@ -107,6 +108,8 @@ const createCharacterEditDefaultValues = (
         ],
   isPublic: universe.visibility === "PUBLIC",
   allowComments: universe.commentEnabled,
+  // 서버가 아직 주지 않으면 대화형으로 채운다.
+  defaultViewMode: universe.defaultViewMode ?? "CHAT",
   adult: universe.adult ?? false,
   characterDescription: universe.description,
   tendency: universe.tendency,

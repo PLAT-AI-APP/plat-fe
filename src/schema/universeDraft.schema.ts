@@ -1,7 +1,7 @@
 import * as z from "zod";
 import { getResourceImageUrl } from "@/lib/file";
 import { createSchemaMigrator, SchemaMigrationStep } from "@/lib/schemaMigration";
-import { CharacterCreateFormValues } from "@/schema/character.schema";
+import { CHAT_VIEW_MODES, CharacterCreateFormValues } from "@/schema/character.schema";
 
 /** fileId는 백엔드 직렬화 정책상 숫자 또는 문자열로 올 수 있어 문자열로 정규화합니다. */
 const fileIdSchema = z
@@ -56,6 +56,8 @@ export const universeDraftV1Schema = z.object({
   characterDescription: z.string().catch(""),
   isPublic: z.boolean().catch(true),
   allowComments: z.boolean().catch(true),
+  // 나중에 생긴 값이라 예전 초안에는 없다. 없으면 대화형으로 채운다.
+  defaultViewMode: z.enum(CHAT_VIEW_MODES).catch("CHAT"),
   adult: z.boolean().catch(false),
   tendency: z.string().catch(""),
   tagIds: z.array(draftTagSchema).catch([]),
@@ -116,6 +118,7 @@ export const buildUniverseDraft = (
   characterDescription: values.characterDescription,
   isPublic: values.isPublic,
   allowComments: values.allowComments,
+  defaultViewMode: values.defaultViewMode,
   adult: values.adult ?? false,
   tendency: values.tendency,
   tagIds: values.tagIds,
@@ -171,6 +174,7 @@ export const applyUniverseDraft = (
   characterDescription: draft.characterDescription ?? "",
   isPublic: draft.isPublic ?? true,
   allowComments: draft.allowComments ?? true,
+  defaultViewMode: draft.defaultViewMode ?? "CHAT",
   adult: draft.adult ?? false,
   tendency: draft.tendency ?? "",
   tagIds: draft.tagIds ?? [],

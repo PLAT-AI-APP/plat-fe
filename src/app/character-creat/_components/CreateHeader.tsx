@@ -353,6 +353,7 @@ const CreateHeader = ({
         const request: UniverseUpdateRequest = {
           language: LANGUAGE_BY_LOCALE[locale] ?? "KO",
           commentEnabled: currentFormData.allowComments,
+          defaultViewMode: currentFormData.defaultViewMode,
           adult: currentFormData.adult ?? false,
           scenarios,
           assets,
@@ -415,6 +416,7 @@ const CreateHeader = ({
 
       const request: UniverseCreateRequest = {
         commentEnabled: currentFormData.allowComments,
+        defaultViewMode: currentFormData.defaultViewMode,
         adult: currentFormData.adult ?? false,
         scenarios,
         assets,

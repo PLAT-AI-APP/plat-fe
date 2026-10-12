@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
+import type { ChatViewMode } from "@/type/chat";
 import { draftQueryKeys } from "@/api/draft/queryKeys";
 import { invalidateUniverseLists } from "./invalidateUniverseLists";
 
@@ -52,6 +53,8 @@ export interface UniverseCreateRequest {
    * 동의 시각은 서버가 세계관에 기록한다.
    */
   rightsAgreed: true;
+  /** 채팅방 기본 보기(대화형·소설형). 유저가 채팅방에서 바꿀 수 있다. 생략하면 서버가 CHAT 으로 둔다. */
+  defaultViewMode?: ChatViewMode;
   /** 이 초안에서 세계관을 만든 경우 삭제할 본인 소유 UNIVERSE 임시 저장 ID. 일반 생성은 생략합니다. */
   draftId?: string;
 }
