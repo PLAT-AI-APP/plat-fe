@@ -13,6 +13,7 @@ import { ChatRetry, ChatTrash, Flag, Pen, Trash } from "@/icons";
 import { useAutoResizeTextarea } from "@/hooks/form/useAutoResizeTextarea";
 import { useInlineTextEdit } from "@/hooks/form/useInlineTextEdit";
 import { resolveAssetImageUrl } from "@/lib/file";
+import AssetUnlockImage from "./AssetUnlockImage";
 import { cn } from "@/lib/utils";
 import {
   parsePlatCached,
@@ -34,6 +35,8 @@ interface ChatContentBlockProps {
   isNovelView?: boolean;
   /** 성인 세계관 에셋의 서명 URL(파일 ID → URL). 있으면 파일 ID 로 만든 주소보다 먼저 쓴다. */
   assetImageUrls?: Record<string, string>;
+  /** 이미 풀린 에셋 파일 id. 받는 중인 답에 여기 없는 에셋이 나오면 해금 연출을 튼다. 모르면 틀지 않는다. */
+  unlockedAssetIds?: ReadonlySet<string>;
   onUpdate?: (newContent: string) => void;
   onDelete?: () => void;
   onRetry?: () => void;
@@ -123,6 +126,7 @@ const ChatContentBlock = ({
   isEditMode = false,
   isNovelView = false,
   assetImageUrls,
+  unlockedAssetIds,
   onUpdate,
   onDelete,
   onRetry,
@@ -210,20 +214,29 @@ const ChatContentBlock = ({
 
         if (block.type === "ASSET_IMG") {
           return (
-            <Image
+            <AssetUnlockImage
               key={index}
-              // block.code는 세계관 에셋 업로드로 받은 fileId이므로, 렌더링용 URL로 변환해야 합니다.
-              // 성인 세계관 에셋은 보호 경로라 서버가 준 서명 URL 을 먼저 쓴다.
-              src={resolveAssetImageUrl(block.code, assetImageUrls)}
-              alt={t("chatUI.chatAssetAlt")}
-              width={171}
-              height={250}
-              unoptimized
-              // 171x250 고정 상자에 object-cover 로 채우면 세로형이 아닌 에셋은 잘린다. 원본 비율을 그대로 두고
-              // 250x250 안에 맞춘다 — 디자인이 전제한 세로형(171:250)은 예전과 같은 크기로 나온다.
-              // width/height 는 로드 전 자리 힌트일 뿐이다.
-              className="mx-auto h-auto w-auto max-h-[250px] max-w-[250px] rounded-2xl"
-            />
+              code={block.code}
+              isNewUnlock={
+                isStreaming &&
+                unlockedAssetIds !== undefined &&
+                !unlockedAssetIds.has(block.code)
+              }
+            >
+              <Image
+                // block.code는 세계관 에셋 업로드로 받은 fileId이므로, 렌더링용 URL로 변환해야 합니다.
+                // 성인 세계관 에셋은 보호 경로라 서버가 준 서명 URL 을 먼저 쓴다.
+                src={resolveAssetImageUrl(block.code, assetImageUrls)}
+                alt={t("chatUI.chatAssetAlt")}
+                width={171}
+                height={250}
+                unoptimized
+                // 171x250 고정 상자에 object-cover 로 채우면 세로형이 아닌 에셋은 잘린다. 원본 비율을 그대로 두고
+                // 250x250 안에 맞춘다 — 디자인이 전제한 세로형(171:250)은 예전과 같은 크기로 나온다.
+                // width/height 는 로드 전 자리 힌트일 뿐이다.
+                className="mx-auto h-auto w-auto max-h-[250px] max-w-[250px] rounded-2xl"
+              />
+            </AssetUnlockImage>
           );
         }
 
@@ -282,7 +295,14 @@ const ChatContentBlock = ({
               className="flex size-7 items-center justify-center rounded-lg bg-card p-1.5 text-font-2 transition-colors hover:bg-btn-hover"
               aria-label={t("chatUI.retryResponse")}
             >
-              <ChatRetry className="size-4" />
+              {/* 누르는 순간 아이콘이 한 바퀴 감긴다 */}
+              <m.span
+                className="inline-flex"
+                whileTap={{ rotate: -180 }}
+                transition={{ duration: 0.4 }}
+              >
+                <ChatRetry className="size-4" />
+              </m.span>
             </button>
           )}
           {onReport && (

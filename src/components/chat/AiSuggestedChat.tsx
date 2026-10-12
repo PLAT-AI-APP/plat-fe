@@ -1,5 +1,9 @@
+"use client";
+
 import React from "react";
+import { m } from "framer-motion";
 import { useTranslations } from "next-intl";
+import { EASE_OUT } from "@/constants/motion";
 import ActionText from "@/components/chat/ActionText";
 import { Pen } from "@/icons";
 
@@ -21,7 +25,17 @@ const AiSuggestedChat = ({ items, onSelect }: AiSuggestedChatProps) => {
 
       <ul className="flex w-full max-w-[500px] flex-col gap-2">
         {items.map((item, index) => (
-          <li key={`${index}-${item}`}>
+          // 하나씩 차례로 미끄러져 들어온다
+          <m.li
+            key={`${index}-${item}`}
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{
+              delay: 0.1 + index * 0.08,
+              duration: 0.35,
+              ease: EASE_OUT,
+            }}
+          >
             <button
               type="button"
               onClick={() => onSelect(item)}
@@ -30,7 +44,7 @@ const AiSuggestedChat = ({ items, onSelect }: AiSuggestedChatProps) => {
               {/* 추천 문장도 대사 안에 괄호 동작이 섞여 올 수 있어 말풍선과 같은 규칙으로 그린다. */}
               <ActionText text={item} />
             </button>
-          </li>
+          </m.li>
         ))}
       </ul>
     </section>

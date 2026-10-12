@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import { markRoomFresh } from "@/lib/freshRoom";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import ActiveButton from "../ActiveButton";
@@ -87,6 +88,7 @@ const ChattingStartModal = ({
         onSuccess: ({ roomId }) => {
           // 모달이 열린 채로 이동하므로, 모달 네비게이션 가드가 막지 않도록 한 번 허용합니다.
           allowNextNavigation();
+          markRoomFresh(roomId);
           onClose();
           router.push(`/chatting-room?roomId=${roomId}`);
         },
