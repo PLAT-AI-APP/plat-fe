@@ -13,6 +13,7 @@ const ja: typeof en = {
     search: "検索",
     usageHistory: "利用履歴",
     earnings: "マイ収益",
+    earningsTier: "クリエイターランク",
     myReports: "通報履歴",
   },
   errorPage: {

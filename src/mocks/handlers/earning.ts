@@ -1,6 +1,8 @@
 import { http, HttpResponse } from "msw";
 import { endpoint } from "../utils";
 import type {
+  CreatorTierInfo,
+  CreatorTierStatus,
   EarningLedgerItem,
   EarningSummary,
   NoteConversionRequest,
@@ -18,8 +20,76 @@ const MIN_REDEEM = 5000;
 
 const summary: EarningSummary = {
   available: 12480,
-  noteUnitPrice: 4,
+  pending: 1320,
+  tier: "PLANET",
+  noteUnitPrice: 2.85,
   identityVerified: true,
+};
+
+const tierBenefits = [
+  [],
+  [{ label: "메인 우선 노출", value: "지원" }],
+  [
+    { label: "메인 우선 노출", value: "지원" },
+    { label: "추천 작품 선정", value: "우대" },
+  ],
+  [
+    { label: "메인 우선 노출", value: "지원" },
+    { label: "추천 작품 선정", value: "우대" },
+    { label: "특별 노출", value: "지원" },
+    { label: "신기능 우선 체험", value: "제공" },
+    { label: "전담 소통 채널", value: "제공" },
+  ],
+  [
+    { label: "메인 우선 노출", value: "지원" },
+    { label: "추천 작품 선정", value: "최우선" },
+    { label: "특별 노출", value: "우선 지원" },
+    { label: "신기능 우선 체험", value: "제공" },
+    { label: "전담 소통 채널", value: "제공" },
+    { label: "확장 협업 기회", value: "제공" },
+  ],
+];
+
+/** 서버 시드와 같은 등급표. 목에서는 플래닛까지 올라 있고 노바 조건 중 팔로워만 모자란다. */
+const tierInfos: CreatorTierInfo[] = (
+  [
+    ["DUST", 1, 1_000, 10, 1100, 200, 7, 0, "2026-02-11T05:00:00Z"],
+    ["COMET", 2, 20_000, 50, 1200, 200, 7, 1000, "2026-05-03T12:00:00Z"],
+    ["PLANET", 3, 100_000, 200, 1300, 300, 7, 5000, "2026-09-02T09:20:00Z"],
+    ["NOVA", 5, 500_000, 500, 1400, 400, 5, 20000, null],
+    ["GALAXY", 10, 2_000_000, 1000, 1500, 500, 3, 50000, null],
+  ] as const
+).map(
+  (
+    [code, characters, chats, followers, share, boost, hold, gift, achievedAt],
+    index,
+  ) => ({
+    code,
+    sortOrder: index + 1,
+    minPublicUniverses: characters,
+    minPaidTurns: chats,
+    minFollowers: followers,
+    shareBps: share,
+    boostBps: boost,
+    holdDays: hold,
+    giftNotes: gift,
+    benefits: tierBenefits[index],
+    achievedAt,
+  }),
+);
+
+const tierStatus: CreatorTierStatus = {
+  currentTier: "PLANET",
+  locked: false,
+  celebration: null,
+  canPromote: false,
+  publicUniverses: 5,
+  paidTurns: 523_400,
+  followers: 412,
+  baseShareBps: 1000,
+  baseHoldDays: 7,
+  originShareBps: 2000,
+  tiers: tierInfos,
 };
 
 const products: RewardProduct[] = [
@@ -152,6 +222,23 @@ const insufficient = () =>
 
 export const earningHandlers = [
   http.get(endpoint("/earnings/summary"), () => HttpResponse.json(summary)),
+
+  http.get(endpoint("/earnings/tier"), () => HttpResponse.json(tierStatus)),
+
+  http.post(endpoint("/earnings/tier/promotions"), () =>
+    HttpResponse.json(
+      {
+        code: "EARNING_TIER_NOT_ELIGIBLE",
+        message: "다음 등급의 승급 조건을 아직 모두 채우지 못했습니다.",
+      },
+      { status: 422 },
+    ),
+  ),
+
+  http.post(
+    endpoint("/earnings/tier/celebration/ack"),
+    () => new HttpResponse(null, { status: 204 }),
+  ),
 
   http.get(endpoint("/earnings/ledgers"), ({ request }) =>
     HttpResponse.json(monthSlice(new URL(request.url))),

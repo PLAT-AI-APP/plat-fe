@@ -14,6 +14,7 @@ const zh: typeof en = {
     search: "搜索",
     usageHistory: "使用记录",
     earnings: "我的收益",
+    earningsTier: "创作者等级",
     myReports: "举报记录",
   },
   errorPage: {

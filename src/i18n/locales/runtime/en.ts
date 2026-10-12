@@ -16,6 +16,7 @@ const en = {
     search: "Search",
     usageHistory: "Usage history",
     earnings: "My earnings",
+    earningsTier: "Creator tier",
     myReports: "My reports",
   },
   errorPage: {

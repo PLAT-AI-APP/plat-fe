@@ -14,6 +14,7 @@ const vi: typeof en = {
     search: "Tìm kiếm",
     usageHistory: "Lịch sử sử dụng",
     earnings: "Thu nhập của tôi",
+    earningsTier: "Cấp nhà sáng tạo",
     myReports: "Lịch sử báo cáo",
   },
   errorPage: {

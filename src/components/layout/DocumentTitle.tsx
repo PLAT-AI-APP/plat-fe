@@ -24,6 +24,7 @@ const ROUTE_TITLE_KEYS: ReadonlyArray<readonly [RegExp, string]> = [
   [/^\/token-charge$/, "tokenCharge.title"],
   [/^\/usage-history$/, "pageTitles.usageHistory"],
   [/^\/earnings$/, "pageTitles.earnings"],
+  [/^\/earnings\/tier$/, "pageTitles.earningsTier"],
   [/^\/withdrawal$/, "withdrawalPage.title"],
 ];
 
@@ -42,7 +43,9 @@ const DocumentTitle = () => {
   const pathname = usePathname();
 
   useEffect(() => {
-    const titleKey = ROUTE_TITLE_KEYS.find(([pattern]) => pattern.test(pathname))?.[1];
+    const titleKey = ROUTE_TITLE_KEYS.find(([pattern]) =>
+      pattern.test(pathname),
+    )?.[1];
 
     // 전용 제목이 없는 화면(회원가입·공지 상세 등)은 layout 의 기본 제목과 같은 문구를 쓴다.
     const title = titleKey

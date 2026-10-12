@@ -14,6 +14,7 @@ const th: typeof en = {
     search: "ค้นหา",
     usageHistory: "ประวัติการใช้งาน",
     earnings: "รายได้ของฉัน",
+    earningsTier: "ระดับครีเอเตอร์",
     myReports: "ประวัติการรายงาน",
   },
   errorPage: {
