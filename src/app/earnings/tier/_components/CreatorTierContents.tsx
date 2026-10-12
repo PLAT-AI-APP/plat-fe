@@ -363,13 +363,22 @@ const BenefitList = ({
 
 interface MetricProps {
   label: string;
+  /** 라벨 옆에 작게 붙이는 기준 안내 */
+  note?: string;
   format: (value: string) => string;
   current: number;
   target: number;
   index: number;
 }
 
-const Metric = ({ label, format, current, target, index }: MetricProps) => {
+const Metric = ({
+  label,
+  note,
+  format,
+  current,
+  target,
+  index,
+}: MetricProps) => {
   const t = useTranslations("earnings.tier");
   const locale = useLocale();
   const done = current >= target;
@@ -387,6 +396,7 @@ const Metric = ({ label, format, current, target, index }: MetricProps) => {
             {done && <CheckIcon />}
           </span>
           <span className={done ? "text-font-1" : "text-font-2"}>{label}</span>
+          {note && <span className="body-7 text-font-2">{note}</span>}
         </span>
         <span className="body-6 tabular-nums">
           {done ? (
@@ -587,6 +597,7 @@ const TierBody = ({ data }: { data: CreatorTierStatus }) => {
             <Metric
               index={1}
               label={t("paidChats")}
+              note={t("paidChatsNote")}
               format={units.chats}
               current={stats.paidChats}
               target={next.paidChats}

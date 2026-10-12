@@ -312,6 +312,7 @@ const en = {
       toNext: "To next tier",
       publicCharacters: "Public characters",
       paidChats: "Paid chats",
+      paidChatsNote: "As of yesterday",
       followers: "Followers",
       unitCharacters: "{value}",
       unitChats: "{value}",

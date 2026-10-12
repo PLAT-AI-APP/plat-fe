@@ -306,6 +306,7 @@ const vi = {
       toNext: "Đến cấp tiếp theo",
       publicCharacters: "Nhân vật công khai",
       paidChats: "Trò chuyện trả phí tích lũy",
+      paidChatsNote: "Tính đến hôm qua",
       followers: "Người theo dõi",
       unitCharacters: "{value}",
       unitChats: "{value}",

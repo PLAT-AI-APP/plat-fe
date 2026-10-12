@@ -302,6 +302,7 @@ const zh = {
       toNext: "距下一等级",
       publicCharacters: "公开角色",
       paidChats: "累计付费对话",
+      paidChatsNote: "截至昨天",
       followers: "粉丝",
       unitCharacters: "{value}个",
       unitChats: "{value}次",

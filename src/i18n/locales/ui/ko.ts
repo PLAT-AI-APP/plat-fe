@@ -302,6 +302,7 @@ const ko = {
       toNext: "다음 등급까지",
       publicCharacters: "공개 캐릭터",
       paidChats: "누적 유료 대화",
+      paidChatsNote: "어제까지 기준",
       followers: "팔로워",
       unitCharacters: "{value}개",
       unitChats: "{value}회",

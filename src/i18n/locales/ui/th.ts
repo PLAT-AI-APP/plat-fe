@@ -305,6 +305,7 @@ const th = {
       toNext: "อีกนิดสู่ระดับถัดไป",
       publicCharacters: "ตัวละครสาธารณะ",
       paidChats: "แชทแบบชำระเงินสะสม",
+      paidChatsNote: "ถึงเมื่อวาน",
       followers: "ผู้ติดตาม",
       unitCharacters: "{value}",
       unitChats: "{value}",

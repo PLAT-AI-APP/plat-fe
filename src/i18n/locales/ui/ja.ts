@@ -306,6 +306,7 @@ const ja = {
       toNext: "次のランクまで",
       publicCharacters: "公開キャラクター",
       paidChats: "累計有料会話",
+      paidChatsNote: "昨日まで",
       followers: "フォロワー",
       unitCharacters: "{value}体",
       unitChats: "{value}回",
