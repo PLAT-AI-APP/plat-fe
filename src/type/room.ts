@@ -1,5 +1,5 @@
 import type { AppLocale } from "@/i18n/config";
-import type { ResponseFormatOption } from "@/type/chat";
+import type { ChatViewMode, ResponseFormatOption } from "@/type/chat";
 
 /** 백엔드 LanguageType. 채팅방 응답 언어를 가리킵니다. */
 export type RoomLanguage = "KO" | "EN" | "JA" | "ZH" | "TH" | "VI";
@@ -46,6 +46,11 @@ export interface Room {
   responseFormatCode: string;
   /** 지금 시나리오가 허용하는 응답 형식. 방에서 고를 수 있는 목록이다. */
   allowedResponseFormats: ResponseFormatOption[];
+  /**
+   * 이 방 세계관의 채팅방 기본 보기(제작자가 정한 값). 유저가 그 세계관에서 보기를 바꾼 적이 없을 때 쓴다.
+   * 서버가 아직 주지 않으면 대화형(CHAT)으로 본다.
+   */
+  defaultViewMode?: ChatViewMode | null;
   /** AI 가 대화를 요약해 쌓은 장기기억. 사용자가 고칠 수 있고 다음 요약은 고친 내용 위에 합쳐진다. */
   memory: string;
   /** 사용자가 적은 유저노트. 매 턴 프롬프트에 들어간다. */
