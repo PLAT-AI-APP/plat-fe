@@ -41,6 +41,7 @@ import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
 import { useWalletStore } from "@/store/useWalletStore";
 import { TRANSITION } from "@/constants/motion";
+import { IS_RESPONSE_FORMAT_SELECTABLE } from "@/constants/responseFormat";
 import { useFocusTrap } from "@/hooks/dom/useFocusTrap";
 import ResponseFormatSetting from "./ResponseFormatSetting";
 
@@ -493,9 +494,12 @@ const ChattingSidebar = ({ roomId, toggleIsSidebar }: ChattingSidebarProps) => {
                               }
                             />
                           </li>
-                          <li>
-                            <ResponseFormatSetting roomId={roomId} />
-                          </li>
+                          {/* 응답 형식은 소설형 하나로만 서비스해 고르지 않는다. 다시 열 때는 상수를 켠다. */}
+                          {IS_RESPONSE_FORMAT_SELECTABLE && (
+                            <li>
+                              <ResponseFormatSetting roomId={roomId} />
+                            </li>
+                          )}
                           {isUniverseOpen && (
                             <li>
                               <SidebarMenuItem

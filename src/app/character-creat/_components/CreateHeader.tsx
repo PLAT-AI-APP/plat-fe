@@ -26,6 +26,10 @@ import {
 import { useTranslateText } from "@/hooks/i18n/useTranslateText";
 import { useSafeBack } from "@/hooks/navigation/useSafeBack";
 import { useDialogStore } from "@/store/useDialogStore";
+import {
+  FIXED_RESPONSE_FORMAT,
+  IS_RESPONSE_FORMAT_SELECTABLE,
+} from "@/constants/responseFormat";
 import { TabId } from "./CreateTabs";
 import PublishCelebration from "./PublishCelebration";
 
@@ -319,12 +323,19 @@ const CreateHeader = ({
         name: scenario.name || `Scenario ${index + 1}`,
         description: scenario.description ?? "",
         content: encodeScenarioContent(scenario),
-        ...(scenario.allowedResponseFormats && scenario.allowedResponseFormats.length > 0
+        // 응답 형식을 고르는 화면을 꺼 둔 동안은 소설형으로 고정한다. 예전에 채팅형을 허용했던 캐릭터도
+        // 수정 저장하면 소설형만 남는다. 고르는 화면을 다시 켜면 시나리오에 고른 값을 보낸다.
+        ...(!IS_RESPONSE_FORMAT_SELECTABLE
           ? {
-              allowedResponseFormats: scenario.allowedResponseFormats,
-              defaultResponseFormat: scenario.defaultResponseFormat,
+              allowedResponseFormats: [FIXED_RESPONSE_FORMAT],
+              defaultResponseFormat: FIXED_RESPONSE_FORMAT,
             }
-          : {}),
+          : scenario.allowedResponseFormats && scenario.allowedResponseFormats.length > 0
+            ? {
+                allowedResponseFormats: scenario.allowedResponseFormats,
+                defaultResponseFormat: scenario.defaultResponseFormat,
+              }
+            : {}),
       }));
       const assets =
         currentFormData.asset
