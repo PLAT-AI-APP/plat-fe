@@ -7,7 +7,7 @@ import Link from "next/link";
 import { m } from "framer-motion";
 import { EASE_OUT } from "@/constants/motion";
 import { LIST_ITEM_MOTION } from "@/components/motion/ListMotion";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { KeyboardEvent } from "react";
 import { useTranslations } from "next-intl";
 import { Message, Pin } from "@/icons";
@@ -69,14 +69,21 @@ const CommentListItem = ({
   // 방금 쓴 내 댓글이면 자리가 열리며 들어오고 배경이 잠깐 옅은 주황으로 빛난다(처음 그릴 때 한 번만 정한다)
   const [isFresh] = useState(() => {
     if (!isMine || enteredCommentIds.has(comment.commentId)) return false;
+    // 기기 시계가 조금 어긋나도 판단이 뒤집히지 않게 차이의 크기로 본다
     const isRecent =
-      Date.now() - new Date(comment.meta.createdAt).getTime() <
+      Math.abs(Date.now() - new Date(comment.meta.createdAt).getTime()) <
       FRESH_COMMENT_MS;
     if (isRecent) enteredCommentIds.add(comment.commentId);
     return isRecent;
   });
   // 높이를 여는 동안만 넘친 부분을 자른다. 끝나면 메뉴 팝오버가 잘리지 않게 푼다.
   const [isEntering, setIsEntering] = useState(isFresh);
+  useEffect(() => {
+    if (!isFresh) return;
+    // 애니메이션 완료 신호는 목록이 다시 그려지면 빠질 수 있어 시간으로 푼다(높이 여는 시간 + 여유)
+    const timer = setTimeout(() => setIsEntering(false), 600);
+    return () => clearTimeout(timer);
+  }, [isFresh]);
   // 배지 여부를 부모가 계산해 넘기면 답글처럼 한 단계 건너 그릴 때 빠뜨리기 쉽다. 각 줄이 직접 판단한다.
   const isByCreator = Boolean(creatorId) && comment.author.userId === creatorId;
   // 답글은 백엔드 규칙상 고정할 수 없어, 루트 댓글일 때만 제작자에게 고정 메뉴를 보여준다.
@@ -124,7 +131,6 @@ const CommentListItem = ({
         opacity: { duration: 0.3, delay: 0.1 },
         x: LIST_ITEM_MOTION.transition.default,
       }}
-      onAnimationComplete={() => setIsEntering(false)}
     >
       {isFresh && (
         <m.span
