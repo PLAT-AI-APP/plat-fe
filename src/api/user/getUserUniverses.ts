@@ -20,10 +20,12 @@ const getUserUniverses = async (
   userId: string,
   page: number,
   authenticated: boolean,
+  own: boolean,
 ) => {
-  const client = authenticated ? authAxios : axiosInstance;
+  // 내 목록은 비공개·검수 중인 것까지 받는 본인 전용 엔드포인트를 쓴다.
+  const client = own || authenticated ? authAxios : axiosInstance;
   const response = await client.get<PageWith<UserUniverseCard>>(
-    `/users/${userId}/universes`,
+    own ? "/users/me/universes" : `/users/${userId}/universes`,
     { params: { page, size: USER_UNIVERSE_PAGE_SIZE } },
   );
 
@@ -33,12 +35,14 @@ const getUserUniverses = async (
 /**
  * 특정 사용자가 만든 세계관 목록. 프로필의 캐릭터 탭이 그립니다.
  *
- * 본인 프로필이든 남의 프로필이든 같은 엔드포인트(/users/{userId}/universes)로
- * 처리됩니다 — 로그인 없이도 조회할 수 있고, 그때는 liked가 전부 false로 옵니다.
+ * 남의 프로필은 노출 가능한 것만 주는 /users/{userId}/universes 로 — 로그인 없이도 조회할 수 있고,
+ * 그때는 liked가 전부 false로 옵니다. 내 프로필은 /users/me/universes 로 공개 여부·검수 상태와
+ * 상관없이 내가 만든 것을 전부 받습니다.
  */
 export const useUserUniversesInfiniteQuery = (
   userId?: string,
   enabled = true,
+  own = false,
 ) => {
   const authenticated = useAuthReady();
   const isAuthChecked = useAuthStore((state) => state.isAuthReady);
@@ -46,13 +50,13 @@ export const useUserUniversesInfiniteQuery = (
   const adultMode = useAdultMode();
 
   return useInfiniteQuery<PageWith<UserUniverseCard>, AppError>({
-    queryKey: [...userQueryKeys.universes(userId), authenticated, adultMode],
+    queryKey: [...userQueryKeys.universes(userId), authenticated, adultMode, own],
     initialPageParam: 0,
     queryFn: ({ pageParam }) =>
-      getUserUniverses(userId ?? "", pageParam as number, authenticated),
+      getUserUniverses(userId ?? "", pageParam as number, authenticated, own),
     getNextPageParam: getNextPageNumber,
     staleTime: 1000 * 60,
     // 인증 확인 전에 먼저 받으면, 확인이 끝나 키가 바뀔 때 처음부터 다시 로딩한다.
-    enabled: Boolean(userId) && enabled && isAuthChecked,
+    enabled: Boolean(userId) && enabled && isAuthChecked && (!own || authenticated),
   });
 };

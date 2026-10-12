@@ -121,7 +121,12 @@ export default function ProfileContent({ id }: { id: string }) {
     fetchNextPage: fetchNextCreatedPage,
     hasNextPage: hasNextCreatedPage,
     isFetchingNextPage: isFetchingNextCreatedPage,
-  } = useUserUniversesInfiniteQuery(id, !isWishTab && !isProfileError);
+  } = useUserUniversesInfiniteQuery(
+    id,
+    // 내 프로필인지 알기 전에 공개 목록을 먼저 받으면 비공개 캐릭터가 늦게 끼어든다.
+    hasHydrated && !isWishTab && !isProfileError,
+    isOwnProfile,
+  );
 
   const {
     items: createdItems,
