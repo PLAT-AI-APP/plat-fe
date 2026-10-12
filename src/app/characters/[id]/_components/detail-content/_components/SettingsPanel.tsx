@@ -54,7 +54,7 @@ const ExpandableText = ({
         ref={contentRef}
         style={!isExpanded ? { maxHeight } : undefined}
         className={cn(
-          "body-5 relative overflow-hidden whitespace-pre-wrap text-font-2",
+          "body-4 relative overflow-hidden whitespace-pre-wrap text-font-1",
           shouldShowMoreButton &&
             !isExpanded &&
             "after:absolute after:inset-x-0 after:bottom-0 after:h-12 after:bg-linear-to-t after:from-dark after:to-transparent",
