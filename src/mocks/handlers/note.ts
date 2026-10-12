@@ -24,7 +24,7 @@ const usageItems: UsageHistoryItemType[] = Array.from(
       type,
       referenceType: type === "USE" ? "CHAT" : "WALLET",
       referenceId: `mock-ledger-reference-${index}`,
-      description: type === "USE" ? "채팅 1회 사용" : "웰컴 노트 크레딧 지급",
+      description: type === "USE" ? "채팅 1회 사용" : "웰컴 노트 지급",
       createdAt: new Date(Date.now() - index * 3600000).toISOString(),
     };
   },

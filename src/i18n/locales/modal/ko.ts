@@ -254,7 +254,7 @@ const ko = {
       verify: "성인인증 하기",
       adultTagLocked: "성인 콘텐츠로 설정해야 고를 수 있는 태그예요.",
       adultTagsRemoved: "성인 콘텐츠 설정을 꺼서 성인 해시태그를 뺐어요.",
-      releaseNotice: "성인 분류를 해제하면 관리자 승인 전까지 일반 목록에 노출되지 않아요.",
+      releaseNotice: "성인 분류를 해제하면 운영자 승인 전까지 일반 목록에 노출되지 않아요.",
       releaseToast: "성인 분류를 해제했어요. 승인될 때까지 목록에 보이지 않아요.",
     },
     studio: {

@@ -373,7 +373,6 @@ const vi: typeof en = {
   chatUI: {
     modelSelect: "Chọn mô hình AI",
     modelIcon: "Biểu tượng {name}",
-    coin: "coin",
     free: "Miễn phí",
     modelPrice: "khoảng {price} note",
     perChat: "lượt",

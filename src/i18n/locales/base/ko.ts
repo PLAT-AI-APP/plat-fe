@@ -119,7 +119,7 @@ const ko = {
     },
     adultReleaseConfirm: {
       title: "성인 분류를 해제할까요?",
-      description: "해제하면 관리자 승인 전까지 일반 목록에 노출되지 않아요. 승인되면 다시 보여요.",
+      description: "해제하면 운영자 승인 전까지 일반 목록에 노출되지 않아요. 승인되면 다시 보여요.",
       cancel: "취소하기",
       confirm: "해제하고 저장",
     },
@@ -246,7 +246,7 @@ const ko = {
     },
     withdrawalConfirm: {
       title: "정말 떠나시나요?",
-      descriptionLine1: "탈퇴가 완료되면 회원 정보는 다시 확인할 수 없게 돼요.",
+      descriptionLine1: "탈퇴가 완료되면 유저 정보는 다시 확인할 수 없게 돼요.",
       descriptionLine2: "정말 탈퇴를 진행할까요?",
       cancel: "돌아가기",
       confirm: "탈퇴하기",

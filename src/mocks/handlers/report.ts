@@ -29,7 +29,7 @@ const createSeedReports = (): MyReportItem[] => {
         excerpt: "이런 캐릭터 만드는 사람들 수준 알 만하다. 다 같이 신고 좀 해 주세요.",
       },
       reason: "HATE",
-      detail: "특정 사용자들을 비하하는 표현이 반복돼요.",
+      detail: "특정 유저들을 비하하는 표현이 반복돼요.",
       status: "PENDING",
       createdAt: daysAgo(0.1),
     },

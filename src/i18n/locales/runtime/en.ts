@@ -375,7 +375,6 @@ const en = {
   chatUI: {
     modelSelect: "Select AI model",
     modelIcon: "{name} icon",
-    coin: "coins",
     free: "Free",
     modelPrice: "~{price} notes",
     perChat: "turn",
