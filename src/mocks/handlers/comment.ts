@@ -18,7 +18,7 @@ const createComment = (content: string): Comment => ({
   content,
   author: {
     userId: "0",
-    nickname: "목업 사용자",
+    nickname: "목업 유저",
     profileImageUrl: null,
   },
   meta: {

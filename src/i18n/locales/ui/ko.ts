@@ -128,7 +128,7 @@ const ko = {
       comments: "댓글",
       commentsCount: "({count})",
     },
-    adoptedNotice: "제작자가 떠난 뒤 PLAT이 운영을 이어받은 캐릭터예요",
+    adoptedNotice: "크리에이터가 떠난 뒤 PLAT이 운영을 이어받은 캐릭터예요",
     chatStart: "대화하기",
     like: "찜하기",
     unlike: "찜 취소",
@@ -155,7 +155,7 @@ const ko = {
     myProfileAlt: "내 프로필",
     loggedInCommentPlaceholder: "타인에게 부적절한 댓글은 삭제될 수 있어요",
     loggedOutCommentPlaceholder: "로그인 후 댓글을 달 수 있어요",
-    commentsDisabled: "창작자가 댓글을 허용하지 않았어요",
+    commentsDisabled: "크리에이터가 댓글을 허용하지 않았어요",
     submitComment: "등록",
     commentEmpty: "첫 댓글을 남겨보세요.",
     commentLike: "좋아요",
@@ -281,8 +281,8 @@ const ko = {
   /* 제작자 수익 포인트. 노트와 별개 화폐다. */
   earnings: {
     tier: {
-      title: "제작자 등급",
-      chip: "제작자 등급",
+      title: "크리에이터 등급",
+      chip: "크리에이터 등급",
       myTier: "내 등급",
       achieved: "달성",
       nextTier: "다음 등급",

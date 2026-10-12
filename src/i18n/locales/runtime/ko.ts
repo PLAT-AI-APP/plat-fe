@@ -15,7 +15,7 @@ const ko: typeof en = {
     search: "검색",
     usageHistory: "사용 내역",
     earnings: "나의 수익",
-    earningsTier: "제작자 등급",
+    earningsTier: "크리에이터 등급",
     myReports: "신고 내역",
   },
   errorPage: {
@@ -367,7 +367,6 @@ const ko: typeof en = {
   chatUI: {
     modelSelect: "AI 모델 선택",
     modelIcon: "{name} 아이콘",
-    coin: "코인",
     free: "무료",
     modelPrice: "약 {price}노트",
     perChat: "1턴",
@@ -414,7 +413,7 @@ const ko: typeof en = {
     commentPlaceholder: "댓글을 입력하세요...",
     reply: "답글",
     submit: "등록",
-    creatorImageAlt: "캐릭터 제작자 이미지",
+    creatorImageAlt: "캐릭터 크리에이터 이미지",
     mainImageAlt: "메인 캐릭터 이미지",
     scenarioTitle: "시나리오",
     commentAuthorProfileAlt: "{name}님의 프로필 이미지",

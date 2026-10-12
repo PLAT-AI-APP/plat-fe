@@ -105,7 +105,7 @@ export const followHandlers = [
       return HttpResponse.json(
         {
           code: "FOLLOW_NOT_EXISTS",
-          message: "팔로우하지 않은 사용자입니다.",
+          message: "팔로우하지 않은 유저입니다.",
         },
         { status: 409 },
       );
@@ -145,7 +145,7 @@ export const followHandlers = [
       return HttpResponse.json(
         {
           code: "FOLLOW_ALREADY_EXISTS",
-          message: "이미 팔로우한 사용자입니다.",
+          message: "이미 팔로우한 유저입니다.",
         },
         { status: 409 },
       );
