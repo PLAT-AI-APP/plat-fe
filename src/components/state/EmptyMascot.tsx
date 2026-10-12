@@ -16,6 +16,8 @@ import { cn } from "@/lib/utils";
  * wave    인사 — 로그인·환영
  * lost    갸웃 — 잘못된 접근·길을 잃었을 때
  * hop     통통 — 불러오는 중
+ * cheer   만세 — 가입·공개처럼 축하할 때
+ * sad     시무룩 — 노트가 모자랄 때처럼 아쉬울 때
  */
 export type MascotMood =
   | "peek"
@@ -26,7 +28,9 @@ export type MascotMood =
   | "dizzy"
   | "wave"
   | "lost"
-  | "hop";
+  | "hop"
+  | "cheer"
+  | "sad";
 
 /* 좌표계: viewBox 340×170, 몸통은 (170, 235) 중심 반지름 170 원의 윗부분 */
 const BODY = { cx: 170, cy: 235, r: 170 };
@@ -114,6 +118,43 @@ const Face = ({ mood }: { mood: MascotMood }) => {
             d="M156 124 L190 116 Q193 142 174 144 Q158 146 156 124 Z"
             fill="var(--mascot-face)"
           />
+        </g>
+      );
+    case "cheer":
+      // 눈웃음 + 크게 벌린 입(인사보다 입을 조금 더 크게)
+      return (
+        <g>
+          <g
+            stroke="var(--mascot-face)"
+            strokeWidth="3.5"
+            strokeLinecap="round"
+            fill="none"
+          >
+            <path d="M139 114 q9 -10 18 0" />
+            <path d="M187 100 q9 -10 18 0" />
+          </g>
+          <path
+            d="M154 123 L192 114 Q196 145 175 147 Q156 149 154 123 Z"
+            fill="var(--mascot-face)"
+          />
+        </g>
+      );
+    case "sad":
+      // 처진 눈썹 + 아래로 굽은 입, 시선은 아래
+      return (
+        <g transform="translate(0 4)">
+          <g
+            stroke="var(--mascot-face)"
+            strokeWidth="3"
+            strokeLinecap="round"
+            fill="none"
+          >
+            <path d="M137 98 l16 -5" />
+            <path d="M187 82 l16 3" />
+            <path d="M160 136 q13 -9 26 -3" />
+          </g>
+          <circle cx="147" cy="112" r="6" fill="var(--mascot-face)" />
+          <circle cx="195" cy="98" r="6" fill="var(--mascot-face)" />
         </g>
       );
     case "lost":
@@ -292,8 +333,35 @@ const EmptyMascot = ({ mood = "peek", className }: EmptyMascotProps) => {
             mood === "dizzy" && "mascot-wobble",
             mood === "lost" && "mascot-tilt",
             mood === "hop" && "mascot-hop",
+            mood === "cheer" && "mascot-bounce",
+            mood === "sad" && "mascot-sink",
           )}
         >
+          {/* 만세 — 몸 양쪽에서 팔이 번갈아 올라간다 */}
+          {mood === "cheer" && (
+            <>
+              <g className="mascot-cheer-l">
+                <ellipse
+                  cx="46"
+                  cy="98"
+                  rx="13"
+                  ry="26"
+                  transform="rotate(-24 46 98)"
+                  fill="var(--mascot-body)"
+                />
+              </g>
+              <g className="mascot-cheer-r">
+                <ellipse
+                  cx="294"
+                  cy="98"
+                  rx="13"
+                  ry="26"
+                  transform="rotate(24 294 98)"
+                  fill="var(--mascot-body)"
+                />
+              </g>
+            </>
+          )}
           {/* 인사할 때만 몸 오른쪽에서 팔이 올라와 흔든다 */}
           {mood === "wave" && (
             // CSS 애니메이션이 transform 속성을 덮어쓰므로 흔드는 쪽은 바깥 g 에 둔다.
