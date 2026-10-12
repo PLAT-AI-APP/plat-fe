@@ -181,6 +181,8 @@ const en = {
         scope: "Bulk actions apply to the {count} shown",
       },
       noMatch: "No characters match",
+      open: "View",
+      openCharacter: "Open {title} in a new tab",
       willBeDeleted: "Will be deleted",
       showMore: "Show {count} more",
       remaining: "{count} left",

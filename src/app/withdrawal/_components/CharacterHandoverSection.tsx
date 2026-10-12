@@ -13,6 +13,7 @@ import {
   type WithdrawalChoice,
   type WithdrawalPreview,
 } from "@/type/withdrawal";
+import CharacterShortcut from "./CharacterShortcut";
 import HandoverCandidateList from "./HandoverCandidateList";
 import HandoverConsentCard from "./HandoverConsentCard";
 
@@ -165,11 +166,18 @@ const CharacterHandoverSection = ({
                   className="flex items-center justify-between gap-3 py-3"
                 >
                   <span className="body-5 truncate text-font-1">{deletion.title}</span>
-                  {isKnownReason(deletion.reason) && (
-                    <span className="body-8 shrink-0 rounded-full border border-main px-2.5 py-1 text-font-2">
-                      {t(`reasons.${deletion.reason}`)}
-                    </span>
-                  )}
+                  <span className="flex shrink-0 items-center gap-1.5">
+                    {isKnownReason(deletion.reason) && (
+                      <span className="body-8 rounded-full border border-main px-2.5 py-1 text-font-2">
+                        {t(`reasons.${deletion.reason}`)}
+                      </span>
+                    )}
+                    <CharacterShortcut
+                      universeId={deletion.universeId}
+                      title={deletion.title}
+                      reason={deletion.reason}
+                    />
+                  </span>
                 </li>
               ))}
             </ul>

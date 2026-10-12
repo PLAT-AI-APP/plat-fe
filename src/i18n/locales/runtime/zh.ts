@@ -175,6 +175,8 @@ const zh: typeof en = {
         scope: "批量操作将应用于当前显示的 {count} 个",
       },
       noMatch: "没有符合条件的角色",
+      open: "查看",
+      openCharacter: "在新标签页打开{title}",
       willBeDeleted: "将被删除",
       showMore: "再显示 {count} 个",
       remaining: "剩余 {count} 个",

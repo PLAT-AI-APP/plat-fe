@@ -175,6 +175,8 @@ const ja: typeof en = {
         scope: "一括選択は表示中の{count}件に適用されます",
       },
       noMatch: "条件に合うキャラクターがありません",
+      open: "見る",
+      openCharacter: "{title}を新しいタブで開く",
       willBeDeleted: "削除されます",
       showMore: "さらに{count}件表示",
       remaining: "残り{count}件",

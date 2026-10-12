@@ -177,6 +177,8 @@ const ko: typeof en = {
         scope: "일괄 선택은 지금 보이는 {count}개에 적용돼요",
       },
       noMatch: "조건에 맞는 캐릭터가 없어요",
+      open: "보기",
+      openCharacter: "{title} 새 탭에서 보기",
       willBeDeleted: "삭제돼요",
       showMore: "{count}개 더 보기",
       remaining: "남은 {count}개",

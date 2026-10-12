@@ -179,6 +179,8 @@ const th: typeof en = {
         scope: "การเลือกทั้งหมดใช้กับ {count} รายการที่แสดงอยู่",
       },
       noMatch: "ไม่มีตัวละครที่ตรงเงื่อนไข",
+      open: "ดู",
+      openCharacter: "เปิด {title} ในแท็บใหม่",
       willBeDeleted: "จะถูกลบ",
       showMore: "แสดงเพิ่ม {count}",
       remaining: "เหลือ {count}",
