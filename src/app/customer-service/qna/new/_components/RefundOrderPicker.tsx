@@ -227,6 +227,7 @@ const RefundOrderPicker = ({ selectedOrderUid, onSelect }: RefundOrderPickerProp
       error={error}
       isEmpty={Boolean(data) && orders.length === 0 && !hasNextPage}
       onRetry={refetch}
+      emptyMood="peek"
       emptyMessage={t("orderEmpty")}
       pendingFallback={
         <ul className="flex flex-col gap-2">
