@@ -128,6 +128,10 @@ const vi: typeof ko = {
       nameLabel: "Tên kịch bản",
       descriptionLabel: "Mô tả kịch bản",
       descriptionPlaceholder: "Hãy mô tả đây là kịch bản như thế nào",
+      responseFormatLabel: "Kiểu trả lời",
+      responseFormatGuide: "Các kiểu có thể chọn trong phòng chat. Note được trừ theo lượng sử dụng nên kiểu ngắn tốn ít hơn.",
+      defaultResponseFormatLabel: "Kiểu mặc định",
+      responseFormatMinAlert: "Cần giữ ít nhất một kiểu.",
       difficultyLabel: "Độ khó kịch bản",
       difficultyOptions: {
         EASY: {

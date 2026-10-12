@@ -129,6 +129,10 @@ const en: typeof ko = {
       nameLabel: "Scenario name",
       descriptionLabel: "Scenario description",
       descriptionPlaceholder: "Describe what kind of scenario this is",
+      responseFormatLabel: "Reply styles",
+      responseFormatGuide: "Styles players can pick in the chat room. Notes are charged by usage, so shorter styles cost less.",
+      defaultResponseFormatLabel: "Default style",
+      responseFormatMinAlert: "Keep at least one style.",
       difficultyLabel: "Scenario difficulty",
       difficultyOptions: {
         EASY: {

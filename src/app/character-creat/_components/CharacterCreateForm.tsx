@@ -87,6 +87,8 @@ const createCharacterEditDefaultValues = (
       ? universe.scenarios.map((scenario) => ({
           name: scenario.name,
           description: scenario.description,
+          defaultResponseFormat: scenario.defaultResponseFormat,
+          allowedResponseFormats: scenario.allowedResponseFormats,
           // 성인 세계관 에셋은 보호 경로라 세계관 상세가 준 서명 URL 로 미리 보여 준다.
           ...decodeScenarioContent(
             scenario.content,

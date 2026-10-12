@@ -12,6 +12,10 @@ export interface UniverseCreateScenario {
   name: string;
   description: string;
   content: string;
+  /** 채팅방이 형식을 고르지 않았을 때 쓰는 응답 형식 코드. allowedResponseFormats 와 함께 비우면 NOVEL */
+  defaultResponseFormat?: string;
+  /** 채팅방에서 고를 수 있는 응답 형식 코드(GET /response-formats) */
+  allowedResponseFormats?: string[];
 }
 
 export interface UniverseCreateAsset {
