@@ -50,6 +50,7 @@ const vi: typeof en = {
     loadFailed: "Không tải được phần này.",
     loadMoreFailed: "Không tải thêm được.",
     empty: "Chưa có nội dung để hiển thị.",
+    imageNotFound: "Không tìm thấy hình ảnh",
   },
   sidebar: {
     home: "Trang chủ",

@@ -51,6 +51,7 @@ const ko: typeof en = {
     loadFailed: "이 영역을 불러오지 못했어요.",
     loadMoreFailed: "더 불러오지 못했어요.",
     empty: "아직 표시할 내용이 없어요.",
+    imageNotFound: "이미지를 찾을 수 없어요",
   },
   sidebar: {
     home: "홈",

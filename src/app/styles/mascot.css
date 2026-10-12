@@ -392,3 +392,75 @@
     transform: translateY(6px) scale(1.02, 0.97);
   }
 }
+
+/* =========================================================================
+ * 이미지 대체 (src/components/image/ImageFallback.tsx)
+ *
+ * 카드 면 바닥에서 ghost 마스코트가 몸을 반쯤 내밀고 폭의 대부분을 채운다.
+ * 문구는 위쪽 가운데. 들어간 자리의 크기를 컨테이너 쿼리로 읽어, 가로·세로 모두
+ * 100px 이상일 때만 문구를 보이고, 그보다 작으면 마스코트만 폭에 꽉 차게 둔다.
+ * 레이어 안에 두어 호출부가 넘긴 Tailwind 크기·둥글기 유틸리티가 이기게 한다.
+ * ========================================================================= */
+@layer base {
+  .image-fallback {
+    container-type: size;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+    background: var(--bg-card);
+  }
+  /* next/image 의 width/height 처럼 — className 에 크기가 있으면 그쪽이 이긴다 */
+  .image-fallback[data-sized] {
+    width: var(--image-fallback-w);
+    height: var(--image-fallback-h);
+    /* className 이 h-auto w-full 처럼 높이를 풀어 두어도 원래 비율을 지킨다 */
+    aspect-ratio: var(--image-fallback-ratio);
+  }
+
+  .image-fallback-label {
+    display: none;
+    padding: 0 10px;
+    font-size: 0.6875rem; /* body-8 */
+    line-height: 1.45;
+  }
+  /* 바닥에 붙인다. 폭이 기준이고, 납작한 자리(배너 등)에서는 높이에 맞춰 줄어든다. */
+  .image-fallback-mascot {
+    margin-top: auto;
+    width: 100%;
+  }
+  /* EmptyMascot 은 w-full 이고 xMidYMax meet 라, 높이만 묶으면 바닥 가운데에 붙은 채 줄어든다 */
+  .image-fallback-mascot > svg {
+    max-height: 100cqh;
+  }
+
+  @container (min-width: 100px) and (min-height: 100px) {
+    .image-fallback-label {
+      display: block;
+      padding-top: max(10px, 14cqh);
+    }
+    .image-fallback-mascot {
+      width: 92%;
+    }
+    .image-fallback-mascot > svg {
+      max-height: 62cqh;
+    }
+  }
+  @container (min-width: 200px) and (min-height: 200px) {
+    .image-fallback-label {
+      font-size: 0.8125rem; /* body-6 */
+      line-height: 1.5;
+    }
+  }
+  @container (min-width: 320px) and (min-height: 240px) {
+    .image-fallback-label {
+      font-size: 0.9375rem; /* body-4 */
+    }
+  }
+}
+
+/* 목록에서 여러 장이 동시에 실패할 수 있어 마스코트를 멈춰 둔다.
+   .mascot-* 애니메이션이 레이어 밖에 있으므로 이 규칙도 레이어 밖, 그 뒤에 둔다. */
+.image-fallback * {
+  animation: none;
+}

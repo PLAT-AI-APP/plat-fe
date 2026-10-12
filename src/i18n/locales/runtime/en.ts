@@ -52,6 +52,7 @@ const en = {
     loadFailed: "Could not load this section.",
     loadMoreFailed: "Could not load more.",
     empty: "Nothing to show yet.",
+    imageNotFound: "Image not found",
   },
   sidebar: {
     home: "Home",

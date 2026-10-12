@@ -50,6 +50,7 @@ const zh: typeof en = {
     loadFailed: "无法加载该区域。",
     loadMoreFailed: "无法加载更多内容。",
     empty: "暂时没有可显示的内容。",
+    imageNotFound: "找不到图片",
   },
   sidebar: {
     home: "首页",

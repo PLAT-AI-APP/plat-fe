@@ -49,6 +49,7 @@ const ja: typeof en = {
     loadFailed: "この領域を読み込めませんでした。",
     loadMoreFailed: "これ以上読み込めませんでした。",
     empty: "まだ表示する内容がありません。",
+    imageNotFound: "画像が見つかりません",
   },
   sidebar: {
     home: "ホーム",

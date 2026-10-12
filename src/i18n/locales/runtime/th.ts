@@ -50,6 +50,7 @@ const th: typeof en = {
     loadFailed: "โหลดส่วนนี้ไม่สำเร็จ",
     loadMoreFailed: "โหลดเพิ่มเติมไม่สำเร็จ",
     empty: "ยังไม่มีเนื้อหาที่จะแสดง",
+    imageNotFound: "ไม่พบรูปภาพ",
   },
   sidebar: {
     home: "หน้าแรก",
