@@ -317,7 +317,6 @@ const zh = {
       none: "无等级",
       promoted: "等级提升",
       officialTitle: "PLAT 官方创作者",
-      contract: "按合同",
       benefits: "权益",
       benefitsValue: "星系全部 + α",
       originBadge: "起源徽章",

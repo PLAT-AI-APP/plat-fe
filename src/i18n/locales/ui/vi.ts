@@ -321,7 +321,6 @@ const vi = {
       none: "Chưa có cấp",
       promoted: "Lên cấp",
       officialTitle: "Nhà sáng tạo chính thức PLAT",
-      contract: "Theo hợp đồng",
       benefits: "Quyền lợi",
       benefitsValue: "Toàn bộ Galaxy + α",
       originBadge: "Huy hiệu Origin",

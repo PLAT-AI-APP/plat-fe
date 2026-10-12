@@ -317,7 +317,6 @@ const ko = {
       none: "등급 없음",
       promoted: "등급 상승",
       officialTitle: "PLAT 공식 크리에이터",
-      contract: "계약 조건",
       benefits: "혜택",
       benefitsValue: "갤럭시 전부 + α",
       originBadge: "오리진 뱃지",

@@ -327,7 +327,6 @@ const en = {
       none: "No tier",
       promoted: "Tier up",
       officialTitle: "PLAT official creator",
-      contract: "By contract",
       benefits: "Benefits",
       benefitsValue: "All Galaxy + α",
       originBadge: "Origin badge",

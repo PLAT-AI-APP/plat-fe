@@ -321,7 +321,6 @@ const ja = {
       none: "ランクなし",
       promoted: "ランクアップ",
       officialTitle: "PLAT公式クリエイター",
-      contract: "契約条件",
       benefits: "特典",
       benefitsValue: "ギャラクシー全部 + α",
       originBadge: "オリジンバッジ",

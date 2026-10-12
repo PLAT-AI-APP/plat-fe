@@ -320,7 +320,6 @@ const th = {
       none: "ไม่มีระดับ",
       promoted: "เลื่อนระดับ",
       officialTitle: "ครีเอเตอร์ทางการของ PLAT",
-      contract: "ตามสัญญา",
       benefits: "สิทธิประโยชน์",
       benefitsValue: "ทั้งหมดของ Galaxy + α",
       originBadge: "ป้าย Origin",

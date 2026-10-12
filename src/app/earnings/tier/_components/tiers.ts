@@ -67,12 +67,18 @@ export const toTier = (info: CreatorTierInfo, name: string): Tier => ({
   achievedAt: info.achievedAt,
 });
 
-/** 오리진은 사다리 밖이라 최고 등급(갤럭시)의 비율·보류를 쓴다. */
-export const toOrigin = (galaxy: Tier, name: string): Tier => ({
+/** 오리진은 사다리 밖이라 신작 부스트 없는 고정 비율이고, 보류는 최고 등급(갤럭시)과 같다. */
+export const toOrigin = (
+  galaxy: Tier,
+  name: string,
+  shareBps: number,
+): Tier => ({
   ...galaxy,
   code: "ORIGIN",
   name,
   ...VISUAL.ORIGIN,
+  rate: bpsToPercent(shareBps),
+  boost: 0,
   giftNotes: 0,
   achievedAt: null,
   official: true,
@@ -119,9 +125,16 @@ export const benefitLinesOf = (
 ): BenefitLine[] => {
   const lines: BenefitLine[] = [
     { key: "rate", label: labels.rate, value: `${tier.rate}%` },
-    { key: "boost", label: labels.boost, value: `+${tier.boost}%` },
-    { key: "hold", label: labels.holdLabel, value: labels.hold(tier.holdDays) },
   ];
+  // 오리진은 부스트 없는 고정 비율이라 부스트 줄을 두지 않는다.
+  if (!tier.official) {
+    lines.push({ key: "boost", label: labels.boost, value: `+${tier.boost}%` });
+  }
+  lines.push({
+    key: "hold",
+    label: labels.holdLabel,
+    value: labels.hold(tier.holdDays),
+  });
   if (tier.giftNotes > 0) {
     lines.push({
       key: "gift",

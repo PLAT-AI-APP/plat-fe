@@ -800,7 +800,7 @@ const TierPromotionCelebration = ({
               {to.official ? (
                 <>
                   {[
-                    [t("rate"), t("contract")],
+                    [t("rate"), `${to.rate}%`],
                     [t("benefits"), t("benefitsValue")],
                     [t("originBadge"), t("originBadgeValue")],
                   ].map(([label, value]) => (

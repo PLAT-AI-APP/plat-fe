@@ -88,6 +88,7 @@ const tierStatus: CreatorTierStatus = {
   followers: 412,
   baseShareBps: 1000,
   baseHoldDays: 7,
+  originShareBps: 2000,
   tiers: tierInfos,
 };
 

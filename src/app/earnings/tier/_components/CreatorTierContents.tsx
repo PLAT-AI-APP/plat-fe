@@ -459,8 +459,13 @@ const TierBody = ({ data }: { data: CreatorTierStatus }) => {
     [data.tiers, t],
   );
   const origin = useMemo(
-    () => toOrigin(ladder[ladder.length - 1], t("names.ORIGIN")),
-    [ladder, t],
+    () =>
+      toOrigin(
+        ladder[ladder.length - 1],
+        t("names.ORIGIN"),
+        data.originShareBps,
+      ),
+    [ladder, t, data.originShareBps],
   );
   const isOrigin = data.currentTier === "ORIGIN";
   /** 오리진이면 사다리 끝에 오리진 카드를 붙여 그 위치를 내 등급으로 보여 준다. */

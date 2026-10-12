@@ -59,7 +59,7 @@ export interface PendingTierCelebration {
   giftNotes: number;
 }
 
-/** 제작자 등급 화면. baseShareBps·baseHoldDays 는 등급이 없을 때의 값. celebration 은 연출 대기가 없으면 null. */
+/** 제작자 등급 화면. baseShareBps·baseHoldDays 는 등급이 없을 때의 값, originShareBps 는 오리진 고정 비율. celebration 은 연출 대기가 없으면 null. */
 export interface CreatorTierStatus {
   currentTier: CreatorTierCode;
   locked: boolean;
@@ -70,6 +70,7 @@ export interface CreatorTierStatus {
   followers: number;
   baseShareBps: number;
   baseHoldDays: number;
+  originShareBps: number;
   tiers: CreatorTierInfo[];
 }
 
