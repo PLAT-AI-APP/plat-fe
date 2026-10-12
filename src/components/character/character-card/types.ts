@@ -1,9 +1,13 @@
+import type { BadgeTierCode } from "@/constants/creatorTier";
+
 export type CardSize = "S" | "M" | "L" | "XL";
 
 export interface CharacterCardProps {
   title: string;
   description: string;
   creatorName: string;
+  /** 제작자 등급. 있으면 닉네임 앞 '@' 자리에 뱃지를 단다. */
+  creatorTier?: BadgeTierCode | null;
   /** 탈퇴한 제작자가 남겨 PLAT 이 운영하는 캐릭터. 제작자 이름을 적지 않는다. */
   isAdopted?: boolean;
   chatCount?: number;

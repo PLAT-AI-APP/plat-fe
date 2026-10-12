@@ -1,9 +1,13 @@
+import type { BadgeTierCode } from "@/constants/creatorTier";
+
 export interface CardCreator {
   creatorId: string;
   /** adopted 면 "" 다. 화면에는 제작자 대신 "운영 PLAT" 을 적는다. */
   nickname: string;
   /** 제작자가 탈퇴하며 남겨 공식 계정이 운영하는 캐릭터. 회사를 제작자로 적으면 안 된다. */
   adopted: boolean;
+  /** 제작자 등급 뱃지. 등급이 없거나 인수한 캐릭터면 null. */
+  tier?: BadgeTierCode | null;
 }
 
 /** 백엔드 BaseCard 응답 공통 모양. 홈·랭킹·검색·찜 목록 카드가 이 모양을 공유합니다. */

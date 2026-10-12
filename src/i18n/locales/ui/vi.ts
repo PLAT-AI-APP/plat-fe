@@ -120,6 +120,8 @@ const vi = {
     otherLooksPrompt: "Muốn xem một khía cạnh khác của nhân vật này không?",
     viewProfile: "Xem hồ sơ",
     editButtonLabel: "Chỉnh sửa nhân vật",
+    officialBadge: "Chính thức",
+    newBadge: "Mới",
   },
   characterDetail: {
     scenarioImageAlt: "Ảnh kịch bản",
@@ -130,7 +132,6 @@ const vi = {
       comments: "Bình luận",
       commentsCount: "({count})",
     },
-    officialCharacter: "Nhân vật chính thức của PLAT",
     adoptedNotice: "Người tạo đã rời đi, PLAT đang tiếp tục vận hành nhân vật này",
     chatStart: "Bắt đầu chat",
     like: "Thêm vào yêu thích",

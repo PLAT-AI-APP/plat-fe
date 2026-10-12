@@ -115,7 +115,7 @@ const toRankedCard = (
     images: [`https://picsum.photos/seed/${item.universeId}/374/490`],
     title: item.title,
     description: item.description,
-    creator: { creatorId: `creator-${item.universeId}`, nickname: item.nickname, adopted: false },
+    creator: { creatorId: `creator-${item.universeId}`, nickname: item.nickname, adopted: false, tier: "GALAXY" },
     chatCount: item.chatCount,
     isNew: item.isNew,
     isOfficial: item.isOfficial,

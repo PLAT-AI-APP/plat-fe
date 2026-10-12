@@ -66,6 +66,7 @@ const mockCharacterDetail: CharacterDetail = {
   editable: false,
   tags: ["daily", "mystery", "school", "friend"],
   isOfficial: true,
+  isNew: false,
   images: [
     {
       id: "preview-1",
@@ -90,6 +91,7 @@ const mockCharacterDetail: CharacterDetail = {
     followerCount: 24,
     isFollowing: true,
     adopted: false,
+    tier: "PLANET",
   },
   scenarios: mockCharacterScenarios,
   comments: [

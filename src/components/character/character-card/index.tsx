@@ -11,6 +11,7 @@ import { Pen } from "@/icons";
 // import { useAuthStore } from "@/store/useAuthStore";
 // import { useDialogStore } from "@/store/useDialogStore";
 // import { useModalStore } from "@/store/useModalStore";
+import CreatorTierBadge from "@/components/creator/CreatorTierBadge";
 import ChatCountBadge from "./ChatCountBadge";
 import {
   FLUID_SIZE_OVERRIDE,
@@ -35,6 +36,7 @@ const CharacterCard = ({
   title,
   description,
   creatorName,
+  creatorTier,
   isAdopted = false,
   chatCount,
   images,
@@ -326,13 +328,17 @@ const CharacterCard = ({
           />
         )}
 
-        <div className="inline-flex items-start justify-start gap-0.5">
+        <div className="inline-flex min-w-0 max-w-full items-center justify-start gap-1">
+          {/* 등급이 있는 제작자는 '@' 자리에 등급 뱃지를 단다. */}
+          {!isAdopted && creatorTier && (
+            <CreatorTierBadge tier={creatorTier} size={14} />
+          )}
           {/* 인수 캐릭터는 제작자 이름을 적지 않는다. 자리는 남겨 다른 카드와 높이를 맞춘다. */}
           <span
             aria-hidden={isAdopted || undefined}
             className={cn("line-clamp-1", config.creatorName, isAdopted && "invisible")}
           >
-            {isAdopted ? "@" : `@ ${creatorName}`}
+            {isAdopted ? "@" : creatorTier ? creatorName : `@ ${creatorName}`}
           </span>
         </div>
 

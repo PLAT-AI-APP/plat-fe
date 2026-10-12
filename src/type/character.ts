@@ -1,3 +1,4 @@
+import type { BadgeTierCode } from "@/constants/creatorTier";
 // 시나리오 프리뷰에 쌓이는 콘텐츠의 렌더링 종류를 구분합니다.
 export type ScenarioType = "chat" | "userChat" | "action" | "asset";
 
@@ -51,6 +52,8 @@ export interface CharacterDetail {
   editable: boolean;
   tags: string[];
   isOfficial: boolean;
+  /** 만든 지 30일 안의 신작. 카드와 같은 기준이다. */
+  isNew: boolean;
   /** 성인 세계관. 제목 옆에 19 배지를 단다. */
   adult?: boolean;
   images: CharacterImageItem[];
@@ -65,6 +68,8 @@ export interface CharacterDetail {
     isFollowing: boolean;
     /** 공식 계정이 운영하는 캐릭터(제작자 탈퇴 후 인수). 프로필·팔로우 없이 "운영 PLAT" 으로 적는다. */
     adopted: boolean;
+    /** 제작자 등급 뱃지. 등급이 없거나 인수한 캐릭터면 null. */
+    tier: BadgeTierCode | null;
   };
   scenarios: CharacterScenario[];
   comments: CharacterDetailComment[];

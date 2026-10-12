@@ -5,6 +5,7 @@ import { axiosInstance } from "..";
 import { AppError } from "@/type/api";
 import { resolveApiImageUrl } from "@/lib/file";
 import { userQueryKeys } from "./queryKeys";
+import type { BadgeTierCode } from "@/constants/creatorTier";
 
 /** 백엔드 PublicUserProfileResponse. 이메일·생년월일 같은 비공개 정보는 내려오지 않습니다. */
 interface PublicUserProfileResponse {
@@ -12,6 +13,8 @@ interface PublicUserProfileResponse {
   nickname: string;
   bio: string | null;
   profileImageUrl: string | null;
+  /** 제작자 등급 뱃지. 등급이 없으면 null. */
+  creatorTier?: BadgeTierCode | null;
 }
 
 export interface UserProfile {
@@ -20,6 +23,7 @@ export interface UserProfile {
   bio: string;
   /** 올리지 않은 유저는 없습니다. 그때는 호출부가 기본 이미지를 씁니다. */
   profileImageUrl?: string;
+  creatorTier: BadgeTierCode | null;
 }
 
 const normalizeUserProfile = (user: PublicUserProfileResponse): UserProfile => ({
@@ -27,6 +31,7 @@ const normalizeUserProfile = (user: PublicUserProfileResponse): UserProfile => (
   nickname: user.nickname,
   bio: user.bio ?? "",
   profileImageUrl: resolveApiImageUrl(user.profileImageUrl),
+  creatorTier: user.creatorTier ?? null,
 });
 
 const getUserProfile = async (userId: string) => {
