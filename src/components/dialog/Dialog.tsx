@@ -14,6 +14,7 @@ const Dialog = ({
   confirmText = "common.confirm",
   cancelText = "common.cancel",
   isConfirmPending = false,
+  hero,
 }: DialogProps) => {
   const translateText = useTranslateText();
   const hasCancelButton = Boolean(cancelFn);
@@ -39,23 +40,37 @@ const Dialog = ({
       onClose={onClose}
       className="w-[385px] max-w-[calc(100vw-40px)] overflow-hidden rounded-3xl bg-dark px-6 pb-6 pt-8"
     >
+      {/* 연출 띠는 창 가장자리까지 꽉 채운다 */}
+      {hero && <div className="-mx-6 -mt-8 mb-6">{hero}</div>}
       <div className="flex w-full flex-col items-center gap-8">
         <div className="flex w-full flex-col items-start gap-3">
           {/* JSX 제목은 호출부가 그대로 제어하고, 문자열 제목만 공통 번역/타이포를 적용합니다. */}
-          {typeof label === "string" ? (
-            <h2 className="title-2 w-full text-font-1">
-              {translateText(label)}
-            </h2>
-          ) : (
-            label
-          )}
+          <div
+            className={cn("w-full", hero && "scene-rise")}
+            style={hero ? { animationDelay: "0.2s" } : undefined}
+          >
+            {typeof label === "string" ? (
+              <h2 className="title-2 w-full text-font-1">
+                {translateText(label)}
+              </h2>
+            ) : (
+              label
+            )}
+          </div>
 
-          {typeof description === "string" ? (
-            <p className="body-5 w-full whitespace-pre-line text-font-2">
-              {translateText(description)}
-            </p>
-          ) : (
-            description
+          {description && (
+            <div
+              className={cn("w-full", hero && "scene-rise")}
+              style={hero ? { animationDelay: "0.28s" } : undefined}
+            >
+              {typeof description === "string" ? (
+                <p className="body-5 w-full whitespace-pre-line text-font-2">
+                  {translateText(description)}
+                </p>
+              ) : (
+                description
+              )}
+            </div>
           )}
         </div>
 

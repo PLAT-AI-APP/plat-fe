@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import type { WelcomeCreditDialogProps } from "@/type/dialog";
 import Dialog from "./Dialog";
+import DialogHero from "./DialogHero";
 
 const WelcomeCreditDialog = ({
   onClose,
@@ -18,6 +19,7 @@ const WelcomeCreditDialog = ({
   return (
     <Dialog
       onClose={handleConfirm}
+      hero={<DialogHero variant="welcomeNote" />}
       label="dialog.welcomeCredit.title"
       description={
         <div className="body-5 w-full text-font-2">
