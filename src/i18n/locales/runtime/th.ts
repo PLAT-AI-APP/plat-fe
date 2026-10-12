@@ -50,6 +50,7 @@ const th: typeof en = {
     loadFailed: "โหลดส่วนนี้ไม่สำเร็จ",
     loadMoreFailed: "โหลดเพิ่มเติมไม่สำเร็จ",
     empty: "ยังไม่มีเนื้อหาที่จะแสดง",
+    imageNotFound: "ไม่พบรูปภาพ",
   },
   sidebar: {
     home: "หน้าแรก",
@@ -179,6 +180,8 @@ const th: typeof en = {
         scope: "การเลือกทั้งหมดใช้กับ {count} รายการที่แสดงอยู่",
       },
       noMatch: "ไม่มีตัวละครที่ตรงเงื่อนไข",
+      open: "ดู",
+      openCharacter: "เปิด {title} ในแท็บใหม่",
       willBeDeleted: "จะถูกลบ",
       showMore: "แสดงเพิ่ม {count}",
       remaining: "เหลือ {count}",

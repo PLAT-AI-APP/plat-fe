@@ -1,11 +1,14 @@
 "use client";
 
-import React, { useMemo, useState, useSyncExternalStore } from "react";
+import React, { useCallback, useMemo, useState, useSyncExternalStore } from "react";
 import { m } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { useLikedUniversesInfiniteQuery } from "@/api/user/getLikedUniverses";
 import { useUserProfileQuery } from "@/api/user/getUserProfile";
-import { useUserUniversesInfiniteQuery } from "@/api/user/getUserUniverses";
+import {
+  type UserUniverseCard,
+  useUserUniversesInfiniteQuery,
+} from "@/api/user/getUserUniverses";
 import CharacterShowcase from "@/components/character/CharacterShowcase";
 import SortFilter from "@/components/character/SortFilter";
 import { CharacterSortOption } from "@/components/popover/CharacterSortPopover";
@@ -13,6 +16,7 @@ import { ErrorState } from "@/components/state";
 import { useInfiniteList } from "@/hooks/data/useInfiniteList";
 import { useTabUnderline } from "@/hooks/dom/useTabUnderline";
 import { cn } from "@/lib/utils";
+import { useDialogStore } from "@/store/useDialogStore";
 import { useUserStore } from "@/store/useUserStore";
 import CreatedEmptyState from "./CreatedEmptyState";
 import Header from "./Header";
@@ -121,7 +125,12 @@ export default function ProfileContent({ id }: { id: string }) {
     fetchNextPage: fetchNextCreatedPage,
     hasNextPage: hasNextCreatedPage,
     isFetchingNextPage: isFetchingNextCreatedPage,
-  } = useUserUniversesInfiniteQuery(id, !isWishTab && !isProfileError);
+  } = useUserUniversesInfiniteQuery(
+    id,
+    // 내 프로필인지 알기 전에 공개 목록을 먼저 받으면 비공개 캐릭터가 늦게 끼어든다.
+    hasHydrated && !isWishTab && !isProfileError,
+    isOwnProfile,
+  );
 
   const {
     items: createdItems,
@@ -137,9 +146,48 @@ export default function ProfileContent({ id }: { id: string }) {
     { enabled: !isWishTab },
   );
 
+  const openDialog = useDialogStore((state) => state.openDialog);
+
+  // 내 작품만 공개 여부·검수 결과가 온다. 승인 안 된 카드는 상세가 열리지 않아 누르면 사유를 띄운다.
+  const ownCardState = useCallback((card: UserUniverseCard) => {
+    const review = card.review;
+    if (review) {
+      const editHref = `/character-creat?universeId=${card.universeId}`;
+      return {
+        statusChip: {
+          label:
+            review.status === "REJECTED"
+              ? t("characterCard.reviewStatus.rejected")
+              : review.awaitingAdmin
+                ? t("characterCard.reviewStatus.awaitingAdmin")
+                : t("characterCard.reviewStatus.pending"),
+          tone: review.status === "REJECTED" ? ("danger" as const) : ("pending" as const),
+          hint:
+            review.status === "REJECTED"
+              ? t("characterCard.reviewStatus.rejectedHint")
+              : t("characterCard.reviewStatus.pendingHint"),
+        },
+        onClick: () => openDialog("CONTENT_REVIEW", { review, editHref }),
+      };
+    }
+    if (card.visibility && card.visibility !== "PUBLIC") {
+      return {
+        statusChip: {
+          label:
+            card.visibility === "PRIVATE"
+              ? t("characterCard.reviewStatus.private")
+              : t("characterCard.reviewStatus.unlisted"),
+          tone: "muted" as const,
+        },
+      };
+    }
+    return {};
+  }, [openDialog, t]);
+
   const createdCards = useMemo(
     () =>
       createdItems.map((card) => ({
+        ...(isOwnProfile ? ownCardState(card) : {}),
         id: card.universeId,
         name: card.title,
         chatCount: card.chatCount,
@@ -152,7 +200,7 @@ export default function ProfileContent({ id }: { id: string }) {
         isOfficial: card.isOfficial,
         adult: card.adult,
       })),
-    [createdItems],
+    [createdItems, isOwnProfile, ownCardState],
   );
 
   const displayArray = isWishTab ? likedCards : createdCards;

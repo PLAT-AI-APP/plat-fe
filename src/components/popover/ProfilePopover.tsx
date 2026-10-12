@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef } from "react";
-import Image from "next/image";
+import ResourceImage from "@/components/ResourceImage";
 import Link from "next/link";
 import { cn, formatWithCommas } from "@/lib/utils";
 import {
@@ -202,7 +202,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
           className="flex items-center justify-between rounded-lg p-2 transition-colors hover:bg-btn-hover"
         >
           <div className="flex min-w-0 items-center gap-2">
-            <Image
+            <ResourceImage
               src={profileImage || "/p1.png"}
               alt={t("profileImageAlt")}
               width={28}

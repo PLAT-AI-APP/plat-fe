@@ -26,7 +26,7 @@ import { useIntersectionObserver } from "@/hooks/dom/useIntersectionObserver";
 import { useScrollTimeout } from "@/hooks/dom/useScrollTiemout";
 import { toAiModel } from "@/lib/chatModel";
 import { toImageVariantUrl } from "@/lib/file";
-import { useChatViewStore } from "@/store/useChatViewStore";
+import { useNovelView } from "@/store/useChatViewStore";
 import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
 import { AIModelType, ChatMessageType } from "@/type/chat";
@@ -63,7 +63,6 @@ const toChatMessage = (
 
 const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
   const { onScroll } = useScrollTimeout();
-  const isNovelView = useChatViewStore((state) => state.isNovelView);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [scrollContainer, setScrollContainer] = useState<HTMLDivElement | null>(null);
 
@@ -79,6 +78,8 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
     error: roomError,
     refetch: refetchRoom,
   } = useRoomDetailQuery(roomId);
+  // 유저가 이 캐릭터에서 보기를 바꾼 적이 없으면 제작자가 정한 기본 보기를 따른다.
+  const { isNovelView } = useNovelView(room?.universeId, room?.defaultViewMode);
   // 캐릭터(세계관)가 지워졌거나 운영 심사 중인 방은 세계관 상세가 닫혀 있어 부르지 않는다(404).
   // 이름은 방에 남긴 스냅샷을, 캐릭터 ID·프로필은 방 응답의 값을 쓴다.
   const isClosed = room?.closed === true;

@@ -36,11 +36,12 @@ import { usePatchRoomAnswerRecommendationMutation } from "@/api/room/patchRoomAn
 import { usePatchRoomPersonaMutation } from "@/api/room/patchRoomPersona";
 import AnimatedBalance from "@/components/motion/AnimatedBalance";
 import { cn } from "@/lib/utils";
-import { useChatViewStore } from "@/store/useChatViewStore";
+import { useNovelView } from "@/store/useChatViewStore";
 import { useDialogStore } from "@/store/useDialogStore";
 import { useModalStore } from "@/store/useModalStore";
 import { useWalletStore } from "@/store/useWalletStore";
 import { TRANSITION } from "@/constants/motion";
+import { IS_RESPONSE_FORMAT_SELECTABLE } from "@/constants/responseFormat";
 import { useFocusTrap } from "@/hooks/dom/useFocusTrap";
 import ResponseFormatSetting from "./ResponseFormatSetting";
 
@@ -221,11 +222,9 @@ const ChattingSidebar = ({ roomId, toggleIsSidebar }: ChattingSidebarProps) => {
   const [isAssetViewOn, setIsAssetViewOn] = useState(true);
   const handleAssetViewToggle = () =>
     setIsAssetViewOn((prevState) => !prevState);
-  // 소설로 보기는 채팅 화면(메시지 목록)이 같은 값을 읽는다.
-  const isNovelViewOn = useChatViewStore((state) => state.isNovelView);
-  const handleNovelViewToggle = useChatViewStore(
-    (state) => state.toggleNovelView,
-  );
+  // 소설로 보기는 채팅 화면(메시지 목록)이 같은 값을 읽는다. 바꾸면 이 세계관에서의 선택으로 남는다.
+  const { isNovelView: isNovelViewOn, toggleNovelView: handleNovelViewToggle } =
+    useNovelView(room?.universeId, room?.defaultViewMode);
 
   const isDepthViewOpen = sidebarDepth !== "SETTINGS";
   const panelRef = useRef<HTMLDivElement>(null);
@@ -493,9 +492,12 @@ const ChattingSidebar = ({ roomId, toggleIsSidebar }: ChattingSidebarProps) => {
                               }
                             />
                           </li>
-                          <li>
-                            <ResponseFormatSetting roomId={roomId} />
-                          </li>
+                          {/* 응답 형식은 소설형 하나로만 서비스해 고르지 않는다. 다시 열 때는 상수를 켠다. */}
+                          {IS_RESPONSE_FORMAT_SELECTABLE && (
+                            <li>
+                              <ResponseFormatSetting roomId={roomId} />
+                            </li>
+                          )}
                           {isUniverseOpen && (
                             <li>
                               <SidebarMenuItem

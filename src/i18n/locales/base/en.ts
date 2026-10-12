@@ -175,6 +175,22 @@ const en: typeof ko = {
       replyTitle: "Delete your reply?",
       replyDescription: "A deleted reply cannot be restored.",
     },
+    contentReview: {
+      rejectedTitle: "Your character was rejected",
+      awaitingAdminTitle: "An admin is reviewing it",
+      pendingTitle: "Under review",
+      pendingDescription: "Once the review is done, other users can see it too. Please wait a moment.",
+      awaitingAdminDescription: "Automatic review couldn't finish, so an admin is checking it directly. Other users can see it once that's done.",
+      rejectedFallback: "It didn't meet our review guidelines, so it isn't public. Edit it and save again.",
+      findingsTitle: "What to fix",
+      edit: "Edit",
+      close: "Close",
+      fields: {
+        NAME: "Name",
+        DESCRIPTION: "Description",
+        DETAIL_SETTING: "Detailed settings",
+      },
+    },
     qnaCancel: {
       title: "Cancel this inquiry?",
       description: "A canceled inquiry can't be restored, and you won't receive a reply from our team.",

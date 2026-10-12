@@ -84,6 +84,11 @@ const th: typeof ko = {
         "กรุณาเขียนรายละเอียด เช่น บุคลิก เรื่องราว หรือเหตุการณ์ของตัวละคร",
       tendencyLabel: "แนวโน้ม",
       tendencyHelp: "แนะนำให้ผู้ใช้ที่มีความชอบคล้ายกัน",
+      defaultViewModeLabel: "มุมมองเริ่มต้นของห้องแชท",
+      defaultViewModeHelp:
+        "รูปแบบที่เห็นเมื่อเข้าห้องแชทครั้งแรก ผู้ใช้เปลี่ยนได้ในห้องแชท",
+      defaultViewModeChat: "แบบสนทนา",
+      defaultViewModeNovel: "แบบนิยาย",
       noCategory: "[ยังไม่ได้เลือก]",
       tagPlaceholder: "เลือกแท็ก",
       tagFullPlaceholder: "เลือกแท็กครบแล้ว",

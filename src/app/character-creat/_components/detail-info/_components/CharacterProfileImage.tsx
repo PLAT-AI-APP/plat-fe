@@ -2,7 +2,7 @@
 
 import React from "react";
 import UploadStatusOverlay from "@/components/motion/UploadStatusOverlay";
-import Image from "next/image";
+import ResourceImage from "@/components/ResourceImage";
 import dynamic from "next/dynamic";
 import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
@@ -63,7 +63,7 @@ const CharacterProfileImage = () => {
       >
         <div className="relative flex size-full items-center justify-center overflow-hidden rounded-xl">
           {preview ? (
-            <Image
+            <ResourceImage
               src={preview}
               alt={t("profileImagePreviewAlt")}
               width={128}

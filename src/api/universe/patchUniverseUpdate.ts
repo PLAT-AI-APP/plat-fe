@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
+import type { ChatViewMode } from "@/type/chat";
 import type {
   UniverseCreateAsset,
   UniverseCreateLanguage,
@@ -40,6 +41,8 @@ export interface UniverseUpdateRequest {
   detailSetting?: string | null;
   introduce?: string | null;
   character?: UniverseUpdateCharacter | null;
+  /** 채팅방 기본 보기(대화형·소설형). 생략하면 바꾸지 않는다. */
+  defaultViewMode?: ChatViewMode | null;
 }
 
 export interface PatchUniverseUpdateParams {

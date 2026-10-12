@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { FolderIcon } from "./DocsIcons";
+import FallbackImg from "@/components/image/FallbackImg";
 
 /**
  * 카테고리 썸네일·커버. 커버 이미지가 없으면 연한 브랜드 바탕에 폴더 아이콘을 둔다.
@@ -25,8 +26,7 @@ const DocsThumbnail = ({
     )}
   >
     {src ? (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
+      <FallbackImg
         src={src}
         alt={alt}
         loading={eager ? "eager" : "lazy"}

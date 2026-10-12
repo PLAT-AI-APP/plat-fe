@@ -85,6 +85,11 @@ const en: typeof ko = {
         "Write detailed information such as the character's personality, narrative, or key events.",
       tendencyLabel: "Audience",
       tendencyHelp: "Recommended to users with similar preferences",
+      defaultViewModeLabel: "Default chat view",
+      defaultViewModeHelp:
+        "How the chat room looks when users first enter. Users can change it in the chat room.",
+      defaultViewModeChat: "Chat",
+      defaultViewModeNovel: "Novel",
       noCategory: "[No selection]",
       tagPlaceholder: "Select tags",
       tagFullPlaceholder: "All tags are selected",

@@ -122,6 +122,15 @@ const vi = {
     editButtonLabel: "Chỉnh sửa nhân vật",
     officialBadge: "Chính thức",
     newBadge: "Mới",
+    reviewStatus: {
+      pending: "Đang duyệt",
+      awaitingAdmin: "Chờ quản trị",
+      rejected: "Bị từ chối",
+      rejectedHint: "Chạm để xem lý do",
+      pendingHint: "Chạm để xem chi tiết",
+      private: "Riêng tư",
+      unlisted: "Không công khai",
+    },
   },
   characterDetail: {
     scenarioImageAlt: "Ảnh kịch bản",

@@ -10,6 +10,7 @@ import { useTranslations } from "next-intl";
 import React from "react";
 import CharacterCard from "./character-card";
 import CardGrid from "./character-card/CardGrid";
+import type { CardStatusChip } from "./character-card/types";
 import {
   CARD_BASE_WIDTH,
   type CardColumnCount,
@@ -36,6 +37,8 @@ export interface CharacterShowcaseItem {
   isOfficial?: boolean;
   /** 성인 세계관. 카드 제목 옆에 19 배지를 단다. */
   adult?: boolean;
+  statusChip?: CardStatusChip;
+  onClick?: () => void;
   rank?: number;
 }
 
@@ -147,6 +150,8 @@ const CharacterShowcase = ({
               isNew={char.isNew}
               isOfficial={char.isOfficial}
               adult={char.adult}
+              statusChip={char.statusChip}
+              onCardClick={char.onClick}
               rank={char.rank}
               selectedTags={selectedTags}
               fluid={isFluid}

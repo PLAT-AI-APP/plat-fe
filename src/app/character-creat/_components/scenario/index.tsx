@@ -8,6 +8,7 @@ import { Close, Plus } from "@/icons";
 import { cn } from "@/lib/utils";
 import { showAppToast } from "@/lib/toast";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
+import { IS_RESPONSE_FORMAT_SELECTABLE } from "@/constants/responseFormat";
 import ScenarioResponseFormatField from "./ScenarioResponseFormatField";
 
 interface ScenarioProps {
@@ -173,7 +174,10 @@ const Scenario = ({
         value={currentScenarioDescription}
       />
 
-      <ScenarioResponseFormatField key={fields[currentIndex]?.id} scenarioIndex={currentIndex} />
+      {/* 응답 형식은 소설형 하나로만 서비스해 고르지 않는다(저장 시 소설형 고정). 다시 열 때는 상수를 켠다. */}
+      {IS_RESPONSE_FORMAT_SELECTABLE && (
+        <ScenarioResponseFormatField key={fields[currentIndex]?.id} scenarioIndex={currentIndex} />
+      )}
 
       {/* 난이도 UI 임시 비노출
       <div className="flex flex-col gap-1">

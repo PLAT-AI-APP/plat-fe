@@ -21,6 +21,9 @@ import { showAppToast } from "@/lib/toast";
 import { useModalStore } from "@/store/useModalStore";
 import { useUserStore } from "@/store/useUserStore";
 import type { UniverseCreateTendency } from "@/api/universe/postUniverseCreate";
+import type { ChatViewMode } from "@/type/chat";
+
+const VIEW_MODE_LIST: ChatViewMode[] = ["CHAT", "NOVEL"];
 
 const TENDENCY_LIST: UniverseCreateTendency[] = [
   "ALL",
@@ -44,6 +47,7 @@ const Setting =({ isEditMode, wasAdult = false }: SettingProps) => {
   const isPublicWatch = useWatch({ control, name: "isPublic" });
   const allowComments = useWatch({ control, name: "allowComments" });
   const tendency = useWatch({ control, name: "tendency" });
+  const defaultViewMode = useWatch({ control, name: "defaultViewMode" });
   const rightsAgreed = useWatch({ control, name: "rightsAgreed" }) ?? false;
   const adultT = useTranslations("adultVerification.create");
   const isAdult = useWatch({ control, name: "adult" }) ?? false;
@@ -97,6 +101,18 @@ const Setting =({ isEditMode, wasAdult = false }: SettingProps) => {
   // 임시저장 기준과 비교하지 않도록 dirty 로 치지 않는다(초안에 싣지 않는 값이다).
   const toggleRightsAgreed = () => {
     setValue("rightsAgreed", !rightsAgreed);
+  };
+
+  const handleDefaultViewMode = (nextViewMode: ChatViewMode) => {
+    setValue("defaultViewMode", nextViewMode, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+  };
+
+  const viewModeLabelByValue: Record<ChatViewMode, string> = {
+    CHAT: t("defaultViewModeChat"),
+    NOVEL: t("defaultViewModeNovel"),
   };
 
   const handleTendency = (nextTendency: UniverseCreateTendency) => {
@@ -242,6 +258,37 @@ const Setting =({ isEditMode, wasAdult = false }: SettingProps) => {
                 )}
               >
                 {tendencyLabelByValue[item]}
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      <section className="flex flex-col gap-4">
+        <div className="flex flex-col gap-1">
+          <h3 className="title-3 text-font-1">{t("defaultViewModeLabel")}</h3>
+          <p className="body-6 text-font-2">{t("defaultViewModeHelp")}</p>
+        </div>
+
+        <div role="radiogroup" aria-label={t("defaultViewModeLabel")} className="grid grid-cols-2 gap-2">
+          {VIEW_MODE_LIST.map((item) => {
+            const isActive = defaultViewMode === item;
+
+            return (
+              <button
+                key={item}
+                type="button"
+                role="radio"
+                aria-checked={isActive}
+                onClick={() => handleDefaultViewMode(item)}
+                className={cn(
+                  "body-5 flex h-10 items-center justify-center rounded-xl",
+                  isActive
+                    ? "bg-brand/10 text-brand-dark"
+                    : "bg-darkest text-font-2",
+                )}
+              >
+                {viewModeLabelByValue[item]}
               </button>
             );
           })}

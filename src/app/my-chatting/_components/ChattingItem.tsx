@@ -2,7 +2,7 @@
 
 import { AnimatePresence, m } from "framer-motion";
 import { LIST_ITEM_MOTION } from "@/components/motion/ListMotion";
-import Image from "next/image";
+import ResourceImage from "@/components/ResourceImage";
 import Link from "next/link";
 import React, { useRef } from "react";
 import { useTranslations } from "next-intl";
@@ -115,7 +115,7 @@ const ChattingItem = ({
           <LockLine className="relative size-7 text-font-2" />
         </div>
       ) : (
-        <Image
+        <ResourceImage
           src={thumbnailUrl || DEFAULT_THUMBNAIL}
           width={84}
           height={84}

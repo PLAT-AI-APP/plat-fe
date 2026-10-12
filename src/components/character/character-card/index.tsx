@@ -2,16 +2,17 @@
 
 import { cn } from "@/lib/utils";
 import useEmblaCarousel from "embla-carousel-react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePrefetchUniverseDetail } from "@/api/universe/getUniverseDetail";
 import { useTranslations } from "next-intl";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Pen } from "@/icons";
+import { Clock, Pen } from "@/icons";
+import StatusError from "@/icons/StatusError";
 // import { useAuthStore } from "@/store/useAuthStore";
 // import { useDialogStore } from "@/store/useDialogStore";
 // import { useModalStore } from "@/store/useModalStore";
 import CreatorTierBadge from "@/components/creator/CreatorTierBadge";
+import ResourceImage from "@/components/ResourceImage";
 import ChatCountBadge from "./ChatCountBadge";
 import {
   FLUID_SIZE_OVERRIDE,
@@ -51,6 +52,8 @@ const CharacterCard = ({
   href,
   editHref,
   adult = false,
+  statusChip,
+  onCardClick,
 }: CharacterCardProps) => {
   const t = useTranslations("characterCard");
   // 상세로 가는 카드면 포인터를 올릴 때 상세를 미리 받는다(누를 때 스켈레톤 없이 바로 뜬다).
@@ -96,6 +99,56 @@ const CharacterCard = ({
     >
       <Pen className="size-4" />
     </Link>
+  );
+
+  // 상태 표시는 이미지 위에 얹기만 한다(pointer-events-none) — 눌러도 카드 클릭으로 그대로 넘어간다.
+  const isStatusOverlay = statusChip && statusChip.tone !== "muted";
+  const StatusIcon = statusChip?.tone === "danger" ? StatusError : Clock;
+  const statusChipElement = statusChip && !isStatusOverlay && (
+    <span className="title-7 pointer-events-none absolute left-2 top-2 z-10 rounded-full bg-scrim/80 px-2 py-0.5 text-overlay-font backdrop-blur-sm">
+      {statusChip.label}
+    </span>
+  );
+  // 이미지 영역을 덮는다. 부모(이미지 영역)가 relative·overflow-hidden 이라 모서리 둥글기를 그대로 따른다.
+  const statusOverlayElement = statusChip && isStatusOverlay && (
+    <div className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center gap-1.5 bg-scrim/75 px-3 text-center backdrop-blur-[2px]">
+      <StatusIcon
+        aria-hidden="true"
+        className={cn("size-7", statusChip.tone === "danger" ? "text-danger" : "text-brand")}
+      />
+      <span
+        className={cn(
+          "title-5 break-keep",
+          statusChip.tone === "danger" ? "text-danger" : "text-brand",
+        )}
+      >
+        {statusChip.label}
+      </span>
+      {statusChip.hint && (
+        <span className="body-8 break-keep text-overlay-font/70">{statusChip.hint}</span>
+      )}
+    </div>
+  );
+
+  // 카드 전체를 덮는 클릭 영역. onCardClick 이 있으면 이동 대신 버튼으로 깐다.
+  const cardCover = onCardClick ? (
+    <button
+      type="button"
+      aria-label={title}
+      onClick={onCardClick}
+      className="absolute inset-0 z-0"
+    />
+  ) : (
+    href && (
+      <Link
+        href={href}
+        aria-label={title}
+        onPointerEnter={handleLinkIntent}
+        onFocus={handleLinkIntent}
+        className="absolute inset-0 z-0"
+        // onClick={handleCardLinkClick}
+      />
+    )
   );
 
   const lastImageIndex = imageList.length - 1;
@@ -186,16 +239,9 @@ const CharacterCard = ({
       >
         {/* 나머지 컨트롤(인디케이터, 프로필 보기 CTA)과 형제로 깔리는 stretched link입니다.
             <a> 안에 <button>을 중첩시키지 않으면서도 카드 전체를 클릭 가능하게 합니다. */}
-        {href && (
-          <Link
-            href={href}
-            aria-label={title}
-            onPointerEnter={handleLinkIntent}
-            onFocus={handleLinkIntent}
-            className="absolute inset-0 z-0"
-            // onClick={handleCardLinkClick}
-          />
-        )}
+        {cardCover}
+
+        {statusChipElement}
 
         {hasChatCount && (
           <ChatCountBadge
@@ -218,7 +264,7 @@ const CharacterCard = ({
                 key={`${image}-${index}`}
                 className="relative h-full w-full min-w-0 flex-[0_0_100%] overflow-hidden bg-scrim"
               >
-                <Image
+                <ResourceImage
                   className="object-cover"
                   src={image}
                   alt={t("imageAlt", { title, index: index + 1 })}
@@ -230,6 +276,8 @@ const CharacterCard = ({
             ))}
           </div>
         </div>
+
+        {statusOverlayElement}
 
         <LastImageActionOverlay isVisible={isLastActionVisible} />
 
@@ -268,18 +316,11 @@ const CharacterCard = ({
     >
       {/* 나머지 컨트롤(인디케이터)과 형제로 깔리는 stretched link입니다.
           <a> 안에 <button>을 중첩시키지 않으면서도 카드 전체를 클릭 가능하게 합니다. */}
-      {href && (
-        <Link
-          href={href}
-          aria-label={title}
-          onPointerEnter={handleLinkIntent}
-          onFocus={handleLinkIntent}
-          className="absolute inset-0 z-0"
-          // onClick={handleCardLinkClick}
-        />
-      )}
+      {cardCover}
 
       {editBadge}
+
+      {statusChipElement}
 
       <div
         className={cn(
@@ -287,7 +328,7 @@ const CharacterCard = ({
           fluid ? fluidOverride.imageArea : config.imageArea,
         )}
       >
-        <Image
+        <ResourceImage
           className="object-cover transition-transform group-hover:scale-110"
           src={imageList[0]}
           alt={t("imageAlt", { title, index: 1 })}
@@ -295,6 +336,9 @@ const CharacterCard = ({
           // 6열 기준 1200px에서 187px. 예전 33vw는 실제 표시 폭의 두 배가 넘는 이미지를 받아왔다.
           sizes="(max-width: 447px) 45vw, (max-width: 895px) 30vw, (max-width: 1279px) 20vw, 240px"
         />
+
+        {/* 이미지를 받지 못하면 ResourceImage 가 이 자리에 기본 이미지를 깐다 — 상태 오버레이(z-10)는 그 위에 그대로 얹힌다. */}
+        {statusOverlayElement}
 
         {typeof rank === "number" && (
           <span className="display-1 pointer-events-none absolute bottom-3 left-3 leading-none text-overlay-font [text-shadow:0px_4px_6.7px_rgba(0,0,0,0.4)]">

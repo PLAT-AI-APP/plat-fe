@@ -51,6 +51,7 @@ const ko: typeof en = {
     loadFailed: "이 영역을 불러오지 못했어요.",
     loadMoreFailed: "더 불러오지 못했어요.",
     empty: "아직 표시할 내용이 없어요.",
+    imageNotFound: "이미지를 찾을 수 없어요",
   },
   sidebar: {
     home: "홈",
@@ -177,6 +178,8 @@ const ko: typeof en = {
         scope: "일괄 선택은 지금 보이는 {count}개에 적용돼요",
       },
       noMatch: "조건에 맞는 캐릭터가 없어요",
+      open: "보기",
+      openCharacter: "{title} 새 탭에서 보기",
       willBeDeleted: "삭제돼요",
       showMore: "{count}개 더 보기",
       remaining: "남은 {count}개",

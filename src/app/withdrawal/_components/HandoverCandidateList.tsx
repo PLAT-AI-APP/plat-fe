@@ -7,6 +7,7 @@ import { ArrowDown, Chat, Search } from "@/icons";
 import { toImageVariantUrl } from "@/lib/file";
 import { cn, formatWithCommas } from "@/lib/utils";
 import type { WithdrawalCandidate, WithdrawalChoice } from "@/type/withdrawal";
+import CharacterShortcut from "./CharacterShortcut";
 
 /** 처음 보이는 줄 수와 "더 보기" 한 번에 늘어나는 줄 수. 수백 개여도 한 화면이 길어지지 않게 한다. */
 const PAGE_SIZE = 10;
@@ -283,7 +284,10 @@ const HandoverCandidateList = ({
                     <span aria-hidden="true" className="size-11 shrink-0 rounded-xl bg-card" />
                   )}
                   <div className="flex min-w-0 flex-1 flex-col gap-0.5">
-                    <p className="title-5 truncate text-font-1">{candidate.title}</p>
+                    <div className="flex min-w-0 items-center gap-1.5">
+                      <p className="title-5 truncate text-font-1">{candidate.title}</p>
+                      <CharacterShortcut universeId={candidate.universeId} title={candidate.title} />
+                    </div>
                     <p className="body-7 flex items-center gap-1 text-font-2">
                       <Chat size={12} className="shrink-0" aria-hidden="true" />
                       {t("talking", { count: formatWithCommas(candidate.otherRoomCount) })}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import ResourceImage from "@/components/ResourceImage";
 import { useTranslations } from "next-intl";
 import { resolveApiImageUrl } from "@/lib/file";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -62,7 +62,7 @@ const CommentInputBox = ({
 
   return (
     <div className="flex gap-2">
-      <Image
+      <ResourceImage
         src={resolveApiImageUrl(profileImage) || "/p1.png"}
         alt={t("myProfileAlt")}
         width={40}

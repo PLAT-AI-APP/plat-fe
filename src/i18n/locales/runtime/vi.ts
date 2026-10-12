@@ -50,6 +50,7 @@ const vi: typeof en = {
     loadFailed: "Không tải được phần này.",
     loadMoreFailed: "Không tải thêm được.",
     empty: "Chưa có nội dung để hiển thị.",
+    imageNotFound: "Không tìm thấy hình ảnh",
   },
   sidebar: {
     home: "Trang chủ",
@@ -180,6 +181,8 @@ const vi: typeof en = {
         scope: "Thao tác hàng loạt áp dụng cho {count} mục đang hiển thị",
       },
       noMatch: "Không có nhân vật phù hợp",
+      open: "Xem",
+      openCharacter: "Mở {title} trong tab mới",
       willBeDeleted: "Sẽ bị xóa",
       showMore: "Xem thêm {count}",
       remaining: "Còn {count}",

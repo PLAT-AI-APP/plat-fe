@@ -8,6 +8,7 @@ import type {
   ThumbnailRoom,
 } from "@/type/room";
 import { MOCK_RESPONSE_FORMATS } from "./chat";
+import { getMockUniverseDetail } from "./universe";
 
 export interface MockRoom {
   roomId: string;
@@ -218,6 +219,8 @@ export const roomHandlers = [
       // 목 시나리오는 모두 채팅형·소설형을 허용한다.
       responseFormatCode: room.responseFormatCode,
       allowedResponseFormats: MOCK_RESPONSE_FORMATS,
+      // 서버처럼 그 방 세계관의 채팅방 기본 보기를 그대로 싣는다.
+      defaultViewMode: getMockUniverseDetail(room.universeId).defaultViewMode ?? "CHAT",
       memory: room.memory,
       userNote: room.userNote,
       characterName: "",

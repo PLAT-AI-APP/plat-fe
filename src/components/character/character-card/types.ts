@@ -41,6 +41,20 @@ export interface CharacterCardProps {
   editHref?: string;
   /** 성인 세계관. 제목 옆에 19 배지를 단다. */
   adult?: boolean;
+  /**
+   * 내 작품 목록에서만 쓰는 상태. 반려·검수 대기(danger·pending)는 이미지 전체를 어둡게 덮고 가운데에 크게 띄운다 — 다른 유저에게
+   * 보이지 않는다는 중요한 사실이라 한눈에 보여야 한다. 비공개 같은 가벼운 상태(muted)는 좌상단 칩으로만 단다.
+   */
+  statusChip?: CardStatusChip;
+  /** 넘기면 카드를 눌렀을 때 이동 대신 이 동작을 한다(열리지 않는 상세 대신 사유를 띄울 때). */
+  onCardClick?: () => void;
+}
+
+export interface CardStatusChip {
+  label: string;
+  tone: "danger" | "pending" | "muted";
+  /** 오버레이 아래 작은 안내(예: "눌러서 사유 보기"). muted 칩에는 쓰지 않는다. */
+  hint?: string;
 }
 
 export interface SizeConfig {

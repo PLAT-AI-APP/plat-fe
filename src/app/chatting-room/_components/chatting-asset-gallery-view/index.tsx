@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import ResourceImage from "@/components/ResourceImage";
 import { useTranslations } from "next-intl";
 import { useChatAssetGalleryQuery } from "@/api/chat/getChatAssetGallery";
 import SkeletonAssetGallery from "@/components/skeleton/SkeletonAssetGallery";
@@ -45,7 +45,7 @@ const ChattingAssetGalleryView = ({
         </button>
 
         <div className="relative aspect-square w-full overflow-hidden rounded-xl bg-card-hover">
-          <Image
+          <ResourceImage
             src={selectedAsset.imageUrl}
             alt={selectedAsset.name ?? ""}
             fill

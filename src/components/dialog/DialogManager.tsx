@@ -18,6 +18,7 @@ const DIALOG_LOADERS = {
   CHAT_TURN_DELETE: () => import("./ChatTurnDeleteDialog"),
   CHAT_TURN_REGENERATE: () => import("./ChatTurnRegenerateDialog"),
   COMMENT_DELETE: () => import("./CommentDeleteDialog"),
+  CONTENT_REVIEW: () => import("./ContentReviewDialog"),
   CREDIT_INSUFFICIENT: () => import("./CreditInsufficientDialog"),
   DRAFT_OVERWRITE: () => import("./DraftOverwriteDialog"),
   DRAFT_SAVE_OVERWRITE: () => import("./DraftSaveOverwriteDialog"),

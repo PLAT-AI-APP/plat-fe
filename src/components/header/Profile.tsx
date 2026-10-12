@@ -1,5 +1,5 @@
 "use client";
-import Image from "next/image";
+import ResourceImage from "@/components/ResourceImage";
 import { MouseEvent, Ref } from "react";
 import { useTranslations } from "next-intl";
 
@@ -39,7 +39,7 @@ const Profile = ({
       onFocus={onIntent}
       className="relative block size-8 shrink-0 cursor-pointer rounded-full"
     >
-      <Image
+      <ResourceImage
         src={profileImg || ""}
         alt=""
         width={32}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
+import ResourceImage from "@/components/ResourceImage";
 import { AnimatePresence, m } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { ArrowDown } from "@/icons";
@@ -106,16 +106,18 @@ const SettingsPanel = ({
             transition={{ duration: 0.32, ease: "easeOut" }}
             className="absolute inset-0"
           >
-            <Image
+            <ResourceImage
               src={currentImageUrl}
               alt=""
               aria-hidden
               fill
+              // 배경 장식이라 받지 못해도 대체 이미지를 깔지 않는다(앞의 본 이미지 자리가 대신 보여 준다).
+              showFallback={false}
               // 배경 블러라 선명할 필요가 없다. 작은 이미지로 충분하다.
               sizes="320px"
               className="scale-125 object-cover opacity-35 blur-2xl"
             />
-            <Image
+            <ResourceImage
               src={currentImageUrl}
               alt={character.title}
               width={333}
@@ -179,7 +181,7 @@ const SettingsPanel = ({
       <section className="flex flex-col gap-4">
         <h2 className="title-3 text-font-1">{t("characterIntroduction")}</h2>
         <div className="flex items-center gap-2">
-          <Image
+          <ResourceImage
             src={character.profileImage}
             alt={t("profileAlt", { name: character.characterName })}
             width={32}

@@ -80,6 +80,11 @@ const zh: typeof ko = {
       descriptionHelp: "请填写角色的性格、叙事、事件等更详细的内容。",
       tendencyLabel: "倾向",
       tendencyHelp: "会推荐给偏好相似的用户",
+      defaultViewModeLabel: "聊天室默认视图",
+      defaultViewModeHelp:
+        "首次进入聊天室时显示的形式。用户可以在聊天室中更改。",
+      defaultViewModeChat: "对话式",
+      defaultViewModeNovel: "小说式",
       noCategory: "[未选择]",
       tagPlaceholder: "请选择标签",
       tagFullPlaceholder: "已选择全部标签",

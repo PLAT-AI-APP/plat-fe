@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
+import ResourceImage from "@/components/ResourceImage";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import ProfileEditModal from "@/components/modal/ProfileEditModal";
@@ -31,7 +31,7 @@ const Header = ({ id }: HeaderProps) => {
       <section id="profile-info-summary" className="flex flex-col gap-4">
         <div className="flex gap-5">
           <aside className="shrink-0">
-            <Image
+            <ResourceImage
               src={profileImage || "/public/p1.png"}
               alt={t("profileImageAlt")}
               width={60}

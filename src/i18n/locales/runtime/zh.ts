@@ -50,6 +50,7 @@ const zh: typeof en = {
     loadFailed: "无法加载该区域。",
     loadMoreFailed: "无法加载更多内容。",
     empty: "暂时没有可显示的内容。",
+    imageNotFound: "找不到图片",
   },
   sidebar: {
     home: "首页",
@@ -175,6 +176,8 @@ const zh: typeof en = {
         scope: "批量操作将应用于当前显示的 {count} 个",
       },
       noMatch: "没有符合条件的角色",
+      open: "查看",
+      openCharacter: "在新标签页打开{title}",
       willBeDeleted: "将被删除",
       showMore: "再显示 {count} 个",
       remaining: "剩余 {count} 个",
