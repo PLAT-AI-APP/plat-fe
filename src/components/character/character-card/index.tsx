@@ -51,6 +51,8 @@ const CharacterCard = ({
   href,
   editHref,
   adult = false,
+  statusChip,
+  onCardClick,
 }: CharacterCardProps) => {
   const t = useTranslations("characterCard");
   // 상세로 가는 카드면 포인터를 올릴 때 상세를 미리 받는다(누를 때 스켈레톤 없이 바로 뜬다).
@@ -96,6 +98,42 @@ const CharacterCard = ({
     >
       <Pen className="size-4" />
     </Link>
+  );
+
+  // 상태 칩은 이미지 위에 얹기만 한다 — 눌러도 카드 클릭으로 그대로 넘어간다.
+  const statusChipElement = statusChip && (
+    <span
+      className={cn(
+        // 이미지 위라 옅은 색 바탕은 묻힌다. 바탕은 어둡게 두고 글자색으로만 상태를 가른다.
+        "title-7 pointer-events-none absolute left-2 top-2 z-10 rounded-full bg-scrim/80 px-2 py-0.5 backdrop-blur-sm",
+        statusChip.tone === "danger" && "text-danger",
+        statusChip.tone === "pending" && "text-brand",
+        statusChip.tone === "muted" && "text-overlay-font",
+      )}
+    >
+      {statusChip.label}
+    </span>
+  );
+
+  // 카드 전체를 덮는 클릭 영역. onCardClick 이 있으면 이동 대신 버튼으로 깐다.
+  const cardCover = onCardClick ? (
+    <button
+      type="button"
+      aria-label={title}
+      onClick={onCardClick}
+      className="absolute inset-0 z-0"
+    />
+  ) : (
+    href && (
+      <Link
+        href={href}
+        aria-label={title}
+        onPointerEnter={handleLinkIntent}
+        onFocus={handleLinkIntent}
+        className="absolute inset-0 z-0"
+        // onClick={handleCardLinkClick}
+      />
+    )
   );
 
   const lastImageIndex = imageList.length - 1;
@@ -186,16 +224,9 @@ const CharacterCard = ({
       >
         {/* 나머지 컨트롤(인디케이터, 프로필 보기 CTA)과 형제로 깔리는 stretched link입니다.
             <a> 안에 <button>을 중첩시키지 않으면서도 카드 전체를 클릭 가능하게 합니다. */}
-        {href && (
-          <Link
-            href={href}
-            aria-label={title}
-            onPointerEnter={handleLinkIntent}
-            onFocus={handleLinkIntent}
-            className="absolute inset-0 z-0"
-            // onClick={handleCardLinkClick}
-          />
-        )}
+        {cardCover}
+
+        {statusChipElement}
 
         {hasChatCount && (
           <ChatCountBadge
@@ -268,18 +299,11 @@ const CharacterCard = ({
     >
       {/* 나머지 컨트롤(인디케이터)과 형제로 깔리는 stretched link입니다.
           <a> 안에 <button>을 중첩시키지 않으면서도 카드 전체를 클릭 가능하게 합니다. */}
-      {href && (
-        <Link
-          href={href}
-          aria-label={title}
-          onPointerEnter={handleLinkIntent}
-          onFocus={handleLinkIntent}
-          className="absolute inset-0 z-0"
-          // onClick={handleCardLinkClick}
-        />
-      )}
+      {cardCover}
 
       {editBadge}
+
+      {statusChipElement}
 
       <div
         className={cn(

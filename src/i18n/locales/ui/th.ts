@@ -121,6 +121,13 @@ const th = {
     editButtonLabel: "แก้ไขตัวละคร",
     officialBadge: "ทางการ",
     newBadge: "ผลงานใหม่",
+    reviewStatus: {
+      pending: "กำลังตรวจสอบ",
+      awaitingAdmin: "ผู้ดูแลตรวจสอบ",
+      rejected: "ไม่ผ่าน",
+      private: "ส่วนตัว",
+      unlisted: "บางส่วน",
+    },
   },
   characterDetail: {
     scenarioImageAlt: "รูปภาพสถานการณ์",

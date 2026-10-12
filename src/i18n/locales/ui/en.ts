@@ -122,6 +122,13 @@ const en = {
     editButtonLabel: "Edit character",
     officialBadge: "Official",
     newBadge: "New",
+    reviewStatus: {
+      pending: "In review",
+      awaitingAdmin: "Admin check",
+      rejected: "Rejected",
+      private: "Private",
+      unlisted: "Unlisted",
+    },
   },
   characterDetail: {
     scenarioImageAlt: "Scenario image",

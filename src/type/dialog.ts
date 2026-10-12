@@ -1,3 +1,4 @@
+import type { OwnCardReview } from "@/type/card";
 import type React from "react";
 import type { WithdrawalHandover } from "@/type/withdrawal";
 
@@ -88,6 +89,14 @@ export interface PersonaDeleteDialogProps {
   errorMessage?: string;
 }
 
+/** 내 캐릭터의 검수 결과(검수 중·운영자 확인 중·반려 사유) */
+export interface ContentReviewDialogProps {
+  onClose: () => void;
+  review: OwnCardReview;
+  /** 반려일 때 "수정하기"가 보낼 곳 */
+  editHref: string;
+}
+
 /** 답변 대기 중인 1:1 문의 취소 확인 */
 export interface QnaCancelDialogProps {
   onClose: () => void;
@@ -171,6 +180,7 @@ export type DialogTypeMap = {
   CHAT_TURN_DELETE: DialogWithoutManagerClose<ChatTurnDeleteDialogProps>;
   CHAT_TURN_REGENERATE: DialogWithoutManagerClose<ChatTurnRegenerateDialogProps>;
   COMMENT_DELETE: DialogWithoutManagerClose<CommentDeleteDialogProps>;
+  CONTENT_REVIEW: DialogWithoutManagerClose<ContentReviewDialogProps>;
   CREDIT_INSUFFICIENT: DialogWithoutManagerClose<CreditInsufficientDialogProps>;
   DRAFT_OVERWRITE: DialogWithoutManagerClose<DraftOverwriteDialogProps>;
   DRAFT_SAVE_OVERWRITE: DialogWithoutManagerClose<DraftSaveOverwriteDialogProps>;

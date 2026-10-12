@@ -24,7 +24,29 @@ export interface BaseCard {
   adult?: boolean;
 }
 
+/** 검수에서 고칠 곳. 원문 대신 필드와 고칠 방향만 온다. */
+export interface ReviewFinding {
+  language: string;
+  field: "NAME" | "DESCRIPTION" | "DETAIL_SETTING";
+  guide: string;
+}
+
+/** 내 작품이 승인되지 않은 이유. 모두 승인되면 카드에 없다. */
+export interface OwnCardReview {
+  status: "PENDING" | "REJECTED";
+  /** 자동 검수를 마치지 못해 운영자 판정을 기다리는 중 */
+  awaitingAdmin: boolean;
+  reason: string | null;
+  findings: ReviewFinding[];
+}
+
 /** 로그인 상태일 때만 의미 있는 찜 여부가 함께 내려오는 카드. */
 export interface LikableCard extends BaseCard {
   liked: boolean;
+}
+
+/** 내 프로필 작품 카드. 공개 여부와 검수 결과는 본인에게만 온다. */
+export interface OwnCard extends LikableCard {
+  visibility: "PUBLIC" | "UNLISTED" | "PRIVATE";
+  review: OwnCardReview | null;
 }

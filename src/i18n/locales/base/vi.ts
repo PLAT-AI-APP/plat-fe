@@ -172,6 +172,22 @@ const vi: typeof ko = {
       replyTitle: "Xóa phản hồi bạn đã viết?",
       replyDescription: "Phản hồi đã xóa sẽ không thể khôi phục.",
     },
+    contentReview: {
+      rejectedTitle: "Nhân vật bị từ chối",
+      awaitingAdminTitle: "Quản trị viên đang kiểm tra",
+      pendingTitle: "Đang kiểm duyệt",
+      pendingDescription: "Sau khi kiểm duyệt xong, người dùng khác cũng sẽ thấy. Vui lòng chờ một chút.",
+      awaitingAdminDescription: "Kiểm duyệt tự động chưa hoàn tất nên quản trị viên đang trực tiếp kiểm tra. Xong rồi người dùng khác sẽ thấy.",
+      rejectedFallback: "Chưa đạt tiêu chuẩn kiểm duyệt nên chưa được công khai. Hãy sửa và lưu lại.",
+      findingsTitle: "Cần sửa",
+      edit: "Chỉnh sửa",
+      close: "Đóng",
+      fields: {
+        NAME: "Tên",
+        DESCRIPTION: "Giới thiệu",
+        DETAIL_SETTING: "Thiết lập chi tiết",
+      },
+    },
     qnaCancel: {
       title: "Hủy yêu cầu hỗ trợ này?",
       description: "Yêu cầu đã hủy không thể khôi phục và bạn sẽ không nhận được phản hồi từ đội ngũ vận hành.",

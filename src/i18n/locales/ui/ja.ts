@@ -122,6 +122,13 @@ const ja = {
     editButtonLabel: "キャラクターを編集",
     officialBadge: "公式",
     newBadge: "新作",
+    reviewStatus: {
+      pending: "審査中",
+      awaitingAdmin: "運営確認中",
+      rejected: "差し戻し",
+      private: "非公開",
+      unlisted: "限定公開",
+    },
   },
   characterDetail: {
     scenarioImageAlt: "シナリオ画像",

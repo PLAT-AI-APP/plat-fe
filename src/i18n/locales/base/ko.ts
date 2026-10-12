@@ -171,6 +171,22 @@ const ko = {
       replyTitle: "작성 답글을 삭제할까요?",
       replyDescription: "삭제한 답글은 복구할 수 없어요.",
     },
+    contentReview: {
+      rejectedTitle: "검수에서 반려됐어요",
+      awaitingAdminTitle: "운영자가 확인하고 있어요",
+      pendingTitle: "검수 중이에요",
+      pendingDescription: "검수가 끝나면 다른 유저에게도 보여요. 잠시만 기다려 주세요.",
+      awaitingAdminDescription: "자동 검수를 마치지 못해 운영자가 직접 확인하고 있어요. 확인이 끝나면 다른 유저에게도 보여요.",
+      rejectedFallback: "검수 기준에 맞지 않아 공개되지 않았어요. 내용을 고친 뒤 다시 저장해 주세요.",
+      findingsTitle: "고칠 곳",
+      edit: "수정하기",
+      close: "닫기",
+      fields: {
+        NAME: "이름",
+        DESCRIPTION: "소개",
+        DETAIL_SETTING: "상세 설정",
+      },
+    },
     qnaCancel: {
       title: "문의를 취소할까요?",
       description: "취소한 문의는 되돌릴 수 없고, 운영팀 답변도 받을 수 없어요.",

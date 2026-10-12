@@ -6,12 +6,12 @@ import { AppError, PageWith } from "@/type/api";
 import { getNextPageNumber } from "@/lib/pagination";
 import { useAuthReady } from "@/hooks/data/useAuthReady";
 import { useAuthStore } from "@/store/useAuthStore";
-import type { LikableCard } from "@/type/card";
+import type { LikableCard, OwnCard } from "@/type/card";
 import { useAdultMode } from "@/hooks/data/useAdultAccess";
 import { userQueryKeys } from "./queryKeys";
 
 /** 백엔드 BaseCard. 로그인 없이 조회 가능하고, 그때는 liked가 전부 false로 옵니다. */
-export type UserUniverseCard = LikableCard;
+export type UserUniverseCard = LikableCard & Partial<Pick<OwnCard, "visibility" | "review">>;
 
 /** 서버 기본값과 맞춥니다. */
 export const USER_UNIVERSE_PAGE_SIZE = 20;

@@ -41,6 +41,15 @@ export interface CharacterCardProps {
   editHref?: string;
   /** 성인 세계관. 제목 옆에 19 배지를 단다. */
   adult?: boolean;
+  /** 이미지 좌상단 상태 칩(검수 중·반려·비공개 등). 내 작품 목록에서만 쓴다. */
+  statusChip?: CardStatusChip;
+  /** 넘기면 카드를 눌렀을 때 이동 대신 이 동작을 한다(열리지 않는 상세 대신 사유를 띄울 때). */
+  onCardClick?: () => void;
+}
+
+export interface CardStatusChip {
+  label: string;
+  tone: "danger" | "pending" | "muted";
 }
 
 export interface SizeConfig {

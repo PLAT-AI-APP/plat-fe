@@ -171,6 +171,22 @@ const ja: typeof ko = {
       replyTitle: "作成した返信を削除しますか？",
       replyDescription: "削除した返信は復元できません。",
     },
+    contentReview: {
+      rejectedTitle: "審査で差し戻されました",
+      awaitingAdminTitle: "運営者が確認しています",
+      pendingTitle: "審査中です",
+      pendingDescription: "審査が終わると他のユーザーにも表示されます。少々お待ちください。",
+      awaitingAdminDescription: "自動審査を完了できなかったため、運営者が直接確認しています。確認が終わると他のユーザーにも表示されます。",
+      rejectedFallback: "審査基準を満たさなかったため公開されていません。内容を修正して再度保存してください。",
+      findingsTitle: "修正箇所",
+      edit: "修正する",
+      close: "閉じる",
+      fields: {
+        NAME: "名前",
+        DESCRIPTION: "紹介",
+        DETAIL_SETTING: "詳細設定",
+      },
+    },
     qnaCancel: {
       title: "お問い合わせを取り消しますか？",
       description: "取り消したお問い合わせは元に戻せず、運営チームからの回答も届きません。",
