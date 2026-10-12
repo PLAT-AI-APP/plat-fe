@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useMemo } from "react";
-import Image from "next/image";
 import { m } from "framer-motion";
 import { useTranslations } from "next-intl";
 import CharacterChat from "@/components/chat/CharacterChat";
@@ -227,7 +226,7 @@ const ChatContentBlock = ({
                 !unlockedAssetIds.has(block.code)
               }
             >
-              <Image
+              <ResourceImage
                 // block.code는 세계관 에셋 업로드로 받은 fileId이므로, 렌더링용 URL로 변환해야 합니다.
                 // 성인 세계관 에셋은 보호 경로라 서버가 준 서명 URL 을 먼저 쓴다.
                 src={resolveAssetImageUrl(block.code, assetImageUrls)}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import Image from "next/image";
+import ResourceImage from "@/components/ResourceImage";
 import { AnimatePresence, m } from "framer-motion";
 import { useTranslations } from "next-intl";
 import ScenarioSelectPopover from "@/components/popover/ScenarioSelectPopover";
@@ -141,7 +141,7 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
             {scenarioBlocks.map((block, index) => {
               if (block.type === "ASSET_IMG") {
                 return (
-                  <Image
+                  <ResourceImage
                     key={index}
                     src={resolveAssetImageUrl(block.code, assetImageUrls)}
                     alt={t("assetAlt", { name: selectedScenario.name })}

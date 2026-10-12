@@ -10,6 +10,7 @@ import { ModalLayout } from "@/components/ModalLayout";
 import Button from "@/components/ui/Button";
 import { QueryStateBoundary } from "@/components/state";
 import { cn, formatWithCommas } from "@/lib/utils";
+import FallbackImg from "@/components/image/FallbackImg";
 import { useRewardProductsQuery } from "@/api/earning/getRewardProducts";
 import { usePostRedemptionMutation } from "@/api/earning/postRedemption";
 import type { RewardProduct } from "@/type/earning";
@@ -32,8 +33,7 @@ const RewardThumb = ({
   className?: string;
 }) =>
   product.imageUrl ? (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img
+    <FallbackImg
       src={product.imageUrl}
       alt=""
       className={cn("size-12 shrink-0 rounded-2xl object-cover", className)}
@@ -56,8 +56,7 @@ const RewardThumb = ({
 const RewardVisual = ({ product }: { product: RewardProduct }) => {
   if (product.imageUrl) {
     return (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
+      <FallbackImg
         src={product.imageUrl}
         alt=""
         loading="lazy"

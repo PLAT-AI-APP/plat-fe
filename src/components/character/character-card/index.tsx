@@ -2,7 +2,6 @@
 
 import { cn } from "@/lib/utils";
 import useEmblaCarousel from "embla-carousel-react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePrefetchUniverseDetail } from "@/api/universe/getUniverseDetail";
 import { useTranslations } from "next-intl";
@@ -13,6 +12,7 @@ import StatusError from "@/icons/StatusError";
 // import { useDialogStore } from "@/store/useDialogStore";
 // import { useModalStore } from "@/store/useModalStore";
 import CreatorTierBadge from "@/components/creator/CreatorTierBadge";
+import ResourceImage from "@/components/ResourceImage";
 import ChatCountBadge from "./ChatCountBadge";
 import {
   FLUID_SIZE_OVERRIDE,
@@ -264,7 +264,7 @@ const CharacterCard = ({
                 key={`${image}-${index}`}
                 className="relative h-full w-full min-w-0 flex-[0_0_100%] overflow-hidden bg-scrim"
               >
-                <Image
+                <ResourceImage
                   className="object-cover"
                   src={image}
                   alt={t("imageAlt", { title, index: index + 1 })}
@@ -328,7 +328,7 @@ const CharacterCard = ({
           fluid ? fluidOverride.imageArea : config.imageArea,
         )}
       >
-        <Image
+        <ResourceImage
           className="object-cover transition-transform group-hover:scale-110"
           src={imageList[0]}
           alt={t("imageAlt", { title, index: 1 })}
@@ -337,6 +337,7 @@ const CharacterCard = ({
           sizes="(max-width: 447px) 45vw, (max-width: 895px) 30vw, (max-width: 1279px) 20vw, 240px"
         />
 
+        {/* 이미지를 받지 못하면 ResourceImage 가 이 자리에 기본 이미지를 깐다 — 상태 오버레이(z-10)는 그 위에 그대로 얹힌다. */}
         {statusOverlayElement}
 
         {typeof rank === "number" && (

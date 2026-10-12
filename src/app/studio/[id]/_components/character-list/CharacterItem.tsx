@@ -2,7 +2,7 @@
 
 import { AnimatePresence } from "framer-motion";
 import React, { useRef } from "react";
-import Image from "next/image";
+import ResourceImage from "@/components/ResourceImage";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -83,7 +83,7 @@ const CharacterItem = ({
         }}
         className="absolute inset-0 rounded-2xl"
       />
-      <Image
+      <ResourceImage
         src={thumbnail}
         alt={studioT("characterImageAlt", { title })}
         width={82}

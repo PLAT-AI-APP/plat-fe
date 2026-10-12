@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import ResourceImage from "@/components/ResourceImage";
 import { LockLine } from "@/icons";
 import { useTranslations } from "next-intl";
 import type { ChatAssetGalleryItem } from "@/type/chat";
@@ -37,7 +37,7 @@ const AssetGalleryItem = ({ asset, onSelect }: AssetGalleryItemProps) => {
       // 이미지는 이 버튼 안의 장식이라 alt 는 비우고, 이름은 버튼이 갖는다.
       aria-label={asset.name ?? t("assetView")}
     >
-      <Image
+      <ResourceImage
         src={asset.imageUrl}
         alt=""
         fill

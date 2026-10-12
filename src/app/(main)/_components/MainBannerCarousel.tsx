@@ -1,7 +1,7 @@
 "use client";
 
 import Autoplay from "embla-carousel-autoplay";
-import Image from "next/image";
+import ResourceImage from "@/components/ResourceImage";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useFadeInAfterLoading } from "@/hooks/common/useFadeInAfterLoading";
@@ -65,7 +65,7 @@ export function MainBannerCarousel() {
             const image = (
               <>
                 <div className="relative z-10 mx-auto h-full w-full max-w-(--content-max-width)">
-                  <Image
+                  <ResourceImage
                     alt={t("bannerAlt", { index: index + 1 })}
                     fill
                     priority={index === 0}

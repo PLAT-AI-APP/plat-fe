@@ -1,4 +1,4 @@
-import Image from "next/image";
+import ResourceImage from "@/components/ResourceImage";
 import CharacterChat from "@/components/chat/CharacterChat";
 import Scenario from "@/components/chat/Scenario";
 import UserChatBubble from "@/components/chat/UserChatBubble";
@@ -45,7 +45,7 @@ const PreviewContentView = ({
   }
 
   return (
-    <Image
+    <ResourceImage
       src={item.value}
       alt={assetImageAlt}
       width={120}

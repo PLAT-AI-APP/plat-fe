@@ -1,4 +1,4 @@
-import Image from "next/image";
+import ResourceImage from "@/components/ResourceImage";
 import { useAutoResizeTextarea } from "@/hooks/form/useAutoResizeTextarea";
 import { useTextareaSubmitShortcuts } from "@/hooks/form/useTextareaSubmitShortcuts";
 import PreviewEditControls from "./PreviewEditControls";
@@ -33,7 +33,7 @@ const EditableChatPreview = ({
 
   return (
     <div className="flex items-end gap-3">
-      <Image
+      <ResourceImage
         src={profileImage}
         alt={profileAlt}
         width={40}

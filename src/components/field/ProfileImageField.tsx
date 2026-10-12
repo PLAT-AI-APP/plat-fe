@@ -1,7 +1,7 @@
 "use client";
 
 import React, { ChangeEvent } from "react";
-import Image from "next/image";
+import ResourceImage from "@/components/ResourceImage";
 import { useFormContext, useWatch } from "react-hook-form";
 import { CameraFill } from "@/icons";
 import { useTranslations } from "next-intl";
@@ -60,7 +60,7 @@ const ProfileImageField = ({ name = "profileImg" }: ProfileImageFieldProps) => {
         type="file"
       />
       <label htmlFor="profile-image-select" className="cursor-pointer">
-        <Image
+        <ResourceImage
           src={(profileImg as string) || "/p1.png"}
           alt={t("profilePopover.profileImageAlt")}
           width={80}

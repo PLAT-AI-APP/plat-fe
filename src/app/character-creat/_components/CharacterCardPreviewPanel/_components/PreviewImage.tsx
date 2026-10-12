@@ -1,4 +1,4 @@
-import Image from "next/image";
+import ResourceImage from "@/components/ResourceImage";
 
 interface PreviewImageProps {
   image: string;
@@ -20,7 +20,7 @@ const PreviewImage = ({ image, title }: PreviewImageProps) => {
   }
 
   return (
-    <Image
+    <ResourceImage
       src={image}
       alt={title}
       fill

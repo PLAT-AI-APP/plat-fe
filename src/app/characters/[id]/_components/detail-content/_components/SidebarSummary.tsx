@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import FollowButton from "@/components/motion/FollowButton";
 import LikeHeart from "@/components/motion/LikeHeart";
 import Link from "next/link";
@@ -135,7 +134,7 @@ const SidebarSummary = ({
         {/* lg 미만에서는 이 열이 한 줄을 통째로 쓴다. 상한이 없으면 정사각형이 콘텐츠 폭을
             그대로 따라가 940px 화면에서 812×812 로 그려졌다. 데스크탑 열 폭이 곧 상한이다. */}
         <div className="relative aspect-square w-full max-w-[389px] overflow-hidden rounded-2xl bg-card">
-          <Image
+          <ResourceImage
             src={character.mainImage}
             alt={t("profileAlt", { name: character.title })}
             fill
@@ -188,7 +187,7 @@ const SidebarSummary = ({
               index: index + 1,
             })}
           >
-            <Image
+            <ResourceImage
               src={image.url}
               alt={t("previewImageLabel", {
                 title: character.title,

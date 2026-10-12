@@ -2,7 +2,7 @@
 
 import React, { ChangeEvent, useState } from "react";
 import UploadStatusOverlay from "@/components/motion/UploadStatusOverlay";
-import Image from "next/image";
+import ResourceImage from "@/components/ResourceImage";
 import { useTranslations } from "next-intl";
 import { Draggable } from "@hello-pangea/dnd";
 import { useFormContext, useFormState, useWatch } from "react-hook-form";
@@ -158,7 +158,7 @@ const AssetItem = ({ id, index, remove }: AssetItemProps) => {
                 className="relative flex size-[73px] shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-xl bg-card opacity-80"
               >
                 {assetImage ? (
-                  <Image
+                  <ResourceImage
                     src={typeof assetImage === "string" ? assetImage : ""}
                     alt={t("imageAlt")}
                     fill

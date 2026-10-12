@@ -1,4 +1,4 @@
-import Image from "next/image";
+import ResourceImage from "@/components/ResourceImage";
 import React from "react";
 import { useTranslations } from "next-intl";
 import FollowButton from "@/components/motion/FollowButton";
@@ -33,7 +33,7 @@ const FollowUserItem = ({
         onClick={() => onNavigateToProfile(user.userId)}
         className="flex min-w-0 flex-1 items-center gap-3 text-left"
       >
-        <Image
+        <ResourceImage
           src={user.profileImage || "/p1.png"}
           alt={t("profileImageAlt", { nickname: user.nickname })}
           width={45}

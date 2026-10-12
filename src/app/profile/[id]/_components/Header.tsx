@@ -8,7 +8,7 @@ import RollText from "@/components/motion/RollText";
 import { EASE_OUT } from "@/constants/motion";
 import { m } from "framer-motion";
 import { useState } from "react";
-import Image from "next/image";
+import ResourceImage from "@/components/ResourceImage";
 // import { useRef } from "react";
 import { useTranslations } from "next-intl";
 import { useFollowCountQuery } from "@/api/follow/getFollowCount";
@@ -200,7 +200,7 @@ const Header = ({ userId, profile }: HeaderProps) => {
                     ))}
                   </span>
                 )}
-                <Image
+                <ResourceImage
                   src={profile.profileImageUrl || "/p1.png"}
                   alt={t("profilePopover.profileImageAlt")}
                   width={68}

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { memo, useState } from "react";
-import Image from "next/image";
+import ResourceImage from "@/components/ResourceImage";
 import { useTranslations } from "next-intl";
 import { useAutoResizeTextarea } from "@/hooks/form/useAutoResizeTextarea";
 import { useTextareaSubmitShortcuts } from "@/hooks/form/useTextareaSubmitShortcuts";
@@ -148,7 +148,7 @@ const ScenarioComposer = ({
           className={getModeChipClassName(currentMode === "chat")}
         >
           {characterProfileImage ? (
-            <Image
+            <ResourceImage
               src={characterProfileImage}
               alt={characterChipText}
               width={18}

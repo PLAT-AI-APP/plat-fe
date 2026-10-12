@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import ResourceImage from "@/components/ResourceImage";
 import LikeHeart from "@/components/motion/LikeHeart";
 import RollText from "@/components/motion/RollText";
 import Link from "next/link";
@@ -152,7 +152,7 @@ const CommentListItem = ({
 
       <div className="flex gap-2">
         <Link href={`/profile/${comment.author.userId}`} className="shrink-0">
-          <Image
+          <ResourceImage
             src={
               resolveApiImageUrl(comment.author.profileImageUrl) ||
               DEFAULT_PROFILE_IMAGE
