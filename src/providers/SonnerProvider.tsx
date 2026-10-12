@@ -1,9 +1,12 @@
 "use client";
 
 import { Toaster } from "sonner";
-import { Close, Info, StatusSuccessLine } from "@/icons";
-import StatusError from "@/icons/StatusError";
-import StatusWarning from "@/icons/StatusWarning";
+import {
+  ToastErrorIcon,
+  ToastSuccessIcon,
+  ToastWarningIcon,
+} from "@/components/motion/ToastIcons";
+import { Close, Info } from "@/icons";
 import { APP_TOAST_DURATION } from "@/lib/toast";
 
 /**
@@ -26,9 +29,10 @@ const SonnerProvider = () => {
       mobileOffset={16}
       visibleToasts={3}
       icons={{
-        success: <StatusSuccessLine className="text-success" size={28} />,
-        error: <StatusError className="text-danger" size={28} />,
-        warning: <StatusWarning className="text-warning" size={28} />,
+        // 뜰 때마다 한 번씩 움직이는 아이콘(components/motion/ToastIcons)
+        success: <ToastSuccessIcon />,
+        error: <ToastErrorIcon />,
+        warning: <ToastWarningIcon />,
         info: <Info className="text-info" size={28} />,
         close: <Close className="text-font-disabled" size={20} />,
       }}

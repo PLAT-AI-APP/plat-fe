@@ -1,4 +1,8 @@
+"use client";
+
 import type { ReactNode } from "react";
+import { AnimatePresence, m } from "framer-motion";
+import { EASE_OUT } from "@/constants/motion";
 import { Moon, Sun } from "@/icons";
 import { cn } from "@/lib/utils";
 
@@ -92,8 +96,21 @@ const Switch = ({
         )}
       >
         {thumbContent ??
-          (themeIcon &&
-            (checked ? <Sun className="size-5" /> : <Moon className="size-5" />))}
+          (themeIcon && (
+            // 해·달이 돌며 바뀐다(처음 그릴 때는 그대로)
+            <AnimatePresence mode="popLayout" initial={false}>
+              <m.span
+                key={checked ? "sun" : "moon"}
+                className="inline-flex"
+                initial={{ rotate: checked ? -90 : 90, scale: 0.4, opacity: 0 }}
+                animate={{ rotate: 0, scale: 1, opacity: 1 }}
+                exit={{ rotate: checked ? 90 : -90, scale: 0.4, opacity: 0 }}
+                transition={{ duration: 0.35, ease: EASE_OUT }}
+              >
+                {checked ? <Sun className="size-5" /> : <Moon className="size-5" />}
+              </m.span>
+            </AnimatePresence>
+          ))}
       </span>
     </button>
   );
