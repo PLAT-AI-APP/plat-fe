@@ -336,6 +336,7 @@ const ja: typeof ko = {
       scenarioNameRequired: "シナリオ名を入力してください",
       scenarioDescriptionMaxLength: "シナリオ説明は最大100文字まで入力できます",
       scenarioContentRequired: "内容を入力してください",
+      scenarioContentsRequired: "シナリオの内容を1つ以上入力してください",
       scenarioContentMaxLength: "内容は最大5000文字まで入力できます",
       scenarioContentTotalMaxLength:
         "シナリオの内容は合計最大5000文字まで入力できます",

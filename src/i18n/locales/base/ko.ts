@@ -335,6 +335,7 @@ const ko = {
       scenarioDescriptionMaxLength:
         "시나리오 설명은 최대 100자까지 입력할 수 있어요",
       scenarioContentRequired: "내용을 입력해 주세요",
+      scenarioContentsRequired: "시나리오 내용을 한 줄 이상 입력해 주세요",
       scenarioContentMaxLength: "내용은 최대 5000자까지 입력할 수 있어요",
       scenarioContentTotalMaxLength:
         "시나리오 내용은 합쳐서 최대 5000자까지 입력할 수 있어요",

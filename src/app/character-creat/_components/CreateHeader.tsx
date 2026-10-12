@@ -423,6 +423,17 @@ const CreateHeader = ({
     } catch (error) {
       if (!isApiErrorLike(error)) {
         showAppToast("error", t(isEditMode ? "updateFailed" : "createFailed"));
+      } else {
+        // 서버가 필드별 사유로 거절한 검증 실패는 전역 토스트가 생략된다(입력칸이 말하는 규칙).
+        // 이 폼은 서버 필드명(scenarios[0].content 등)을 입력칸에 연결하지 않아 아무 안내가 없었다.
+        const fields =
+          (error as { fields?: Record<string, string> }).fields ?? {};
+        const firstReason = Object.values(fields)[0];
+        if (firstReason) {
+          showAppToast("warning", t("validationFailed"), {
+            description: firstReason,
+          });
+        }
       }
       console.error("Universe create failed:", error);
     }

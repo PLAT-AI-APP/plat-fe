@@ -341,6 +341,7 @@ const vi: typeof ko = {
       scenarioDescriptionMaxLength:
         "Mô tả kịch bản có thể dài tối đa 100 ký tự",
       scenarioContentRequired: "Vui lòng nhập nội dung",
+      scenarioContentsRequired: "Hãy nhập ít nhất một nội dung cho kịch bản",
       scenarioContentMaxLength: "Nội dung có thể dài tối đa 5000 ký tự",
       scenarioContentTotalMaxLength:
         "Tổng nội dung kịch bản có thể dài tối đa 5000 ký tự",

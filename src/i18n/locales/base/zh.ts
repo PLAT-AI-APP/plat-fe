@@ -330,6 +330,7 @@ const zh: typeof ko = {
       scenarioNameRequired: "请输入场景名称",
       scenarioDescriptionMaxLength: "场景说明最多可输入 100 个字符",
       scenarioContentRequired: "请输入内容",
+      scenarioContentsRequired: "请至少输入一条剧本内容",
       scenarioContentMaxLength: "内容最多可输入 5000 个字符",
       scenarioContentTotalMaxLength: "场景内容合计最多可输入 5000 个字符",
       scenarioMaxCount: "场景最多可创建 5 个",

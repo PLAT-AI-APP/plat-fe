@@ -96,13 +96,20 @@ export const characterCreateSchema = z.object({
                 // 그대로 백엔드에 보낼 수 없어, 임시 업로드 API가 내려준 식별자를 따로 들고 다닌다.
                 assetImageFileId: fileUploadIdSchema.nullable().optional(),
               })
+              // 공백·줄바꿈만 있는 글은 서버(@NotBlank)가 거절한다. 길이 1 이상이어도 통과시키지 않는다.
+              .refine((item) => item.type === "asset" || item.value.trim().length > 0, {
+                message: FIELD_ERROR_MESSAGES.scenarioContentRequired,
+                path: ["value"],
+              })
               // asset의 value는 base64 미리보기라 수만 자를 넘기기 일쑤라, 실제
               // 텍스트를 쓰는 타입(action/chat/userChat)에만 길이 제한을 건다.
               .refine((item) => item.type === "asset" || item.value.length <= 5000, {
                 message: FIELD_ERROR_MESSAGES.scenarioContentMaxLength,
                 path: ["value"],
               }),
-          ),
+          )
+            // 글이 하나도 없으면 합친 content 가 빈 문자열이라 서버가 400(크기 1~5000)으로 거절한다.
+            .min(1, FIELD_ERROR_MESSAGES.scenarioContentsRequired),
         })
         // 항목 하나하나는 5000자 이하여도, encodeScenarioContent로 합친 뒤 백엔드에
         // 실제로 나가는 content 문자열은 이 항목들을 다 이어붙인 값이라 따로 합산 검증이 필요합니다.

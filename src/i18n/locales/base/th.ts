@@ -339,6 +339,7 @@ const th: typeof ko = {
       scenarioDescriptionMaxLength:
         "คำอธิบายสถานการณ์สามารถกรอกได้สูงสุด 100 ตัวอักษร",
       scenarioContentRequired: "กรุณากรอกเนื้อหา",
+      scenarioContentsRequired: "กรุณากรอกเนื้อหาของซีนาริโอย่างน้อย 1 รายการ",
       scenarioContentMaxLength: "เนื้อหาสามารถกรอกได้สูงสุด 5000 ตัวอักษร",
       scenarioContentTotalMaxLength:
         "เนื้อหาของสถานการณ์รวมกันสามารถกรอกได้สูงสุด 5000 ตัวอักษร",

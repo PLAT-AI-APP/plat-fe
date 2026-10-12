@@ -347,6 +347,7 @@ const en: typeof ko = {
       scenarioDescriptionMaxLength:
         "Scenario descriptions can be up to 100 characters long",
       scenarioContentRequired: "Please enter the content.",
+      scenarioContentsRequired: "Add at least one line to the scenario",
       scenarioContentMaxLength: "Content can be up to 5000 characters long",
       scenarioContentTotalMaxLength:
         "The scenario's content can be up to 5000 characters combined",
