@@ -25,7 +25,7 @@ export interface ImageFallbackProps {
  * 마스코트가 몸을 반쯤 내밀고 폭의 대부분을 채운다. 문구는 위쪽 가운데. 자리 크기는 컨테이너 쿼리로 읽는다
  * (styles/mascot.css 의 .image-fallback).
  *  - 가로·세로 모두 100px 이상: 마스코트 + "이미지를 찾을 수 없어요"
- *  - 그보다 작으면(아바타·작은 썸네일): 문구 없이 같은 마스코트를 폭에 꽉 차게
+ *  - 그보다 작으면(아바타·작은 썸네일): 문구 없이 색이 채워진 마스코트를 꽉 차게(점선은 작으면 안 보인다)
  * 움직임은 넣지 않는다 — 목록에서 여러 장이 한꺼번에 실패하면 화면이 어지러워진다.
  */
 const ImageFallback = ({
@@ -59,8 +59,12 @@ const ImageFallback = ({
       <p className="image-fallback-label text-center text-font-2 break-keep">
         {t("imageNotFound")}
       </p>
-      <div className="image-fallback-mascot">
+      {/* 큰 자리는 '찾을 수 없음' 점선, 작은 자리(아바타)는 점선이 묻혀 색이 채워진 빼꼼 표정. 어느 쪽을 보일지는 CSS 가 정한다. */}
+      <div className="image-fallback-mascot image-fallback-mascot-large">
         <EmptyMascot mood="ghost" />
+      </div>
+      <div className="image-fallback-mascot image-fallback-mascot-small">
+        <EmptyMascot mood="peek" />
       </div>
     </div>
   );
