@@ -3,6 +3,11 @@
 // 공유하기·차단 기능은 후순위로 미뤄 화면에서 뺐다. 다시 켤 때 아래 [공유·차단] 주석을 되살린다.
 // import { AnimatePresence } from "framer-motion";
 import CreatorTierBadge from "@/components/creator/CreatorTierBadge";
+import FollowButton, { useFollowPulse } from "@/components/motion/FollowButton";
+import RollText from "@/components/motion/RollText";
+import { EASE_OUT } from "@/constants/motion";
+import { m } from "framer-motion";
+import { useState } from "react";
 import Image from "next/image";
 // import { useRef } from "react";
 import { useTranslations } from "next-intl";
@@ -40,11 +45,27 @@ interface StatItemProps {
 const UNKNOWN_STAT = "—";
 
 const StatItem = ({ label, value, onClick }: StatItemProps) => {
+  // 굴러가는 방향을 정하려고 직전 값을 기억한다(렌더 중 갱신 — 값이 바뀔 때만)
+  const [previousValue, setPreviousValue] = useState(value);
+  const [shownValue, setShownValue] = useState(value);
+  if (shownValue !== value) {
+    setPreviousValue(shownValue);
+    setShownValue(value);
+  }
   const content = (
     <>
       <span className="body-3 text-font-2">{label}</span>
       <span className="title-3 text-font-1">
-        {value === undefined ? UNKNOWN_STAT : formatWithCommas(value)}
+        {value === undefined ? (
+          UNKNOWN_STAT
+        ) : (
+          // 팔로우로 수가 바뀌면 자리마다 굴러 바뀐다
+          <RollText
+            value={formatWithCommas(value)}
+            up={value >= (previousValue ?? value)}
+            perChar
+          />
+        )}
       </span>
     </>
   );
@@ -112,6 +133,8 @@ const Header = ({ userId, profile }: HeaderProps) => {
     isFollowing: serverIsFollowing ?? false,
   });
 
+  const followPulse = useFollowPulse(isFollowing);
+
   // 내 프로필에서 여는 모달(팔로우 목록·프로필 수정)을 미리 받아 둔다.
   usePreloadModalsWhenIdle(["FOLLOW", "PROFILE_EDIT"], isOwnProfile);
 
@@ -158,18 +181,38 @@ const Header = ({ userId, profile }: HeaderProps) => {
             {isProfileLoading ? (
               <div className="skeleton size-[68px] shrink-0 rounded-full" />
             ) : (
-              <Image
-                src={profile.profileImageUrl || "/p1.png"}
-                alt={t("profilePopover.profileImageAlt")}
-                width={68}
-                height={68}
-                // 백엔드 이미지 호스트가 remotePatterns 에 없으면 next/image 가 렌더 단계에서 던진다.
-                unoptimized
-                className={cn(
-                  "size-[68px] shrink-0 rounded-full bg-card-hover object-cover",
-                  fadeInClassName,
+              <span className="relative shrink-0">
+                {/* 팔로우하면 프로필 사진 둘레로 링이 두 번 퍼진다 */}
+                {isFollowing && followPulse > 0 && (
+                  <span
+                    key={followPulse}
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0"
+                  >
+                    {[0, 0.14].map((delay) => (
+                      <m.span
+                        key={delay}
+                        className="absolute inset-0 rounded-full border-2 border-brand"
+                        initial={{ scale: 1, opacity: 0.9 }}
+                        animate={{ scale: 1.6, opacity: 0 }}
+                        transition={{ delay, duration: 0.7, ease: EASE_OUT }}
+                      />
+                    ))}
+                  </span>
                 )}
-              />
+                <Image
+                  src={profile.profileImageUrl || "/p1.png"}
+                  alt={t("profilePopover.profileImageAlt")}
+                  width={68}
+                  height={68}
+                  // 백엔드 이미지 호스트가 remotePatterns 에 없으면 next/image 가 렌더 단계에서 던진다.
+                  unoptimized
+                  className={cn(
+                    "size-[68px] shrink-0 rounded-full bg-card-hover object-cover",
+                    fadeInClassName,
+                  )}
+                />
+              </span>
             )}
 
             <div className="flex min-w-0 items-center gap-1">
@@ -238,30 +281,52 @@ const Header = ({ userId, profile }: HeaderProps) => {
             // 조회가 끝나기 전에 "팔로우"로 그렸다가 "팔로잉"으로 뒤집으면 틀린 상태가 잠깐 보인다.
             <div aria-hidden="true" className="skeleton h-11 w-24 rounded-2xl" />
           ) : (
-            <button
-              type="button"
+            <FollowButton
+              isFollowing={isFollowing}
+              // 버튼은 지금 상태가 아니라 누르면 일어날 동작을 말한다. 팔로우 중이면 "언팔로우".
+              label={isFollowing ? t("profile.unfollow") : t("profile.follow")}
               onClick={handleFollowToggle}
               disabled={isFollowPending}
               className={cn(
-                "title-3 flex h-11 items-center justify-center rounded-2xl px-4 py-2.5",
+                "title-3 h-11 min-w-28 rounded-2xl px-4 py-2.5",
                 isFollowing ? "bg-main text-font-1" : "bg-font-1 text-dark",
                 isFollowPending && "pending-state",
               )}
-            >
-              {/* 버튼은 지금 상태가 아니라 누르면 일어날 동작을 말한다. 팔로우 중이면 "언팔로우". */}
-              {isFollowing ? t("profile.unfollow") : t("profile.follow")}
-            </button>
+            />
           )}
         </div>
 
         <nav className="body-3 flex items-center gap-1.5 whitespace-nowrap">
-          <StatItem
-            label={t("profile.followers")}
-            value={followerCount}
-            onClick={
-              isOwnProfile ? () => openFollowModal("followers") : undefined
-            }
-          />
+          <span className="relative">
+            <StatItem
+              label={t("profile.followers")}
+              value={followerCount}
+              onClick={
+                isOwnProfile ? () => openFollowModal("followers") : undefined
+              }
+            />
+            {/* 팔로우하면 팔로워 수 옆에 +1 이 떠올랐다 사라진다 */}
+            {isFollowing && followPulse > 0 && (
+              <m.span
+                key={followPulse}
+                aria-hidden
+                className="title-5 pointer-events-none absolute -top-3 left-full ml-1 text-brand"
+                initial={{ opacity: 0, y: 6, scale: 0.7 }}
+                animate={{
+                  opacity: [0, 1, 1, 0],
+                  y: [6, -4, -10, -18],
+                  scale: [0.7, 1.1, 1, 1],
+                }}
+                transition={{
+                  duration: 1.1,
+                  times: [0, 0.2, 0.6, 1],
+                  ease: "easeOut",
+                }}
+              >
+                +1
+              </m.span>
+            )}
+          </span>
           <StatDivider />
           <StatItem
             label={t("profile.followingTab")}

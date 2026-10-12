@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import FollowButton from "@/components/motion/FollowButton";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
@@ -72,20 +73,22 @@ const UserResultCard = ({ user }: UserResultCardProps) => {
           </div>
         </Link>
 
-        <button
-          type="button"
+        <FollowButton
+          small
+          isFollowing={isFollowing}
+          label={
+            isFollowing
+              ? t("modalUi.common.following")
+              : t("modalUi.common.follow")
+          }
           onClick={handleFollowToggle}
           disabled={isFollowPending}
           className={cn(
-            "title-6 flex w-[69px] shrink-0 cursor-pointer items-center justify-center rounded-full px-3 py-1 transition-colors",
+            "title-6 w-[69px] shrink-0 cursor-pointer rounded-full px-3 py-1",
             isFollowing ? "bg-main text-font-1" : "bg-font-1 text-dark",
             isFollowPending && "pending-state",
           )}
-        >
-          {isFollowing
-            ? t("modalUi.common.following")
-            : t("modalUi.common.follow")}
-        </button>
+        />
       </div>
     </div>
   );

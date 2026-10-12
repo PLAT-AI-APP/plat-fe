@@ -1,4 +1,5 @@
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
+import { LIST_ITEM_MOTION } from "@/components/motion/ListMotion";
 import React, { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
@@ -71,7 +72,8 @@ const PersonaItem = ({
 
   return (
     <>
-      <li
+      <m.li
+        {...LIST_ITEM_MOTION}
         onClick={() => onSelect(persona.personaId)}
         className={cn(
           "group flex w-full cursor-pointer flex-col gap-2 rounded-2xl border px-4 py-3 transition-colors",
@@ -142,7 +144,7 @@ const PersonaItem = ({
             </AnimatePresence>
           </div>
         </div>
-      </li>
+      </m.li>
     </>
   );
 };

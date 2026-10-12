@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import FollowButton from "@/components/motion/FollowButton";
+import LikeHeart from "@/components/motion/LikeHeart";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -11,7 +13,7 @@ import {
 import { useUserProfileQuery } from "@/api/user/getUserProfile";
 import ActiveButton from "@/components/ActiveButton";
 import ResourceImage from "@/components/ResourceImage";
-import { ChatFill, Gear, Heart, HeartFill, Info } from "@/icons";
+import { ChatFill, Gear, HeartFill, Info } from "@/icons";
 import { toImageVariantUrl } from "@/lib/file";
 import { cn, formatStatCount } from "@/lib/utils";
 import { useLocaleStore } from "@/store/useLocaleStore";
@@ -233,11 +235,7 @@ const SidebarSummary = ({
               title={character.liked ? t("unlike") : t("like")}
               className="flex size-[52px] shrink-0 items-center justify-center rounded-2xl bg-card text-font-2 transition-colors hover:bg-card-hover"
             >
-              {character.liked ? (
-                <HeartFill className="size-5 text-brand" aria-hidden="true" />
-              ) : (
-                <Heart className="size-5" aria-hidden="true" />
-              )}
+              <LikeHeart liked={character.liked} />
             </button>
             <UniverseMenuButton universeId={character.characterId} universeName={character.title} />
           </>
@@ -260,21 +258,21 @@ const SidebarSummary = ({
               </div>
             )}
             {canUseCreatorActions && (
-              <button
-                type="button"
+              <FollowButton
+                small
+                isFollowing={isFollowingCreator}
+                label={isFollowingCreator ? t("following") : t("follow")}
                 onClick={handleCreatorFollowToggle}
                 // 버튼 글자는 낙관적으로 바로 바뀐다. 요청 중에 흐리게 하면 오히려 기다리는 것처럼
                 // 보여서, 연타는 훅이 막고 모양은 그대로 둔다.
                 aria-busy={isFollowPending}
                 className={cn(
-                  "title-6 rounded-full px-3 py-1 transition-colors",
+                  "title-6 rounded-full px-3 py-1",
                   isFollowingCreator
                     ? "bg-main text-font-1"
                     : "bg-font-1 text-dark",
                 )}
-              >
-                {isFollowingCreator ? t("following") : t("follow")}
-              </button>
+              />
             )}
           </div>
         </section>

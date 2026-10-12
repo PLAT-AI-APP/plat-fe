@@ -1,6 +1,7 @@
 "use client";
 
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, m } from "framer-motion";
+import { LIST_ITEM_MOTION } from "@/components/motion/ListMotion";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useRef } from "react";
@@ -77,7 +78,8 @@ const ChattingItem = ({
   };
 
   return (
-    <li
+    <m.li
+      {...LIST_ITEM_MOTION}
       data-chat-id={roomId}
       className="relative flex gap-3 rounded-lg px-4 py-3 transition-colors duration-200 hover:bg-btn-hover"
     >
@@ -145,12 +147,21 @@ const ChattingItem = ({
                     {t("closedBadge")}
                   </span>
                 )}
-                {isPinned && (
-                  <PinLine
-                    className="size-4 shrink-0 text-font-1"
-                    aria-hidden
-                  />
-                )}
+                {/* 고정하면 핀이 톡 꽂힌다 */}
+                <AnimatePresence initial={false}>
+                  {isPinned && (
+                    <m.span
+                      key="pin"
+                      className="inline-flex shrink-0"
+                      initial={{ scale: 0, rotate: -45, y: -6 }}
+                      animate={{ scale: 1, rotate: 0, y: 0 }}
+                      exit={{ scale: 0, opacity: 0 }}
+                      transition={{ type: "spring", stiffness: 500, damping: 14, delay: 0.25 }}
+                    >
+                      <PinLine className="size-4 text-font-1" aria-hidden />
+                    </m.span>
+                  )}
+                </AnimatePresence>
               </div>
 
               {isLocked ? (
@@ -218,7 +229,7 @@ const ChattingItem = ({
           </div>
         </div>
       </article>
-    </li>
+    </m.li>
   );
 };
 
