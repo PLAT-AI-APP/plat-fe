@@ -23,6 +23,8 @@ interface MessageListProps {
   isEditable?: boolean;
   /** 소설로 보기. 말풍선·프로필 없이 글만 이어서 보여 준다. */
   isNovelView?: boolean;
+  /** {{user}} 자리와 소설형 내 말 앞에 쓸 이름. 채팅방에서는 방의 페르소나 이름이다. 없으면 계정 닉네임. */
+  userName?: string;
   /** 성인 세계관 에셋의 서명 URL(파일 ID → URL). 일반 세계관은 없다. */
   assetImageUrls?: Record<string, string>;
   /** 이미 풀린 에셋 파일 id. 받는 중인 답에서 처음 풀린 에셋을 가려내 해금 연출을 튼다. */
@@ -95,6 +97,7 @@ interface MessageRowProps {
   message: ChatMessageType;
   isEditable: boolean;
   isNovelView: boolean;
+  userName?: string;
   assetImageUrls?: Record<string, string>;
   unlockedAssetIds?: ReadonlySet<string>;
   /** 이 줄 아래에 붙일 추천 문장. 마지막 답에만 넘어온다. */
@@ -113,6 +116,7 @@ const MessageRow = memo(
     message,
     isEditable,
     isNovelView,
+    userName,
     assetImageUrls,
     unlockedAssetIds,
     suggestions,
@@ -158,6 +162,7 @@ const MessageRow = memo(
               characterName={message.characterName || ""}
               profileImage={message.profileImage || ""}
               isNovelView={isNovelView}
+              userName={userName}
               assetImageUrls={assetImageUrls}
             />
           ) : (
@@ -165,6 +170,7 @@ const MessageRow = memo(
               text={message.content}
               isEditable={false}
               isNovelView={isNovelView}
+              userName={userName}
             />
           )}
         </m.div>
@@ -187,6 +193,7 @@ const MessageRow = memo(
               isStreaming={message.isStreaming}
               isEditMode={isEditable}
               isNovelView={isNovelView}
+              userName={userName}
               assetImageUrls={assetImageUrls}
               unlockedAssetIds={unlockedAssetIds}
               onUpdate={handleUpdate}
@@ -219,6 +226,7 @@ const MessageRow = memo(
           text={message.content}
           isEditable={isEditable}
           isNovelView={isNovelView}
+          userName={userName}
           onUpdate={handleUpdate}
           onDelete={canDelete ? handleDelete : undefined}
         />
@@ -242,6 +250,7 @@ const MessageRow = memo(
       isSameMessage &&
       previous.isEditable === next.isEditable &&
       previous.isNovelView === next.isNovelView &&
+      previous.userName === next.userName &&
       previous.assetImageUrls === next.assetImageUrls &&
       previous.unlockedAssetIds === next.unlockedAssetIds &&
       previous.suggestions === next.suggestions &&
@@ -277,6 +286,7 @@ const MessageList = memo(
     scrollContainer,
     isEditable = false,
     isNovelView = false,
+    userName,
     assetImageUrls,
     unlockedAssetIds,
     onUpdateMessage,
@@ -420,6 +430,7 @@ const MessageList = memo(
                 message={message}
                 isEditable={isEditable}
                 isNovelView={isNovelView}
+                userName={userName}
                 assetImageUrls={assetImageUrls}
                 unlockedAssetIds={unlockedAssetIds}
                 suggestions={

@@ -7,6 +7,7 @@ import { isRoomFresh } from "@/lib/freshRoom";
 import { useTranslations } from "next-intl";
 import { useChatModelsQuery } from "@/api/chat/getChatModels";
 import { useDeleteRoomMessageMutation } from "@/api/room/deleteRoomMessage";
+import { useDetailPersonaQuery } from "@/api/persona/detailPersons";
 import { useRoomDetailQuery } from "@/api/room/getRoomDetail";
 import {
   isMessageAtOrAfter,
@@ -81,6 +82,13 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
   // 캐릭터(세계관)가 지워졌거나 운영 심사 중인 방은 세계관 상세가 닫혀 있어 부르지 않는다(404).
   // 이름은 방에 남긴 스냅샷을, 캐릭터 ID·프로필은 방 응답의 값을 쓴다.
   const isClosed = room?.closed === true;
+  // {{user}} 와 소설형 내 말의 이름은 계정 닉네임이 아니라 이 방에서 쓰는 페르소나 이름이다.
+  // 불러오는 동안이나 지워진 페르소나면 비워 두어, 아래 화면이 닉네임으로 대신한다.
+  const roomPersonaId = room?.personaId;
+  const { data: roomPersona } = useDetailPersonaQuery(roomPersonaId ?? "", {
+    enabled: Boolean(roomPersonaId),
+  });
+  const userName = roomPersona?.name?.trim() || undefined;
   const isHandoverPending = room?.handoverPending === true;
   const isUniverseOpen = !isClosed && !isHandoverPending;
   const {
@@ -344,6 +352,7 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
               messages={messages}
               scrollContainer={scrollContainer}
               isNovelView={isNovelView}
+              userName={userName}
               assetImageUrls={room?.assetImageUrls}
               unlockedAssetIds={unlockedAssetIds}
               playScenarioIntro={playScenarioIntro}

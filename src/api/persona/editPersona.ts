@@ -21,6 +21,7 @@ export const useEditPersonaMutation = () => {
     mutationFn: PatchEditPersona,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: personaQueryKeys.myList() });
+      queryClient.invalidateQueries({ queryKey: personaQueryKeys.details() });
     },
   });
 };

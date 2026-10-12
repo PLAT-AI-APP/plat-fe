@@ -15,6 +15,8 @@ interface UserChatBubbleProps {
   onDelete?: () => void;
   /** 소설로 보기. 말풍선 없이 `이름 | 말` 한 문단으로 그린다. */
   isNovelView?: boolean;
+  /** 소설형 이름 자리에 쓸 이름. 채팅방에서는 방의 페르소나 이름이다. 없으면 계정 닉네임. */
+  userName?: string;
 }
 
 const UserChatBubble = ({
@@ -23,9 +25,11 @@ const UserChatBubble = ({
   onUpdate,
   onDelete,
   isNovelView = false,
+  userName,
 }: UserChatBubbleProps) => {
   const t = useTranslations();
-  const userDisplayName = useUserDisplayName();
+  const nickname = useUserDisplayName();
+  const userDisplayName = userName ?? nickname;
   const {
     isEditing,
     draft: editedText,

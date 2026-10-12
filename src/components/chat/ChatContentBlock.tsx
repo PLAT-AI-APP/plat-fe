@@ -33,6 +33,8 @@ interface ChatContentBlockProps {
   isEditMode?: boolean;
   /** 소설로 보기. 프로필·말풍선·나레이션 아이콘 없이 글만 이어서 보여 준다. */
   isNovelView?: boolean;
+  /** {{user}} 자리에 채울 이름. 채팅방에서는 방의 페르소나 이름이다. 없으면 계정 닉네임을 쓴다. */
+  userName?: string;
   /** 성인 세계관 에셋의 서명 URL(파일 ID → URL). 있으면 파일 ID 로 만든 주소보다 먼저 쓴다. */
   assetImageUrls?: Record<string, string>;
   /** 이미 풀린 에셋 파일 id. 받는 중인 답에 여기 없는 에셋이 나오면 해금 연출을 튼다. 모르면 틀지 않는다. */
@@ -125,6 +127,7 @@ const ChatContentBlock = ({
   isStreaming = false,
   isEditMode = false,
   isNovelView = false,
+  userName,
   assetImageUrls,
   unlockedAssetIds,
   onUpdate,
@@ -133,7 +136,8 @@ const ChatContentBlock = ({
   onReport,
 }: ChatContentBlockProps) => {
   const t = useTranslations();
-  const userDisplayName = useUserDisplayName();
+  const nickname = useUserDisplayName();
+  const userDisplayName = userName ?? nickname;
   const {
     isEditing,
     draft: editedContent,
