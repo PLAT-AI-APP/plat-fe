@@ -1,16 +1,28 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import Button from "@/components/ui/Button";
 import { QueryStateBoundary } from "@/components/state";
 import { formatWithCommas } from "@/lib/utils";
 import { useEarningSummaryQuery } from "@/api/earning/getEarningSummary";
+import type { EarningSummary } from "@/type/earning";
 import GiftCardList from "./GiftCardList";
 import NoteConversionModal from "./NoteConversionModal";
 import EarningHistoryModal from "./EarningHistoryModal";
 
 type OpenModal = "convert" | "history" | null;
+
+/** 등급 칩 뱃지. 등급 화면(earnings/tier)과 같은 그림을 쓴다. */
+const TIER_BADGE: Record<Exclude<EarningSummary["tier"], "NONE">, string> = {
+  DUST: "/images/creator-tier/1-dust.svg",
+  COMET: "/images/creator-tier/2-comet.svg",
+  PLANET: "/images/creator-tier/3-planet.svg",
+  NOVA: "/images/creator-tier/4-nova.svg",
+  GALAXY: "/images/creator-tier/5-galaxy.svg",
+  ORIGIN: "/images/creator-tier/6-origin.svg",
+};
 
 const BalanceSkeleton = () => (
   <div className="h-24 animate-pulse rounded-3xl border border-main bg-darker" />
@@ -28,7 +40,24 @@ const EarningsContents = () => {
 
   return (
     <section className="mx-auto mb-10 flex w-full max-w-160 flex-col gap-8 pt-5">
-      <h1 className="heading-2">{t("title")}</h1>
+      <div className="flex items-center justify-between gap-3">
+        <h1 className="heading-2">{t("title")}</h1>
+        <Link
+          href="/earnings/tier"
+          aria-label={t("tier.chip")}
+          className="body-6 flex items-center gap-1.5 rounded-full border border-main bg-darker py-1 pl-1.5 pr-3 transition-colors hover:bg-darkest"
+        >
+          {data && data.tier !== "NONE" ? (
+            <>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={TIER_BADGE[data.tier]} alt="" width={22} height={22} />
+              {t(`tier.names.${data.tier}`)}
+            </>
+          ) : (
+            <span className="pl-1.5">{t("tier.chip")}</span>
+          )}
+        </Link>
+      </div>
 
       <QueryStateBoundary
         isPending={isPending}
@@ -44,6 +73,11 @@ const EarningsContents = () => {
               <span className="title-1 truncate">
                 {t("points", { value: formatWithCommas(data.available) })}
               </span>
+              {data.pending > 0 && (
+                <span className="body-7 text-font-2">
+                  {t("pending", { value: formatWithCommas(data.pending) })}
+                </span>
+              )}
             </div>
             <div className="flex shrink-0 gap-2">
               <Button

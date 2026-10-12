@@ -15,6 +15,7 @@ const ko: typeof en = {
     search: "검색",
     usageHistory: "사용 내역",
     earnings: "나의 수익",
+    earningsTier: "제작자 등급",
     myReports: "신고 내역",
   },
   errorPage: {

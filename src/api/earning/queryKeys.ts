@@ -7,4 +7,5 @@ export const earningQueryKeys = {
   ledgerList: (month: string, size?: number) =>
     [...earningQueryKeys.ledgers(), month, size] as const,
   rewardProducts: () => [...earningQueryKeys.all(), "reward-products"] as const,
+  tier: () => [...earningQueryKeys.all(), "tier"] as const,
 };
