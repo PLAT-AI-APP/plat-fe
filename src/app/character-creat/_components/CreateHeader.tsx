@@ -25,10 +25,13 @@ import {
 } from "@/api/universe/patchUniverseUpdate";
 import { useTranslateText } from "@/hooks/i18n/useTranslateText";
 import { useSafeBack } from "@/hooks/navigation/useSafeBack";
+import { useDialogStore } from "@/store/useDialogStore";
 import { TabId } from "./CreateTabs";
 
 interface CreateHeaderProps {
   universeId?: string;
+  /** 저장된 세계관이 성인이었는지. 성인 분류를 풀고 저장하면 검수 대기로 돌아간다. */
+  wasAdult?: boolean;
   // 이 초안에서 세계관을 만든 경우에만 있습니다. 등록 성공 시 실어 보내면 백엔드가 그 초안을 자동 삭제합니다.
   draftId: string | null;
   onSave: () => void;
@@ -217,6 +220,7 @@ const findFirstValidationTarget = (
 
 const CreateHeader = ({
   universeId,
+  wasAdult = false,
   draftId,
   onSave,
   isSaving,
@@ -226,6 +230,8 @@ const CreateHeader = ({
   markSubmitSuccess,
 }: CreateHeaderProps) => {
   const t = useTranslations("characterCreate");
+  const adultT = useTranslations("adultVerification.create");
+  const openDialog = useDialogStore((state) => state.openDialog);
   const translateText = useTranslateText();
   const router = useRouter();
   const locale = useLocaleStore((state) => state.locale);
@@ -354,9 +360,16 @@ const CreateHeader = ({
           },
         };
 
+        // 성인 분류를 풀면 관리자 승인 전까지 목록에 보이지 않는다. 저장 전에 한 번 더 묻는다.
+        const isReleasingAdult = wasAdult && !(currentFormData.adult ?? false);
+        if (isReleasingAdult && !(await confirmAdultRelease())) return;
+
         await updateUniverse({ universeId, request });
 
-        showAppToast("success", t("updateSuccess"));
+        showAppToast(
+          "success",
+          isReleasingAdult ? adultT("releaseToast") : t("updateSuccess"),
+        );
         markSubmitted();
         router.push(`/characters/${universeId}`);
         return;
@@ -414,6 +427,15 @@ const CreateHeader = ({
       console.error("Universe create failed:", error);
     }
   };
+
+  /** 성인 해제 확인. 확인이면 true, 취소·닫기면 false 로 이어 간다. */
+  const confirmAdultRelease = () =>
+    new Promise<boolean>((resolve) => {
+      openDialog("ADULT_RELEASE_CONFIRM", {
+        onConfirm: () => resolve(true),
+        onCancel: () => resolve(false),
+      });
+    });
 
   const handleRegisterClick = async () => {
     if (isSubmitLockedRef.current || isUploadingImages || !canSubmit) return;

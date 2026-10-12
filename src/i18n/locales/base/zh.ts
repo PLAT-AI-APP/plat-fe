@@ -116,6 +116,12 @@ const zh: typeof ko = {
       cancel: "取消",
       confirm: "退出",
     },
+    adultReleaseConfirm: {
+      title: "要取消成人分类吗?",
+      description: "取消后,在管理员批准之前不会显示在普通列表中。批准后会重新显示。",
+      cancel: "取消",
+      confirm: "取消并保存",
+    },
     chatDelete: {
       title: "确定要删除聊天室吗？",
       description: "与该角色进行过的对话将无法恢复。",

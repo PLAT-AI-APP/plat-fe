@@ -117,6 +117,12 @@ const ja: typeof ko = {
       cancel: "キャンセル",
       confirm: "退出",
     },
+    adultReleaseConfirm: {
+      title: "成人向け分類を解除しますか?",
+      description: "解除すると、管理者が承認するまで一般の一覧には表示されません。承認後に再び表示されます。",
+      cancel: "キャンセル",
+      confirm: "解除して保存",
+    },
     chatDelete: {
       title: "本当にチャットルームを削除しますか？",
       description: "このキャラクターとのこれまでの会話は復元できません。",

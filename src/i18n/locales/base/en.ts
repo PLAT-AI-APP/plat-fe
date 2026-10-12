@@ -120,6 +120,12 @@ const en: typeof ko = {
       cancel: "Cancel",
       confirm: "Leave",
     },
+    adultReleaseConfirm: {
+      title: "Remove the adult classification?",
+      description: "Once removed, it won't appear in regular lists until an admin approves it. It will show again after approval.",
+      cancel: "Cancel",
+      confirm: "Remove and save",
+    },
     chatDelete: {
       title: "Delete this chat room?",
       description:

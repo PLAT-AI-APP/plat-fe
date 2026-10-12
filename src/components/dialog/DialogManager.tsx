@@ -10,6 +10,7 @@ import { useModalStore } from "@/store/useModalStore";
 import type { DialogTypeMap } from "@/type/dialog";
 
 const DIALOG_LOADERS = {
+  ADULT_RELEASE_CONFIRM: () => import("./AdultReleaseConfirmDialog"),
   AGREEMENT_RESULT: () => import("./AgreementResultDialog"),
   CHAT_DELETE: () => import("./ChatDeleteDialog"),
   CHAT_LEAVE: () => import("./ChatLeaveDialog"),

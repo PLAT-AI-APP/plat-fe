@@ -256,6 +256,8 @@ const zh: typeof ko = {
       verify: "进行成人认证",
       adultTagLocked: "设为成人内容后才能选择此标签。",
       adultTagsRemoved: "已关闭成人内容设置，成人标签已移除。",
+      releaseNotice: "取消成人分类后,在管理员批准之前不会显示在普通列表中。",
+      releaseToast: "已取消成人分类。批准之前不会显示在列表中。",
     },
     studio: {
       verify: "进行成人认证",

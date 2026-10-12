@@ -128,6 +128,8 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
   const isEditMode = Boolean(universeId);
   const { data: universeDetail, isError: isUniverseDetailError } =
     useUniverseDetailQuery(universeId);
+  // 성인 분류를 풀면 검수 대기로 돌아가므로, 저장된 값이 성인이었는지 알아 둔다. 새로 만들 때는 해당 없다.
+  const wasAdult = isEditMode && universeDetail?.adult === true;
   // 상세가 폼 값으로 옮겨진 뒤에야 수정 화면을 보여 주기 위한 표시. 데이터가 도착한 첫 렌더에는
   // 아직 빈 폼이라, 이걸 보지 않으면 빈 입력칸이 한 프레임 보였다가 값이 채워지며 튄다.
   const [appliedUniverse, setAppliedUniverse] =
@@ -403,6 +405,7 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
       <div className="flex h-full min-h-0 flex-col gap-4">
         <CreateHeader
           universeId={universeId}
+          wasAdult={wasAdult}
           draftId={draftId}
           onSave={handleSaveClick}
           isSaving={isSaving}
@@ -423,6 +426,7 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
             <div className="flex min-h-0 min-w-0 flex-1 items-start justify-center gap-4 lg:grid lg:grid-cols-[491fr_693fr]">
               <CreateTabs
                 isEditMode={isEditMode}
+                wasAdult={wasAdult}
                 currentTabId={currentTabId}
                 setCurrentTabId={setCurrentTabId}
                 activeScenarioIndex={activeScenarioIndex}

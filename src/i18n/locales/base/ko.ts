@@ -117,6 +117,12 @@ const ko = {
       cancel: "취소하기",
       confirm: "나가기",
     },
+    adultReleaseConfirm: {
+      title: "성인 분류를 해제할까요?",
+      description: "해제하면 관리자 승인 전까지 일반 목록에 노출되지 않아요. 승인되면 다시 보여요.",
+      cancel: "취소하기",
+      confirm: "해제하고 저장",
+    },
     chatDelete: {
       title: "정말 채팅방을 삭제할까요?",
       description: "그 동안의 캐릭터와 진행한 대화는 복구할 수 없어요",

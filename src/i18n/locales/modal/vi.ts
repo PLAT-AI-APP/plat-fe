@@ -262,6 +262,8 @@ const vi: typeof ko = {
       verify: "Xác minh độ tuổi",
       adultTagLocked: "Thẻ này chỉ chọn được khi đặt là nội dung người lớn.",
       adultTagsRemoved: "Đã tắt nội dung người lớn nên các hashtag người lớn đã bị gỡ.",
+      releaseNotice: "Nếu bỏ phân loại người lớn, nội dung sẽ không hiển thị trong danh sách thông thường cho đến khi quản trị viên phê duyệt.",
+      releaseToast: "Đã bỏ phân loại người lớn. Nội dung sẽ không hiển thị trong danh sách cho đến khi được phê duyệt.",
     },
     studio: {
       verify: "Xác minh độ tuổi",

@@ -31,9 +31,11 @@ const TENDENCY_LIST: UniverseCreateTendency[] = [
 interface SettingProps {
   /** 수정 화면에는 권리 책임 동의 항목이 없다. */
   isEditMode: boolean;
+  /** 저장된 세계관이 성인이었는지. 스위치를 끄면 검수 대기로 돌아간다는 안내의 기준이다. */
+  wasAdult?: boolean;
 }
 
-const Setting = ({ isEditMode }: SettingProps) => {
+const Setting =({ isEditMode, wasAdult = false }: SettingProps) => {
   const t = useTranslations("characterCreate.settings");
   const selectorT = useTranslations("selector");
   const { setValue, control } = useFormContext<CharacterCreateFormValues>();
@@ -190,6 +192,16 @@ const Setting = ({ isEditMode }: SettingProps) => {
             }
           />
         </div>
+
+        {/* 성인이던 세계관의 분류를 풀면 일반 목록에 바로 섞이지 않도록 검수 대기로 돌아간다. */}
+        {isEditMode && wasAdult && !isAdult && (
+          <p
+            role="note"
+            className="body-7 rounded-xl border border-main px-4 py-3 text-font-1"
+          >
+            {adultT("releaseNotice")}
+          </p>
+        )}
 
         {!isAdultVerified && (
           <div className="flex items-center justify-between gap-3 rounded-xl bg-darkest px-4 py-3">

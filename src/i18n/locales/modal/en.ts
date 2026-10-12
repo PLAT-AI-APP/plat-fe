@@ -261,6 +261,8 @@ const en: typeof ko = {
       verify: "Verify age",
       adultTagLocked: "This tag requires the adult content setting.",
       adultTagsRemoved: "Adult content was turned off, so adult hashtags were removed.",
+      releaseNotice: "If you remove the adult classification, it won't appear in regular lists until an admin approves it.",
+      releaseToast: "Adult classification removed. It won't appear in lists until it's approved.",
     },
     studio: {
       verify: "Verify age",

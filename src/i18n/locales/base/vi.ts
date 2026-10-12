@@ -117,6 +117,12 @@ const vi: typeof ko = {
       cancel: "Hủy",
       confirm: "Rời đi",
     },
+    adultReleaseConfirm: {
+      title: "Bỏ phân loại người lớn?",
+      description: "Sau khi bỏ, nội dung sẽ không hiển thị trong danh sách thông thường cho đến khi quản trị viên phê duyệt. Sẽ hiển thị lại sau khi được duyệt.",
+      cancel: "Hủy",
+      confirm: "Bỏ và lưu",
+    },
     chatDelete: {
       title: "Bạn thật sự muốn xóa phòng chat này?",
       description: "Cuộc trò chuyện với nhân vật này sẽ không thể khôi phục.",
