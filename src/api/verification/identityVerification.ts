@@ -5,6 +5,7 @@ import { authAxios } from "..";
 import type { AppError } from "@/api";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useUserStore } from "@/store/useUserStore";
+import { refreshWalletAfterReward } from "@/api/wallet/refreshWalletAfterReward";
 import { invalidateAdultScopedQueries } from "./invalidateAdultScopedQueries";
 import type {
   CompleteDevIdentityVerificationRequest,
@@ -73,6 +74,8 @@ export const useConfirmIdentityVerificationMutation = () => {
         birthLocked: true,
       });
       invalidateAdultScopedQueries(queryClient);
+      // 처음 성인인증을 마치면 보상 노트가 비동기로 들어온다. 잔액이 늘 때까지 짧게 다시 확인한다.
+      if (result.adult) void refreshWalletAfterReward(queryClient);
     },
   });
 };
