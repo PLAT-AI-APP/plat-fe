@@ -20,6 +20,8 @@ export interface MockRoom {
   isPinned: boolean;
   /** 방이 고른 응답 형식 코드 */
   responseFormatCode: string;
+  /** 소설형 답변 길이. 없으면 서버처럼 보통으로 본다. */
+  responseLength?: "SHORT" | "MEDIUM" | "LONG";
   language: RoomLanguage;
   memory: string;
   userNote: string;
@@ -219,6 +221,9 @@ export const roomHandlers = [
       // 목 시나리오는 모두 채팅형·소설형을 허용한다.
       responseFormatCode: room.responseFormatCode,
       allowedResponseFormats: MOCK_RESPONSE_FORMATS,
+      // 소설형이면 유효 선택값(미설정은 보통), 그 외 형식이면 null 이다.
+      responseLength:
+        room.responseFormatCode === "NOVEL" ? (room.responseLength ?? "MEDIUM") : null,
       // 서버처럼 그 방 세계관의 채팅방 기본 보기를 그대로 싣는다.
       defaultViewMode: getMockUniverseDetail(room.universeId).defaultViewMode ?? "CHAT",
       memory: room.memory,
@@ -367,6 +372,28 @@ export const roomHandlers = [
       }
 
       room.responseFormatCode = responseFormat!;
+      return new HttpResponse(null, { status: 204 });
+    },
+  ),
+
+  // 채팅방 답변 길이 수정. 소설형이 아니면 400(RESPONSE_LENGTH_NOT_ALLOWED, 서버와 동일)
+  http.patch(
+    /\/rooms\/([^/]+)\/response-length(?:\?.*)?$/,
+    async ({ request }) => {
+      const room = findRoom(request, /\/rooms\/([^/]+)\/response-length$/);
+      if (!room) return roomNotFound();
+
+      const { responseLength } = (await request.json()) as { responseLength?: string };
+      if (responseLength !== "SHORT" && responseLength !== "MEDIUM" && responseLength !== "LONG") {
+        return invalidInput({ responseLength: "답변 길이는 필수입니다." });
+      }
+      if (room.responseFormatCode !== "NOVEL") {
+        return invalidInput({
+          responseLength: "답변 길이는 소설형 채팅방에서만 변경할 수 있습니다.",
+        });
+      }
+
+      room.responseLength = responseLength;
       return new HttpResponse(null, { status: 204 });
     },
   ),

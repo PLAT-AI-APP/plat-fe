@@ -33,6 +33,11 @@ export interface ThumbnailRoom {
   locked?: RoomLockReason | null;
 }
 
+/** 소설형 답변 길이. 소설형이 아니면 고르지 않는다. */
+export type ResponseLength = "SHORT" | "MEDIUM" | "LONG";
+
+export const RESPONSE_LENGTHS: ResponseLength[] = ["SHORT", "MEDIUM", "LONG"];
+
 /** 채팅방 단건 */
 export interface Room {
   roomId: string;
@@ -46,6 +51,11 @@ export interface Room {
   responseFormatCode: string;
   /** 지금 시나리오가 허용하는 응답 형식. 방에서 고를 수 있는 목록이다. */
   allowedResponseFormats: ResponseFormatOption[];
+  /**
+   * 소설형 답변 길이. 소설형이면 유효 선택값(고른 적 없으면 MEDIUM), 그 밖의 형식이면 null 이다.
+   * 서버가 아직 주지 않으면 없다.
+   */
+  responseLength?: ResponseLength | null;
   /**
    * 이 방 세계관의 채팅방 기본 보기(제작자가 정한 값). 유저가 그 세계관에서 보기를 바꾼 적이 없을 때 쓴다.
    * 서버가 아직 주지 않으면 대화형(CHAT)으로 본다.
