@@ -3,8 +3,6 @@
 import React from "react";
 import { useTranslations } from "next-intl";
 import ResourceImage from "@/components/ResourceImage";
-import Scenario from "@/components/chat/Scenario";
-import { splitDialogueActions } from "@/lib/chatText";
 import { cn } from "@/lib/utils";
 
 interface CharacterChatProps {
@@ -28,16 +26,17 @@ const CharacterChat = ({
   isNovelView = false,
 }: CharacterChatProps) => {
   const t = useTranslations();
-  // 대사 안의 행동 묘사는 대사 아래 나레이션 박스로 뺀다. 행동만 있는 응답은 말풍선을 그리지 않는다.
-  const { speech, actions } = splitDialogueActions(chatText);
-  const hasDialogue = speech !== "" || actions.length === 0;
 
-  const dialogue = isNovelView ? (
-    <article className="body-4 whitespace-pre-line text-speech">
-      {CharacterName && `${CharacterName} | `}
-      {speech}
-    </article>
-  ) : (
+  if (isNovelView) {
+    return (
+      <article className="body-4 whitespace-pre-line text-speech">
+        {CharacterName && `${CharacterName} | `}
+        {chatText}
+      </article>
+    );
+  }
+
+  return (
     <article className="flex gap-2">
       {/* 프로필이 없거나 세계관 상세가 아직 오지 않았으면 빈 src 로 그리지 않는다 — next/image 가 매번 콘솔 에러를 낸다.
           받는 중 말풍선(ChatContentBlock)과 같은 빈 원으로 자리만 잡아, 이미지가 와도 줄이 흔들리지 않게 한다. */}
@@ -70,19 +69,10 @@ const CharacterChat = ({
             bubbleClassName,
           )}
         >
-          {speech}
+          {chatText}
         </div>
       </div>
     </article>
-  );
-
-  if (actions.length === 0) return dialogue;
-
-  return (
-    <div className={cn("flex flex-col", isNovelView ? "gap-5" : "gap-6")}>
-      {hasDialogue && dialogue}
-      <Scenario text={actions.join("\n")} isNovelView={isNovelView} />
-    </div>
   );
 };
 

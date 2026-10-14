@@ -172,7 +172,6 @@ const th: typeof ko = {
       messagePlaceholder: "ส่งข้อความ",
       scenarioPlaceholder: "กรุณากรอกสถานการณ์",
       action: "ผู้บรรยาย",
-      actionMark: "แทรกเครื่องหมายการกระทำ (*)",
       asset: "แอสเซ็ต",
       assetImageAlt: "รูปแอสเซ็ต",
       profileAlt: "รูปโปรไฟล์ของ {name}",
