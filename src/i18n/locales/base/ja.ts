@@ -59,6 +59,18 @@ const ja: typeof ko = {
       failedHint: "しばらくしてからもう一度お試しください。",
       retry: "もう一度試す",
       login: "ログイン",
+      reasons: {
+        accessDenied: "ソーシャルログインをキャンセルしました。",
+        codeExpired: "ソーシャルログインの有効期限が切れました。もう一度お試しください。",
+        failed: "ソーシャルログインに失敗しました。しばらくしてからもう一度お試しください。",
+        accountLocked: "利用が制限されたアカウントです。運営にお問い合わせください。",
+        accountSuspended: "一時停止中のアカウントです。停止期間が終わると再び利用できます。",
+        accountBanned: "利用が永久に制限されたアカウントです。運営にお問い合わせください。",
+        accountWithdrawn: "退会済みのアカウントです。",
+        agreementRequired: "必須の規約にすべて同意してください。",
+        rejoinRestricted: "退会したアカウントのメールアドレスは、退会から7日後に再登録できます。",
+        internal: "内部エラーが発生しました。しばらくしてからもう一度お試しください。",
+      },
     },
     agreementGate: {
       firstTitle: "登録を完了してください",

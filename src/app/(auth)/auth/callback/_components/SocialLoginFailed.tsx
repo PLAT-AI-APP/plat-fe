@@ -26,25 +26,60 @@ const readProvider = (): SocialLoginProvider | null => {
 
 const subscribeNothing = () => () => {};
 
-interface SocialLoginFailedProps {
-  /** 서버가 현지화해 준 실패 사유(`?error=`). 텍스트로만 그린다. */
-  reason: string;
+/**
+ * 서버가 `?error=` 로 보내는 메시지 키 → 번역 키. 주소에 실린 값은 누구나 바꿀 수 있어 문구로 그대로 보이지 않는다 —
+ * 아는 키만 번역하고 나머지는 일반 실패 문구로 보인다.
+ */
+const ERROR_REASONS = {
+  "auth.social.error.accessDenied": "accessDenied",
+  "auth.social.error.codeExpired": "codeExpired",
+  "auth.social.error.failed": "failed",
+  "auth.error.accountLocked": "accountLocked",
+  "auth.error.accountSuspended": "accountSuspended",
+  "auth.error.accountBanned": "accountBanned",
+  "auth.error.accountWithdrawn": "accountWithdrawn",
+  "agreement.error.required": "agreementRequired",
+  "email.error.rejoinRestricted": "rejoinRestricted",
+  "error.internal": "internal",
+} as const;
+
+type ErrorReason = (typeof ERROR_REASONS)[keyof typeof ERROR_REASONS];
+
+const reasonOf = (errorKey: string): ErrorReason =>
+  Object.hasOwn(ERROR_REASONS, errorKey)
+    ? ERROR_REASONS[errorKey as keyof typeof ERROR_REASONS]
+    : "failed";
+
+type SocialLoginFailedProps = {
   /**
    * 이미 연결 연출을 충분히 보여 준 뒤라면 true — 곧바로 끊긴다.
    * 서버가 `?error=` 로 바로 보낸 경우엔 false 로 두어, 연결 중을 잠깐 보인 뒤 끊기게 한다.
    */
   skipIntro?: boolean;
-}
+} & (
+  | {
+      /** API 응답이 준 실패 문구. 텍스트로만 그린다. */
+      reason: string;
+      errorKey?: never;
+    }
+  | {
+      /** 서버 리다이렉트의 `?error=` 메시지 키. 아는 키만 번역한다. */
+      errorKey: string;
+      reason?: never;
+    }
+);
 
 /**
- * 소셜 로그인 실패. 서버는 실패하면 `/auth/callback?error=<사유>` 로 보낸다(BE↔FE 계약 2번).
+ * 소셜 로그인 실패. 서버는 실패하면 `/auth/callback?error=<메시지 키>` 로 보낸다(BE↔FE 계약 2번).
  * 로그인 중 화면의 연결이 끊기는 연출로 사유를 보여 주고, 누른 수단을 알면 같은 수단으로, 모르면 로그인 창으로 다시 시도하게 한다.
  */
 const SocialLoginFailed = ({
   reason,
+  errorKey,
   skipIntro = false,
 }: SocialLoginFailedProps) => {
   const t = useTranslations("auth.callback");
+  const reasonText = reason ?? t(`reasons.${reasonOf(errorKey ?? "")}`);
   // 연결 중을 최소 시간만큼 보인 뒤에 끊는다.
   const isBroken = useMinimumDisplay(!skipIntro, MIN_PROCESSING_MS);
   const provider = useSyncExternalStore(
@@ -72,7 +107,7 @@ const SocialLoginFailed = ({
         failure={
           isBroken
             ? {
-                reason,
+                reason: reasonText,
                 actions: (
                   <>
                     <Button

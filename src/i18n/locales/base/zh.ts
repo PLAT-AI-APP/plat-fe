@@ -59,6 +59,18 @@ const zh: typeof ko = {
       failedHint: "请稍后再试。",
       retry: "重试",
       login: "登录",
+      reasons: {
+        accessDenied: "您已取消社交登录。",
+        codeExpired: "社交登录已过期，请重试。",
+        failed: "社交登录失败，请稍后重试。",
+        accountLocked: "该账号已被限制使用，请联系客服。",
+        accountSuspended: "该账号已被暂停使用，暂停期结束后可再次使用。",
+        accountBanned: "该账号已被永久限制使用，请联系客服。",
+        accountWithdrawn: "该账号已注销。",
+        agreementRequired: "请同意所有必选条款。",
+        rejoinRestricted: "已注销账号的邮箱需在注销7天后才能重新注册。",
+        internal: "发生内部错误，请稍后重试。",
+      },
     },
     agreementGate: {
       firstTitle: "请完成注册",
