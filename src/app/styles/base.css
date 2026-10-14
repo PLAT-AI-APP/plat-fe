@@ -22,6 +22,12 @@ html {
   scrollbar-gutter: stable;
 }
 
+/* 오른쪽 끝에 붙는 레이어(채팅방 사이드바)가 떠 있는 동안은 스크롤바 자리를 비워 틈이 없게 한다. */
+html[data-full-viewport] {
+  scrollbar-gutter: auto;
+  overflow: hidden;
+}
+
 body {
   background-color: var(--bg-dark);
   color: var(--font-1);

@@ -43,6 +43,7 @@ import { useWalletStore } from "@/store/useWalletStore";
 import { TRANSITION } from "@/constants/motion";
 import { IS_RESPONSE_FORMAT_SELECTABLE } from "@/constants/responseFormat";
 import { useFocusTrap } from "@/hooks/dom/useFocusTrap";
+import { useFullViewport } from "@/hooks/dom/useFullViewport";
 import ResponseFormatSetting from "./ResponseFormatSetting";
 import ResponseLengthSetting from "./ResponseLengthSetting";
 
@@ -293,6 +294,9 @@ const ChattingSidebar = ({ roomId, toggleIsSidebar }: ChattingSidebarProps) => {
     handleOverlayClickRef.current = handleOverlayClick;
   }, [handleOverlayClick]);
   const handleEscape = useCallback(() => handleOverlayClickRef.current(), []);
+  // 오른쪽에 붙는 패널이라 스크롤바 자리만큼 떨어져 보이지 않게 한다.
+  useFullViewport();
+
   useFocusTrap({
     containerRef: panelRef,
     enabled: true,
