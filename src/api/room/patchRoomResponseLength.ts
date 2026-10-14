@@ -13,9 +13,12 @@ const patchRoomResponseLength = async ({
   roomId,
   responseLength,
 }: PatchRoomResponseLengthProps) => {
-  await authAxios.patch(`/rooms/${roomId}/response-length`, {
-    responseLength,
-  });
+  // TODO: 로컬 백엔드 테스트용 임시 하드코딩. 커밋 전에 baseURL 옵션을 지운다.
+  await authAxios.patch(
+    `/rooms/${roomId}/response-length`,
+    { responseLength },
+    { baseURL: "http://localhost:8080" },
+  );
 };
 
 /**
