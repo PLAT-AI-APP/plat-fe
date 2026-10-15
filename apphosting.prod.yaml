@@ -1,0 +1,68 @@
+# Firebase App Hosting 운영 설정. 운영 백엔드(App Hosting 백엔드 설정의 환경 이름 `prod`)에서만 읽는다.
+# 문서: https://firebase.google.com/docs/app-hosting/configure
+#
+# 기본 값은 apphosting.yaml 과 저장소의 .env.production 이고, 이 파일이 같은 변수를 덮어쓴다.
+# 테스트 배포 값(NEXT_PUBLIC_APP_ENV=dev 등)과 섞이지 않도록 운영 값은 모두 여기에 둔다.
+
+runConfig:
+  # 운영 사양. 트래픽을 보고 조정한다. 콜드 스타트를 피하려면 minInstances 를 1 이상으로 둔다.
+  cpu: 1
+  memoryMiB: 1024
+  minInstances: 1
+  maxInstances: 10
+  concurrency: 80
+
+# NEXT_PUBLIC_* 값은 빌드 때 번들에 박히므로 BUILD 가용성이 있어야 한다.
+env:
+  # 일반 API(로그인·방·결제 등). 끝에 / 를 붙이지 않는다.
+  - variable: NEXT_PUBLIC_BASE_URI
+    value: https://api.plat.so
+    availability: [BUILD, RUNTIME]
+
+  # AI 채팅(/chat/**, SSE)은 별도 앱이 받는다.
+  - variable: NEXT_PUBLIC_CHAT_BASE_URI
+    value: https://ai.plat.so
+    availability: [BUILD, RUNTIME]
+
+  # dev 가짜 본인인증(/dev/**)이 열리지 않게 반드시 prod 로 둔다.
+  - variable: NEXT_PUBLIC_APP_ENV
+    value: prod
+    availability: [BUILD, RUNTIME]
+
+  # 공유 미리보기·메타 기준 주소.
+  - variable: NEXT_PUBLIC_SITE_URL
+    value: https://plat.so
+    availability: [BUILD, RUNTIME]
+
+  # MSW 목업은 운영에서 끈다.
+  - variable: NEXT_PUBLIC_API_MOCKING
+    value: disabled
+    availability: [BUILD, RUNTIME]
+
+  # 정식 출시 때 베타 안내 띠를 끈다. off 가 아니면 보인다.
+  # - variable: NEXT_PUBLIC_BETA_BANNER
+  #   value: "off"
+  #   availability: [BUILD, RUNTIME]
+
+  # 검색 엔진 수집 허용. 정식 출시 때 true 로 연다. 클로즈베타 동안은 두지 않는다.
+  # - variable: NEXT_PUBLIC_ALLOW_INDEXING
+  #   value: "true"
+  #   availability: [BUILD, RUNTIME]
+
+  # 토스페이먼츠 결제창 클라이언트 키(live_gck_). 저장소의 .env.production 값은 테스트 키(test_gck_)라
+  # 운영 결제를 열기 전에 라이브 키로 덮어써야 한다. 브라우저에 공개되는 키라 value 로 둘 수 있다.
+  # 시크릿 키(gsk)는 여기 넣지 않는다 — 서버(plat-be)에만 둔다.
+  # - variable: NEXT_PUBLIC_TOSS_CLIENT_KEY
+  #   value: live_gck_...
+  #   availability: [BUILD, RUNTIME]
+
+  # 오류 수집(Sentry)을 켤 때만. 인증 토큰은 value 가 아니라 secret 으로 둔다.
+  # - variable: NEXT_PUBLIC_SENTRY_DSN
+  #   value: https://...
+  #   availability: [BUILD, RUNTIME]
+  # - variable: NEXT_PUBLIC_SENTRY_ENVIRONMENT
+  #   value: production
+  #   availability: [BUILD, RUNTIME]
+  # - variable: SENTRY_AUTH_TOKEN
+  #   secret: sentry-auth-token
+  #   availability: [BUILD]
