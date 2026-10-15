@@ -78,6 +78,61 @@ const splitAssetToken = (
 };
 
 /**
+ * 이름 뒤에 붙는 조사 [받침 있을 때, 없을 때]. AI 는 이름을 {{user}} 토큰으로만 쓰므로 받침을 몰라
+ * "{{user}}를", "{{user}}가" 처럼 조사를 고정해 쓴다. 이름이 정해진 화면에서 받침에 맞춘다.
+ */
+const JOSA_PAIRS = [
+  ["은", "는"],
+  ["이", "가"],
+  ["을", "를"],
+  ["과", "와"],
+  ["이랑", "랑"],
+  ["이라", "라"],
+  ["아", "야"],
+];
+const JOSA_LOOKUP = new Map<string, readonly string[]>();
+for (const pair of JOSA_PAIRS) for (const josa of pair) JOSA_LOOKUP.set(josa, pair);
+
+// 조사 뒤가 한글이면 "아니", "이상" 같은 다른 낱말이므로 건드리지 않는다. 조사 뒤에 다시 붙는 글자(는·도·만…)만 허용한다.
+const NAME_JOSA = new RegExp(
+  `^(으로|${JOSA_PAIRS.flat()
+    .sort((a, b) => b.length - a.length)
+    .join("|")}|로)(?=[^가-힣]|$|[는도만의요서])`,
+);
+
+/**
+ * 이름 바로 뒤 글자가 조사면 이름의 받침에 맞춰 바꿉니다. 한글로 끝나는 이름만 보정하고,
+ * 영문·숫자 이름이나 조사가 아닌 글자는 AI 가 쓴 그대로 둡니다.
+ */
+const fitJosa = (name: string, after: string) => {
+  const code = name.charCodeAt(name.length - 1) - 0xac00;
+  if (code < 0 || code > 11171) return after;
+
+  const match = NAME_JOSA.exec(after);
+  if (!match) return after;
+
+  const jong = code % 28;
+  const josa = match[1];
+  const fitted =
+    josa === "으로" || josa === "로"
+      ? jong && jong !== 8 // 받침 ㄹ 은 받침 없는 이름처럼 "로" 를 쓴다
+        ? "으로"
+        : "로"
+      : JOSA_LOOKUP.get(josa)![jong ? 0 : 1];
+
+  return fitted + after.slice(josa.length);
+};
+
+/** 글 안의 {{user}} 를 이름으로 바꾸고 바로 뒤에 붙은 조사를 이름 받침에 맞춥니다. */
+export const fillUserName = (text: string, name: string) => {
+  const parts = text.split("{{user}}");
+  let result = parts[0];
+  for (let i = 1; i < parts.length; i += 1) result += name + fitJosa(name, parts[i]);
+
+  return result;
+};
+
+/**
  * 파싱된 세그먼트를 화면에 보여줄 문자열로 합칩니다. {{user}}(ASSET_USER)는
  * 실제로 보고 있는 사람의 이름으로 치환합니다 — 시나리오를 편집하는 폼처럼
  * 토큰을 그대로 남겨야 하는 자리에는 쓰지 말고, 채팅방/미리보기처럼 "누군가에게
@@ -87,14 +142,25 @@ const splitAssetToken = (
 export const segmentsToDisplayText = (
   segments: PlatSegment[],
   userDisplayName?: string,
-) =>
-  segments
-    .map((segment) => {
-      if (segment.type === "TEXT") return segment.value;
-      if (segment.type === "ASSET_USER") return userDisplayName ?? "{{user}}";
-      return `{{${segment.assetType}:${segment.code}}}`;
-    })
-    .join("");
+) => {
+  let text = "";
+  let afterUser = false;
+
+  for (const segment of segments) {
+    if (segment.type === "TEXT") {
+      text += afterUser && userDisplayName ? fitJosa(userDisplayName, segment.value) : segment.value;
+      afterUser = false;
+    } else if (segment.type === "ASSET_USER") {
+      text += userDisplayName ?? "{{user}}";
+      afterUser = true;
+    } else {
+      text += `{{${segment.assetType}:${segment.code}}}`;
+      afterUser = false;
+    }
+  }
+
+  return text;
+};
 
 /**
  * encodeScenarioContent가 구분자 문자·역슬래시 앞에 붙인 역슬래시를 지워
