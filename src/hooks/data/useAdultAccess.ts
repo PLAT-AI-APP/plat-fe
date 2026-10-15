@@ -1,9 +1,21 @@
 import { useAuthStore } from "@/store/useAuthStore";
 import { useAuthReady } from "@/hooks/data/useAuthReady";
-import { hasAdultAccess, hasAdultMode } from "@/lib/adultAccess";
+import {
+  hasAdultAccess,
+  hasAdultMode,
+  hasAdultVerification,
+} from "@/lib/adultAccess";
+
+/** 성인인증이 유효한지(19 토글과 무관). 19 토글을 보여 주고 켤 수 있게 하는 데만 쓴다. */
+export const useAdultVerified = () => {
+  const authReady = useAuthReady();
+  const accessToken = useAuthStore((state) => state.accessToken);
+
+  return authReady && hasAdultVerification(accessToken);
+};
 
 /**
- * 성인 세계관·방에 들어갈 수 있는지(로그인 + 성인인증 유효). 상세·채팅처럼 "접근"이 갈리는 조회의 캐시 키에 넣는다.
+ * 성인 세계관·방에 들어갈 수 있는지(로그인 + 성인인증 유효 + 19 토글 ON). 상세·채팅처럼 "접근"이 갈리는 조회의 캐시 키에 넣는다.
  * 토큰 클레임 기준이라 서버 판단과 같고, 새로고침 직후 /users/me 를 기다리지 않는다.
  */
 export const useAdultAccess = () => {

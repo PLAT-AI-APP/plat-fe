@@ -240,6 +240,8 @@ const en: typeof ko = {
       verifyDescription: "Complete age verification to view it. Verification is valid for 1 year.",
       login: "Log in",
       verify: "Verify age",
+      toggleDescription: "You're already age-verified. Turn on the 19+ toggle to view this.",
+      enableToggle: "Turn on 19+",
     },
     room: {
       backToList: "My chats",
@@ -258,6 +260,8 @@ const en: typeof ko = {
       label: "Adult content",
       help: "Register this character as viewable only by users 19 or older. Adult hashtags can be selected only when this is on.",
       requiresVerification: "Available after age verification.",
+      requiresToggle: "Turn on the 19+ toggle to mark this as adult content.",
+      enableToggle: "Turn on 19+",
       verify: "Verify age",
       adultTagLocked: "This tag requires the adult content setting.",
       adultTagsRemoved: "Adult content was turned off, so adult hashtags were removed.",

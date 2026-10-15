@@ -21,6 +21,8 @@ import { ReportModalProps } from "@/type/modal";
 import { focusFirstFieldError } from "@/lib/formError";
 import { useTranslateText } from "@/hooks/i18n/useTranslateText";
 import { showAppToast } from "@/lib/toast";
+import { ADULT_CONTENT_RESTRICTED } from "@/lib/adultAccess";
+import { useAdultUnlock } from "@/hooks/data/useAdultUnlock";
 
 const MY_REPORTS_PATH = "/my-reports";
 
@@ -46,6 +48,7 @@ const ReportModal = ({ onClose, targetType, targetId, targetName }: ReportModalP
   const commonT = useTranslations("common");
   const reasonT = useTranslations("report.reasons");
   const router = useRouter();
+  const { unlock: unlockAdult } = useAdultUnlock();
   const translateText = useTranslateText();
   const {
     control,
@@ -82,6 +85,12 @@ const ReportModal = ({ onClose, targetType, targetId, targetName }: ReportModalP
   };
 
   const handleReportError = (error: AppError) => {
+    // 성인 방 대사는 대화를 볼 수 있을 때만 신고된다. 막힌 이유(미인증·만료·19 토글 꺼짐)에 맞는 창을 연다.
+    if (error.code === ADULT_CONTENT_RESTRICTED) {
+      onClose();
+      unlockAdult();
+      return;
+    }
     if (isRejectionCode(error.code)) {
       // AI 답변은 신고자가 쓴 글이 아니다. 거절 사유는 "내 캐릭터의 답변"이라 문구를 따로 둔다.
       const messageKey =

@@ -15,7 +15,8 @@ import { cn } from "@/lib/utils";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
 import { useHashtagListQuery } from "@/api/hashtag/getHashtagList";
 import Button from "@/components/ui/Button";
-import { useAdultAccess } from "@/hooks/data/useAdultAccess";
+import { useAdultAccess, useAdultVerified } from "@/hooks/data/useAdultAccess";
+import { useAdultUnlock } from "@/hooks/data/useAdultUnlock";
 import { isVerificationValid } from "@/lib/adultAccess";
 import { showAppToast } from "@/lib/toast";
 import { useModalStore } from "@/store/useModalStore";
@@ -54,13 +55,21 @@ const Setting =({ isEditMode, wasAdult = false }: SettingProps) => {
   const openModal = useModalStore((state) => state.openModal);
   // /users/me 가 오기 전에는 토큰 클레임으로 판단한다. 서버도 토큰으로 판단한다.
   const adultVerifiedUntil = useUserStore((state) => state.user?.adultVerifiedUntil);
+  const adultContentEnabled = useUserStore((state) => state.user?.adultContentEnabled);
+  const tokenAdultVerified = useAdultVerified();
   const tokenAdultAccess = useAdultAccess();
   const isAdultVerified =
     adultVerifiedUntil !== undefined
       ? isVerificationValid(adultVerifiedUntil)
+      : tokenAdultVerified;
+  // 19 토글을 끄면 미인증과 같다 — 성인 세계관을 만들 수도 없다.
+  const isAdultAccessible =
+    adultVerifiedUntil !== undefined
+      ? isAdultVerified && (adultContentEnabled ?? false)
       : tokenAdultAccess;
-  // 켜기는 성인인증이 유효해야 한다. 이미 켜진 세계관을 끄는 것은 언제나 된다.
-  const isAdultToggleDisabled = !isAdultVerified && !isAdult;
+  const { unlock: unlockAdult } = useAdultUnlock();
+  // 켜기는 성인인증 + 19 토글이 있어야 한다. 이미 켜진 세계관을 끄는 것은 언제나 된다.
+  const isAdultToggleDisabled = !isAdultAccessible && !isAdult;
   const { data: hashtagList } = useHashtagListQuery();
   const tendencyLabelByValue: Record<UniverseCreateTendency, string> = {
     ALL: selectorT("all"),
@@ -80,8 +89,8 @@ const Setting =({ isEditMode, wasAdult = false }: SettingProps) => {
   };
 
   const handleAdult = (nextAdult: boolean) => {
-    if (nextAdult && !isAdultVerified) {
-      openModal("IDENTITY_VERIFICATION", { purpose: "adult" });
+    if (nextAdult && !isAdultAccessible) {
+      unlockAdult();
       return;
     }
     setValue("adult", nextAdult, { shouldDirty: true, shouldValidate: true });
@@ -219,15 +228,13 @@ const Setting =({ isEditMode, wasAdult = false }: SettingProps) => {
           </p>
         )}
 
-        {!isAdultVerified && (
+        {!isAdultAccessible && (
           <div className="flex items-center justify-between gap-3 rounded-xl bg-darkest px-4 py-3">
-            <p className="body-7 text-font-2">{adultT("requiresVerification")}</p>
-            <Button
-              size="sm"
-              variant="brandSoft"
-              onClick={() => openModal("IDENTITY_VERIFICATION", { purpose: "adult" })}
-            >
-              {adultT("verify")}
+            <p className="body-7 text-font-2">
+              {isAdultVerified ? adultT("requiresToggle") : adultT("requiresVerification")}
+            </p>
+            <Button size="sm" variant="brandSoft" onClick={unlockAdult}>
+              {isAdultVerified ? adultT("enableToggle") : adultT("verify")}
             </Button>
           </div>
         )}

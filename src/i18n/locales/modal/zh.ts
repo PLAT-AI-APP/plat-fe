@@ -235,6 +235,8 @@ const zh: typeof ko = {
       verifyDescription: "完成成人认证后即可查看。认证有效期为1年。",
       login: "登录",
       verify: "进行成人认证",
+      toggleDescription: "您已完成成人认证。打开 19 开关即可查看。",
+      enableToggle: "打开 19 开关",
     },
     room: {
       backToList: "我的聊天",
@@ -253,6 +255,8 @@ const zh: typeof ko = {
       label: "成人内容",
       help: "登记为仅年满19周岁可查看的角色。开启后才能选择成人标签。",
       requiresVerification: "完成成人认证后可选择。",
+      requiresToggle: "打开 19 开关后才能设为成人内容。",
+      enableToggle: "打开 19 开关",
       verify: "进行成人认证",
       adultTagLocked: "设为成人内容后才能选择此标签。",
       adultTagsRemoved: "已关闭成人内容设置，成人标签已移除。",

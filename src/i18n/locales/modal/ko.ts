@@ -233,6 +233,8 @@ const ko = {
       verifyDescription: "성인인증을 마치면 볼 수 있어요. 인증은 1년 동안 유효해요.",
       login: "로그인",
       verify: "성인인증 하기",
+      toggleDescription: "성인인증은 마쳤어요. 19 토글을 켜면 볼 수 있어요.",
+      enableToggle: "19 토글 켜기",
     },
     room: {
       backToList: "내 채팅으로",
@@ -251,6 +253,8 @@ const ko = {
       label: "성인 콘텐츠",
       help: "만 19세 이상만 볼 수 있는 캐릭터로 등록해요. 성인 해시태그는 이걸 켜야 고를 수 있어요.",
       requiresVerification: "성인인증 후 선택할 수 있어요.",
+      requiresToggle: "19 토글을 켜야 성인 콘텐츠로 지정할 수 있어요.",
+      enableToggle: "19 토글 켜기",
       verify: "성인인증 하기",
       adultTagLocked: "성인 콘텐츠로 설정해야 고를 수 있는 태그예요.",
       adultTagsRemoved: "성인 콘텐츠 설정을 꺼서 성인 해시태그를 뺐어요.",

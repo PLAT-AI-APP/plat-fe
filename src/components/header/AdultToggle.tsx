@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { useAdultContentMutation } from "@/api/verification/patchAdultContent";
 import Switch from "@/components/ui/Switch";
-import { useAdultAccess } from "@/hooks/data/useAdultAccess";
+import { useAdultVerified } from "@/hooks/data/useAdultAccess";
 import {
   ADULT_VERIFICATION_REQUIRED,
   isVerificationValid,
@@ -16,7 +16,7 @@ import { useModalStore } from "@/store/useModalStore";
 import { useUserStore } from "@/store/useUserStore";
 
 /**
- * 헤더의 19 토글. 목록·검색·랭킹에 성인 콘텐츠를 섞을지만 정한다(접근 권한은 성인인증이 정한다).
+ * 헤더의 19 토글. 끄면 성인인증을 하지 않은 것과 똑같이 성인 콘텐츠가 목록에서 빠지고 열리지도 않는다.
  *
  * - 비로그인: 누르면 로그인 창
  * - 성인인증 무효(미인증·만료): 누르면 본인인증 창
@@ -28,7 +28,7 @@ const AdultToggle = ({ className }: { className?: string }) => {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn) && isAuthReady;
   const accessToken = useAuthStore((state) => state.accessToken);
   const openModal = useModalStore((state) => state.openModal);
-  const tokenAdultAccess = useAdultAccess();
+  const tokenAdultAccess = useAdultVerified();
   const adultVerifiedUntil = useUserStore((state) => state.user?.adultVerifiedUntil);
   const storedEnabled = useUserStore((state) => state.user?.adultContentEnabled);
   const { mutate: changeAdultContent, isPending } = useAdultContentMutation();
