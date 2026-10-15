@@ -20,9 +20,9 @@ const AuthPage = async ({ searchParams }: PageProps) => {
   const error = typeof params.error === "string" ? params.error : undefined;
   const signupToken = typeof params.signup === "string" ? params.signup : "";
 
-  // 소셜 로그인이 실패하면 서버가 사유를 error 로 실어 보낸다. 코드가 없다고 "잘못된 접근"으로 뭉개지 않는다.
+  // 소셜 로그인이 실패하면 서버가 사유의 메시지 키를 error 로 실어 보낸다. 코드가 없다고 "잘못된 접근"으로 뭉개지 않는다.
   if (error !== undefined) {
-    return <SocialLoginFailed reason={error} />;
+    return <SocialLoginFailed errorKey={error} />;
   }
 
   // 처음 온 소셜 사용자. 아직 계정·토큰이 없다 — 이 자리에서 약관 동의를 받아야 가입이 끝난다.

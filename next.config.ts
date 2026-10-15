@@ -9,11 +9,17 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
  * - X-Frame-Options: 다른 사이트가 우리 화면을 iframe 에 넣어 클릭을 가로채지 못하게 한다.
  * - X-Content-Type-Options: 브라우저가 응답 형식을 추측해 스크립트로 실행하지 않게 한다.
  * - Referrer-Policy: 다른 사이트로 나갈 때 주소의 경로·쿼리(pg_token 등)를 넘기지 않는다.
+ * - Content-Security-Policy: 플러그인 실행·base 태그 바꿔치기·프레임 삽입을 막는다.
  */
 const SECURITY_HEADERS = [
   { key: "X-Frame-Options", value: "DENY" },
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  /* 스크립트 출처까지 묶으면 토스·Sentry·인라인 스크립트가 깨진다. 깨질 일 없는 지시어만 둔다. */
+  {
+    key: "Content-Security-Policy",
+    value: "frame-ancestors 'none'; object-src 'none'; base-uri 'self'",
+  },
 ];
 
 const nextConfig: NextConfig = {

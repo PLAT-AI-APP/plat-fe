@@ -241,6 +241,8 @@ const vi: typeof ko = {
       verifyDescription: "Hoàn tất xác minh độ tuổi để xem. Xác minh có hiệu lực 1 năm.",
       login: "Đăng nhập",
       verify: "Xác minh độ tuổi",
+      toggleDescription: "Bạn đã xác minh độ tuổi. Bật nút 19+ để xem nội dung này.",
+      enableToggle: "Bật 19+",
     },
     room: {
       backToList: "Trò chuyện của tôi",
@@ -259,6 +261,8 @@ const vi: typeof ko = {
       label: "Nội dung người lớn",
       help: "Đăng ký nhân vật chỉ người từ 19 tuổi trở lên mới xem được. Chỉ chọn được hashtag người lớn khi bật mục này.",
       requiresVerification: "Có thể chọn sau khi xác minh độ tuổi.",
+      requiresToggle: "Bật nút 19+ để đặt nội dung này là nội dung người lớn.",
+      enableToggle: "Bật 19+",
       verify: "Xác minh độ tuổi",
       adultTagLocked: "Thẻ này chỉ chọn được khi đặt là nội dung người lớn.",
       adultTagsRemoved: "Đã tắt nội dung người lớn nên các hashtag người lớn đã bị gỡ.",

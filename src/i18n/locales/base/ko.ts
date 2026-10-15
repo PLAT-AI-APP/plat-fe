@@ -59,6 +59,18 @@ const ko = {
       failedHint: "잠시 뒤 다시 시도해 주세요.",
       retry: "다시 시도",
       login: "로그인하기",
+      reasons: {
+        accessDenied: "소셜 로그인을 취소했습니다.",
+        codeExpired: "소셜 로그인이 만료되었습니다. 다시 시도해주세요.",
+        failed: "소셜 로그인에 실패했습니다. 잠시 후 다시 시도해주세요.",
+        accountLocked: "서비스 이용이 제한된 계정입니다. 운영자에게 문의하세요.",
+        accountSuspended: "이용이 일시 정지된 계정입니다. 정지 기간이 끝나면 다시 이용할 수 있습니다.",
+        accountBanned: "이용이 영구 제한된 계정입니다. 운영자에게 문의하세요.",
+        accountWithdrawn: "탈퇴한 계정입니다.",
+        agreementRequired: "필수 약관에 모두 동의해 주세요.",
+        rejoinRestricted: "탈퇴한 계정의 이메일은 탈퇴 후 7일이 지나야 다시 가입할 수 있습니다.",
+        internal: "내부 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
+      },
     },
     agreementGate: {
       firstTitle: "가입을 마무리해 주세요",

@@ -59,6 +59,18 @@ const vi: typeof ko = {
       failedHint: "Vui lòng thử lại sau giây lát.",
       retry: "Thử lại",
       login: "Đăng nhập",
+      reasons: {
+        accessDenied: "Bạn đã hủy đăng nhập bằng mạng xã hội.",
+        codeExpired: "Phiên đăng nhập mạng xã hội đã hết hạn. Vui lòng thử lại.",
+        failed: "Đăng nhập bằng mạng xã hội thất bại. Vui lòng thử lại sau.",
+        accountLocked: "Tài khoản này đã bị hạn chế. Vui lòng liên hệ bộ phận hỗ trợ.",
+        accountSuspended: "Tài khoản này đang bị tạm ngưng. Bạn có thể dùng lại khi hết thời gian tạm ngưng.",
+        accountBanned: "Tài khoản này đã bị hạn chế vĩnh viễn. Vui lòng liên hệ bộ phận hỗ trợ.",
+        accountWithdrawn: "Tài khoản này đã bị xóa.",
+        agreementRequired: "Vui lòng đồng ý với tất cả điều khoản bắt buộc.",
+        rejoinRestricted: "Bạn có thể đăng ký lại bằng email này sau 7 ngày kể từ khi xóa tài khoản.",
+        internal: "Đã xảy ra lỗi. Vui lòng thử lại sau.",
+      },
     },
     agreementGate: {
       firstTitle: "Hoàn tất đăng ký",

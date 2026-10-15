@@ -71,15 +71,21 @@ export const readAdultClaims = (token: string | null | undefined): AdultClaims =
   return claims;
 };
 
-/** 토큰 기준 성인인증이 지금 유효한지. 서버가 성인 세계관·방 접근을 허락하는 조건과 같다. */
-export const hasAdultAccess = (token: string | null | undefined) => {
+/** 토큰 기준 성인인증이 지금 유효한지. 19 토글을 보여 줄지·켤 수 있는지는 이것으로 정한다. */
+export const hasAdultVerification = (token: string | null | undefined) => {
   const { adultUntilMs } = readAdultClaims(token);
   return adultUntilMs !== null && adultUntilMs > Date.now();
 };
 
-/** 토큰 기준 목록에 성인 콘텐츠가 섞이는지(성인인증 유효 + 19 토글). */
-export const hasAdultMode = (token: string | null | undefined) =>
-  hasAdultAccess(token) && readAdultClaims(token).adultMode;
+/**
+ * 토큰 기준 성인 콘텐츠를 볼 수 있는지(성인인증 유효 + 19 토글 ON). 서버가 성인 세계관·방 접근을 허락하는 조건과 같다.
+ * 19 토글을 끄면 성인인증을 하지 않은 것과 똑같이 본다 — 목록에서 빠지고 주소로 들어가도 열리지 않는다.
+ */
+export const hasAdultAccess = (token: string | null | undefined) =>
+  hasAdultVerification(token) && readAdultClaims(token).adultMode;
+
+/** 목록에 성인 콘텐츠가 섞이는지. 접근 조건과 같다. */
+export const hasAdultMode = hasAdultAccess;
 
 /** 만료 30일 전부터 갱신을 권한다. */
 export const RENEWAL_NOTICE_DAYS = 30;

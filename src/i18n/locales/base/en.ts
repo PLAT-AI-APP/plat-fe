@@ -61,6 +61,18 @@ const en: typeof ko = {
       failedHint: "Please try again in a moment.",
       retry: "Try again",
       login: "Log in",
+      reasons: {
+        accessDenied: "You canceled the social login.",
+        codeExpired: "The social login expired. Please try again.",
+        failed: "Social login failed. Please try again in a moment.",
+        accountLocked: "This account is restricted. Please contact support.",
+        accountSuspended: "This account is temporarily suspended. You can use it again when the suspension ends.",
+        accountBanned: "This account is permanently restricted. Please contact support.",
+        accountWithdrawn: "This account has been deleted.",
+        agreementRequired: "Please agree to all required terms.",
+        rejoinRestricted: "You can sign up again with this email 7 days after deleting your account.",
+        internal: "Something went wrong. Please try again in a moment.",
+      },
     },
     agreementGate: {
       firstTitle: "Finish signing up",

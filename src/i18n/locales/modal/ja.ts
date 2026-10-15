@@ -237,6 +237,8 @@ const ja: typeof ko = {
       verifyDescription: "成人認証を完了すると閲覧できます。認証の有効期間は1年です。",
       login: "ログイン",
       verify: "成人認証する",
+      toggleDescription: "成人認証は完了しています。19トグルをオンにすると見られます。",
+      enableToggle: "19トグルをオン",
     },
     room: {
       backToList: "マイチャットへ",
@@ -255,6 +257,8 @@ const ja: typeof ko = {
       label: "成人向けコンテンツ",
       help: "満19歳以上のみ閲覧できるキャラクターとして登録します。成人向けハッシュタグはこれをオンにすると選択できます。",
       requiresVerification: "成人認証後に選択できます。",
+      requiresToggle: "19トグルをオンにすると成人向けに指定できます。",
+      enableToggle: "19トグルをオン",
       verify: "成人認証する",
       adultTagLocked: "成人向けコンテンツに設定すると選択できるタグです。",
       adultTagsRemoved: "成人向けコンテンツ設定をオフにしたため、成人向けハッシュタグを外しました。",
