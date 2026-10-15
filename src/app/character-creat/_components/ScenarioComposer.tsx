@@ -5,7 +5,7 @@ import ResourceImage from "@/components/ResourceImage";
 import { useTranslations } from "next-intl";
 import { useAutoResizeTextarea } from "@/hooks/form/useAutoResizeTextarea";
 import { useTextareaSubmitShortcuts } from "@/hooks/form/useTextareaSubmitShortcuts";
-import { Asterisk, Message, MoveUp, User } from "@/icons";
+import { Message, MoveUp, User } from "@/icons";
 import { cn } from "@/lib/utils";
 import { ScenarioType } from "@/type/character";
 
@@ -86,29 +86,6 @@ const ScenarioComposer = ({
       textarea.focus();
       const nextCursorPosition = start + text.length;
       textarea.setSelectionRange(nextCursorPosition, nextCursorPosition);
-      resizeTextarea();
-    }, 0);
-  };
-
-  const wrapActionText = () => {
-    // 고른 글자를 `*행동*` 으로 감싼다. 고른 게 없으면 별표 두 개만 넣고 그 사이에 커서를 둔다.
-    const textarea = textareaRef.current;
-    if (!textarea) {
-      setMsg((prev) => `${prev}**`);
-      return;
-    }
-
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const selectedText = msg.substring(start, end);
-    const selectionStart = start + 1;
-    const selectionEnd = selectionStart + selectedText.length;
-
-    setMsg(`${msg.substring(0, start)}*${selectedText}*${msg.substring(end)}`);
-
-    window.setTimeout(() => {
-      textarea.focus();
-      textarea.setSelectionRange(selectionStart, selectionEnd);
       resizeTextarea();
     }, 0);
   };
@@ -194,18 +171,6 @@ const ScenarioComposer = ({
               className={cn("body-5", COMPOSER_TOOL_BUTTON_CLASS_NAME)}
             >
               {"{{user}}"}
-            </button>
-
-            <button
-              type="button"
-              onClick={wrapActionText}
-              // 행동 종류는 한 줄 전체가 이미 지문이라 그 안의 `*` 는 글자로 남는다(인코딩이 이스케이프한다).
-              // 캐릭터·사용자 대사에서는 `*행동*` 이 지문으로 그려지므로 쓸 수 있게 둔다.
-              disabled={currentMode === "action"}
-              aria-label={t("actionMark")}
-              className={COMPOSER_TOOL_BUTTON_CLASS_NAME}
-            >
-              <Asterisk className="size-5" />
             </button>
           </div>
 

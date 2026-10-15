@@ -169,7 +169,6 @@ const ko = {
       messagePlaceholder: "메시지 보내기",
       scenarioPlaceholder: "시나리오를 입력해 주세요",
       action: "내레이터",
-      actionMark: "행동 표시(*) 넣기",
       asset: "에셋",
       assetImageAlt: "에셋 이미지",
       profileAlt: "{name} 프로필 이미지",

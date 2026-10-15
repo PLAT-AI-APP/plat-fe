@@ -173,7 +173,6 @@ const vi: typeof ko = {
       messagePlaceholder: "Gửi tin nhắn",
       scenarioPlaceholder: "Nhập kịch bản",
       action: "Người dẫn chuyện",
-      actionMark: "Chèn dấu hành động (*)",
       asset: "Tài sản",
       assetImageAlt: "Hình ảnh tài sản",
       profileAlt: "Ảnh hồ sơ của {name}",

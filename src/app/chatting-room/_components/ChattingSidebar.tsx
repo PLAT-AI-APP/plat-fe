@@ -43,7 +43,9 @@ import { useWalletStore } from "@/store/useWalletStore";
 import { TRANSITION } from "@/constants/motion";
 import { IS_RESPONSE_FORMAT_SELECTABLE } from "@/constants/responseFormat";
 import { useFocusTrap } from "@/hooks/dom/useFocusTrap";
+import { useFullViewport } from "@/hooks/dom/useFullViewport";
 import ResponseFormatSetting from "./ResponseFormatSetting";
+import ResponseLengthSetting from "./ResponseLengthSetting";
 
 /*
  * 유저노트 화면은 react-hook-form·zod 를 쓰는데, 그대로 가져오면 두 라이브러리(약 126KB)가
@@ -292,6 +294,9 @@ const ChattingSidebar = ({ roomId, toggleIsSidebar }: ChattingSidebarProps) => {
     handleOverlayClickRef.current = handleOverlayClick;
   }, [handleOverlayClick]);
   const handleEscape = useCallback(() => handleOverlayClickRef.current(), []);
+  // 오른쪽에 붙는 패널이라 스크롤바 자리만큼 떨어져 보이지 않게 한다.
+  useFullViewport();
+
   useFocusTrap({
     containerRef: panelRef,
     enabled: true,
@@ -442,6 +447,10 @@ const ChattingSidebar = ({ roomId, toggleIsSidebar }: ChattingSidebarProps) => {
                               label={t("assetGallery")}
                               onClick={() => setSidebarDepth("ASSET_GALLERY")}
                             />
+                          </li>
+                          {/* 소설형 방에서만 보인다. 서버가 형식이 다르면 400 으로 거절한다. */}
+                          <li>
+                            <ResponseLengthSetting roomId={roomId} />
                           </li>
                         </menu>
                       </section>

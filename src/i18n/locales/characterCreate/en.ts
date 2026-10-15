@@ -173,7 +173,6 @@ const en: typeof ko = {
       messagePlaceholder: "Send a message",
       scenarioPlaceholder: "Enter a scenario",
       action: "Narrator",
-      actionMark: "Insert action marks (*)",
       asset: "Asset",
       assetImageAlt: "Asset image",
       profileAlt: "{name} profile image",

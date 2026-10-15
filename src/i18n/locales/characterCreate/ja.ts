@@ -174,7 +174,6 @@ const ja: typeof ko = {
       messagePlaceholder: "メッセージを送信",
       scenarioPlaceholder: "シナリオを入力してください",
       action: "ナレーター",
-      actionMark: "行動の記号(*)を挿入",
       asset: "アセット",
       assetImageAlt: "アセット画像",
       profileAlt: "{name} のプロフィール画像",

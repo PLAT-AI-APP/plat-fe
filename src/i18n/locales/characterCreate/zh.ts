@@ -164,7 +164,6 @@ const zh: typeof ko = {
       messagePlaceholder: "发送消息",
       scenarioPlaceholder: "请输入场景",
       action: "旁白",
-      actionMark: "插入动作标记(*)",
       asset: "素材",
       assetImageAlt: "素材图片",
       profileAlt: "{name} 个人资料图片",
