@@ -5,7 +5,8 @@ import type { AppError } from "@/type/api";
 export type TermsDocumentType =
   | "TERMS_OF_SERVICE"
   | "PRIVACY_POLICY"
-  | "YOUTH_PROTECTION";
+  | "YOUTH_PROTECTION"
+  | "REFUND_POLICY";
 
 export interface TermsHistoryItem {
   documentId: string;

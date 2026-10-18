@@ -70,12 +70,21 @@ const th: typeof en = {
     terms: "ข้อกำหนดการใช้งาน",
     privacy: "นโยบายความเป็นส่วนตัว",
     youth: "นโยบายคุ้มครองเยาวชน",
+    refund: "นโยบายการคืนเงิน",
+    // 사업자 정보 값(회사명·대표·주소)은 서버 사이트 설정을 못 받았을 때의 대체값이다(Footer).
     companyName: "Orbitlab Co., Ltd.",
-    representative: "ตัวแทน Kim Seungwoo",
+    representativeLabel: "ตัวแทน",
+    representative: "Kim Seungwoo",
     registrationNumberLabel: "เลขทะเบียนธุรกิจ",
     mailOrderNumberLabel: "เลขทะเบียนธุรกิจขายออนไลน์",
     address:
       "707-A19, 707 ชั้น 7, 22 Harmony-ro 178beon-gil, Yeonsu-gu, Incheon",
+    addressLabel: "ที่อยู่",
+    phoneLabel: "ศูนย์บริการลูกค้า",
+    emailLabel: "อีเมล",
+    supportHoursLabel: "เวลาทำการ",
+    privacyOfficerLabel: "เจ้าหน้าที่คุ้มครองข้อมูลส่วนบุคคล",
+    hostingProviderLabel: "ผู้ให้บริการโฮสติ้ง",
     copyright: "© 2026 Orbitlab Co., Ltd. All rights reserved.",
   },
   searchBar: {
