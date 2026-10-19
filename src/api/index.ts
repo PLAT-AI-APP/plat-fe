@@ -21,6 +21,7 @@ import axios, {
 import { refreshAccessToken } from "./auth/postRefresh";
 import { useLocaleStore } from "@/store/useLocaleStore";
 import type { ApiErrorResponse, ApiSuccessResponse } from "@/type/api";
+import { installGetThrottle } from "./requestThrottle";
 
 /** 1. Axios 모듈 확장: _retry 속성 정의 */
 declare module "axios" {
@@ -527,6 +528,9 @@ const onPlainResponseError = (
 };
 
 // plainAxios는 재시도 로직은 타지 않지만, 에러 메시지 언어는 다른 인스턴스와 동일하게 맞춥니다.
+// 조회 1차 속도 제한(같은 조회 묶기·순간 폭주 늦추기). 서버의 RateLimitFilter 가 2차로 막는다.
+[plainAxios, axiosInstance, authAxios, chatAxios].forEach(installGetThrottle);
+
 plainAxios.interceptors.request.use((config) => {
   if (typeof window !== "undefined") {
     config.headers["Accept-Language"] = useLocaleStore.getState().locale;
