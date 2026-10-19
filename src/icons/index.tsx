@@ -43,6 +43,7 @@ export { default as SendFill } from "./SendFill";
 export { default as User } from "./User";
 export { default as Persona } from "./Persona";
 export { default as Coin } from "./Coin";
+export { default as CreatorCenter } from "./CreatorCenter";
 export { default as Home } from "./Home";
 export { default as Gear } from "./Gear";
 export { default as Global } from "./Global";

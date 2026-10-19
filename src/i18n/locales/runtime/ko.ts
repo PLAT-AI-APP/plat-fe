@@ -14,8 +14,11 @@ const ko: typeof en = {
     home: "캐릭터 둘러보기",
     search: "검색",
     usageHistory: "사용 내역",
-    earnings: "나의 수익",
+    earnings: "크리에이터 센터",
     earningsTier: "크리에이터 등급",
+    earningsExchange: "교환",
+    earningsCharacters: "캐릭터별 수익",
+    earningsCharacter: "캐릭터 수익",
     myReports: "신고 내역",
   },
   errorPage: {

@@ -6,20 +6,20 @@ import { getNextPageNumber } from "@/lib/pagination";
 import { useAuthReady } from "@/hooks/data/useAuthReady";
 import { earningQueryKeys } from "./queryKeys";
 
-const getEarningLedgers = async (
+const getEarningExchanges = async (
   month: string,
   page: number,
   size?: number,
 ) => {
   const response = await authAxios.get<EarningLedgerListResponse>(
-    "/earnings/ledgers",
+    "/earnings/exchanges",
     { params: { month, page, size } },
   );
   return response.data;
 };
 
-/** 한 달(YYYY-MM, KST) 수익 포인트 내역 조회 */
-export const useEarningLedgersQuery = ({
+/** 한 달(YYYY-MM, KST) 전환 내역(교환 · 소멸 · 운영 지급/차감) 조회 */
+export const useEarningExchangesQuery = ({
   month,
   size,
 }: {
@@ -29,10 +29,10 @@ export const useEarningLedgersQuery = ({
   const authReady = useAuthReady();
 
   return useInfiniteQuery<EarningLedgerListResponse, AppError>({
-    queryKey: earningQueryKeys.ledgerList(month, size),
+    queryKey: earningQueryKeys.exchangeList(month, size),
     initialPageParam: 0,
     queryFn: ({ pageParam = 0 }) =>
-      getEarningLedgers(month, pageParam as number, size),
+      getEarningExchanges(month, pageParam as number, size),
     getNextPageParam: getNextPageNumber,
     enabled: authReady,
   });

@@ -666,7 +666,12 @@ const TierPromotionCelebration = ({
                 />
                 {from ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={from.badge} alt="" width={96} height={96} />
+                  <img
+                    src={from.badge ?? undefined}
+                    alt=""
+                    width={96}
+                    height={96}
+                  />
                 ) : (
                   <span className="size-16 rounded-full bg-white/10" />
                 )}
@@ -704,7 +709,7 @@ const TierPromotionCelebration = ({
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={to.badge}
+                    src={to.badge ?? undefined}
                     alt=""
                     width={132}
                     height={132}

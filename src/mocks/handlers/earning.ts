@@ -1,10 +1,14 @@
 import { http, HttpResponse } from "msw";
-import { endpoint } from "../utils";
+import { endpoint, pathValue } from "../utils";
 import type {
   CreatorTierInfo,
   CreatorTierStatus,
+  EarningCalendarDay,
+  EarningDayUniverse,
   EarningLedgerItem,
   EarningSummary,
+  EarningUniverseRow,
+  RedemptionDetail,
   NoteConversionRequest,
   RedeemGiftCardRequest,
   RewardProduct,
@@ -21,6 +25,8 @@ const MIN_REDEEM = 5000;
 const summary: EarningSummary = {
   available: 12480,
   pending: 1320,
+  settleTomorrow: 412,
+  expiringSoon: 0,
   tier: "PLANET",
   noteUnitPrice: 2.85,
   identityVerified: true,
@@ -117,6 +123,7 @@ const ledger = (
   > &
     Partial<EarningLedgerItem>,
 ): EarningLedgerItem => ({
+  redemptionNo: null,
   rewardType: null,
   productName: null,
   noteAmount: null,
@@ -125,50 +132,32 @@ const ledger = (
   ...item,
 });
 
+/** 전환 내역: 교환 · 소멸 · 운영 지급/차감. 대화 적립은 수익 캘린더가 대신한다. */
 const ledgers: EarningLedgerItem[] = [
-  ledger({
-    ledgerId: "10",
-    type: "ACCRUE",
-    amount: 584,
-    balanceAfter: 12480,
-    createdAt: day(1),
-  }),
-  ledger({
-    ledgerId: "9",
-    type: "ACCRUE",
-    amount: 702,
-    balanceAfter: 11896,
-    createdAt: day(2),
-  }),
   ledger({
     ledgerId: "8",
     type: "REDEEM",
     amount: -5000,
     balanceAfter: 11194,
+    redemptionNo: "E261016G7KQ2M8PX",
     rewardType: "GIFT_CARD",
     productName: "네이버페이 5,000원권",
     redemptionStatus: "ISSUED",
     createdAt: day(3, 14),
   }),
   ledger({
-    ledgerId: "7",
-    type: "ACCRUE",
-    amount: 1328,
+    ledgerId: "6",
+    type: "ADMIN_GRANT",
+    amount: 1000,
     balanceAfter: 16194,
-    createdAt: day(3),
-  }),
-  ledger({
-    ledgerId: "5",
-    type: "ACCRUE",
-    amount: 2412,
-    balanceAfter: 14866,
-    createdAt: day(5),
+    createdAt: day(6, 11),
   }),
   ledger({
     ledgerId: "4",
     type: "REDEEM",
-    amount: -2000,
+    amount: -1425,
     balanceAfter: 12454,
+    redemptionNo: "E261006NB4D9HXTR",
     rewardType: "NOTE",
     productName: "노트 전환",
     noteAmount: 500,
@@ -177,9 +166,10 @@ const ledgers: EarningLedgerItem[] = [
   }),
   ledger({
     ledgerId: "2",
-    type: "REDEEM_CANCEL",
-    amount: 5000,
-    balanceAfter: 14454,
+    type: "REDEEM",
+    amount: -5000,
+    balanceAfter: 9454,
+    redemptionNo: "E260909GQ3MZ6LCA",
     rewardType: "GIFT_CARD",
     productName: "네이버페이 5,000원권",
     redemptionStatus: "REJECTED",
@@ -188,6 +178,53 @@ const ledgers: EarningLedgerItem[] = [
     createdAt: day(40, 16),
   }),
 ];
+
+const redemptionDetail = (item: EarningLedgerItem): RedemptionDetail => ({
+  redemptionNo: item.redemptionNo ?? "",
+  type: item.rewardType ?? "GIFT_CARD",
+  productName: item.productName ?? "",
+  pointAmount: -item.amount,
+  noteAmount: item.noteAmount,
+  status: item.redemptionStatus ?? "REQUESTED",
+  recipientPhone: item.rewardType === "GIFT_CARD" ? "010-****-5678" : null,
+  requestedAt: item.createdAt,
+  processedAt:
+    item.redemptionStatus === "REQUESTED"
+      ? null
+      : new Date(new Date(item.createdAt).getTime() + 86_400_000).toISOString(),
+  rejectReason: item.rejectReason,
+});
+
+/* 캐릭터 · 날짜 수익 목업. 60일치, 날짜(KST 사용일)마다 캐릭터별 포인트. */
+const MOCK_UNIVERSES = [
+  { universeId: "101", title: "비 오는 날의 서점 주인", base: 180 },
+  { universeId: "102", title: "은하 정거장 관제사 레아", base: 95 },
+  { universeId: "103", title: "괴팍한 마법학교 교수", base: 40 },
+  { universeId: "104", title: "새벽 편의점 알바생", base: 6 },
+];
+const kstDate = (daysAgo: number) =>
+  new Date(Date.now() + 9 * 3_600_000 - daysAgo * 86_400_000)
+    .toISOString()
+    .slice(0, 10);
+const pointsOf = (base: number, daysAgo: number) =>
+  daysAgo < 1 || daysAgo > 60
+    ? 0
+    : Math.max(0, Math.round(base + Math.sin(daysAgo / 3) * base * 0.6));
+const availableAtOf = (daysAgo: number) =>
+  new Date(Date.now() + (8 - daysAgo) * 86_400_000).toISOString();
+const daysAgoOf = (date: string) =>
+  Math.round((Date.parse(kstDate(0)) - Date.parse(date)) / 86_400_000);
+const label = (universe: (typeof MOCK_UNIVERSES)[number]) => ({
+  universeId: universe.universeId,
+  title: universe.title,
+  imageUrl: null,
+  active: true,
+});
+const sumOf = (base: number, from: number, to: number) => {
+  let sum = 0;
+  for (let d = from; d <= to; d += 1) sum += pointsOf(base, d);
+  return sum;
+};
 
 let sequence = 100;
 
@@ -240,7 +277,151 @@ export const earningHandlers = [
     () => new HttpResponse(null, { status: 204 }),
   ),
 
-  http.get(endpoint("/earnings/ledgers"), ({ request }) =>
+  http.get(/\/earnings\/redemptions\/[^/?]+(?:\?.*)?$/, ({ request }) => {
+    const no = pathValue(request.url, /\/earnings\/redemptions\/([^/]+)$/);
+    const item = ledgers.find((row) => row.redemptionNo === no);
+    return item
+      ? HttpResponse.json(redemptionDetail(item))
+      : error(
+          404,
+          "EARNING_REDEMPTION_NOT_FOUND",
+          "교환 신청을 찾을 수 없습니다.",
+        );
+  }),
+
+  http.get(endpoint("/earnings/calendar"), ({ request }) => {
+    const month = new URL(request.url).searchParams.get("month") ?? "";
+    const days: EarningCalendarDay[] = [];
+    for (let d = 1; d <= 60; d += 1) {
+      const date = kstDate(d);
+      if (!date.startsWith(month)) continue;
+      const points = MOCK_UNIVERSES.reduce(
+        (acc, u) => acc + pointsOf(u.base, d),
+        0,
+      );
+      if (points > 0) {
+        days.push({
+          date,
+          points,
+          settled: d >= 9,
+          availableAt: availableAtOf(d),
+        });
+      }
+    }
+    days.sort((a, b) => a.date.localeCompare(b.date));
+    return HttpResponse.json({
+      month,
+      total: days.reduce((acc, day) => acc + day.points, 0),
+      days,
+    });
+  }),
+
+  http.get(
+    /\/earnings\/calendar\/[^/]+\/universes(?:\?.*)?$/,
+    ({ request }) => {
+      const url = new URL(request.url);
+      const date =
+        pathValue(request.url, /\/earnings\/calendar\/([^/]+)\/universes$/) ??
+        "";
+      const offset = Number(url.searchParams.get("offset") ?? 0);
+      const limit = Number(url.searchParams.get("limit") ?? 5);
+      const d = daysAgoOf(date);
+      const all: EarningDayUniverse[] = MOCK_UNIVERSES.map((u) => ({
+        ...label(u),
+        points: pointsOf(u.base, d),
+        paidTurns: Math.round(pointsOf(u.base, d) / 1.14),
+      }))
+        .filter((row) => row.points > 0)
+        .sort((a, b) => b.points - a.points);
+      return HttpResponse.json({
+        items: all.slice(offset, offset + limit),
+        hasNext: offset + limit < all.length,
+      });
+    },
+  ),
+
+  http.get(/\/earnings\/universes\/[^/]+\/days(?:\?.*)?$/, ({ request }) => {
+    const month = new URL(request.url).searchParams.get("month") ?? "";
+    const id = pathValue(request.url, /\/earnings\/universes\/([^/]+)\/days$/);
+    const universe = MOCK_UNIVERSES.find((u) => u.universeId === id);
+    const days = [];
+    for (let d = 1; d <= 60 && universe; d += 1) {
+      const points = pointsOf(universe.base, d);
+      if (points > 0 && kstDate(d).startsWith(month)) {
+        days.push({
+          date: kstDate(d),
+          points,
+          paidTurns: Math.round(points / 1.14),
+          settled: d >= 9,
+          availableAt: availableAtOf(d),
+        });
+      }
+    }
+    return HttpResponse.json(days);
+  }),
+
+  http.get(/\/earnings\/universes\/[^/?]+(?:\?.*)?$/, ({ request }) => {
+    const id = pathValue(request.url, /\/earnings\/universes\/([^/]+)$/);
+    const universe = MOCK_UNIVERSES.find((u) => u.universeId === id);
+    if (!universe) {
+      return error(
+        404,
+        "EARNING_UNIVERSE_NOT_FOUND",
+        "수익 기록이 없는 캐릭터입니다.",
+      );
+    }
+    const total = sumOf(universe.base, 1, 60);
+    return HttpResponse.json({
+      ...label(universe),
+      week: sumOf(universe.base, 1, 7),
+      month: sumOf(universe.base, 1, 30),
+      total,
+      totalPaidTurns: Math.round(total / 1.14),
+    });
+  }),
+
+  http.get(endpoint("/earnings/universes"), ({ request }) => {
+    const url = new URL(request.url);
+    const sort = url.searchParams.get("sort") ?? "TOTAL";
+    const asc = url.searchParams.get("direction") === "ASC";
+    const keyword = (url.searchParams.get("keyword") ?? "").trim();
+    const page = Number(url.searchParams.get("page") ?? 0);
+    const size = Number(url.searchParams.get("size") ?? 20);
+    const rows: EarningUniverseRow[] = MOCK_UNIVERSES.filter(
+      (u) => !keyword || u.title.includes(keyword),
+    ).map((u) => {
+      const total = sumOf(u.base, 1, 60);
+      return {
+        ...label(u),
+        yesterday: pointsOf(u.base, 1),
+        week: sumOf(u.base, 1, 7),
+        month: sumOf(u.base, 1, 30),
+        total,
+        totalPaidTurns: Math.round(total / 1.14),
+      };
+    });
+    const key = {
+      YESTERDAY: "yesterday",
+      WEEK: "week",
+      MONTH: "month",
+      TOTAL: "total",
+    }[sort] as "yesterday" | "week" | "month" | "total";
+    rows.sort((a, b) => (asc ? a[key] - b[key] : b[key] - a[key]));
+    const content = rows.slice(page * size, page * size + size);
+    return HttpResponse.json({
+      page: {
+        number: page,
+        size,
+        numberOfElements: content.length,
+        hasNext: (page + 1) * size < rows.length,
+        totalElements: rows.length,
+        totalPages: Math.ceil(rows.length / size),
+      },
+      content,
+    });
+  }),
+
+  http.get(endpoint("/earnings/exchanges"), ({ request }) =>
     HttpResponse.json(monthSlice(new URL(request.url))),
   ),
 
@@ -270,8 +451,10 @@ export const earningHandlers = [
     }
 
     const now = new Date().toISOString();
+    const redemptionNo = `E000000G${String((sequence += 1)).padStart(8, "0")}`;
     const redemption: RewardRedemption = {
       redemptionId: String((sequence += 1)),
+      redemptionNo,
       productName: product.name,
       type: "GIFT_CARD",
       pointAmount: product.pointPrice,
@@ -288,6 +471,7 @@ export const earningHandlers = [
         type: "REDEEM",
         amount: -product.pointPrice,
         balanceAfter: summary.available,
+        redemptionNo,
         rewardType: "GIFT_CARD",
         productName: product.name,
         redemptionStatus: "REQUESTED",
@@ -308,6 +492,7 @@ export const earningHandlers = [
     }
 
     const now = new Date().toISOString();
+    const redemptionNo = `E000000N${String((sequence += 1)).padStart(8, "0")}`;
     summary.available -= cost;
     ledgers.unshift(
       ledger({
@@ -315,6 +500,7 @@ export const earningHandlers = [
         type: "REDEEM",
         amount: -cost,
         balanceAfter: summary.available,
+        redemptionNo,
         rewardType: "NOTE",
         productName: "노트 전환",
         noteAmount: notes,
@@ -324,6 +510,7 @@ export const earningHandlers = [
     );
     const redemption: RewardRedemption = {
       redemptionId: String((sequence += 1)),
+      redemptionNo,
       productName: "노트 전환",
       type: "NOTE",
       pointAmount: cost,

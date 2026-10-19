@@ -27,6 +27,17 @@ const nextConfig: NextConfig = {
   async headers() {
     return [{ source: "/:path*", headers: SECURITY_HEADERS }];
   },
+  /* 옛 '나의 수익' 주소는 크리에이터 센터로 옮겼다. 북마크·공유 링크가 깨지지 않게 돌린다. */
+  async redirects() {
+    return [
+      { source: "/earnings", destination: "/creator", permanent: true },
+      {
+        source: "/earnings/:path*",
+        destination: "/creator/:path*",
+        permanent: true,
+      },
+    ];
+  },
   experimental: {
     /*
      * 배럴 파일을 통과하는 임포트를 실제 사용한 모듈로만 좁힌다.

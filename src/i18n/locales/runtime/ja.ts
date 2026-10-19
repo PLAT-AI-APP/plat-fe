@@ -12,8 +12,11 @@ const ja: typeof en = {
     home: "キャラクターを探す",
     search: "検索",
     usageHistory: "利用履歴",
-    earnings: "マイ収益",
+    earnings: "クリエイターセンター",
     earningsTier: "クリエイターランク",
+    earningsExchange: "交換",
+    earningsCharacters: "キャラクター別収益",
+    earningsCharacter: "キャラクター収益",
     myReports: "通報履歴",
   },
   errorPage: {

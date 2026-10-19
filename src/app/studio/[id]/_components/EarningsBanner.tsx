@@ -14,7 +14,7 @@ const EarningsBanner = () => {
 
   return (
     <Link
-      href="/earnings"
+      href="/creator"
       className="flex items-center justify-between gap-4 rounded-3xl border border-main bg-darker px-5 py-4 transition-colors hover:bg-btn-hover"
     >
       <div className="flex flex-col gap-1">

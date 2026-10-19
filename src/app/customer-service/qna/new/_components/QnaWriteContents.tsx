@@ -21,8 +21,8 @@ const CONTENT_MAX_LENGTH = 1000;
 /** 서버 환불 사유 컬럼(255자)에 맞춘다. */
 const REFUND_REASON_MAX_LENGTH = 255;
 
-/** 작성 화면에서 고르는 문의 유형. 환불은 오류 신고와 기타 사이에 둔다. */
-const WRITE_CATEGORIES = ["ACCOUNT", "PAYMENT", "CHARACTER", "BUG", "REFUND", "ETC"] as const;
+/** 작성 화면에서 고르는 문의 유형. 환불·수익·교환은 오류 신고와 기타 사이에 둔다. */
+const WRITE_CATEGORIES = ["ACCOUNT", "PAYMENT", "CHARACTER", "BUG", "REFUND", "EARNING", "ETC"] as const;
 type WriteCategory = (typeof WRITE_CATEGORIES)[number];
 
 const QNA_LIST_PATH = "/customer-service/qna";
@@ -40,9 +40,11 @@ const isWriteCategory = (value: string | undefined): value is WriteCategory =>
 interface QnaWriteContentsProps {
   /** 주소로 받은 유형. 목록에 없는 값이면 기본 유형으로 연다. */
   initialCategory?: string;
+  /** 전환 내역에서 넘어온 내 교환 번호. 수익·교환 문의에 붙여 운영팀이 그 건을 찾는다. */
+  redemptionNo?: string;
 }
 
-const QnaWriteContents = ({ initialCategory }: QnaWriteContentsProps) => {
+const QnaWriteContents = ({ initialCategory, redemptionNo }: QnaWriteContentsProps) => {
   const t = useTranslations("customerService");
   const router = useRouter();
   const { mutate: postQna, isPending: isQnaPending } = usePostQnaMutation();
@@ -51,7 +53,11 @@ const QnaWriteContents = ({ initialCategory }: QnaWriteContentsProps) => {
   const [category, setCategory] = useState<WriteCategory>(
     isWriteCategory(initialCategory) ? initialCategory : WRITE_CATEGORIES[0],
   );
-  const [title, setTitle] = useState("");
+  // 전환 내역에서 왔으면 교환 번호로 제목을 채워 둔다. 이 값은 쓴 내용으로 보지 않는다.
+  const [initialTitle] = useState(() =>
+    redemptionNo ? t("write.redemptionTitle", { no: redemptionNo }) : "",
+  );
+  const [title, setTitle] = useState(initialTitle);
   const [content, setContent] = useState("");
   const [orderUid, setOrderUid] = useState<string | null>(null);
   // 서버가 거절한 칸별 사유. 고치면 그 칸의 사유는 지운다.
@@ -62,7 +68,7 @@ const QnaWriteContents = ({ initialCategory }: QnaWriteContentsProps) => {
 
   // 쓰던 내용이 있으면 떠나기 전에 묻는다. 환불 결제만 고른 것도 쓰던 것으로 본다.
   const isDirty =
-    title.trim().length > 0 || content.trim().length > 0 || orderUid !== null;
+    (title.trim().length > 0 && title !== initialTitle) || content.trim().length > 0 || orderUid !== null;
   const { allowLeave } = useUnsavedChangesGuard({ isDirty });
 
   /** 서버 검증 오류를 칸 아래에 단다. 칸에 붙일 수 없으면 토스트로 알린다. */
@@ -87,6 +93,7 @@ const QnaWriteContents = ({ initialCategory }: QnaWriteContentsProps) => {
   };
 
   const isRefund = category === "REFUND";
+  const attachRedemption = Boolean(redemptionNo) && category === "EARNING";
   const isPending = isQnaPending || isRefundPending;
   // 환불 사유는 기존 환불 신청과 같이 선택 입력이다.
   const canSubmit = isRefund
@@ -117,7 +124,13 @@ const QnaWriteContents = ({ initialCategory }: QnaWriteContentsProps) => {
     }
 
     postQna(
-      { category: category as QnaWritableCategory, title: title.trim(), content: content.trim() },
+      {
+        category: category as QnaWritableCategory,
+        title: title.trim(),
+        content: content.trim(),
+        // 교환 건은 수익·교환 문의에만 붙는다. 유형을 바꾸면 떼어 낸다.
+        ...(attachRedemption ? { redemptionNo } : {}),
+      },
       {
         onSuccess: () => {
           showAppToast("success", t("write.success"));
@@ -131,6 +144,8 @@ const QnaWriteContents = ({ initialCategory }: QnaWriteContentsProps) => {
   const handleChangeCategory = (next: WriteCategory) => {
     setCategory(next);
     setFieldErrors({});
+    // 교환 건은 수익·교환 문의에만 붙는다. 다른 유형으로 바꾸면 미리 채운 교환 제목도 거둔다.
+    if (initialTitle && next !== "EARNING" && title === initialTitle) setTitle("");
     // 환불 사유는 255자라 일반 문의에서 넘어오면 잘라 둔다.
     if (next === "REFUND") setContent((prev) => prev.slice(0, REFUND_REASON_MAX_LENGTH));
   };
@@ -156,6 +171,16 @@ const QnaWriteContents = ({ initialCategory }: QnaWriteContentsProps) => {
             ))}
           </div>
         </div>
+
+        {attachRedemption && (
+          <div className="flex flex-col gap-2">
+            <p className="title-5 text-font-1">{t("write.redemptionLabel")}</p>
+            <p className="body-5 flex items-center justify-between gap-3 rounded-xl border border-main px-4 py-3">
+              <span className="text-font-2">{t("qna.redemptionNo")}</span>
+              <span className="tabular-nums text-font-1">{redemptionNo}</span>
+            </p>
+          </div>
+        )}
 
         {isRefund ? (
           <>

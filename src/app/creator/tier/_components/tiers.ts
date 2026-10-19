@@ -10,7 +10,7 @@ import { CREATOR_TIER_BADGE } from "@/constants/creatorTier";
  * 승급 조건은 세 지표를 모두 채우는 것이고, 한 단계씩 직접 신청해 올라간다.
  */
 export type LadderCode = Exclude<CreatorTierCode, "NONE" | "ORIGIN">;
-export type TierCode = Exclude<CreatorTierCode, "NONE">;
+export type TierCode = CreatorTierCode;
 
 export const LADDER: LadderCode[] = [
   "DUST",
@@ -21,7 +21,9 @@ export const LADDER: LadderCode[] = [
 ];
 
 /** 등급 색은 뱃지와 카드 뒤 은은한 빛·승급 연출에만 쓴다. */
-const VISUAL: Record<TierCode, { color: string; badge: string }> = {
+const VISUAL: Record<TierCode, { color: string; badge: string | null }> = {
+  // 등급 없음은 뱃지가 없다.
+  NONE: { color: "#8590A6", badge: null },
   DUST: { color: "#8590A6", badge: CREATOR_TIER_BADGE.DUST },
   COMET: { color: "#19B26B", badge: CREATOR_TIER_BADGE.COMET },
   PLANET: { color: "#2E6FF0", badge: CREATOR_TIER_BADGE.PLANET },
@@ -34,7 +36,7 @@ export interface Tier {
   code: TierCode;
   name: string;
   color: string;
-  badge: string;
+  badge: string | null;
   /** 수익률(%) */
   rate: number;
   /** 신작 부스트(%), 공개 후 30일 */
@@ -52,6 +54,29 @@ export interface Tier {
 }
 
 export const bpsToPercent = (bps: number) => bps / 100;
+
+/**
+ * 등급 없음. 사다리 앞에 두어, 등급이 없을 때의 수익률(정책 기본)·보류 기간을 보여 준다.
+ * 신작 부스트는 등급이 있어야 붙으므로 없다(서버 AccrualTerms 와 같다).
+ */
+export const toNone = (
+  name: string,
+  shareBps: number,
+  holdDays: number,
+): Tier => ({
+  code: "NONE",
+  name,
+  ...VISUAL.NONE,
+  rate: bpsToPercent(shareBps),
+  boost: 0,
+  holdDays,
+  giftNotes: 0,
+  publicCharacters: 0,
+  paidChats: 0,
+  followers: 0,
+  benefits: [],
+  achievedAt: null,
+});
 
 export const toTier = (info: CreatorTierInfo, name: string): Tier => ({
   code: info.code,
@@ -127,8 +152,8 @@ export const benefitLinesOf = (
   const lines: BenefitLine[] = [
     { key: "rate", label: labels.rate, value: `${tier.rate}%` },
   ];
-  // 오리진은 부스트 없는 고정 비율이라 부스트 줄을 두지 않는다.
-  if (!tier.official) {
+  // 오리진은 부스트 없는 고정 비율, 등급 없음은 부스트가 없어 줄을 두지 않는다.
+  if (!tier.official && tier.code !== "NONE") {
     lines.push({ key: "boost", label: labels.boost, value: `+${tier.boost}%` });
   }
   lines.push({
