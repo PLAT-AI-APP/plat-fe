@@ -9,7 +9,7 @@ import { ChevronIcon } from "./DocsIcons";
 import { useDocs } from "./DocsProvider";
 import { docsPath, parseDocsPathname } from "./docsPath";
 
-const nodeKey = (node: Pick<DocsTreeNode, "type" | "id">) => `${node.type}:${node.id}`;
+const nodeKey = (node: Pick<DocsTreeNode, "type" | "slug">) => `${node.type}:${node.slug}`;
 
 /** 트리에서 대상 노드까지의 경로(자신 포함 조상 키). 없으면 빈 배열. */
 const findPath = (nodes: DocsTreeNode[], target: string): string[] => {
@@ -31,8 +31,8 @@ const DocsTree = ({ onNavigate }: { onNavigate?: () => void }) => {
   const pathname = usePathname();
   const current = parseDocsPathname(pathname);
   const activeKey =
-    current.id && (current.kind === "article" || current.kind === "category")
-      ? nodeKey({ type: current.kind === "article" ? "PAGE" : "GROUP", id: current.id })
+    current.slug && (current.kind === "article" || current.kind === "category")
+      ? nodeKey({ type: current.kind === "article" ? "PAGE" : "GROUP", slug: current.slug })
       : null;
   const activePath = useMemo(
     () => (activeKey ? findPath(tree, activeKey) : []),
@@ -66,8 +66,8 @@ const DocsTree = ({ onNavigate }: { onNavigate?: () => void }) => {
         const isActive = key === activeKey;
         const label = (isGroup ? node.name : node.title) ?? "";
         const href = isGroup
-          ? docsPath.category(locale, node.slug, node.id)
-          : docsPath.article(locale, node.slug, node.id);
+          ? docsPath.category(locale, node.slug)
+          : docsPath.article(locale, node.slug);
 
         return (
           <li key={key}>

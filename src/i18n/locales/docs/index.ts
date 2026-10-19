@@ -8,8 +8,8 @@ const MESSAGES: Record<DocsLocale, DocsMessages> = { ko, en };
 
 /**
  * 주소 locale 에 맞는 문서 화면 문구. 서버 컴포넌트에서 골라 클라이언트 컴포넌트에 props 로 넘긴다.
- * 지원 언어는 서버가 정하므로, 서버가 언어를 먼저 늘려 사이트에 문구가 아직 없으면 영어 문구를 쓴다
- * (본문 · 제목은 서버가 그 언어로 준다).
+ * 지원 언어는 문서 레포(docs.config.json)가 정하므로, 레포가 언어를 먼저 늘려 사이트에 문구가 아직 없으면 영어 문구를 쓴다
+ * (본문 · 제목은 문서 레포에 그 언어로 있다).
  */
 export const getDocsMessages = (locale: DocsLocale): DocsMessages => MESSAGES[locale] ?? MESSAGES.en;
 

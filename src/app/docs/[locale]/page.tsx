@@ -10,11 +10,11 @@ import { LogoWordmark } from "@/icons";
 import { formatDocsCount, getDocsMessages } from "@/i18n/locales/docs";
 
 /*
- * 첫 요청 때 그려 둔 화면을 30초 동안 그대로 내준다(ISR). 문서 사이 이동마다 서버가 다시 그리지 않고,
- * 링크 prefetch 가 화면 전체를 미리 받아 둔다. 미리 만들 주소는 없다(빌드 때 문서 서버에 묻지 않는다).
- * 게시 변경은 길어야 30초 남짓 뒤에 보인다(server.ts 의 데이터 캐시와 같은 주기).
+ * 첫 요청 때 그려 둔 화면을 60초 동안 그대로 내준다(ISR). 문서 사이 이동마다 서버가 다시 그리지 않고,
+ * 링크 prefetch 가 화면 전체를 미리 받아 둔다. 미리 만들 주소는 없다(빌드가 문서 레포에 기대지 않게 한다).
+ * 문서 변경은 GitHub raw 캐시(5분)와 이 주기(server.ts 의 데이터 캐시와 같다)를 지나 보인다.
  */
-export const revalidate = 30;
+export const revalidate = 60;
 
 export async function generateStaticParams(): Promise<{ locale: string }[]> {
   return [];
@@ -65,9 +65,9 @@ export default async function DocsHomePage({ params }: DocsHomeProps) {
         ) : (
           <ul className="flex flex-col gap-2">
             {groups.map((group, index) => (
-              <li key={group.id}>
+              <li key={group.slug}>
                 <Link
-                  href={docsPath.category(locale, group.slug, group.id)}
+                  href={docsPath.category(locale, group.slug)}
                   className="group -mx-3 flex items-center gap-6 rounded-2xl p-3 transition-colors hover:bg-btn-hover"
                 >
                   <div className="flex min-w-0 flex-1 flex-col gap-1.5">

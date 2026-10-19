@@ -4,7 +4,7 @@ import type { DocsLocale } from "@/api/docs/types";
 import { getDocsMessages } from "@/i18n/locales/docs";
 
 /**
- * 주소의 locale 조각을 문서 언어로 읽는다. 서버가 지원하는 언어가 아니면 null(페이지가 notFound).
+ * 주소의 locale 조각을 문서 언어로 읽는다. 문서 레포가 지원하는 언어가 아니면 null(페이지가 notFound).
  * 언어 목록은 요청 하나에서 한 번만 받는다(getDocsLocales 가 cache 로 묶여 있다).
  */
 export const readDocsLocale = async (value: string): Promise<DocsLocale | null> => {

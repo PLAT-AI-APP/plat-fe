@@ -23,7 +23,6 @@ const ko = {
   emptyHome: "아직 공개된 문서가 없습니다.",
   emptyCategory: "이 카테고리에는 아직 아티클이 없습니다.",
   tableOfContents: "이 페이지의 내용",
-  updatedAt: "{date} 업데이트",
   loading: "불러오는 중…",
   imageZoom: "이미지 크게 보기",
   imageViewer: "이미지 보기",

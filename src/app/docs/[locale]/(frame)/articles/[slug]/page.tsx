@@ -1,21 +1,21 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound, permanentRedirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { findDocsInOtherLocales, getDocsLocales, getDocsPage } from "@/api/docs/server";
 import DocsMarkdown from "@/components/docs/DocsMarkdown";
 import DocsToc from "@/components/docs/DocsToc";
 import DocsUntranslated from "@/components/docs/DocsUntranslated";
 import { buildDocsMetadata, readDocsLocale } from "@/components/docs/docsMetadata";
-import { docsPath, parseSlugId } from "@/components/docs/docsPath";
+import { docsPath } from "@/components/docs/docsPath";
 import { ChevronIcon } from "@/components/docs/DocsIcons";
-import { formatDocsMessage, getDocsMessages } from "@/i18n/locales/docs";
+import { getDocsMessages } from "@/i18n/locales/docs";
 
 /*
- * 첫 요청 때 그려 둔 화면을 30초 동안 그대로 내준다(ISR). 문서 사이 이동마다 서버가 다시 그리지 않고,
- * 링크 prefetch 가 화면 전체를 미리 받아 둔다. 미리 만들 주소는 없다(빌드 때 문서 서버에 묻지 않는다).
- * 게시 변경은 길어야 30초 남짓 뒤에 보인다(server.ts 의 데이터 캐시와 같은 주기).
+ * 첫 요청 때 그려 둔 화면을 60초 동안 그대로 내준다(ISR). 문서 사이 이동마다 서버가 다시 그리지 않고,
+ * 링크 prefetch 가 화면 전체를 미리 받아 둔다. 미리 만들 주소는 없다(빌드가 문서 레포에 기대지 않게 한다).
+ * 문서 변경은 GitHub raw 캐시(5분)와 이 주기(server.ts 의 데이터 캐시와 같다)를 지나 보인다.
  */
-export const revalidate = 30;
+export const revalidate = 60;
 
 export async function generateStaticParams(): Promise<{ locale: string; slug?: string }[]> {
   return [];
@@ -30,13 +30,12 @@ const ARTICLE_BODY_ID = "docs-article-body";
 const loadArticle = async (params: ArticlePageProps["params"]) => {
   const { locale: rawLocale, slug } = await params;
   const locale = await readDocsLocale(rawLocale);
-  const parsed = parseSlugId(slug);
-  if (!locale || !parsed) return null;
-  const page = await getDocsPage(locale, parsed.id);
-  if (page) return { locale, parsed, page, translations: [] };
+  if (!locale) return null;
+  const page = await getDocsPage(locale, slug);
+  if (page) return { locale, page, translations: [] };
   // 이 언어로는 없는 문서 — 다른 언어로 있으면 번역 없음 안내를, 어디에도 없으면 404 를 그린다.
-  const translations = await findDocsInOtherLocales(locale, (other) => getDocsPage(other, parsed.id));
-  return translations.length ? { locale, parsed, page: null, translations } : null;
+  const translations = await findDocsInOtherLocales(locale, (other) => getDocsPage(other, slug));
+  return translations.length ? { locale, page: null, translations } : null;
 };
 
 export async function generateMetadata({ params }: ArticlePageProps): Promise<Metadata> {
@@ -50,9 +49,9 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
     locale,
     title: page.title,
     description: page.summary,
-    path: docsPath.article(locale, page.slug, page.id),
+    path: docsPath.article(locale, page.slug),
     alternates: Object.fromEntries(
-      page.availableLocales.map((each) => [each, docsPath.article(each, page.slug, page.id)]),
+      page.availableLocales.map((each) => [each, docsPath.article(each, page.slug)]),
     ),
   });
 }
@@ -61,7 +60,7 @@ export async function generateMetadata({ params }: ArticlePageProps): Promise<Me
 export default async function DocsArticlePage({ params }: ArticlePageProps) {
   const loaded = await loadArticle(params);
   if (!loaded) notFound();
-  const { locale, parsed, page, translations } = loaded;
+  const { locale, page, translations } = loaded;
 
   if (!page) {
     const { locales } = await getDocsLocales();
@@ -73,21 +72,13 @@ export default async function DocsArticlePage({ params }: ArticlePageProps) {
           locale: each.locale,
           languageName: each.name,
           title: each.item.title,
-          href: docsPath.article(each.locale, each.item.slug, each.item.id),
+          href: docsPath.article(each.locale, each.item.slug),
         }))}
       />
     );
   }
 
-  if (parsed.slug !== page.slug) {
-    permanentRedirect(docsPath.article(locale, page.slug, page.id));
-  }
-
   const messages = getDocsMessages(locale);
-  const updatedAt = new Intl.DateTimeFormat(locale === "ko" ? "ko-KR" : "en-US", {
-    dateStyle: "long",
-    timeZone: "Asia/Seoul",
-  }).format(new Date(page.updatedAt));
 
   return (
     <>
@@ -97,10 +88,10 @@ export default async function DocsArticlePage({ params }: ArticlePageProps) {
             <nav aria-label="breadcrumb" className="mb-4">
               <ol className="body-6 flex flex-wrap items-center gap-1 text-font-2">
                 {page.breadcrumbs.map((crumb, index) => (
-                  <li key={crumb.id} className="flex items-center gap-1">
+                  <li key={crumb.slug} className="flex items-center gap-1">
                     {index > 0 && <ChevronIcon size={12} aria-hidden="true" className="text-font-disabled" />}
                     <Link
-                      href={docsPath.category(locale, crumb.slug, crumb.id)}
+                      href={docsPath.category(locale, crumb.slug)}
                       className="hover:text-font-1 hover:underline"
                     >
                       {crumb.name}
@@ -116,11 +107,6 @@ export default async function DocsArticlePage({ params }: ArticlePageProps) {
               {page.title}
             </h1>
             {page.summary && <p className="body-3 text-font-2">{page.summary}</p>}
-            <p className="body-7 text-font-disabled">
-              <time dateTime={page.updatedAt}>
-                {formatDocsMessage(messages.updatedAt, { date: updatedAt })}
-              </time>
-            </p>
           </header>
 
           <div id={ARTICLE_BODY_ID} className="body-3 mt-8 flex flex-col gap-4 break-words text-font-1">

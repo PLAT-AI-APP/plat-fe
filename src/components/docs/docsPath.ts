@@ -6,24 +6,6 @@ import type { DocsLocale } from "@/api/docs/types";
  */
 export const DOCS_BASE_PATH = "/docs";
 
-/** 주소의 `{slug}-{id}` 조각. slug 가 비어 있으면 id 만 쓴다. */
-export const toSlugId = (slug: string | null | undefined, id: string) =>
-  slug ? `${slug}-${id}` : id;
-
-/** `{slug}-{id}` 에서 마지막 `-` 뒤 숫자를 id 로 읽는다. 형식이 맞지 않으면 null. */
-export const parseSlugId = (value: string): { slug: string; id: string } | null => {
-  const decoded = (() => {
-    try {
-      return decodeURIComponent(value);
-    } catch {
-      return value;
-    }
-  })();
-  const match = decoded.match(/^(?:(.*)-)?(\d+)$/);
-  if (!match) return null;
-  return { slug: match[1] ?? "", id: match[2] };
-};
-
 /** 앱에서 문서로 들어갈 때 붙이는 앱 언어. 문서가 그 언어를 지원하면 그 언어 홈으로, 아니면 기본 언어로 간다. */
 export const DOCS_ENTRY_LANG_PARAM = "lang";
 
@@ -40,10 +22,8 @@ export const pickDocsEntryLocale = (
 
 export const docsPath = {
   home: (locale: DocsLocale) => `${DOCS_BASE_PATH}/${locale}`,
-  category: (locale: DocsLocale, slug: string | null | undefined, id: string) =>
-    `${DOCS_BASE_PATH}/${locale}/categories/${toSlugId(slug, id)}`,
-  article: (locale: DocsLocale, slug: string | null | undefined, id: string) =>
-    `${DOCS_BASE_PATH}/${locale}/articles/${toSlugId(slug, id)}`,
+  category: (locale: DocsLocale, slug: string) => `${DOCS_BASE_PATH}/${locale}/categories/${slug}`,
+  article: (locale: DocsLocale, slug: string) => `${DOCS_BASE_PATH}/${locale}/articles/${slug}`,
   search: (locale: DocsLocale, query?: string) => {
     const trimmed = query?.trim();
     return `${DOCS_BASE_PATH}/${locale}/search${
@@ -52,23 +32,18 @@ export const docsPath = {
   },
 };
 
-/** 현재 문서 주소의 종류와 id. 사이드바 강조·언어 전환이 주소만 보고 판단한다. */
+/** 현재 문서 주소의 종류와 slug. 사이드바 강조·언어 전환이 주소만 보고 판단한다. */
 export const parseDocsPathname = (
   pathname: string,
-): { locale: string; kind: "home" | "category" | "article" | "search" | "other"; id?: string } => {
+): { locale: string; kind: "home" | "category" | "article" | "search" | "other"; slug?: string } => {
   const rest = pathname.startsWith(DOCS_BASE_PATH)
     ? pathname.slice(DOCS_BASE_PATH.length)
     : pathname;
-  const [, locale = "", section, slugId] = rest.split("/");
+  const [, locale = "", section, slug] = rest.split("/");
   if (!section) return { locale, kind: "home" };
   if (section === "search") return { locale, kind: "search" };
-  if ((section === "categories" || section === "articles") && slugId) {
-    const parsed = parseSlugId(slugId);
-    return {
-      locale,
-      kind: section === "categories" ? "category" : "article",
-      id: parsed?.id,
-    };
+  if ((section === "categories" || section === "articles") && slug) {
+    return { locale, kind: section === "categories" ? "category" : "article", slug };
   }
   return { locale, kind: "other" };
 };
