@@ -151,7 +151,7 @@ const ko = {
       headline: "성인인증 한 번이면\n모든 이야기가 열려요",
       subtitle: "본인인증으로 만 19세 이상인지 확인해요.",
       benefitTime: "1분이면 끝나고, 1년 동안 유효해요.",
-      benefitPrivacy: "생년월일·성별만 확인해요. 이름과 연락처는 저장하지 않아요.",
+      benefitPrivacy: "생년월일·성별·휴대폰 번호를 확인해요. 이름은 저장하지 않고, 번호는 상품권 발송에만 써요.",
       benefitToggle: "인증을 마치면 성인 콘텐츠 표시를 바로 켤 수 있어요.",
       methodsLabel: "이런 방법으로 인증할 수 있어요",
       methods: {
@@ -214,6 +214,7 @@ const ko = {
       title: "가짜 본인인증",
       name: "이름",
       namePlaceholder: "홍길동",
+      phone: "휴대폰 번호",
       birth: "생년월일",
       gender: "성별",
       genderNone: "선택 안 함",

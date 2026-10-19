@@ -464,11 +464,12 @@ const ko = {
     },
     delivery: {
       label: "받는 방법",
+      phoneMissing: "본인인증한 번호가 없어요. 본인인증을 다시 해 주세요.",
       SMS: {
         name: "문자",
         field: "받는 번호",
         invalid: "받는 번호를 확인해 주세요",
-        privacy: "받는 번호는 상품권 발송에만 쓰고, 처리 후 30일이 지나면 끝 4자리만 남기고 파기해요.",
+        privacy: "본인인증한 번호로만 보내요.",
         notice: "3일 내 문자 발송",
         requested: "{recipient} 로 3일 안에 문자로 보내 드려요",
         sent: "문자 발송",
@@ -486,7 +487,7 @@ const ko = {
         name: "카카오 알림톡",
         field: "받는 번호",
         invalid: "받는 번호를 확인해 주세요",
-        privacy: "받는 번호는 상품권 발송에만 쓰고, 처리 후 30일이 지나면 끝 4자리만 남기고 파기해요.",
+        privacy: "본인인증한 번호로만 보내요.",
         notice: "3일 내 알림톡 발송",
         requested: "{recipient} 로 3일 안에 알림톡으로 보내 드려요",
         sent: "알림톡 발송",

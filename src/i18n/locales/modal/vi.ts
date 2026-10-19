@@ -159,7 +159,7 @@ const vi: typeof ko = {
       headline: "Xác minh tuổi một lần\nmở khóa mọi câu chuyện",
       subtitle: "Chúng tôi xác minh danh tính để kiểm tra bạn đủ 19 tuổi.",
       benefitTime: "Chỉ mất khoảng 1 phút và có hiệu lực 1 năm.",
-      benefitPrivacy: "Chỉ kiểm tra ngày sinh và giới tính. Không lưu tên và số điện thoại.",
+      benefitPrivacy: "Kiểm tra ngày sinh, giới tính và số điện thoại. Không lưu tên, số điện thoại chỉ dùng để gửi thẻ quà tặng.",
       benefitToggle: "Xác minh xong là bật hiển thị nội dung người lớn được ngay.",
       methodsLabel: "Phương thức xác minh",
       methods: {
@@ -222,6 +222,7 @@ const vi: typeof ko = {
       title: "Xác minh danh tính giả",
       name: "Họ tên",
       namePlaceholder: "Nguyễn Văn A",
+      phone: "Số điện thoại",
       birth: "Ngày sinh",
       gender: "Giới tính",
       genderNone: "Không chọn",

@@ -153,7 +153,7 @@ const zh: typeof ko = {
       headline: "完成一次成人认证\n即可解锁所有故事",
       subtitle: "通过实名认证确认您已年满19周岁。",
       benefitTime: "约1分钟即可完成，有效期1年。",
-      benefitPrivacy: "仅确认出生日期和性别，不保存姓名和联系方式。",
+      benefitPrivacy: "确认出生日期、性别和手机号码。不保存姓名，号码仅用于发送礼品卡。",
       benefitToggle: "认证后可立即开启成人内容显示。",
       methodsLabel: "可用的认证方式",
       methods: {
@@ -216,6 +216,7 @@ const zh: typeof ko = {
       title: "模拟实名认证",
       name: "姓名",
       namePlaceholder: "张三",
+      phone: "手机号码",
       birth: "出生日期",
       gender: "性别",
       genderNone: "不选择",

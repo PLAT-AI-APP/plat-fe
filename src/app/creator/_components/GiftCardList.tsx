@@ -13,42 +13,23 @@ import { cn, formatWithCommas } from "@/lib/utils";
 import FallbackImg from "@/components/image/FallbackImg";
 import { useRewardProductsQuery } from "@/api/earning/getRewardProducts";
 import { usePostRedemptionMutation } from "@/api/earning/postRedemption";
-import { useDeliveryChannelsQuery } from "@/api/earning/getDeliveryChannels";
+import { useDeliveryOptionsQuery } from "@/api/earning/getDeliveryOptions";
 import ClearInputButton from "@/components/ui/ClearInputButton";
 import type { RewardDeliveryChannel, RewardProduct } from "@/type/earning";
 
-/** 받는 방법마다 받는 곳의 입력 모양과 서버 검증과 같은 형식. */
-const RECIPIENT_FIELD: Record<
-  RewardDeliveryChannel,
-  {
-    pattern: RegExp;
-    inputType: "tel" | "email";
-    autoComplete: string;
-    placeholder: string;
-    maxLength: number;
-  }
-> = {
-  SMS: {
-    pattern: /^01[0-9]-?\d{3,4}-?\d{4}$/,
-    inputType: "tel",
-    autoComplete: "tel",
-    placeholder: "010-0000-0000",
-    maxLength: 13,
-  },
-  KAKAO_ALIMTALK: {
-    pattern: /^01[0-9]-?\d{3,4}-?\d{4}$/,
-    inputType: "tel",
-    autoComplete: "tel",
-    placeholder: "010-0000-0000",
-    maxLength: 13,
-  },
-  EMAIL: {
-    pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-    inputType: "email",
-    autoComplete: "email",
-    placeholder: "name@example.com",
-    maxLength: 100,
-  },
+/**
+ * 휴대폰으로 받는 방법. 번호를 입력받지 않고 본인인증한 번호로 보낸다 — 남의 번호로 상품권을 받아 가지 못하게.
+ */
+const PHONE_CHANNELS: ReadonlySet<RewardDeliveryChannel> = new Set([
+  "SMS",
+  "KAKAO_ALIMTALK",
+]);
+
+/** 받는 곳을 직접 적는 방법(이메일)의 입력 모양. 서버 검증과 같은 형식이다. */
+const EMAIL_FIELD = {
+  pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+  placeholder: "name@example.com",
+  maxLength: 100,
 };
 
 /** 받는 방법을 아직 못 받았을 때 쓰는 기본값. 서버도 지금은 문자만 연다. */
@@ -220,6 +201,8 @@ interface ConfirmModalProps {
   available: number;
   isSubmitting: boolean;
   channels: RewardDeliveryChannel[];
+  /** 본인인증 휴대폰 번호(가린 값). 없으면 휴대폰으로 받는 방법을 신청할 수 없다. */
+  verifiedPhone: string | null;
   /** 신청이 끝났으면 받는 방법·받는 곳. 있으면 완료 화면을 보여 준다. */
   requested?: RequestedDelivery;
   onClose: () => void;
@@ -307,6 +290,7 @@ const ExchangeConfirmModal = ({
   available,
   isSubmitting,
   channels,
+  verifiedPhone,
   requested,
   onClose,
   onConfirm,
@@ -315,18 +299,12 @@ const ExchangeConfirmModal = ({
   const [channel, setChannel] = useState<RewardDeliveryChannel>(
     channels[0] ?? DEFAULT_CHANNEL,
   );
-  const [recipient, setRecipient] = useState("");
-  const field = RECIPIENT_FIELD[channel];
-  const isRecipientValid = field.pattern.test(recipient);
-  const showRecipientError = recipient.length > 0 && !isRecipientValid;
-  const canSubmit = !isSubmitting && isRecipientValid;
-
-  const changeChannel = (next: RewardDeliveryChannel) => {
-    if (next === channel) return;
-    // 번호와 이메일은 서로 옮겨 쓸 수 없다. 받는 방법을 바꾸면 받는 곳도 비운다.
-    if (RECIPIENT_FIELD[next].inputType !== field.inputType) setRecipient("");
-    setChannel(next);
-  };
+  const [email, setEmail] = useState("");
+  const isPhoneChannel = PHONE_CHANNELS.has(channel);
+  const isEmailValid = EMAIL_FIELD.pattern.test(email);
+  const showEmailError = !isPhoneChannel && email.length > 0 && !isEmailValid;
+  const canSubmit =
+    !isSubmitting && (isPhoneChannel ? Boolean(verifiedPhone) : isEmailValid);
 
   const rows = [
     {
@@ -355,7 +333,11 @@ const ExchangeConfirmModal = ({
           onSubmit={(event) => {
             event.preventDefault();
             if (!canSubmit) return;
-            onConfirm({ channel, recipient });
+            onConfirm(
+              isPhoneChannel
+                ? { channel, recipient: verifiedPhone ?? "" }
+                : { channel, recipient: email },
+            );
           }}
         >
           <div className="flex items-center gap-3">
@@ -386,7 +368,7 @@ const ExchangeConfirmModal = ({
                       type="button"
                       role="radio"
                       aria-checked={isSelected}
-                      onClick={() => changeChannel(item)}
+                      onClick={() => setChannel(item)}
                       className={cn(
                         "body-6 h-9 rounded-full border px-4 transition-colors",
                         isSelected
@@ -402,53 +384,79 @@ const ExchangeConfirmModal = ({
             </div>
           </fieldset>
 
-          <div className="flex flex-col gap-1.5">
-            <label
-              htmlFor="earning-recipient"
-              className="body-6 text-font-2"
-            >
-              {t(`delivery.${channel}.field`)}
-            </label>
-            <div className="relative">
-              <input
-                id="earning-recipient"
-                type={field.inputType}
-                inputMode={field.inputType}
-                autoComplete={field.autoComplete}
-                value={recipient}
-                maxLength={field.maxLength}
-                placeholder={field.placeholder}
-                onChange={(event) => setRecipient(event.target.value.trim())}
-                aria-invalid={showRecipientError}
+          {isPhoneChannel ? (
+            <div className="flex flex-col gap-1.5">
+              <div className="body-5 flex items-center justify-between gap-3 rounded-lg bg-darkest px-4 py-3">
+                <span className="text-font-2">
+                  {t(`delivery.${channel}.field`)}
+                </span>
+                <span className="tabular-nums text-font-1">
+                  {verifiedPhone ?? "-"}
+                </span>
+              </div>
+              <p
                 className={cn(
-                  "body-5 h-11 w-full rounded-lg border border-main bg-darkest px-4 text-font-1",
-                  "placeholder:text-font-2/50 focus:border-brand transition-colors",
-                  recipient && "pr-11",
-                  showRecipientError &&
-                    "border-font-accents focus:border-font-accents",
+                  "body-7",
+                  verifiedPhone ? "text-font-2" : "text-font-accents",
                 )}
-              />
-              {recipient && (
-                <ClearInputButton
-                  onClear={() => setRecipient("")}
-                  className="absolute right-4 top-1/2 -translate-y-1/2"
-                />
-              )}
+              >
+                {verifiedPhone
+                  ? t(`delivery.${channel}.notice`)
+                  : t("delivery.phoneMissing")}
+              </p>
+              <p className="body-7 text-font-2">
+                {t(`delivery.${channel}.privacy`)}
+              </p>
             </div>
-            <p
-              className={cn(
-                "body-7",
-                showRecipientError ? "text-font-accents" : "text-font-2",
-              )}
-            >
-              {showRecipientError
-                ? t(`delivery.${channel}.invalid`)
-                : t(`delivery.${channel}.notice`)}
-            </p>
-            <p className="body-7 text-font-2">
-              {t(`delivery.${channel}.privacy`)}
-            </p>
-          </div>
+          ) : (
+            <div className="flex flex-col gap-1.5">
+              <label
+                htmlFor="earning-recipient"
+                className="body-6 text-font-2"
+              >
+                {t(`delivery.${channel}.field`)}
+              </label>
+              <div className="relative">
+                <input
+                  id="earning-recipient"
+                  type="email"
+                  inputMode="email"
+                  autoComplete="email"
+                  value={email}
+                  maxLength={EMAIL_FIELD.maxLength}
+                  placeholder={EMAIL_FIELD.placeholder}
+                  onChange={(event) => setEmail(event.target.value.trim())}
+                  aria-invalid={showEmailError}
+                  className={cn(
+                    "body-5 h-11 w-full rounded-lg border border-main bg-darkest px-4 text-font-1",
+                    "placeholder:text-font-2/50 focus:border-brand transition-colors",
+                    email && "pr-11",
+                    showEmailError &&
+                      "border-font-accents focus:border-font-accents",
+                  )}
+                />
+                {email && (
+                  <ClearInputButton
+                    onClear={() => setEmail("")}
+                    className="absolute right-4 top-1/2 -translate-y-1/2"
+                  />
+                )}
+              </div>
+              <p
+                className={cn(
+                  "body-7",
+                  showEmailError ? "text-font-accents" : "text-font-2",
+                )}
+              >
+                {showEmailError
+                  ? t(`delivery.${channel}.invalid`)
+                  : t(`delivery.${channel}.notice`)}
+              </p>
+              <p className="body-7 text-font-2">
+                {t(`delivery.${channel}.privacy`)}
+              </p>
+            </div>
+          )}
 
           <div className="grid grid-cols-2 gap-2">
             <Button
@@ -480,7 +488,8 @@ const GiftCardList = ({ available, identityVerified }: GiftCardListProps) => {
     setSelected(null);
     setRequested(undefined);
   };
-  const { data: channels = [] } = useDeliveryChannelsQuery();
+  const { data: deliveryOptions } = useDeliveryOptionsQuery();
+  const channels = deliveryOptions?.channels ?? [];
   const {
     data: products = [],
     isPending,
@@ -499,7 +508,10 @@ const GiftCardList = ({ available, identityVerified }: GiftCardListProps) => {
       {
         productId: product.productId,
         deliveryChannel: delivery.channel,
-        recipient: delivery.recipient,
+        // 휴대폰으로 받는 방법은 서버가 본인인증 번호를 쓴다. 적은 곳은 이메일만 보낸다.
+        ...(PHONE_CHANNELS.has(delivery.channel)
+          ? {}
+          : { recipient: delivery.recipient }),
       },
       {
         onSuccess: () => setRequested(delivery),
@@ -540,6 +552,7 @@ const GiftCardList = ({ available, identityVerified }: GiftCardListProps) => {
           available={available}
           isSubmitting={isSubmitting}
           channels={channels}
+          verifiedPhone={deliveryOptions?.verifiedPhone ?? null}
           requested={requested}
           onClose={closeModal}
           onConfirm={(delivery) => handleConfirm(selected, delivery)}

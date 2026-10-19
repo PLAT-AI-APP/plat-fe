@@ -386,11 +386,12 @@ const ja = {
     },
     delivery: {
       label: "受け取り方法",
+      phoneMissing: "本人認証した番号がありません。もう一度本人認証してください。",
       SMS: {
         name: "SMS",
         field: "受取番号",
         invalid: "受取番号を確認してください",
-        privacy: "受取番号はギフト券の送信にのみ使用し、処理から30日後に下4桁を残して破棄します。",
+        privacy: "本人認証した番号にのみ送信します。",
         notice: "3日以内にSMSで送信",
         requested: "{recipient} に3日以内にSMSでお送りします",
         sent: "SMS送信",
@@ -408,7 +409,7 @@ const ja = {
         name: "カカオトーク",
         field: "受取番号",
         invalid: "受取番号を確認してください",
-        privacy: "受取番号はギフト券の送信にのみ使用し、処理から30日後に下4桁を残して破棄します。",
+        privacy: "本人認証した番号にのみ送信します。",
         notice: "3日以内にカカオトークで送信",
         requested: "{recipient} に3日以内にカカオトークでお送りします",
         sent: "カカオトーク送信",

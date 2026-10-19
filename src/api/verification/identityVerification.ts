@@ -6,6 +6,7 @@ import type { AppError } from "@/api";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useUserStore } from "@/store/useUserStore";
 import { refreshWalletAfterReward } from "@/api/wallet/refreshWalletAfterReward";
+import { earningQueryKeys } from "@/api/earning/queryKeys";
 import { invalidateAdultScopedQueries } from "./invalidateAdultScopedQueries";
 import type {
   CompleteDevIdentityVerificationRequest,
@@ -74,6 +75,8 @@ export const useConfirmIdentityVerificationMutation = () => {
         birthLocked: true,
       });
       invalidateAdultScopedQueries(queryClient);
+      // 수익 요약의 인증 여부와 상품권 받는 번호(본인인증 휴대폰)가 바뀐다.
+      void queryClient.invalidateQueries({ queryKey: earningQueryKeys.all() });
       // 처음 성인인증을 마치면 보상 노트가 비동기로 들어온다. 잔액이 늘 때까지 짧게 다시 확인한다.
       if (result.adult) void refreshWalletAfterReward(queryClient);
     },

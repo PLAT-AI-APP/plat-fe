@@ -124,6 +124,12 @@ export type EarningLedgerListResponse = SliceWith<EarningLedgerItem>;
 /** 상품권 받는 방법. 서버가 고를 수 있는 것만 내려준다(지금은 SMS 뿐). */
 export type RewardDeliveryChannel = "SMS" | "EMAIL" | "KAKAO_ALIMTALK";
 
+/** 받는 방법 선택지. 휴대폰으로 받는 방법은 본인인증 번호(가린 값)로 보낸다. */
+export interface RewardDeliveryOptions {
+  channels: RewardDeliveryChannel[];
+  verifiedPhone: string | null;
+}
+
 /** 교환 상세. 받는 곳은 가운데가 가려져 온다. 단계는 상태와 신청 · 처리 시각으로 그린다. */
 export interface RedemptionDetail {
   redemptionNo: string;
@@ -203,7 +209,8 @@ export interface EarningUniverseDay {
 export interface RedeemGiftCardRequest {
   productId: string;
   deliveryChannel: RewardDeliveryChannel;
-  recipient: string;
+  /** 이메일처럼 받는 곳을 적는 방법만. 휴대폰으로 받는 방법은 서버가 본인인증 번호를 쓴다. */
+  recipient?: string;
 }
 
 export interface NoteConversionRequest {

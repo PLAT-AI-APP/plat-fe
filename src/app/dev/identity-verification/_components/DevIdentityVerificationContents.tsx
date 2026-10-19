@@ -70,6 +70,7 @@ const DevIdentityVerificationContents = () => {
   const [name, setName] = useState("");
   const [birth, setBirth] = useState("2000-01-01");
   const [gender, setGender] = useState<Gender>(null);
+  const [phone, setPhone] = useState("010-1234-5678");
   const [inputError, setInputError] = useState<string | null>(null);
   const [done, setDone] = useState<{ title: string; adult: boolean | null } | null>(null);
 
@@ -100,7 +101,10 @@ const DevIdentityVerificationContents = () => {
     setInputError(null);
 
     completeMutation.mutate(
-      { verificationId, body: { name: name.trim(), birth, gender } },
+      {
+        verificationId,
+        body: { name: name.trim(), birth, gender, phone: phone.trim() || undefined },
+      },
       {
         onSuccess: () => {
           if (!isRedirectMode && notifyOpener()) {
@@ -158,6 +162,19 @@ const DevIdentityVerificationContents = () => {
             onChange={(event) => setName(event.target.value)}
             placeholder={t("namePlaceholder")}
             maxLength={30}
+            autoComplete="off"
+            className={fieldClassName}
+          />
+        </label>
+
+        <label className="flex flex-col gap-2">
+          <span className="title-5 text-font-1">{t("phone")}</span>
+          <input
+            type="tel"
+            value={phone}
+            onChange={(event) => setPhone(event.target.value)}
+            placeholder="010-1234-5678"
+            maxLength={13}
             autoComplete="off"
             className={fieldClassName}
           />

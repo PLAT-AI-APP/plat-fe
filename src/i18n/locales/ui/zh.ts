@@ -382,11 +382,12 @@ const zh = {
     },
     delivery: {
       label: "接收方式",
+      phoneMissing: "没有已验证的手机号码。请重新进行身份验证。",
       SMS: {
         name: "短信",
         field: "接收号码",
         invalid: "请确认接收号码",
-        privacy: "接收号码仅用于发送礼品卡，处理30天后仅保留后4位并销毁。",
+        privacy: "仅发送至已验证的手机号码。",
         notice: "3天内短信发送",
         requested: "将在3天内以短信发送至 {recipient}",
         sent: "短信已发送",
@@ -404,7 +405,7 @@ const zh = {
         name: "KakaoTalk",
         field: "接收号码",
         invalid: "请确认接收号码",
-        privacy: "接收号码仅用于发送礼品卡，处理30天后仅保留后4位并销毁。",
+        privacy: "仅发送至已验证的手机号码。",
         notice: "3天内通过KakaoTalk发送",
         requested: "将在3天内通过KakaoTalk发送至 {recipient}",
         sent: "KakaoTalk已发送",

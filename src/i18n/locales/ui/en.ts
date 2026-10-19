@@ -392,11 +392,12 @@ const en = {
     },
     delivery: {
       label: "Delivery method",
+      phoneMissing: "No verified phone number. Please verify your identity again.",
       SMS: {
         name: "Text",
         field: "Phone number",
         invalid: "Check the phone number",
-        privacy: "Your number is used only to send the gift card and is masked (last 4 digits kept) 30 days after processing.",
+        privacy: "Sent only to your verified phone number.",
         notice: "Sent by text within 3 days",
         requested: "We'll text it to {recipient} within 3 days",
         sent: "Text sent",
@@ -414,7 +415,7 @@ const en = {
         name: "KakaoTalk",
         field: "Phone number",
         invalid: "Check the phone number",
-        privacy: "Your number is used only to send the gift card and is masked (last 4 digits kept) 30 days after processing.",
+        privacy: "Sent only to your verified phone number.",
         notice: "Sent via KakaoTalk within 3 days",
         requested: "We'll send it to {recipient} via KakaoTalk within 3 days",
         sent: "KakaoTalk sent",

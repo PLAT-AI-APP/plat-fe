@@ -386,11 +386,12 @@ const vi = {
     },
     delivery: {
       label: "Cách nhận",
+      phoneMissing: "Chưa có số điện thoại đã xác minh. Vui lòng xác minh danh tính lại.",
       SMS: {
         name: "SMS",
         field: "Số nhận",
         invalid: "Vui lòng kiểm tra số nhận",
-        privacy: "Số nhận chỉ dùng để gửi thẻ quà tặng và sẽ được che (giữ 4 số cuối) sau 30 ngày kể từ khi xử lý.",
+        privacy: "Chỉ gửi đến số điện thoại đã xác minh.",
         notice: "Gửi SMS trong 3 ngày",
         requested: "Chúng tôi sẽ gửi tin nhắn đến {recipient} trong 3 ngày",
         sent: "Đã gửi SMS",
@@ -408,7 +409,7 @@ const vi = {
         name: "KakaoTalk",
         field: "Số nhận",
         invalid: "Vui lòng kiểm tra số nhận",
-        privacy: "Số nhận chỉ dùng để gửi thẻ quà tặng và sẽ được che (giữ 4 số cuối) sau 30 ngày kể từ khi xử lý.",
+        privacy: "Chỉ gửi đến số điện thoại đã xác minh.",
         notice: "Gửi qua KakaoTalk trong 3 ngày",
         requested: "Chúng tôi sẽ gửi qua KakaoTalk đến {recipient} trong 3 ngày",
         sent: "Đã gửi KakaoTalk",

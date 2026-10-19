@@ -23,6 +23,8 @@ export interface CompleteDevIdentityVerificationRequest {
   /** YYYY-MM-DD */
   birth: string;
   gender: "MALE" | "FEMALE" | null;
+  /** 가짜 휴대폰 번호. 상품권 문자 발송 번호가 된다. */
+  phone?: string;
 }
 
 /** PATCH /users/me/adult-content 응답. */
