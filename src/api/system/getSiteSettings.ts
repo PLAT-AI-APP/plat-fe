@@ -18,7 +18,6 @@ export interface SiteSettings {
   supportHours: string;
   privacyOfficer: string;
   privacyOfficerContact: string;
-  hostingProvider: string;
   betaBannerEnabled: boolean;
   /** 언어 코드(대문자)별 배너 문구. 없는 언어는 기본 번역 문구를 쓴다. */
   betaBannerMessages: Partial<Record<TermsLanguage, string>>;

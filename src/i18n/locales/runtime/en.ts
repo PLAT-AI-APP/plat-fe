@@ -85,7 +85,6 @@ const en = {
     emailLabel: "Email",
     supportHoursLabel: "Hours",
     privacyOfficerLabel: "Chief Privacy Officer",
-    hostingProviderLabel: "Hosting provider",
     copyright: "© 2026 Orbitlab Co., Ltd. All rights reserved.",
   },
   searchBar: {

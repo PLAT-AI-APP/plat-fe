@@ -98,13 +98,6 @@ const Footer = () => {
           : privacyOfficer || privacyOfficerContact,
       ),
     },
-    {
-      id: "footer-hosting-provider",
-      text: labeled(
-        t("footer.hostingProviderLabel"),
-        pick(settings?.hostingProvider),
-      ),
-    },
   ].filter((item) => item.text);
 
   return (

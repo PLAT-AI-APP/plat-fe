@@ -82,7 +82,6 @@ const ja: typeof en = {
     emailLabel: "メール",
     supportHoursLabel: "営業時間",
     privacyOfficerLabel: "個人情報保護責任者",
-    hostingProviderLabel: "ホスティング事業者",
     copyright: "© 2026 Orbitlab Co., Ltd. All rights reserved.",
   },
   searchBar: {

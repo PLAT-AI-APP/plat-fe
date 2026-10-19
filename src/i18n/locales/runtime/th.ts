@@ -84,7 +84,6 @@ const th: typeof en = {
     emailLabel: "อีเมล",
     supportHoursLabel: "เวลาทำการ",
     privacyOfficerLabel: "เจ้าหน้าที่คุ้มครองข้อมูลส่วนบุคคล",
-    hostingProviderLabel: "ผู้ให้บริการโฮสติ้ง",
     copyright: "© 2026 Orbitlab Co., Ltd. All rights reserved.",
   },
   searchBar: {

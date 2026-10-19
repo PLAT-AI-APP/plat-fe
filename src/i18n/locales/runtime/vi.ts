@@ -84,7 +84,6 @@ const vi: typeof en = {
     emailLabel: "Email",
     supportHoursLabel: "Giờ làm việc",
     privacyOfficerLabel: "Người phụ trách bảo vệ thông tin cá nhân",
-    hostingProviderLabel: "Nhà cung cấp dịch vụ lưu trữ",
     copyright: "© 2026 Orbitlab Co., Ltd. All rights reserved.",
   },
   searchBar: {

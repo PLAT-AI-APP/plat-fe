@@ -83,7 +83,6 @@ const zh: typeof en = {
     emailLabel: "邮箱",
     supportHoursLabel: "服务时间",
     privacyOfficerLabel: "个人信息保护负责人",
-    hostingProviderLabel: "托管服务商",
     copyright: "© 2026 Orbitlab Co., Ltd. All rights reserved.",
   },
   searchBar: {

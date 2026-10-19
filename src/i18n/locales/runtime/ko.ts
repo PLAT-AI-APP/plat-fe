@@ -84,7 +84,6 @@ const ko: typeof en = {
     emailLabel: "이메일",
     supportHoursLabel: "운영시간",
     privacyOfficerLabel: "개인정보보호책임자",
-    hostingProviderLabel: "호스팅 제공자",
     copyright: "© 2026 Orbitlab Co., Ltd. All rights reserved.",
   },
   searchBar: {
