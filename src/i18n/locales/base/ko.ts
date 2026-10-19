@@ -70,6 +70,8 @@ const ko = {
         accountWithdrawn: "탈퇴한 계정입니다.",
         agreementRequired: "필수 약관에 모두 동의해 주세요.",
         rejoinRestricted: "탈퇴한 계정의 이메일은 탈퇴 후 7일이 지나야 다시 가입할 수 있습니다.",
+        emailUnavailable: "이미 다른 방법으로 가입된 이메일입니다. 처음 가입한 방법으로 로그인해 주세요.",
+        emailRequired: "소셜 계정에서 이메일을 받지 못했습니다. 이메일 제공에 동의한 뒤 다시 시도해 주세요.",
         internal: "내부 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
       },
     },
