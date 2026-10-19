@@ -21,7 +21,7 @@ const AuthClient = ({ code }: AuthClientProps) => {
     readProvider,
     () => null,
   );
-  const { mutate } = useSocialTokenMutation();
+  const { mutateAsync } = useSocialTokenMutation();
   const isRequested = useRef(false); // StrictMode에서 API가 두 번 중복 호출되는 것을 방어합니다.
   const [failureReason, setFailureReason] = useState<string | null>(null);
 
@@ -38,8 +38,11 @@ const AuthClient = ({ code }: AuthClientProps) => {
       );
     };
 
-    mutate(code, {
-      onSuccess: (data) =>
+    // mutate 의 호출별 콜백(onSuccess)은 쓰지 않는다. 개발 모드(StrictMode)는 effect 를 정리했다 다시 붙이는데,
+    // 그 사이 useMutation 의 구독이 끊겨 호출별 콜백이 사라진다 — 토큰은 받았는데 이 화면에 멈춰 있었다.
+    // 프로미스는 구독과 상관없이 끝나므로 결과를 여기서 받는다.
+    mutateAsync(code).then(
+      (data) =>
         afterMinimum(() => {
           const prevPath = takeReturnPath();
 
@@ -54,10 +57,10 @@ const AuthClient = ({ code }: AuthClientProps) => {
           router.replace(prevPath);
         }),
       // 코드가 만료됐거나 이미 쓰인 경우 등. 다른 화면으로 튕기지 않고 이 자리에서 연결이 끊기며 사유를 보여 준다.
-      onError: (error) =>
+      (error: unknown) =>
         afterMinimum(() => setFailureReason(resolveErrorMessage(error))),
-    });
-  }, [code, mutate, router]);
+    );
+  }, [code, mutateAsync, router]);
 
   if (failureReason !== null) {
     return <SocialLoginFailed reason={failureReason} skipIntro />;
