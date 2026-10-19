@@ -6,7 +6,9 @@ export type TermsDocumentType =
   | "TERMS_OF_SERVICE"
   | "PRIVACY_POLICY"
   | "YOUTH_PROTECTION"
-  | "REFUND_POLICY";
+  | "REFUND_POLICY"
+  /** 본인인증 정보 수집·이용 동의서. 본인인증 창 앞에서만 보인다. */
+  | "IDENTITY_VERIFICATION_CONSENT";
 
 export interface TermsHistoryItem {
   documentId: string;

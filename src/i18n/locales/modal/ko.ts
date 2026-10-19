@@ -28,7 +28,7 @@ const ko = {
     profileEdit: {
       title: "프로필 수정",
       optionalInfoNotice:
-        "생년월일·성별은 선택 항목이에요. 입력하지 않아도 모든 기능을 쓸 수 있고, 지우면 바로 삭제돼요.",
+        "생년월일·성별은 선택 항목이에요. 입력하면 본인인증 여부와 관계없이 맞춤 콘텐츠 추천에 쓰이고, 지우면 바로 삭제돼요.",
       changePassword: "비밀번호 변경",
       submit: "저장",
       invalidType: "jpg, png, webp 이미지 파일만 가능합니다.",
@@ -125,6 +125,8 @@ const ko = {
       unverified: "미인증",
     },
     field: {
+      phone: "휴대폰 번호",
+      changePhone: "번호 변경",
       remaining: "남은 유효기간",
       daysLeft: "D-{days}",
       title: "본인·성인인증",
@@ -141,6 +143,12 @@ const ko = {
       birthLocked: "본인인증된 생년월일이라 바꿀 수 없어요.",
     },
     modal: {
+      consent: {
+        label: "[필수] 본인인증 정보 수집·이용 동의",
+        view: "보기",
+        hide: "접기",
+        unavailable: "지금은 본인인증을 시작할 수 없어요. 잠시 후 다시 시도해 주세요.",
+      },
       identity: {
         headline: "본인인증 한 번이면\n1년 동안 든든해요",
         subtitle: "휴대폰·간편인증으로 본인 명의인지 확인해요.",

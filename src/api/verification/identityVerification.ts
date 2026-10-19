@@ -14,9 +14,11 @@ import type {
   StartIdentityVerificationResponse,
 } from "./types";
 
-const startIdentityVerification = async () => {
+/** consentDocumentId: 동의한 본인인증 정보 수집·이용 동의서. 서버가 시행 중인 버전인지 보고 인증 기록에 남긴다. */
+const startIdentityVerification = async (consentDocumentId: string) => {
   const response = await authAxios.post<StartIdentityVerificationResponse>(
     "/verifications/identity",
+    { consentDocumentId },
   );
 
   return response.data;
@@ -45,7 +47,7 @@ const completeDevIdentityVerification = async ({
 
 /** 본인인증 건을 연다. 실패 문구는 모달 안에 직접 그린다. */
 export const useStartIdentityVerificationMutation = () =>
-  useMutation<StartIdentityVerificationResponse, AppError>({
+  useMutation<StartIdentityVerificationResponse, AppError, string>({
     mutationKey: ["post-identity-verification-start"],
     mutationFn: startIdentityVerification,
     meta: { silent: true },
