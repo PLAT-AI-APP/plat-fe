@@ -16,6 +16,7 @@ import { useRewardProductsQuery } from "@/api/earning/getRewardProducts";
 import { usePostRedemptionMutation } from "@/api/earning/postRedemption";
 import { useDeliveryOptionsQuery } from "@/api/earning/getDeliveryOptions";
 import ClearInputButton from "@/components/ui/ClearInputButton";
+import { useModalStore } from "@/store/useModalStore";
 import Checkbox from "@/icons/Checkbox";
 import CheckboxEmpty from "@/icons/CheckboxEmpty";
 import { ArrowDown } from "@/icons";
@@ -28,6 +29,16 @@ import type {
 // 동의서 전문은 펼쳤을 때만 그린다. 약관 화면과 같은 렌더러를 쓴다.
 const MarkdownDocument = dynamic(
   () => import("@/components/markdown/MarkdownDocument"),
+  {
+    // loading 이 없으면 dynamic 이 자체 Suspense 경계를 두지 않아, 처음 펼칠 때 화면 전체가 잠깐 교체되며 깜빡인다.
+    loading: () => (
+      <div className="flex flex-col gap-2">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="skeleton h-4 w-full rounded" />
+        ))}
+      </div>
+    ),
+  },
 );
 
 /**
@@ -215,7 +226,7 @@ interface ConfirmModalProps {
   available: number;
   isSubmitting: boolean;
   channels: RewardDeliveryChannel[];
-  /** 본인인증 휴대폰 번호(가린 값). 없으면 휴대폰으로 받는 방법을 신청할 수 없다. */
+  /** 본인인증 휴대폰 번호. 없으면 휴대폰으로 받는 방법을 신청할 수 없다. */
   verifiedPhone: string | null;
   /** 동의받을 상품권 발송 개인정보 수집·이용 동의서. 없으면 신청할 수 없다. */
   consent: RewardDeliveryOptions["consent"];
@@ -224,18 +235,6 @@ interface ConfirmModalProps {
   onClose: () => void;
   onConfirm: (delivery: RequestedDelivery) => void;
 }
-
-/** 010-1234-5678 → 010-****-5678, name@plat.so → na***@plat.so. 완료 화면에 받는 곳 전체를 다시 띄우지 않는다. */
-const maskRecipient = ({ channel, recipient }: RequestedDelivery) => {
-  if (channel === "EMAIL") {
-    const at = recipient.indexOf("@");
-    if (at < 0) return recipient;
-    return `${recipient.slice(0, Math.min(2, at))}***${recipient.slice(at)}`;
-  }
-  const digits = recipient.replace(/\D/g, "");
-  if (digits.length < 8) return recipient;
-  return `${digits.slice(0, 3)}-****-${digits.slice(-4)}`;
-};
 
 /** 신청 완료 — 상품권이 뒤집히며 체크가 그려지고 발송 안내가 떠오른다 */
 const ExchangeDone = ({
@@ -284,7 +283,7 @@ const ExchangeDone = ({
         <h2 className="title-2 text-font-1">{t("exchange.requested")}</h2>
         <p className="body-5 text-font-2 break-keep">
           {t(`delivery.${requested.channel}.requested`, {
-            recipient: maskRecipient(requested),
+            recipient: requested.recipient,
           })}
         </p>
       </m.div>
@@ -313,6 +312,7 @@ const ExchangeConfirmModal = ({
   onConfirm,
 }: ConfirmModalProps) => {
   const t = useTranslations("earnings");
+  const openModal = useModalStore((state) => state.openModal);
   const [channel, setChannel] = useState<RewardDeliveryChannel>(
     channels[0] ?? DEFAULT_CHANNEL,
   );
@@ -408,27 +408,28 @@ const ExchangeConfirmModal = ({
 
           {isPhoneChannel ? (
             <div className="flex flex-col gap-1.5">
-              <div className="body-5 flex items-center justify-between gap-3 rounded-lg bg-darkest px-4 py-3">
+              <div className="body-5 flex min-h-12 items-center justify-between gap-3 rounded-lg bg-darkest px-4 py-2">
                 <span className="text-font-2">
                   {t(`delivery.${channel}.field`)}
                 </span>
-                <span className="tabular-nums text-font-1">
-                  {verifiedPhone ?? "-"}
-                </span>
-              </div>
-              <p
-                className={cn(
-                  "body-7",
-                  verifiedPhone ? "text-font-2" : "text-font-accents",
+                {verifiedPhone ? (
+                  <span className="tabular-nums text-font-1">
+                    {verifiedPhone}
+                  </span>
+                ) : (
+                  // 번호는 본인인증한 본인 명의 번호만 쓴다. 인증하면 이 화면의 번호도 다시 받는다.
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="sm"
+                    onClick={() =>
+                      openModal("IDENTITY_VERIFICATION", { purpose: "identity" })
+                    }
+                  >
+                    {t("delivery.verifyPhone")}
+                  </Button>
                 )}
-              >
-                {verifiedPhone
-                  ? t(`delivery.${channel}.notice`)
-                  : t("delivery.phoneMissing")}
-              </p>
-              <p className="body-7 text-font-2">
-                {t(`delivery.${channel}.privacy`)}
-              </p>
+              </div>
             </div>
           ) : (
             <div className="flex flex-col gap-1.5">
@@ -464,19 +465,11 @@ const ExchangeConfirmModal = ({
                   />
                 )}
               </div>
-              <p
-                className={cn(
-                  "body-7",
-                  showEmailError ? "text-font-accents" : "text-font-2",
-                )}
-              >
-                {showEmailError
-                  ? t(`delivery.${channel}.invalid`)
-                  : t(`delivery.${channel}.notice`)}
-              </p>
-              <p className="body-7 text-font-2">
-                {t(`delivery.${channel}.privacy`)}
-              </p>
+              {showEmailError && (
+                <p className="body-7 text-font-accents">
+                  {t(`delivery.${channel}.invalid`)}
+                </p>
+              )}
             </div>
           )}
 
@@ -490,7 +483,7 @@ const ExchangeConfirmModal = ({
                   className="flex min-w-0 items-center gap-2 text-left"
                 >
                   {isConsentAgreed ? <Checkbox /> : <CheckboxEmpty />}
-                  <span className="body-6 break-keep text-font-1">
+                  <span className="body-6 truncate text-font-1">
                     {t("consent.label")}
                   </span>
                 </button>

@@ -124,7 +124,7 @@ export type EarningLedgerListResponse = SliceWith<EarningLedgerItem>;
 /** 상품권 받는 방법. 서버가 고를 수 있는 것만 내려준다(지금은 SMS 뿐). */
 export type RewardDeliveryChannel = "SMS" | "EMAIL" | "KAKAO_ALIMTALK";
 
-/** 받는 방법 선택지. 휴대폰으로 받는 방법은 본인인증 번호(가린 값)로 보낸다. */
+/** 받는 방법 선택지. 휴대폰으로 받는 방법은 본인인증 번호로 보낸다. */
 export interface RewardDeliveryOptions {
   channels: RewardDeliveryChannel[];
   verifiedPhone: string | null;
