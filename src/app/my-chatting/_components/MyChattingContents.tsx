@@ -2,9 +2,9 @@
 
 import React, { useState } from "react";
 import { useTranslations } from "next-intl";
-import { cn } from "@/lib/utils";
-import { Close, Search } from "@/icons";
+import { Search } from "@/icons";
 import ChattingList from "./ChattingList";
+import ClearInputButton from "@/components/ui/ClearInputButton";
 
 const MyChattingContents = () => {
   const t = useTranslations();
@@ -35,18 +35,11 @@ const MyChattingContents = () => {
             placeholder={isSearchFocused ? "" : t("myChatting.searchPlaceholder")}
             className="focus-ring-none body-5 min-w-0 flex-1 appearance-none bg-transparent text-font-1 outline-none placeholder:text-font-disabled [&::-webkit-search-cancel-button]:appearance-none"
           />
-          <button
-            type="button"
-            onMouseDown={(event) => event.preventDefault()}
-            onClick={() => setSearchQuery("")}
-            aria-label={t("myChatting.clearSearch")}
-            className={cn(
-              "flex size-4 shrink-0 items-center justify-center text-font-2 transition hover:text-font-1",
-              searchQuery ? "opacity-100" : "pointer-events-none opacity-0",
-            )}
-          >
-            <Close className="size-3" aria-hidden="true" />
-          </button>
+          <ClearInputButton
+            visible={Boolean(searchQuery)}
+            onClear={() => setSearchQuery("")}
+            label={t("myChatting.clearSearch")}
+          />
         </label>
       </header>
 

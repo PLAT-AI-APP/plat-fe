@@ -1,7 +1,8 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { Close, CloseLine, Search } from "@/icons";
+import { CloseLine, Search } from "@/icons";
+import ClearInputButton from "@/components/ui/ClearInputButton";
 
 interface SearchQueryBarProps {
   queryDraft: string;
@@ -42,14 +43,12 @@ const SearchQueryBar = ({
           />
         </div>
 
-        <button
-          type="button"
-          aria-label={t("searchResults.close")}
-          onClick={() => onQueryDraftChange("")}
-          className="flex size-7 shrink-0 items-center justify-center opacity-24 transition-opacity hover:opacity-60"
-        >
-          <Close className="size-4 text-font-2" />
-        </button>
+        <ClearInputButton
+          visible={Boolean(queryDraft)}
+          label={t("searchResults.close")}
+          onClear={() => onQueryDraftChange("")}
+          className="size-6"
+        />
       </form>
 
       {keywords.length > 0 && (

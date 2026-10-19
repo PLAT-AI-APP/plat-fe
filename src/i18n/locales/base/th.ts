@@ -3,7 +3,7 @@ import type ko from "./ko";
 
 const th: typeof ko = {
   ...en,
-  common: { confirm: "ยืนยัน", cancel: "ยกเลิก", optional: "(ไม่บังคับ)" },
+  common: { confirm: "ยืนยัน", cancel: "ยกเลิก", optional: "(ไม่บังคับ)", clearInput: "ล้างข้อความ" },
   languages: {
     ko: "เกาหลี",
     en: "English",
@@ -69,6 +69,8 @@ const th: typeof ko = {
         accountWithdrawn: "บัญชีนี้ถูกลบแล้ว",
         agreementRequired: "โปรดยอมรับข้อกำหนดที่จำเป็นทั้งหมด",
         rejoinRestricted: "คุณสามารถสมัครใหม่ด้วยอีเมลนี้ได้หลังจากลบบัญชีครบ 7 วัน",
+        emailUnavailable: "อีเมลนี้ลงทะเบียนด้วยวิธีอื่นแล้ว กรุณาเข้าสู่ระบบด้วยวิธีที่ใช้สมัครครั้งแรก",
+        emailRequired: "ไม่ได้รับอีเมลจากบัญชีโซเชียล กรุณาอนุญาตให้แชร์อีเมลแล้วลองอีกครั้ง",
         internal: "เกิดข้อผิดพลาด โปรดลองอีกครั้งในภายหลัง",
       },
     },

@@ -3,7 +3,7 @@ import type ko from "./ko";
 
 const ja: typeof ko = {
   ...en,
-  common: { confirm: "確認", cancel: "キャンセル", optional: "（任意）" },
+  common: { confirm: "確認", cancel: "キャンセル", optional: "（任意）", clearInput: "入力を消去" },
   languages: {
     ko: "韓国語",
     en: "English",
@@ -69,6 +69,8 @@ const ja: typeof ko = {
         accountWithdrawn: "退会済みのアカウントです。",
         agreementRequired: "必須の規約にすべて同意してください。",
         rejoinRestricted: "退会したアカウントのメールアドレスは、退会から7日後に再登録できます。",
+        emailUnavailable: "このメールアドレスは別の方法で登録済みです。最初に登録した方法でログインしてください。",
+        emailRequired: "ソーシャルアカウントからメールアドレスを取得できませんでした。メールアドレスの提供に同意して、もう一度お試しください。",
         internal: "内部エラーが発生しました。しばらくしてからもう一度お試しください。",
       },
     },

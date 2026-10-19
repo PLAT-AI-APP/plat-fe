@@ -24,6 +24,7 @@ interface UserProfileResponse {
   adultVerifiedUntil?: string | null;
   adultContentEnabled?: boolean;
   birthLocked?: boolean;
+  identityVerifiedPhone?: string | null;
 }
 
 const normalizeUserInfo = (user: UserProfileResponse): UserInfo => ({
@@ -41,6 +42,7 @@ const normalizeUserInfo = (user: UserProfileResponse): UserInfo => ({
   adultVerifiedUntil: user.adultVerifiedUntil ?? null,
   adultContentEnabled: user.adultContentEnabled ?? false,
   birthLocked: user.birthLocked ?? false,
+  identityVerifiedPhone: user.identityVerifiedPhone ?? null,
 });
 
 const GetMyInfo = async () => {

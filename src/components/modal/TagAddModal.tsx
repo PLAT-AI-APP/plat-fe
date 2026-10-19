@@ -19,6 +19,7 @@ import { useModalStore } from "@/store/useModalStore";
 import { TagAddModalProps } from "@/type/modal";
 import IconButton from "@/components/ui/IconButton";
 import { EmptyState, ErrorState } from "@/components/state";
+import ClearInputButton from "@/components/ui/ClearInputButton";
 
 /** isAdult 는 화면 판단용이라 폼 값(tagIds)에는 id·label 만 담는다. */
 type TagOption = { id: string; label: string; isAdult?: boolean };
@@ -185,7 +186,7 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
             type="text"
             value={searchKeyword}
             className={cn(
-              "focus-ring-none body-5 h-10 w-full rounded-xl px-4 pl-10 text-font-1 outline-none transition-colors placeholder:text-font-disabled focus:field-focus!",
+              "focus-ring-none body-5 h-10 w-full rounded-xl px-4 pl-10 pr-11 text-font-1 outline-none transition-colors placeholder:text-font-disabled focus:field-focus!",
               shouldShowSearchPrefix && "pl-14",
               searchKeyword
                 ? "border border-transparent bg-card"
@@ -206,6 +207,12 @@ const TagAddModal = ({ onClose }: TagAddModalProps) => {
             <span className="body-5 pointer-events-none absolute left-10 text-font-1">
               #
             </span>
+          )}
+          {searchKeyword && (
+            <ClearInputButton
+              onClear={() => setSearchKeyword("")}
+              className="absolute right-4"
+            />
           )}
         </div>
 

@@ -27,6 +27,8 @@ export interface UserInfo {
   adultContentEnabled?: boolean;
   /** 본인인증으로 생년월일이 확정돼 바꿀 수 없다. */
   birthLocked?: boolean;
+  /** 본인인증한 휴대폰 번호. 바꾸려면 본인인증을 다시 한다. */
+  identityVerifiedPhone?: string | null;
 }
 
 interface UserState {

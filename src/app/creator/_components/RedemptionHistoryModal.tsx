@@ -64,7 +64,7 @@ interface Step {
 }
 
 /**
- * 단계. 상품권: 신청 접수 → 발송 준비(운영팀 처리) → 문자 발송. 노트: 신청 접수 → 노트 지급.
+ * 단계. 상품권: 신청 접수 → 발송 준비(운영팀 처리) → 받는 방법으로 발송. 노트: 신청 접수 → 노트 지급.
  * 반려면 신청 접수 → 반려 → 포인트 환불(반려와 같은 시각)로 끝난다.
  */
 const stepsOf = (item: RedemptionDetail): Step[] => {
@@ -139,7 +139,9 @@ const Steps = ({ item }: { item: RedemptionDetail }) => {
                   step.tone === "accent" && "text-font-accents",
                 )}
               >
-                {t(`exchanges.steps.${step.key}`)}
+                {step.key === "sent"
+                  ? t(`delivery.${item.deliveryChannel ?? "SMS"}.sent`)
+                  : t(`exchanges.steps.${step.key}`)}
               </span>
               {/* 시각이 없는 단계도 같은 높이가 되도록 줄 자리를 남긴다. */}
               <time
@@ -244,19 +246,29 @@ const RedemptionDetailView = ({ redemptionNo }: { redemptionNo: string }) => {
                     },
                   ]
                 : []),
-              ...(data.recipientPhone
-                ? [{ key: "phone", value: data.recipientPhone }]
+              ...(data.recipient
+                ? [
+                    {
+                      key: "recipient",
+                      label: t(
+                        `delivery.${data.deliveryChannel ?? "SMS"}.field`,
+                      ),
+                      value: data.recipient,
+                    },
+                  ]
                 : []),
               {
                 key: "requestedAt",
                 value: dayjs(data.requestedAt).format(t("dateTimeFormat")),
               },
-            ].map((row) => (
+            ].map((row: { key: string; label?: string; value: string }) => (
               <div
                 key={row.key}
                 className="body-5 flex items-center justify-between gap-3 py-3"
               >
-                <dt className="text-font-2">{t(`exchanges.${row.key}`)}</dt>
+                <dt className="text-font-2">
+                  {row.label ?? t(`exchanges.${row.key}`)}
+                </dt>
                 <dd className="tabular-nums">{row.value}</dd>
               </div>
             ))}

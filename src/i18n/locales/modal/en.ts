@@ -31,7 +31,7 @@ const en: typeof ko = {
     profileEdit: {
       title: "Edit profile",
       optionalInfoNotice:
-        "Birth date and gender are optional. You can use every feature without them, and clearing them deletes them right away.",
+        "Birth date and gender are optional. If entered, they're used for personalized content recommendations whether or not you've verified your identity, and are deleted as soon as you clear them.",
       changePassword: "Change password",
       submit: "Save",
       invalidType: "Only jpg, png, and webp image files are supported.",
@@ -132,6 +132,8 @@ const en: typeof ko = {
       unverified: "Not verified",
     },
     field: {
+      phone: "Phone number",
+      changePhone: "Change",
       remaining: "Remaining validity",
       daysLeft: "D-{days}",
       title: "Identity & age verification",
@@ -148,6 +150,12 @@ const en: typeof ko = {
       birthLocked: "This date of birth was verified and can't be changed.",
     },
     modal: {
+      consent: {
+        label: "[Required] Consent to collect and use identity verification data",
+        view: "View",
+        hide: "Hide",
+        unavailable: "Identity verification isn't available right now. Please try again later.",
+      },
       identity: {
         headline: "Verify your identity once,\nstay covered for a year",
         subtitle: "Confirm it's really you with your phone or a simple sign-in app.",
@@ -158,7 +166,7 @@ const en: typeof ko = {
       headline: "One adult verification\nunlocks every story",
       subtitle: "We check you're 19 or older with an identity verification.",
       benefitTime: "Takes about a minute and stays valid for a year.",
-      benefitPrivacy: "We only check your birth date and gender. Your name and phone number aren't stored.",
+      benefitPrivacy: "We check your birth date, gender and phone number. Your name isn't stored, and the number is used only to send gift cards.",
       benefitToggle: "Once verified, you can turn on adult content right away.",
       methodsLabel: "Verify with",
       methods: {
@@ -221,6 +229,7 @@ const en: typeof ko = {
       title: "Fake identity verification",
       name: "Name",
       namePlaceholder: "Jane Doe",
+      phone: "Phone number",
       birth: "Date of birth",
       gender: "Gender",
       genderNone: "Not specified",

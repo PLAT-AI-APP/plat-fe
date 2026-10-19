@@ -31,7 +31,7 @@ const ja: typeof ko = {
     profileEdit: {
       title: "プロフィール修正",
       optionalInfoNotice:
-        "生年月日・性別は任意項目です。入力しなくてもすべての機能を使え、消去するとすぐに削除されます。",
+        "生年月日・性別は任意項目です。入力すると本人認証の有無にかかわらずおすすめコンテンツに使われ、消すとすぐに削除されます。",
       changePassword: "パスワード変更",
       submit: "保存",
       invalidType: "jpg、png、webp画像ファイルのみ使用できます。",
@@ -129,6 +129,8 @@ const ja: typeof ko = {
       unverified: "未認証",
     },
     field: {
+      phone: "携帯電話番号",
+      changePhone: "番号を変更",
       remaining: "残りの有効期間",
       daysLeft: "残り{days}日",
       title: "本人認証・成人認証",
@@ -145,6 +147,12 @@ const ja: typeof ko = {
       birthLocked: "本人認証済みの生年月日のため変更できません。",
     },
     modal: {
+      consent: {
+        label: "[必須] 本人認証情報の収集・利用への同意",
+        view: "表示",
+        hide: "閉じる",
+        unavailable: "現在本人認証を開始できません。しばらくしてからもう一度お試しください。",
+      },
       identity: {
         headline: "本人認証は一度だけ\n1年間安心です",
         subtitle: "携帯電話や簡単認証で、ご本人の名義か確認します。",
@@ -155,7 +163,7 @@ const ja: typeof ko = {
       headline: "成人認証ひとつで\nすべての物語が開きます",
       subtitle: "本人認証で19歳以上かを確認します。",
       benefitTime: "約1分で完了し、1年間有効です。",
-      benefitPrivacy: "生年月日と性別のみ確認します。名前と連絡先は保存しません。",
+      benefitPrivacy: "生年月日・性別・携帯電話番号を確認します。名前は保存せず、番号はギフト券の送信にのみ使います。",
       benefitToggle: "認証後すぐに成人向けコンテンツの表示をオンにできます。",
       methodsLabel: "利用できる認証方法",
       methods: {
@@ -218,6 +226,7 @@ const ja: typeof ko = {
       title: "偽の本人認証",
       name: "名前",
       namePlaceholder: "山田太郎",
+      phone: "携帯電話番号",
       birth: "生年月日",
       gender: "性別",
       genderNone: "選択しない",

@@ -32,7 +32,7 @@ const vi: typeof ko = {
     profileEdit: {
       title: "Chỉnh sửa hồ sơ",
       optionalInfoNotice:
-        "Ngày sinh và giới tính là không bắt buộc. Bạn vẫn dùng được mọi tính năng khi không nhập, và dữ liệu bị xóa ngay khi bạn xóa trống.",
+        "Ngày sinh và giới tính là mục tùy chọn. Nếu nhập, chúng được dùng để gợi ý nội dung phù hợp dù bạn đã xác minh danh tính hay chưa, và bị xóa ngay khi bạn xóa đi.",
       changePassword: "Đổi mật khẩu",
       submit: "Lưu",
       invalidType: "Chỉ hỗ trợ file ảnh jpg, png, webp.",
@@ -133,6 +133,8 @@ const vi: typeof ko = {
       unverified: "Chưa xác minh",
     },
     field: {
+      phone: "Số điện thoại",
+      changePhone: "Đổi số",
       remaining: "Thời hạn còn lại",
       daysLeft: "Còn {days} ngày",
       title: "Xác minh danh tính & độ tuổi",
@@ -149,6 +151,12 @@ const vi: typeof ko = {
       birthLocked: "Ngày sinh này đã được xác minh danh tính nên không thể thay đổi.",
     },
     modal: {
+      consent: {
+        label: "[Bắt buộc] Đồng ý thu thập và sử dụng thông tin xác minh danh tính",
+        view: "Xem",
+        hide: "Ẩn",
+        unavailable: "Hiện chưa thể bắt đầu xác minh danh tính. Vui lòng thử lại sau.",
+      },
       identity: {
         headline: "Xác minh danh tính một lần\nyên tâm suốt 1 năm",
         subtitle: "Xác nhận chính chủ qua điện thoại hoặc xác thực nhanh.",
@@ -159,7 +167,7 @@ const vi: typeof ko = {
       headline: "Xác minh tuổi một lần\nmở khóa mọi câu chuyện",
       subtitle: "Chúng tôi xác minh danh tính để kiểm tra bạn đủ 19 tuổi.",
       benefitTime: "Chỉ mất khoảng 1 phút và có hiệu lực 1 năm.",
-      benefitPrivacy: "Chỉ kiểm tra ngày sinh và giới tính. Không lưu tên và số điện thoại.",
+      benefitPrivacy: "Kiểm tra ngày sinh, giới tính và số điện thoại. Không lưu tên, số điện thoại chỉ dùng để gửi thẻ quà tặng.",
       benefitToggle: "Xác minh xong là bật hiển thị nội dung người lớn được ngay.",
       methodsLabel: "Phương thức xác minh",
       methods: {
@@ -222,6 +230,7 @@ const vi: typeof ko = {
       title: "Xác minh danh tính giả",
       name: "Họ tên",
       namePlaceholder: "Nguyễn Văn A",
+      phone: "Số điện thoại",
       birth: "Ngày sinh",
       gender: "Giới tính",
       genderNone: "Không chọn",

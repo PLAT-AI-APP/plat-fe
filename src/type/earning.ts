@@ -121,7 +121,18 @@ export interface RewardRedemption {
 
 export type EarningLedgerListResponse = SliceWith<EarningLedgerItem>;
 
-/** 교환 상세. 받는 번호는 가운데가 가려져 온다. 단계는 상태와 신청 · 처리 시각으로 그린다. */
+/** 상품권 받는 방법. 서버가 고를 수 있는 것만 내려준다(지금은 SMS 뿐). */
+export type RewardDeliveryChannel = "SMS" | "EMAIL" | "KAKAO_ALIMTALK";
+
+/** 받는 방법 선택지. 휴대폰으로 받는 방법은 본인인증 번호로 보낸다. */
+export interface RewardDeliveryOptions {
+  channels: RewardDeliveryChannel[];
+  verifiedPhone: string | null;
+  /** 신청 때 동의받는 상품권 발송 개인정보 수집·이용 동의서. 게시된 것이 없으면 null(신청 불가). */
+  consent: { documentId: string; version: string; content: string } | null;
+}
+
+/** 교환 상세. 받는 곳은 가운데가 가려져 온다. 단계는 상태와 신청 · 처리 시각으로 그린다. */
 export interface RedemptionDetail {
   redemptionNo: string;
   type: RewardType;
@@ -129,7 +140,8 @@ export interface RedemptionDetail {
   pointAmount: number;
   noteAmount: number | null;
   status: RewardRedemptionStatus;
-  recipientPhone: string | null;
+  deliveryChannel: RewardDeliveryChannel | null;
+  recipient: string | null;
   requestedAt: string;
   processedAt: string | null;
   rejectReason: string | null;
@@ -198,7 +210,11 @@ export interface EarningUniverseDay {
 
 export interface RedeemGiftCardRequest {
   productId: string;
-  recipientPhone: string;
+  deliveryChannel: RewardDeliveryChannel;
+  /** 이메일처럼 받는 곳을 적는 방법만. 휴대폰으로 받는 방법은 서버가 본인인증 번호를 쓴다. */
+  recipient?: string;
+  /** 동의한 상품권 발송 개인정보 수집·이용 동의서 ID. */
+  consentDocumentId: string;
 }
 
 export interface NoteConversionRequest {

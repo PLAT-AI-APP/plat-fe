@@ -84,3 +84,13 @@ export const formatErrorDetail = (error: unknown): string | undefined => {
 
   return parts.length > 0 ? parts.join(" · ") : undefined;
 };
+
+/**
+ * 서버에 닿지 못한 실패(연결 끊김·응답 지연)인지.
+ *
+ * 이 실패는 특정 섹션의 문제가 아니라 서버 전체 상태라, 화면의 모든 섹션이 같은 문구를
+ * 한꺼번에 띄우게 된다. ServerOutageBoundary 가 이것만 모아 페이지에 한 번만 보여준다.
+ */
+export const isServerOutageError = (error: unknown): boolean =>
+  isAppError(error) &&
+  (error.code === NETWORK_ERROR_CODE || error.code === TIMEOUT_ERROR_CODE);

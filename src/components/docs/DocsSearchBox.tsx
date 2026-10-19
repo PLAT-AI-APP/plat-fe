@@ -9,6 +9,7 @@ import { Search } from "@/icons";
 import { cn } from "@/lib/utils";
 import { useDocs } from "./DocsProvider";
 import { docsPath } from "./docsPath";
+import ClearInputButton from "@/components/ui/ClearInputButton";
 
 const DEBOUNCE_MS = 250;
 /** 드롭다운에는 몇 건만 보이고 나머지는 결과 화면으로 넘긴다. */
@@ -159,6 +160,15 @@ const DocsSearchBox = ({
             isLarge ? "body-3" : "body-5",
           )}
         />
+        {query && (
+          <ClearInputButton
+            onClear={() => {
+              setQuery("");
+              setItems([]);
+              setStatus("idle");
+            }}
+          />
+        )}
       </form>
 
       {showDropdown && (

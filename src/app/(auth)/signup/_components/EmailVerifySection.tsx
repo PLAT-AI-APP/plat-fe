@@ -240,6 +240,9 @@ const EmailVerifySection = ({
               isEmailVerified && "bg-card text-font-2",
             )}
             disabled={isEmailVerified}
+            onEnter={() => {
+              if (isEmailButtonActive) handleEmailBtnClick();
+            }}
             helperMessage={emailHelperMessage}
             // 인증을 마치면 칸 안에 체크가 그려진다
             rightElement={
@@ -314,6 +317,10 @@ const EmailVerifySection = ({
                     value={code}
                     placeholder="000000"
                     inputMode="numeric"
+                    onEnter={() => {
+                      if ((code?.length ?? 0) >= 6 && timeLeft > 0)
+                        handleVerifyOtp();
+                    }}
                     onInput={(event) => {
                       event.currentTarget.value = event.currentTarget.value.slice(
                         0,

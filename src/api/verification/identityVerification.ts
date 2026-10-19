@@ -6,6 +6,7 @@ import type { AppError } from "@/api";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useUserStore } from "@/store/useUserStore";
 import { refreshWalletAfterReward } from "@/api/wallet/refreshWalletAfterReward";
+import { earningQueryKeys } from "@/api/earning/queryKeys";
 import { invalidateAdultScopedQueries } from "./invalidateAdultScopedQueries";
 import type {
   CompleteDevIdentityVerificationRequest,
@@ -13,9 +14,11 @@ import type {
   StartIdentityVerificationResponse,
 } from "./types";
 
-const startIdentityVerification = async () => {
+/** consentDocumentId: 동의한 본인인증 정보 수집·이용 동의서. 서버가 시행 중인 버전인지 보고 인증 기록에 남긴다. */
+const startIdentityVerification = async (consentDocumentId: string) => {
   const response = await authAxios.post<StartIdentityVerificationResponse>(
     "/verifications/identity",
+    { consentDocumentId },
   );
 
   return response.data;
@@ -44,7 +47,7 @@ const completeDevIdentityVerification = async ({
 
 /** 본인인증 건을 연다. 실패 문구는 모달 안에 직접 그린다. */
 export const useStartIdentityVerificationMutation = () =>
-  useMutation<StartIdentityVerificationResponse, AppError>({
+  useMutation<StartIdentityVerificationResponse, AppError, string>({
     mutationKey: ["post-identity-verification-start"],
     mutationFn: startIdentityVerification,
     meta: { silent: true },
@@ -74,6 +77,8 @@ export const useConfirmIdentityVerificationMutation = () => {
         birthLocked: true,
       });
       invalidateAdultScopedQueries(queryClient);
+      // 수익 요약의 인증 여부와 상품권 받는 번호(본인인증 휴대폰)가 바뀐다.
+      void queryClient.invalidateQueries({ queryKey: earningQueryKeys.all() });
       // 처음 성인인증을 마치면 보상 노트가 비동기로 들어온다. 잔액이 늘 때까지 짧게 다시 확인한다.
       if (result.adult) void refreshWalletAfterReward(queryClient);
     },

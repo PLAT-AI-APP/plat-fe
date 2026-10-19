@@ -2,14 +2,30 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { AnimatePresence, m, useReducedMotion } from "framer-motion";
-import { useTranslations } from "next-intl";
+import dynamic from "next/dynamic";
+import { useLocale, useTranslations } from "next-intl";
+
+// 동의서 전문은 펼쳤을 때만 그린다. 약관 화면과 같은 렌더러를 쓴다.
+const MarkdownDocument = dynamic(() => import("@/components/markdown/MarkdownDocument"), {
+    // loading 이 없으면 dynamic 이 자체 Suspense 경계를 두지 않아, 처음 펼칠 때 화면 전체가 잠깐 교체되며 깜빡인다.
+    loading: () => (
+      <div className="flex flex-col gap-2">
+        {[1, 2, 3].map((i) => (
+          <div key={i} className="skeleton h-4 w-full rounded" />
+        ))}
+      </div>
+    ),
+});
 import { ModalLayout } from "@/components/ModalLayout";
 import AdultEmblem from "@/components/adult/AdultEmblem";
 import Button from "@/components/ui/Button";
 import IconButton from "@/components/ui/IconButton";
 import Switch from "@/components/ui/Switch";
 import { ConfettiBurst } from "@/app/payments/[provider]/[result]/_components/PaymentSuccess";
-import { Clock, Close, LockLine } from "@/icons";
+import { ArrowDown, Clock, Close, LockLine } from "@/icons";
+import Checkbox from "@/icons/Checkbox";
+import CheckboxEmpty from "@/icons/CheckboxEmpty";
+import { useTermsQuery } from "@/api/legal/getTerms";
 import StatusSuccess from "@/icons/StatusSuccess";
 import {
   useConfirmIdentityVerificationMutation,
@@ -191,6 +207,15 @@ const IdentityVerificationModal = ({
   const commonT = useTranslations("modalUi.common");
   const reduceMotion = useReducedMotion() ?? false;
   const [step, setStep] = useState<Step>({ kind: "intro" });
+  const locale = useLocale();
+  // 인증 창을 열기 전에 본인인증 정보 수집·이용 동의를 받는다(필수). 동의한 버전은 서버가 인증 기록에 남긴다.
+  const { data: consent, isError: isConsentError } = useTermsQuery(
+    "IDENTITY_VERIFICATION_CONSENT",
+    undefined,
+    locale,
+  );
+  const [isConsentAgreed, setIsConsentAgreed] = useState(false);
+  const [isConsentOpen, setIsConsentOpen] = useState(false);
   const popupRef = useRef<Window | null>(null);
   const { mutate: startVerification, isPending: isStarting } =
     useStartIdentityVerificationMutation();
@@ -241,7 +266,8 @@ const IdentityVerificationModal = ({
   };
 
   const handleStart = () => {
-    startVerification(undefined, {
+    if (!consent || !isConsentAgreed) return;
+    startVerification(consent.documentId, {
       onSuccess: ({ verificationId, provider }) => {
         if (provider === "PORTONE") {
           setStep({ kind: "waiting", verificationId });
@@ -376,12 +402,53 @@ const IdentityVerificationModal = ({
                   </div>
                 </div>
 
+                {consent ? (
+                  <div className="mt-5 flex w-full flex-col gap-2 text-left">
+                    <div className="flex items-center justify-between gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setIsConsentAgreed((prev) => !prev)}
+                        aria-pressed={isConsentAgreed}
+                        className="flex min-w-0 items-center gap-2 text-left"
+                      >
+                        {isConsentAgreed ? <Checkbox /> : <CheckboxEmpty />}
+                        <span className="body-6 truncate text-font-1">{t("consent.label")}</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setIsConsentOpen((prev) => !prev)}
+                        aria-expanded={isConsentOpen}
+                        aria-controls="identity-consent"
+                        className="body-7 flex shrink-0 items-center gap-1 text-font-2 hover:text-font-1"
+                      >
+                        {t(isConsentOpen ? "consent.hide" : "consent.view")}
+                        <ArrowDown
+                          className={cn("size-3 transition-transform", isConsentOpen && "rotate-180")}
+                          aria-hidden="true"
+                        />
+                      </button>
+                    </div>
+                    {isConsentOpen && (
+                      <div
+                        id="identity-consent"
+                        className="custom-scrollbar body-6 max-h-48 overflow-y-auto rounded-lg bg-darkest px-4 py-3 text-font-1"
+                      >
+                        <MarkdownDocument content={consent.content} />
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  isConsentError && (
+                    <p className="body-7 mt-5 text-font-accents">{t("consent.unavailable")}</p>
+                  )
+                )}
+
                 <Button
                   size="lg"
                   fullWidth
                   className="mt-6"
                   onClick={handleStart}
-                  disabled={isStarting}
+                  disabled={isStarting || !consent || !isConsentAgreed}
                   isPending={isStarting}
                 >
                   {t("start")}

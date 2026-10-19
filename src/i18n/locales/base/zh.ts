@@ -3,7 +3,7 @@ import type ko from "./ko";
 
 const zh: typeof ko = {
   ...en,
-  common: { confirm: "确认", cancel: "取消", optional: "（可选）" },
+  common: { confirm: "确认", cancel: "取消", optional: "（可选）", clearInput: "清除输入" },
   languages: {
     ko: "韩语",
     en: "English",
@@ -69,6 +69,8 @@ const zh: typeof ko = {
         accountWithdrawn: "该账号已注销。",
         agreementRequired: "请同意所有必选条款。",
         rejoinRestricted: "已注销账号的邮箱需在注销7天后才能重新注册。",
+        emailUnavailable: "该邮箱已通过其他方式注册。请使用最初注册的方式登录。",
+        emailRequired: "未能从社交账号获取邮箱。请同意提供邮箱后重试。",
         internal: "发生内部错误，请稍后重试。",
       },
     },

@@ -10,6 +10,7 @@ import {
   isSuppressedError,
   resolveErrorMessage,
 } from "@/lib/apiError";
+import { useServerOutageReport } from "./ServerOutageBoundary";
 
 interface ErrorStateProps {
   error: unknown;
@@ -25,6 +26,8 @@ interface ErrorStateProps {
    * 자리에서는 false 로 끄고 예전 카드 모양을 쓴다.
    */
   withMascot?: boolean;
+  /** 실패 종류와 상관없이 재시도 버튼을 띄운다(onRetry 가 있을 때). */
+  forceRetry?: boolean;
   className?: string;
 }
 
@@ -40,16 +43,20 @@ const ErrorState = ({
   onRetry,
   variant = "block",
   withMascot = true,
+  forceRetry = false,
   className,
 }: ErrorStateProps) => {
   const t = useTranslations("state");
   const detail = formatErrorDetail(error);
   // 4xx 는 다시 눌러도 답이 같다. 재시도 버튼을 띄우면 사용자를 헛수고시킨다.
-  const canRetry = Boolean(onRetry) && isRetryableError(error);
+  const canRetry =
+    Boolean(onRetry) && (forceRetry || isRetryableError(error));
+  // 서버에 닿지 못한 실패는 페이지 경계(ServerOutageBoundary)가 한 번만 띄운다.
+  const isDelegated = useServerOutageReport(error);
 
   // 세션 만료는 이미 LOGIN_REQUIRED 다이얼로그가 안내한다. 여기서 또 그리면
   // 같은 내용을 두 번 말하고, 로그인해야 풀리는데 재시도 버튼까지 뜬다.
-  if (isSuppressedError(error)) return null;
+  if (isSuppressedError(error) || isDelegated) return null;
 
   if (variant === "inline") {
     return (

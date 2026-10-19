@@ -45,6 +45,8 @@ interface VerificationRowProps {
   verifiedUntil: string | null | undefined;
   /** 미인증일 때 덧붙일 안내(성인인증은 만 19세 이상만 된다는 것). */
   unverifiedHint?: string;
+  /** 본인인증한 휴대폰 번호. 본인인증 줄에만 넘긴다. */
+  phone?: string | null;
 }
 
 const VerificationRow = ({
@@ -53,6 +55,7 @@ const VerificationRow = ({
   verifiedAt,
   verifiedUntil,
   unverifiedHint,
+  phone,
 }: VerificationRowProps) => {
   const t = useTranslations("adultVerification");
   const openModal = useModalStore((state) => state.openModal);
@@ -138,6 +141,23 @@ const VerificationRow = ({
       )}
 
       {status === "renewSoon" && <p className="body-7 -mt-1 text-warning">{t("field.renewNotice")}</p>}
+
+      {/* 휴대폰 번호는 본인 명의 번호로만 둔다. 바꾸려면 본인인증을 다시 하고, 그 번호로 바뀐다. */}
+      {kind === "identity" && status !== "unverified" && (
+        <div className="flex items-center justify-between gap-3 border-t border-main pt-3">
+          <span className="body-6 text-font-2">{t("field.phone")}</span>
+          <div className="flex items-center gap-2">
+            <span className="body-6 tabular-nums text-font-1">{phone ?? "-"}</span>
+            <button
+              type="button"
+              onClick={() => openModal("IDENTITY_VERIFICATION", { purpose: "identity" })}
+              className="body-7 text-font-2 underline underline-offset-2 hover:text-font-1"
+            >
+              {t("field.changePhone")}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
@@ -158,6 +178,7 @@ const VerificationField = () => {
         label={t("identity")}
         verifiedAt={user?.identityVerifiedAt}
         verifiedUntil={user?.identityVerifiedUntil}
+        phone={user?.identityVerifiedPhone}
       />
       <VerificationRow
         kind="adult"

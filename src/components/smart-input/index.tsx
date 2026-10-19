@@ -3,7 +3,8 @@
 import { ArrowDown, ArrowRight, ArrowUp } from "@/icons";
 import { useTranslateText } from "@/hooks/i18n/useTranslateText";
 import { cn } from "@/lib/utils";
-import React, { forwardRef, useState } from "react";
+import React, { forwardRef, useRef, useState } from "react";
+import ClearInputButton from "@/components/ui/ClearInputButton";
 import {
   CharacterCounter,
   ErrorMessage,
@@ -11,7 +12,7 @@ import {
   LabelSection,
 } from "./SubComponents";
 import { useAutoResizeTextarea } from "@/hooks/form/useAutoResizeTextarea";
-import { useLeftPadding } from "./hooks";
+import { useLeftPadding, useRightPadding } from "./hooks";
 import { SmartInputProps } from "./types";
 
 const SmartInput = forwardRef<
@@ -50,6 +51,9 @@ const SmartInput = forwardRef<
     descFontSize = "body-6",
     onFocus,
     onBlur,
+    onKeyDown,
+    clearable = true,
+    onEnter,
     ...rest
   } = props;
 
@@ -69,6 +73,40 @@ const SmartInput = forwardRef<
     value,
   });
   const { iconRef, paddingLeft } = useLeftPadding(leftElement);
+  const { clusterRef, paddingRight } = useRightPadding();
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleInputRef = (node: HTMLInputElement | null) => {
+    inputRef.current = node;
+    if (typeof ref === "function") ref(node);
+    else if (ref)
+      (ref as React.MutableRefObject<HTMLInputElement | null>).current = node;
+  };
+
+  // register() 처럼 onChange 로만 값을 받는 쪽도 알아듣게, 네이티브 setter 로 비우고 input 이벤트를 쏜다.
+  const clearInput = () => {
+    const input = inputRef.current;
+    if (!input) return;
+    const setter = Object.getOwnPropertyDescriptor(
+      HTMLInputElement.prototype,
+      "value",
+    )?.set;
+    setter?.call(input, "");
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    input.focus();
+  };
+
+  // 한글 조합 중 Enter 는 조합 확정이라 동작으로 보지 않는다.
+  const handleInputKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    onKeyDown?.(e);
+    if (e.defaultPrevented || !onEnter) return;
+    if (e.key === "Enter" && !e.nativeEvent.isComposing) {
+      e.preventDefault();
+      onEnter();
+    }
+  };
 
   const handleTextareaRef = (node: HTMLTextAreaElement | null) => {
     textareaRef.current = node;
@@ -92,6 +130,13 @@ const SmartInput = forwardRef<
     // controlled 입력은 값이 바뀐 뒤 훅의 layout effect 가 잰다. 여기서도 재면 입력마다 두 번 잰다.
     if (isTextarea && value === undefined) resizeTextarea();
   };
+
+  const isClearVisible =
+    isInput &&
+    clearable &&
+    currentDisplayValue.length > 0 &&
+    !rest.disabled &&
+    !rest.readOnly;
 
   const isNavigationType =
     label === "메인어" || label?.includes("태그 등록(0/5)");
@@ -213,24 +258,50 @@ const SmartInput = forwardRef<
           {isInput && (
             <input
               {...(rest as React.InputHTMLAttributes<HTMLInputElement>)}
-              ref={ref as React.ForwardedRef<HTMLInputElement>}
-              style={{ paddingLeft: `${paddingLeft}px` }}
+              ref={handleInputRef}
+              style={{
+                paddingLeft: `${paddingLeft}px`,
+                paddingRight:
+                  paddingRight !== undefined ? `${paddingRight}px` : undefined,
+              }}
               type={inputType}
               className={cn(
                 // 포커스 시 이 border 색이 바로 포커스 표시라, 브라우저 기본 포커스 링은 겹치지 않게 끕니다.
                 "focus-ring-none w-full rounded-xl border bg-darkest px-4 py-3 outline-none transition-colors placeholder:text-font-disabled disabled:cursor-not-allowed disabled:text-font-disabled",
                 borderColorClassName,
                 placeholderClassName,
-                rightElement && "pr-11",
                 inputClassName,
               )}
               placeholder={translateText(placeholder)}
               maxLength={maxLength}
               value={value}
               onChange={handleValueChange}
+              onKeyDown={handleInputKeyDown}
               onFocus={handleFocus}
               onBlur={handleBlur}
             />
+          )}
+
+          {isInput && (
+            <div
+              ref={clusterRef}
+              className="absolute right-4 top-1/2 z-10 flex -translate-y-1/2 items-center gap-2"
+            >
+              {isClearVisible && <ClearInputButton onClear={clearInput} />}
+              {maxLength && (
+                <CharacterCounter
+                  inline
+                  currentLength={currentLength}
+                  maxLength={maxLength}
+                  className={counterClassName}
+                />
+              )}
+              {rightElement && (
+                <div className="flex items-center justify-center">
+                  {rightElement}
+                </div>
+              )}
+            </div>
           )}
 
           {isModal && (
@@ -258,15 +329,7 @@ const SmartInput = forwardRef<
             </div>
           )}
 
-          {!isModal && !isTextarea && maxLength && (
-            <CharacterCounter
-              currentLength={currentLength}
-              maxLength={maxLength}
-              className={counterClassName}
-            />
-          )}
-
-          {rightElement && (
+          {!isInput && rightElement && (
             <div className="absolute right-4 top-1/2 z-10 flex -translate-y-1/2 items-center justify-center">
               {rightElement}
             </div>
