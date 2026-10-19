@@ -25,5 +25,7 @@ export const earningQueryKeys = {
   universeDays: (universeId: string, month: string) =>
     [...earningQueryKeys.universe(universeId), "days", month] as const,
   rewardProducts: () => [...earningQueryKeys.all(), "reward-products"] as const,
+  deliveryChannels: () =>
+    [...earningQueryKeys.all(), "delivery-channels"] as const,
   tier: () => [...earningQueryKeys.all(), "tier"] as const,
 };

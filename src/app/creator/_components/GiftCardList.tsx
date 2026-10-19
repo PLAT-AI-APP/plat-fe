@@ -13,10 +13,46 @@ import { cn, formatWithCommas } from "@/lib/utils";
 import FallbackImg from "@/components/image/FallbackImg";
 import { useRewardProductsQuery } from "@/api/earning/getRewardProducts";
 import { usePostRedemptionMutation } from "@/api/earning/postRedemption";
-import type { RewardProduct } from "@/type/earning";
+import { useDeliveryChannelsQuery } from "@/api/earning/getDeliveryChannels";
+import ClearInputButton from "@/components/ui/ClearInputButton";
+import type { RewardDeliveryChannel, RewardProduct } from "@/type/earning";
 
-/** 서버 검증과 같은 휴대폰 번호 형식 */
-const PHONE_PATTERN = /^01[0-9]-?\d{3,4}-?\d{4}$/;
+/** 받는 방법마다 받는 곳의 입력 모양과 서버 검증과 같은 형식. */
+const RECIPIENT_FIELD: Record<
+  RewardDeliveryChannel,
+  {
+    pattern: RegExp;
+    inputType: "tel" | "email";
+    autoComplete: string;
+    placeholder: string;
+    maxLength: number;
+  }
+> = {
+  SMS: {
+    pattern: /^01[0-9]-?\d{3,4}-?\d{4}$/,
+    inputType: "tel",
+    autoComplete: "tel",
+    placeholder: "010-0000-0000",
+    maxLength: 13,
+  },
+  KAKAO_ALIMTALK: {
+    pattern: /^01[0-9]-?\d{3,4}-?\d{4}$/,
+    inputType: "tel",
+    autoComplete: "tel",
+    placeholder: "010-0000-0000",
+    maxLength: 13,
+  },
+  EMAIL: {
+    pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+    inputType: "email",
+    autoComplete: "email",
+    placeholder: "name@example.com",
+    maxLength: 100,
+  },
+};
+
+/** 받는 방법을 아직 못 받았을 때 쓰는 기본값. 서버도 지금은 문자만 연다. */
+const DEFAULT_CHANNEL: RewardDeliveryChannel = "SMS";
 
 interface GiftCardListProps {
   available: number;
@@ -81,6 +117,8 @@ interface RewardCardProps {
   product: RewardProduct;
   available: number;
   identityVerified: boolean;
+  /** 카드 안내 문구에 쓸 받는 방법(고를 수 있는 첫 번째). */
+  channel: RewardDeliveryChannel;
   onSelect: (product: RewardProduct) => void;
 }
 
@@ -94,6 +132,7 @@ const RewardCard = ({
   product,
   available,
   identityVerified,
+  channel,
   onSelect,
 }: RewardCardProps) => {
   const t = useTranslations("earnings");
@@ -113,7 +152,9 @@ const RewardCard = ({
         <span className="heading-2">
           {t("points", { value: formatWithCommas(product.pointPrice) })}
         </span>
-        <span className="body-7 text-font-2">{t("exchange.giftNotice")}</span>
+        <span className="body-7 text-font-2">
+          {t(`delivery.${channel}.notice`)}
+        </span>
       </div>
 
       <div className="mt-auto flex flex-col gap-2">
@@ -168,31 +209,43 @@ const CardSkeleton = () => (
   </ul>
 );
 
+/** 신청이 끝난 건. 완료 화면이 받는 방법과 받는 곳을 말한다. */
+interface RequestedDelivery {
+  channel: RewardDeliveryChannel;
+  recipient: string;
+}
+
 interface ConfirmModalProps {
   product: RewardProduct;
   available: number;
   isSubmitting: boolean;
-  /** 신청이 끝났으면 받는 번호. 있으면 확인 화면을 보여 준다. */
-  requestedPhone?: string;
+  channels: RewardDeliveryChannel[];
+  /** 신청이 끝났으면 받는 방법·받는 곳. 있으면 완료 화면을 보여 준다. */
+  requested?: RequestedDelivery;
   onClose: () => void;
-  onConfirm: (recipientPhone: string) => void;
+  onConfirm: (delivery: RequestedDelivery) => void;
 }
 
-/** 010-1234-5678 → 010-****-5678. 완료 화면에 번호 전체를 다시 띄우지 않는다. */
-const maskPhone = (phone: string) => {
-  const digits = phone.replace(/\D/g, "");
-  if (digits.length < 8) return phone;
+/** 010-1234-5678 → 010-****-5678, name@plat.so → na***@plat.so. 완료 화면에 받는 곳 전체를 다시 띄우지 않는다. */
+const maskRecipient = ({ channel, recipient }: RequestedDelivery) => {
+  if (channel === "EMAIL") {
+    const at = recipient.indexOf("@");
+    if (at < 0) return recipient;
+    return `${recipient.slice(0, Math.min(2, at))}***${recipient.slice(at)}`;
+  }
+  const digits = recipient.replace(/\D/g, "");
+  if (digits.length < 8) return recipient;
   return `${digits.slice(0, 3)}-****-${digits.slice(-4)}`;
 };
 
 /** 신청 완료 — 상품권이 뒤집히며 체크가 그려지고 발송 안내가 떠오른다 */
 const ExchangeDone = ({
   product,
-  phone,
+  requested,
   onClose,
 }: {
   product: RewardProduct;
-  phone: string;
+  requested: RequestedDelivery;
   onClose: () => void;
 }) => {
   const t = useTranslations("earnings");
@@ -231,7 +284,9 @@ const ExchangeDone = ({
       >
         <h2 className="title-2 text-font-1">{t("exchange.requested")}</h2>
         <p className="body-5 text-font-2 break-keep">
-          {t("exchange.requestedDescription", { phone: maskPhone(phone) })}
+          {t(`delivery.${requested.channel}.requested`, {
+            recipient: maskRecipient(requested),
+          })}
         </p>
       </m.div>
       <Button
@@ -251,14 +306,27 @@ const ExchangeConfirmModal = ({
   product,
   available,
   isSubmitting,
-  requestedPhone,
+  channels,
+  requested,
   onClose,
   onConfirm,
 }: ConfirmModalProps) => {
   const t = useTranslations("earnings");
-  const [phone, setPhone] = useState("");
-  const isPhoneValid = PHONE_PATTERN.test(phone);
-  const showPhoneError = phone.length > 0 && !isPhoneValid;
+  const [channel, setChannel] = useState<RewardDeliveryChannel>(
+    channels[0] ?? DEFAULT_CHANNEL,
+  );
+  const [recipient, setRecipient] = useState("");
+  const field = RECIPIENT_FIELD[channel];
+  const isRecipientValid = field.pattern.test(recipient);
+  const showRecipientError = recipient.length > 0 && !isRecipientValid;
+  const canSubmit = !isSubmitting && isRecipientValid;
+
+  const changeChannel = (next: RewardDeliveryChannel) => {
+    if (next === channel) return;
+    // 번호와 이메일은 서로 옮겨 쓸 수 없다. 받는 방법을 바꾸면 받는 곳도 비운다.
+    if (RECIPIENT_FIELD[next].inputType !== field.inputType) setRecipient("");
+    setChannel(next);
+  };
 
   const rows = [
     {
@@ -279,19 +347,15 @@ const ExchangeConfirmModal = ({
       onClose={onClose}
       className="w-[calc(100%-32px)] max-w-90 p-6"
     >
-      {requestedPhone ? (
-        <ExchangeDone
-          product={product}
-          phone={requestedPhone}
-          onClose={onClose}
-        />
+      {requested ? (
+        <ExchangeDone product={product} requested={requested} onClose={onClose} />
       ) : (
         <form
           className="flex flex-col gap-5"
           onSubmit={(event) => {
             event.preventDefault();
-            if (!isPhoneValid) return;
-            onConfirm(phone);
+            if (!canSubmit) return;
+            onConfirm({ channel, recipient });
           }}
         >
           <div className="flex items-center gap-3">
@@ -308,41 +372,82 @@ const ExchangeConfirmModal = ({
             ))}
           </dl>
 
+          <fieldset className="flex flex-col gap-1.5">
+            <legend className="body-6 mb-1.5 text-font-2">
+              {t("delivery.label")}
+            </legend>
+            <div role="radiogroup" className="flex flex-wrap gap-2">
+              {(channels.length > 0 ? channels : [DEFAULT_CHANNEL]).map(
+                (item) => {
+                  const isSelected = item === channel;
+                  return (
+                    <button
+                      key={item}
+                      type="button"
+                      role="radio"
+                      aria-checked={isSelected}
+                      onClick={() => changeChannel(item)}
+                      className={cn(
+                        "body-6 h-9 rounded-full border px-4 transition-colors",
+                        isSelected
+                          ? "border-brand bg-brand/10 text-brand-dark"
+                          : "border-main text-font-2 hover:text-font-1",
+                      )}
+                    >
+                      {t(`delivery.${item}.name`)}
+                    </button>
+                  );
+                },
+              )}
+            </div>
+          </fieldset>
+
           <div className="flex flex-col gap-1.5">
             <label
-              htmlFor="earning-recipient-phone"
+              htmlFor="earning-recipient"
               className="body-6 text-font-2"
             >
-              {t("exchange.phone")}
+              {t(`delivery.${channel}.field`)}
             </label>
-            <input
-              id="earning-recipient-phone"
-              type="tel"
-              inputMode="tel"
-              autoComplete="tel"
-              value={phone}
-              maxLength={13}
-              placeholder="010-0000-0000"
-              onChange={(event) => setPhone(event.target.value.trim())}
-              aria-invalid={showPhoneError}
-              className={cn(
-                "body-5 h-11 rounded-lg border border-main bg-darkest px-4 text-font-1",
-                "placeholder:text-font-2/50 focus:border-brand transition-colors",
-                showPhoneError &&
-                  "border-font-accents focus:border-font-accents",
+            <div className="relative">
+              <input
+                id="earning-recipient"
+                type={field.inputType}
+                inputMode={field.inputType}
+                autoComplete={field.autoComplete}
+                value={recipient}
+                maxLength={field.maxLength}
+                placeholder={field.placeholder}
+                onChange={(event) => setRecipient(event.target.value.trim())}
+                aria-invalid={showRecipientError}
+                className={cn(
+                  "body-5 h-11 w-full rounded-lg border border-main bg-darkest px-4 text-font-1",
+                  "placeholder:text-font-2/50 focus:border-brand transition-colors",
+                  recipient && "pr-11",
+                  showRecipientError &&
+                    "border-font-accents focus:border-font-accents",
+                )}
+              />
+              {recipient && (
+                <ClearInputButton
+                  onClear={() => setRecipient("")}
+                  className="absolute right-4 top-1/2 -translate-y-1/2"
+                />
               )}
-            />
+            </div>
             <p
               className={cn(
                 "body-7",
-                showPhoneError ? "text-font-accents" : "text-font-2",
+                showRecipientError ? "text-font-accents" : "text-font-2",
               )}
             >
-              {showPhoneError
-                ? t("exchange.phoneInvalid")
-                : t("exchange.giftNotice")}
+              {showRecipientError
+                ? t(`delivery.${channel}.invalid`)
+                : t(`delivery.${channel}.notice`)}
             </p>
-            <p className="body-7 text-font-2">{t("exchange.phonePrivacy")}</p>
+            <p className="body-7 text-font-2">
+              {t(`delivery.${channel}.privacy`)}
+            </p>
           </div>
 
           <div className="grid grid-cols-2 gap-2">
@@ -355,12 +460,7 @@ const ExchangeConfirmModal = ({
             >
               {t("cancel")}
             </Button>
-            <Button
-              type="submit"
-              size="lg"
-              fullWidth
-              disabled={isSubmitting || !isPhoneValid}
-            >
+            <Button type="submit" size="lg" fullWidth disabled={!canSubmit}>
               {t("exchange.button")}
             </Button>
           </div>
@@ -375,11 +475,12 @@ const GiftCardList = ({ available, identityVerified }: GiftCardListProps) => {
   const t = useTranslations("earnings");
   const [selected, setSelected] = useState<RewardProduct | null>(null);
   // 신청이 끝나면 모달을 닫지 않고 그 안에서 완료 화면을 보여 준다
-  const [requestedPhone, setRequestedPhone] = useState<string>();
+  const [requested, setRequested] = useState<RequestedDelivery>();
   const closeModal = () => {
     setSelected(null);
-    setRequestedPhone(undefined);
+    setRequested(undefined);
   };
+  const { data: channels = [] } = useDeliveryChannelsQuery();
   const {
     data: products = [],
     isPending,
@@ -390,11 +491,18 @@ const GiftCardList = ({ available, identityVerified }: GiftCardListProps) => {
   const { mutate: redeem, isPending: isSubmitting } =
     usePostRedemptionMutation();
 
-  const handleConfirm = (product: RewardProduct, recipientPhone: string) => {
+  const handleConfirm = (
+    product: RewardProduct,
+    delivery: RequestedDelivery,
+  ) => {
     redeem(
-      { productId: product.productId, recipientPhone },
       {
-        onSuccess: () => setRequestedPhone(recipientPhone),
+        productId: product.productId,
+        deliveryChannel: delivery.channel,
+        recipient: delivery.recipient,
+      },
+      {
+        onSuccess: () => setRequested(delivery),
       },
     );
   };
@@ -419,6 +527,7 @@ const GiftCardList = ({ available, identityVerified }: GiftCardListProps) => {
               product={product}
               available={available}
               identityVerified={identityVerified}
+              channel={channels[0] ?? DEFAULT_CHANNEL}
               onSelect={setSelected}
             />
           ))}
@@ -430,11 +539,10 @@ const GiftCardList = ({ available, identityVerified }: GiftCardListProps) => {
           product={selected}
           available={available}
           isSubmitting={isSubmitting}
-          requestedPhone={requestedPhone}
+          channels={channels}
+          requested={requested}
           onClose={closeModal}
-          onConfirm={(recipientPhone) =>
-            handleConfirm(selected, recipientPhone)
-          }
+          onConfirm={(delivery) => handleConfirm(selected, delivery)}
         />
       )}
     </QueryStateBoundary>

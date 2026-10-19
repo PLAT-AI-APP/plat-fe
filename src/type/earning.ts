@@ -121,7 +121,10 @@ export interface RewardRedemption {
 
 export type EarningLedgerListResponse = SliceWith<EarningLedgerItem>;
 
-/** 교환 상세. 받는 번호는 가운데가 가려져 온다. 단계는 상태와 신청 · 처리 시각으로 그린다. */
+/** 상품권 받는 방법. 서버가 고를 수 있는 것만 내려준다(지금은 SMS 뿐). */
+export type RewardDeliveryChannel = "SMS" | "EMAIL" | "KAKAO_ALIMTALK";
+
+/** 교환 상세. 받는 곳은 가운데가 가려져 온다. 단계는 상태와 신청 · 처리 시각으로 그린다. */
 export interface RedemptionDetail {
   redemptionNo: string;
   type: RewardType;
@@ -129,7 +132,8 @@ export interface RedemptionDetail {
   pointAmount: number;
   noteAmount: number | null;
   status: RewardRedemptionStatus;
-  recipientPhone: string | null;
+  deliveryChannel: RewardDeliveryChannel | null;
+  recipient: string | null;
   requestedAt: string;
   processedAt: string | null;
   rejectReason: string | null;
@@ -198,7 +202,8 @@ export interface EarningUniverseDay {
 
 export interface RedeemGiftCardRequest {
   productId: string;
-  recipientPhone: string;
+  deliveryChannel: RewardDeliveryChannel;
+  recipient: string;
 }
 
 export interface NoteConversionRequest {

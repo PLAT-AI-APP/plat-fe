@@ -186,7 +186,8 @@ const redemptionDetail = (item: EarningLedgerItem): RedemptionDetail => ({
   pointAmount: -item.amount,
   noteAmount: item.noteAmount,
   status: item.redemptionStatus ?? "REQUESTED",
-  recipientPhone: item.rewardType === "GIFT_CARD" ? "010-****-5678" : null,
+  deliveryChannel: item.rewardType === "GIFT_CARD" ? "SMS" : null,
+  recipient: item.rewardType === "GIFT_CARD" ? "010-****-5678" : null,
   requestedAt: item.createdAt,
   processedAt:
     item.redemptionStatus === "REQUESTED"
