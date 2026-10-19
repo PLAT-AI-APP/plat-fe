@@ -390,6 +390,12 @@ const en = {
       requested: "Request submitted",
       done: "OK",
     },
+    consent: {
+      label: "[Required] Consent to collect and use personal data for gift card delivery",
+      view: "View",
+      hide: "Hide",
+      unavailable: "Gift card redemption isn't available right now. Please try again later.",
+    },
     delivery: {
       label: "Delivery method",
       phoneMissing: "No verified phone number. Please verify your identity again.",

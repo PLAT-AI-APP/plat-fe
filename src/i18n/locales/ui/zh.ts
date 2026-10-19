@@ -380,6 +380,12 @@ const zh = {
       requested: "已提交兑换申请",
       done: "确认",
     },
+    consent: {
+      label: "[必选] 同意为发送礼品卡收集和使用个人信息",
+      view: "查看",
+      hide: "收起",
+      unavailable: "目前无法申请兑换礼品卡，请稍后再试。",
+    },
     delivery: {
       label: "接收方式",
       phoneMissing: "没有已验证的手机号码。请重新进行身份验证。",

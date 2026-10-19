@@ -384,6 +384,12 @@ const vi = {
       requested: "Đã gửi yêu cầu đổi",
       done: "Xác nhận",
     },
+    consent: {
+      label: "[Bắt buộc] Đồng ý thu thập và sử dụng thông tin cá nhân để gửi thẻ quà tặng",
+      view: "Xem",
+      hide: "Ẩn",
+      unavailable: "Hiện chưa thể yêu cầu đổi thẻ quà tặng. Vui lòng thử lại sau.",
+    },
     delivery: {
       label: "Cách nhận",
       phoneMissing: "Chưa có số điện thoại đã xác minh. Vui lòng xác minh danh tính lại.",

@@ -462,6 +462,12 @@ const ko = {
       requested: "교환을 신청했어요",
       done: "확인",
     },
+    consent: {
+      label: "[필수] 상품권 발송을 위한 개인정보 수집·이용 동의",
+      view: "보기",
+      hide: "접기",
+      unavailable: "지금은 상품권 교환을 신청할 수 없어요. 잠시 후 다시 시도해 주세요.",
+    },
     delivery: {
       label: "받는 방법",
       phoneMissing: "본인인증한 번호가 없어요. 본인인증을 다시 해 주세요.",

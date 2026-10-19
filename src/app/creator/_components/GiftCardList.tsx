@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import dynamic from "next/dynamic";
 import { m } from "framer-motion";
 import { useTranslations } from "next-intl";
 import DrawCheck from "@/components/motion/DrawCheck";
@@ -15,7 +16,19 @@ import { useRewardProductsQuery } from "@/api/earning/getRewardProducts";
 import { usePostRedemptionMutation } from "@/api/earning/postRedemption";
 import { useDeliveryOptionsQuery } from "@/api/earning/getDeliveryOptions";
 import ClearInputButton from "@/components/ui/ClearInputButton";
-import type { RewardDeliveryChannel, RewardProduct } from "@/type/earning";
+import Checkbox from "@/icons/Checkbox";
+import CheckboxEmpty from "@/icons/CheckboxEmpty";
+import { ArrowDown } from "@/icons";
+import type {
+  RewardDeliveryChannel,
+  RewardDeliveryOptions,
+  RewardProduct,
+} from "@/type/earning";
+
+// 동의서 전문은 펼쳤을 때만 그린다. 약관 화면과 같은 렌더러를 쓴다.
+const MarkdownDocument = dynamic(
+  () => import("@/components/markdown/MarkdownDocument"),
+);
 
 /**
  * 휴대폰으로 받는 방법. 번호를 입력받지 않고 본인인증한 번호로 보낸다 — 남의 번호로 상품권을 받아 가지 못하게.
@@ -194,6 +207,7 @@ const CardSkeleton = () => (
 interface RequestedDelivery {
   channel: RewardDeliveryChannel;
   recipient: string;
+  consentDocumentId: string;
 }
 
 interface ConfirmModalProps {
@@ -203,6 +217,8 @@ interface ConfirmModalProps {
   channels: RewardDeliveryChannel[];
   /** 본인인증 휴대폰 번호(가린 값). 없으면 휴대폰으로 받는 방법을 신청할 수 없다. */
   verifiedPhone: string | null;
+  /** 동의받을 상품권 발송 개인정보 수집·이용 동의서. 없으면 신청할 수 없다. */
+  consent: RewardDeliveryOptions["consent"];
   /** 신청이 끝났으면 받는 방법·받는 곳. 있으면 완료 화면을 보여 준다. */
   requested?: RequestedDelivery;
   onClose: () => void;
@@ -291,6 +307,7 @@ const ExchangeConfirmModal = ({
   isSubmitting,
   channels,
   verifiedPhone,
+  consent,
   requested,
   onClose,
   onConfirm,
@@ -303,8 +320,13 @@ const ExchangeConfirmModal = ({
   const isPhoneChannel = PHONE_CHANNELS.has(channel);
   const isEmailValid = EMAIL_FIELD.pattern.test(email);
   const showEmailError = !isPhoneChannel && email.length > 0 && !isEmailValid;
+  const [isConsentAgreed, setIsConsentAgreed] = useState(false);
+  const [isConsentOpen, setIsConsentOpen] = useState(false);
   const canSubmit =
-    !isSubmitting && (isPhoneChannel ? Boolean(verifiedPhone) : isEmailValid);
+    !isSubmitting &&
+    Boolean(consent) &&
+    isConsentAgreed &&
+    (isPhoneChannel ? Boolean(verifiedPhone) : isEmailValid);
 
   const rows = [
     {
@@ -332,12 +354,12 @@ const ExchangeConfirmModal = ({
           className="flex flex-col gap-5"
           onSubmit={(event) => {
             event.preventDefault();
-            if (!canSubmit) return;
-            onConfirm(
-              isPhoneChannel
-                ? { channel, recipient: verifiedPhone ?? "" }
-                : { channel, recipient: email },
-            );
+            if (!canSubmit || !consent) return;
+            onConfirm({
+              channel,
+              recipient: isPhoneChannel ? (verifiedPhone ?? "") : email,
+              consentDocumentId: consent.documentId,
+            });
           }}
         >
           <div className="flex items-center gap-3">
@@ -458,6 +480,52 @@ const ExchangeConfirmModal = ({
             </div>
           )}
 
+          {consent ? (
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center justify-between gap-2">
+                <button
+                  type="button"
+                  onClick={() => setIsConsentAgreed((prev) => !prev)}
+                  aria-pressed={isConsentAgreed}
+                  className="flex min-w-0 items-center gap-2 text-left"
+                >
+                  {isConsentAgreed ? <Checkbox /> : <CheckboxEmpty />}
+                  <span className="body-6 break-keep text-font-1">
+                    {t("consent.label")}
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsConsentOpen((prev) => !prev)}
+                  aria-expanded={isConsentOpen}
+                  aria-controls="gift-card-consent"
+                  className="body-7 flex shrink-0 items-center gap-1 text-font-2 hover:text-font-1"
+                >
+                  {t(isConsentOpen ? "consent.hide" : "consent.view")}
+                  <ArrowDown
+                    className={cn(
+                      "size-3 transition-transform",
+                      isConsentOpen && "rotate-180",
+                    )}
+                    aria-hidden="true"
+                  />
+                </button>
+              </div>
+              {isConsentOpen && (
+                <div
+                  id="gift-card-consent"
+                  className="custom-scrollbar body-6 max-h-48 overflow-y-auto rounded-lg bg-darkest px-4 py-3 text-font-1"
+                >
+                  <MarkdownDocument content={consent.content} />
+                </div>
+              )}
+            </div>
+          ) : (
+            <p className="body-7 text-font-accents">
+              {t("consent.unavailable")}
+            </p>
+          )}
+
           <div className="grid grid-cols-2 gap-2">
             <Button
               type="button"
@@ -512,6 +580,7 @@ const GiftCardList = ({ available, identityVerified }: GiftCardListProps) => {
         ...(PHONE_CHANNELS.has(delivery.channel)
           ? {}
           : { recipient: delivery.recipient }),
+        consentDocumentId: delivery.consentDocumentId,
       },
       {
         onSuccess: () => setRequested(delivery),
@@ -553,6 +622,7 @@ const GiftCardList = ({ available, identityVerified }: GiftCardListProps) => {
           isSubmitting={isSubmitting}
           channels={channels}
           verifiedPhone={deliveryOptions?.verifiedPhone ?? null}
+          consent={deliveryOptions?.consent ?? null}
           requested={requested}
           onClose={closeModal}
           onConfirm={(delivery) => handleConfirm(selected, delivery)}
