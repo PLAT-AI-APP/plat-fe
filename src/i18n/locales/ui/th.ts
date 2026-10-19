@@ -398,7 +398,6 @@ const th = {
       usePoints: "คะแนนที่ใช้",
       remainPoints: "คะแนนคงเหลือ",
       done: "แปลงเป็น {count} โน้ตแล้ว",
-      granting: "กำลังเพิ่มโน้ต อีกสักครู่จะเข้า",
       doneDescription: "ใช้ในการแชตได้ทันที",
       confirm: "ตกลง",
     },
@@ -463,7 +462,6 @@ const th = {
       copied: "คัดลอกหมายเลขแลกแล้ว",
       status: {
         REQUESTED: "รอส่ง",
-        GRANTING: "กำลังมอบ",
         ISSUED: "ส่งแล้ว",
         ISSUED_NOTE: "มอบแล้ว",
         REJECTED: "ถูกปฏิเสธ",
@@ -473,7 +471,6 @@ const th = {
         preparing: "กำลังเตรียมส่ง",
         prepared: "เตรียมส่ง",
         sent: "ส่ง SMS แล้ว",
-        granting: "กำลังมอบโน้ต",
         granted: "มอบโน้ตแล้ว",
         rejected: "ถูกปฏิเสธ",
         refunded: "คืนคะแนน",

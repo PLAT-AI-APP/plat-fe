@@ -433,7 +433,6 @@ const ko = {
       copied: "교환 번호를 복사했어요",
       status: {
         REQUESTED: "발송 대기",
-        GRANTING: "지급 중",
         ISSUED: "발송 완료",
         ISSUED_NOTE: "지급 완료",
         REJECTED: "반려",
@@ -443,7 +442,6 @@ const ko = {
         preparing: "발송 준비 중",
         prepared: "발송 준비",
         sent: "문자 발송",
-        granting: "노트 지급 중",
         granted: "노트 지급",
         rejected: "반려",
         refunded: "포인트 환불",
@@ -481,7 +479,6 @@ const ko = {
       usePoints: "사용 포인트",
       remainPoints: "남는 포인트",
       done: "{count}노트로 전환했어요",
-      granting: "노트 지급 중이에요. 잠시 뒤 들어와요",
       doneDescription: "바로 대화에 쓸 수 있어요",
       confirm: "확인",
     },

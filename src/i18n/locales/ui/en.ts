@@ -405,7 +405,6 @@ const en = {
       usePoints: "Points used",
       remainPoints: "Points left",
       done: "Converted to {count} notes",
-      granting: "Your notes are on the way",
       doneDescription: "You can use them in chats right away",
       confirm: "OK",
     },
@@ -470,7 +469,6 @@ const en = {
       copied: "Exchange number copied",
       status: {
         REQUESTED: "Awaiting delivery",
-        GRANTING: "Granting",
         ISSUED: "Delivered",
         ISSUED_NOTE: "Granted",
         REJECTED: "Rejected",
@@ -480,7 +478,6 @@ const en = {
         preparing: "Preparing delivery",
         prepared: "Delivery prepared",
         sent: "Text sent",
-        granting: "Granting notes",
         granted: "Notes granted",
         rejected: "Rejected",
         refunded: "Points refunded",

@@ -80,17 +80,14 @@ const stepsOf = (item: RedemptionDetail): Step[] => {
       { key: "refunded", at: item.processedAt, state: "done" },
     ];
   }
-  const issued = item.status === "ISSUED";
+  // 노트는 차감과 지급이 한 번에 끝나 반려가 아니면 늘 지급 완료다.
   if (item.type === "NOTE") {
     return [
       requested,
-      {
-        key: issued ? "granted" : "granting",
-        at: item.processedAt,
-        state: issued ? "done" : "current",
-      },
+      { key: "granted", at: item.processedAt, state: "done" },
     ];
   }
+  const issued = item.status === "ISSUED";
   return [
     requested,
     {

@@ -395,7 +395,6 @@ const zh = {
       usePoints: "使用积分",
       remainPoints: "剩余积分",
       done: "已转换为{count}笔记",
-      granting: "正在发放笔记，请稍候",
       doneDescription: "可以立即在对话中使用",
       confirm: "确认",
     },
@@ -460,7 +459,6 @@ const zh = {
       copied: "已复制兑换编号",
       status: {
         REQUESTED: "待发送",
-        GRANTING: "发放中",
         ISSUED: "已发送",
         ISSUED_NOTE: "已发放",
         REJECTED: "已驳回",
@@ -470,7 +468,6 @@ const zh = {
         preparing: "准备发送中",
         prepared: "准备发送",
         sent: "短信已发送",
-        granting: "笔记发放中",
         granted: "笔记已发放",
         rejected: "已驳回",
         refunded: "积分已退还",

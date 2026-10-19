@@ -399,7 +399,6 @@ const ja = {
       usePoints: "使用ポイント",
       remainPoints: "残りポイント",
       done: "{count}ノートに変換しました",
-      granting: "ノートを付与しています。まもなく反映されます",
       doneDescription: "すぐに会話で使えます",
       confirm: "確認",
     },
@@ -464,7 +463,6 @@ const ja = {
       copied: "交換番号をコピーしました",
       status: {
         REQUESTED: "発送待ち",
-        GRANTING: "付与中",
         ISSUED: "発送完了",
         ISSUED_NOTE: "付与完了",
         REJECTED: "差し戻し",
@@ -474,7 +472,6 @@ const ja = {
         preparing: "発送準備中",
         prepared: "発送準備",
         sent: "SMS送信",
-        granting: "ノート付与中",
         granted: "ノート付与",
         rejected: "差し戻し",
         refunded: "ポイント返還",

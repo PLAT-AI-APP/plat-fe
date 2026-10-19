@@ -13,9 +13,8 @@ export type EarningLedgerType =
 /** 교환 종류. 상품권은 받는 번호가 필요하고, 노트는 원하는 만큼 바로 전환된다. */
 export type RewardType = "GIFT_CARD" | "NOTE";
 
-/** GRANTING 은 노트 지급 대기. 화면에는 드러내지 않는다. */
-export type RewardRedemptionStatus =
-  "REQUESTED" | "GRANTING" | "ISSUED" | "REJECTED";
+/** 노트 전환은 바로 ISSUED 로 남는다. REQUESTED 는 상품권 발송 대기. */
+export type RewardRedemptionStatus = "REQUESTED" | "ISSUED" | "REJECTED";
 
 /** 제작자 등급. DUST~GALAXY 는 직접 승급하는 사다리, ORIGIN 은 관리자가 지정하는 공식 크리에이터. */
 export type CreatorTierCode =

@@ -399,7 +399,6 @@ const vi = {
       usePoints: "Điểm sử dụng",
       remainPoints: "Điểm còn lại",
       done: "Đã chuyển thành {count} note",
-      granting: "Đang cộng note, vui lòng chờ giây lát",
       doneDescription: "Bạn có thể dùng ngay trong trò chuyện",
       confirm: "Xác nhận",
     },
@@ -464,7 +463,6 @@ const vi = {
       copied: "Đã sao chép mã đổi thưởng",
       status: {
         REQUESTED: "Chờ gửi",
-        GRANTING: "Đang cấp",
         ISSUED: "Đã gửi",
         ISSUED_NOTE: "Đã cấp",
         REJECTED: "Bị từ chối",
@@ -474,7 +472,6 @@ const vi = {
         preparing: "Đang chuẩn bị gửi",
         prepared: "Chuẩn bị gửi",
         sent: "Đã gửi SMS",
-        granting: "Đang cấp note",
         granted: "Đã cấp note",
         rejected: "Bị từ chối",
         refunded: "Hoàn điểm",
