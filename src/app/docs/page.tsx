@@ -10,7 +10,7 @@ interface DocsIndexPageProps {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
-/** /docs 는 앱에서 넘긴 언어(?lang=)가 지원되면 그 언어, 아니면 서버가 정한 기본 언어의 문서 홈으로 보낸다. */
+/** /docs 는 앱에서 넘긴 언어(?lang=)가 지원되면 그 언어, 아니면 문서 레포가 정한 기본 언어의 문서 홈으로 보낸다. */
 export default async function DocsIndexPage({
   searchParams,
 }: DocsIndexPageProps) {

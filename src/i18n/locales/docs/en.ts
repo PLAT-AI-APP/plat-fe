@@ -21,7 +21,6 @@ const en: DocsMessages = {
   emptyHome: "No articles have been published yet.",
   emptyCategory: "There are no articles in this category yet.",
   tableOfContents: "On this page",
-  updatedAt: "Updated {date}",
   loading: "Loading…",
   imageZoom: "View larger image",
   imageViewer: "Image viewer",

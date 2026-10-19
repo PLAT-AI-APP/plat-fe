@@ -6,7 +6,7 @@ import type { DocsMessages } from "@/i18n/locales/docs";
 
 interface DocsContextValue {
   locale: DocsLocale;
-  /** 서버가 정한 지원 언어(메뉴 순서). */
+  /** 문서 레포가 정한 지원 언어(메뉴 순서). */
   locales: DocsLocaleInfo[];
   messages: DocsMessages;
   tree: DocsTreeNode[];

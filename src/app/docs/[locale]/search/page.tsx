@@ -54,9 +54,9 @@ export default async function DocsSearchPage({ params, searchParams }: SearchPag
           ) : (
             <ul className="mt-2 flex flex-col">
               {items.map((item) => (
-                <li key={item.id} className="border-b border-main last:border-b-0">
+                <li key={item.slug} className="border-b border-main last:border-b-0">
                   <Link
-                    href={docsPath.article(locale, item.slug, item.id)}
+                    href={docsPath.article(locale, item.slug)}
                     className="group -mx-3 flex flex-col gap-1 rounded-xl px-3 py-4 transition-colors hover:bg-btn-hover"
                   >
                     {item.groupName && (

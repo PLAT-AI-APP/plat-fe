@@ -34,6 +34,11 @@ env:
     value: https://plat.so
     availability: [BUILD, RUNTIME]
 
+  # 문서(/docs) 원본 브랜치. PLAT-AI-APP/plat-docs 의 main 이 운영, 그 밖(기본 develop)은 개발 문서다.
+  - variable: DOCS_BRANCH
+    value: main
+    availability: [RUNTIME]
+
   # MSW 목업은 운영에서 끈다.
   - variable: NEXT_PUBLIC_API_MOCKING
     value: disabled

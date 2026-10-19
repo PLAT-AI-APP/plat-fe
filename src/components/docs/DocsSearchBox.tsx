@@ -96,7 +96,7 @@ const DocsSearchBox = ({
     const picked = activeIndex >= 0 ? items[activeIndex] : undefined;
     router.push(
       picked
-        ? docsPath.article(locale, picked.slug, picked.id)
+        ? docsPath.article(locale, picked.slug)
         : docsPath.search(locale, trimmed),
     );
     finish();
@@ -185,9 +185,9 @@ const DocsSearchBox = ({
           {items.length > 0 && (
             <ul id={listId} role="listbox" className="max-h-80 overflow-y-auto py-1">
               {items.map((item, index) => (
-                <li key={item.id} id={`${listId}-${index}`} role="option" aria-selected={index === activeIndex}>
+                <li key={item.slug} id={`${listId}-${index}`} role="option" aria-selected={index === activeIndex}>
                   <Link
-                    href={docsPath.article(locale, item.slug, item.id)}
+                    href={docsPath.article(locale, item.slug)}
                     onClick={finish}
                     onMouseEnter={() => setActiveIndex(index)}
                     className={cn(

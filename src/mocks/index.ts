@@ -21,7 +21,6 @@ import { roomHandlers } from "./handlers/room";
 import { searchHandlers } from "./handlers/search";
 import { earningHandlers } from "./handlers/earning";
 import { verificationHandlers } from "./handlers/verification";
-import { docsHandlers } from "./handlers/docs";
 
 /**
  * 모든 핸들러를 하나의 배열로 통합합니다.
@@ -54,5 +53,4 @@ export const handlers = [
   ...roomHandlers,
   ...searchHandlers,
   ...earningHandlers,
-  ...docsHandlers,
 ];

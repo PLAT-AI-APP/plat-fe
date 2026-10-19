@@ -12,7 +12,7 @@ export interface DocsLightboxImage {
 
 /**
  * 본문 이미지를 화면 가득 크게 보여 주는 오버레이. 본문에 들어 있는 이미지 주소를 그대로 쓴다 —
- * 서버가 본문 이미지를 원본에 가장 가까운 공개 변형본 주소로 내려 주므로 여기서 변형본 이름을 바꾸지 않는다.
+ * 본문 이미지는 문서 레포 assets/ 의 원본(GitHub raw 주소)이라 따로 바꿀 주소가 없다.
  * ESC · 바깥(이미지가 아닌 곳) 클릭 · 닫기 버튼으로 닫고, 닫으면 연 이미지 버튼으로 초점을 돌려준다.
  * 바탕은 문서 바탕색(테마를 따른다)을 거의 불투명하게 깐다.
  */
@@ -70,7 +70,7 @@ const DocsImageLightbox = ({
       >
         <Close size={20} aria-hidden="true" />
       </button>
-      {/* eslint-disable-next-line @next/next/no-img-element -- 관리자가 올린 이미지라 크기를 미리 알 수 없다. */}
+      {/* eslint-disable-next-line @next/next/no-img-element -- 문서 레포의 이미지라 크기를 미리 알 수 없다. */}
       <img
         src={image.src}
         alt={image.alt}
