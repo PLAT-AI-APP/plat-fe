@@ -3,7 +3,7 @@ import type ko from "./ko";
 
 const zh: typeof ko = {
   ...en,
-  common: { confirm: "确认", cancel: "取消", optional: "（可选）" },
+  common: { confirm: "确认", cancel: "取消", optional: "（可选）", clearInput: "清除输入" },
   languages: {
     ko: "韩语",
     en: "English",

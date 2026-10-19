@@ -3,7 +3,7 @@ import type ko from "./ko";
 
 const vi: typeof ko = {
   ...en,
-  common: { confirm: "Xác nhận", cancel: "Hủy", optional: "(Tùy chọn)" },
+  common: { confirm: "Xác nhận", cancel: "Hủy", optional: "(Tùy chọn)", clearInput: "Xóa nội dung" },
   languages: {
     ko: "Tiếng Hàn",
     en: "English",

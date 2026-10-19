@@ -8,6 +8,7 @@ import { toImageVariantUrl } from "@/lib/file";
 import { cn, formatWithCommas } from "@/lib/utils";
 import type { WithdrawalCandidate, WithdrawalChoice } from "@/type/withdrawal";
 import CharacterShortcut from "./CharacterShortcut";
+import ClearInputButton from "@/components/ui/ClearInputButton";
 
 /** 처음 보이는 줄 수와 "더 보기" 한 번에 늘어나는 줄 수. 수백 개여도 한 화면이 길어지지 않게 한다. */
 const PAGE_SIZE = 10;
@@ -200,8 +201,16 @@ const HandoverCandidateList = ({
                       setVisibleCount(PAGE_SIZE);
                     }}
                     placeholder={t("searchPlaceholder")}
-                    className="body-5 min-w-0 flex-1 bg-transparent text-font-1 outline-none placeholder:text-font-disabled"
+                    className="body-5 min-w-0 flex-1 bg-transparent text-font-1 outline-none placeholder:text-font-disabled [&::-webkit-search-cancel-button]:appearance-none"
                   />
+                  {keyword && (
+                    <ClearInputButton
+                      onClear={() => {
+                        setKeyword("");
+                        setVisibleCount(PAGE_SIZE);
+                      }}
+                    />
+                  )}
                 </label>
               )}
 

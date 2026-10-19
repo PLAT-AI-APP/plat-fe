@@ -14,6 +14,7 @@ import { AnimatePresence, m } from "framer-motion";
 import { useTranslations } from "next-intl";
 import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { TagFolder, TagOption, TagPill } from "./TagFolder";
+import ClearInputButton from "@/components/ui/ClearInputButton";
 
 const MAX_SELECTED_TAGS = 5;
 
@@ -136,8 +137,14 @@ const TagSidebar = ({
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder={t("searchPlaceholder")}
-            className="focus-ring-none h-[43px] w-full rounded-xl border border-main bg-darkest pl-[38px] pr-3 body-6 text-font-1 outline-none transition-colors placeholder:text-font-2 focus:field-focus!"
+            className="focus-ring-none h-[43px] w-full rounded-xl border border-main bg-darkest pl-[38px] pr-10 body-6 text-font-1 outline-none transition-colors placeholder:text-font-2 focus:field-focus!"
           />
+          {query && (
+            <ClearInputButton
+              onClear={() => setQuery("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2"
+            />
+          )}
         </label>
       </div>
 

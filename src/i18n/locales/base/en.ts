@@ -5,6 +5,7 @@ const en: typeof ko = {
     confirm: "Confirm",
     cancel: "Cancel",
     optional: "(Optional)",
+    clearInput: "Clear input",
   },
   languages: {
     ko: "Korean",

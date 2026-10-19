@@ -32,6 +32,10 @@ export interface SmartInputProps extends React.InputHTMLAttributes<
   helperMessageType?: "success" | "default";
   leftElement?: React.ReactNode;
   rightElement?: React.ReactNode;
+  /** type="input" 에 값이 있으면 동그라미 X 지우기 버튼을 띄운다(기본 켬). */
+  clearable?: boolean;
+  /** type="input" 에서 Enter 를 눌렀을 때 실행할 동작(옆 버튼과 같은 동작을 건다). */
+  onEnter?: () => void;
   // fontSize?: "md" | "lg";
   labelFontSize?: "title-3" | "title-5";
   descFontSize?: "body-5" | "body-6" | "body-7";

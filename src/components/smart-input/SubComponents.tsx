@@ -48,11 +48,14 @@ export const CharacterCounter = ({
   currentLength,
   maxLength,
   isTextarea,
+  inline,
   className,
 }: {
   currentLength: number;
   maxLength?: number;
   isTextarea?: boolean;
+  /** 입력 칸 오른쪽 묶음(지우기 버튼 등) 안에 흐름대로 놓을 때. */
+  inline?: boolean;
   className?: string;
 }) => {
   if (!maxLength) return null;
@@ -60,8 +63,9 @@ export const CharacterCounter = ({
   return (
     <div
       className={cn(
-        "absolute right-4 body-7 text-font-disabled pointer-events-none",
-        isTextarea ? "bottom-3" : "top-1/2 -translate-y-1/2",
+        "body-7 text-font-disabled pointer-events-none",
+        !inline && "absolute right-4",
+        !inline && (isTextarea ? "bottom-3" : "top-1/2 -translate-y-1/2"),
         className,
       )}
     >

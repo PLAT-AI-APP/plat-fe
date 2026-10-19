@@ -3,7 +3,7 @@ import type ko from "./ko";
 
 const ja: typeof ko = {
   ...en,
-  common: { confirm: "確認", cancel: "キャンセル", optional: "（任意）" },
+  common: { confirm: "確認", cancel: "キャンセル", optional: "（任意）", clearInput: "入力を消去" },
   languages: {
     ko: "韓国語",
     en: "English",

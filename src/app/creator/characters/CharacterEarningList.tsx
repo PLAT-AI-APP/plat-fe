@@ -3,13 +3,14 @@
 import React, { useRef, useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { ArrowLeft, ArrowRight, Close, Search } from "@/icons";
+import { ArrowLeft, ArrowRight, Search } from "@/icons";
 import Button from "@/components/ui/Button";
 import { QueryStateBoundary } from "@/components/state";
 import { cn, formatWithCommas } from "@/lib/utils";
 import { useEarningUniversesQuery } from "@/api/earning/getEarningUniverses";
 import type { EarningUniverseRow, UniverseEarningSort } from "@/type/earning";
 import CharacterThumb from "../_components/CharacterThumb";
+import ClearInputButton from "@/components/ui/ClearInputButton";
 
 /** 서버가 정렬 기준대로 한 쪽에 20개씩 준다. */
 const PAGE_SIZE = 20;
@@ -207,17 +208,13 @@ const CharacterEarningList = () => {
         />
         {keyword && (
           <>
-            <button
-              type="button"
-              aria-label={t("characters.clearSearch")}
-              onClick={() => {
+            <ClearInputButton
+              label={t("characters.clearSearch")}
+              onClear={() => {
                 setKeyword("");
                 if (query) search("");
               }}
-              className="flex size-5 shrink-0 items-center justify-center rounded-full bg-font-2/40 text-dark transition-colors hover:bg-font-2/70"
-            >
-              <Close className="size-2.5" aria-hidden="true" />
-            </button>
+            />
             <Button type="submit" size="sm">
               {t("characters.search")}
             </Button>

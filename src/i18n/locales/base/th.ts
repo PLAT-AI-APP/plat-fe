@@ -3,7 +3,7 @@ import type ko from "./ko";
 
 const th: typeof ko = {
   ...en,
-  common: { confirm: "ยืนยัน", cancel: "ยกเลิก", optional: "(ไม่บังคับ)" },
+  common: { confirm: "ยืนยัน", cancel: "ยกเลิก", optional: "(ไม่บังคับ)", clearInput: "ล้างข้อความ" },
   languages: {
     ko: "เกาหลี",
     en: "English",

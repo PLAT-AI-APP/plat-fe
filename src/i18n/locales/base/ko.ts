@@ -3,6 +3,7 @@ const ko = {
     confirm: "확인",
     cancel: "취소",
     optional: "(선택)",
+    clearInput: "입력 지우기",
   },
   languages: {
     ko: "한국어",
