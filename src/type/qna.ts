@@ -14,6 +14,7 @@ export const QNA_WRITABLE_CATEGORIES = [
   "PAYMENT",
   "CHARACTER",
   "BUG",
+  "EARNING",
   "ETC",
 ] as const;
 export type QnaWritableCategory = (typeof QNA_WRITABLE_CATEGORIES)[number];
@@ -36,6 +37,12 @@ export interface QnaRefundSummary {
   creditAmount: number;
 }
 
+/** 수익 · 교환 문의에 붙인 교환 건(문의 시점 스냅샷). 교환 진행 상태는 담지 않는다 — 결과는 답변으로 온다. */
+export interface QnaRedemptionSummary {
+  redemptionNo: string;
+  productName: string;
+}
+
 /** GET /qna/me 목록 한 줄이자 GET /qna/me/{qnaId} 응답 */
 export interface MyQnaItem {
   qnaId: string;
@@ -51,6 +58,8 @@ export interface MyQnaItem {
   cancelledAt: string | null;
   /** `REFUND` 문의에만 있고 나머지는 null 이다. */
   refund: QnaRefundSummary | null;
+  /** 교환 건을 붙인 `EARNING` 문의에만 있다. */
+  redemption: QnaRedemptionSummary | null;
 }
 
 export type MyQnaListResponse = SliceWith<MyQnaItem>;
@@ -68,6 +77,8 @@ export interface QnaCreateRequest {
   category: QnaWritableCategory;
   title: string;
   content: string;
+  /** 전환 내역에서 넘어온 내 교환 번호. `EARNING` 문의에만 붙는다. */
+  redemptionNo?: string;
 }
 
 /** POST /qna 응답(201) */

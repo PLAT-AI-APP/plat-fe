@@ -23,8 +23,11 @@ const ROUTE_TITLE_KEYS: ReadonlyArray<readonly [RegExp, string]> = [
   [/^\/studio\/[^/]+$/, "pageTitles.studio"],
   [/^\/token-charge$/, "tokenCharge.title"],
   [/^\/usage-history$/, "pageTitles.usageHistory"],
-  [/^\/earnings$/, "pageTitles.earnings"],
-  [/^\/earnings\/tier$/, "pageTitles.earningsTier"],
+  [/^\/creator$/, "pageTitles.earnings"],
+  [/^\/creator\/tier$/, "pageTitles.earningsTier"],
+  [/^\/creator\/exchange$/, "pageTitles.earningsExchange"],
+  [/^\/creator\/characters$/, "pageTitles.earningsCharacters"],
+  [/^\/creator\/characters\/[^/]+$/, "pageTitles.earningsCharacter"],
   [/^\/withdrawal$/, "withdrawalPage.title"],
 ];
 

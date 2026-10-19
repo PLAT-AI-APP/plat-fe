@@ -15,8 +15,11 @@ const en = {
     home: "Explore characters",
     search: "Search",
     usageHistory: "Usage history",
-    earnings: "My earnings",
+    earnings: "Creator Center",
     earningsTier: "Creator tier",
+    earningsExchange: "Exchange",
+    earningsCharacters: "Earnings by character",
+    earningsCharacter: "Character earnings",
     myReports: "My reports",
   },
   errorPage: {

@@ -13,8 +13,11 @@ const zh: typeof en = {
     home: "探索角色",
     search: "搜索",
     usageHistory: "使用记录",
-    earnings: "我的收益",
+    earnings: "创作者中心",
     earningsTier: "创作者等级",
+    earningsExchange: "兑换",
+    earningsCharacters: "按角色收益",
+    earningsCharacter: "角色收益",
     myReports: "举报记录",
   },
   errorPage: {

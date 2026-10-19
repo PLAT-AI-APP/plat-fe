@@ -13,8 +13,11 @@ const th: typeof en = {
     home: "สำรวจตัวละคร",
     search: "ค้นหา",
     usageHistory: "ประวัติการใช้งาน",
-    earnings: "รายได้ของฉัน",
+    earnings: "ศูนย์ครีเอเตอร์",
     earningsTier: "ระดับครีเอเตอร์",
+    earningsExchange: "แลกรางวัล",
+    earningsCharacters: "รายได้ตามตัวละคร",
+    earningsCharacter: "รายได้ของตัวละคร",
     myReports: "ประวัติการรายงาน",
   },
   errorPage: {

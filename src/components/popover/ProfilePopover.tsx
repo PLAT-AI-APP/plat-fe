@@ -7,7 +7,7 @@ import { cn, formatWithCommas } from "@/lib/utils";
 import {
   ArrowRight,
   BookOpen,
-  Coin,
+  CreatorCenter,
   Flag,
   Info,
   Gear,
@@ -106,8 +106,8 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
     },
     {
       name: t("earnings"),
-      icon: Coin,
-      link: "/earnings",
+      icon: CreatorCenter,
+      link: "/creator",
     },
     {
       name: t("persona"),
@@ -124,7 +124,7 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
 
   // 로그인 상태가 아닐 때는 개인화 기능으로 이어지는 항목을 숨깁니다.
   const filteredActivityArray = activityArray.filter((item) => {
-    if (item.link === "/token-charge" || item.link === "/earnings") {
+    if (item.link === "/token-charge" || item.link === "/creator") {
       return isLoggedIn;
     }
 

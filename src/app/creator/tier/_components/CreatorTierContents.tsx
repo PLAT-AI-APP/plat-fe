@@ -29,6 +29,7 @@ import {
   meetsTier,
   toOrigin,
   toTier,
+  toNone,
   type CreatorStats,
   type Tier,
 } from "./tiers";
@@ -43,19 +44,20 @@ const TierBadge = ({
   tier: Tier;
   size: number;
   dim?: boolean;
-}) => (
-  // eslint-disable-next-line @next/next/no-img-element
-  <img
-    src={tier.badge}
-    alt=""
-    width={size}
-    height={size}
-    className={cn(
-      "shrink-0 transition-[filter,opacity]",
-      dim && "opacity-35 grayscale",
-    )}
-  />
-);
+}) =>
+  tier.badge && (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={tier.badge}
+      alt=""
+      width={size}
+      height={size}
+      className={cn(
+        "shrink-0 transition-[filter,opacity]",
+        dim && "opacity-35 grayscale",
+      )}
+    />
+  );
 
 /** 카드 뒤에 등급 색을 아주 옅게 깐다. */
 const tierGlow = (tier: Tier, at = "12% 20%") => ({
@@ -201,13 +203,13 @@ const TierSlider = ({
                 isCurrent ? "border-main" : "border-main/60",
                 !isViewed && "cursor-pointer scale-[0.96] opacity-50",
               )}
-              style={locked ? undefined : tierGlow(tier)}
+              style={locked || !tier.badge ? undefined : tierGlow(tier)}
             >
               <TierBadge tier={tier} size={64} dim={locked} />
               <div className="flex min-w-0 flex-col gap-1">
                 <span className="body-6 flex items-center gap-1.5 text-font-2">
                   {isCurrent && t("myTier")}
-                  {index < tierIndex && (
+                  {index < tierIndex && tier.code !== "NONE" && (
                     <>
                       <CheckIcon className="size-3" /> {t("achieved")}
                     </>
@@ -478,12 +480,18 @@ const TierBody = ({ data }: { data: CreatorTierStatus }) => {
     [ladder, t, data.originShareBps],
   );
   const isOrigin = data.currentTier === "ORIGIN";
-  /** 오리진이면 사다리 끝에 오리진 카드를 붙여 그 위치를 내 등급으로 보여 준다. */
-  const sliderTiers = useMemo(
-    () => (isOrigin ? [...ladder, origin] : ladder),
-    [isOrigin, ladder, origin],
+  const none = useMemo(
+    () => toNone(t("none"), data.baseShareBps, data.baseHoldDays),
+    [t, data.baseShareBps, data.baseHoldDays],
   );
-  /** 슬라이더에서 내 위치. 등급이 없으면 -1. */
+  /**
+   * 맨 앞에 등급 없음, 오리진이면 사다리 끝에 오리진 카드를 붙여 그 위치를 내 등급으로 보여 준다.
+   */
+  const sliderTiers = useMemo(
+    () => (isOrigin ? [none, ...ladder, origin] : [none, ...ladder]),
+    [isOrigin, none, ladder, origin],
+  );
+  /** 슬라이더에서 내 위치. 등급이 없으면 0(등급 없음 카드). */
   const tierIndex = sliderTiers.findIndex(
     (tier) => tier.code === data.currentTier,
   );
@@ -505,8 +513,13 @@ const TierBody = ({ data }: { data: CreatorTierStatus }) => {
     paidChats: data.paidTurns,
     followers: data.followers,
   };
-  const current = tierIndex >= 0 ? sliderTiers[tierIndex] : null;
-  const next = isOrigin ? null : (ladder[tierIndex + 1] ?? null);
+  const ladderIndex = ladder.findIndex(
+    (tier) => tier.code === data.currentTier,
+  );
+  /** 승급 연출의 출발 등급. 등급 없음에서 올라가면 없다. */
+  const current =
+    ladderIndex >= 0 ? ladder[ladderIndex] : isOrigin ? origin : null;
+  const next = isOrigin ? null : (ladder[ladderIndex + 1] ?? null);
   const canPromote = data.canPromote && next !== null && meetsTier(stats, next);
 
   const handlePromote = () => {
@@ -657,12 +670,10 @@ const TierSkeleton = () => (
 
 /** 내 등급 슬라이더, 혜택, 다음 등급까지의 진행과 승급 신청. */
 const CreatorTierContents = () => {
-  const t = useTranslations("earnings.tier");
   const { data, isPending, isError, error, refetch } = useCreatorTierQuery();
 
   return (
-    <section className="mx-auto mb-10 flex w-full max-w-160 flex-col gap-8 pt-5">
-      <h1 className="heading-2">{t("title")}</h1>
+    <section className="flex flex-col gap-8">
       <QueryStateBoundary
         isPending={isPending}
         isError={isError}

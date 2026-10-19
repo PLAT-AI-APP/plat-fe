@@ -13,8 +13,11 @@ const vi: typeof en = {
     home: "Khám phá nhân vật",
     search: "Tìm kiếm",
     usageHistory: "Lịch sử sử dụng",
-    earnings: "Thu nhập của tôi",
+    earnings: "Trung tâm nhà sáng tạo",
     earningsTier: "Cấp nhà sáng tạo",
+    earningsExchange: "Đổi thưởng",
+    earningsCharacters: "Thu nhập theo nhân vật",
+    earningsCharacter: "Thu nhập nhân vật",
     myReports: "Lịch sử báo cáo",
   },
   errorPage: {

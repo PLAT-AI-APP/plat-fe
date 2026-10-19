@@ -39,7 +39,7 @@ const MyQnaItem = ({ item }: MyQnaItemProps) => {
   const t = useTranslations("customerService.qna");
   const unitT = useTranslations("tokenCharge");
   const [isOpen, setIsOpen] = useState(false);
-  const { refund } = item;
+  const { refund, redemption } = item;
   const isCancelled = item.status === "CANCELLED";
   const openDialog = useDialogStore((state) => state.openDialog);
   const closeDialog = useDialogStore((state) => state.closeDialog);
@@ -134,6 +134,18 @@ const MyQnaItem = ({ item }: MyQnaItemProps) => {
                     </dd>
                     <dt className="text-font-2">{t("orderUid")}</dt>
                     <dd className="text-font-1">{refund.orderUid}</dd>
+                  </dl>
+                </section>
+              )}
+
+              {redemption && (
+                <section className="flex flex-col gap-1">
+                  <h3 className="title-7 text-font-2">{t("redemptionLabel")}</h3>
+                  <dl className="body-6 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 rounded-xl bg-card px-3 py-2.5">
+                    <dt className="text-font-2">{t("refundProduct")}</dt>
+                    <dd className="text-font-1">{redemption.productName}</dd>
+                    <dt className="text-font-2">{t("redemptionNo")}</dt>
+                    <dd className="text-font-1 tabular-nums">{redemption.redemptionNo}</dd>
                   </dl>
                 </section>
               )}

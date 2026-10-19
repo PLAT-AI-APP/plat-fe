@@ -9,7 +9,6 @@ import Token from "@/icons/Token";
 import { ModalLayout } from "@/components/ModalLayout";
 import Button from "@/components/ui/Button";
 import { cn, formatWithCommas } from "@/lib/utils";
-import { showAppToast } from "@/lib/toast";
 import { usePostNoteConversionMutation } from "@/api/earning/postNoteConversion";
 
 interface NoteConversionModalProps {
@@ -130,15 +129,8 @@ const NoteConversionModal = ({
     convert(
       { notes },
       {
-        onSuccess: (redemption) => {
-          if (redemption.status === "ISSUED") {
-            setConvertedNotes(notes);
-            return;
-          }
-          onClose();
-          // 노트 지급이 늦어지면 재지급 배치가 채운다.
-          showAppToast("info", t("conversion.granting"));
-        },
+        // 차감·지급이 한 트랜잭션이라 성공 응답이면 노트가 이미 들어와 있다.
+        onSuccess: () => setConvertedNotes(notes),
       },
     );
   };
