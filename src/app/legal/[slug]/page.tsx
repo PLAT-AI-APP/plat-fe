@@ -22,6 +22,7 @@ const TITLE_KEY: Record<LegalSlug, string> = {
   terms: "footer.terms",
   privacy: "footer.privacy",
   youth: "footer.youth",
+  refund: "footer.refund",
 };
 
 const isLegalSlug = (slug: string): slug is LegalSlug =>

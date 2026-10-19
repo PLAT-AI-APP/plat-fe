@@ -8,6 +8,7 @@ export const LEGAL_SLUG_TYPE = {
   terms: "TERMS_OF_SERVICE",
   privacy: "PRIVACY_POLICY",
   youth: "YOUTH_PROTECTION",
+  refund: "REFUND_POLICY",
 } as const satisfies Record<string, TermsDocumentType>;
 
 export type LegalSlug = keyof typeof LEGAL_SLUG_TYPE;
@@ -18,9 +19,11 @@ export const LEGAL_LINKS = {
   // 가입의 "만 14세 이상" 항목은 청소년 보호 정책으로 잇는다.
   ageOver14: "/legal/youth",
   youth: "/legal/youth",
+  refund: "/legal/refund",
 } as const;
 
-// 사업자 정보 중 번역이 필요 없는 값. 빈 문자열이면 푸터에 표시하지 않는다.
+// 사업자 정보 중 번역이 필요 없는 값. 서버 사이트 설정을 못 받았을 때의 대체값이다(Footer).
+// 빈 문자열이면 푸터에 표시하지 않는다.
 export const BUSINESS_INFO = {
   registrationNumber: "227-40-01411",
   phone: "",

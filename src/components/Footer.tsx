@@ -5,7 +5,16 @@ import React from "react";
 import { useTranslations } from "next-intl";
 import { docsEntryPath } from "@/components/docs/docsPath";
 import { useLocaleStore } from "@/store/useLocaleStore";
+import { useSiteSettingsQuery } from "@/api/system/getSiteSettings";
 import { BUSINESS_INFO, LEGAL_LINKS } from "@/constants/legal";
+
+/** 서버 값이 비어 있으면(못 받았거나 아직 입력 전) 대체값을 쓴다. 둘 다 비면 빈 문자열 — 그 항목은 숨긴다. */
+const pick = (serverValue: string | undefined, fallback = "") =>
+  serverValue?.trim() || fallback;
+
+/** "라벨: 값". 값이 없으면 빈 문자열을 돌려 항목째 숨긴다. */
+const labeled = (label: string, value: string, separator = ": ") =>
+  value ? `${label}${separator}${value}` : "";
 
 const Footer = () => {
   const t = useTranslations();
@@ -17,23 +26,78 @@ const Footer = () => {
     { text: t("footer.terms"), link: LEGAL_LINKS.terms, external: false },
     { text: t("footer.privacy"), link: LEGAL_LINKS.privacy, external: false },
     { text: t("footer.youth"), link: LEGAL_LINKS.youth, external: false },
+    { text: t("footer.refund"), link: LEGAL_LINKS.refund, external: false },
   ];
 
+  /*
+   * 사업자 정보는 관리자 콘솔 > 사이트 설정 값을 먼저 쓴다. 통신판매업 표시 의무 항목이라
+   * 응답 전·API 장애 때도 비지 않도록, 번역 문구·상수에 둔 값으로 대신 그린다.
+   */
+  const { data: settings } = useSiteSettingsQuery();
+  const privacyOfficer = pick(settings?.privacyOfficer);
+  const privacyOfficerContact = pick(settings?.privacyOfficerContact);
+
   const businessItems = [
-    { id: "footer-company-name", text: t("footer.companyName") },
-    { id: "footer-representative", text: t("footer.representative") },
-    { id: "footer-phone-number", text: BUSINESS_INFO.phone },
+    {
+      id: "footer-company-name",
+      text: pick(settings?.companyName, t("footer.companyName")),
+    },
+    {
+      id: "footer-representative",
+      text: labeled(
+        t("footer.representativeLabel"),
+        pick(settings?.representative, t("footer.representative")),
+        " ",
+      ),
+    },
     {
       id: "footer-registration-number",
-      text: `${t("footer.registrationNumberLabel")}: ${BUSINESS_INFO.registrationNumber}`,
+      text: labeled(
+        t("footer.registrationNumberLabel"),
+        pick(settings?.businessNumber, BUSINESS_INFO.registrationNumber),
+      ),
     },
     {
       id: "footer-mail-order-number",
-      text: BUSINESS_INFO.mailOrderNumber
-        ? `${t("footer.mailOrderNumberLabel")}: ${BUSINESS_INFO.mailOrderNumber}`
-        : "",
+      text: labeled(
+        t("footer.mailOrderNumberLabel"),
+        pick(settings?.mailOrderNumber, BUSINESS_INFO.mailOrderNumber),
+      ),
     },
-    { id: "footer-office-address", text: t("footer.address") },
+    {
+      id: "footer-office-address",
+      text: labeled(
+        t("footer.addressLabel"),
+        pick(settings?.address, t("footer.address")),
+      ),
+    },
+    {
+      id: "footer-phone-number",
+      text: labeled(
+        t("footer.phoneLabel"),
+        pick(settings?.phone, BUSINESS_INFO.phone),
+      ),
+    },
+    {
+      id: "footer-email",
+      text: labeled(t("footer.emailLabel"), pick(settings?.email)),
+    },
+    {
+      id: "footer-support-hours",
+      text: labeled(
+        t("footer.supportHoursLabel"),
+        pick(settings?.supportHours),
+      ),
+    },
+    {
+      id: "footer-privacy-officer",
+      text: labeled(
+        t("footer.privacyOfficerLabel"),
+        privacyOfficer && privacyOfficerContact
+          ? `${privacyOfficer} (${privacyOfficerContact})`
+          : privacyOfficer || privacyOfficerContact,
+      ),
+    },
   ].filter((item) => item.text);
 
   return (
