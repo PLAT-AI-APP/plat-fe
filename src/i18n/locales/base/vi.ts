@@ -200,6 +200,11 @@ const vi: typeof ko = {
         NAME: "Tên",
         DESCRIPTION: "Giới thiệu",
         DETAIL_SETTING: "Thiết lập chi tiết",
+        UNIVERSE: "Thế giới",
+        CHARACTER: "Nhân vật",
+        SCENARIO: "Kịch bản",
+        ASSET: "Tài sản",
+        MULTIPLE: "Nhiều chỗ",
       },
     },
     qnaCancel: {

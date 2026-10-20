@@ -200,6 +200,11 @@ const ko = {
         NAME: "이름",
         DESCRIPTION: "소개",
         DETAIL_SETTING: "상세 설정",
+        UNIVERSE: "세계관",
+        CHARACTER: "캐릭터",
+        SCENARIO: "시나리오",
+        ASSET: "에셋",
+        MULTIPLE: "여러 곳",
       },
     },
     qnaCancel: {

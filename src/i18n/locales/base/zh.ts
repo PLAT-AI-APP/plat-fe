@@ -198,6 +198,11 @@ const zh: typeof ko = {
         NAME: "名称",
         DESCRIPTION: "简介",
         DETAIL_SETTING: "详细设定",
+        UNIVERSE: "世界观",
+        CHARACTER: "角色",
+        SCENARIO: "场景",
+        ASSET: "素材",
+        MULTIPLE: "多处",
       },
     },
     qnaCancel: {

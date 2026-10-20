@@ -204,6 +204,11 @@ const en: typeof ko = {
         NAME: "Name",
         DESCRIPTION: "Description",
         DETAIL_SETTING: "Detailed settings",
+        UNIVERSE: "World",
+        CHARACTER: "Character",
+        SCENARIO: "Scenario",
+        ASSET: "Asset",
+        MULTIPLE: "Multiple areas",
       },
     },
     qnaCancel: {

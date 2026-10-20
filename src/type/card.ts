@@ -24,10 +24,22 @@ export interface BaseCard {
   adult?: boolean;
 }
 
-/** 검수에서 고칠 곳. 원문 대신 필드와 고칠 방향만 온다. */
+/**
+ * 검수에서 고칠 곳. 원문 대신 필드와 고칠 방향만 온다.
+ * field 는 입력 칸(NAME·DESCRIPTION·DETAIL_SETTING)이거나, 칸을 특정하지 못할 때 문제가 감지된 영역이다.
+ * 영역 값은 정확한 문장 위치가 아니라 대략의 범위이고, MULTIPLE 은 여러 영역에 걸친다는 뜻이다.
+ */
 export interface ReviewFinding {
   language: string;
-  field: "NAME" | "DESCRIPTION" | "DETAIL_SETTING";
+  field:
+    | "NAME"
+    | "DESCRIPTION"
+    | "DETAIL_SETTING"
+    | "UNIVERSE"
+    | "CHARACTER"
+    | "SCENARIO"
+    | "ASSET"
+    | "MULTIPLE";
   guide: string;
 }
 

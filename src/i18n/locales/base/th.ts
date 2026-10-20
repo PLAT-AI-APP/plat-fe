@@ -200,6 +200,11 @@ const th: typeof ko = {
         NAME: "ชื่อ",
         DESCRIPTION: "คำแนะนำ",
         DETAIL_SETTING: "การตั้งค่าโดยละเอียด",
+        UNIVERSE: "โลก",
+        CHARACTER: "ตัวละคร",
+        SCENARIO: "สถานการณ์",
+        ASSET: "แอสเซ็ต",
+        MULTIPLE: "หลายส่วน",
       },
     },
     qnaCancel: {

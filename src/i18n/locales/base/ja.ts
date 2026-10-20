@@ -199,6 +199,11 @@ const ja: typeof ko = {
         NAME: "名前",
         DESCRIPTION: "紹介",
         DETAIL_SETTING: "詳細設定",
+        UNIVERSE: "世界観",
+        CHARACTER: "キャラクター",
+        SCENARIO: "シナリオ",
+        ASSET: "アセット",
+        MULTIPLE: "複数の箇所",
       },
     },
     qnaCancel: {
