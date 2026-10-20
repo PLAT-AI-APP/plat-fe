@@ -175,13 +175,17 @@ const SidebarSummary = ({
         </div>
       </section>
 
-      <div className="flex gap-2 overflow-hidden">
+      {/* 칸 폭(389px)에 5장이 다 들어가지 않거나 좁은 화면에서는 가로로 밀어 볼 수 있어야 한다.
+          예전에는 overflow-hidden 이라 넘친 썸네일이 그냥 잘려 보이기만 했다. 스크롤바는 전역 스타일(얇은 막대)을 따르고,
+          넘칠 때만 나타난다. snap 으로 썸네일이 반쯤 걸쳐 멈추지 않게 하고, overscroll-x-contain 으로 트랙패드 가로 스와이프가
+          브라우저 뒤로가기로 번지지 않게 한다. */}
+      <div className="flex snap-x gap-2 overflow-x-auto overscroll-x-contain">
         {character.images.slice(0, 5).map((image, index) => (
           <button
             key={image.id}
             type="button"
             onClick={() => onSelectImage(index)}
-            className="relative size-[73px] shrink-0 overflow-hidden rounded-lg transition-opacity hover:opacity-80"
+            className="relative size-[73px] shrink-0 snap-start overflow-hidden rounded-lg transition-opacity hover:opacity-80"
             aria-label={t("previewImageLabel", {
               title: character.title,
               index: index + 1,
