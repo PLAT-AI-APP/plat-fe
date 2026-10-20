@@ -13,17 +13,20 @@ import IconButton from "@/components/ui/IconButton";
 interface RepresentativeImageCropModalProps {
   imageSrc: string;
   imageType: string;
+  /** 크롭 비율(가로 ÷ 세로). 생략하면 정사각형이다. */
+  aspect?: number;
   /** 잘라 낸 이미지. 부모가 바로 미리보기에 넣고 업로드는 뒤에서 한다. */
   onApply: (croppedImage: Blob) => void;
   onClose: () => void;
 }
 
-// 대표 이미지는 항상 정사각형 썸네일로 사용되므로 크롭 비율을 1:1로 고정합니다.
-const FIXED_CROP_ASPECT = 1;
+// 비율은 쓰는 곳이 정해 넘기고, 이 모달 안에서는 사용자가 바꾸지 못하게 고정합니다.
+const SQUARE_CROP_ASPECT = 1;
 
 const RepresentativeImageCropModal = ({
   imageSrc,
   imageType,
+  aspect = SQUARE_CROP_ASPECT,
   onApply,
   onClose,
 }: RepresentativeImageCropModalProps) => {
@@ -63,13 +66,10 @@ const RepresentativeImageCropModal = ({
   };
 
   const handleMediaLoaded = (mediaSize: { width: number; height: number }) => {
-    // 보이는 이미지 영역 안에 크롭 박스가 딱 맞도록, 짧은 변을 기준으로 1:1 크롭 크기를 계산합니다.
-    const visibleImageSize = Math.min(mediaSize.width, mediaSize.height);
+    // 보이는 이미지 영역 안에 크롭 박스가 딱 맞도록, 비율을 지키는 가장 큰 크기를 계산합니다.
+    const width = Math.min(mediaSize.width, mediaSize.height * aspect);
 
-    setCropSize({
-      width: visibleImageSize,
-      height: visibleImageSize,
-    });
+    setCropSize({ width, height: width / aspect });
   };
 
   return (
@@ -82,7 +82,11 @@ const RepresentativeImageCropModal = ({
         <header className="flex items-start justify-between gap-4">
           <div className="min-w-0">
             <h2 className="title-1 text-font-1">{t("title")}</h2>
-            <p className="body-5 pt-3 text-font-2">{t("description")}</p>
+            <p className="body-5 pt-3 text-font-2">
+              {aspect === SQUARE_CROP_ASPECT
+                ? t("description")
+                : t("descriptionPortrait")}
+            </p>
           </div>
 
           <IconButton
@@ -102,7 +106,7 @@ const RepresentativeImageCropModal = ({
               crop={crop}
               cropSize={cropSize}
               zoom={1}
-              aspect={FIXED_CROP_ASPECT}
+              aspect={aspect}
               cropShape="rect"
               showGrid={false}
               objectFit="contain"

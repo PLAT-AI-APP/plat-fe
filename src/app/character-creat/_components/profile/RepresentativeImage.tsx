@@ -9,6 +9,7 @@ import { useFormContext, useWatch } from "react-hook-form";
 import { Close, ImageIcon, Plus } from "@/icons";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
 import { cn } from "@/lib/utils";
+import { REPRESENTATIVE_IMAGE_ASPECT } from "@/constants/imageCrop";
 import { useCroppedImageUpload } from "./useCroppedImageUpload";
 
 const RepresentativeImageCropModal = dynamic(
@@ -115,6 +116,7 @@ const RepresentativeImage = () => {
         <RepresentativeImageCropModal
           imageSrc={cropTarget.src}
           imageType={cropTarget.type}
+          aspect={REPRESENTATIVE_IMAGE_ASPECT}
           onApply={handleCropApply}
           onClose={closeCrop}
         />

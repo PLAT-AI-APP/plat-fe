@@ -75,6 +75,7 @@ const vi: typeof ko = {
       title: "Chỉnh sửa ảnh",
       description:
         "Hãy căn vùng sẽ hiển thị trên ảnh đại diện theo khung vuông.",
+      descriptionPortrait: "Hãy căn vùng sẽ hiển thị trên ảnh đại diện theo tỷ lệ 1:1.3 (khung dọc).",
       dragGuide: "Bạn chỉ có thể kéo ảnh để điều chỉnh vị trí.",
       zoom: "Thu phóng",
       cancel: "Hủy",

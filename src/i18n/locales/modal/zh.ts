@@ -70,6 +70,7 @@ const zh: typeof ko = {
     imageCrop: {
       title: "编辑图片",
       description: "请将要显示在代表图片中的区域调整为正方形。",
+      descriptionPortrait: "请将要显示在代表图片中的区域调整为 1:1.3（竖版）比例。",
       dragGuide: "只能通过拖动图片来调整位置。",
       zoom: "缩放",
       cancel: "取消",

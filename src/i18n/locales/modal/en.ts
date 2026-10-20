@@ -74,6 +74,7 @@ const en: typeof ko = {
       title: "Edit image",
       description:
         "Adjust the square area that will be shown as the cover image.",
+      descriptionPortrait: "Adjust the 1:1.3 (portrait) area that will be shown as the cover image.",
       dragGuide: "You can drag the image to adjust its position only.",
       zoom: "Zoom",
       cancel: "Cancel",
