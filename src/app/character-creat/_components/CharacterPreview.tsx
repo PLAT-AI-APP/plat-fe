@@ -47,10 +47,6 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
     name: `scenarios.${activeScenarioIndex}.contents`,
   });
   const name = useWatch({ control, name: "name" });
-  const representativeImage = useWatch({
-    control,
-    name: "representativeImage",
-  });
   const characterProfileImage = useWatch({
     control,
     name: "characterProfileImage",
@@ -75,8 +71,10 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
   const canUndoScenario = (scenarioHistory?.past.length ?? 0) > 0;
   const canRedoScenario = (scenarioHistory?.future.length ?? 0) > 0;
   const { onScroll } = useScrollTimeout();
+  // 채팅방에서 말풍선 옆에 뜨는 얼굴은 대표 이미지(카드용)가 아니라 캐릭터 프로필 이미지다.
+  // 아직 올리지 않았을 때만 샘플로 대신한다.
   const previewProfileImage =
-    representativeImage || PREVIEW_PROFILE_FALLBACK_IMAGE;
+    characterProfileImage || PREVIEW_PROFILE_FALLBACK_IMAGE;
 
   const applyScenarioContents = (
     nextContents: ScenarioContentItem[],
