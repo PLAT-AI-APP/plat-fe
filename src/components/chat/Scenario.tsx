@@ -21,7 +21,7 @@ const Scenario = ({
   return (
     <section id="scenario-item" className={cn("flex gap-5", className)}>
       {!isNovelView && (
-        <Message className={cn("shrink-0 text-font-2", iconClassName)} />
+        <Message className={cn("shrink-0 text-[#69697A]", iconClassName)} />
       )}
       <p
         className={cn(

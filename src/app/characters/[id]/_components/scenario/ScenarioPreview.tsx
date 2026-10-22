@@ -17,7 +17,7 @@ export const ScenarioPreview = ({ currentScenario }: ScenarioPreviewProps) => {
     <section id="scenario-preview-container" className="flex flex-col gap-6">
       {/* 지문 섹션 */}
       <article className="flex items-center gap-5">
-        <Message className="min-w-7 h-7 text-font-2" />
+        <Message className="min-w-7 h-7 text-[#69697A]" />
         <p className="body-5 text-font-2 whitespace-pre-line">{situation}</p>
       </article>
 
