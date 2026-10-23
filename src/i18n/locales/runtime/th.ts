@@ -348,8 +348,9 @@ const th: typeof en = {
     },
     badges: {
       popular: "ยอดนิยม",
-      firstCharge: "เติมครั้งแรก",
+      firstCharge: "เฉพาะเติมครั้งแรก",
     },
+    firstChargeOnce: "ครั้งเดียวเท่านั้น",
   },
   myChatting: {
     closedBadge: "สิ้นสุดแล้ว",

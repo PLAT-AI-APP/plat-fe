@@ -17,7 +17,6 @@ import { useRequireLogin } from "@/hooks/common/useRequireLogin";
 import { useWalletStore } from "@/store/useWalletStore";
 import type { Product } from "@/type/product";
 import type { PaymentOrderCreated } from "@/type/payment";
-import Badge from "./Badge";
 import PolicyGuide from "./PolicyGuide";
 import PurchaseConfirmDialog from "./PurchaseConfirmDialog";
 import PaymentWindowOverlay, {
@@ -44,6 +43,13 @@ const isHttpUrl = (value: string) => {
   }
 };
 
+/** 첫 충전 라벨의 네 갈래 반짝임. 이 카드에서만 쓰므로 아이콘 모음에 올리지 않는다. */
+const Sparkle = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 12 12" fill="currentColor" aria-hidden className={className}>
+    <path d="M6 0c.35 2.9 2.1 4.65 5 5-2.9.35-4.65 2.1-5 5-.35-2.9-2.1-4.65-5-5 2.9-.35 4.65-2.1 5-5Z" />
+  </svg>
+);
+
 interface ProductListItemProps {
   product: Product;
   disabled: boolean;
@@ -67,11 +73,23 @@ const ProductListItem = ({
         disabled={disabled}
         aria-busy={disabled || undefined}
         onClick={() => onPurchase(product)}
-        className="relative w-full cursor-pointer rounded-2xl border border-main px-5 py-4 text-left transition-colors hover:bg-btn-hover disabled:cursor-wait disabled:opacity-60"
+        className={cn(
+          "relative w-full cursor-pointer rounded-2xl px-5 py-4 text-left transition-colors disabled:cursor-wait disabled:opacity-60",
+          product.firstPurchaseOnly
+            ? "first-charge-card"
+            : "border border-main hover:bg-btn-hover",
+        )}
       >
-        {/* 카드 위 테두리에 매달린 뱃지 */}
         {product.firstPurchaseOnly && (
-          <Badge type="firstCharge" className="-mt-4 mb-3" />
+          <div className="mb-3 flex items-center justify-between">
+            <span className="first-charge-sheen inline-flex items-center gap-1 rounded-full bg-brand-opacity px-2.5 py-1 title-7 leading-none text-brand-dark">
+              <Sparkle className="h-3 w-3" />
+              {t("tokenCharge.badges.firstCharge")}
+            </span>
+            <span className="caption-2 text-font-2">
+              {t("tokenCharge.firstChargeOnce")}
+            </span>
+          </div>
         )}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -130,17 +148,15 @@ const TokenChargeContents = () => {
   } = useProductsQuery();
   const { data: firstPurchase } = useFirstPurchaseEligibilityQuery();
   const queryClient = useQueryClient();
-  // 목록은 사람별로 거르지 않는다. 비로그인은 그대로 보여주고(누르면 로그인), 로그인했으면 대상일 때만
-  // 첫 구매 상품을 맨 위에 둔다. 표시용 필터이고 실제로는 서버가 주문 단계에서 막는다.
-  const visibleProducts =
-    products && isLoggedIn
-      ? [
-          ...(firstPurchase?.eligible
-            ? products.filter((product) => product.firstPurchaseOnly)
-            : []),
-          ...products.filter((product) => !product.firstPurchaseOnly),
-        ]
-      : products;
+  // 목록은 사람별로 거르지 않는다. 첫 구매 상품은 비로그인(누르면 로그인)이거나 대상일 때만 맨 위에 둔다.
+  // 표시용 필터이고 실제로는 서버가 주문 단계에서 막는다.
+  const showFirstPurchase = !isLoggedIn || !!firstPurchase?.eligible;
+  const visibleProducts = products && [
+    ...(showFirstPurchase
+      ? products.filter((product) => product.firstPurchaseOnly)
+      : []),
+    ...products.filter((product) => !product.firstPurchaseOnly),
+  ];
   const fadeInClassName = useFadeInAfterLoading(isLoading);
   const requireLogin = useRequireLogin();
   const { mutate: createPaymentOrder, isPending: isCreatingOrder } =

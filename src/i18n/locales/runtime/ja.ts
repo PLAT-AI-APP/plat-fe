@@ -345,8 +345,9 @@ const ja: typeof en = {
     },
     badges: {
       popular: "人気",
-      firstCharge: "初回チャージ",
+      firstCharge: "初回チャージ限定",
     },
+    firstChargeOnce: "1回限り",
   },
   myChatting: {
     closedBadge: "会話終了",

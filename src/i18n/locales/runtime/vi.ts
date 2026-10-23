@@ -352,8 +352,9 @@ const vi: typeof en = {
     },
     badges: {
       popular: "Phổ biến",
-      firstCharge: "Nạp đầu",
+      firstCharge: "Chỉ lần nạp đầu",
     },
+    firstChargeOnce: "Chỉ một lần",
   },
   myChatting: {
     closedBadge: "Đã kết thúc",
