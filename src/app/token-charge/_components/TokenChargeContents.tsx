@@ -15,6 +15,8 @@ import { cn, formatWithCommas, toMajorAmount } from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useRequireLogin } from "@/hooks/common/useRequireLogin";
 import { useWalletStore } from "@/store/useWalletStore";
+import { useUserStore } from "@/store/useUserStore";
+import { useModalStore } from "@/store/useModalStore";
 import type { Product } from "@/type/product";
 import type { PaymentOrderCreated } from "@/type/payment";
 import PolicyGuide from "./PolicyGuide";
@@ -53,12 +55,15 @@ const Sparkle = ({ className }: { className?: string }) => (
 interface ProductListItemProps {
   product: Product;
   disabled: boolean;
+  /** 로그인했지만 본인인증 전이다. 첫 충전 카드에 인증이 먼저라고 알린다. */
+  needsIdentity: boolean;
   onPurchase: (product: Product) => void;
 }
 
 const ProductListItem = ({
   product,
   disabled,
+  needsIdentity,
   onPurchase,
 }: ProductListItemProps) => {
   const t = useTranslations();
@@ -87,7 +92,9 @@ const ProductListItem = ({
               {t("tokenCharge.badges.firstCharge")}
             </span>
             <span className="caption-2 text-font-2">
-              {t("tokenCharge.firstChargeOnce")}
+              {needsIdentity
+                ? t("tokenCharge.firstChargeIdentityRequired")
+                : t("tokenCharge.firstChargeOnce")}
             </span>
           </div>
         )}
@@ -147,6 +154,13 @@ const TokenChargeContents = () => {
     refetch,
   } = useProductsQuery();
   const { data: firstPurchase } = useFirstPurchaseEligibilityQuery();
+  const identityVerifiedUntil = useUserStore(
+    (state) => state.user?.identityVerifiedUntil,
+  );
+  // 본인인증은 1년 뒤 만료된다. 만료도 미인증으로 본다.
+  const identityVerified =
+    !!identityVerifiedUntil && new Date(identityVerifiedUntil) > new Date();
+  const openModal = useModalStore((state) => state.openModal);
   const queryClient = useQueryClient();
   // 목록은 사람별로 거르지 않는다. 첫 구매 상품은 비로그인(누르면 로그인)이거나 대상일 때만 맨 위에 둔다.
   // 표시용 필터이고 실제로는 서버가 주문 단계에서 막는다.
@@ -176,6 +190,11 @@ const TokenChargeContents = () => {
 
   const handleSelectProduct = (product: Product) => {
     if (!requireLogin()) return;
+    // 첫 충전은 본인인증한 계정만 산다. 인증을 마치면 같은 카드를 다시 누르면 된다(서버가 주문 때 다시 본다).
+    if (product.firstPurchaseOnly && !identityVerified) {
+      openModal("IDENTITY_VERIFICATION", { purpose: "identity" });
+      return;
+    }
     setConfirmingProduct(product);
   };
 
@@ -243,6 +262,10 @@ const TokenChargeContents = () => {
             queryKey: paymentQueryKeys.firstPurchase(),
           });
         }
+        // 인증이 그사이 만료됐다. 서버 문구 토스트와 함께 인증 창을 연다.
+        if (error.code === "PAYMENT_IDENTITY_NOT_VERIFIED") {
+          openModal("IDENTITY_VERIFICATION", { purpose: "identity" });
+        }
       },
     });
   };
@@ -291,6 +314,7 @@ const TokenChargeContents = () => {
                 key={product.productId}
                 product={product}
                 disabled={isCreatingOrder || tossCheckout !== null}
+                needsIdentity={isLoggedIn && !identityVerified}
                 onPurchase={handleSelectProduct}
               />
             ))}

@@ -346,6 +346,7 @@ const zh: typeof en = {
       firstCharge: "首充专享",
     },
     firstChargeOnce: "仅限一次",
+    firstChargeIdentityRequired: "实名认证后可购买",
   },
   myChatting: {
     closedBadge: "已结束",

@@ -348,6 +348,7 @@ const ja: typeof en = {
       firstCharge: "初回チャージ限定",
     },
     firstChargeOnce: "1回限り",
+    firstChargeIdentityRequired: "本人確認後に購入",
   },
   myChatting: {
     closedBadge: "会話終了",

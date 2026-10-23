@@ -355,6 +355,7 @@ const vi: typeof en = {
       firstCharge: "Chỉ lần nạp đầu",
     },
     firstChargeOnce: "Chỉ một lần",
+    firstChargeIdentityRequired: "Xác minh danh tính để mua",
   },
   myChatting: {
     closedBadge: "Đã kết thúc",
