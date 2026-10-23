@@ -32,6 +32,7 @@ const PreviewContentView = ({
         CharacterName={characterName}
         chatText={displayValue}
         image={profileImage}
+        showFallbackWhenEmpty
       />
     );
   }

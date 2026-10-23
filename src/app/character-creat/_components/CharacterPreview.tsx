@@ -17,9 +17,6 @@ interface CharacterPreviewProps {
 
 const EMPTY_CONTENTS: ScenarioContentItem[] = [];
 
-// 프로필 이미지를 아직 등록하지 않아도 채팅 프리뷰의 Next Image가 깨지지 않도록 표시용 이미지만 둡니다.
-const PREVIEW_PROFILE_FALLBACK_IMAGE = "/images/sample.png";
-
 const scrollToBottom = (container: HTMLDivElement | null) => {
   requestAnimationFrame(() => {
     if (!container) return;
@@ -72,9 +69,8 @@ const CharacterPreview = ({ activeScenarioIndex }: CharacterPreviewProps) => {
   const canRedoScenario = (scenarioHistory?.future.length ?? 0) > 0;
   const { onScroll } = useScrollTimeout();
   // 채팅방에서 말풍선 옆에 뜨는 얼굴은 대표 이미지(카드용)가 아니라 캐릭터 프로필 이미지다.
-  // 아직 올리지 않았을 때만 샘플로 대신한다.
-  const previewProfileImage =
-    characterProfileImage || PREVIEW_PROFILE_FALLBACK_IMAGE;
+  // 아직 올리지 않았으면 비워 둔다. 말풍선이 다른 화면과 같은 마스코트 기본 이미지(ImageFallback)를 그린다.
+  const previewProfileImage = characterProfileImage || "";
 
   const applyScenarioContents = (
     nextContents: ScenarioContentItem[],

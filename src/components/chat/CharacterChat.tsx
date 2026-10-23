@@ -14,6 +14,11 @@ interface CharacterChatProps {
   bubbleClassName?: string;
   /** 소설로 보기. 프로필·말풍선 없이 `이름 | 대사` 한 문단으로 그린다. */
   isNovelView?: boolean;
+  /**
+   * 프로필이 비어 있을 때 빈 원 대신 마스코트 기본 이미지를 그린다. 제작 미리보기처럼 아직 올리지 않은 것이
+   * 정상인 화면용이다. 채팅방은 프로필을 받는 중에도 비어 있으므로 켜지 않는다(빈 원으로 자리만 잡는다).
+   */
+  showFallbackWhenEmpty?: boolean;
 }
 
 const CharacterChat = ({
@@ -24,6 +29,7 @@ const CharacterChat = ({
   imageClassName = "size-9",
   bubbleClassName = "rounded-[0px_16px_16px_16px]",
   isNovelView = false,
+  showFallbackWhenEmpty = false,
 }: CharacterChatProps) => {
   const t = useTranslations();
 
@@ -40,7 +46,7 @@ const CharacterChat = ({
     <article className="flex gap-2">
       {/* 프로필이 없거나 세계관 상세가 아직 오지 않았으면 빈 src 로 그리지 않는다 — next/image 가 매번 콘솔 에러를 낸다.
           받는 중 말풍선(ChatContentBlock)과 같은 빈 원으로 자리만 잡아, 이미지가 와도 줄이 흔들리지 않게 한다. */}
-      {image ? (
+      {image || showFallbackWhenEmpty ? (
         <ResourceImage
           src={image}
           alt={t("chatUI.characterProfileAlt", { name: CharacterName })}
