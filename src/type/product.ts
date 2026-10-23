@@ -26,4 +26,6 @@ export interface Product {
   display: ProductDisplay;
   price: ProductPrice;
   credits: ProductCredits;
+  /** 첫 결제 때만 살 수 있는 상품. 목록은 사람별로 거르지 않아 화면이 대상 여부로 거른다. */
+  firstPurchaseOnly: boolean;
 }
