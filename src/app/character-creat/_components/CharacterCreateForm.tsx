@@ -426,7 +426,7 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
           {isEditLoading || isLoadingDraft ? (
             <SkeletonCharacterCreate />
           ) : (
-            <div className="flex min-h-0 min-w-0 flex-1 items-start justify-center gap-4 lg:grid lg:grid-cols-[491fr_693fr]">
+            <div className="flex min-h-0 min-w-0 flex-1 items-start justify-center gap-4 lg:grid lg:grid-cols-[491fr_693fr] lg:grid-rows-[minmax(0,1fr)]">
               <CreateTabs
                 isEditMode={isEditMode}
                 wasAdult={wasAdult}
@@ -437,7 +437,7 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
                 assetFieldArray={assetFieldArray}
               />
               {isDesktop && (
-                <div className="hidden lg:block">
+                <div className="hidden h-full min-h-0 lg:block">
                   {shouldShowCardPreview ? (
                     <CharacterCardPreviewPanel />
                   ) : (
