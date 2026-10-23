@@ -2,10 +2,13 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useProductsQuery } from "@/api/product/getProducts";
 import { useFadeInAfterLoading } from "@/hooks/common/useFadeInAfterLoading";
 import { usePostPaymentOrderMutation } from "@/api/payment/postPaymentOrder";
+import { useFirstPurchaseEligibilityQuery } from "@/api/payment/getFirstPurchaseEligibility";
+import { paymentQueryKeys } from "@/api/payment/queryKeys";
 import { showAppToast } from "@/lib/toast";
 import Token from "@/icons/Token";
 import { cn, formatWithCommas, toMajorAmount } from "@/lib/utils";
@@ -14,6 +17,7 @@ import { useRequireLogin } from "@/hooks/common/useRequireLogin";
 import { useWalletStore } from "@/store/useWalletStore";
 import type { Product } from "@/type/product";
 import type { PaymentOrderCreated } from "@/type/payment";
+import Badge from "./Badge";
 import PolicyGuide from "./PolicyGuide";
 import PurchaseConfirmDialog from "./PurchaseConfirmDialog";
 import PaymentWindowOverlay, {
@@ -65,6 +69,10 @@ const ProductListItem = ({
         onClick={() => onPurchase(product)}
         className="relative w-full cursor-pointer rounded-2xl border border-main px-5 py-4 text-left transition-colors hover:bg-btn-hover disabled:cursor-wait disabled:opacity-60"
       >
+        {/* 카드 위 테두리에 매달린 뱃지 */}
+        {product.firstPurchaseOnly && (
+          <Badge type="firstCharge" className="-mt-4 mb-3" />
+        )}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Token className="h-8 w-8" />
@@ -120,6 +128,19 @@ const TokenChargeContents = () => {
     isError,
     refetch,
   } = useProductsQuery();
+  const { data: firstPurchase } = useFirstPurchaseEligibilityQuery();
+  const queryClient = useQueryClient();
+  // 목록은 사람별로 거르지 않는다. 비로그인은 그대로 보여주고(누르면 로그인), 로그인했으면 대상일 때만
+  // 첫 구매 상품을 맨 위에 둔다. 표시용 필터이고 실제로는 서버가 주문 단계에서 막는다.
+  const visibleProducts =
+    products && isLoggedIn
+      ? [
+          ...(firstPurchase?.eligible
+            ? products.filter((product) => product.firstPurchaseOnly)
+            : []),
+          ...products.filter((product) => !product.firstPurchaseOnly),
+        ]
+      : products;
   const fadeInClassName = useFadeInAfterLoading(isLoading);
   const requireLogin = useRequireLogin();
   const { mutate: createPaymentOrder, isPending: isCreatingOrder } =
@@ -197,9 +218,15 @@ const TokenChargeContents = () => {
         showAppToast("info", t("tokenCharge.payment.redirecting"));
         window.location.href = redirectUrl;
       },
-      onError: () => {
+      onError: (error) => {
         popup?.close();
         setTossCheckout(null);
+        // 다른 창에서 이미 결제했다. 대상 여부를 다시 받아 첫 구매 상품을 내린다(토스트는 전역 처리가 띄운다).
+        if (error.code === "PAYMENT_FIRST_PURCHASE_USED") {
+          queryClient.invalidateQueries({
+            queryKey: paymentQueryKeys.firstPurchase(),
+          });
+        }
       },
     });
   };
@@ -237,13 +264,13 @@ const TokenChargeContents = () => {
         {/* 서버가 준 사유와(개발 모드에서는) 실패한 요청까지 함께 보여주고 재시도를 제공한다. */}
         {isError && <ErrorState error={error} onRetry={refetch} />}
 
-        {products && products.length === 0 && (
+        {visibleProducts && visibleProducts.length === 0 && (
           <EmptyState mood="peek" message={t("tokenCharge.empty")} />
         )}
 
-        {products && products.length > 0 && (
+        {visibleProducts && visibleProducts.length > 0 && (
           <ul className={cn("flex flex-col gap-3", fadeInClassName)}>
-            {products.map((product) => (
+            {visibleProducts.map((product) => (
               <ProductListItem
                 key={product.productId}
                 product={product}
