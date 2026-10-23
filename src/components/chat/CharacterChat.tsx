@@ -53,7 +53,8 @@ const CharacterChat = ({
           width={imageSize}
           height={imageSize}
           unoptimized
-          className={cn("avatar-img", imageClassName)}
+          // 대사가 길어 줄이 늘어도 프로필이 좁아지지 않게 줄어들지 않는다. 글이 대신 아랫줄로 내려간다.
+          className={cn("avatar-img shrink-0", imageClassName)}
         />
       ) : (
         <span
@@ -62,7 +63,7 @@ const CharacterChat = ({
         />
       )}
 
-      <div id="chat-bubble-container" className="body-4">
+      <div id="chat-bubble-container" className="body-4 min-w-0">
         {/* 이름은 세계관 상세가 도착해야 채워진다. 비어 있어도 한 줄 높이를 잡아 두어, 나중에 채워질 때
             말풍선이 아래로 밀리지 않게 한다. */}
         <span className="body-6 mb-1.5 block min-h-[1lh] text-font-1">

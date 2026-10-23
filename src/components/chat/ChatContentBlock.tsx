@@ -103,13 +103,13 @@ const TypingIndicator = ({
           width={36}
           height={36}
           unoptimized
-          className="avatar-img size-9"
+          className="avatar-img size-9 shrink-0"
         />
       ) : (
         <span className="size-9 shrink-0 rounded-full bg-card" aria-hidden />
       )}
 
-      <div className="body-5">
+      <div className="body-5 min-w-0">
         <span className="body-6 mb-1.5 block text-font-1">{characterName}</span>
         <div className="flex h-9 w-fit items-center gap-1 rounded-[0px_16px_16px_16px] bg-card px-3">
           {dots}
