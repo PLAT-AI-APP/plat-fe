@@ -87,7 +87,7 @@ const CreateTabs = ({
   };
 
   return (
-    <section className="flex h-full max-h-[calc(100dvh-var(--header-height)-5.5rem)] w-full max-w-[491px] min-w-0 flex-col gap-9 overflow-hidden">
+    <section className="flex h-full max-h-full min-h-0 w-full max-w-[491px] min-w-0 flex-col gap-9 overflow-hidden">
       {/* Tabs are unframed in the Figma design; the border belongs only to the tab row. */}
       <nav
         ref={tabNavRef as React.RefObject<HTMLElement>}

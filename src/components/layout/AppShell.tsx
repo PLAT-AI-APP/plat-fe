@@ -13,6 +13,8 @@ import SidebarFrame from "./SidebarFrame";
 
 const HIDE_SIDEBAR_PATHS: string[] = [];
 const HIDE_HEADER_PATHS = ["/chatting-room"];
+// 헤더는 두되 본문을 화면 높이에 맞춰 고정하고 안에서만 스크롤하는 화면. 문서 스크롤이 생기지 않는다.
+const FIXED_HEIGHT_PATHS = ["/character-creat"];
 
 const AppShell = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname();
@@ -26,15 +28,21 @@ const AppShell = ({ children }: { children: ReactNode }) => {
     pathname.startsWith(path),
   );
 
+  const isFixedHeight = FIXED_HEIGHT_PATHS.some((path) =>
+    pathname.startsWith(path),
+  );
+
   return (
     <SidebarFrame
       isHeaderHidden={isHeaderHidden}
       isSidebarHidden={isSidebarHidden}
+      isFixedHeight={isFixedHeight}
     >
       <PageViewport
         isChattingRoomPath={pathname.startsWith("/chatting-room")}
         isHeaderHidden={isHeaderHidden}
         isHomePath={pathname === "/"}
+        isFixedHeight={isFixedHeight}
       >
         {/* 인증 확인을 기다리는 건 페이지 내용뿐이다. 헤더·사이드바까지 감싸면 새로고침할 때마다
             토큰 갱신이 끝날 때까지 화면 전체가 비어 보인다. */}

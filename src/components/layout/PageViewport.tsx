@@ -10,6 +10,7 @@ interface PageViewportProps {
   isChattingRoomPath: boolean;
   isHeaderHidden: boolean;
   isHomePath: boolean;
+  isFixedHeight?: boolean;
 }
 
 const PageViewport = ({
@@ -17,6 +18,7 @@ const PageViewport = ({
   isChattingRoomPath,
   isHeaderHidden,
   isHomePath,
+  isFixedHeight = false,
 }: PageViewportProps) => {
   return (
     <div
@@ -28,6 +30,8 @@ const PageViewport = ({
         "relative min-w-0 w-full mx-auto",
         isHeaderHidden ? "min-h-0 overflow-hidden" : "overflow-x-clip",
         !isHomePath && !isChattingRoomPath && "content-x",
+        // 화면 높이에 고정하는 화면: 배너 띠를 뺀 나머지 높이를 본문이 쓰고, 넘치면 안에서 스크롤한다.
+        isFixedHeight && "flex h-full min-h-0 flex-col overflow-hidden",
       )}
     >
       {/*

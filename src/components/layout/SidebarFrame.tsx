@@ -35,12 +35,15 @@ interface SidebarFrameProps {
   children: ReactNode;
   isHeaderHidden: boolean;
   isSidebarHidden: boolean;
+  /** 헤더를 뺀 화면 높이에 본문을 고정한다(문서 스크롤 없음). */
+  isFixedHeight?: boolean;
 }
 
 const SidebarFrame = ({
   children,
   isHeaderHidden,
   isSidebarHidden,
+  isFixedHeight = false,
 }: SidebarFrameProps) => {
   const t = useTranslations();
   const isNarrow = useMediaQuery(TABLET_MAX_WIDTH_QUERY);
@@ -113,11 +116,14 @@ const SidebarFrame = ({
             : "[grid-template-columns:minmax(0,1fr)]",
           hideInlineOnSmallBeforeMount &&
             "max-sm:[grid-template-columns:minmax(0,1fr)]",
-          // 헤더 없는 화면(채팅방)은 화면 높이에 고정하고 안에서 스크롤한다. 나머지는 문서가
-          // 스크롤하므로 높이를 가두지 않는다(최소 높이만 둔다).
+          // 헤더 없는 화면(채팅방)은 화면 높이에 고정하고 안에서 스크롤한다. 제작 화면처럼 헤더는
+          // 두고 본문만 고정하는 화면은 행을 1fr 로 가둬야 내용이 길어도 문서가 늘어나지 않는다.
+          // 나머지는 문서가 스크롤하므로 높이를 가두지 않는다(최소 높이만 둔다).
           isHeaderHidden
             ? "h-dvh overflow-hidden"
-            : "min-h-[calc(100dvh-var(--header-height))]",
+            : isFixedHeight
+              ? "h-[calc(100dvh-var(--header-height))] overflow-hidden [grid-template-rows:minmax(0,1fr)]"
+              : "min-h-[calc(100dvh-var(--header-height))]",
         )}
       >
         {isSidebarRendered && (
