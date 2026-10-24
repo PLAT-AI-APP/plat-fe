@@ -36,10 +36,11 @@ const EditableChatPreview = ({
       <ResourceImage
         src={profileImage}
         alt={profileAlt}
-        width={40}
-        height={40}
+        width={36}
+        height={36}
         unoptimized
-        className="h-10 w-10 self-start rounded-full"
+        // 보기 모드(CharacterChat)의 프로필과 같은 36px 로 맞춘다. 40px 이면 수정 버튼을 누를 때 아바타가 커졌다 줄어든다.
+        className="avatar-img size-9 self-start"
       />
       <div className="body-5 min-w-0 flex-1">
         <span className="body-5 block text-font-1">{characterName}</span>

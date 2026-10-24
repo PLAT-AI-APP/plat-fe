@@ -134,10 +134,14 @@
 /*
  * 프로필/아바타 이미지. rounded-full object-cover 조합이 헤더·사이드바·댓글·채팅 등
  * 10곳 넘게 반복되고 있어 하나로 묶는다. size-*는 자리마다 달라 그대로 둔다.
+ *
+ * flex-shrink: 0 — 아바타는 옆 글이 길어져도 좁아지면 안 된다. flex 줄 안의 이미지는 기본값(1) 때문에
+ * 글이 길어지거나 버튼이 붙으면 폭이 줄어 타원이 된다. 자리마다 shrink-0 을 빠뜨리지 않게 여기서 한 번에 막는다.
  */
 @utility avatar-img {
   border-radius: calc(infinity* 1px);
   object-fit: cover;
+  flex-shrink: 0;
 }
 
 /*
