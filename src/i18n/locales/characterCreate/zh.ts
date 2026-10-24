@@ -121,6 +121,7 @@ const zh: typeof ko = {
       toggleAsset: "展开或收起素材",
       invalidType: "仅支持 jpg、png、webp 图片文件。",
       invalidSize: "文件大小最多为 5MB。",
+      maxCount: "最多可添加 {max} 个素材，已跳过超出的 {count} 个文件。",
       uploading: "正在上传图片",
       uploadFailed: "素材图片上传失败。请重试。",
     },

@@ -123,6 +123,8 @@ const ko = {
       toggleAsset: "에셋 펼치기·접기",
       invalidType: "jpg, png, webp 이미지 파일만 가능합니다.",
       invalidSize: "파일 용량은 최대 5MB까지 가능합니다.",
+      maxCount:
+        "에셋은 최대 {max}개까지 등록할 수 있어요. 초과한 {count}개는 제외했어요.",
       uploading: "이미지를 올리는 중",
       uploadFailed: "에셋 이미지 업로드에 실패했습니다. 다시 시도해 주세요.",
     },

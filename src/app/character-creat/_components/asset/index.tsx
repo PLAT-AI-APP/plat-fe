@@ -23,6 +23,11 @@ interface AssetProps {
 // 채우면 저장을 누르기도 전에 길이 에러가 떠서 사용자가 이유를 알기 어렵습니다.
 const ASSET_NAME_MAX_LENGTH = 15;
 
+const MAX_ASSET_COUNT = 50;
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const UPLOAD_CONCURRENCY = 3;
+
 const Asset = ({ assetFieldArray }: AssetProps) => {
   const t = useTranslations("characterCreate.asset");
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -31,48 +36,9 @@ const Asset = ({ assetFieldArray }: AssetProps) => {
   const { mutateAsync: uploadAssetImage } =
     useUniverseAssetImageUploadMutation();
 
-  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
-    if (!allowedTypes.includes(file.type)) {
-      showAppToast("warning", t("invalidType"));
-      e.target.value = "";
-      return;
-    }
-
-    const maxSize = 5 * 1024 * 1024;
-    if (file.size > maxSize) {
-      showAppToast("warning", t("invalidSize"));
-      e.target.value = "";
-      return;
-    }
-
-    /*
-     * 고르는 즉시 목록에 붙이고 업로드는 뒤에서 한다. 예전에는 업로드가 끝나야 항목이 생겨,
-     * 모바일 회선에서는 몇 초 동안 아무 반응이 없었고 그 사이 다시 누르게 됐다.
-     * 미리보기는 파일을 base64 로 읽지 않고 object URL 로 바로 만든다.
-     *
-     * 업로드 중에 순서를 바꾸거나 지울 수 있어, 끝난 뒤에는 인덱스가 아니라 이 미리보기 주소로
-     * 항목을 다시 찾는다. fileId 가 채워지기 전까지 AssetItem 이 대기 표시를 하고,
-     * 등록·임시저장과 시나리오로 끌어넣기는 막힌다.
-     */
-    const previewUrl = URL.createObjectURL(file);
-    append({
-      assetFile: null,
-      assetName: file.name
-        .split(".")
-        .slice(0, -1)
-        .join(".")
-        .slice(0, ASSET_NAME_MAX_LENGTH),
-      assetImage: previewUrl,
-      assetImageFileId: null,
-      assetSituation: "",
-      assetVisibility: "PUBLIC",
-    });
-    e.target.value = "";
-
+  // 올린 항목은 먼저 목록에 붙여 두고, 끝난 뒤에는 인덱스가 아니라 이 미리보기 주소로 항목을 다시 찾는다.
+  // 업로드 중에 순서를 바꾸거나 지울 수 있기 때문이다.
+  const uploadAsset = async (file: File, previewUrl: string) => {
     const findIndex = () =>
       (getValues("asset") ?? []).findIndex(
         (asset) => asset.assetImage === previewUrl,
@@ -98,8 +64,81 @@ const Asset = ({ assetFieldArray }: AssetProps) => {
     }
   };
 
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    // value 를 비우면 FileList 도 비워지므로 먼저 배열로 복사한다.
+    const picked = Array.from(e.target.files ?? []);
+    e.target.value = "";
+    if (picked.length === 0) return;
+
+    // 여러 장을 골라도 토스트가 파일 수만큼 쌓이지 않도록 종류별로 한 번만 알린다.
+    const typeValid = picked.filter((file) =>
+      ALLOWED_TYPES.includes(file.type),
+    );
+    if (typeValid.length < picked.length) {
+      showAppToast("warning", t("invalidType"));
+    }
+    const valid = typeValid.filter((file) => file.size <= MAX_FILE_SIZE);
+    if (valid.length < typeValid.length) {
+      showAppToast("warning", t("invalidSize"));
+    }
+
+    const remaining = MAX_ASSET_COUNT - (getValues("asset")?.length ?? 0);
+    const accepted = valid.slice(0, Math.max(remaining, 0));
+    if (accepted.length < valid.length) {
+      showAppToast(
+        "warning",
+        t("maxCount", {
+          max: MAX_ASSET_COUNT,
+          count: valid.length - accepted.length,
+        }),
+      );
+    }
+    if (accepted.length === 0) return;
+
+    /*
+     * 고르는 즉시 목록에 붙이고 업로드는 뒤에서 한다. 예전에는 업로드가 끝나야 항목이 생겨,
+     * 모바일 회선에서는 몇 초 동안 아무 반응이 없었고 그 사이 다시 누르게 됐다.
+     * 미리보기는 파일을 base64 로 읽지 않고 object URL 로 바로 만든다.
+     *
+     * 여러 장은 한 번에 append 해 고른 순서를 지킨다. fileId 가 채워지기 전까지 AssetItem 이
+     * 대기 표시를 하고, 등록·임시저장과 시나리오로 끌어넣기는 막힌다.
+     */
+    const items = accepted.map((file) => ({
+      file,
+      previewUrl: URL.createObjectURL(file),
+    }));
+    append(
+      items.map(({ file, previewUrl }) => ({
+        assetFile: null,
+        assetName: file.name
+          .split(".")
+          .slice(0, -1)
+          .join(".")
+          .slice(0, ASSET_NAME_MAX_LENGTH),
+        assetImage: previewUrl,
+        assetImageFileId: null,
+        assetSituation: "",
+        assetVisibility: "PUBLIC" as const,
+      })),
+    );
+
+    // 한꺼번에 올리면 회선·서버에 부담이 되므로 동시에 몇 장씩만 올린다.
+    const queue = [...items];
+    const worker = async () => {
+      for (let next = queue.shift(); next; next = queue.shift()) {
+        await uploadAsset(next.file, next.previewUrl);
+      }
+    };
+    await Promise.all(
+      Array.from(
+        { length: Math.min(UPLOAD_CONCURRENCY, queue.length) },
+        worker,
+      ),
+    );
+  };
+
   const addAsset = () => {
-    if (fields.length + 1 > 50) return;
+    if (fields.length >= MAX_ASSET_COUNT) return;
     fileInputRef.current?.click();
   };
 
@@ -147,6 +186,7 @@ const Asset = ({ assetFieldArray }: AssetProps) => {
         <input
           ref={fileInputRef}
           type="file"
+          multiple
           className="hidden"
           accept=".jpg,.jpeg,.png,.webp"
           onChange={handleFileChange}

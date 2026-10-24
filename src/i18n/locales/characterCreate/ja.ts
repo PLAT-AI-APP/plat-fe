@@ -127,6 +127,8 @@ const ja: typeof ko = {
       toggleAsset: "アセットを開く・閉じる",
       invalidType: "jpg、png、webp 画像ファイルのみ可能です。",
       invalidSize: "ファイル容量は最大 5MB まで可能です。",
+      maxCount:
+        "アセットは最大{max}個まで登録できます。超過した{count}個は除外しました。",
       uploading: "画像をアップロード中",
       uploadFailed:
         "アセット画像のアップロードに失敗しました。もう一度お試しください。",

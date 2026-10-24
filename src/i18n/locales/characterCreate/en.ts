@@ -127,6 +127,8 @@ const en: typeof ko = {
       toggleAsset: "Expand or collapse asset",
       invalidType: "Only jpg, png, and webp image files are allowed.",
       invalidSize: "File size can be up to 5MB.",
+      maxCount:
+        "You can add up to {max} assets. {count} extra file(s) were skipped.",
       uploading: "Uploading image",
       uploadFailed: "Failed to upload the asset image. Please try again.",
     },

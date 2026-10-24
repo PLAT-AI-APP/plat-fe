@@ -126,6 +126,8 @@ const vi: typeof ko = {
       toggleAsset: "Mở rộng hoặc thu gọn tài nguyên",
       invalidType: "Chỉ cho phép tệp ảnh jpg, png, webp.",
       invalidSize: "Dung lượng tệp tối đa là 5MB.",
+      maxCount:
+        "Bạn có thể thêm tối đa {max} tài nguyên. Đã bỏ qua {count} tệp vượt quá.",
       uploading: "Đang tải ảnh lên",
       uploadFailed: "Tải ảnh asset lên thất bại. Vui lòng thử lại.",
     },
