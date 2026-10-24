@@ -404,6 +404,8 @@
 @layer base {
   .image-fallback {
     container-type: size;
+    /* flex 줄 안에서 글이 길어져도 자리가 좁아지지 않게 한다 */
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
     align-items: center;

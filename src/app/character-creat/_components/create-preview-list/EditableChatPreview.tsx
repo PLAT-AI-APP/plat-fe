@@ -41,6 +41,7 @@ const EditableChatPreview = ({
         unoptimized
         // 보기 모드(CharacterChat)의 프로필과 같은 36px 로 맞춘다. 40px 이면 수정 버튼을 누를 때 아바타가 커졌다 줄어든다.
         className="avatar-img size-9 self-start"
+        style={{ width: 36, height: 36, minWidth: 36, maxWidth: 36 }}
       />
       <div className="body-5 min-w-0 flex-1">
         <span className="body-5 block text-font-1">{characterName}</span>

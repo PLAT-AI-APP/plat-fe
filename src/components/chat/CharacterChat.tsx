@@ -55,6 +55,13 @@ const CharacterChat = ({
           unoptimized
           // 대사가 길어 줄이 늘어도 프로필이 좁아지지 않게 줄어들지 않는다. 글이 대신 아랫줄로 내려간다.
           className={cn("avatar-img shrink-0", imageClassName)}
+          // 클래스 우선순위나 대체 이미지(ImageFallback)의 컨테이너 쿼리와 상관없이 크기가 흔들리지 않도록 인라인으로도 못 박는다.
+          style={{
+            width: imageSize,
+            height: imageSize,
+            minWidth: imageSize,
+            maxWidth: imageSize,
+          }}
         />
       ) : (
         <span
