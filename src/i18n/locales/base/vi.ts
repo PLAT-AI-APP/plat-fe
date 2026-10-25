@@ -69,6 +69,7 @@ const vi: typeof ko = {
         accountWithdrawn: "Tài khoản này đã bị xóa.",
         agreementRequired: "Vui lòng đồng ý với tất cả điều khoản bắt buộc.",
         rejoinRestricted: "Bạn có thể đăng ký lại bằng email này sau 7 ngày kể từ khi xóa tài khoản.",
+        signupPaused: "Hiện chúng tôi tạm ngừng nhận đăng ký mới. Vui lòng thử lại sau.",
         emailUnavailable: "Email này đã được đăng ký bằng phương thức khác. Vui lòng đăng nhập bằng phương thức bạn đã dùng khi đăng ký.",
         emailRequired: "Không nhận được email từ tài khoản mạng xã hội. Hãy cho phép chia sẻ email và thử lại.",
         internal: "Đã xảy ra lỗi. Vui lòng thử lại sau.",

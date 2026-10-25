@@ -40,6 +40,8 @@ const ERROR_REASONS = {
   "auth.error.accountWithdrawn": "accountWithdrawn",
   "agreement.error.required": "agreementRequired",
   "email.error.rejoinRestricted": "rejoinRestricted",
+  // 관리자가 신규 가입을 잠시 막았다. 기존 회원 로그인은 그대로다.
+  "auth.signup.error.paused": "signupPaused",
   // 처음 소셜 가입인데 같은 이메일이 다른 방법(이메일·다른 소셜)으로 이미 가입돼 있거나, 제공사가 이메일을 주지 않았다.
   "email.error.unavailable": "emailUnavailable",
   "email.error.required": "emailRequired",
