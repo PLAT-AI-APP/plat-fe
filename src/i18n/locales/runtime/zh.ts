@@ -343,8 +343,10 @@ const zh: typeof en = {
     },
     badges: {
       popular: "热门",
-      firstCharge: "首充",
+      firstCharge: "首充专享",
     },
+    firstChargeOnce: "仅限一次",
+    firstChargeIdentityRequired: "实名认证后可购买",
   },
   myChatting: {
     closedBadge: "已结束",

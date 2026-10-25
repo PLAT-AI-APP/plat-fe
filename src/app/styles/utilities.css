@@ -226,3 +226,56 @@
     white-space: nowrap;
   }
 }
+
+/*
+ * 첫 충전 상품 카드. 다른 카드와 같은 틀에 브랜드색이 오른쪽 위에서 번지는 테두리와 옅은 빛만 더해 눈에 띄게 한다.
+ * 테두리는 padding-box·border-box 두 겹 배경으로 그린다(border-image 는 둥근 모서리를 따르지 못한다).
+ * 바탕을 배경으로 덮으므로 hover 는 배경색 대신 빛의 세기로 보여 준다.
+ */
+/* 사용자 속성은 등록해야 색으로 보간된다. 등록하지 않으면 hover 때 빛이 툭 바뀐다. */
+@property --first-charge-glow {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: transparent;
+}
+
+@utility first-charge-card {
+  --first-charge-glow: var(--brand-opacity-2);
+  border: 1px solid transparent;
+  background:
+    radial-gradient(90% 180% at 100% 0%, var(--first-charge-glow) 0%, transparent 70%) padding-box,
+    linear-gradient(var(--bg-dark), var(--bg-dark)) padding-box,
+    linear-gradient(120deg, var(--brand) 0%, var(--brand-opacity-2) 50%, var(--brand) 100%) border-box;
+  transition: --first-charge-glow var(--motion-slow) var(--motion-ease-out);
+
+  &:hover:not(:disabled) {
+    --first-charge-glow: rgb(255 122 0 / 0.3);
+  }
+}
+
+/* 첫 충전 라벨 위로 몇 초에 한 번 빛이 지나간다. 동작 줄이기 설정에서는 base.css 가 멈춘다. */
+@keyframes first-charge-sheen {
+  0%,
+  72% {
+    transform: translateX(-120%) skewX(-20deg);
+  }
+  100% {
+    transform: translateX(260%) skewX(-20deg);
+  }
+}
+
+@utility first-charge-sheen {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: 40%;
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.35), transparent);
+    animation: first-charge-sheen 4.5s var(--motion-ease-in-out) infinite;
+    pointer-events: none;
+  }
+}

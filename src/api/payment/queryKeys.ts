@@ -5,4 +5,6 @@ export const paymentQueryKeys = {
   orders: () => ["get-payment-order-list"] as const,
   orderList: (size?: number, paidOnly?: boolean) =>
     [...paymentQueryKeys.orders(), size, paidOnly] as const,
+  /** 첫 구매 상품 대상 여부. 결제가 끝나거나 서버가 이미 썼다고 답하면 무효화한다. */
+  firstPurchase: () => ["get-first-purchase-eligibility"] as const,
 };

@@ -346,8 +346,10 @@ const ko: typeof en = {
     },
     badges: {
       popular: "인기",
-      firstCharge: "첫충전",
+      firstCharge: "첫 충전 한정",
     },
+    firstChargeOnce: "단 한 번",
+    firstChargeIdentityRequired: "본인인증 후 구매",
   },
   myChatting: {
     closedBadge: "대화 종료",

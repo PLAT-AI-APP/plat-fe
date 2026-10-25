@@ -354,8 +354,10 @@ const en = {
     },
     badges: {
       popular: "Popular",
-      firstCharge: "First charge",
+      firstCharge: "First charge only",
     },
+    firstChargeOnce: "One time only",
+    firstChargeIdentityRequired: "Verify identity to buy",
   },
   myChatting: {
     closedBadge: "Ended",

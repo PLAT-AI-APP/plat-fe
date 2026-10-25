@@ -6,6 +6,7 @@ import { useQueryClient, type QueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { postPaymentConfirm } from "@/api/payment/postPaymentConfirm";
 import { getPaymentOrder } from "@/api/payment/getPaymentOrder";
+import { paymentQueryKeys } from "@/api/payment/queryKeys";
 import { walletQueryKeys } from "@/api/wallet/queryKeys";
 import { noteQueryKeys } from "@/api/note/queryKeys";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -59,6 +60,8 @@ const refreshNotes = (queryClient: QueryClient) => {
   queryClient.invalidateQueries({
     queryKey: noteQueryKeys.usageHistoryLists(),
   });
+  // 결제가 끝났으니 첫 구매 상품 대상에서 빠진다.
+  queryClient.invalidateQueries({ queryKey: paymentQueryKeys.firstPurchase() });
 };
 
 /** 결제창이 돌려주는 승인 값. 카카오페이는 pg_token, 토스페이먼츠는 paymentKey·amount·paymentType 이다. */

@@ -72,6 +72,7 @@ const en: typeof ko = {
         accountWithdrawn: "This account has been deleted.",
         agreementRequired: "Please agree to all required terms.",
         rejoinRestricted: "You can sign up again with this email 7 days after deleting your account.",
+        signupPaused: "We're not accepting new sign-ups right now. Please try again later.",
         emailUnavailable: "This email is already registered with another sign-in method. Please sign in the way you first signed up.",
         emailRequired: "We couldn't get an email from your social account. Allow email sharing and try again.",
         internal: "Something went wrong. Please try again in a moment.",
