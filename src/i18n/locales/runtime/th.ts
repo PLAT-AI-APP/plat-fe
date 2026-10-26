@@ -446,6 +446,7 @@ const th: typeof en = {
     loginTokenMissing: "ไม่พบโทเค็นในผลการเข้าสู่ระบบ",
     chatNoResponse: "ไม่ได้รับการตอบกลับจากแชต",
     chatTurnInProgress: "กำลังสร้างคำตอบก่อนหน้าอยู่ จะโหลดบทสนทนาใหม่ในอีกสักครู่",
+    chatRoomBusy: "กำลังจัดการคำตอบอยู่ โปรดลองอีกครั้งในอีกสักครู่",
     personaDetailInvalid: "ไม่สามารถอ่านผลรายละเอียดเพอร์โซนาได้",
   },
   loading: {

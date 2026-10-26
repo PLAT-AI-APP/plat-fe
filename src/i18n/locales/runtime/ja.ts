@@ -442,6 +442,7 @@ const ja: typeof en = {
     loginTokenMissing: "ログインの応答にトークンが含まれていません。",
     chatNoResponse: "チャットの応答を受け取れませんでした。",
     chatTurnInProgress: "前の返答をまだ作成中です。しばらくしてから会話を読み込み直します。",
+    chatRoomBusy: "返答を整理しています。しばらくしてからもう一度お試しください。",
     personaDetailInvalid: "ペルソナ詳細の応答を確認できませんでした。",
   },
   loading: {

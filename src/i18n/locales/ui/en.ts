@@ -625,6 +625,7 @@ const en = {
       submit: "Request refund",
       successToast: "Your refund request has been submitted",
       existingToast: "You've already requested this refund",
+      notYetToast: "This order isn't eligible for a refund request yet",
       successDescription: "Our team will review it and reply in My Q&A.",
       viewInQna: "My Q&A",
       orderLabel: "Payment to refund",

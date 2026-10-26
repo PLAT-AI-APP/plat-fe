@@ -83,6 +83,11 @@ const QnaWriteContents = ({ initialCategory, redemptionNo }: QnaWriteContentsPro
       setFieldErrors(next);
       return;
     }
+    // 노트가 아직 지급되지 않은 주문처럼, 지금 결제 상태로는 환불을 신청할 수 없다(409).
+    if (error.code === "PAYMENT_STATUS_TRANSITION_INVALID") {
+      showAppToast("info", t("refund.notYetToast"));
+      return;
+    }
     notifyApiError(error);
   };
 

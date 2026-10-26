@@ -618,6 +618,7 @@ const ko = {
       submit: "환불 요청하기",
       successToast: "환불 요청이 접수되었습니다",
       existingToast: "이미 신청한 환불이에요",
+      notYetToast: "아직 환불을 신청할 수 없는 주문이에요",
       successDescription: "운영팀이 확인 후 나의 Q&A에 답변드릴게요.",
       viewInQna: "나의 Q&A",
       orderLabel: "환불할 결제",

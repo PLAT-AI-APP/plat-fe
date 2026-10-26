@@ -15,6 +15,7 @@ const vi: typeof ko = {
     loadDraft: "Tải bản nháp",
     draftLoadFailed: "Không thể tải bản nháp.",
     draftSaveFailed: "Lưu bản nháp thất bại. Vui lòng thử lại.",
+    draftCreatorRequired: "Chỉ nhà sáng tạo mới có thể dùng bản nháp.",
     draftNotFound: "Không có bản nháp để tải.",
     untitledDraftTitle: "Bản nháp chưa có tiêu đề",
     createSuccess: "Đã tạo nhân vật thành công!",

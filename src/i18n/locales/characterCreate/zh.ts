@@ -15,6 +15,7 @@ const zh: typeof ko = {
     loadDraft: "加载草稿",
     draftLoadFailed: "无法加载草稿。",
     draftSaveFailed: "临时保存失败，请重试。",
+    draftCreatorRequired: "只有创作者可以使用临时保存。",
     draftNotFound: "没有可加载的草稿。",
     untitledDraftTitle: "无标题草稿",
     createSuccess: "角色已成功创建！",

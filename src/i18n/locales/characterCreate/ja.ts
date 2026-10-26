@@ -15,6 +15,7 @@ const ja: typeof ko = {
     loadDraft: "一時保存を読み込む",
     draftLoadFailed: "下書きを読み込めませんでした。",
     draftSaveFailed: "一時保存に失敗しました。もう一度お試しください。",
+    draftCreatorRequired: "一時保存はクリエイターのみ利用できます。",
     draftNotFound: "読み込める下書きがありません。",
     untitledDraftTitle: "無題の下書き",
     createSuccess: "キャラクターが正常に登録されました！",
