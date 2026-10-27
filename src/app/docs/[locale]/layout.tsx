@@ -2,6 +2,7 @@ import type { CSSProperties, ReactNode } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getDocsLocales, getDocsTree } from "@/api/docs/server";
+import { TITLE_PREFIX } from "@/constants/seo";
 import DocsHeader from "@/components/docs/DocsHeader";
 import { readDocsLocale } from "@/components/docs/docsMetadata";
 import { DocsProvider } from "@/components/docs/DocsProvider";
@@ -17,8 +18,11 @@ export async function generateMetadata({ params }: DocsLayoutProps): Promise<Met
   if (!locale) return {};
   const messages = getDocsMessages(locale);
   return {
-    // absolute: 루트 레이아웃의 "%s | PLAT" 템플릿을 덧붙이지 않는다.
-    title: { absolute: messages.siteName, template: `%s | ${messages.siteName}` },
+    // absolute: 루트 레이아웃의 "%s | PLAT" 템플릿을 덧붙이지 않는다. 그래서 환경 표시도 여기서 따로 붙인다.
+    title: {
+      absolute: `${TITLE_PREFIX}${messages.siteName}`,
+      template: `${TITLE_PREFIX}%s | ${messages.siteName}`,
+    },
     description: messages.metaDescription,
   };
 }

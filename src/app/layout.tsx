@@ -12,13 +12,13 @@ import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 import { NavigationGuardProvider } from "next-navigation-guard";
 import MSWProvider from "@/providers/MSWProvider";
 import MotionProvider from "@/providers/MotionProvider";
-import { ALLOW_INDEXING, SITE_URL } from "@/constants/seo";
+import { ALLOW_INDEXING, SITE_URL, TITLE_PREFIX } from "@/constants/seo";
 
 export const metadata: Metadata = {
-  // 1. 기본 메타데이터 및 타이틀 템플릿
+  // 1. 기본 메타데이터 및 타이틀 템플릿 (dev·local 빌드는 앞에 "dev: " 등이 붙는다)
   title: {
-    default: "PLAT | 나만의 AI 페르소나 플랫폼",
-    template: "%s | PLAT", // 하위 페이지에서 "회원가입" 입력 시 "회원가입 | PLAT"으로 표시
+    default: `${TITLE_PREFIX}PLAT | 나만의 AI 페르소나 플랫폼`,
+    template: `${TITLE_PREFIX}%s | PLAT`, // 하위 페이지에서 "회원가입" 입력 시 "회원가입 | PLAT"으로 표시
   },
   description:
     "PLAT에서 당신만의 AI 페르소나를 생성하고, 깊이 있는 대화를 통해 새로운 영감을 얻으세요. 당신의 상상이 현실이 되는 AI 공간입니다.",
