@@ -8,7 +8,8 @@ import {
   useAgreementStatusQuery,
 } from "@/api/agreement/agreements";
 import { useLogoutMutation } from "@/api/auth/logout";
-import { isDocsPathname } from "@/components/docs/docsPath";
+// 예전 앱 안 문서 화면(/docs)용. 문서가 docs.plat.so 로 옮겨 가 지금은 쓰지 않는다(proxy 가 /docs 를 그쪽으로 보낸다).
+// import { isDocsPathname } from "@/components/docs/docsPath";
 import { showAppToast } from "@/lib/toast";
 import { useDialogStore } from "@/store/useDialogStore";
 import AgreementConsentDialog, {
@@ -31,11 +32,11 @@ const AgreementGate = () => {
 
   const pending = status?.pending ?? [];
   // 약관 페이지는 동의하기 전에 읽어야 하는 화면이라 가리지 않는다. 동의 창의 링크가 새 탭으로 여기를 연다.
-  // 문서 사이트(/docs)도 로그인과 무관한 공개 안내라 가리지 않는다.
+  // (예전에는 앱 안 문서 화면(/docs)도 가리지 않았다. 지금 문서는 docs.plat.so 라 앱의 동의 창이 뜨지 않는다.)
   const isOpen =
     pending.length > 0 &&
-    !pathname.startsWith("/legal/") &&
-    !isDocsPathname(pathname);
+    !pathname.startsWith("/legal/");
+  // && !isDocsPathname(pathname);
 
   if (!status || !isOpen) return null;
 

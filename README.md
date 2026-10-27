@@ -41,6 +41,7 @@ npx tsc --noEmit             # 타입 검사
 | `NEXT_PUBLIC_APP_ENV` | (비어 있음) | 배포 환경. `dev`·`local` 일 때만 개발용 화면(`/dev/**`, 가짜 본인인증 창)이 열린다. 비우거나 다른 값이면 운영처럼 닫힌다. **dev 배포는 `dev` 를 꼭 넣는다** — 빠지면 dev 서버(가짜 인증)에서 본인인증을 끝낼 수 없다 |
 | `NEXT_PUBLIC_ALLOW_INDEXING` | (빈 값) | `true` 일 때만 검색 엔진 수집을 연다. 클로즈베타 동안은 비워 둔다 |
 | `NEXT_PUBLIC_SITE_URL` | (빈 값) | 공유 미리보기 기준 주소(`metadataBase`). 비우면 `https://plat.so` |
+| `NEXT_PUBLIC_DOCS_URL` | `https://docs-dev.plat.so` | 문서 사이트 주소(plat-docs 레포, 앱과 따로 배포). 앱의 "문서" 링크가 새 탭으로 열고, 예전 `/docs/...` 주소는 `src/proxy.ts` 가 여기로 308 이동한다. 비우면 `https://docs.plat.so`. 운영은 `apphosting.prod.yaml` 에서 `https://docs.plat.so` |
 | `NEXT_PUBLIC_BETA_BANNER` | (빈 값) | 클로즈베타 안내 띠. `off` 일 때만 숨긴다(비우면 보인다). 정식 출시 때 `off` |
 | `NEXT_PUBLIC_MAINTENANCE_MODE` | (빈 값) | `on` 이면 `src/proxy.ts` 가 모든 화면 요청을 `/maintenance` 로 돌린다(주소는 그대로, 503). **빌드 시 고정** |
 | `NEXT_PUBLIC_SENTRY_DSN` | (없음) | Sentry DSN. 없으면 브라우저·서버 모두 오류 수집을 켜지 않는다 |

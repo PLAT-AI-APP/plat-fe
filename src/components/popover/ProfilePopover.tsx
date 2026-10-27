@@ -27,7 +27,7 @@ import { m, AnimatePresence } from "framer-motion";
 import { TRANSITION_COLLAPSE } from "@/constants/motion";
 import { PopoverLayout } from "./layout";
 import { BUG_REPORT_PATH } from "@/components/layout/BetaBanner";
-import { docsEntryPath } from "@/components/docs/docsPath";
+import { docsSiteEntryUrl } from "@/constants/docs";
 import { useLocaleStore } from "@/store/useLocaleStore";
 import useToggle from "@/hooks/common/useToggle";
 import { useModalStore } from "@/store/useModalStore";
@@ -68,7 +68,8 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
   const supportArray = [
     { name: t("notice"), link: "/notification", icon: Megaphone },
     // 고객센터에 묻기 전에 먼저 찾아볼 곳이라 그 앞에 둔다.
-    { name: t("docs"), link: docsEntryPath(appLocale), icon: BookOpen },
+    // 문서는 따로 배포된 사이트(docs.plat.so)라 새 탭으로 연다.
+    { name: t("docs"), link: docsSiteEntryUrl(appLocale), icon: BookOpen, external: true },
     {
       name: t("customerService"),
       link: "/customer-service",
@@ -379,6 +380,8 @@ const ProfilePopover = ({ onClose, triggerRef }: ProfilePopoverProps) => {
             <Link
               key={tab.name}
               href={tab.link}
+              target={tab.external ? "_blank" : undefined}
+              rel={tab.external ? "noopener noreferrer" : undefined}
               className="menu-item body-5 gap-2 text-font-1"
             >
               <Icon

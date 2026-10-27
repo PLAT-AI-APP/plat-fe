@@ -3,7 +3,7 @@
 import Link from "next/link";
 import React from "react";
 import { useTranslations } from "next-intl";
-import { docsEntryPath } from "@/components/docs/docsPath";
+import { docsSiteEntryUrl } from "@/constants/docs";
 import { useLocaleStore } from "@/store/useLocaleStore";
 import { useSiteSettingsQuery } from "@/api/system/getSiteSettings";
 import { BUSINESS_INFO, LEGAL_LINKS } from "@/constants/legal";
@@ -21,7 +21,8 @@ const Footer = () => {
   const appLocale = useLocaleStore((state) => state.locale);
   // 연결할 문서가 없는 메뉴(회사 소개)는 링크가 생길 때까지 노출하지 않는다
   const menuArray = [
-    { text: t("footer.docs"), link: docsEntryPath(appLocale), external: false },
+    // 문서는 따로 배포된 사이트(docs.plat.so)라 새 탭으로 연다.
+    { text: t("footer.docs"), link: docsSiteEntryUrl(appLocale), external: true },
     { text: t("footer.support"), link: "/customer-service", external: false },
     { text: t("footer.terms"), link: LEGAL_LINKS.terms, external: false },
     { text: t("footer.privacy"), link: LEGAL_LINKS.privacy, external: false },

@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl";
 import { useFaqListQuery } from "@/api/qna/getFaqList";
 import { ChipButton } from "@/components/ui/Button";
 import { buttonStyles } from "@/components/ui/buttonStyles";
-import { docsEntryPath } from "@/components/docs/docsPath";
+import { docsSiteEntryUrl } from "@/constants/docs";
 import { useLocaleStore } from "@/store/useLocaleStore";
 import { QueryStateBoundary } from "@/components/state";
 import { FAQ_CATEGORIES, type FaqCategory } from "@/type/qna";
@@ -71,12 +71,15 @@ const FaqContents = () => {
           <p className="body-6 text-font-2">{t("moreHelpDescription")}</p>
         </div>
         <div className="flex shrink-0 items-center gap-2">
-          <Link
-            href={docsEntryPath(appLocale)}
+          {/* 문서는 따로 배포된 사이트(docs.plat.so)라 새 탭으로 연다. 보던 FAQ 화면은 그대로 남는다. */}
+          <a
+            href={docsSiteEntryUrl(appLocale)}
+            target="_blank"
+            rel="noopener noreferrer"
             className={buttonStyles({ variant: "secondary", size: "sm" })}
           >
             {t("docs")}
-          </Link>
+          </a>
           <Link
             href="/customer-service/qna/new"
             className={buttonStyles({ variant: "primary", size: "sm" })}
