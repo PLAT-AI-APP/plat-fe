@@ -618,6 +618,7 @@ const th = {
       submit: "ขอคืนเงิน",
       successToast: "ส่งคำขอคืนเงินแล้ว",
       existingToast: "คุณขอคืนเงินรายการนี้แล้ว",
+      notYetToast: "คำสั่งซื้อนี้ยังขอคืนเงินไม่ได้",
       successDescription: "ทีมงานจะตรวจสอบและตอบกลับใน Q&A ของฉัน",
       viewInQna: "Q&A ของฉัน",
       orderLabel: "รายการชำระเงินที่ต้องการคืนเงิน",

@@ -619,6 +619,7 @@ const vi = {
       submit: "Yêu cầu hoàn tiền",
       successToast: "Đã gửi yêu cầu hoàn tiền",
       existingToast: "Bạn đã yêu cầu hoàn tiền này rồi",
+      notYetToast: "Đơn hàng này chưa thể yêu cầu hoàn tiền",
       successDescription: "Đội ngũ vận hành sẽ kiểm tra và trả lời trong Hỏi đáp của tôi.",
       viewInQna: "Q&A của tôi",
       orderLabel: "Giao dịch cần hoàn tiền",

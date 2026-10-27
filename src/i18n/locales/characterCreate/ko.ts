@@ -13,6 +13,7 @@ const ko = {
     loadDraft: "임시저장 불러오기",
     draftLoadFailed: "초안을 불러오지 못했습니다.",
     draftSaveFailed: "임시저장에 실패했습니다. 다시 시도해주세요.",
+    draftCreatorRequired: "크리에이터만 임시저장을 사용할 수 있어요.",
     draftNotFound: "불러올 초안이 없어요.",
     untitledDraftTitle: "제목 없는 초안",
     createSuccess: "캐릭터가 성공적으로 등록되었습니다!",

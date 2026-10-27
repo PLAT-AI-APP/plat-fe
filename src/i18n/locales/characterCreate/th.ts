@@ -15,6 +15,7 @@ const th: typeof ko = {
     loadDraft: "โหลดฉบับร่าง",
     draftLoadFailed: "ไม่สามารถโหลดร่างได้",
     draftSaveFailed: "บันทึกร่างไม่สำเร็จ กรุณาลองใหม่อีกครั้ง",
+    draftCreatorRequired: "เฉพาะครีเอเตอร์เท่านั้นที่ใช้การบันทึกร่างได้",
     draftNotFound: "ไม่มีร่างให้โหลด",
     untitledDraftTitle: "ร่างไม่มีชื่อ",
     createSuccess: "สร้างตัวละครสำเร็จแล้ว!",

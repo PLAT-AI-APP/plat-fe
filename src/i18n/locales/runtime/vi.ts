@@ -456,6 +456,7 @@ const vi: typeof en = {
     loginTokenMissing: "Không tìm thấy token trong phản hồi đăng nhập.",
     chatNoResponse: "Không nhận được phản hồi từ cuộc trò chuyện.",
     chatTurnInProgress: "Câu trả lời trước vẫn đang được tạo. Cuộc trò chuyện sẽ được tải lại sau giây lát.",
+    chatRoomBusy: "Đang hoàn tất câu trả lời. Vui lòng thử lại sau giây lát.",
     personaDetailInvalid: "Không đọc được phản hồi chi tiết persona.",
   },
   loading: {

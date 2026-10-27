@@ -619,6 +619,7 @@ const ja = {
       submit: "返金をリクエスト",
       successToast: "返金リクエストを受け付けました",
       existingToast: "すでに申請済みの返金です",
+      notYetToast: "この注文はまだ返金を申請できません",
       successDescription: "運営チームが確認後、マイQ&Aでご返信します。",
       viewInQna: "マイQ&A",
       orderLabel: "返金する決済",
