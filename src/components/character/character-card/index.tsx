@@ -265,7 +265,7 @@ const CharacterCard = ({
                 className="relative h-full w-full min-w-0 flex-[0_0_100%] overflow-hidden bg-scrim"
               >
                 <ResourceImage
-                  className="object-cover"
+                  className="object-cover object-top"
                   src={image}
                   alt={t("imageAlt", { title, index: index + 1 })}
                   fill
@@ -329,7 +329,7 @@ const CharacterCard = ({
         )}
       >
         <ResourceImage
-          className="object-cover transition-transform group-hover:scale-110"
+          className="origin-top object-cover object-top transition-transform group-hover:scale-110"
           src={imageList[0]}
           alt={t("imageAlt", { title, index: 1 })}
           fill
