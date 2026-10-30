@@ -15,6 +15,7 @@ const en: typeof ko = {
     loadDraft: "Load saved draft",
     draftLoadFailed: "Could not load the draft.",
     draftSaveFailed: "Couldn't save the draft. Please try again.",
+    draftCreatorRequired: "Only creators can use drafts.",
     draftNotFound: "There's no draft to load.",
     untitledDraftTitle: "Untitled draft",
     createSuccess: "Character has been created successfully!",

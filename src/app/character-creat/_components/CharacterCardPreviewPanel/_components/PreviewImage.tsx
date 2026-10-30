@@ -26,7 +26,7 @@ const PreviewImage = ({ image, title }: PreviewImageProps) => {
       fill
       sizes="227px"
       unoptimized
-      className="object-cover"
+      className="object-cover object-top"
     />
   );
 };

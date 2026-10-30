@@ -16,6 +16,12 @@ import { useDraftCurrentQuery } from "@/api/draft/getDraftCurrent";
 import { useDraftMutation } from "@/api/draft/getDraft";
 import { isAppError } from "@/lib/apiError";
 
+/** 크리에이터가 아니라 초안 API 를 쓸 수 없을 때 서버가 주는 코드(403). 초안이 없는 404 와 다르다. */
+const DRAFT_CREATOR_REQUIRED_CODE = "DRAFT_CREATOR_REQUIRED";
+
+const isDraftCreatorRequired = (error: unknown) =>
+  isAppError(error) && error.code === DRAFT_CREATOR_REQUIRED_CODE;
+
 interface UseUniverseDraftParams {
   // 이미 만들어진 세계관을 수정하는 화면에는 초안 기능 자체가 없어, 새로 만드는 흐름에서만 켭니다.
   enabled: boolean;
@@ -102,7 +108,10 @@ export const useUniverseDraft = ({
       showAppToast("success", t("draftSaved"));
     } catch (error) {
       console.error("Draft save failed:", error);
-      showAppToast("error", t("draftSaveFailed"));
+      showAppToast(
+        "error",
+        t(isDraftCreatorRequired(error) ? "draftCreatorRequired" : "draftSaveFailed"),
+      );
     } finally {
       isSavingRef.current = false;
       setIsSaving(false);
@@ -138,8 +147,16 @@ export const useUniverseDraft = ({
   ) => {
     // 페이지에 막 들어와 GET /drafts/current 응답이 아직 안 돌아온 시점에 눌렀을 수 있어,
     // 이미 아는 값이 없을 때만 그 자리에서 한 번 더 확인합니다.
-    const targetDraftId =
-      draftId ?? (await refetchCurrentDraft()).data?.draftId ?? null;
+    let targetDraftId = draftId;
+    if (!targetDraftId) {
+      const current = await refetchCurrentDraft();
+      // 크리에이터가 아니면 조회 자체가 403 이다. "불러올 초안 없음"으로 안내하면 안 된다.
+      if (isDraftCreatorRequired(current.error)) {
+        showAppToast("error", t("draftCreatorRequired"));
+        return;
+      }
+      targetDraftId = current.data?.draftId ?? null;
+    }
 
     if (!targetDraftId) {
       showAppToast("warning", t("draftNotFound"));
@@ -159,7 +176,10 @@ export const useUniverseDraft = ({
       showAppToast("success", t("draftLoaded"));
     } catch (error) {
       console.error("Draft load failed:", error);
-      showAppToast("error", t("draftLoadFailed"));
+      showAppToast(
+        "error",
+        t(isDraftCreatorRequired(error) ? "draftCreatorRequired" : "draftLoadFailed"),
+      );
     }
   };
 

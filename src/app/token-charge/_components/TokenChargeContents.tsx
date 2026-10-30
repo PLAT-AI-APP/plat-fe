@@ -2,16 +2,21 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { useProductsQuery } from "@/api/product/getProducts";
 import { useFadeInAfterLoading } from "@/hooks/common/useFadeInAfterLoading";
 import { usePostPaymentOrderMutation } from "@/api/payment/postPaymentOrder";
+import { useFirstPurchaseEligibilityQuery } from "@/api/payment/getFirstPurchaseEligibility";
+import { paymentQueryKeys } from "@/api/payment/queryKeys";
 import { showAppToast } from "@/lib/toast";
 import Token from "@/icons/Token";
 import { cn, formatWithCommas, toMajorAmount } from "@/lib/utils";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useRequireLogin } from "@/hooks/common/useRequireLogin";
 import { useWalletStore } from "@/store/useWalletStore";
+import { useUserStore } from "@/store/useUserStore";
+import { useModalStore } from "@/store/useModalStore";
 import type { Product } from "@/type/product";
 import type { PaymentOrderCreated } from "@/type/payment";
 import PolicyGuide from "./PolicyGuide";
@@ -40,15 +45,25 @@ const isHttpUrl = (value: string) => {
   }
 };
 
+/** 첫 충전 라벨의 네 갈래 반짝임. 이 카드에서만 쓰므로 아이콘 모음에 올리지 않는다. */
+const Sparkle = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 12 12" fill="currentColor" aria-hidden className={className}>
+    <path d="M6 0c.35 2.9 2.1 4.65 5 5-2.9.35-4.65 2.1-5 5-.35-2.9-2.1-4.65-5-5 2.9-.35 4.65-2.1 5-5Z" />
+  </svg>
+);
+
 interface ProductListItemProps {
   product: Product;
   disabled: boolean;
+  /** 로그인했지만 본인인증 전이다. 첫 충전 카드에 인증이 먼저라고 알린다. */
+  needsIdentity: boolean;
   onPurchase: (product: Product) => void;
 }
 
 const ProductListItem = ({
   product,
   disabled,
+  needsIdentity,
   onPurchase,
 }: ProductListItemProps) => {
   const t = useTranslations();
@@ -63,8 +78,26 @@ const ProductListItem = ({
         disabled={disabled}
         aria-busy={disabled || undefined}
         onClick={() => onPurchase(product)}
-        className="relative w-full cursor-pointer rounded-2xl border border-main px-5 py-4 text-left transition-colors hover:bg-btn-hover disabled:cursor-wait disabled:opacity-60"
+        className={cn(
+          "relative w-full cursor-pointer rounded-2xl px-5 py-4 text-left transition-colors disabled:cursor-wait disabled:opacity-60",
+          product.firstPurchaseOnly
+            ? "first-charge-card"
+            : "border border-main hover:bg-btn-hover",
+        )}
       >
+        {product.firstPurchaseOnly && (
+          <div className="mb-3 flex items-center justify-between">
+            <span className="first-charge-sheen inline-flex items-center gap-1 rounded-full bg-brand-opacity px-2.5 py-1 title-7 leading-none text-brand-dark">
+              <Sparkle className="h-3 w-3" />
+              {t("tokenCharge.badges.firstCharge")}
+            </span>
+            <span className="caption-2 text-font-2">
+              {needsIdentity
+                ? t("tokenCharge.firstChargeIdentityRequired")
+                : t("tokenCharge.firstChargeOnce")}
+            </span>
+          </div>
+        )}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Token className="h-8 w-8" />
@@ -120,6 +153,24 @@ const TokenChargeContents = () => {
     isError,
     refetch,
   } = useProductsQuery();
+  const { data: firstPurchase } = useFirstPurchaseEligibilityQuery();
+  const identityVerifiedUntil = useUserStore(
+    (state) => state.user?.identityVerifiedUntil,
+  );
+  // 본인인증은 1년 뒤 만료된다. 만료도 미인증으로 본다.
+  const identityVerified =
+    !!identityVerifiedUntil && new Date(identityVerifiedUntil) > new Date();
+  const openModal = useModalStore((state) => state.openModal);
+  const queryClient = useQueryClient();
+  // 목록은 사람별로 거르지 않는다. 첫 구매 상품은 비로그인(누르면 로그인)이거나 대상일 때만 맨 위에 둔다.
+  // 표시용 필터이고 실제로는 서버가 주문 단계에서 막는다.
+  const showFirstPurchase = !isLoggedIn || !!firstPurchase?.eligible;
+  const visibleProducts = products && [
+    ...(showFirstPurchase
+      ? products.filter((product) => product.firstPurchaseOnly)
+      : []),
+    ...products.filter((product) => !product.firstPurchaseOnly),
+  ];
   const fadeInClassName = useFadeInAfterLoading(isLoading);
   const requireLogin = useRequireLogin();
   const { mutate: createPaymentOrder, isPending: isCreatingOrder } =
@@ -139,6 +190,11 @@ const TokenChargeContents = () => {
 
   const handleSelectProduct = (product: Product) => {
     if (!requireLogin()) return;
+    // 첫 충전은 본인인증한 계정만 산다. 인증을 마치면 같은 카드를 다시 누르면 된다(서버가 주문 때 다시 본다).
+    if (product.firstPurchaseOnly && !identityVerified) {
+      openModal("IDENTITY_VERIFICATION", { purpose: "identity" });
+      return;
+    }
     setConfirmingProduct(product);
   };
 
@@ -197,9 +253,19 @@ const TokenChargeContents = () => {
         showAppToast("info", t("tokenCharge.payment.redirecting"));
         window.location.href = redirectUrl;
       },
-      onError: () => {
+      onError: (error) => {
         popup?.close();
         setTossCheckout(null);
+        // 다른 창에서 이미 결제했다. 대상 여부를 다시 받아 첫 구매 상품을 내린다(토스트는 전역 처리가 띄운다).
+        if (error.code === "PAYMENT_FIRST_PURCHASE_USED") {
+          queryClient.invalidateQueries({
+            queryKey: paymentQueryKeys.firstPurchase(),
+          });
+        }
+        // 인증이 그사이 만료됐다. 서버 문구 토스트와 함께 인증 창을 연다.
+        if (error.code === "PAYMENT_IDENTITY_NOT_VERIFIED") {
+          openModal("IDENTITY_VERIFICATION", { purpose: "identity" });
+        }
       },
     });
   };
@@ -237,17 +303,18 @@ const TokenChargeContents = () => {
         {/* 서버가 준 사유와(개발 모드에서는) 실패한 요청까지 함께 보여주고 재시도를 제공한다. */}
         {isError && <ErrorState error={error} onRetry={refetch} />}
 
-        {products && products.length === 0 && (
+        {visibleProducts && visibleProducts.length === 0 && (
           <EmptyState mood="peek" message={t("tokenCharge.empty")} />
         )}
 
-        {products && products.length > 0 && (
+        {visibleProducts && visibleProducts.length > 0 && (
           <ul className={cn("flex flex-col gap-3", fadeInClassName)}>
-            {products.map((product) => (
+            {visibleProducts.map((product) => (
               <ProductListItem
                 key={product.productId}
                 product={product}
                 disabled={isCreatingOrder || tossCheckout !== null}
+                needsIdentity={isLoggedIn && !identityVerified}
                 onPurchase={handleSelectProduct}
               />
             ))}

@@ -14,6 +14,7 @@ const mockProducts: (Product & { platform: ProductPlatform })[] = [
     platform: "WEB",
     display: { name: "노트 5,000", description: "노트 5,000개" },
     price: { currency: "KRW", amountMinor: 4900, taxIncluded: true },
+    firstPurchaseOnly: false,
     credits: { base: 5000, bonus: 0, total: 5000 },
   },
   {
@@ -22,6 +23,7 @@ const mockProducts: (Product & { platform: ProductPlatform })[] = [
     platform: "WEB",
     display: { name: "노트 10,000", description: "노트 10,000개 + 보너스 500" },
     price: { currency: "KRW", amountMinor: 9900, taxIncluded: true },
+    firstPurchaseOnly: false,
     credits: { base: 10000, bonus: 500, total: 10500 },
   },
   {
@@ -33,6 +35,7 @@ const mockProducts: (Product & { platform: ProductPlatform })[] = [
       description: "노트 20,000개 + 보너스 2,500",
     },
     price: { currency: "KRW", amountMinor: 19900, taxIncluded: true },
+    firstPurchaseOnly: false,
     credits: { base: 20000, bonus: 2500, total: 22500 },
   },
   {
@@ -44,6 +47,7 @@ const mockProducts: (Product & { platform: ProductPlatform })[] = [
       description: "노트 46,000개 + 보너스 5,000",
     },
     price: { currency: "KRW", amountMinor: 30900, taxIncluded: true },
+    firstPurchaseOnly: false,
     credits: { base: 46000, bonus: 5000, total: 51000 },
   },
   {
@@ -55,7 +59,20 @@ const mockProducts: (Product & { platform: ProductPlatform })[] = [
       description: "노트 90,000개 + 보너스 11,000",
     },
     price: { currency: "KRW", amountMinor: 79900, taxIncluded: true },
+    firstPurchaseOnly: false,
     credits: { base: 90000, bonus: 11000, total: 101000 },
+  },
+  {
+    code: "NOTE_FIRST_10000",
+    productId: 6,
+    platform: "WEB",
+    display: {
+      name: "첫 충전 노트 10,000",
+      description: "첫 결제 한정 노트 10,000개 + 보너스 5,000",
+    },
+    price: { currency: "KRW", amountMinor: 4900, taxIncluded: true },
+    firstPurchaseOnly: true,
+    credits: { base: 10000, bonus: 5000, total: 15000 },
   },
 ];
 

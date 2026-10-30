@@ -10,6 +10,7 @@ import { noticeHandlers } from "./handlers/notice";
 import { noteHandler } from "./handlers/note";
 import { walletHandlers } from "./handlers/wallet";
 import { productHandlers } from "./handlers/product";
+import { paymentHandlers } from "./handlers/payment";
 import { homeHandlers } from "./handlers/home";
 import { universeHandlers } from "./handlers/universe";
 import { commentHandlers } from "./handlers/comment";
@@ -41,6 +42,7 @@ export const handlers = [
   ...noteHandler,
   ...walletHandlers,
   ...productHandlers,
+  ...paymentHandlers,
   ...homeHandlers,
   // comment 가 universe 보다 먼저 와야 합니다. universe 상세 핸들러의 정규식이
   // 앞 세그먼트를 제한하지 않아 /comment/universe/:id 까지 잡아먹기 때문입니다.

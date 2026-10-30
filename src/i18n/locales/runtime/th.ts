@@ -348,8 +348,10 @@ const th: typeof en = {
     },
     badges: {
       popular: "ยอดนิยม",
-      firstCharge: "เติมครั้งแรก",
+      firstCharge: "เฉพาะเติมครั้งแรก",
     },
+    firstChargeOnce: "ครั้งเดียวเท่านั้น",
+    firstChargeIdentityRequired: "ยืนยันตัวตนก่อนซื้อ",
   },
   myChatting: {
     closedBadge: "สิ้นสุดแล้ว",
@@ -444,6 +446,7 @@ const th: typeof en = {
     loginTokenMissing: "ไม่พบโทเค็นในผลการเข้าสู่ระบบ",
     chatNoResponse: "ไม่ได้รับการตอบกลับจากแชต",
     chatTurnInProgress: "กำลังสร้างคำตอบก่อนหน้าอยู่ จะโหลดบทสนทนาใหม่ในอีกสักครู่",
+    chatRoomBusy: "กำลังจัดการคำตอบอยู่ โปรดลองอีกครั้งในอีกสักครู่",
     personaDetailInvalid: "ไม่สามารถอ่านผลรายละเอียดเพอร์โซนาได้",
   },
   loading: {

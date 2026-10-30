@@ -343,8 +343,10 @@ const zh: typeof en = {
     },
     badges: {
       popular: "热门",
-      firstCharge: "首充",
+      firstCharge: "首充专享",
     },
+    firstChargeOnce: "仅限一次",
+    firstChargeIdentityRequired: "实名认证后可购买",
   },
   myChatting: {
     closedBadge: "已结束",
@@ -436,6 +438,7 @@ const zh: typeof en = {
     loginTokenMissing: "登录响应中没有找到令牌。",
     chatNoResponse: "未收到聊天回复。",
     chatTurnInProgress: "上一条回复仍在生成中，稍后将重新加载对话。",
+    chatRoomBusy: "正在整理回复，请稍后再试。",
     personaDetailInvalid: "无法识别人设详情的响应结果。",
   },
   loading: {

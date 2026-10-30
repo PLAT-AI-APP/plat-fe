@@ -346,8 +346,10 @@ const ko: typeof en = {
     },
     badges: {
       popular: "인기",
-      firstCharge: "첫충전",
+      firstCharge: "첫 충전 한정",
     },
+    firstChargeOnce: "단 한 번",
+    firstChargeIdentityRequired: "본인인증 후 구매",
   },
   myChatting: {
     closedBadge: "대화 종료",
@@ -441,6 +443,7 @@ const ko: typeof en = {
     loginTokenMissing: "로그인 응답에서 토큰을 찾을 수 없습니다.",
     chatNoResponse: "채팅 응답을 받지 못했습니다.",
     chatTurnInProgress: "이전 답변을 아직 만들고 있어요. 잠시 뒤 대화를 다시 불러올게요.",
+    chatRoomBusy: "답변을 정리하는 중이에요. 잠시 후 다시 시도해 주세요.",
     personaDetailInvalid: "페르소나 상세 응답을 확인해 주세요.",
   },
   loading: {

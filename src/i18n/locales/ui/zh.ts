@@ -615,6 +615,7 @@ const zh = {
       submit: "申请退款",
       successToast: "已提交退款申请",
       existingToast: "该退款已申请过",
+      notYetToast: "该订单暂时无法申请退款",
       successDescription: "运营团队确认后将在我的问答中回复您。",
       viewInQna: "我的问答",
       orderLabel: "要退款的支付",

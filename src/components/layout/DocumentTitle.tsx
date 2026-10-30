@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { TITLE_PREFIX } from "@/constants/seo";
 
 /** 각 페이지 metadata.title 의 제목 부분과 대응하는 메시지 키. 동적 세그먼트는 한 칸으로 본다. */
 const ROUTE_TITLE_KEYS: ReadonlyArray<readonly [RegExp, string]> = [
@@ -51,9 +52,10 @@ const DocumentTitle = () => {
     )?.[1];
 
     // 전용 제목이 없는 화면(회원가입·공지 상세 등)은 layout 의 기본 제목과 같은 문구를 쓴다.
-    const title = titleKey
-      ? `${t(titleKey)}${TITLE_SUFFIX}`
-      : t("pageTitles.siteDefault");
+    // 서버 metadata 와 같은 환경 표시를 붙여야 하이드레이션 뒤 덮어쓸 때 사라지지 않는다.
+    const title = `${TITLE_PREFIX}${
+      titleKey ? `${t(titleKey)}${TITLE_SUFFIX}` : t("pageTitles.siteDefault")
+    }`;
 
     const applyTitle = () => {
       // 같은 값을 다시 쓰면 그것도 변경으로 잡혀 감시가 스스로를 깨우므로 다를 때만 쓴다.
