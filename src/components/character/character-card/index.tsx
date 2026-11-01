@@ -95,7 +95,7 @@ const CharacterCard = ({
       href={editHref}
       aria-label={t("editButtonLabel")}
       onClick={(event) => event.stopPropagation()}
-      className="absolute right-2 top-2 z-10 flex items-center justify-center rounded-full bg-main p-2 text-font-1 transition-colors hover:bg-btn-hover"
+      className="absolute right-2 top-2 z-30 flex items-center justify-center rounded-full bg-main p-2 text-font-1 transition-colors hover:bg-btn-hover"
     >
       <Pen className="size-4" />
     </Link>
@@ -109,9 +109,9 @@ const CharacterCard = ({
       {statusChip.label}
     </span>
   );
-  // 이미지 영역을 덮는다. 부모(이미지 영역)가 relative·overflow-hidden 이라 모서리 둥글기를 그대로 따른다.
+  // 이미지 영역보다 1px 넓게 덮은 뒤 부모의 둥근 클리핑으로 잘라, 경계의 반투명 픽셀까지 어둡게 덮는다.
   const statusOverlayElement = statusChip && isStatusOverlay && (
-    <div className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center gap-1.5 bg-scrim/75 px-3 text-center backdrop-blur-[2px]">
+    <div className="pointer-events-none absolute -inset-px z-10 flex flex-col items-center justify-center gap-1.5 rounded-[inherit] bg-scrim/75 px-3 text-center backdrop-blur-[2px]">
       <StatusIcon
         aria-hidden="true"
         className={cn("size-7", statusChip.tone === "danger" ? "text-danger" : "text-brand")}
@@ -231,7 +231,7 @@ const CharacterCard = ({
     return (
       <article
         className={cn(
-          "relative inline-flex cursor-pointer flex-col items-center justify-end bg-scrim active:cursor-grab",
+          "relative isolate inline-flex cursor-pointer flex-col items-center justify-end bg-scrim active:cursor-grab",
           fluid ? fluidOverride.wrapper : config.wrapper,
         )}
         onPointerDown={handlePointerDown}
@@ -310,7 +310,7 @@ const CharacterCard = ({
   return (
     <article
       className={cn(
-        "group relative inline-flex cursor-pointer flex-col items-start justify-start",
+        "group relative isolate inline-flex cursor-pointer flex-col items-start justify-start",
         fluid ? fluidOverride.wrapper : config.wrapper,
       )}
     >
