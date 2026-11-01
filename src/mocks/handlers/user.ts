@@ -118,6 +118,7 @@ const likedUniversePage = (page: number, size: number) => {
 };
 
 const OTHER_USER_UNIVERSE_TOTAL = 8;
+const USER_UNIVERSE_MOCK_SIZE = 20;
 
 /**
  * 특정 유저가 만든 세계관 목록. UserController.userUniverses 는 로그인 없이도 조회할 수 있고,
@@ -245,6 +246,65 @@ export const userHandlers = [
     };
 
     return new HttpResponse(null, { status: 204 });
+  }),
+
+  /**
+   * 내 프로필 작품 탭. 공개 여부와 검수 상태까지 오는 본인 전용 목록입니다.
+   * 아래 "/users/{id}/universes" 패턴이 "me" 까지 삼키므로 그보다 앞에 둡니다.
+   * 카드의 검수 표시(운영자 확인 중 · 검수 중 · 반려)를 화면에서 확인하는 용도입니다.
+   */
+  http.get(endpoint("/users/me/universes"), ({ request }) => {
+    const page = Number(new URL(request.url).searchParams.get("page") ?? 0);
+    const creator = { creatorId: mockUser.id, nickname: mockUser.nickname, adopted: false, tier: "COMET" };
+    const card = (
+      key: string,
+      title: string,
+      extra: { visibility?: "PUBLIC" | "UNLISTED" | "PRIVATE"; review?: unknown },
+    ) => ({
+      universeId: `mine-${key}`,
+      images: [`https://picsum.photos/seed/mine-${key}/374/490`],
+      title,
+      description: "내 프로필 작품 탭에서 보이는 세계관입니다.",
+      creator,
+      chatCount: 12,
+      isNew: false,
+      isOfficial: false,
+      liked: false,
+      visibility: extra.visibility ?? "PUBLIC",
+      review: extra.review ?? null,
+    });
+    const content = [
+      card("awaiting-admin", "옆집 동생이 너무 잘 컸다", {
+        review: { status: "PENDING", awaitingAdmin: true, reason: null, findings: [] },
+      }),
+      card("pending", "검수 중인 세계관", {
+        review: { status: "PENDING", awaitingAdmin: false, reason: null, findings: [] },
+      }),
+      card("rejected", "반려된 세계관", {
+        review: {
+          status: "REJECTED",
+          awaitingAdmin: false,
+          reason: "운영 정책상 허용되지 않는 표현이 포함되어 있습니다.",
+          findings: [
+            { language: "KO", field: "DESCRIPTION", guide: "소개 문구의 폭력적인 표현을 순화해 주세요." },
+          ],
+        },
+      }),
+      card("private", "비공개 세계관", { visibility: "PRIVATE" }),
+      card("public", "공개된 세계관", {}),
+    ];
+
+    return HttpResponse.json({
+      page: {
+        number: page,
+        size: USER_UNIVERSE_MOCK_SIZE,
+        numberOfElements: page === 0 ? content.length : 0,
+        hasNext: false,
+        totalElements: content.length,
+        totalPages: 1,
+      },
+      content: page === 0 ? content : [],
+    });
   }),
 
   /** 로그인 없이도 조회 가능한 특정 유저의 작품(세계관) 목록. */
