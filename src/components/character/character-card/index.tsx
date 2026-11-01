@@ -110,8 +110,9 @@ const CharacterCard = ({
     </span>
   );
   // 이미지 영역보다 1px 넓게 덮은 뒤 부모의 둥근 클리핑으로 잘라, 경계의 반투명 픽셀까지 어둡게 덮는다.
+  // backdrop-blur 는 쓰지 않는다: 둥근 모서리 경계에서 뒤 이미지가 가장자리를 따라 덜 덮여 보이는 띠가 생긴다.
   const statusOverlayElement = statusChip && isStatusOverlay && (
-    <div className="pointer-events-none absolute -inset-px z-10 flex flex-col items-center justify-center gap-1.5 rounded-[inherit] bg-scrim/75 px-3 text-center backdrop-blur-[2px]">
+    <div className="pointer-events-none absolute -inset-px z-10 flex flex-col items-center justify-center gap-1.5 rounded-[inherit] bg-scrim/80 px-3 text-center">
       <StatusIcon
         aria-hidden="true"
         className={cn("size-7", statusChip.tone === "danger" ? "text-danger" : "text-brand")}
