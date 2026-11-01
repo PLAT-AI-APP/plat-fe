@@ -110,9 +110,11 @@ const CharacterCard = ({
     </span>
   );
   // 이미지 영역보다 1px 넓게 덮은 뒤 부모의 둥근 클리핑으로 잘라, 경계의 반투명 픽셀까지 어둡게 덮는다.
-  // backdrop-blur 는 쓰지 않는다: 둥근 모서리 경계에서 뒤 이미지가 가장자리를 따라 덜 덮여 보이는 띠가 생긴다.
+  // 어둡게 하는 일은 이미지 자신이 맡는다(statusDimClassName). 반투명 덮개를 이미지 위에 한 겹 더 얹으면
+  // 둥근 모서리에서 두 겹이 따로 잘려 가장자리에 덜 덮인 틈이 생긴다. 덮개는 글자만 올린다.
+  const statusDimClassName = isStatusOverlay ? "brightness-[0.2]" : undefined;
   const statusOverlayElement = statusChip && isStatusOverlay && (
-    <div className="pointer-events-none absolute -inset-px z-10 flex flex-col items-center justify-center gap-1.5 rounded-[inherit] bg-scrim/80 px-3 text-center">
+    <div className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center gap-1.5 px-3 text-center">
       <StatusIcon
         aria-hidden="true"
         className={cn("size-7", statusChip.tone === "danger" ? "text-danger" : "text-brand")}
@@ -266,7 +268,7 @@ const CharacterCard = ({
                 className="relative h-full w-full min-w-0 flex-[0_0_100%] overflow-hidden bg-scrim"
               >
                 <ResourceImage
-                  className="object-cover object-top"
+                  className={cn("object-cover object-top", statusDimClassName)}
                   src={image}
                   alt={t("imageAlt", { title, index: index + 1 })}
                   fill
@@ -330,7 +332,10 @@ const CharacterCard = ({
         )}
       >
         <ResourceImage
-          className="origin-top object-cover object-top transition-transform group-hover:scale-110"
+          className={cn(
+            "origin-top object-cover object-top transition-transform group-hover:scale-110",
+            statusDimClassName,
+          )}
           src={imageList[0]}
           alt={t("imageAlt", { title, index: 1 })}
           fill
