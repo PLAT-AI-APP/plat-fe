@@ -22,6 +22,7 @@ import { roomHandlers } from "./handlers/room";
 import { searchHandlers } from "./handlers/search";
 import { earningHandlers } from "./handlers/earning";
 import { verificationHandlers } from "./handlers/verification";
+import { systemHandlers } from "./handlers/system";
 
 /**
  * 모든 핸들러를 하나의 배열로 통합합니다.
@@ -30,6 +31,7 @@ import { verificationHandlers } from "./handlers/verification";
 export const handlers = [
   // /users/me/adult-content 가 user 핸들러의 /users/[^/]+ 정규식에 잡히지 않도록 먼저 둔다.
   ...verificationHandlers,
+  ...systemHandlers,
   ...followHandlers,
   ...authHandlers,
   ...personaHandlers,
