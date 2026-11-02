@@ -28,12 +28,8 @@ export type PendingPhase =
   | "popupClosed"
   /** (결제창 안) 결과를 원래 창에 넘겼다 */
   | "handedOff"
-  /** 토스: 주문을 만들고 결제창을 여는 중 */
-  | "tossOpening"
-  /** 토스: 이 페이지 위에 결제창을 띄워 두고 기다리는 중 */
-  | "tossOpen"
-  /** 토스: 결제창을 닫았다. 승인 전이라 같은 주문으로 이어서 결제할 수 있다 */
-  | "tossClosed";
+  /** 주문을 만들고 결제창으로 넘어가는 중 */
+  | "opening";
 
 type Badge = "warn" | "muted" | "done";
 
@@ -89,21 +85,10 @@ const PHASES: Record<PendingPhase, PhaseConfig> = {
     working: false,
     badge: "done",
   },
-  tossOpening: {
-    title: "tokenCharge.payment.tossOpeningTitle",
-    hint: "tokenCharge.payment.tossOpeningHint",
+  opening: {
+    title: "tokenCharge.payment.openingTitle",
+    hint: "tokenCharge.payment.openingHint",
     working: true,
-  },
-  tossOpen: {
-    title: "tokenCharge.payment.popupTitle",
-    hint: "tokenCharge.payment.tossOpenHint",
-    working: true,
-  },
-  tossClosed: {
-    title: "tokenCharge.payment.tossClosedTitle",
-    hint: "tokenCharge.payment.tossClosedHint",
-    working: false,
-    badge: "muted",
   },
 };
 

@@ -54,12 +54,10 @@ env:
   #   value: "true"
   #   availability: [BUILD, RUNTIME]
 
-  # 토스페이먼츠 결제창 클라이언트 키(live_gck_). 저장소의 .env.production 값은 테스트 키(test_gck_)라
-  # 운영 결제를 열기 전에 라이브 키로 덮어써야 한다. 브라우저에 공개되는 키라 value 로 둘 수 있다.
-  # 시크릿 키(gsk)는 여기 넣지 않는다 — 서버(plat-be)에만 둔다.
-  # - variable: NEXT_PUBLIC_TOSS_CLIENT_KEY
-  #   value: live_gck_...
-  #   availability: [BUILD, RUNTIME]
+  # 포트원 실연동 채널. 저장소의 .env.production 은 테스트 채널이라 여기서 덮어쓴다. 공개값이다.
+  - variable: NEXT_PUBLIC_PORTONE_CHANNEL_KEY
+    value: channel-key-d9ca78d6-7d76-45e0-b57a-0555f724f166
+    availability: [BUILD, RUNTIME]
 
   # 오류 수집(Sentry)을 켤 때만. 인증 토큰은 value 가 아니라 secret 으로 둔다.
   # - variable: NEXT_PUBLIC_SENTRY_DSN

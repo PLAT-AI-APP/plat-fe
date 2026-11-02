@@ -15,7 +15,7 @@ const SECURITY_HEADERS = [
   { key: "X-Frame-Options", value: "DENY" },
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-  /* 스크립트 출처까지 묶으면 토스·Sentry·인라인 스크립트가 깨진다. 깨질 일 없는 지시어만 둔다. */
+  /* 스크립트 출처까지 묶으면 결제 SDK·Sentry·인라인 스크립트가 깨진다. 깨질 일 없는 지시어만 둔다. */
   {
     key: "Content-Security-Policy",
     value: "frame-ancestors 'none'; object-src 'none'; base-uri 'self'",
