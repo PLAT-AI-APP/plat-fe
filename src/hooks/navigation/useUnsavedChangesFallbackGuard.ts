@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { setPopStateGuard } from "@/lib/popStateGuard";
 
 interface UseUnsavedChangesFallbackGuardOptions {
   isDirty: boolean;
@@ -17,13 +18,11 @@ interface UseUnsavedChangesFallbackGuardOptions {
  *
  * - 링크 클릭: 기본 이동을 막고 router.push로 대신 보낸다. 이렇게 하면 이미 정상
  *   동작하는 useNavigationGuard의 confirm 콜백이 그대로 잡아준다.
- * - 뒤로가기: popstate는 브라우저 URL이 이미 바뀐 뒤에야 발생해 미리 막을 수
- *   없다. 대신 이벤트가 발생하면 즉시 원래 있던 경로로 다시 push해 눈에 보이는
- *   URL을 원위치로 되돌리고, 사용자가 가려던 목적지는 onBlockedByBack으로 알려준다.
+ * - 뒤로가기: popstate는 브라우저 URL이 이미 바뀐 뒤에야 발생해 미리 막을 수 없다.
+ *   그래서 Next.js·라이브러리보다 먼저 달아 둔 리스너(lib/popStateGuard)가 이벤트를
+ *   삼키고 history.go 로 원래 위치로 되돌린 뒤, 사용자가 가려던 목적지를
+ *   onBlockedByBack으로 알려준다(Next.js 는 이 이동을 보지 못하니 화면도 그대로다).
  *   "나가기"를 확정하면 leaveToBlockedTarget(path)로 그 목적지에 router.push한다.
- *   history.go(-1)/router.back()으로 "진짜 뒤로가기"를 재현하는 방식도 시도했지만,
- *   더미 history 엔트리 + 재진입 상황에서 실제 이동이 반영되지 않는 경우가 있어
- *   (원인 불명) 이미 안정적으로 동작하는 router.push 하나로 통일했다.
  */
 export const useUnsavedChangesFallbackGuard = ({
   isDirty,
@@ -80,27 +79,15 @@ export const useUnsavedChangesFallbackGuard = ({
     return () => document.removeEventListener("click", handleClick, true);
   }, [router]);
 
+  // 뒤로가기는 라이브러리보다 먼저 받는 popStateGuard 가 막고 원위치로 되돌린 뒤 여기로 알려준다.
   useEffect(() => {
     if (!isDirty) return;
 
-    const handlePopState = () => {
-      if (isLeavingRef.current || !isDirtyRef.current) return;
-
-      const targetPath = window.location.pathname + window.location.search;
-
-      // state를 null로 밀어 넣으면 Next.js App Router가 각 history 엔트리에 심어둔
-      // 자체 상태(__NA, __PRIVATE_NEXTJS_INTERNALS_TREE 등)가 지워져 이후 라우팅이
-      // 꼬인다. 원래 있던 state를 그대로 복제해 되돌린다.
-      window.history.pushState(
-        window.history.state,
-        "",
-        currentPathRef.current,
-      );
+    setPopStateGuard((targetPath) => {
+      if (isLeavingRef.current) return;
       onBlockedByBackRef.current(targetPath);
-    };
-
-    window.addEventListener("popstate", handlePopState);
-    return () => window.removeEventListener("popstate", handlePopState);
+    });
+    return () => setPopStateGuard(null);
   }, [isDirty]);
 
   /** 다이얼로그에서 "나가기"를 확정했을 때, 뒤로가기로 가려던 목적지로 실제 이동한다. */
