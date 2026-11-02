@@ -22,7 +22,7 @@ const TITLE_CLASS: Record<ImageReviewTone, string> = {
 interface ImageReviewNoticeProps {
   tone: ImageReviewTone;
   title?: string;
-  message: string;
+  message?: string;
   /** 이미지 바꾸기 · 성인 설정으로 */
   action?: { label: string; onClick: () => void };
   /** 있으면 이의 신청 버튼을 함께 둔다 */
@@ -46,7 +46,7 @@ const ImageReviewNotice = ({
   return (
     <div className={cn("flex flex-col gap-2 rounded-xl px-3.5 py-3", TONE_CLASS[tone], className)}>
       {title && <p className={cn("title-6 break-keep", TITLE_CLASS[tone])}>{title}</p>}
-      <p className="body-7 whitespace-pre-line break-keep text-font-2">{message}</p>
+      {message && <p className="body-7 whitespace-pre-line break-keep text-font-2">{message}</p>}
       {(action || appealFileId) && (
         <div className="flex flex-wrap gap-2">
           {action && (

@@ -11,15 +11,13 @@ const IMAGE_REASON_CODES = [
 export type ImageReasonKey =
   | (typeof IMAGE_REASON_CODES)[number]
   | "ADULT_SETTING_REQUIRED"
-  | "pending"
-  | "appealed"
   | "fallback";
 
-/** imageReview.reasons 아래의 번역 키 */
+/** imageReview.reasons 아래의 번역 키. 검수 중이면 상태 라벨로 충분해 사유를 따로 쓰지 않는다. */
 export const getImageReasonKey = (
-  image: Pick<ReviewImage, "status" | "reasonCode"> & { appealed?: boolean },
-): ImageReasonKey => {
-  if (image.status === "PENDING") return image.appealed ? "appealed" : "pending";
+  image: Pick<ReviewImage, "status" | "reasonCode">,
+): ImageReasonKey | null => {
+  if (image.status === "PENDING") return null;
   if (image.status === "ADULT_SETTING_REQUIRED") return "ADULT_SETTING_REQUIRED";
   return IMAGE_REASON_CODES.find((code) => code === image.reasonCode) ?? "fallback";
 };

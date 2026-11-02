@@ -88,7 +88,6 @@ const ProfileImageField = ({ name = "profileImg" }: ProfileImageFieldProps) => {
         <ImageReviewNotice
           tone="neutral"
           title={reviewT("profile.pendingTitle")}
-          message={reviewT("profile.pendingDescription")}
           className="mt-3 mb-6"
         />
       );
@@ -104,10 +103,8 @@ const ProfileImageField = ({ name = "profileImg" }: ProfileImageFieldProps) => {
         )}
         message={
           reviewStatus === "REJECTED"
-            ? reviewT(
-                `reasons.${getImageReasonKey({ status: "REJECTED", reasonCode: review.reasonCode })}`,
-              )
-            : reviewT("profile.notAllowedDescription")
+            ? reviewT(`reasons.${getImageReasonKey({ status: "REJECTED", reasonCode: review.reasonCode })}`)
+            : undefined
         }
         action={replaceAction}
         // 서버가 파일 ID 를 함께 줄 때만 이의 신청할 수 있다.

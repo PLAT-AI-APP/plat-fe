@@ -137,13 +137,14 @@ export const SlotReviewNotice = ({
 }) => {
   const t = useTranslations("imageReview");
   const { openSettings } = useContext(ImageReviewContext);
-  if (!isBlockingImage(image)) return null;
+  const reasonKey = getImageReasonKey(image);
+  if (!isBlockingImage(image) || !reasonKey) return null;
   const isAdult = image.status === "ADULT_SETTING_REQUIRED";
 
   return (
     <ImageReviewNotice
       tone={isAdult ? "warning" : "danger"}
-      message={t(`reasons.${getImageReasonKey(image)}`)}
+      message={t(`reasons.${reasonKey}`)}
       action={
         isAdult
           ? { label: t("adultSetting"), onClick: openSettings }

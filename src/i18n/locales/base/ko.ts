@@ -195,8 +195,6 @@ const ko = {
       awaitingAdminDescription: "자동 검수를 마치지 못해 운영자가 직접 확인하고 있어요. 확인이 끝나면 다른 유저에게도 보여요.",
       rejectedFallback: "검수 기준에 맞지 않아 공개되지 않았어요. 내용을 고친 뒤 다시 저장해 주세요.",
       findingsTitle: "고칠 곳",
-      imagesDescription: "이미지 {count}장 때문에 공개되지 않았어요. 아래 이미지만 고치면 돼요.",
-      bodyPassed: "본문과 나머지 이미지는 통과했어요",
       edit: "수정하기",
       close: "닫기",
       fields: {

@@ -195,8 +195,6 @@ const vi: typeof ko = {
       awaitingAdminDescription: "Kiểm duyệt tự động chưa hoàn tất nên quản trị viên đang trực tiếp kiểm tra. Xong rồi người dùng khác sẽ thấy.",
       rejectedFallback: "Chưa đạt tiêu chuẩn kiểm duyệt nên chưa được công khai. Hãy sửa và lưu lại.",
       findingsTitle: "Cần sửa",
-      imagesDescription: "Chưa được công khai vì {count} hình ảnh. Bạn chỉ cần sửa các hình ảnh bên dưới.",
-      bodyPassed: "Nội dung và các hình ảnh còn lại đã được duyệt",
       edit: "Chỉnh sửa",
       close: "Đóng",
       fields: {

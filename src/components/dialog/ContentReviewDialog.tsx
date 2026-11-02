@@ -6,7 +6,6 @@ import { useTranslations } from "next-intl";
 import ResourceImage from "@/components/ResourceImage";
 import Button from "@/components/ui/Button";
 import { ImageIcon } from "@/icons";
-import CheckCircleFill from "@/icons/CheckCircleFill";
 import { useImageAppeal } from "@/hooks/data/useImageAppeal";
 import {
   getImageReasonKey,
@@ -67,17 +66,7 @@ const ContentReviewDialog = ({ onClose, review, editHref }: ContentReviewDialogP
     <p className="body-5 w-full whitespace-pre-line break-keep text-font-2">
       {review.reason || t("rejectedFallback")}
     </p>
-  ) : isRejected && blockingCount > 0 ? (
-    <div className="flex w-full flex-col gap-2">
-      <p className="body-5 w-full whitespace-pre-line break-keep text-font-2">
-        {t("imagesDescription", { count: blockingCount })}
-      </p>
-      <p className="body-7 flex items-center gap-1.5 text-font-2">
-        <CheckCircleFill className="size-4 shrink-0 text-brand" aria-hidden="true" />
-        {t("bodyPassed")}
-      </p>
-    </div>
-  ) : isRejected ? (
+  ) : isRejected && blockingCount > 0 ? null : isRejected ? (
     <p className="body-5 w-full whitespace-pre-line break-keep text-font-2">
       {t("rejectedFallback")}
     </p>
@@ -136,9 +125,11 @@ const ContentReviewDialog = ({ onClose, review, editHref }: ContentReviewDialogP
                       ? imageT("status.appealed")
                       : imageT(`status.${image.status}`)}
                   </span>
-                  <span className="body-7 whitespace-pre-line break-keep text-font-2">
-                    {imageT(`reasons.${getImageReasonKey(image)}`)}
-                  </span>
+                  {getImageReasonKey(image) && (
+                    <span className="body-7 whitespace-pre-line break-keep text-font-2">
+                      {imageT(`reasons.${getImageReasonKey(image)}`)}
+                    </span>
+                  )}
                   <div className="mt-1 flex flex-wrap gap-2">
                     <Button
                       variant="secondary"
