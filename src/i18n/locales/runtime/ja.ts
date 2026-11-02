@@ -269,6 +269,7 @@ const ja: typeof en = {
   },
   tokenCharge: {
     title: "ノートチャージ",
+    preparing: "決済サービスは準備中です",
     payment: {
       redirecting: "決済ページへ移動しています…",
       success: "{credits}ノートがチャージされました。",

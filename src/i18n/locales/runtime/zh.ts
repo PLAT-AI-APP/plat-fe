@@ -269,6 +269,7 @@ const zh: typeof en = {
   },
   tokenCharge: {
     title: "充值笔记",
+    preparing: "支付服务正在准备中",
     payment: {
       redirecting: "正在跳转到支付页面…",
       success: "已充值 {credits} 个笔记。",

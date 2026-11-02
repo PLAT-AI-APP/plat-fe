@@ -273,6 +273,7 @@ const th: typeof en = {
   },
   tokenCharge: {
     title: "เติมโน้ต",
+    preparing: "บริการชำระเงินกำลังอยู่ระหว่างการเตรียมการ",
     payment: {
       redirecting: "กำลังไปยังหน้าชำระเงิน…",
       success: "เติม {credits} โน้ตเรียบร้อยแล้ว",

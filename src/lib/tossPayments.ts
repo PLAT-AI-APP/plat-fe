@@ -14,10 +14,19 @@
  *  - customerKey 는 ANONYMOUS 다. 회원 식별자를 PG 에 넘기지 않는다(카드 저장 기능은 쓰지 않는다).
  */
 
+import { isDevToolsEnabledFor } from "@/constants/identityVerification";
+
 const SDK_URL = "https://js.tosspayments.com/v2/standard";
 
 /** 브라우저 번들에 들어가도 되는 클라이언트 키. 비어 있으면 토스 결제를 쓸 수 없다. */
 export const TOSS_CLIENT_KEY = process.env.NEXT_PUBLIC_TOSS_CLIENT_KEY ?? "";
+
+/**
+ * 결제를 아직 열지 않았는지. 운영에서는 라이브 클라이언트 키(live_)를 넣어야 충전이 열린다.
+ * 테스트 키로 열면 실제 돈 없이 노트가 충전되기 때문이다. 로컬·dev 는 테스트 키로 그대로 연다.
+ */
+export const isPaymentPreparing = (host: string | null | undefined) =>
+  !isDevToolsEnabledFor(host) && !TOSS_CLIENT_KEY.startsWith("live_");
 
 /** 결제창이 끝난 뒤 돌아올 결과 페이지의 PG 자리(서버 PgProvider.TOSS 의 설정 키). */
 export const TOSS_PROVIDER_SEGMENT = "toss";
