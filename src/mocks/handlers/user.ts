@@ -2,6 +2,7 @@ import { http, HttpResponse } from "msw";
 import type { UserInfo } from "@/store/useUserStore";
 import { endpoint, pathValue } from "../utils";
 import { mockVerificationFields } from "./verification";
+import { mockReviewImages } from "./universe";
 
 interface MockUserProfileResponse {
   id: string;
@@ -177,7 +178,15 @@ export const userHandlers = [
   }),
 
   http.get(endpoint("/users/me"), async () => {
-    return HttpResponse.json({ ...mockUser, ...mockVerificationFields() });
+    return HttpResponse.json({
+      ...mockUser,
+      ...mockVerificationFields(),
+      profileImageReview: {
+        status: "REJECTED",
+        reasonCode: "IMAGE_EXPLICIT_SEXUAL",
+        appealable: true,
+      },
+    });
   }),
 
   http.patch(endpoint("/users/me"), async ({ request }) => {
@@ -275,10 +284,10 @@ export const userHandlers = [
     });
     const content = [
       card("awaiting-admin", "옆집 동생이 너무 잘 컸다", {
-        review: { status: "PENDING", awaitingAdmin: true, reason: null, findings: [] },
+        review: { status: "PENDING", awaitingAdmin: true, reason: null, findings: [], images: [] },
       }),
       card("pending", "검수 중인 세계관", {
-        review: { status: "PENDING", awaitingAdmin: false, reason: null, findings: [] },
+        review: { status: "PENDING", awaitingAdmin: false, reason: null, findings: [], images: [] },
       }),
       card("rejected", "반려된 세계관", {
         review: {
@@ -288,6 +297,16 @@ export const userHandlers = [
           findings: [
             { language: "KO", field: "DESCRIPTION", guide: "소개 문구의 폭력적인 표현을 순화해 주세요." },
           ],
+          images: [],
+        },
+      }),
+      card("rejected-image", "이미지만 반려된 세계관", {
+        review: {
+          status: "REJECTED",
+          awaitingAdmin: false,
+          reason: null,
+          findings: [],
+          images: mockReviewImages,
         },
       }),
       card("private", "비공개 세계관", { visibility: "PRIVATE" }),

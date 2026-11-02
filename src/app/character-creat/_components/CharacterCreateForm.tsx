@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
@@ -17,6 +17,7 @@ import CharacterPreview from "./CharacterPreview";
 import CreateHeader from "./CreateHeader";
 import CreateModals from "./CreateModals";
 import CreateTabs, { TabId } from "./CreateTabs";
+import { ImageReviewBanner, ImageReviewContext } from "./imageReview";
 import {
   characterCreateSchema,
   CharacterCreateFormValues,
@@ -30,6 +31,27 @@ import {
   UniverseDetailResponse,
   useUniverseDetailQuery,
 } from "@/api/universe/getUniverseDetail";
+import { useUniverseReviewQuery } from "@/api/review/getContentReview";
+import { getAssetReviewElementId } from "@/lib/imageReview";
+
+/** 검수 창의 "이미지 바꾸기"가 넘긴 reviewFocus 를 열 탭과 칸으로 바꾼다. */
+const getReviewFocusTarget = (
+  reviewFocus?: string,
+): { tabId: TabId; elementId: string } | null => {
+  if (reviewFocus === "profile") {
+    return { tabId: "profile", elementId: "representative-image-field" };
+  }
+  if (reviewFocus === "character") {
+    return { tabId: "details", elementId: "character-profile-image-field" };
+  }
+  if (reviewFocus?.startsWith("asset:")) {
+    return {
+      tabId: "assets",
+      elementId: getAssetReviewElementId(reviewFocus.slice("asset:".length)),
+    };
+  }
+  return null;
+};
 
 const createCharacterCreateDefaultValues = (
   defaultScenarioName: string,
@@ -121,9 +143,14 @@ const createCharacterEditDefaultValues = (
 
 interface CharacterCreateFormProps {
   universeId?: string;
+  /** 검수 창에서 넘어올 때 바로 보여 줄 이미지 칸 */
+  reviewFocus?: string;
 }
 
-const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
+const CharacterCreateForm = ({
+  universeId,
+  reviewFocus,
+}: CharacterCreateFormProps) => {
   const router = useRouter();
   const t = useTranslations("characterCreate");
   const scenarioT = useTranslations("characterCreate.scenario");
@@ -154,7 +181,18 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
     (state) => state.recordChange,
   );
 
-  const [currentTabId, setCurrentTabId] = useState<TabId>("profile");
+  const reviewFocusTarget = isEditMode ? getReviewFocusTarget(reviewFocus) : null;
+  const { data: universeReview } = useUniverseReviewQuery(universeId);
+  const [currentTabId, setCurrentTabId] = useState<TabId>(
+    reviewFocusTarget?.tabId ?? "profile",
+  );
+  const imageReviewContext = useMemo(
+    () => ({
+      images: universeReview?.images ?? [],
+      openSettings: () => setCurrentTabId("settings"),
+    }),
+    [universeReview],
+  );
   const [activeScenarioIndex, setActiveScenarioIndex] = useState(0);
   const [activeModal, setActiveModal] = useState<
     "OVERWRITE" | "RESUME" | "SAVE_OVERWRITE" | "UNSAVED" | null
@@ -219,6 +257,21 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
     isEditMode &&
     !isUniverseDetailError &&
     (!universeDetail || appliedUniverse !== universeDetail);
+
+  // 폼이 채워져 칸이 그려진 뒤 한 번만 그 칸으로 스크롤한다.
+  const hasFocusedReviewRef = useRef(false);
+  const reviewFocusElementId = reviewFocusTarget?.elementId;
+  useEffect(() => {
+    if (isEditLoading || !reviewFocusElementId || hasFocusedReviewRef.current) {
+      return;
+    }
+    hasFocusedReviewRef.current = true;
+    requestAnimationFrame(() => {
+      const element = document.getElementById(reviewFocusElementId);
+      element?.scrollIntoView({ block: "center" });
+      element?.focus({ preventScroll: true });
+    });
+  }, [isEditLoading, reviewFocusElementId]);
 
   useEffect(() => {
     if (!isEditMode || !isUniverseDetailError) return;
@@ -396,86 +449,90 @@ const CharacterCreateForm = ({ universeId }: CharacterCreateFormProps) => {
 
   return (
     <FormProvider {...methods}>
-      <CreateModals
-        activeModal={activeModal}
-        closeModal={closeModal}
-        handleConfirmExit={handleConfirmExit}
-        rejectNavigation={reject}
-        handleLoadDraft={handleConfirmLoadDraft}
-        handleSaveOverwrite={handleConfirmSaveOverwrite}
-      />
-
-      <div className="flex h-full min-h-0 flex-col gap-4">
-        <CreateHeader
-          universeId={universeId}
-          wasAdult={wasAdult}
-          draftId={draftId}
-          onSave={handleSaveClick}
-          isSaving={isSaving}
-          onDraftClick={handleLoadDraftClick}
-          setCurrentTabId={setCurrentTabId}
-          setActiveScenarioIndex={setActiveScenarioIndex}
-          markSubmitSuccess={markSubmitSuccess}
+      <ImageReviewContext.Provider value={imageReviewContext}>
+        <CreateModals
+          activeModal={activeModal}
+          closeModal={closeModal}
+          handleConfirmExit={handleConfirmExit}
+          rejectNavigation={reject}
+          handleLoadDraft={handleConfirmLoadDraft}
+          handleSaveOverwrite={handleConfirmSaveOverwrite}
         />
 
-        {/* lg 미만에서는 폭이 부족해 미리보기를 숨기고 토글 모달로 확인합니다. */}
-        <DragDropContext onDragEnd={handleDragEnd}>
-          {/* lg 이상에서는 두 패널(폼 491px : 프리뷰 693px 비율)이 gap을 뺀 나머지 폭을
-              끝까지 나눠 갖도록 grid로 전환합니다. flex로는 flex-basis가 auto인 wrapper div의
-              내용 기반 크기 계산과 얽혀 정확히 맞아떨어지지 않았습니다. */}
-          {isEditLoading || isLoadingDraft ? (
-            <SkeletonCharacterCreate />
-          ) : (
-            <div className="flex min-h-0 min-w-0 flex-1 items-start justify-center gap-4 lg:grid lg:grid-cols-[491fr_693fr] lg:grid-rows-[minmax(0,1fr)]">
-              <CreateTabs
-                isEditMode={isEditMode}
-                wasAdult={wasAdult}
-                currentTabId={currentTabId}
-                setCurrentTabId={setCurrentTabId}
-                activeScenarioIndex={activeScenarioIndex}
-                setActiveScenarioIndex={setActiveScenarioIndex}
-                assetFieldArray={assetFieldArray}
-              />
-              {isDesktop && (
-                <div className="hidden h-full min-h-0 lg:block">
-                  {shouldShowCardPreview ? (
-                    <CharacterCardPreviewPanel />
-                  ) : (
-                    <CharacterPreview
-                      activeScenarioIndex={activeScenarioIndex}
-                    />
-                  )}
-                </div>
-              )}
-            </div>
-          )}
+        <div className="flex h-full min-h-0 flex-col gap-4">
+          <CreateHeader
+            universeId={universeId}
+            wasAdult={wasAdult}
+            draftId={draftId}
+            onSave={handleSaveClick}
+            isSaving={isSaving}
+            onDraftClick={handleLoadDraftClick}
+            setCurrentTabId={setCurrentTabId}
+            setActiveScenarioIndex={setActiveScenarioIndex}
+            markSubmitSuccess={markSubmitSuccess}
+          />
 
-          {/* 미리보기 모달의 CharacterPreview도 Droppable을 렌더링하므로
-              같은 DragDropContext 안에 있어야 합니다. */}
-          <button
-            type="button"
-            onClick={() => setIsPreviewOpen(true)}
-            className="fixed bottom-6 right-6 z-10 flex items-center gap-2 rounded-full bg-brand px-5 py-3 text-on-brand shadow-card-heavy transition-opacity hover:opacity-90 lg:hidden"
-          >
-            <Eye className="size-5" aria-hidden="true" />
-            {t("cardPreview.openPreview")}
-          </button>
+          {!isEditLoading && <ImageReviewBanner />}
 
-          {isPreviewOpen && (
-            <ModalLayout
-              hasBackground
-              onClose={() => setIsPreviewOpen(false)}
-              className="flex h-[80dvh] w-full max-w-[693px] flex-col"
+          {/* lg 미만에서는 폭이 부족해 미리보기를 숨기고 토글 모달로 확인합니다. */}
+          <DragDropContext onDragEnd={handleDragEnd}>
+            {/* lg 이상에서는 두 패널(폼 491px : 프리뷰 693px 비율)이 gap을 뺀 나머지 폭을
+                끝까지 나눠 갖도록 grid로 전환합니다. flex로는 flex-basis가 auto인 wrapper div의
+                내용 기반 크기 계산과 얽혀 정확히 맞아떨어지지 않았습니다. */}
+            {isEditLoading || isLoadingDraft ? (
+              <SkeletonCharacterCreate />
+            ) : (
+              <div className="flex min-h-0 min-w-0 flex-1 items-start justify-center gap-4 lg:grid lg:grid-cols-[491fr_693fr] lg:grid-rows-[minmax(0,1fr)]">
+                <CreateTabs
+                  isEditMode={isEditMode}
+                  wasAdult={wasAdult}
+                  currentTabId={currentTabId}
+                  setCurrentTabId={setCurrentTabId}
+                  activeScenarioIndex={activeScenarioIndex}
+                  setActiveScenarioIndex={setActiveScenarioIndex}
+                  assetFieldArray={assetFieldArray}
+                />
+                {isDesktop && (
+                  <div className="hidden h-full min-h-0 lg:block">
+                    {shouldShowCardPreview ? (
+                      <CharacterCardPreviewPanel />
+                    ) : (
+                      <CharacterPreview
+                        activeScenarioIndex={activeScenarioIndex}
+                      />
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* 미리보기 모달의 CharacterPreview도 Droppable을 렌더링하므로
+                같은 DragDropContext 안에 있어야 합니다. */}
+            <button
+              type="button"
+              onClick={() => setIsPreviewOpen(true)}
+              className="fixed bottom-6 right-6 z-10 flex items-center gap-2 rounded-full bg-brand px-5 py-3 text-on-brand shadow-card-heavy transition-opacity hover:opacity-90 lg:hidden"
             >
-              {shouldShowCardPreview ? (
-                <CharacterCardPreviewPanel />
-              ) : (
-                <CharacterPreview activeScenarioIndex={activeScenarioIndex} />
-              )}
-            </ModalLayout>
-          )}
-        </DragDropContext>
-      </div>
+              <Eye className="size-5" aria-hidden="true" />
+              {t("cardPreview.openPreview")}
+            </button>
+
+            {isPreviewOpen && (
+              <ModalLayout
+                hasBackground
+                onClose={() => setIsPreviewOpen(false)}
+                className="flex h-[80dvh] w-full max-w-[693px] flex-col"
+              >
+                {shouldShowCardPreview ? (
+                  <CharacterCardPreviewPanel />
+                ) : (
+                  <CharacterPreview activeScenarioIndex={activeScenarioIndex} />
+                )}
+              </ModalLayout>
+            )}
+          </DragDropContext>
+        </div>
+      </ImageReviewContext.Provider>
     </FormProvider>
   );
 };

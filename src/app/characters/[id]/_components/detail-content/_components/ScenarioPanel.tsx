@@ -96,8 +96,9 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
             <span className="title-5 text-font-1">
               {selectedScenario.name}
             </span>
+            {/* 상위의 pre-wrap 이 설명 끝 줄바꿈을 빈 줄로 살려 한 줄짜리도 2줄 높이가 되므로 줄바꿈을 접는다. */}
             {selectedScenario.description && (
-              <span className="body-5 line-clamp-2 text-font-2">
+              <span className="body-5 line-clamp-2 whitespace-normal text-font-2">
                 {selectedScenario.description}
               </span>
             )}

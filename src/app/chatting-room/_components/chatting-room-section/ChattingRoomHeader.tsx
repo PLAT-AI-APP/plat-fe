@@ -15,10 +15,11 @@ interface ChattingRoomHeaderProps {
   roomId: string;
   /** 제목을 눌렀을 때 갈 캐릭터 상세. 방 정보를 받기 전에는 없습니다. */
   universeId?: string;
-  characterName: string;
+  /** 헤더에 보여 줄 세계관 제목. 세계관을 받지 못했을 때는 캐릭터 이름으로 대신한다. */
+  title: string;
   models: AIModelType[];
   currentAi?: AIModelType;
-  /** 세계관 상세를 아직 받는 중이라 캐릭터 이름을 모를 때. */
+  /** 세계관 상세를 아직 받는 중이라 제목을 모를 때. */
   isCharacterLoading?: boolean;
   /** 모델 목록을 아직 받는 중일 때. */
   isModelsLoading?: boolean;
@@ -28,7 +29,7 @@ interface ChattingRoomHeaderProps {
 const ChattingRoomHeader = ({
   roomId,
   universeId,
-  characterName,
+  title,
   models,
   currentAi,
   isCharacterLoading = false,
@@ -67,10 +68,10 @@ const ChattingRoomHeader = ({
                 href={`/characters/${universeId}`}
                 className="block truncate underline-offset-4 transition-colors hover:text-font-2 hover:underline"
               >
-                {characterName}
+                {title}
               </Link>
             ) : (
-              characterName
+              title
             )}
           </h1>
         )}

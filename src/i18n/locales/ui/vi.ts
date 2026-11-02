@@ -653,6 +653,46 @@ const vi = {
       success: "Đã gửi câu hỏi. Xem phản hồi trong Q&A của tôi.",
     },
   },
+  imageReview: {
+    imageAlt: "Hình ảnh đang được duyệt",
+    usage: {
+      UNIVERSE_PROFILE: "Ảnh đại diện",
+      CHARACTER_PROFILE: "Hồ sơ nhân vật",
+      UNIVERSE_ASSET: "Tài nguyên",
+    },
+    status: {
+      REJECTED: "Bị từ chối",
+      ADULT_SETTING_REQUIRED: "Cần bật cài đặt người lớn",
+      PENDING: "Đang duyệt",
+      appealed: "Đã nhận khiếu nại",
+    },
+    badge: {
+      REJECTED: "Từ chối",
+      ADULT_SETTING_REQUIRED: "Cần cài đặt người lớn",
+      PENDING: "Đang duyệt",
+    },
+    reasons: {
+      IMAGE_EXPLICIT_SEXUAL: "Phát hiện nội dung tình dục lộ liễu",
+      IMAGE_MINOR_SEXUAL: "Phát hiện nội dung tình dục liên quan đến trẻ vị thành niên",
+      IMAGE_GRAPHIC_VIOLENCE: "Phát hiện cảnh bạo lực tàn bạo",
+      ADULT_SETTING_REQUIRED: "Cần bật cài đặt người lớn để dùng hình này",
+      MANUAL_REJECTION: "Quản trị viên đã từ chối hình ảnh này",
+      fallback: "Hình ảnh không đạt tiêu chuẩn duyệt",
+    },
+    replace: "Đổi hình ảnh",
+    appeal: "Khiếu nại",
+    adultSetting: "Đến cài đặt người lớn",
+    banner: "Có {count} hình ảnh bị từ chối",
+    tabDot: "Có hình ảnh cần sửa",
+    appealSubmitted: "Đã nhận khiếu nại. Quản trị viên sẽ kiểm tra.",
+    appealNotAllowed: "Không thể khiếu nại hình ảnh này",
+    appealRateLimited: "Bạn đã khiếu nại quá nhiều lần. Vui lòng thử lại sau ít phút.",
+    profile: {
+      pendingTitle: "Ảnh hồ sơ đang được duyệt",
+      rejectedTitle: "Ảnh hồ sơ đã bị từ chối",
+      notAllowedTitle: "Không thể dùng hình ảnh người lớn làm ảnh hồ sơ",
+    },
+  },
 };
 
 export default vi satisfies typeof ko;

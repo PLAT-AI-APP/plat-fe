@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Cropper, { type Area, type Point } from "react-easy-crop";
 import "react-easy-crop/react-easy-crop.css";
 import { useTranslations } from "next-intl";
@@ -9,6 +9,7 @@ import { ModalLayout } from "@/components/ModalLayout";
 import { createCroppedImageBlob, getCropOutputType } from "@/lib/cropImage";
 import { cn } from "@/lib/utils";
 import IconButton from "@/components/ui/IconButton";
+import { useTransformSettled } from "@/hooks/dom/useTransformSettled";
 
 interface RepresentativeImageCropModalProps {
   imageSrc: string;
@@ -36,6 +37,9 @@ const RepresentativeImageCropModal = ({
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
   const [cropSize, setCropSize] = useState<{ width: number; height: number }>();
   const [isApplying, setIsApplying] = useState(false);
+  const cropSectionRef = useRef<HTMLElement>(null);
+  // 모달이 축소된 채 나타나는 동안 크기를 재면 이동 범위가 그만큼 작게 굳어 이미지 끝까지 드래그가 안 된다.
+  const isModalSettled = useTransformSettled(cropSectionRef);
 
   const handleCropComplete = (
     _croppedArea: Area,
@@ -100,32 +104,37 @@ const RepresentativeImageCropModal = ({
         </header>
 
         <div className="flex flex-col gap-4">
-          <section className="relative aspect-square w-full overflow-hidden bg-scrim">
-            <Cropper
-              image={imageSrc}
-              crop={crop}
-              cropSize={cropSize}
-              zoom={1}
-              aspect={aspect}
-              cropShape="rect"
-              showGrid={false}
-              objectFit="contain"
-              minZoom={1}
-              maxZoom={1}
-              zoomWithScroll={false}
-              onCropChange={setCrop}
-              onCropComplete={handleCropComplete}
-              onMediaLoaded={handleMediaLoaded}
-              style={{
-                containerStyle: {
-                  backgroundColor: "#000000",
-                },
-                cropAreaStyle: {
-                  // 크롭 영역 경계는 스크림 위에 얹히므로 얇은 반투명 흰 선이면 충분하다.
-                  border: "1px solid rgba(255, 255, 255, 0.72)",
-                },
-              }}
-            />
+          <section
+            ref={cropSectionRef}
+            className="relative aspect-square w-full overflow-hidden bg-scrim"
+          >
+            {isModalSettled && (
+              <Cropper
+                image={imageSrc}
+                crop={crop}
+                cropSize={cropSize}
+                zoom={1}
+                aspect={aspect}
+                cropShape="rect"
+                showGrid={false}
+                objectFit="contain"
+                minZoom={1}
+                maxZoom={1}
+                zoomWithScroll={false}
+                onCropChange={setCrop}
+                onCropComplete={handleCropComplete}
+                onMediaLoaded={handleMediaLoaded}
+                style={{
+                  containerStyle: {
+                    backgroundColor: "#000000",
+                  },
+                  cropAreaStyle: {
+                    // 크롭 영역 경계는 스크림 위에 얹히므로 얇은 반투명 흰 선이면 충분하다.
+                    border: "1px solid rgba(255, 255, 255, 0.72)",
+                  },
+                }}
+              />
+            )}
           </section>
         </div>
 

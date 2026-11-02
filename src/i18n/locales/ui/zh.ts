@@ -649,6 +649,46 @@ const zh = {
       success: "咨询已提交，可在我的问答中查看回复。",
     },
   },
+  imageReview: {
+    imageAlt: "审核中的图片",
+    usage: {
+      UNIVERSE_PROFILE: "封面图片",
+      CHARACTER_PROFILE: "角色头像",
+      UNIVERSE_ASSET: "素材",
+    },
+    status: {
+      REJECTED: "已驳回",
+      ADULT_SETTING_REQUIRED: "需开启成人设置",
+      PENDING: "审核中",
+      appealed: "已受理申诉",
+    },
+    badge: {
+      REJECTED: "驳回",
+      ADULT_SETTING_REQUIRED: "需成人设置",
+      PENDING: "审核中",
+    },
+    reasons: {
+      IMAGE_EXPLICIT_SEXUAL: "检测到露骨的色情内容",
+      IMAGE_MINOR_SEXUAL: "检测到涉及未成年人的性化内容",
+      IMAGE_GRAPHIC_VIOLENCE: "检测到血腥暴力画面",
+      ADULT_SETTING_REQUIRED: "需开启成人设置才能使用",
+      MANUAL_REJECTION: "已被运营人员驳回",
+      fallback: "该图片不符合审核标准",
+    },
+    replace: "更换图片",
+    appeal: "申诉",
+    adultSetting: "前往成人设置",
+    banner: "有 {count} 张图片被驳回",
+    tabDot: "有需要修改的图片",
+    appealSubmitted: "已受理申诉。运营人员会进行确认。",
+    appealNotAllowed: "该图片无法申诉",
+    appealRateLimited: "申诉过于频繁。请稍后再试。",
+    profile: {
+      pendingTitle: "头像正在审核中",
+      rejectedTitle: "头像已被驳回",
+      notAllowedTitle: "成人图片不能用作头像",
+    },
+  },
 };
 
 export default zh satisfies typeof ko;

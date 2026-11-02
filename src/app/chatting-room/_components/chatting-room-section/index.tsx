@@ -330,7 +330,8 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
             roomId={roomId}
             // 세계관 상세가 닫힌 방은 제목을 링크로 두지 않는다.
             universeId={isUniverseOpen ? room?.universeId : undefined}
-            characterName={characterName}
+            // 눌러서 가는 곳이 세계관 상세라 세계관 제목을 보인다. 못 받았으면 캐릭터 이름으로 대신한다.
+            title={universe?.title ?? characterName}
             models={models}
             currentAi={currentAi}
             isCharacterLoading={isCharacterLoading}

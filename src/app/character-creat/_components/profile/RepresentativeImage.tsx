@@ -11,6 +11,12 @@ import { CharacterCreateFormValues } from "@/schema/character.schema";
 import { cn } from "@/lib/utils";
 import { REPRESENTATIVE_IMAGE_ASPECT } from "@/constants/imageCrop";
 import { useCroppedImageUpload } from "./useCroppedImageUpload";
+import {
+  ImageReviewMark,
+  REVIEW_RING_CLASS,
+  SlotReviewNotice,
+  useSlotReviewImage,
+} from "../imageReview";
 
 const RepresentativeImageCropModal = dynamic(
   () => import("./RepresentativeImageCropModal"),
@@ -21,6 +27,15 @@ const RepresentativeImage = () => {
   const t = useTranslations("characterCreate.representativeImage");
   const { control } = useFormContext<CharacterCreateFormValues>();
   const preview = useWatch({ control, name: "representativeImage" });
+  const representativeImageId = useWatch({
+    control,
+    name: "representativeImageId",
+  });
+  const reviewImage = useSlotReviewImage(
+    "UNIVERSE_PROFILE",
+    preview,
+    representativeImageId,
+  );
   const uploadingLabel = t("uploading");
   const {
     cropTarget,
@@ -67,7 +82,13 @@ const RepresentativeImage = () => {
           className="group relative flex justify-end w-[120px] h-full cursor-pointer flex-col gap-0 rounded-xl"
         >
           {/* 안내 문구가 말하는 대로 1:1.13 이다. aspect-square 는 w/h 에 덮여 아무 일도 하지 않으면서 정사각형처럼 읽혔다. */}
-          <div className="relative flex h-[157px] w-[120px] items-center justify-center rounded-xl bg-card">
+          <div
+            className={cn(
+              "relative flex h-[157px] w-[120px] items-center justify-center rounded-xl bg-card",
+              reviewImage && REVIEW_RING_CLASS[reviewImage.status],
+            )}
+          >
+            {reviewImage && <ImageReviewMark image={reviewImage} variant="pill" />}
             <div className="relative flex size-full items-center justify-center overflow-hidden rounded-xl">
               {preview ? (
                 <ResourceImage
@@ -111,6 +132,14 @@ const RepresentativeImage = () => {
           </div>
         </label>
       </div>
+
+      {reviewImage && (
+        <SlotReviewNotice
+          image={reviewImage}
+          onReplace={() => document.getElementById("representative-image")?.click()}
+          className="mt-3"
+        />
+      )}
 
       {cropTarget && (
         <RepresentativeImageCropModal

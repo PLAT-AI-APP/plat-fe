@@ -4,7 +4,13 @@ import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { authAxios } from "..";
 import { AppError } from "@/type/api";
-import { Gender, Provider, UserInfo, useUserStore } from "@/store/useUserStore";
+import {
+  Gender,
+  ProfileImageReview,
+  Provider,
+  UserInfo,
+  useUserStore,
+} from "@/store/useUserStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useAuthReady } from "@/hooks/data/useAuthReady";
 import { userQueryKeys } from "./queryKeys";
@@ -25,6 +31,7 @@ interface UserProfileResponse {
   adultContentEnabled?: boolean;
   birthLocked?: boolean;
   identityVerifiedPhone?: string | null;
+  profileImageReview?: ProfileImageReview | null;
 }
 
 const normalizeUserInfo = (user: UserProfileResponse): UserInfo => ({
@@ -43,6 +50,7 @@ const normalizeUserInfo = (user: UserProfileResponse): UserInfo => ({
   adultContentEnabled: user.adultContentEnabled ?? false,
   birthLocked: user.birthLocked ?? false,
   identityVerifiedPhone: user.identityVerifiedPhone ?? null,
+  profileImageReview: user.profileImageReview ?? null,
 });
 
 const GetMyInfo = async () => {
