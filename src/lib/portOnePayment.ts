@@ -20,12 +20,8 @@ const CHANNEL_KEY = process.env.NEXT_PUBLIC_PORTONE_CHANNEL_KEY ?? "";
 /** 테스트 채널. 운영은 apphosting.prod.yaml 이 실연동 채널로 덮어쓴다. */
 const TEST_CHANNEL_KEY = "channel-key-7ac022f7-b78c-4fa0-b2f6-cb7d09be076d";
 
-// shortcut: PG 필수값을 고정값으로 채운다. 회원 정보를 PG 에 넘기지 않아 구매자가 PG 영수증 메일을 받지 못한다.
-const BUYER = {
-  fullName: "구매자",
-  phoneNumber: "010-0000-0000",
-  email: "noreply@plat.so",
-};
+// shortcut: PG 필수값인 전화번호는 프로필 응답에 없어 고정값이다. 결제창에 보이지 않는다. 본인인증 번호를 내려 주면 바꾼다.
+const BUYER_PHONE = "010-0000-0000";
 
 /**
  * 결제를 아직 열지 않았는지. 운영에서는 실연동 채널을 넣어야 충전이 열린다.
@@ -86,10 +82,14 @@ export const requestPortOnePayment = async ({
   orderUid,
   orderName,
   amountMinor,
+  buyerName,
+  buyerEmail,
 }: {
   orderUid: string;
   orderName: string;
   amountMinor: number;
+  buyerName: string;
+  buyerEmail: string;
 }) => {
   const PortOne = await loadSdk();
   const response = await PortOne.requestPayment({
@@ -100,7 +100,11 @@ export const requestPortOnePayment = async ({
     totalAmount: amountMinor,
     currency: "CURRENCY_KRW",
     payMethod: "CARD",
-    customer: BUYER,
+    customer: {
+      fullName: buyerName,
+      phoneNumber: BUYER_PHONE,
+      email: buyerEmail,
+    },
     redirectUrl: `${window.location.origin}/payments/portone/success?orderUid=${encodeURIComponent(orderUid)}`,
     forceRedirect: true,
   });
