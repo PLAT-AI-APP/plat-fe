@@ -11,6 +11,7 @@ import DetailInfo from "./detail-info";
 import Profile from "./profile";
 import Scenario from "./scenario";
 import Setting from "./setting";
+import { ReviewTabDot } from "./imageReview";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
 import { SPRING_SNAPPY } from "@/constants/motion";
 
@@ -109,6 +110,7 @@ const CreateTabs = ({
               )}
             >
               {t(tabId)}
+              <ReviewTabDot tabId={tabId} />
             </button>
           );
         })}

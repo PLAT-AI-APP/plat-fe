@@ -652,6 +652,46 @@ const th = {
       success: "ส่งคำถามแล้ว ดูคำตอบได้ใน Q&A ของฉัน",
     },
   },
+  imageReview: {
+    imageAlt: "รูปภาพที่อยู่ระหว่างตรวจ",
+    usage: {
+      UNIVERSE_PROFILE: "รูปหลัก",
+      CHARACTER_PROFILE: "โปรไฟล์ตัวละคร",
+      UNIVERSE_ASSET: "แอสเซต",
+    },
+    status: {
+      REJECTED: "ถูกปฏิเสธ",
+      ADULT_SETTING_REQUIRED: "ต้องเปิดการตั้งค่าผู้ใหญ่",
+      PENDING: "กำลังตรวจ",
+      appealed: "รับคำอุทธรณ์แล้ว",
+    },
+    badge: {
+      REJECTED: "ปฏิเสธ",
+      ADULT_SETTING_REQUIRED: "ต้องตั้งค่าผู้ใหญ่",
+      PENDING: "กำลังตรวจ",
+    },
+    reasons: {
+      IMAGE_EXPLICIT_SEXUAL: "ตรวจพบเนื้อหาทางเพศที่โจ่งแจ้ง",
+      IMAGE_MINOR_SEXUAL: "ตรวจพบเนื้อหาทางเพศเกี่ยวกับผู้เยาว์",
+      IMAGE_GRAPHIC_VIOLENCE: "ตรวจพบความรุนแรงที่โหดร้าย",
+      ADULT_SETTING_REQUIRED: "ต้องเปิดการตั้งค่าสำหรับผู้ใหญ่จึงจะใช้ได้",
+      MANUAL_REJECTION: "ผู้ดูแลปฏิเสธรูปนี้",
+      fallback: "รูปนี้ไม่เป็นไปตามเกณฑ์การตรวจ",
+    },
+    replace: "เปลี่ยนรูป",
+    appeal: "อุทธรณ์",
+    adultSetting: "ไปที่การตั้งค่าผู้ใหญ่",
+    banner: "มีรูปที่ถูกปฏิเสธ {count} รูป",
+    tabDot: "มีรูปที่ต้องแก้",
+    appealSubmitted: "รับคำอุทธรณ์แล้ว ผู้ดูแลจะตรวจสอบให้",
+    appealNotAllowed: "รูปนี้ยื่นอุทธรณ์ไม่ได้",
+    appealRateLimited: "ยื่นอุทธรณ์บ่อยเกินไป โปรดลองใหม่อีกครั้งในภายหลัง",
+    profile: {
+      pendingTitle: "กำลังตรวจรูปโปรไฟล์",
+      rejectedTitle: "รูปโปรไฟล์ถูกปฏิเสธ",
+      notAllowedTitle: "รูปสำหรับผู้ใหญ่ใช้เป็นโปรไฟล์ไม่ได้",
+    },
+  },
 };
 
 export default th satisfies typeof ko;

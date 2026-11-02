@@ -659,6 +659,46 @@ const en = {
       success: "Your question was submitted. Check My Q&A for our reply.",
     },
   },
+  imageReview: {
+    imageAlt: "Image under review",
+    usage: {
+      UNIVERSE_PROFILE: "Cover image",
+      CHARACTER_PROFILE: "Character profile",
+      UNIVERSE_ASSET: "Asset",
+    },
+    status: {
+      REJECTED: "Rejected",
+      ADULT_SETTING_REQUIRED: "Adult setting required",
+      PENDING: "Under review",
+      appealed: "Appeal received",
+    },
+    badge: {
+      REJECTED: "Rejected",
+      ADULT_SETTING_REQUIRED: "Adult setting required",
+      PENDING: "Under review",
+    },
+    reasons: {
+      IMAGE_EXPLICIT_SEXUAL: "Explicit sexual content detected",
+      IMAGE_MINOR_SEXUAL: "Sexual depiction of a minor detected",
+      IMAGE_GRAPHIC_VIOLENCE: "Graphic violence detected",
+      ADULT_SETTING_REQUIRED: "Needs the adult setting to be used",
+      MANUAL_REJECTION: "Rejected by an admin",
+      fallback: "Doesn't meet our review guidelines",
+    },
+    replace: "Change image",
+    appeal: "Appeal",
+    adultSetting: "Go to adult setting",
+    banner: "{count, plural, one {# image was} other {# images were}} rejected",
+    tabDot: "Has images to fix",
+    appealSubmitted: "Your appeal was received. An admin will review it.",
+    appealNotAllowed: "This image can't be appealed",
+    appealRateLimited: "You've appealed too often. Please try again in a moment.",
+    profile: {
+      pendingTitle: "Your profile image is under review",
+      rejectedTitle: "Your profile image was rejected",
+      notAllowedTitle: "Adult images can't be profile images",
+    },
+  },
 };
 
 export default en satisfies typeof ko;
