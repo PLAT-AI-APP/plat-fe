@@ -165,6 +165,7 @@ const TokenChargeContents = () => {
     refetch,
   } = useProductsQuery();
   const { data: firstPurchase } = useFirstPurchaseEligibilityQuery();
+  const buyer = useUserStore((state) => state.user);
   const identityVerifiedUntil = useUserStore(
     (state) => state.user?.identityVerifiedUntil,
   );
@@ -235,6 +236,8 @@ const TokenChargeContents = () => {
             orderUid: order.orderUid,
             orderName: order.orderName || product.display.name,
             amountMinor: order.amountMinor,
+            buyerName: buyer?.nickname ?? "",
+            buyerEmail: buyer?.email ?? "",
           }).catch(() => {
             setOpening(false);
             showAppToast("error", t("tokenCharge.payment.failed"));
