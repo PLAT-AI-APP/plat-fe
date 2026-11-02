@@ -48,12 +48,16 @@ const ContentReviewDialog = ({ onClose, review, editHref }: ContentReviewDialogP
       ? { ...image, status: "PENDING" as const, appealed: true, appealable: false }
       : image,
   );
-  const isRejected = review.status === "REJECTED";
-  const isBodyRejected = isRejected && (Boolean(review.reason) || review.findings.length > 0);
+  const isBodyRejected =
+    review.status === "REJECTED" && (Boolean(review.reason) || review.findings.length > 0);
   const blockingCount = images.filter(isBlockingImage).length;
+  // 이 창에서 이의 신청해 고칠 이미지가 남지 않으면 반려가 아니라 운영자 확인 대기로 바뀐다.
+  const isRejected =
+    isBodyRejected || blockingCount > 0 || (review.status === "REJECTED" && images.length === 0);
+  const isAwaitingAdmin = review.awaitingAdmin || images.some((image) => image.appealed);
   const title = isRejected
     ? t("rejectedTitle")
-    : review.awaitingAdmin
+    : isAwaitingAdmin
       ? t("awaitingAdminTitle")
       : t("pendingTitle");
 
