@@ -154,6 +154,7 @@ const th = {
     updatedAt: "อัปเดตล่าสุด {date}",
     previousImage: "รูปก่อนหน้า",
     nextImage: "รูปถัดไป",
+    imageViewerClose: "ปิดรูป",
     moreImagesPrompt: "อยากดูอีกมุมของตัวละครนี้ไหม?",
     prologue: "บทนำ",
     characterIntroduction: "แนะนำตัวละคร",

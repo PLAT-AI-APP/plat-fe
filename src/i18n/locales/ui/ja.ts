@@ -155,6 +155,7 @@ const ja = {
     updatedAt: "最終更新日 {date}",
     previousImage: "前の画像",
     nextImage: "次の画像",
+    imageViewerClose: "画像を閉じる",
     moreImagesPrompt: "キャラクターの別の姿を見たいですか？",
     prologue: "プロローグ",
     characterIntroduction: "キャラクター紹介",
