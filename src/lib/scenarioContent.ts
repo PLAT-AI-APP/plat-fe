@@ -96,23 +96,25 @@ export const decodeScenarioContent = (
 
     const id = `restored-${index}`;
 
-    if (block.type === "NARRATIVE") {
+    if (
+      block.type === "NARRATIVE" ||
+      block.type === "DIALOGUE" ||
+      block.type === "USER_DIALOGUE"
+    ) {
+      const value = segmentsToText(block.segments);
+      // 내용이 빈 문장은 저장할 때도 버려지는데(encodeScenarioContent), 폼에 올려 두면
+      // 수정 버튼에서 "내용을 입력해 주세요"로 막혀 사용자가 지울 수밖에 없다. 처음부터 올리지 않는다.
+      if (!value.trim()) return;
+
       contents.push({
         id,
-        type: "action",
-        value: segmentsToText(block.segments),
-      });
-    } else if (block.type === "DIALOGUE") {
-      contents.push({
-        id,
-        type: "chat",
-        value: segmentsToText(block.segments),
-      });
-    } else if (block.type === "USER_DIALOGUE") {
-      contents.push({
-        id,
-        type: "userChat",
-        value: segmentsToText(block.segments),
+        type:
+          block.type === "NARRATIVE"
+            ? "action"
+            : block.type === "DIALOGUE"
+              ? "chat"
+              : "userChat",
+        value,
       });
     } else if (block.type === "ASSET_IMG") {
       // 미리보기는 fileId로 렌더링용 URL을 다시 만들어 채웁니다. 서버가 준 주소가 있으면 그것을 씁니다.

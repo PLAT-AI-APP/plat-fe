@@ -93,9 +93,9 @@ export const characterCreateSchema = z.object({
               .object({
                 id: z.string(),
                 type: z.enum(["chat", "userChat", "action", "asset"]),
-                value: z
-                  .string()
-                  .min(1, FIELD_ERROR_MESSAGES.scenarioContentRequired),
+                // asset 의 value 는 미리보기 이미지 주소라 비어 있어도(이미지 반려·로드 실패) 그 자체로 오류가 아니다.
+                // 텍스트 항목의 필수 검사는 아래 refine 이 맡는다.
+                value: z.string(),
                 // asset 타입만 갖는 값. value는 미리보기 표시용 이미지(base64/URL)라
                 // 그대로 백엔드에 보낼 수 없어, 임시 업로드 API가 내려준 식별자를 따로 들고 다닌다.
                 assetImageFileId: fileUploadIdSchema.nullable().optional(),
