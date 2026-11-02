@@ -9,20 +9,21 @@ export const metadata: Metadata = {
 interface CharacterCreatPageProps {
   searchParams: Promise<{
     universeId?: string;
+    reviewFocus?: string;
   }>;
 }
 
 const CharacterCreatPage = async ({
   searchParams,
 }: CharacterCreatPageProps) => {
-  const { universeId } = await searchParams;
+  const { universeId, reviewFocus } = await searchParams;
 
   return (
     <section
       id="character-create-main"
       className="mx-auto flex min-h-0 w-full max-w-(--content-max-width) min-w-0 flex-1 flex-col px-0 py-4"
     >
-      <CharacterCreateForm universeId={universeId} />
+      <CharacterCreateForm universeId={universeId} reviewFocus={reviewFocus} />
     </section>
   );
 };

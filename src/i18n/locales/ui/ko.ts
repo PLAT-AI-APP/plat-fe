@@ -652,6 +652,46 @@ const ko = {
       success: "문의를 등록했어요. 답변은 나의 Q&A에서 확인할 수 있어요.",
     },
   },
+  imageReview: {
+    imageAlt: "검수 대상 이미지",
+    usage: {
+      UNIVERSE_PROFILE: "대표 이미지",
+      CHARACTER_PROFILE: "캐릭터 프로필",
+      UNIVERSE_ASSET: "에셋",
+    },
+    status: {
+      REJECTED: "반려됨",
+      ADULT_SETTING_REQUIRED: "성인 설정 필요",
+      PENDING: "검수 중",
+      appealed: "이의 신청 접수됨",
+    },
+    badge: {
+      REJECTED: "반려",
+      ADULT_SETTING_REQUIRED: "성인 설정 필요",
+      PENDING: "검수 중",
+    },
+    reasons: {
+      IMAGE_EXPLICIT_SEXUAL: "노골적인 성적 표현이 감지됐어요",
+      IMAGE_MINOR_SEXUAL: "미성년자 성적 표현이 감지됐어요",
+      IMAGE_GRAPHIC_VIOLENCE: "잔혹한 폭력 표현이 감지됐어요",
+      ADULT_SETTING_REQUIRED: "성인 설정을 켜야 쓸 수 있는 이미지예요",
+      MANUAL_REJECTION: "운영자가 반려했어요",
+      fallback: "검수 기준에 맞지 않는 이미지예요",
+    },
+    replace: "이미지 바꾸기",
+    appeal: "이의 신청",
+    adultSetting: "성인 설정으로",
+    banner: "반려된 이미지가 {count}장 있어요",
+    tabDot: "고칠 이미지가 있어요",
+    appealSubmitted: "이의 신청을 접수했어요. 운영자가 확인할게요.",
+    appealNotAllowed: "이의 신청할 수 없는 이미지예요",
+    appealRateLimited: "이의 신청을 너무 자주 했어요. 잠시 뒤 다시 시도해 주세요.",
+    profile: {
+      pendingTitle: "프로필 이미지 검수 중이에요",
+      rejectedTitle: "프로필 이미지가 반려됐어요",
+      notAllowedTitle: "성인 이미지는 프로필에 쓸 수 없어요",
+    },
+  },
 };
 
 export default ko;

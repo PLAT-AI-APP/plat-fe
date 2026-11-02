@@ -29,6 +29,17 @@ export interface UserInfo {
   birthLocked?: boolean;
   /** 본인인증한 휴대폰 번호. 바꾸려면 본인인증을 다시 한다. */
   identityVerifiedPhone?: string | null;
+  /** 내 프로필 이미지의 검수 상태. 승인 전이면 다른 사람에게는 기본 이미지로 보인다. */
+  profileImageReview?: ProfileImageReview | null;
+}
+
+export interface ProfileImageReview {
+  /** PROFILE_NOT_ALLOWED: 성인 이미지라 프로필로 쓸 수 없다 */
+  status: "PENDING" | "APPROVED" | "REJECTED" | "PROFILE_NOT_ALLOWED";
+  reasonCode: string | null;
+  appealable: boolean;
+  /** 이의 신청에 쓸 파일 ID. 서버가 아직 주지 않으면 이의 신청 버튼을 숨긴다. */
+  fileId?: string | null;
 }
 
 interface UserState {

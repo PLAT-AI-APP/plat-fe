@@ -18,6 +18,14 @@ import {
 } from "@/icons";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
 import { showAppToast } from "@/lib/toast";
+import { getAssetReviewElementId, isBlockingImage } from "@/lib/imageReview";
+import { cn } from "@/lib/utils";
+import {
+  ImageReviewMark,
+  REVIEW_RING_CLASS,
+  SlotReviewNotice,
+  useReviewImages,
+} from "../imageReview";
 
 const formOptions = { shouldDirty: true, shouldValidate: true } as const;
 
@@ -42,6 +50,12 @@ const AssetItem = ({ id, index, remove }: AssetItemProps) => {
     control,
     name: `asset.${index}.assetImageFileId`,
   });
+  // 이미지를 바꾸면 파일 ID 가 달라져 표시가 사라진다.
+  const reviewImage = useReviewImages().find(
+    (image) =>
+      image.usage === "UNIVERSE_ASSET" &&
+      image.fileId === String(assetImageFileId),
+  );
   // 미리보기는 떴지만 아직 fileId 를 못 받은 상태 = 뒤에서 올리는 중.
   const isUploading = Boolean(assetImage) && !assetImageFileId;
   const assetName = useWatch({ control, name: `asset.${index}.assetName` });
@@ -140,8 +154,16 @@ const AssetItem = ({ id, index, remove }: AssetItemProps) => {
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
+          id={
+            assetImageFileId
+              ? getAssetReviewElementId(assetImageFileId)
+              : undefined
+          }
+          tabIndex={-1}
           className={`min-h-[110px] overflow-hidden rounded-xl border border-main bg-darkest px-4 pb-4 pt-1 ${
-            isActive ? "h-auto" : "h-[110px]"
+            isActive || (reviewImage && isBlockingImage(reviewImage))
+              ? "h-auto"
+              : "h-[110px]"
           }`}
         >
           <div
@@ -155,8 +177,14 @@ const AssetItem = ({ id, index, remove }: AssetItemProps) => {
             <div className="flex min-w-0 flex-1 gap-3">
               <label
                 htmlFor={`asset-image-${index}`}
-                className="relative flex size-[73px] shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-xl bg-card opacity-80"
+                className={cn(
+                  "relative flex size-[73px] shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-xl bg-card opacity-80",
+                  reviewImage && REVIEW_RING_CLASS[reviewImage.status],
+                )}
               >
+                {reviewImage && (
+                  <ImageReviewMark image={reviewImage} variant="strip" />
+                )}
                 {assetImage ? (
                   <ResourceImage
                     src={typeof assetImage === "string" ? assetImage : ""}
@@ -217,6 +245,16 @@ const AssetItem = ({ id, index, remove }: AssetItemProps) => {
               </button>
             </div>
           </article>
+
+          {reviewImage && (
+            <SlotReviewNotice
+              image={reviewImage}
+              onReplace={() =>
+                document.getElementById(`asset-image-${index}`)?.click()
+              }
+              className="mt-3"
+            />
+          )}
 
           {isActive && (
             <div className="mt-4 flex flex-col items-end gap-5">

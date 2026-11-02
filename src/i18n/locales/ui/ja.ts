@@ -653,6 +653,46 @@ const ja = {
       success: "お問い合わせを受け付けました。回答はマイQ&Aで確認できます。",
     },
   },
+  imageReview: {
+    imageAlt: "審査対象の画像",
+    usage: {
+      UNIVERSE_PROFILE: "代表画像",
+      CHARACTER_PROFILE: "キャラクタープロフィール",
+      UNIVERSE_ASSET: "アセット",
+    },
+    status: {
+      REJECTED: "差し戻し",
+      ADULT_SETTING_REQUIRED: "成人設定が必要",
+      PENDING: "審査中",
+      appealed: "異議申し立て受付済み",
+    },
+    badge: {
+      REJECTED: "差し戻し",
+      ADULT_SETTING_REQUIRED: "成人設定が必要",
+      PENDING: "審査中",
+    },
+    reasons: {
+      IMAGE_EXPLICIT_SEXUAL: "露骨な性的表現が検出されました",
+      IMAGE_MINOR_SEXUAL: "未成年者の性的表現が検出されました",
+      IMAGE_GRAPHIC_VIOLENCE: "残虐な暴力表現が検出されました",
+      ADULT_SETTING_REQUIRED: "成人向け設定が必要な画像です",
+      MANUAL_REJECTION: "運営者が差し戻しました",
+      fallback: "審査基準に合わない画像です",
+    },
+    replace: "画像を変更",
+    appeal: "異議申し立て",
+    adultSetting: "成人設定へ",
+    banner: "差し戻された画像が{count}枚あります",
+    tabDot: "修正が必要な画像があります",
+    appealSubmitted: "異議申し立てを受け付けました。運営者が確認します。",
+    appealNotAllowed: "異議申し立てできない画像です",
+    appealRateLimited: "異議申し立ての回数が多すぎます。しばらくしてからもう一度お試しください。",
+    profile: {
+      pendingTitle: "プロフィール画像を審査中です",
+      rejectedTitle: "プロフィール画像が差し戻されました",
+      notAllowedTitle: "成人向けの画像はプロフィールに使えません",
+    },
+  },
 };
 
 export default ja satisfies typeof ko;

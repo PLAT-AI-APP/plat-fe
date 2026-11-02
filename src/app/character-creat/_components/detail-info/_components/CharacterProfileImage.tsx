@@ -10,6 +10,12 @@ import { Close, ImageIcon, Plus } from "@/icons";
 import { CharacterCreateFormValues } from "@/schema/character.schema";
 import { cn } from "@/lib/utils";
 import { useCroppedImageUpload } from "../../profile/useCroppedImageUpload";
+import {
+  ImageReviewMark,
+  REVIEW_RING_CLASS,
+  SlotReviewNotice,
+  useSlotReviewImage,
+} from "../../imageReview";
 
 const RepresentativeImageCropModal = dynamic(
   () => import("../../profile/RepresentativeImageCropModal"),
@@ -23,6 +29,15 @@ const CharacterProfileImage = () => {
   );
   const { control } = useFormContext<CharacterCreateFormValues>();
   const preview = useWatch({ control, name: "characterProfileImage" });
+  const characterProfileImageId = useWatch({
+    control,
+    name: "characterProfileImageId",
+  });
+  const reviewImage = useSlotReviewImage(
+    "CHARACTER_PROFILE",
+    preview,
+    characterProfileImageId,
+  );
   const uploadingLabel = representativeT("uploading");
   const {
     cropTarget,
@@ -59,8 +74,12 @@ const CharacterProfileImage = () => {
         id="character-profile-image-field"
         htmlFor="character-profile-image"
         tabIndex={-1}
-        className="group relative flex size-32 cursor-pointer items-center justify-center overflow-visible rounded-xl bg-card"
+        className={cn(
+          "group relative flex size-32 cursor-pointer items-center justify-center overflow-visible rounded-xl bg-card",
+          reviewImage && REVIEW_RING_CLASS[reviewImage.status],
+        )}
       >
+        {reviewImage && <ImageReviewMark image={reviewImage} variant="pill" />}
         <div className="relative flex size-full items-center justify-center overflow-hidden rounded-xl">
           {preview ? (
             <ResourceImage
@@ -98,6 +117,15 @@ const CharacterProfileImage = () => {
           {preview ? <Close className="size-4" /> : <Plus className="size-4" />}
         </span>
       </label>
+
+      {reviewImage && (
+        <SlotReviewNotice
+          image={reviewImage}
+          onReplace={() =>
+            document.getElementById("character-profile-image")?.click()
+          }
+        />
+      )}
 
       {cropTarget && (
         <RepresentativeImageCropModal
