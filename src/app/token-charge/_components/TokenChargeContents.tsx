@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
@@ -30,7 +30,7 @@ import {
   openBlankPaymentWindow,
   providerSegment,
 } from "@/lib/paymentWindow";
-import { isTossConfigured } from "@/lib/tossPayments";
+import { isPaymentPreparing, isTossConfigured } from "@/lib/tossPayments";
 import TossPaymentOverlay from "./TossPaymentOverlay";
 import PageTitle from "@/components/PageTitle";
 import { EmptyState, ErrorState } from "@/components/state";
@@ -140,8 +140,16 @@ const ProductListSkeleton = () => (
   </ul>
 );
 
+const subscribeNothing = () => () => {};
+
 const TokenChargeContents = () => {
   const t = useTranslations();
+  // 서버는 호스트를 모르므로 빌드 값으로만 판단하고, 브라우저에서 호스트까지 넣어 다시 본다.
+  const preparing = useSyncExternalStore(
+    subscribeNothing,
+    () => isPaymentPreparing(window.location.host),
+    () => isPaymentPreparing(null),
+  );
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
   const availableBalance = useWalletStore(
     (state) => state.balance?.availableBalance ?? 0,
@@ -298,16 +306,18 @@ const TokenChargeContents = () => {
       <div className="flex flex-col gap-4">
         <h2 className="title-2 text-font-0">{t("tokenCharge.purchase")}</h2>
 
-        {isLoading && <ProductListSkeleton />}
+        {preparing && <EmptyState mood="peek" message={t("tokenCharge.preparing")} />}
+
+        {!preparing && isLoading && <ProductListSkeleton />}
 
         {/* 서버가 준 사유와(개발 모드에서는) 실패한 요청까지 함께 보여주고 재시도를 제공한다. */}
-        {isError && <ErrorState error={error} onRetry={refetch} />}
+        {!preparing && isError && <ErrorState error={error} onRetry={refetch} />}
 
-        {visibleProducts && visibleProducts.length === 0 && (
+        {!preparing && visibleProducts && visibleProducts.length === 0 && (
           <EmptyState mood="peek" message={t("tokenCharge.empty")} />
         )}
 
-        {visibleProducts && visibleProducts.length > 0 && (
+        {!preparing && visibleProducts && visibleProducts.length > 0 && (
           <ul className={cn("flex flex-col gap-3", fadeInClassName)}>
             {visibleProducts.map((product) => (
               <ProductListItem
