@@ -274,6 +274,7 @@ const vi: typeof en = {
   },
   tokenCharge: {
     title: "Nạp note",
+    preparing: "Dịch vụ thanh toán đang được chuẩn bị",
     payment: {
       redirecting: "Đang chuyển đến trang thanh toán…",
       success: "Đã nạp {credits} note.",
@@ -300,11 +301,8 @@ const vi: typeof en = {
       popupHint: "Hoàn tất thanh toán KakaoPay trong cửa sổ mới, kết quả sẽ hiện ngay tại đây.",
       popupClosedTitle: "Cửa sổ thanh toán đã đóng",
       popupClosedHint: "Nếu chưa thanh toán xong, hãy mở lại cửa sổ thanh toán. Nếu đã xong, kết quả sẽ sớm hiện ra.",
-      tossOpeningTitle: "Đang mở cửa sổ thanh toán",
-      tossOpeningHint: "Vui lòng đợi một chút.",
-      tossOpenHint: "Hoàn tất thanh toán trong cửa sổ và chúng tôi sẽ báo kết quả ngay.",
-      tossClosedTitle: "Bạn đã đóng cửa sổ thanh toán",
-      tossClosedHint: "Bạn chưa bị trừ tiền. Hãy mở lại cửa sổ thanh toán để tiếp tục.",
+      openingTitle: "Đang mở cửa sổ thanh toán",
+      openingHint: "Vui lòng đợi một chút.",
       handedOffTitle: "Kết quả sẽ hiện ở cửa sổ ban đầu",
       handedOffHint: "Bạn có thể đóng cửa sổ này.",
       showPopup: "Xem cửa sổ thanh toán",

@@ -275,6 +275,7 @@ const en = {
   },
   tokenCharge: {
     title: "Charge notes",
+    preparing: "Payments are coming soon",
     payment: {
       redirecting: "Redirecting to the payment page…",
       success: "{credits} notes have been added.",
@@ -301,11 +302,8 @@ const en = {
       popupHint: "Finish paying with Kakao Pay in the new window and we'll show the result right here.",
       popupClosedTitle: "The payment window was closed",
       popupClosedHint: "If you haven't finished paying, reopen the payment window. If you have, the result will appear shortly.",
-      tossOpeningTitle: "Opening the payment window",
-      tossOpeningHint: "Just a moment, please.",
-      tossOpenHint: "Finish paying in the payment window and we'll show the result right away.",
-      tossClosedTitle: "You closed the payment window",
-      tossClosedHint: "You haven't been charged. Reopen the payment window to continue.",
+      openingTitle: "Opening the payment window",
+      openingHint: "Just a moment, please.",
       handedOffTitle: "We'll show the result in your original window",
       handedOffHint: "You can close this window.",
       showPopup: "Show payment window",

@@ -269,6 +269,7 @@ const ja: typeof en = {
   },
   tokenCharge: {
     title: "ノートチャージ",
+    preparing: "決済サービスは準備中です",
     payment: {
       redirecting: "決済ページへ移動しています…",
       success: "{credits}ノートがチャージされました。",
@@ -295,11 +296,8 @@ const ja: typeof en = {
       popupHint: "新しいウィンドウでカカオペイの決済を完了すると、この画面ですぐに結果をお知らせします。",
       popupClosedTitle: "決済ウィンドウが閉じられました",
       popupClosedHint: "まだ決済を完了していない場合は、決済ウィンドウをもう一度開いてください。完了している場合は、まもなく結果が表示されます。",
-      tossOpeningTitle: "決済画面を開いています",
-      tossOpeningHint: "少々お待ちください。",
-      tossOpenHint: "決済画面でお支払いを完了すると、すぐに結果をお知らせします。",
-      tossClosedTitle: "決済画面を閉じました",
-      tossClosedHint: "まだ決済されていません。決済画面を再度開いて続けられます。",
+      openingTitle: "決済画面を開いています",
+      openingHint: "少々お待ちください。",
       handedOffTitle: "元のウィンドウで結果をお知らせします",
       handedOffHint: "このウィンドウは閉じても大丈夫です。",
       showPopup: "決済ウィンドウを表示",

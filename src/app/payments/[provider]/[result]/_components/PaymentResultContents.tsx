@@ -11,7 +11,6 @@ import { walletQueryKeys } from "@/api/wallet/queryKeys";
 import { noteQueryKeys } from "@/api/note/queryKeys";
 import { useAuthStore } from "@/store/useAuthStore";
 import { handOffToOpener, isMobileDevice } from "@/lib/paymentWindow";
-import { TOSS_USER_CANCEL_CODES } from "@/lib/tossPayments";
 import { useMinimumDisplay } from "@/hooks/common/useMinimumDisplay";
 import type { AppError } from "@/api";
 import Button from "@/components/ui/Button";
@@ -64,8 +63,14 @@ const refreshNotes = (queryClient: QueryClient) => {
   queryClient.invalidateQueries({ queryKey: paymentQueryKeys.firstPurchase() });
 };
 
-/** 결제창이 돌려주는 승인 값. 카카오페이는 pg_token, 토스페이먼츠는 paymentKey·amount·paymentType 이다. */
-const PG_RETURN_PARAMS = ["pg_token", "paymentKey", "amount", "paymentType"];
+/** 결제창이 돌려주는 승인 값. 로컬 가짜 PG 는 pg_token, 포트원은 paymentToken·paymentId·txId·transactionType 이다. */
+const PG_RETURN_PARAMS = [
+  "pg_token",
+  "paymentToken",
+  "paymentId",
+  "txId",
+  "transactionType",
+];
 
 /**
  * 승인을 보낸 뒤 주소에서 승인 토큰을 뗀다. 남겨 두면 새로고침·공유·방문 기록에 일회용 승인 토큰이 남고,
@@ -80,12 +85,6 @@ const dropPgTokenFromUrl = () => {
     "",
     `${url.pathname}${url.search}${url.hash}`,
   );
-};
-
-/** 결제창이 돌려준 금액. 정수가 아니면 버리고 서버가 정한 주문 금액으로 대조한다. */
-const parseReturnedAmount = (value: string | null) => {
-  if (!value || !/^\d{1,12}$/.test(value)) return undefined;
-  return Number(value);
 };
 
 interface PaymentResultContentsProps {
@@ -103,18 +102,18 @@ const PaymentResultContents = ({
   const isAuthReady = useAuthStore((state) => state.isAuthReady);
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
 
-  // 토스페이먼츠는 주문번호를 orderId, 승인 토큰을 paymentKey 로 돌려준다.
-  const orderUid = searchParams.get("orderUid") ?? searchParams.get("orderId");
+  const orderUid = searchParams.get("orderUid");
   const pgToken =
-    searchParams.get("pg_token") ?? searchParams.get("paymentKey");
-  const returnedAmount = parseReturnedAmount(searchParams.get("amount"));
-  // 토스페이먼츠는 구매자 취소도 failUrl 로 보낸다. 코드로 취소와 실패를 가른다.
+    searchParams.get("pg_token") ??
+    searchParams.get("paymentToken") ??
+    searchParams.get("paymentId");
   const failCode = searchParams.get("code");
 
   const [state, setState] = useState<PaymentState>(() => {
     if (result === "cancel") return { kind: "cancelled" };
-    if (result === "fail" && failCode && TOSS_USER_CANCEL_CODES.has(failCode))
-      return { kind: "cancelled" };
+    // 포트원은 성공·실패 모두 같은 주소로 돌려보내고 실패에만 code 를 붙인다.
+    if (result === "success" && failCode)
+      return { kind: "failed", message: searchParams.get("message") ?? undefined };
     if (result !== "success" || !orderUid) return { kind: "failed" };
     // 승인 토큰 없이 돌아왔다면 승인은 이미 다른 창에서 끝났다. 주문 상태만 확인한다.
     if (!pgToken) return { kind: "checking" };
@@ -169,7 +168,7 @@ const PaymentResultContents = ({
     requested.current = true;
 
     const slowTimer = setTimeout(() => setSlow(true), SLOW_CONFIRM_MS);
-    postPaymentConfirm({ orderUid, pgToken, amountMinor: returnedAmount })
+    postPaymentConfirm({ orderUid, pgToken })
       .then((confirmed) => {
         dropPgTokenFromUrl();
         setState({
@@ -194,7 +193,6 @@ const PaymentResultContents = ({
     state.kind,
     orderUid,
     pgToken,
-    returnedAmount,
     handoff,
     isAuthReady,
     isLoggedIn,

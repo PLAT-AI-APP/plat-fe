@@ -269,6 +269,7 @@ const zh: typeof en = {
   },
   tokenCharge: {
     title: "充值笔记",
+    preparing: "支付服务正在准备中",
     payment: {
       redirecting: "正在跳转到支付页面…",
       success: "已充值 {credits} 个笔记。",
@@ -295,11 +296,8 @@ const zh: typeof en = {
       popupHint: "在新窗口中完成 KakaoPay 支付后，我们会立即在此页面显示结果。",
       popupClosedTitle: "支付窗口已关闭",
       popupClosedHint: "如果尚未完成支付，请重新打开支付窗口。如果已完成，结果将很快显示。",
-      tossOpeningTitle: "正在打开支付窗口",
-      tossOpeningHint: "请稍候。",
-      tossOpenHint: "在支付窗口完成付款后,我们会立即告诉您结果。",
-      tossClosedTitle: "您已关闭支付窗口",
-      tossClosedHint: "尚未扣款。您可以重新打开支付窗口继续付款。",
+      openingTitle: "正在打开支付窗口",
+      openingHint: "请稍候。",
       handedOffTitle: "将在原窗口中显示结果",
       handedOffHint: "您可以关闭此窗口。",
       showPopup: "查看支付窗口",

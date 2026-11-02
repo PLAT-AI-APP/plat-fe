@@ -271,6 +271,7 @@ const ko: typeof en = {
   },
   tokenCharge: {
     title: "노트 충전",
+    preparing: "결제 서비스를 준비 중이에요",
     payment: {
       redirecting: "결제창으로 이동하고 있어요…",
       success: "{credits} 노트가 충전되었어요.",
@@ -297,11 +298,8 @@ const ko: typeof en = {
       popupHint: "새 창에서 카카오페이 결제를 마치면 이 화면에서 바로 결과를 알려 드릴게요.",
       popupClosedTitle: "결제창이 닫혔어요",
       popupClosedHint: "결제를 아직 마치지 않았다면 결제창을 다시 열어 주세요. 결제를 마쳤다면 곧 결과가 나타나요.",
-      tossOpeningTitle: "결제창을 여는 중이에요",
-      tossOpeningHint: "잠시만 기다려 주세요.",
-      tossOpenHint: "결제창에서 결제를 마치면 바로 결과를 알려 드릴게요.",
-      tossClosedTitle: "결제창을 닫았어요",
-      tossClosedHint: "아직 결제되지 않았어요. 결제창을 다시 열어 이어서 결제할 수 있어요.",
+      openingTitle: "결제창을 여는 중이에요",
+      openingHint: "잠시만 기다려 주세요.",
       handedOffTitle: "원래 창에서 결과를 보여 드릴게요",
       handedOffHint: "이 창은 닫아도 돼요.",
       showPopup: "결제창 보기",
