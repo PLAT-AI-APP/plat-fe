@@ -271,6 +271,7 @@ const ko: typeof en = {
   },
   tokenCharge: {
     title: "노트 충전",
+    preparing: "결제 서비스를 준비 중이에요",
     payment: {
       redirecting: "결제창으로 이동하고 있어요…",
       success: "{credits} 노트가 충전되었어요.",

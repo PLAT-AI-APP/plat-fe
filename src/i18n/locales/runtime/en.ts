@@ -275,6 +275,7 @@ const en = {
   },
   tokenCharge: {
     title: "Charge notes",
+    preparing: "Payments are coming soon",
     payment: {
       redirecting: "Redirecting to the payment page…",
       success: "{credits} notes have been added.",

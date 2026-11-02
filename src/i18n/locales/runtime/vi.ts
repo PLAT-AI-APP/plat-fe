@@ -274,6 +274,7 @@ const vi: typeof en = {
   },
   tokenCharge: {
     title: "Nạp note",
+    preparing: "Dịch vụ thanh toán đang được chuẩn bị",
     payment: {
       redirecting: "Đang chuyển đến trang thanh toán…",
       success: "Đã nạp {credits} note.",
