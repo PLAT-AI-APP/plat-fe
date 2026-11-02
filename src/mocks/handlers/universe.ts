@@ -3,8 +3,43 @@ import { endpoint, pathValue } from "../utils";
 import type { UniverseCreateRequest } from "@/api/universe/postUniverseCreate";
 import type { UniverseDetailResponse } from "@/api/universe/getUniverseDetail";
 import type { UniverseUpdateRequest } from "@/api/universe/patchUniverseUpdate";
+import type { ReviewImage } from "@/type/card";
 
 const deletedUniverseIds = new Set<string>();
+
+/** 이미지만 반려된 세계관(mine-rejected-image)의 이미지 검수 결과. 내 작품 카드와 수정 화면이 함께 쓴다. */
+export const mockReviewImages: ReviewImage[] = [
+  {
+    fileId: "456789012345678901",
+    usage: "UNIVERSE_ASSET",
+    refId: "1",
+    imageUrl: "https://picsum.photos/seed/universe-asset-happy/640/384",
+    status: "REJECTED",
+    reasonCode: "IMAGE_EXPLICIT_SEXUAL",
+    appealable: true,
+    appealed: false,
+  },
+  {
+    fileId: "456789012345678902",
+    usage: "UNIVERSE_PROFILE",
+    refId: null,
+    imageUrl: "https://picsum.photos/seed/mine-rejected/374/490",
+    status: "ADULT_SETTING_REQUIRED",
+    reasonCode: "IMAGE_SUGGESTIVE",
+    appealable: true,
+    appealed: false,
+  },
+  {
+    fileId: "456789012345678903",
+    usage: "CHARACTER_PROFILE",
+    refId: "9876543210987654321",
+    imageUrl: "https://picsum.photos/seed/mine-character/128/128",
+    status: "PENDING",
+    reasonCode: "USER_APPEAL",
+    appealable: false,
+    appealed: true,
+  },
+];
 const mockUniverseDetails = new Map<string, UniverseDetailResponse>();
 
 const isUniverseMissing = (universeId?: string): universeId is undefined =>
@@ -239,6 +274,47 @@ export const universeHandlers = [
     }
 
     setUniverseLiked(universeId, false);
+    return new HttpResponse(null, { status: 204 });
+  }),
+
+  http.get(/\/content-reviews\/UNIVERSE\/([^/]+)(?:\?.*)?$/, ({ request }) => {
+    const universeId = pathValue(request.url, /\/UNIVERSE\/([^/]+)$/);
+    const images = universeId === "mine-rejected-image" ? mockReviewImages : [];
+
+    return HttpResponse.json({
+      taskId: "1",
+      reviewStatus: images.length > 0 ? "REJECTED" : "APPROVED",
+      jobStatus: "DONE",
+      scope: "IMAGE",
+      reasonCode: null,
+      reason: null,
+      findings: [],
+      images,
+    });
+  }),
+
+  /** 판정이 AI 반려·성인 등급일 때만 받는다. 받으면 운영자 확인 대기로 바뀐다. */
+  http.post(/\/content-reviews\/files\/([^/]+)\/appeal$/, ({ request }) => {
+    const fileId = pathValue(request.url, /\/files\/([^/]+)\/appeal$/);
+    const image = mockReviewImages.find((item) => item.fileId === fileId);
+    if (!image) {
+      return HttpResponse.json(
+        { code: "FILE_NOT_FOUND", message: "File does not exist." },
+        { status: 404 },
+      );
+    }
+    if (!image.appealable) {
+      return HttpResponse.json(
+        { code: "CONTENT_REVIEW_NOT_APPEALABLE", message: "Cannot appeal." },
+        { status: 409 },
+      );
+    }
+    Object.assign(image, {
+      status: "PENDING",
+      reasonCode: "USER_APPEAL",
+      appealable: false,
+      appealed: true,
+    });
     return new HttpResponse(null, { status: 204 });
   }),
 

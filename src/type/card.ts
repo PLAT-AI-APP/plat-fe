@@ -43,13 +43,30 @@ export interface ReviewFinding {
   guide: string;
 }
 
+/** 공개를 막고 있는 이미지 한 장. 승인된 이미지는 오지 않는다. */
+export interface ReviewImage {
+  fileId: string;
+  usage: "UNIVERSE_PROFILE" | "CHARACTER_PROFILE" | "UNIVERSE_ASSET";
+  /** 캐릭터 프로필은 세계관 캐릭터 ID, 에셋은 에셋 ID, 대표 이미지는 null */
+  refId: string | null;
+  /** 본인만 볼 수 있는 서명 URL */
+  imageUrl: string | null;
+  status: "PENDING" | "REJECTED" | "ADULT_SETTING_REQUIRED";
+  /** IMAGE_<분류> · MANUAL_REJECTION · USER_APPEAL 등. 화면이 번역한다. */
+  reasonCode: string | null;
+  appealable: boolean;
+  appealed: boolean;
+}
+
 /** 내 작품이 승인되지 않은 이유. 모두 승인되면 카드에 없다. */
 export interface OwnCardReview {
   status: "PENDING" | "REJECTED";
   /** 자동 검수를 마치지 못해 운영자 판정을 기다리는 중 */
   awaitingAdmin: boolean;
+  /** 본문 검수 사유. 이미지 사유는 images 에 있다. */
   reason: string | null;
   findings: ReviewFinding[];
+  images: ReviewImage[];
 }
 
 /** 로그인 상태일 때만 의미 있는 찜 여부가 함께 내려오는 카드. */
