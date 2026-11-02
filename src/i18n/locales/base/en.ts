@@ -199,6 +199,8 @@ const en: typeof ko = {
       awaitingAdminDescription: "Automatic review couldn't finish, so an admin is checking it directly. Other users can see it once that's done.",
       rejectedFallback: "It didn't meet our review guidelines, so it isn't public. Edit it and save again.",
       findingsTitle: "What to fix",
+      imagesDescription: "{count, plural, one {# image} other {# images}} kept this from being published. You only need to fix the {count, plural, one {image} other {images}} below.",
+      bodyPassed: "The text and other images passed review",
       edit: "Edit",
       close: "Close",
       fields: {

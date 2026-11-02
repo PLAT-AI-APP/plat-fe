@@ -194,6 +194,8 @@ const ja: typeof ko = {
       awaitingAdminDescription: "自動審査を完了できなかったため、運営者が直接確認しています。確認が終わると他のユーザーにも表示されます。",
       rejectedFallback: "審査基準を満たさなかったため公開されていません。内容を修正して再度保存してください。",
       findingsTitle: "修正箇所",
+      imagesDescription: "画像{count}枚のため公開されませんでした。下の画像を直すだけで大丈夫です。",
+      bodyPassed: "本文とほかの画像は審査を通過しました",
       edit: "修正する",
       close: "閉じる",
       fields: {

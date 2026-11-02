@@ -659,6 +659,50 @@ const en = {
       success: "Your question was submitted. Check My Q&A for our reply.",
     },
   },
+  imageReview: {
+    imageAlt: "Image under review",
+    usage: {
+      UNIVERSE_PROFILE: "Cover image",
+      CHARACTER_PROFILE: "Character profile",
+      UNIVERSE_ASSET: "Asset",
+    },
+    status: {
+      REJECTED: "Rejected",
+      ADULT_SETTING_REQUIRED: "Adult setting required",
+      PENDING: "Under review",
+      appealed: "Under review · Appeal received",
+    },
+    badge: {
+      REJECTED: "Rejected",
+      ADULT_SETTING_REQUIRED: "Adult setting required",
+      PENDING: "Under review",
+    },
+    reasons: {
+      IMAGE_EXPLICIT_SEXUAL: "Explicit sexual content was detected. Please use a different image.",
+      IMAGE_MINOR_SEXUAL: "Sexual depiction of a minor was detected. Please use a different image.",
+      IMAGE_GRAPHIC_VIOLENCE: "Graphic or excessively violent content was detected. Please use a different image.",
+      ADULT_SETTING_REQUIRED: "This is an adult image. Turn on the adult setting or use a different image.",
+      MANUAL_REJECTION: "An admin rejected this image. Please use a different image.",
+      pending: "Others will see it once the review is done.",
+      appealed: "An admin is taking another look.",
+      fallback: "This image doesn't meet our review guidelines. Please use a different image.",
+    },
+    replace: "Change image",
+    appeal: "Appeal",
+    adultSetting: "Go to adult setting",
+    banner: "{count, plural, one {# image was} other {# images were}} rejected. Change the marked {count, plural, one {image} other {images}} or file an appeal.",
+    tabDot: "Has images to fix",
+    appealSubmitted: "Your appeal was received. An admin will review it.",
+    appealNotAllowed: "This image can't be appealed",
+    appealRateLimited: "You've appealed too often. Please try again in a moment.",
+    profile: {
+      pendingTitle: "Your profile image is under review",
+      pendingDescription: "Until the review is done, others will see the default image.",
+      rejectedTitle: "Your profile image was rejected",
+      notAllowedTitle: "This image can't be used as a profile image",
+      notAllowedDescription: "Adult images can't be used as profile images. Others will see the default image.",
+    },
+  },
 };
 
 export default en satisfies typeof ko;

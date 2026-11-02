@@ -653,6 +653,50 @@ const ja = {
       success: "お問い合わせを受け付けました。回答はマイQ&Aで確認できます。",
     },
   },
+  imageReview: {
+    imageAlt: "審査対象の画像",
+    usage: {
+      UNIVERSE_PROFILE: "代表画像",
+      CHARACTER_PROFILE: "キャラクタープロフィール",
+      UNIVERSE_ASSET: "アセット",
+    },
+    status: {
+      REJECTED: "差し戻し",
+      ADULT_SETTING_REQUIRED: "成人設定が必要",
+      PENDING: "審査中",
+      appealed: "審査中 · 異議申し立て受付済み",
+    },
+    badge: {
+      REJECTED: "差し戻し",
+      ADULT_SETTING_REQUIRED: "成人設定が必要",
+      PENDING: "審査中",
+    },
+    reasons: {
+      IMAGE_EXPLICIT_SEXUAL: "露骨な性的表現が検出されました。別の画像に変更してください。",
+      IMAGE_MINOR_SEXUAL: "未成年者を性的に表現した内容が検出されました。別の画像に変更してください。",
+      IMAGE_GRAPHIC_VIOLENCE: "残虐または過度に暴力的な場面が検出されました。別の画像に変更してください。",
+      ADULT_SETTING_REQUIRED: "成人向けの画像です。成人設定をオンにするか、別の画像に変更してください。",
+      MANUAL_REJECTION: "運営者が差し戻しました。別の画像に変更してください。",
+      pending: "審査が終わるとほかのユーザーにも表示されます。",
+      appealed: "運営者が改めて確認しています。",
+      fallback: "審査基準に合わない画像です。別の画像に変更してください。",
+    },
+    replace: "画像を変更",
+    appeal: "異議申し立て",
+    adultSetting: "成人設定へ",
+    banner: "差し戻された画像が{count}枚あります。表示された画像を変更するか、異議申し立てをしてください。",
+    tabDot: "修正が必要な画像があります",
+    appealSubmitted: "異議申し立てを受け付けました。運営者が確認します。",
+    appealNotAllowed: "異議申し立てできない画像です",
+    appealRateLimited: "異議申し立ての回数が多すぎます。しばらくしてからもう一度お試しください。",
+    profile: {
+      pendingTitle: "プロフィール画像を審査中です",
+      pendingDescription: "審査が終わるまで、ほかの人にはデフォルト画像で表示されます。",
+      rejectedTitle: "プロフィール画像が差し戻されました",
+      notAllowedTitle: "プロフィールに使えない画像です",
+      notAllowedDescription: "成人向けの画像はプロフィールに使えません。ほかの人にはデフォルト画像で表示されます。",
+    },
+  },
 };
 
 export default ja satisfies typeof ko;
