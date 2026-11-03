@@ -18,6 +18,7 @@ import {
   parsePlatCached,
   parsePlatStreaming,
   segmentsToDisplayText,
+  splitInlineImages,
 } from "@/lib/platParse";
 import { useUserDisplayName } from "@/hooks/data/useUserDisplayName";
 import { TRANSITION_FAST, slideUpVariants } from "@/constants/motion";
@@ -156,7 +157,10 @@ const ChatContentBlock = ({
   // 같은 메시지가 가상화로 다시 마운트돼도 이전 파싱 결과를 재사용한다.
   // 받는 중인 응답은 글자마다 원문이 바뀌어 캐시 대신 마지막 블록을 미리 닫아 파싱한다.
   const blocks = useMemo(
-    () => (isStreaming ? parsePlatStreaming(rawData) : parsePlatCached(rawData)),
+    () =>
+      splitInlineImages(
+        isStreaming ? parsePlatStreaming(rawData) : parsePlatCached(rawData),
+      ),
     [rawData, isStreaming],
   );
 
