@@ -220,16 +220,25 @@ const ChatContentBlock = ({
         }
 
         if (block.type === "ASSET_IMG") {
+          const isNewUnlock =
+            isStreaming &&
+            unlockedAssetIds !== undefined &&
+            !unlockedAssetIds.has(block.code);
+
+          // 소설로 보기는 글만 이어 읽는 화면이라 그림을 넣지 않는다. 새로 풀린 에셋이면 갤러리에 담겼다는 안내만 보인다.
+          if (isNovelView) {
+            return (
+              <AssetUnlockImage
+                key={index}
+                code={block.code}
+                isNewUnlock={isNewUnlock}
+                noteOnly
+              />
+            );
+          }
+
           return (
-            <AssetUnlockImage
-              key={index}
-              code={block.code}
-              isNewUnlock={
-                isStreaming &&
-                unlockedAssetIds !== undefined &&
-                !unlockedAssetIds.has(block.code)
-              }
-            >
+            <AssetUnlockImage key={index} code={block.code} isNewUnlock={isNewUnlock}>
               <ResourceImage
                 // block.code는 세계관 에셋 업로드로 받은 fileId이므로, 렌더링용 URL로 변환해야 합니다.
                 // 성인 세계관 에셋은 보호 경로라 서버가 준 서명 URL 을 먼저 쓴다.
