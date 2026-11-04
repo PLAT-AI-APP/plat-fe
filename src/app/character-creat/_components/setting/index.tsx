@@ -37,9 +37,11 @@ interface SettingProps {
   isEditMode: boolean;
   /** 저장된 세계관이 성인이었는지. 스위치를 끄면 검수 대기로 돌아간다는 안내의 기준이다. */
   wasAdult?: boolean;
+  /** 수정 화면에서만 넘긴다. 있으면 맨 아래에 캐릭터 삭제 항목이 붙는다. */
+  onDelete?: () => void;
 }
 
-const Setting =({ isEditMode, wasAdult = false }: SettingProps) => {
+const Setting =({ isEditMode, wasAdult = false, onDelete }: SettingProps) => {
   const t = useTranslations("characterCreate.settings");
   const selectorT = useTranslations("selector");
   const { setValue, control } = useFormContext<CharacterCreateFormValues>();
@@ -378,6 +380,23 @@ const Setting =({ isEditMode, wasAdult = false }: SettingProps) => {
           </button>
 
           <p className="body-7 text-font-2">{t("rightsHelp")}</p>
+        </section>
+      )}
+
+      {isEditMode && onDelete && (
+        <section className="flex items-center justify-between gap-4">
+          <div className="flex flex-col gap-1">
+            <h3 className="title-3 text-font-1">{t("deleteLabel")}</h3>
+            <p className="body-7 text-font-2">{t("deleteHelp")}</p>
+          </div>
+
+          <Button
+            variant="dangerSubtle"
+            onClick={onDelete}
+            className="h-[42px] px-[26px]"
+          >
+            {t("deleteButton")}
+          </Button>
         </section>
       )}
 

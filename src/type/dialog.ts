@@ -89,6 +89,11 @@ export interface PersonaDeleteDialogProps {
   errorMessage?: string;
 }
 
+export interface UniverseDeleteDialogProps {
+  onClose: () => void;
+  onConfirm: () => void;
+}
+
 /** 내 캐릭터의 검수 결과(검수 중·운영자 확인 중·반려 사유) */
 export interface ContentReviewDialogProps {
   onClose: () => void;
@@ -188,6 +193,7 @@ export type DialogTypeMap = {
   PERSONA_DELETE: DialogWithoutManagerClose<PersonaDeleteDialogProps>;
   QNA_CANCEL: DialogWithoutManagerClose<QnaCancelDialogProps>;
   SIGNUP_COMPLETE: DialogWithoutManagerClose<SignupCompleteDialogProps>;
+  UNIVERSE_DELETE: DialogWithoutManagerClose<UniverseDeleteDialogProps>;
   UNSAVED_CHANGES: DialogWithoutManagerClose<UnsavedChangesDialogProps>;
   USER_BLOCK: DialogWithoutManagerClose<UserBlockDialogProps>;
   WELCOME_CREDIT: DialogWithoutManagerClose<WelcomeCreditDialogProps>;

@@ -38,6 +38,8 @@ interface CreateTabsProps {
   isEditMode: boolean;
   /** 저장된 세계관이 성인이었는지. 성인 분류를 풀 때 검수 대기 안내를 띄우는 기준이다. */
   wasAdult?: boolean;
+  /** 수정 화면에서만 넘긴다. 설정 탭 맨 아래 삭제 항목이 부른다. */
+  onDelete?: () => void;
   currentTabId: TabId;
   setCurrentTabId: (id: TabId) => void;
   activeScenarioIndex: number;
@@ -52,6 +54,7 @@ interface CreateTabsProps {
 const CreateTabs = ({
   isEditMode,
   wasAdult = false,
+  onDelete,
   currentTabId,
   setCurrentTabId,
   activeScenarioIndex,
@@ -81,7 +84,13 @@ const CreateTabs = ({
           />
         );
       case "settings":
-        return <Setting isEditMode={isEditMode} wasAdult={wasAdult} />;
+        return (
+          <Setting
+            isEditMode={isEditMode}
+            wasAdult={wasAdult}
+            onDelete={onDelete}
+          />
+        );
       default:
         return null;
     }

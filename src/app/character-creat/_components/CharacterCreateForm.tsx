@@ -32,7 +32,12 @@ import {
   useUniverseDetailQuery,
 } from "@/api/universe/getUniverseDetail";
 import { useUniverseReviewQuery } from "@/api/review/getContentReview";
+import { useUniverseDeleteMutation } from "@/api/universe/deleteUniverse";
+import { invalidateUniverseLists } from "@/api/universe/invalidateUniverseLists";
 import { getAssetReviewElementId } from "@/lib/imageReview";
+import { useQueryClient } from "@tanstack/react-query";
+import { useDialogStore } from "@/store/useDialogStore";
+import { useUserStore } from "@/store/useUserStore";
 
 /** 검수 창의 "이미지 바꾸기"가 넘긴 reviewFocus 를 열 탭과 칸으로 바꾼다. */
 const getReviewFocusTarget = (
@@ -208,6 +213,36 @@ const CharacterCreateForm = ({
   const markSubmitSuccess = () => {
     isSubmitSuccessRef.current = true;
   };
+
+  const rootT = useTranslations();
+  const queryClient = useQueryClient();
+  const openDialog = useDialogStore((state) => state.openDialog);
+  const closeDialog = useDialogStore((state) => state.closeDialog);
+  const myUserId = useUserStore((state) => state.user?.id);
+  const { mutate: deleteUniverse } = useUniverseDeleteMutation();
+
+  const handleDeleteConfirm = () => {
+    if (!universeId) return;
+
+    deleteUniverse(universeId, {
+      onSuccess: () => {
+        closeDialog();
+        invalidateUniverseLists(queryClient);
+        showAppToast("success", rootT("toast.characterDeleted"));
+        // 지운 세계관의 수정 화면에 남을 수 없으니, 고치던 중이어도 이탈 경고 없이 나간다.
+        markSubmitSuccess();
+        router.replace(myUserId ? `/profile/${myUserId}` : "/");
+      },
+      onError: () => {
+        closeDialog();
+        showAppToast("error", rootT("toast.characterDeleteFailed"));
+      },
+    });
+  };
+
+  const handleDeleteClick = () => {
+    openDialog("UNIVERSE_DELETE", { onConfirm: handleDeleteConfirm });
+  };
   // lg 미만(태블릿)에서는 폼과 미리보기를 나란히 둘 폭이 없어 미리보기를 모달 토글로 뺍니다.
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   // CSS(hidden lg:block)로만 숨기면 태블릿에서도 사이드 패널이 계속 마운트되어 있어,
@@ -275,6 +310,8 @@ const CharacterCreateForm = ({
 
   useEffect(() => {
     if (!isEditMode || !isUniverseDetailError) return;
+    // 방금 지워서 나가는 중이라 상세를 다시 받다 404 가 나도 알릴 일이 아니다.
+    if (isSubmitSuccessRef.current) return;
 
     showAppToast("error", t("loadFailed"));
   }, [isEditMode, isUniverseDetailError]);
@@ -486,6 +523,7 @@ const CharacterCreateForm = ({
                 <CreateTabs
                   isEditMode={isEditMode}
                   wasAdult={wasAdult}
+                  onDelete={isEditMode ? handleDeleteClick : undefined}
                   currentTabId={currentTabId}
                   setCurrentTabId={setCurrentTabId}
                   activeScenarioIndex={activeScenarioIndex}

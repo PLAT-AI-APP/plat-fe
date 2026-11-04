@@ -104,6 +104,9 @@ const ja: typeof ko = {
       rightsHelp:
         "同意するとキャラクターを登録できます。同意日時は記録され、権利侵害が確認された場合はキャラクターが非公開・削除されることがあります。",
       rightsTermsLink: "利用規約を見る",
+      deleteLabel: "キャラクターを削除",
+      deleteHelp: "削除するとキャラクターとすべての会話履歴が完全に削除され、復元できません。",
+      deleteButton: "削除する",
     },
     asset: {
       header: "アセット登録 ({count}/50)",

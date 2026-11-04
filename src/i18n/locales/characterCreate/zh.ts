@@ -99,6 +99,9 @@ const zh: typeof ko = {
       rightsHelp:
         "同意后才能创建角色。同意时间将被记录，如确认存在侵权，角色可能被设为不公开或删除。",
       rightsTermsLink: "查看服务条款",
+      deleteLabel: "删除角色",
+      deleteHelp: "删除后，角色和所有对话记录将被永久删除，且无法恢复。",
+      deleteButton: "删除",
     },
     asset: {
       header: "素材注册 ({count}/50)",

@@ -101,6 +101,9 @@ const ko = {
       rightsHelp:
         "동의해야 캐릭터를 등록할 수 있어요. 동의 시각은 기록되며, 권리 침해가 확인되면 캐릭터가 비공개·삭제될 수 있어요.",
       rightsTermsLink: "이용약관 보기",
+      deleteLabel: "캐릭터 삭제하기",
+      deleteHelp: "삭제하면 캐릭터와 모든 대화 기록이 영구 삭제되며, 복구할 수 없어요.",
+      deleteButton: "삭제하기",
     },
     asset: {
       header: "에셋 등록 ({count}/50)",
