@@ -25,7 +25,8 @@ export type ButtonVariant =
   | "brandSoft"
   | "ghost"
   | "quiet"
-  | "danger";
+  | "danger"
+  | "dangerSubtle";
 
 export type ButtonSize = "lg" | "md" | "sm";
 
@@ -73,6 +74,14 @@ const VARIANT: Record<ButtonVariant, string> = {
    * 속한 --danger 로 모은다.
    */
   danger: "text-danger hover:bg-danger-bg",
+  /**
+   * 설정 화면의 삭제처럼 평소엔 조용하고 hover 에서만 빨개지는 자리.
+   * hover 면은 카드 위에 빨강 12% 를 얹은 색이라 --danger-bg(반투명)로는 카드가 비친다.
+   */
+  dangerSubtle: cn(
+    "bg-card text-font-2 hover:bg-[color-mix(in_srgb,var(--danger)_12%,var(--bg-card))] hover:text-danger",
+    FILLED_DISABLED,
+  ),
 };
 
 const SIZE: Record<ButtonSize, string> = {

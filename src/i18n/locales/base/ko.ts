@@ -221,6 +221,12 @@ const ko = {
       cancel: "취소하기",
       confirm: "확인하기",
     },
+    universeDelete: {
+      title: "정말 삭제할까요?",
+      description: "캐릭터와 모든 대화 기록이 영구 삭제되며,\n복구할 수 없어요.",
+      cancel: "취소",
+      confirm: "삭제",
+    },
     userBlock: {
       title: "'{nickname}' 유저를 차단할까요?",
       description:

@@ -221,6 +221,12 @@ const vi: typeof ko = {
       cancel: "Hủy",
       confirm: "Xác nhận",
     },
+    universeDelete: {
+      title: "Bạn có chắc muốn xóa?",
+      description: "Nhân vật và toàn bộ lịch sử trò chuyện sẽ bị xóa vĩnh viễn\nvà không thể khôi phục.",
+      cancel: "Hủy",
+      confirm: "Xóa",
+    },
     userBlock: {
       title: "Chặn {nickname}?",
       description:

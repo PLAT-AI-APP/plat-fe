@@ -220,6 +220,12 @@ const ja: typeof ko = {
       cancel: "キャンセル",
       confirm: "確認",
     },
+    universeDelete: {
+      title: "本当に削除しますか？",
+      description: "キャラクターとすべての会話履歴が完全に削除され、\n復元できません。",
+      cancel: "キャンセル",
+      confirm: "削除",
+    },
     userBlock: {
       title: "{nickname}さんをブロックしますか？",
       description:

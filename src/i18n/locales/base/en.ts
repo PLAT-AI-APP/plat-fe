@@ -225,6 +225,12 @@ const en: typeof ko = {
       cancel: "Cancel",
       confirm: "Confirm",
     },
+    universeDelete: {
+      title: "Delete this character?",
+      description: "The character and all chat history will be permanently deleted\nand cannot be restored.",
+      cancel: "Cancel",
+      confirm: "Delete",
+    },
     userBlock: {
       title: "Block {nickname}?",
       description:
