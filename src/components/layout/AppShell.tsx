@@ -3,7 +3,6 @@
 import type { ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import LazyLayerManagers from "@/components/LazyLayerManagers";
-import { isDocsPathname } from "@/components/docs/docsPath";
 import ProtectedRouteGate from "@/components/auth/ProtectedRouteGate";
 import ServerOutageBoundary from "@/components/state/ServerOutageBoundary";
 import ModalNavigationGuard from "@/components/modal/ModalNavigationGuard";
@@ -18,8 +17,6 @@ const FIXED_HEIGHT_PATHS = ["/character-creat"];
 
 const AppShell = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname();
-  // 문서 사이트(/docs)는 앱 셸 없이 문서 전용 레이아웃(app/docs/[locale]/layout)만 그린다.
-  if (isDocsPathname(pathname)) return <>{children}</>;
 
   const isSidebarHidden = HIDE_SIDEBAR_PATHS.some((path) =>
     pathname.startsWith(path),
