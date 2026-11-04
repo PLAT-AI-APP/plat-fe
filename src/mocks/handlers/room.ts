@@ -10,6 +10,12 @@ import type {
 import { MOCK_RESPONSE_FORMATS } from "./chat";
 import { getMockUniverseDetail } from "./universe";
 
+interface MockMemoryEntry {
+  id: string;
+  turnCount: number;
+  content: string;
+}
+
 export interface MockRoom {
   roomId: string;
   universeId: string;
@@ -24,6 +30,8 @@ export interface MockRoom {
   responseLength?: "SHORT" | "MEDIUM" | "LONG";
   language: RoomLanguage;
   memory: string;
+  /** 지나온 대화(자동 요약). 최신 턴부터 담는다. */
+  memoryEntries: MockMemoryEntry[];
   userNote: string;
   lastUsedAt: string;
   messages: RoomMessage[];
@@ -59,6 +67,38 @@ export const rooms = new Map<string, MockRoom>([
       responseFormatCode: "NOVEL",
       language: "KO",
       memory: "",
+      memoryEntries: [
+        {
+          id: "memory-5",
+          turnCount: 12,
+          content:
+            "사용자는 짧고 자연스러운 답변을 선호한다. 감정 표현은 과하지 않게, 상황에 맞춰 담백하게 이어가는 편이 좋다.",
+        },
+        {
+          id: "memory-4",
+          turnCount: 10,
+          content:
+            "사용자는 판타지 세계관과 일상적인 대화를 섞는 설정을 좋아한다. 갑작스러운 전개보다 관계가 천천히 가까워지는 흐름을 선호한다.",
+        },
+        {
+          id: "memory-3",
+          turnCount: 8,
+          content:
+            "캐릭터는 사용자가 피곤하다고 말하면 먼저 상태를 묻고, 바로 조언하기보다 잠깐 쉬어도 괜찮다는 식으로 반응한다.",
+        },
+        {
+          id: "memory-2",
+          turnCount: 5,
+          content:
+            "사용자는 대화 중 이름을 자주 부르는 것보다 중요한 순간에만 불러주는 방식을 더 자연스럽게 느낀다.",
+        },
+        {
+          id: "memory-1",
+          turnCount: 2,
+          content:
+            "캐릭터는 처음에는 무심한 말투지만, 사용자가 먼저 다가오면 짧게 웃거나 솔직한 감정을 조금씩 드러낸다.",
+        },
+      ],
       userNote: "",
       lastUsedAt: new Date().toISOString(),
       messages: createMessages([
@@ -80,6 +120,7 @@ export const rooms = new Map<string, MockRoom>([
       responseFormatCode: "NOVEL",
       language: "KO",
       memory: "",
+      memoryEntries: [],
       userNote: "",
       lastUsedAt: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
       messages: createMessages([
@@ -100,6 +141,7 @@ export const rooms = new Map<string, MockRoom>([
       responseFormatCode: "NOVEL",
       language: "KO",
       memory: "",
+      memoryEntries: [],
       userNote: "",
       lastUsedAt: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString(),
       // 커서 페이지네이션 동작을 눈으로 확인할 수 있게 넉넉히 쌓아 둡니다.
@@ -116,6 +158,12 @@ export const rooms = new Map<string, MockRoom>([
 const roomNotFound = () =>
   HttpResponse.json(
     { code: "CHAT_ROOM_NOT_FOUND", message: "채팅방을 찾을 수 없습니다." },
+    { status: 404 },
+  );
+
+const memoryEntryNotFound = () =>
+  HttpResponse.json(
+    { code: "CHAT_MESSAGE_NOT_FOUND", message: "메시지를 찾을 수 없습니다." },
     { status: 404 },
   );
 
@@ -201,6 +249,7 @@ export const roomHandlers = [
       responseFormatCode: "NOVEL",
       language: "KO",
       memory: "",
+      memoryEntries: [],
       userNote: "",
       lastUsedAt: new Date().toISOString(),
       messages: [],
@@ -295,12 +344,28 @@ export const roomHandlers = [
     });
   }),
 
-  // 채팅방 장기기억 조회
+  // 채팅방 지나온 대화(자동 요약) 목록 — 최신 턴순, 총 개수 없이 hasNext 만 준다.
   http.get(/\/rooms\/([^/]+)\/memory(?:\?.*)?$/, ({ request }) => {
     const room = findRoom(request, /\/rooms\/([^/]+)\/memory$/);
     if (!room) return roomNotFound();
 
-    return HttpResponse.json({ memory: room.memory });
+    const url = new URL(request.url);
+    const page = Math.max(parseInt(url.searchParams.get("page") || "0", 10), 0);
+    const size = Math.min(
+      Math.max(parseInt(url.searchParams.get("size") || "10", 10), 1),
+      100,
+    );
+    const content = room.memoryEntries.slice(page * size, page * size + size);
+
+    return HttpResponse.json({
+      page: {
+        number: page,
+        size,
+        numberOfElements: content.length,
+        hasNext: (page + 1) * size < room.memoryEntries.length,
+      },
+      content,
+    });
   }),
 
   // 채팅방 유저 노트 조회
@@ -310,6 +375,49 @@ export const roomHandlers = [
 
     return HttpResponse.json({ userNote: room.userNote });
   }),
+
+  // 지나온 대화 항목 수정
+  http.patch(
+    /\/rooms\/([^/]+)\/memory\/([^/]+)(?:\?.*)?$/,
+    async ({ request }) => {
+      const room = findRoom(request, /\/rooms\/([^/]+)\/memory\/[^/]+$/);
+      if (!room) return roomNotFound();
+
+      const memoryId = pathValue(request.url, /\/rooms\/[^/]+\/memory\/([^/]+)$/);
+      const entry = room.memoryEntries.find((item) => item.id === memoryId);
+      if (!entry) return memoryEntryNotFound();
+
+      const { content } = (await request.json()) as { content?: string };
+      if (content == null || content.trim() === "") {
+        return invalidInput({ content: "장기 기억 내용은 비워 둘 수 없습니다." });
+      }
+      if (content.length > 4000) {
+        return invalidInput({ content: "장기 기억은 4,000자 이하여야 합니다." });
+      }
+
+      entry.content = content;
+      return new HttpResponse(null, { status: 204 });
+    },
+  ),
+
+  // 지나온 대화 항목 삭제 — 서버는 내용을 비우고 목록에서 빠진다.
+  http.delete(
+    /\/rooms\/([^/]+)\/memory\/([^/]+)(?:\?.*)?$/,
+    ({ request }) => {
+      const room = findRoom(request, /\/rooms\/([^/]+)\/memory\/[^/]+$/);
+      if (!room) return roomNotFound();
+
+      const memoryId = pathValue(request.url, /\/rooms\/[^/]+\/memory\/([^/]+)$/);
+      if (!room.memoryEntries.some((item) => item.id === memoryId)) {
+        return memoryEntryNotFound();
+      }
+
+      room.memoryEntries = room.memoryEntries.filter(
+        (item) => item.id !== memoryId,
+      );
+      return new HttpResponse(null, { status: 204 });
+    },
+  ),
 
   // 채팅방 장기기억 수정
   http.patch(/\/rooms\/([^/]+)\/memory(?:\?.*)?$/, async ({ request }) => {

@@ -413,6 +413,51 @@ export function parsePlat(source: string): PlatBlock[] {
   return blocks;
 }
 
+/**
+ * 대사·묘사 안에 섞인 `{{img:code}}` 를 이미지 블록으로 떼어 냅니다.
+ *
+ * 모델이 이미지를 단독 줄이 아니라 `*묘사 … {{img:..}}*` 처럼 글 안에 쓰면 인라인 토큰으로 남아
+ * 코드가 글자 그대로 보인다. 채팅 화면에서만 쓴다 — 시나리오 편집은 원문 그대로 되돌려야 해서 parsePlat 은 그대로 둔다.
+ * 이미지 앞뒤 글은 같은 종류(대사·묘사)의 블록으로 이어 그린다.
+ */
+export function splitInlineImages(blocks: PlatBlock[]): PlatBlock[] {
+  const isInlineImage = (segment: PlatSegment) =>
+    segment.type === "ASSET_INLINE" && segment.assetType === "img";
+
+  return blocks.flatMap((block): PlatBlock[] => {
+    if (
+      (block.type !== "DIALOGUE" &&
+        block.type !== "USER_DIALOGUE" &&
+        block.type !== "NARRATIVE") ||
+      !block.segments.some(isInlineImage)
+    ) {
+      return [block];
+    }
+
+    const result: PlatBlock[] = [];
+    let run: PlatSegment[] = [];
+    const flush = () => {
+      const hasText = run.some(
+        (segment) => segment.type !== "TEXT" || segment.value.trim() !== "",
+      );
+      if (hasText) result.push({ type: block.type, segments: run });
+      run = [];
+    };
+
+    for (const segment of block.segments) {
+      if (segment.type === "ASSET_INLINE" && segment.assetType === "img") {
+        flush();
+        result.push({ type: "ASSET_IMG", code: segment.code });
+      } else {
+        run.push(segment);
+      }
+    }
+    flush();
+
+    return result;
+  });
+}
+
 /** 끝에 반쯤 걸린 인라인 토큰(`{{us`, `{{img:ab}`)과 토큰·이스케이프의 첫 글자. */
 const PARTIAL_INLINE_TOKEN_REGEX = /\{\{[^}]*\}?$/;
 const PARTIAL_TAIL_CHAR_REGEX = /[{[\\]$/;

@@ -18,6 +18,7 @@ import {
   parsePlatCached,
   parsePlatStreaming,
   segmentsToDisplayText,
+  splitInlineImages,
 } from "@/lib/platParse";
 import { useUserDisplayName } from "@/hooks/data/useUserDisplayName";
 import { TRANSITION_FAST, slideUpVariants } from "@/constants/motion";
@@ -156,7 +157,10 @@ const ChatContentBlock = ({
   // 같은 메시지가 가상화로 다시 마운트돼도 이전 파싱 결과를 재사용한다.
   // 받는 중인 응답은 글자마다 원문이 바뀌어 캐시 대신 마지막 블록을 미리 닫아 파싱한다.
   const blocks = useMemo(
-    () => (isStreaming ? parsePlatStreaming(rawData) : parsePlatCached(rawData)),
+    () =>
+      splitInlineImages(
+        isStreaming ? parsePlatStreaming(rawData) : parsePlatCached(rawData),
+      ),
     [rawData, isStreaming],
   );
 
@@ -216,16 +220,25 @@ const ChatContentBlock = ({
         }
 
         if (block.type === "ASSET_IMG") {
+          const isNewUnlock =
+            isStreaming &&
+            unlockedAssetIds !== undefined &&
+            !unlockedAssetIds.has(block.code);
+
+          // 소설로 보기는 글만 이어 읽는 화면이라 그림을 넣지 않는다. 새로 풀린 에셋이면 갤러리에 담겼다는 안내만 보인다.
+          if (isNovelView) {
+            return (
+              <AssetUnlockImage
+                key={index}
+                code={block.code}
+                isNewUnlock={isNewUnlock}
+                noteOnly
+              />
+            );
+          }
+
           return (
-            <AssetUnlockImage
-              key={index}
-              code={block.code}
-              isNewUnlock={
-                isStreaming &&
-                unlockedAssetIds !== undefined &&
-                !unlockedAssetIds.has(block.code)
-              }
-            >
+            <AssetUnlockImage key={index} code={block.code} isNewUnlock={isNewUnlock}>
               <ResourceImage
                 // block.code는 세계관 에셋 업로드로 받은 fileId이므로, 렌더링용 URL로 변환해야 합니다.
                 // 성인 세계관 에셋은 보호 경로라 서버가 준 서명 URL 을 먼저 쓴다.

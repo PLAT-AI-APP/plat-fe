@@ -151,6 +151,7 @@ const zh = {
     updatedAt: "最后更新日 {date}",
     previousImage: "上一张图片",
     nextImage: "下一张图片",
+    imageViewerClose: "关闭图片",
     moreImagesPrompt: "想看看这个角色的另一面吗？",
     prologue: "序章",
     characterIntroduction: "角色介绍",

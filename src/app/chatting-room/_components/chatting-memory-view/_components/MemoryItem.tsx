@@ -51,7 +51,7 @@ const MemoryItem = ({
             isEditing ? "text-font-2" : "text-font-1",
           )}
         >
-          {t("memoryTurn", { turn: memory.turn })}
+          {t("memoryTurn", { turn: memory.turnCount })}
         </span>
 
         {isEditing ? (

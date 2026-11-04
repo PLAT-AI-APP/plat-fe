@@ -155,6 +155,7 @@ const en = {
     updatedAt: "Last updated {date}",
     previousImage: "Previous image",
     nextImage: "Next image",
+    imageViewerClose: "Close image",
     moreImagesPrompt: "Want to see another side of this character?",
     prologue: "Prologue",
     characterIntroduction: "Character introduction",

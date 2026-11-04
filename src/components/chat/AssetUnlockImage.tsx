@@ -79,19 +79,43 @@ const Padlock = ({ open }: { open: boolean }) => (
   </svg>
 );
 
+/** 해금 안내 칩. AnimatePresence 안에서 들어오고 나가는 연출을 한다. */
+const UnlockNote = ({ text }: { text: string }) => (
+  <m.span
+    role="status"
+    className="body-6 flex w-fit items-center gap-1.5 rounded-full bg-brand-opacity px-3 py-1.5 text-brand-dark"
+    initial={{ opacity: 0, y: 6 }}
+    animate={{
+      opacity: 1,
+      y: 0,
+      transition: { delay: 0.7, duration: 0.45, ease: EASE_OUT },
+    }}
+    exit={{ opacity: 0, transition: { duration: 0.4 } }}
+  >
+    <UnlockLine className="size-4" />
+    {text}
+  </m.span>
+);
+
 interface AssetUnlockImageProps {
   /** 에셋 파일 id. 같은 에셋의 연출을 이어 붙이는 열쇠다. */
   code: string;
   /** 이번 답에서 처음 풀린 에셋인지. 아니면 그림만 그린다. */
   isNewUnlock: boolean;
   /** 실제 그림(next/image). 크기는 그림이 정한다. */
-  children: ReactNode;
+  children?: ReactNode;
+  /**
+   * 그림은 그리지 않고 해금 안내 칩만 보여 준다(소설로 보기). 글만 이어 읽는 화면이라 그림을 넣지 않고,
+   * 갤러리에 담겼다는 사실만 알린다. 새로 풀린 에셋이 아니면 아무것도 그리지 않는다.
+   */
+  noteOnly?: boolean;
 }
 
 const AssetUnlockImage = ({
   code,
   isNewUnlock,
   children,
+  noteOnly = false,
 }: AssetUnlockImageProps) => {
   const t = useTranslations("chatUI");
   // 처음 그릴 때 한 번만 정한다 — 연출 중인지, 어디까지 왔는지
@@ -121,7 +145,15 @@ const AssetUnlockImage = ({
     return () => timers.forEach(clearTimeout);
   }, [startedAt, isFinished]);
 
-  if (isFinished) return <>{children}</>;
+  if (isFinished) return noteOnly ? null : <>{children}</>;
+
+  if (noteOnly) {
+    return (
+      <AnimatePresence>
+        {phase === "revealed" && <UnlockNote text={t("assetUnlocked")} />}
+      </AnimatePresence>
+    );
+  }
 
   const revealed = phase === "revealed" || phase === "done";
   const opened = phase === "open" || revealed;
@@ -218,22 +250,7 @@ const AssetUnlockImage = ({
       </div>
 
       <AnimatePresence>
-        {phase === "revealed" && (
-          <m.span
-            role="status"
-            className="body-6 flex items-center gap-1.5 rounded-full bg-brand-opacity px-3 py-1.5 text-brand-dark"
-            initial={{ opacity: 0, y: 6 }}
-            animate={{
-              opacity: 1,
-              y: 0,
-              transition: { delay: 0.7, duration: 0.45, ease: EASE_OUT },
-            }}
-            exit={{ opacity: 0, transition: { duration: 0.4 } }}
-          >
-            <UnlockLine className="size-4" />
-            {t("assetUnlocked")}
-          </m.span>
-        )}
+        {phase === "revealed" && <UnlockNote text={t("assetUnlocked")} />}
       </AnimatePresence>
     </div>
   );

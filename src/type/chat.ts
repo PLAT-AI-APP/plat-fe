@@ -45,11 +45,13 @@ interface UserMessageType {
 export type ChatMessageType = AssistantMessageType | UserMessageType;
 
 /** 채팅방 지나온 대화(장기기억) 항목 */
+/** 지나온 대화(자동 요약) 한 항목. 누적 요약이라 항목마다 그 시점까지의 내용이다. */
 export interface ChatMemoryEntry {
   content: string;
-  createdAt: string;
+  /** 요약 경계 메시지 id */
   id: string;
-  turn: number;
+  /** 그 시점까지 완료된 누적 턴 수 */
+  turnCount: number;
 }
 
 /**

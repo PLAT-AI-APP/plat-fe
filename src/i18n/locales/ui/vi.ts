@@ -155,6 +155,7 @@ const vi = {
     updatedAt: "Cập nhật lần cuối {date}",
     previousImage: "Ảnh trước",
     nextImage: "Ảnh tiếp theo",
+    imageViewerClose: "Đóng ảnh",
     moreImagesPrompt: "Muốn xem một khía cạnh khác của nhân vật không?",
     prologue: "Mở đầu",
     characterIntroduction: "Giới thiệu nhân vật",

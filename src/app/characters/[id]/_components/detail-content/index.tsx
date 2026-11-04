@@ -21,6 +21,7 @@ import DetailTabs, { CharacterDetailTab } from "./_components/DetailTabs";
 import ScenarioPanel from "./_components/ScenarioPanel";
 import SettingsPanel from "./_components/SettingsPanel";
 import SidebarSummary from "./_components/SidebarSummary";
+import ImageLightbox from "@/components/image/ImageLightbox";
 
 interface CharacterDetailContentProps {
   characterId: string;
@@ -64,6 +65,8 @@ const CharacterDetailContent = ({
   usePreloadModalsWhenIdle(["CHATTING_START"]);
   const [currentTab, setCurrentTab] = useState<CharacterDetailTab>("settings");
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  // 썸네일을 눌러 크게 보고 있는 이미지 번호. null 이면 닫혀 있다.
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const settingsRef = useRef<HTMLElement>(null);
   const scenarioRef = useRef<HTMLElement>(null);
   const commentsRef = useRef<HTMLElement>(null);
@@ -213,6 +216,10 @@ const CharacterDetailContent = ({
       ? character.images[selectedImageIndex]
       : undefined;
   const shouldShowImageCta = selectedImageIndex >= character.images.length;
+  const handleSelectImage = (index: number) => {
+    setSelectedImageIndex(index);
+    setLightboxIndex(index);
+  };
   const moveSelectedImage = (direction: "previous" | "next") => {
     setSelectedImageIndex((prevIndex) => {
       const imageCount = character.images.length;
@@ -236,7 +243,7 @@ const CharacterDetailContent = ({
       <div className="grid w-full max-w-(--content-max-width) grid-cols-1 gap-[27px] min-[900px]:grid-cols-[389px_minmax(0,782px)]">
         <SidebarSummary
           character={character}
-          onSelectImage={setSelectedImageIndex}
+          onSelectImage={handleSelectImage}
           onStartChat={openChatStartModal}
         />
 
@@ -297,6 +304,20 @@ const CharacterDetailContent = ({
           </div>
         </main>
       </div>
+      {lightboxIndex !== null && (
+        <ImageLightbox
+          images={character.images}
+          index={lightboxIndex}
+          getAlt={(position) =>
+            t("previewImageLabel", { title: character.title, index: position })
+          }
+          closeLabel={t("imageViewerClose")}
+          previousLabel={t("previousImage")}
+          nextLabel={t("nextImage")}
+          onChangeIndex={setLightboxIndex}
+          onClose={() => setLightboxIndex(null)}
+        />
+      )}
     </article>
   );
 };

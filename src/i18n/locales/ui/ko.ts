@@ -151,6 +151,7 @@ const ko = {
     updatedAt: "마지막 수정일 {date}",
     previousImage: "이전 이미지",
     nextImage: "다음 이미지",
+    imageViewerClose: "이미지 닫기",
     moreImagesPrompt: "캐릭터의 다른 모습을 보고 싶다면?",
     prologue: "프롤로그",
     characterIntroduction: "캐릭터 소개",
