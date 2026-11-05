@@ -10,7 +10,7 @@ import { Pen } from "@/icons";
 interface AiSuggestedChatProps {
   /** 서버가 응답 끝에 함께 보낸 추천 문장. 비어 있으면 아무것도 그리지 않는다. */
   items: string[];
-  /** 고른 문장을 입력창에 넣는다. 바로 보내지는 않아 사용자가 고쳐 쓸 수 있다. */
+  /** 고른 문장을 바로 보낸다. */
   onSelect: (text: string) => void;
 }
 
