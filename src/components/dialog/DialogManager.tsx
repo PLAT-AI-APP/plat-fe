@@ -26,6 +26,7 @@ const DIALOG_LOADERS = {
   PERSONA_DELETE: () => import("./PersonaDeleteDialog"),
   QNA_CANCEL: () => import("./QnaCancelDialog"),
   SIGNUP_COMPLETE: () => import("./SignupCompleteDialog"),
+  UNIVERSE_DELETE: () => import("./UniverseDeleteDialog"),
   UNSAVED_CHANGES: () => import("./UnsavedChangesDialog"),
   USER_BLOCK: () => import("./UserBlockDialog"),
   WELCOME_CREDIT: () => import("./WelcomeCreditDialog"),

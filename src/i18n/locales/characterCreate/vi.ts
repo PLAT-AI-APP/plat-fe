@@ -103,6 +103,9 @@ const vi: typeof ko = {
       rightsHelp:
         "Bạn cần đồng ý để tạo nhân vật. Thời điểm đồng ý sẽ được ghi lại, và nhân vật vi phạm quyền có thể bị ẩn hoặc xóa.",
       rightsTermsLink: "Xem Điều khoản dịch vụ",
+      deleteLabel: "Xóa nhân vật",
+      deleteHelp: "Khi xóa, nhân vật và toàn bộ lịch sử trò chuyện sẽ bị xóa vĩnh viễn và không thể khôi phục.",
+      deleteButton: "Xóa",
     },
     asset: {
       header: "Đăng ký tài sản ({count}/50)",

@@ -219,6 +219,12 @@ const zh: typeof ko = {
       cancel: "取消",
       confirm: "确认",
     },
+    universeDelete: {
+      title: "确定要删除吗？",
+      description: "角色和所有对话记录将被永久删除，\n且无法恢复。",
+      cancel: "取消",
+      confirm: "删除",
+    },
     userBlock: {
       title: "要屏蔽 {nickname} 吗？",
       description: "屏蔽后，你将无法查看该用户创建的角色或参与聊天。",

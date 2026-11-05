@@ -104,6 +104,9 @@ const en: typeof ko = {
       rightsHelp:
         "You must agree to create a character. The time you agree is recorded, and characters found to infringe rights may be hidden or removed.",
       rightsTermsLink: "View Terms of Service",
+      deleteLabel: "Delete character",
+      deleteHelp: "Deleting permanently removes this character and all chat history. This cannot be undone.",
+      deleteButton: "Delete",
     },
     asset: {
       header: "Assets ({count}/50)",

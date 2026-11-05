@@ -1,11 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { getDocsLocales } from "@/api/docs/server";
 import {
   DOCS_BASE_PATH,
-  DOCS_ENTRY_LANG_PARAM,
-  docsPath,
+  DOCS_SITE_URL,
   isDocsPathname,
-  pickDocsEntryLocale,
 } from "@/components/docs/docsPath";
 import { isDevToolsEnabledFor } from "@/constants/identityVerification";
 
@@ -26,23 +23,17 @@ export async function proxy(request: NextRequest) {
   ) {
     return new NextResponse(null, { status: 404 });
   }
-  // 문서 기준 경로는 앱에서 넘긴 언어(?lang=)가 지원되면 그 언어, 아니면 문서 레포가 정한 기본 언어 홈으로 보낸다. 페이지(app/docs/page.tsx)에서도 보내지만, 루트 레이아웃의
-  // Suspense 안에서는 응답이 이미 시작돼 200 + 클라이언트 이동이 되므로 여기서 진짜 307 로 보낸다.
-  // 언어 목록을 못 받으면 그대로 넘겨 페이지가 오류 화면을 보이게 한다.
-  if (request.nextUrl.pathname === DOCS_BASE_PATH) {
-    const locales = await getDocsLocales().catch(() => null);
-    if (locales) {
-      const url = request.nextUrl.clone();
-      url.pathname = docsPath.home(pickDocsEntryLocale(url.searchParams.get(DOCS_ENTRY_LANG_PARAM), locales));
-      url.search = "";
-      return NextResponse.redirect(url);
-    }
+  // 문서는 문서 전용 사이트로 옮겼다. 예전 앱 안 주소(/docs/ko/articles/x 등)로 들어와도 같은 문서가 열리도록
+  // 기준 경로만 떼고 문서 사이트의 같은 경로로 보낸다. 언어 고르기(?lang=)도 문서 사이트가 그대로 받는다.
+  if (isDocsPathname(request.nextUrl.pathname)) {
+    const rest = request.nextUrl.pathname.slice(DOCS_BASE_PATH.length) || "/";
+    return NextResponse.redirect(`${DOCS_SITE_URL}${rest}${request.nextUrl.search}`);
   }
   if (!isMaintenanceMode(process.env.NEXT_PUBLIC_MAINTENANCE_MODE)) {
     return NextResponse.next();
   }
-  // 점검 화면 자신과 문서 사이트(/docs)는 점검 중에도 연다. 문서는 점검 안내·이용 방법을 볼 수 있어야 한다.
-  if (request.nextUrl.pathname === MAINTENANCE_PATH || isDocsPathname(request.nextUrl.pathname)) {
+  // 점검 화면 자신은 점검 중에도 연다. 문서(/docs)는 위에서 이미 문서 사이트로 보냈다.
+  if (request.nextUrl.pathname === MAINTENANCE_PATH) {
     return NextResponse.next();
   }
   const url = request.nextUrl.clone();

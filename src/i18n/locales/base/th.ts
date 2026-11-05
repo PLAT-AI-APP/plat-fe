@@ -221,6 +221,12 @@ const th: typeof ko = {
       cancel: "ยกเลิก",
       confirm: "ยืนยัน",
     },
+    universeDelete: {
+      title: "ต้องการลบจริงหรือไม่?",
+      description: "ตัวละครและประวัติการสนทนาทั้งหมดจะถูกลบถาวร\nและไม่สามารถกู้คืนได้",
+      cancel: "ยกเลิก",
+      confirm: "ลบ",
+    },
     userBlock: {
       title: "บล็อก {nickname} หรือไม่?",
       description:
