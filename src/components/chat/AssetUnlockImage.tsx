@@ -109,6 +109,8 @@ interface AssetUnlockImageProps {
    * 갤러리에 담겼다는 사실만 알린다. 새로 풀린 에셋이 아니면 아무것도 그리지 않는다.
    */
   noteOnly?: boolean;
+  /** 그림을 누르면 크게 본다. 해금 연출이 끝나 그림이 드러난 뒤에만 눌린다(흐린 그림이 미리 보이지 않게). */
+  onOpen?: () => void;
 }
 
 const AssetUnlockImage = ({
@@ -116,6 +118,7 @@ const AssetUnlockImage = ({
   isNewUnlock,
   children,
   noteOnly = false,
+  onOpen,
 }: AssetUnlockImageProps) => {
   const t = useTranslations("chatUI");
   // 처음 그릴 때 한 번만 정한다 — 연출 중인지, 어디까지 왔는지
@@ -145,7 +148,16 @@ const AssetUnlockImage = ({
     return () => timers.forEach(clearTimeout);
   }, [startedAt, isFinished]);
 
-  if (isFinished) return noteOnly ? null : <>{children}</>;
+  const openable = (picture: ReactNode) =>
+    onOpen ? (
+      <button type="button" onClick={onOpen} className="block cursor-zoom-in">
+        {picture}
+      </button>
+    ) : (
+      picture
+    );
+
+  if (isFinished) return noteOnly ? null : <>{openable(children)}</>;
 
   if (noteOnly) {
     return (
@@ -171,7 +183,7 @@ const AssetUnlockImage = ({
             }
             transition={{ duration: 1, ease: EASE_OUT }}
           >
-            {children}
+            {revealed ? openable(children) : children}
           </m.div>
           <m.div
             aria-hidden

@@ -6,6 +6,7 @@ import { AnimatePresence, m } from "framer-motion";
 import { useTranslations } from "next-intl";
 import ScenarioSelectPopover from "@/components/popover/ScenarioSelectPopover";
 import CharacterChat from "@/components/chat/CharacterChat";
+import ImageLightbox from "@/components/image/ImageLightbox";
 import Scenario from "@/components/chat/Scenario";
 import UserChatBubble from "@/components/chat/UserChatBubble";
 import { ArrowDown } from "@/icons";
@@ -33,6 +34,8 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [shouldShowMoreButton, setShouldShowMoreButton] = useState(false);
   const [contentHeight, setContentHeight] = useState(0);
+  // 눌러서 크게 보고 있는 시나리오 에셋 주소. null 이면 닫혀 있다.
+  const [enlargedAsset, setEnlargedAsset] = useState<string | null>(null);
   const selectedScenario = useMemo(
     () =>
       character.scenarios.find(
@@ -141,18 +144,26 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
           <div ref={contentRef} className="flex flex-col items-center gap-5">
             {scenarioBlocks.map((block, index) => {
               if (block.type === "ASSET_IMG") {
+                const assetUrl = resolveAssetImageUrl(block.code, assetImageUrls);
+
                 return (
-                  <ResourceImage
+                  <button
                     key={index}
-                    src={resolveAssetImageUrl(block.code, assetImageUrls)}
-                    alt={t("assetAlt", { name: selectedScenario.name })}
-                    width={482}
-                    height={289}
-                    // 업로드한 에셋은 비율이 제각각이라 가로형(482:289) 상자에 object-cover 로 채우면
-                    // 세로형·정사각형이 잘려 원본과 다르게 보였다. 원본 비율 그대로 두되, 세로로 너무
-                    // 길어지지 않게 482x482 안에 맞춘다. width/height 는 로드 전 자리 힌트일 뿐이다.
-                    className="h-auto w-auto max-h-[482px] max-w-[min(100%,482px)] rounded-2xl"
-                  />
+                    type="button"
+                    onClick={() => setEnlargedAsset(assetUrl)}
+                    className="flex max-w-full cursor-zoom-in justify-center"
+                  >
+                    <ResourceImage
+                      src={assetUrl}
+                      alt={t("assetAlt", { name: selectedScenario.name })}
+                      width={482}
+                      height={289}
+                      // 업로드한 에셋은 비율이 제각각이라 가로형(482:289) 상자에 object-cover 로 채우면
+                      // 세로형·정사각형이 잘려 원본과 다르게 보였다. 원본 비율 그대로 두되, 세로로 너무
+                      // 길어지지 않게 482x482 안에 맞춘다. width/height 는 로드 전 자리 힌트일 뿐이다.
+                      className="h-auto w-auto max-h-[482px] max-w-[min(100%,482px)] rounded-2xl"
+                    />
+                  </button>
                 );
               }
 
@@ -220,6 +231,19 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
           </button>
         )}
       </div>
+
+      {enlargedAsset && (
+        <ImageLightbox
+          images={[{ id: "scenario-asset", url: enlargedAsset }]}
+          index={0}
+          getAlt={() => t("assetAlt", { name: selectedScenario.name })}
+          closeLabel={t("imageViewerClose")}
+          previousLabel={t("previousImage")}
+          nextLabel={t("nextImage")}
+          onChangeIndex={() => {}}
+          onClose={() => setEnlargedAsset(null)}
+        />
+      )}
     </section>
   );
 };
