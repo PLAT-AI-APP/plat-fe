@@ -26,6 +26,7 @@ const ja: typeof ko = {
       memorySaveButton: "保存",
       memorySavedToast: "長期記憶が保存されました",
       memoryTurn: "ターン {turn}",
+      memoryTurnRange: "ターン {start}〜{end}",
       editMemory: "長期記憶を編集",
       memoryCancelButton: "キャンセル",
       memoryEmpty: "まだ記憶した会話がありません",

@@ -24,6 +24,7 @@ const ko = {
       memorySaveButton: "저장",
       memorySavedToast: "장기기억이 저장되었습니다",
       memoryTurn: "턴 {turn}",
+      memoryTurnRange: "턴 {start}~{end}",
       editMemory: "장기기억 수정",
       memoryCancelButton: "취소",
       memoryEmpty: "아직 기억해 둔 대화가 없어요",

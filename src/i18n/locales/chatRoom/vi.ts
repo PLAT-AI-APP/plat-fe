@@ -26,6 +26,7 @@ const vi: typeof ko = {
       memorySaveButton: "Lưu",
       memorySavedToast: "Đã lưu trí nhớ dài hạn",
       memoryTurn: "Lượt {turn}",
+      memoryTurnRange: "Lượt {start}–{end}",
       editMemory: "Sửa trí nhớ dài hạn",
       memoryCancelButton: "Hủy",
       memoryEmpty: "Chưa có cuộc trò chuyện nào được ghi nhớ",

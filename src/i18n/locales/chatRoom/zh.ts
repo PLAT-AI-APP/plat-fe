@@ -23,6 +23,7 @@ const zh: typeof ko = {
       memorySaveButton: "保存",
       memorySavedToast: "长期记忆已保存",
       memoryTurn: "回合 {turn}",
+      memoryTurnRange: "回合 {start}–{end}",
       editMemory: "编辑长期记忆",
       memoryCancelButton: "取消",
       memoryEmpty: "还没有记住的对话",

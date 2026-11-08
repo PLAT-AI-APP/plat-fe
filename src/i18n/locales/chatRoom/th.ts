@@ -26,6 +26,7 @@ const th: typeof ko = {
       memorySaveButton: "บันทึก",
       memorySavedToast: "บันทึกความจำระยะยาวแล้ว",
       memoryTurn: "เทิร์น {turn}",
+      memoryTurnRange: "เทิร์น {start}–{end}",
       editMemory: "แก้ไขความจำระยะยาว",
       memoryCancelButton: "ยกเลิก",
       memoryEmpty: "ยังไม่มีบทสนทนาที่จดจำไว้",
