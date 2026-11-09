@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useTranslations } from "next-intl";
 import ImageLightbox from "@/components/image/ImageLightbox";
 import ResourceImage from "@/components/ResourceImage";
+import { toImageVariantUrl } from "@/lib/file";
 import { cn } from "@/lib/utils";
 
 interface CharacterChatProps {
@@ -107,7 +108,8 @@ const CharacterChat = ({
       </div>
       {isProfileOpen && (
         <ImageLightbox
-          images={[{ id: "profile", url: image }]}
+          // 아바타용으로 받은 작은 변형본(sq140)을 크게 띄우면 흐려 보여서, 확대에는 표시용 큰 변형본을 쓴다.
+          images={[{ id: "profile", url: toImageVariantUrl(image, "lg") }]}
           index={0}
           getAlt={() => t("chatUI.characterProfileAlt", { name: CharacterName })}
           closeLabel={t("characterDetail.imageViewerClose")}
