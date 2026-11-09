@@ -1,8 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useTranslations } from "next-intl";
+import ImageLightbox from "@/components/image/ImageLightbox";
 import ResourceImage from "@/components/ResourceImage";
+import { toImageVariantUrl } from "@/lib/file";
 import { cn } from "@/lib/utils";
 
 interface CharacterChatProps {
@@ -19,6 +21,8 @@ interface CharacterChatProps {
    * 정상인 화면용이다. 채팅방은 프로필을 받는 중에도 비어 있으므로 켜지 않는다(빈 원으로 자리만 잡는다).
    */
   showFallbackWhenEmpty?: boolean;
+  /** 프로필을 누르면 크게 보여 준다. 채팅방에서만 켠다(제작 미리보기는 프로필이 곧 교체 대상이다). */
+  enlargeProfile?: boolean;
 }
 
 const CharacterChat = ({
@@ -30,8 +34,10 @@ const CharacterChat = ({
   bubbleClassName = "rounded-[0px_16px_16px_16px]",
   isNovelView = false,
   showFallbackWhenEmpty = false,
+  enlargeProfile = false,
 }: CharacterChatProps) => {
   const t = useTranslations();
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   if (isNovelView) {
     return (
@@ -42,27 +48,41 @@ const CharacterChat = ({
     );
   }
 
+  const profileImage = (
+    <ResourceImage
+      src={image}
+      alt={t("chatUI.characterProfileAlt", { name: CharacterName })}
+      width={imageSize}
+      height={imageSize}
+      unoptimized
+      // 대사가 길어 줄이 늘어도 프로필이 좁아지지 않게 줄어들지 않는다. 글이 대신 아랫줄로 내려간다.
+      className={cn("avatar-img shrink-0", imageClassName)}
+      // 클래스 우선순위나 대체 이미지(ImageFallback)의 컨테이너 쿼리와 상관없이 크기가 흔들리지 않도록 인라인으로도 못 박는다.
+      style={{
+        width: imageSize,
+        height: imageSize,
+        minWidth: imageSize,
+        maxWidth: imageSize,
+      }}
+    />
+  );
+
   return (
     <article className="flex gap-2">
       {/* 프로필이 없거나 세계관 상세가 아직 오지 않았으면 빈 src 로 그리지 않는다 — next/image 가 매번 콘솔 에러를 낸다.
           받는 중 말풍선(ChatContentBlock)과 같은 빈 원으로 자리만 잡아, 이미지가 와도 줄이 흔들리지 않게 한다. */}
       {image || showFallbackWhenEmpty ? (
-        <ResourceImage
-          src={image}
-          alt={t("chatUI.characterProfileAlt", { name: CharacterName })}
-          width={imageSize}
-          height={imageSize}
-          unoptimized
-          // 대사가 길어 줄이 늘어도 프로필이 좁아지지 않게 줄어들지 않는다. 글이 대신 아랫줄로 내려간다.
-          className={cn("avatar-img shrink-0", imageClassName)}
-          // 클래스 우선순위나 대체 이미지(ImageFallback)의 컨테이너 쿼리와 상관없이 크기가 흔들리지 않도록 인라인으로도 못 박는다.
-          style={{
-            width: imageSize,
-            height: imageSize,
-            minWidth: imageSize,
-            maxWidth: imageSize,
-          }}
-        />
+        enlargeProfile && image ? (
+          <button
+            type="button"
+            onClick={() => setIsProfileOpen(true)}
+            className="shrink-0 cursor-zoom-in self-start rounded-full"
+          >
+            {profileImage}
+          </button>
+        ) : (
+          profileImage
+        )
       ) : (
         <span
           className={cn("shrink-0 rounded-full bg-card", imageClassName)}
@@ -86,6 +106,20 @@ const CharacterChat = ({
           {chatText}
         </div>
       </div>
+      {isProfileOpen && (
+        <ImageLightbox
+          // 아바타용으로 받은 작은 변형본(sq140)을 크게 띄우면 흐려 보여서, 확대에는 표시용 큰 변형본을 쓴다.
+          images={[{ id: "profile", url: toImageVariantUrl(image, "lg") }]}
+          index={0}
+          getAlt={() => t("chatUI.characterProfileAlt", { name: CharacterName })}
+          closeLabel={t("characterDetail.imageViewerClose")}
+          previousLabel={t("characterDetail.previousImage")}
+          nextLabel={t("characterDetail.nextImage")}
+          unoptimized
+          onChangeIndex={() => {}}
+          onClose={() => setIsProfileOpen(false)}
+        />
+      )}
     </article>
   );
 };

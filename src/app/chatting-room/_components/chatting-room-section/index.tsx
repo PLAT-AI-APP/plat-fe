@@ -167,11 +167,6 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
   const handleTurnFailed = useCallback((message: string) => {
     chatFormRef.current?.restore(message);
   }, []);
-  // 고른 추천은 입력창에 넣기만 한다. 바로 보내면 고쳐 쓸 틈이 없다.
-  const handleSuggestionSelect = useCallback((text: string) => {
-    chatFormRef.current?.fill(text);
-  }, []);
-
   // 진행 중인 턴의 말풍선은 서버 이력과 별개로 이어붙이고, 저장이 끝나 이력에 들어오면 훅이 치운다.
   const {
     pendingMessages,
@@ -191,6 +186,13 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
     profileImage,
     onTurnFailed: handleTurnFailed,
   });
+  // 고른 추천은 입력창을 거치지 않고 바로 보낸다. 보내지 못하면(턴 실패 등) handleTurnFailed 가 입력창에 되돌려 놓는다.
+  const handleSuggestionSelect = useCallback(
+    (text: string) => {
+      sendMessage(text);
+    },
+    [sendMessage],
+  );
   // 이미 풀린 에셋을 알아 두면, 받는 중인 답에 처음 나온 에셋에만 해금 연출을 틀 수 있다.
   // 갤러리(사이드바)와 같은 조회라 캐시를 같이 쓴다. 답을 다 받으면 훅이 갤러리를 다시 받는다.
   const { data: assetGallery } = useChatAssetGalleryQuery(roomId);

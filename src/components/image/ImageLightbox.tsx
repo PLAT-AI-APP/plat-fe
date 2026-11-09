@@ -18,6 +18,8 @@ interface ImageLightboxProps {
   closeLabel: string;
   previousLabel: string;
   nextLabel: string;
+  /** 서명 URL 처럼 이미지 최적화를 거치면 안 되는 주소일 때 켠다. */
+  unoptimized?: boolean;
   onChangeIndex: (index: number) => void;
   onClose: () => void;
 }
@@ -34,6 +36,7 @@ const ImageLightbox = ({
   closeLabel,
   previousLabel,
   nextLabel,
+  unoptimized = false,
   onChangeIndex,
   onClose,
 }: ImageLightboxProps) => {
@@ -130,6 +133,7 @@ const ImageLightbox = ({
           src={image.url}
           alt={getAlt(index + 1)}
           fill
+          unoptimized={unoptimized}
           sizes="(min-width: 1024px) 1024px, 100vw"
           className="rounded-xl object-contain"
         />

@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { m } from "framer-motion";
 import { useTranslations } from "next-intl";
 import CharacterChat from "@/components/chat/CharacterChat";
+import ImageLightbox from "@/components/image/ImageLightbox";
 import ResourceImage from "@/components/ResourceImage";
 import InlineEditActions from "@/components/chat/InlineEditActions";
 import Scenario from "@/components/chat/Scenario";
@@ -136,6 +137,7 @@ const ChatContentBlock = ({
   onReport,
 }: ChatContentBlockProps) => {
   const t = useTranslations();
+  const [enlargedAsset, setEnlargedAsset] = useState<string | null>(null);
   const nickname = useUserDisplayName();
   const userDisplayName = userName ?? nickname;
   const {
@@ -202,6 +204,7 @@ const ChatContentBlock = ({
             <CharacterChat
               key={index}
               image={profileImage}
+              enlargeProfile
               chatText={segmentsToDisplayText(block.segments, userDisplayName)}
               CharacterName={characterName}
               isNovelView={isNovelView}
@@ -238,7 +241,16 @@ const ChatContentBlock = ({
           }
 
           return (
-            <AssetUnlockImage key={index} code={block.code} isNewUnlock={isNewUnlock}>
+            <AssetUnlockImage
+              key={index}
+              code={block.code}
+              isNewUnlock={isNewUnlock}
+              onOpen={() =>
+                setEnlargedAsset(
+                  resolveAssetImageUrl(block.code, assetImageUrls),
+                )
+              }
+            >
               <ResourceImage
                 // block.code는 세계관 에셋 업로드로 받은 fileId이므로, 렌더링용 URL로 변환해야 합니다.
                 // 성인 세계관 에셋은 보호 경로라 서버가 준 서명 URL 을 먼저 쓴다.
@@ -257,10 +269,18 @@ const ChatContentBlock = ({
         }
 
         if (block.type === "NARRATIVE") {
+          const narrativeText = segmentsToDisplayText(
+            block.segments,
+            userDisplayName,
+          );
+
+          // 모델이 `*`만 덩그러니 쓰거나 이미지·토큰만 있는 묘사는 보여 줄 글이 없다. 아이콘만 남은 빈 블록을 그리지 않는다.
+          if (!narrativeText.trim()) return null;
+
           return (
             <Scenario
               key={index}
-              text={segmentsToDisplayText(block.segments, userDisplayName)}
+              text={narrativeText}
               isNovelView={isNovelView}
             />
           );
@@ -333,6 +353,20 @@ const ChatContentBlock = ({
             </button>
           )}
         </div>
+      )}
+
+      {enlargedAsset && (
+        <ImageLightbox
+          images={[{ id: "asset", url: enlargedAsset }]}
+          index={0}
+          getAlt={() => t("chatUI.chatAssetAlt")}
+          closeLabel={t("characterDetail.imageViewerClose")}
+          previousLabel={t("characterDetail.previousImage")}
+          nextLabel={t("characterDetail.nextImage")}
+          unoptimized
+          onChangeIndex={() => {}}
+          onClose={() => setEnlargedAsset(null)}
+        />
       )}
     </div>
   );

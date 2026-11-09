@@ -31,12 +31,15 @@ const DEFAULT_CREATOR_IMAGE = "/p1.png";
 interface SidebarSummaryProps {
   character: CharacterDetail;
   onSelectImage: (index: number) => void;
+  /** 대표 이미지를 눌렀을 때 */
+  onOpenMainImage: () => void;
   onStartChat: () => void;
 }
 
 const SidebarSummary = ({
   character,
   onSelectImage,
+  onOpenMainImage,
   onStartChat,
 }: SidebarSummaryProps) => {
   const t = useTranslations("characterDetail");
@@ -133,7 +136,11 @@ const SidebarSummary = ({
       <section className="flex flex-col gap-4">
         {/* lg 미만에서는 이 열이 한 줄을 통째로 쓴다. 상한이 없으면 정사각형이 콘텐츠 폭을
             그대로 따라가 940px 화면에서 812×812 로 그려졌다. 데스크탑 열 폭이 곧 상한이다. */}
-        <div className="relative aspect-square w-full max-w-[389px] overflow-hidden rounded-2xl bg-card">
+        <button
+          type="button"
+          onClick={onOpenMainImage}
+          className="relative aspect-square w-full max-w-[389px] cursor-zoom-in overflow-hidden rounded-2xl bg-card"
+        >
           <ResourceImage
             src={character.mainImage}
             alt={t("profileAlt", { name: character.title })}
@@ -142,7 +149,7 @@ const SidebarSummary = ({
             className="object-contain"
             priority
           />
-        </div>
+        </button>
 
         <div className="flex flex-col gap-2">
           <h1 className="heading-2 flex items-center gap-2 text-font-1">

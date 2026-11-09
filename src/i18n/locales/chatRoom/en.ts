@@ -26,6 +26,7 @@ const en: typeof ko = {
       memorySaveButton: "Save",
       memorySavedToast: "Memory has been saved",
       memoryTurn: "Turn {turn}",
+      memoryTurnRange: "Turns {start}–{end}",
       editMemory: "Edit memory",
       memoryCancelButton: "Cancel",
       memoryEmpty: "No remembered conversations yet",
