@@ -269,10 +269,18 @@ const ChatContentBlock = ({
         }
 
         if (block.type === "NARRATIVE") {
+          const narrativeText = segmentsToDisplayText(
+            block.segments,
+            userDisplayName,
+          );
+
+          // 모델이 `*`만 덩그러니 쓰거나 이미지·토큰만 있는 묘사는 보여 줄 글이 없다. 아이콘만 남은 빈 블록을 그리지 않는다.
+          if (!narrativeText.trim()) return null;
+
           return (
             <Scenario
               key={index}
-              text={segmentsToDisplayText(block.segments, userDisplayName)}
+              text={narrativeText}
               isNovelView={isNovelView}
             />
           );
