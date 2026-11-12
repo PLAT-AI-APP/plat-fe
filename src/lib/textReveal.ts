@@ -1,5 +1,5 @@
 /** 밀린 글자가 적을 때 내보내는 기본 속도(초당 글자 수). 눈으로 따라 읽을 수 있는 정도다. */
-const BASE_CHARS_PER_SECOND = 60;
+const BASE_CHARS_PER_SECOND = 120;
 
 /**
  * 화면이 받은 글자보다 최대 이만큼(초)만 뒤처지게 한다.
@@ -8,7 +8,7 @@ const BASE_CHARS_PER_SECOND = 60;
  * 일정 비율을 내보내면 첫 몇 프레임에 대부분이 쏟아져(600자면 0.2초 안에 절반 이상) 결국 툭
  * 나타난 것처럼 보였다.
  */
-const MAX_LAG_SECONDS = 3;
+const MAX_LAG_SECONDS = 1.5;
 
 /** 탭 전환 등으로 프레임이 오래 멈췄다 돌아와도 밀린 시간만큼 한꺼번에 쏟아내지 않도록 묶는 상한. */
 const MAX_FRAME_SECONDS = 0.1;
