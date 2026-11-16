@@ -507,7 +507,8 @@ const CreateHeader = ({
   };
 
   return (
-    <header className="flex h-[37px] shrink-0 items-center justify-between">
+    // 320px처럼 좁은 폭에서는 제목과 버튼이 한 줄에 안 들어가므로 고정 높이 대신 줄바꿈을 허용한다.
+    <header className="flex min-h-[37px] shrink-0 flex-wrap items-center justify-between gap-y-2">
       {published && (
         <PublishCelebration
           imageUrl={published.imageUrl}
@@ -515,7 +516,7 @@ const CreateHeader = ({
           onLeave={leaveToPublished}
         />
       )}
-      <h1 className="title-1 flex items-center gap-2">
+      <h1 className="title-1 flex items-center gap-2 whitespace-nowrap">
         <ArrowLineLeft
           onClick={() => handleSafeBack("/")}
           className="h-6 w-6 cursor-pointer text-font-2"

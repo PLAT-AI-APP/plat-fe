@@ -14,7 +14,7 @@ const WishlistEmptyState = () => {
 
       <Link
         href="/?tab=categories"
-        className="flex w-[308px] items-center justify-center rounded-2xl bg-card-hover p-4 transition-colors hover:bg-card-selected"
+        className="flex w-[308px] max-w-full items-center justify-center rounded-2xl bg-card-hover p-4 transition-colors hover:bg-card-selected"
       >
         <span className="title-3 text-font-1">{t("searchTag")}</span>
       </Link>
