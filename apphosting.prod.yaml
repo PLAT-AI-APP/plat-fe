@@ -59,6 +59,11 @@ env:
     value: channel-key-d9ca78d6-7d76-45e0-b57a-0555f724f166
     availability: [BUILD, RUNTIME]
 
+  # 포트원 KCP 본인인증 실연동 채널. 저장소의 .env.production 은 테스트 채널이라 여기서 덮어쓴다. 공개값이다.
+  - variable: NEXT_PUBLIC_PORTONE_IDENTITY_CHANNEL_KEY
+    value: channel-key-a28b7223-c2e2-4d42-8e64-2d54f7162620
+    availability: [BUILD, RUNTIME]
+
   # 오류 수집(Sentry)을 켤 때만. 인증 토큰은 value 가 아니라 secret 으로 둔다.
   # - variable: NEXT_PUBLIC_SENTRY_DSN
   #   value: https://...
