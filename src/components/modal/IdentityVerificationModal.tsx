@@ -66,9 +66,6 @@ type Step =
 
 const POPUP_FEATURES = "popup=yes,width=480,height=760";
 
-/** 통합인증(KG이니시스)이 여는 간편인증 수단. 화면에 이름만 보여 준다. */
-const METHODS = ["PASS", "kakao", "naver", "toss", "bank"] as const;
-
 const formatDate = (value: string | null | undefined) =>
   value ? dayjs(value).format("YYYY.MM.DD") : "";
 
@@ -398,20 +395,6 @@ const IdentityVerificationModal = ({
                     </li>
                   ))}
                 </ul>
-
-                <div className="mt-5 flex w-full flex-col items-center gap-2">
-                  <span className="body-7 text-font-disabled">{t("methodsLabel")}</span>
-                  <div className="flex flex-wrap justify-center gap-1.5">
-                    {METHODS.map((method) => (
-                      <span
-                        key={method}
-                        className="rounded-full border border-main px-2.5 py-1 text-[11px] font-semibold text-font-2"
-                      >
-                        {t(`methods.${method}`)}
-                      </span>
-                    ))}
-                  </div>
-                </div>
 
                 {consent ? (
                   <div className="mt-5 flex w-full flex-col gap-2 text-left">
