@@ -1,12 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
+import dynamic from "next/dynamic";
 import { AnimatePresence, m } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { ArrowDown } from "@/icons";
 import type { FaqItem } from "@/type/qna";
-import FaqAnswer from "./FaqAnswer";
+
+// 답변은 항목을 펼칠 때만 그려서, 마크다운 처리기(react-markdown 등)는 처음 펼칠 때 받는다.
+const FaqAnswer = dynamic(() => import("./FaqAnswer"));
 
 interface FaqAccordionItemProps {
   item: FaqItem;
