@@ -86,8 +86,14 @@ export const useFollowToggle = ({
       (id): id is string => Boolean(id),
     );
 
-    // 숫자는 먼저 고쳐 두었지만, 그 사이 다른 사람이 팔로우했을 수 있어 뒤에서 맞춘다.
+    // 팔로워 수 API 는 서버에서 30초 캐시돼, 팔로우 직후 다시 받으면 옛 숫자가 와서 먼저 고쳐 둔 숫자를 덮는다
+    // ("눌렀는데 숫자는 그대로"). 그래서 대상의 수는 먼저 고쳐 둔 값을 그대로 두고, 캐시가 아직 없어 못 고친
+    // 경우와 그 밖의 사용자 수만 다시 받는다. 캐시가 풀리는 시점에는 다음 조회가 서버 값으로 맞춘다.
     userIds.forEach((id) => {
+      const isOptimisticallyUpdated =
+        id === userId &&
+        queryClient.getQueryData(followQueryKeys.count(id)) !== undefined;
+      if (isOptimisticallyUpdated) return;
       queryClient.invalidateQueries({ queryKey: followQueryKeys.count(id) });
     });
     queryClient.invalidateQueries({

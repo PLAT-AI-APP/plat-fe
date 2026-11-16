@@ -289,7 +289,7 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
 
   if (isAdultLocked) {
     return (
-      <section className="flex h-full min-h-0 flex-1 justify-center bg-dark pt-2">
+      <section className="flex h-full min-h-0 min-w-0 flex-1 justify-center bg-dark pt-2">
         <div className="flex h-full w-full max-w-[867px] flex-col">
           <div className="flex flex-1 items-center justify-center overflow-y-auto">
             <AdultGate
@@ -321,7 +321,8 @@ const ChattingRoomSection = ({ roomId }: ChattingRoomSectionProps) => {
   }
 
   return (
-    <section className="flex h-full min-h-0 flex-1 justify-center bg-dark pt-2">
+    // min-w-0 이 없으면 flex 자식이 내용 폭까지 커져서 375px 화면에서 오른쪽(전송 버튼 등)이 잘린다.
+    <section className="flex h-full min-h-0 min-w-0 flex-1 justify-center bg-dark pt-2">
       <div className="flex h-full w-full max-w-[867px] flex-col">
         <div
           ref={handleScrollContainerRef}

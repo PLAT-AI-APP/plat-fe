@@ -217,6 +217,7 @@ const IdentityVerificationModal = ({
   const [isConsentAgreed, setIsConsentAgreed] = useState(false);
   const [isConsentOpen, setIsConsentOpen] = useState(false);
   const popupRef = useRef<Window | null>(null);
+  const isPortOneRef = useRef(false);
   const { mutate: startVerification, isPending: isStarting } =
     useStartIdentityVerificationMutation();
   const { mutate: confirmVerification } = useConfirmIdentityVerificationMutation();
@@ -265,23 +266,29 @@ const IdentityVerificationModal = ({
     setStep({ kind: "waiting", verificationId });
   };
 
+  // 포트원 인증 창. PC 는 창이 닫히면 여기로 돌아와 확정하고, 모바일은 이 화면을 떠나 복귀 페이지가 확정한다.
+  const openPortOneWindow = (verificationId: string) => {
+    isPortOneRef.current = true;
+    setStep({ kind: "waiting", verificationId });
+    requestPortOneIdentityVerification(verificationId, purpose)
+      .then(() => confirm(verificationId))
+      .catch((error: unknown) =>
+        setStep({
+          kind: "error",
+          message:
+            error instanceof PortOneIdentityNotReadyError
+              ? t("errorPortOneNotReady")
+              : t("errorDefault"),
+        }),
+      );
+  };
+
   const handleStart = () => {
     if (!consent || !isConsentAgreed) return;
     startVerification(consent.documentId, {
       onSuccess: ({ verificationId, provider }) => {
         if (provider === "PORTONE") {
-          setStep({ kind: "waiting", verificationId });
-          requestPortOneIdentityVerification(verificationId)
-            .then(() => confirm(verificationId))
-            .catch((error: unknown) =>
-              setStep({
-                kind: "error",
-                message:
-                  error instanceof PortOneIdentityNotReadyError
-                    ? t("errorPortOneNotReady")
-                    : t("errorDefault"),
-              }),
-            );
+          openPortOneWindow(verificationId);
           return;
         }
 
@@ -316,6 +323,10 @@ const IdentityVerificationModal = ({
 
   const handleReopen = () => {
     if (step.kind !== "waiting") return;
+    if (isPortOneRef.current) {
+      openPortOneWindow(step.verificationId);
+      return;
+    }
     if (popupRef.current && !popupRef.current.closed) {
       popupRef.current.focus();
       return;

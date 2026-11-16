@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Close } from "@/icons";
 import ResourceImage from "@/components/ResourceImage";
@@ -25,9 +25,9 @@ interface ImageLightboxProps {
 }
 
 /**
- * 이미지를 화면 가득 크게 보여 주는 오버레이.
- * ESC · 바깥 클릭 · 닫기 버튼으로 닫고, 좌우 방향키·화살표 버튼으로 앞뒤 이미지를 넘긴다.
- * 닫으면 연 버튼으로 초점을 돌려주고, 열려 있는 동안 뒤 화면은 스크롤되지 않게 막는다.
+ * 배경 없이 이미지만(높이 70vh 이내) 띄우고, 닫기·이전·다음 버튼은 이미지 위에 붙인다.
+ * ESC · 이미지 밖 누르기 · 닫기 버튼으로 닫고, 밖을 누른 동작은 막지 않아 그대로 실행된다.
+ * 좌우 방향키·화살표 버튼으로 앞뒤 이미지를 넘기고, 닫으면 연 버튼으로 초점을 돌려준다.
  */
 const ImageLightbox = ({
   images,
@@ -41,6 +41,11 @@ const ImageLightbox = ({
   onClose,
 }: ImageLightboxProps) => {
   const closeRef = useRef<HTMLButtonElement>(null);
+  const frameRef = useRef<HTMLDivElement>(null);
+  // 이미지별로 받은 가로세로 비율. 다른 이미지로 넘기면 id 가 달라 이전 비율을 쓰지 않는다.
+  const [ratio, setRatio] = useState<{ id: string; value: number } | null>(
+    null,
+  );
   const image = images[index];
   const hasPrevious = index > 0;
   const hasNext = index < images.length - 1;
@@ -50,15 +55,28 @@ const ImageLightbox = ({
       document.activeElement instanceof HTMLElement
         ? document.activeElement
         : null;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
     closeRef.current?.focus();
 
     return () => {
-      document.body.style.overflow = previousOverflow;
       opener?.focus();
     };
   }, []);
+
+  // 이미지·버튼 밖을 누르면 닫는다. 캡처 단계에서 듣기만 하고 막지 않아, 누른 버튼의 동작은 그대로 실행된다.
+  useEffect(() => {
+    const handlePointerDown = (event: PointerEvent) => {
+      if (
+        event.target instanceof Node &&
+        !frameRef.current?.contains(event.target)
+      ) {
+        onClose();
+      }
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown, true);
+    return () =>
+      document.removeEventListener("pointerdown", handlePointerDown, true);
+  }, [onClose]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -79,64 +97,89 @@ const ImageLightbox = ({
   if (!image) return null;
 
   return createPortal(
+    // 배경 없이 이미지만 띄운다. 바깥 영역은 클릭을 막지 않아(pointer-events-none) 누른 대상이 그대로 동작한다.
     <div
       role="dialog"
-      aria-modal="true"
       aria-label={getAlt(index + 1)}
-      onClick={(event) => {
-        if (event.target === event.currentTarget) onClose();
-      }}
-      className="fixed inset-0 z-50 flex items-center justify-center bg-dark/95 p-4 backdrop-blur-sm sm:p-10"
+      className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center p-4"
     >
-      <button
-        ref={closeRef}
-        type="button"
-        aria-label={closeLabel}
-        onClick={onClose}
-        className="absolute top-3 right-3 flex size-11 items-center justify-center rounded-full border border-main bg-card text-font-1 shadow-popover hover:bg-btn-hover sm:top-5 sm:right-5"
+      <div
+        ref={frameRef}
+        className="pointer-events-auto flex flex-col items-end gap-2"
       >
-        <Close size={20} aria-hidden="true" />
-      </button>
-
-      {hasPrevious && (
+        {/* 버튼은 이미지 가장자리에 붙이되 이미지를 가리지 않게 바깥에 둔다. */}
         <button
+          ref={closeRef}
           type="button"
-          aria-label={previousLabel}
-          onClick={() => onChangeIndex(index - 1)}
-          className="absolute left-3 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full border border-main bg-card text-font-1 hover:bg-btn-hover sm:left-5"
+          aria-label={closeLabel}
+          onClick={onClose}
+          className="flex size-9 items-center justify-center rounded-full border border-main bg-card text-font-1 hover:bg-btn-hover"
         >
-          <span
-            aria-hidden="true"
-            className="ml-1 size-3 rotate-45 border-b-2 border-l-2 border-current"
-          />
+          <Close size={18} aria-hidden="true" />
         </button>
-      )}
 
-      {hasNext && (
-        <button
-          type="button"
-          aria-label={nextLabel}
-          onClick={() => onChangeIndex(index + 1)}
-          className="absolute right-3 top-1/2 flex size-11 -translate-y-1/2 items-center justify-center rounded-full border border-main bg-card text-font-1 hover:bg-btn-hover sm:right-5"
-        >
-          <span
-            aria-hidden="true"
-            className="mr-1 size-3 rotate-45 border-r-2 border-t-2 border-current"
-          />
-        </button>
-      )}
+        <div className="flex items-center gap-2">
+          {/* 이미지가 한 장이어도 좌우 자리를 같게 잡아 이미지가 가운데에 놓이게 한다. */}
+          <div className="size-9 shrink-0">
+            {hasPrevious && (
+              <button
+                type="button"
+                aria-label={previousLabel}
+                onClick={() => onChangeIndex(index - 1)}
+                className="flex size-9 items-center justify-center rounded-full border border-main bg-card text-font-1 hover:bg-btn-hover"
+              >
+                <span
+                  aria-hidden="true"
+                  className="ml-1 size-2.5 rotate-45 border-b-2 border-l-2 border-current"
+                />
+              </button>
+            )}
+          </div>
 
-      {/* 이미지 틀이 클릭을 가로채면 이미지 주변 빈 곳을 눌러도 닫히지 않아, 클릭은 뒤 오버레이가 받게 한다. */}
-      <div className="pointer-events-none relative h-full w-full max-w-5xl">
-        <ResourceImage
-          key={image.id}
-          src={image.url}
-          alt={getAlt(index + 1)}
-          fill
-          unoptimized={unoptimized}
-          sizes="(min-width: 1024px) 1024px, 100vw"
-          className="rounded-xl object-contain"
-        />
+          {/* 높이를 70vh 로 못 박고 가로는 원본 비율로 잡는다. 내용 크기에 맡기면(w-auto) 칸이 0 으로 접혀 이미지가 안 보였다.
+              비율은 받은 뒤에야 알 수 있어, 그 전엔 정사각형 자리로 둔다. */}
+          <div
+            className="relative h-[70vh] max-w-[calc(100vw-9rem)]"
+            style={{
+              aspectRatio: ratio?.id === image.id ? ratio.value : 1,
+            }}
+          >
+            <ResourceImage
+              key={image.id}
+              src={image.url}
+              alt={getAlt(index + 1)}
+              fill
+              unoptimized={unoptimized}
+              sizes="(min-width: 1024px) 1024px, 100vw"
+              onLoad={(event) => {
+                const { naturalWidth, naturalHeight } = event.currentTarget;
+                if (naturalWidth && naturalHeight) {
+                  setRatio({
+                    id: image.id,
+                    value: naturalWidth / naturalHeight,
+                  });
+                }
+              }}
+              className="rounded-xl object-contain"
+            />
+          </div>
+
+          <div className="size-9 shrink-0">
+            {hasNext && (
+              <button
+                type="button"
+                aria-label={nextLabel}
+                onClick={() => onChangeIndex(index + 1)}
+                className="flex size-9 items-center justify-center rounded-full border border-main bg-card text-font-1 hover:bg-btn-hover"
+              >
+                <span
+                  aria-hidden="true"
+                  className="mr-1 size-2.5 rotate-45 border-r-2 border-t-2 border-current"
+                />
+              </button>
+            )}
+          </div>
+        </div>
       </div>
     </div>,
     document.body,

@@ -47,6 +47,12 @@ interface PortOneSdk {
     redirectUrl: string;
     forceRedirect: boolean;
   }): Promise<{ code?: string; message?: string } | undefined>;
+  requestIdentityVerification(params: {
+    storeId: string;
+    channelKey: string;
+    identityVerificationId: string;
+    redirectUrl: string;
+  }): Promise<{ code?: string; message?: string } | undefined>;
 }
 
 declare global {
@@ -58,7 +64,7 @@ declare global {
 let sdkPromise: Promise<PortOneSdk> | null = null;
 
 /** SDK 스크립트를 한 번만 받는다. 실패하면 다음 시도에서 다시 받는다. */
-const loadSdk = () => {
+export const loadSdk = () => {
   if (window.PortOne) return Promise.resolve(window.PortOne);
   sdkPromise ??= new Promise<PortOneSdk>((resolve, reject) => {
     const script = document.createElement("script");

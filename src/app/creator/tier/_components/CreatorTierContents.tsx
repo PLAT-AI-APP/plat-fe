@@ -8,6 +8,7 @@ import React, {
   useSyncExternalStore,
 } from "react";
 import { useLocale, useTranslations } from "next-intl";
+import dynamic from "next/dynamic";
 import { m } from "framer-motion";
 import Button from "@/components/ui/Button";
 import { QueryStateBoundary } from "@/components/state";
@@ -20,7 +21,6 @@ import {
 } from "@/api/earning/postTierPromotion";
 import { useTierCelebrationAckMutation } from "@/api/earning/postTierCelebrationAck";
 import type { CreatorTierStatus } from "@/type/earning";
-import TierPromotionCelebration from "./TierPromotionCelebration";
 import {
   LADDER,
   benefitLinesOf,
@@ -33,6 +33,12 @@ import {
   type CreatorStats,
   type Tier,
 } from "./tiers";
+
+// 승급 축하 연출은 승급했을 때만 그려서, 884줄짜리 연출 코드는 그때 받는다.
+const TierPromotionCelebration = dynamic(
+  () => import("./TierPromotionCelebration"),
+);
+
 
 /** 등급 색은 뱃지와 카드 뒤 은은한 빛에만 쓴다. 글자·막대·버튼은 앱 기본 색을 따른다. */
 

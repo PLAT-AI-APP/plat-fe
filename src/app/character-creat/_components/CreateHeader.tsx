@@ -6,6 +6,7 @@ import { useIsMutating } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { FieldErrors, FieldPath, useFormContext, useWatch } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import ActiveButton from "@/components/ActiveButton";
 import ArrowLineLeft from "@/icons/ArrowLineLeft";
 import { Redo } from "@/icons";
@@ -31,7 +32,10 @@ import {
   IS_RESPONSE_FORMAT_SELECTABLE,
 } from "@/constants/responseFormat";
 import { TabId } from "./CreateTabs";
-import PublishCelebration from "./PublishCelebration";
+
+// 등록 축하 화면은 등록에 성공했을 때만 그려서, 그때 받는다.
+const PublishCelebration = dynamic(() => import("./PublishCelebration"));
+
 
 interface CreateHeaderProps {
   universeId?: string;
@@ -503,7 +507,8 @@ const CreateHeader = ({
   };
 
   return (
-    <header className="flex h-[37px] shrink-0 items-center justify-between">
+    // 320px처럼 좁은 폭에서는 제목과 버튼이 한 줄에 안 들어가므로 고정 높이 대신 줄바꿈을 허용한다.
+    <header className="flex min-h-[37px] shrink-0 flex-wrap items-center justify-between gap-y-2">
       {published && (
         <PublishCelebration
           imageUrl={published.imageUrl}
@@ -511,7 +516,7 @@ const CreateHeader = ({
           onLeave={leaveToPublished}
         />
       )}
-      <h1 className="title-1 flex items-center gap-2">
+      <h1 className="title-1 flex items-center gap-2 whitespace-nowrap">
         <ArrowLineLeft
           onClick={() => handleSafeBack("/")}
           className="h-6 w-6 cursor-pointer text-font-2"

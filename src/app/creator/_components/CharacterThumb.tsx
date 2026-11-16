@@ -16,6 +16,9 @@ const CharacterThumb = ({
       <img
         src={label.imageUrl}
         alt=""
+        // 목록 아래쪽 썸네일은 화면에 가까워질 때 받는다. 서버가 이미 80px 로 줄여 줘서 변형본 처리는 필요 없다.
+        loading="lazy"
+        decoding="async"
         width={size}
         height={size}
         className="shrink-0 rounded-xl bg-darkest object-cover"
