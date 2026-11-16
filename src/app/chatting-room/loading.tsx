@@ -6,7 +6,7 @@ import SkeletonChatMessages from "@/components/skeleton/SkeletonChatMessages";
  */
 const Loading = () => (
   <section className="flex h-full min-h-0">
-    <div className="flex h-full min-h-0 flex-1 justify-center bg-dark pt-2">
+    <div className="flex h-full min-h-0 min-w-0 flex-1 justify-center bg-dark pt-2">
       <div className="w-full max-w-[867px]">
         <SkeletonChatMessages />
       </div>
