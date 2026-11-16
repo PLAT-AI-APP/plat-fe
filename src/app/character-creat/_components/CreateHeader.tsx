@@ -6,6 +6,7 @@ import { useIsMutating } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { FieldErrors, FieldPath, useFormContext, useWatch } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
 import ActiveButton from "@/components/ActiveButton";
 import ArrowLineLeft from "@/icons/ArrowLineLeft";
 import { Redo } from "@/icons";
@@ -31,7 +32,10 @@ import {
   IS_RESPONSE_FORMAT_SELECTABLE,
 } from "@/constants/responseFormat";
 import { TabId } from "./CreateTabs";
-import PublishCelebration from "./PublishCelebration";
+
+// 등록 축하 화면은 등록에 성공했을 때만 그려서, 그때 받는다.
+const PublishCelebration = dynamic(() => import("./PublishCelebration"));
+
 
 interface CreateHeaderProps {
   universeId?: string;
