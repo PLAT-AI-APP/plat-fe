@@ -57,6 +57,8 @@ export interface CharacterDetail {
   /** 성인 세계관. 제목 옆에 19 배지를 단다. */
   adult?: boolean;
   images: CharacterImageItem[];
+  /** 내가 아직 해금하지 못한 에셋 수. 미리보기 줄에 잠긴 칸으로 그린다(주소는 서버가 주지 않는다). */
+  lockedImageCount?: number;
   mainImage: string;
   profileImage: string;
   createdAt: string;

@@ -11,7 +11,6 @@ const ko = {
     createPromptTitle: "직접 나만의 캐릭터를 만들어보세요",
     createCharacter: "캐릭터 만들기",
     createCharacterCta: "캐릭터 생성하기",
-    bannerAlt: "메인 배너 {index}",
     previousBanner: "이전 배너",
     nextBanner: "다음 배너",
     banner1Title: "첫 번째 이벤트 제목",

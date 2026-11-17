@@ -30,6 +30,7 @@ import { LOGOUT_REDIRECT_IN_PROGRESS_KEY } from "@/constants/auth";
 import {
   UniverseDetailResponse,
   useUniverseDetailQuery,
+  unlockedAssets,
 } from "@/api/universe/getUniverseDetail";
 import { useUniverseReviewQuery } from "@/api/review/getContentReview";
 import { useUniverseDeleteMutation } from "@/api/universe/deleteUniverse";
@@ -102,7 +103,7 @@ const createCharacterEditDefaultValues = (
   characterIntroduce: universe.introduce,
   profileSituationDescription: universe.detailSetting,
   characterDetailSetting: universe.character.detailSetting ?? "",
-  asset: universe.assets.map((asset) => ({
+  asset: unlockedAssets(universe.assets).map((asset) => ({
     assetFile: null,
     assetImage: asset.originalUrl,
     assetImageFileId: asset.assetImageFileId,
@@ -121,7 +122,7 @@ const createCharacterEditDefaultValues = (
           ...decodeScenarioContent(
             scenario.content,
             Object.fromEntries(
-              universe.assets.map((asset) => [asset.assetImageFileId, asset.originalUrl]),
+              unlockedAssets(universe.assets).map((asset) => [asset.assetImageFileId, asset.originalUrl]),
             ),
           ),
         }))

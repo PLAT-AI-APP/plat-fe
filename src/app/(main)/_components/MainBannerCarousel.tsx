@@ -1,7 +1,6 @@
 "use client";
 
 import Autoplay from "embla-carousel-autoplay";
-import ResourceImage from "@/components/ResourceImage";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useFadeInAfterLoading } from "@/hooks/common/useFadeInAfterLoading";
@@ -9,13 +8,14 @@ import { useCarousel } from "@/hooks/dom/useCarousel";
 import { useHomeBannersQuery } from "@/api/home/getBanners";
 import { ArrowLeft, ArrowRight } from "@/icons";
 import { cn } from "@/lib/utils";
+import EventBanner from "./banner-templates/EventBanner";
 
 /**
  * 메인 최상단 캐러셀.
  *
- * 백엔드 HomeBannerResponse 는 이미지 URL 과 이동 링크만 준다 — 배너는 이미지가 전부라는
- * 설계라 제목·설명·태그 필드가 아예 없다. 그래서 여기서도 문구를 얹지 않는다.
- * (예전에는 i18n 에 하드코딩한 문구 3벌을 이미지 위에 그려 실제 배너와 무관한 화면이었다.)
+ * 배너는 템플릿으로 그린다 — 서버가 배경 이미지와 문구(뱃지·제목·설명·태그)를 따로 주고,
+ * 여기서는 틀(templateType)에 맞는 컴포넌트를 고른다. 지금은 이벤트형 하나다.
+ * 문구가 들어가야 해서 좁은 화면에서도 높이를 220px 아래로 줄이지 않는다.
  */
 export function MainBannerCarousel() {
   const t = useTranslations("home");
@@ -40,7 +40,7 @@ export function MainBannerCarousel() {
   // 배너가 없으면 자리만 차지하는 빈 캐러셀 대신 섹션을 통째로 내린다.
   if (isLoading) {
     return (
-      <section className="aspect-[64/23] max-h-[437px] w-full max-w-full skeleton" />
+      <section className="aspect-[64/23] min-h-[220px] max-h-[437px] w-full max-w-full skeleton" />
     );
   }
 
@@ -51,7 +51,7 @@ export function MainBannerCarousel() {
   return (
     <section
       className={cn(
-        "relative aspect-[64/23] max-h-[437px] w-full max-w-full overflow-hidden bg-scrim",
+        "relative aspect-[64/23] min-h-[220px] max-h-[437px] w-full max-w-full overflow-hidden bg-scrim",
         fadeInClassName,
       )}
     >
@@ -63,25 +63,7 @@ export function MainBannerCarousel() {
         <div id="carousel-container" className="flex h-full">
           {banners.map((banner, index) => {
             const image = (
-              <>
-                <div className="relative z-10 mx-auto h-full w-full max-w-(--content-max-width)">
-                  <ResourceImage
-                    alt={t("bannerAlt", { index: index + 1 })}
-                    fill
-                    priority={index === 0}
-                    // 배너는 콘텐츠 최대 폭까지만 커진다.
-                    sizes="(max-width: 1200px) 100vw, 1200px"
-                    className="object-contain"
-                    src={banner.imageUrl}
-                  />
-                </div>
-
-                {/* 하단 그라데이션 어둡게 처리. 위쪽이 띠처럼 보이지 않도록 중간 단계를 두어 서서히 옅어지게 한다. 링크 클릭을 가로채지 않도록 pointer-events 를 끈다. */}
-                <div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-32 bg-linear-to-t from-scrim/70 via-scrim/20 via-60% to-transparent"
-                />
-              </>
+              <EventBanner banner={banner} priority={index === 0} />
             );
 
             return (
@@ -93,7 +75,7 @@ export function MainBannerCarousel() {
                   <Link
                     href={banner.linkUrl}
                     className="block h-full w-full"
-                    aria-label={t("bannerAlt", { index: index + 1 })}
+                    aria-label={banner.title}
                   >
                     {image}
                   </Link>

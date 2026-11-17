@@ -13,7 +13,6 @@ const zh = {
     createPromptTitle: "亲手创建只属于你的角色吧",
     createCharacter: "创建角色",
     createCharacterCta: "创建角色",
-    bannerAlt: "主横幅 {index}",
     previousBanner: "上一个横幅",
     nextBanner: "下一个横幅",
     banner1Title: "第一个活动标题",

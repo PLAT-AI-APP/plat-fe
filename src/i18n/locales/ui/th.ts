@@ -13,7 +13,6 @@ const th = {
     createPromptTitle: "ลองสร้างตัวละครในแบบของคุณเอง",
     createCharacter: "สร้างตัวละคร",
     createCharacterCta: "สร้างตัวละคร",
-    bannerAlt: "แบนเนอร์หลัก {index}",
     previousBanner: "แบนเนอร์ก่อนหน้า",
     nextBanner: "แบนเนอร์ถัดไป",
     banner1Title: "หัวข้ออีเวนต์แรก",

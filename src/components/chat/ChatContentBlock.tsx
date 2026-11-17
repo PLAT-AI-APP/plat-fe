@@ -263,6 +263,8 @@ const ChatContentBlock = ({
                 // 250x250 안에 맞춘다 — 디자인이 전제한 세로형(171:250)은 예전과 같은 크기로 나온다.
                 // width/height 는 로드 전 자리 힌트일 뿐이다.
                 className="mx-auto h-auto w-auto max-h-[250px] max-w-[250px] rounded-2xl"
+                // 못 받으면(404) 디자인이 전제한 세로형 카드 크기로 기본 이미지를 세운다.
+                fallbackClassName="mx-auto h-[250px] w-[171px] rounded-2xl"
               />
             </AssetUnlockImage>
           );

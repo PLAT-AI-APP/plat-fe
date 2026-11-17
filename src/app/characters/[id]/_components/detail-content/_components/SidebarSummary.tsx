@@ -12,7 +12,7 @@ import {
 import { useUserProfileQuery } from "@/api/user/getUserProfile";
 import ActiveButton from "@/components/ActiveButton";
 import ResourceImage from "@/components/ResourceImage";
-import { ChatFill, Gear, HeartFill, Info } from "@/icons";
+import { ChatFill, Gear, HeartFill, Info, LockLine } from "@/icons";
 import { toImageVariantUrl } from "@/lib/file";
 import { cn, formatStatCount } from "@/lib/utils";
 import { useLocaleStore } from "@/store/useLocaleStore";
@@ -27,6 +27,8 @@ import { StatusBadge } from "@/components/character/character-card/TitleStatusIc
 
 /** 창작자가 사진을 올리지 않았거나 불러오지 못했을 때 쓰는 기본 프로필 이미지 */
 const DEFAULT_CREATOR_IMAGE = "/p1.png";
+/** 미리보기 줄에 그리는 에셋 칸 수(잠긴 칸 포함). */
+const PREVIEW_IMAGE_LIMIT = 5;
 
 interface SidebarSummaryProps {
   character: CharacterDetail;
@@ -43,6 +45,7 @@ const SidebarSummary = ({
   onStartChat,
 }: SidebarSummaryProps) => {
   const t = useTranslations("characterDetail");
+  const tChatSidebar = useTranslations("chatRoom.sidebar");
   const locale = useLocaleStore((state) => state.locale);
   const router = useRouter();
   // 탈퇴한 제작자가 남겨 PLAT 이 운영하는 캐릭터는 제작자 프로필·팔로우 대신 안내 문구만 둔다.
@@ -187,7 +190,7 @@ const SidebarSummary = ({
           넘칠 때만 나타난다. snap 으로 썸네일이 반쯤 걸쳐 멈추지 않게 하고, overscroll-x-contain 으로 트랙패드 가로 스와이프가
           브라우저 뒤로가기로 번지지 않게 한다. */}
       <div className="flex snap-x gap-2 overflow-x-auto overscroll-x-contain">
-        {character.images.slice(0, 5).map((image, index) => (
+        {character.images.slice(0, PREVIEW_IMAGE_LIMIT).map((image, index) => (
           <button
             key={image.id}
             type="button"
@@ -210,6 +213,25 @@ const SidebarSummary = ({
             />
           </button>
         ))}
+        {/* 아직 해금하지 못한 에셋. 주소를 받지 않으므로 자물쇠 칸만 그린다(채팅방 갤러리와 같은 모양). */}
+        {Array.from(
+          {
+            length: Math.min(
+              character.lockedImageCount ?? 0,
+              Math.max(PREVIEW_IMAGE_LIMIT - character.images.length, 0),
+            ),
+          },
+          (_, index) => (
+            <div
+              key={`locked-${index}`}
+              role="img"
+              aria-label={tChatSidebar("assetLocked")}
+              className="flex size-[73px] shrink-0 snap-start items-center justify-center rounded-lg bg-card-hover"
+            >
+              <LockLine className="size-6 text-font-disabled" />
+            </div>
+          ),
+        )}
       </div>
 
       <div className="flex items-stretch gap-2">

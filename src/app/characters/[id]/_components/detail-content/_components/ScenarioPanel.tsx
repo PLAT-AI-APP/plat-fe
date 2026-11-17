@@ -162,6 +162,7 @@ const ScenarioPanel = ({ character }: ScenarioPanelProps) => {
                       // 세로형·정사각형이 잘려 원본과 다르게 보였다. 원본 비율 그대로 두되, 세로로 너무
                       // 길어지지 않게 482x482 안에 맞춘다. width/height 는 로드 전 자리 힌트일 뿐이다.
                       className="h-auto w-auto max-h-[482px] max-w-[min(100%,482px)] rounded-2xl"
+                      fallbackClassName="aspect-[482/289] w-full max-w-[482px] rounded-2xl"
                     />
                   </button>
                 );
