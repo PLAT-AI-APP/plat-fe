@@ -42,25 +42,18 @@ const EventBanner = ({ banner, priority }: EventBannerProps) => {
         className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-linear-to-t from-scrim/70 via-scrim/20 via-60% to-transparent"
       />
 
-      {/*
-        전경은 본문 폭 오른쪽 아래에 붙이고 높이를 늘 꽉 채운다. 모바일처럼 배너가 세로로 길어지면 왼쪽(투명한 쪽)이 잘린다.
-        width·height 는 비율 힌트일 뿐이고 실제 크기는 h-full w-auto 가 정한다.
-      */}
+      {/* 전경은 배너 높이에 맞춰 만든다. 오른쪽 끝에 붙여 높이 100% 로 건다. width·height 는 비율 힌트일 뿐이다. */}
       {banner.foregroundImageUrl && (
-        <div className="pointer-events-none absolute inset-0 flex justify-center overflow-hidden">
-          <div className="content-shell relative h-full">
-            <ResourceImage
-              alt=""
-              width={2560}
-              height={920}
-              priority={priority}
-              sizes="100vw"
-              unoptimized
-              className="absolute right-0 bottom-0 h-full w-auto max-w-none"
-              src={banner.foregroundImageUrl}
-            />
-          </div>
-        </div>
+        <ResourceImage
+          alt=""
+          width={2560}
+          height={920}
+          priority={priority}
+          sizes="100vw"
+          unoptimized
+          className="pointer-events-none absolute top-0 right-0 h-full w-auto max-w-none"
+          src={banner.foregroundImageUrl}
+        />
       )}
       {/* 모바일은 폭이 좁아 전경이 글자 밑까지 들어온다. 그때만 전경 위에 한 겹 더 깔아 글자를 읽히게 한다. */}
       {banner.foregroundImageUrl && (
@@ -70,16 +63,19 @@ const EventBanner = ({ banner, priority }: EventBannerProps) => {
         />
       )}
 
-      {/* 좌우 화살표(left-4 / md:left-10 + 32px)와 겹치지 않게 안쪽 여백을 더 준다. */}
+      {/*
+        데스크톱 규격: 배너 기준 왼쪽 48px·아래 60px, 뱃지 14·제목 26·설명 18·태그 16px, 뱃지 아래 8px·나머지 4px.
+        모바일은 좌우 화살표(left-4 + 32px)와 겹치지 않게 본문 여백 안쪽에 둔다.
+      */}
       <div className="absolute inset-0 flex items-end">
-        <div className="content-shell pb-6 md:pb-10">
-          <div className="flex max-w-[560px] flex-col gap-2 pl-10 text-overlay-font md:gap-3 md:pl-16">
+        <div className="content-shell pb-6 md:max-w-none md:px-0 md:pb-[60px]">
+          <div className="flex max-w-[560px] flex-col gap-1 pl-10 text-overlay-font md:pl-12">
             {badges.length > 0 && (
-              <ul className="flex flex-wrap gap-1.5">
+              <ul className="mb-1 flex flex-wrap gap-1.5">
                 {badges.map((badge) => (
                   <li
                     key={badge}
-                    className="title-7 rounded-full px-2.5 py-0.5 md:title-6"
+                    className="title-7 rounded-full px-2.5 py-0.5 md:title-5"
                     style={{ backgroundColor: BANNER_BADGE_COLORS[badge] }}
                   >
                     {t(badge)}
@@ -87,16 +83,16 @@ const EventBanner = ({ banner, priority }: EventBannerProps) => {
                 ))}
               </ul>
             )}
-            <h2 className="title-1 line-clamp-2 break-keep md:display-1">
+            <h2 className="title-1 line-clamp-2 break-keep md:text-[26px] md:leading-[1.3] md:font-bold">
               {banner.title}
             </h2>
             {banner.description && (
-              <p className="body-6 line-clamp-2 break-keep text-overlay-font/85 md:body-3">
+              <p className="body-6 line-clamp-2 break-keep text-overlay-font/85 md:body-2">
                 {banner.description}
               </p>
             )}
             {banner.tags.length > 0 && (
-              <ul className="body-7 flex flex-wrap gap-x-2 text-overlay-font/65 md:body-5">
+              <ul className="body-7 flex flex-wrap gap-x-2 text-overlay-font/65 md:body-3">
                 {banner.tags.map((tag) => (
                   <li key={tag}>#{tag}</li>
                 ))}
