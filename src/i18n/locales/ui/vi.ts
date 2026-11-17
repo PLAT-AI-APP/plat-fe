@@ -13,7 +13,6 @@ const vi = {
     createPromptTitle: "Hãy tự tạo nhân vật của riêng bạn",
     createCharacter: "Tạo nhân vật",
     createCharacterCta: "Tạo nhân vật",
-    bannerAlt: "Banner chính {index}",
     previousBanner: "Banner trước",
     nextBanner: "Banner tiếp theo",
     banner1Title: "Tiêu đề sự kiện đầu tiên",

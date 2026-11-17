@@ -13,7 +13,7 @@ import { FileUploadType } from "@/api/file/postFileUpload";
  * - UNIVERSE_PROFILE: sq80, sq140
  * - UNIVERSE_ASSET: sq80 (정사각 크롭이라 비율을 지켜야 하는 에셋 본문에는 못 쓴다)
  */
-export type ImageVariant = "lg" | "sq40" | "sq80" | "sq140";
+export type ImageVariant = "lg" | "sq40" | "sq80" | "sq140" | "sc10";
 
 /** /images/{type}/{fileId}/{variant} 의 마지막 세그먼트 */
 const IMAGE_VARIANT_PATH = /(\/images\/[^/]+\/[^/?#]+\/)([a-z0-9]+)(?=$|[?#])/;

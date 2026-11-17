@@ -97,6 +97,15 @@ const createMockUniverseDetail = (
       assetName: "행복",
       assetSituation: "행복한 감정을 느낄 때 표시합니다.",
       originalUrl: "https://picsum.photos/seed/universe-asset-happy/640/384",
+      isLocked: false as const,
+    },
+    // 아직 해금하지 못한 에셋은 자리만 온다.
+    {
+      assetImageFileId: null,
+      assetName: null,
+      assetSituation: null,
+      originalUrl: null,
+      isLocked: true as const,
     },
     // 이미지 확대의 이전·다음 이동과 가로·세로·정사각 비율을 보려고 여러 장을 둔다.
     {
@@ -104,24 +113,28 @@ const createMockUniverseDetail = (
       assetName: "슬픔",
       assetSituation: "슬픈 감정을 느낄 때 표시합니다.",
       originalUrl: "https://picsum.photos/seed/universe-asset-sad/384/640",
+      isLocked: false as const,
     },
     {
       assetImageFileId: "456789012345678903",
       assetName: "놀람",
       assetSituation: "예상치 못한 일이 생겼을 때 표시합니다.",
       originalUrl: "https://picsum.photos/seed/universe-asset-surprised/640/640",
+      isLocked: false as const,
     },
     {
       assetImageFileId: "456789012345678904",
       assetName: "수줍음",
       assetSituation: "얼굴이 붉어질 때 표시합니다.",
       originalUrl: "https://picsum.photos/seed/universe-asset-shy/800/450",
+      isLocked: false as const,
     },
     {
       assetImageFileId: "456789012345678905",
       assetName: "화남",
       assetSituation: "화가 났을 때 표시합니다.",
       originalUrl: "https://picsum.photos/seed/universe-asset-angry/450/800",
+      isLocked: false as const,
     },
   ],
   scenarios: [
@@ -253,6 +266,7 @@ const createUpdatedUniverseDetail = (
           assetImageFileId: asset.assetImageFileId,
           assetName: asset.assetName,
           assetSituation: asset.assetSituation,
+          isLocked: false as const,
           originalUrl:
             current.assets.find(
               (currentAsset) =>

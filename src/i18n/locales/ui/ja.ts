@@ -13,7 +13,6 @@ const ja = {
     createPromptTitle: "自分だけのキャラクターを作ってみましょう",
     createCharacter: "キャラクターを作る",
     createCharacterCta: "キャラクターを作成",
-    bannerAlt: "メインバナー {index}",
     previousBanner: "前のバナー",
     nextBanner: "次のバナー",
     banner1Title: "1つ目のイベント見出し",

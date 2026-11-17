@@ -8,9 +8,23 @@ import { useAuthReady } from "@/hooks/data/useAuthReady";
 import { useAdultMode } from "@/hooks/data/useAdultAccess";
 import { homeQueryKeys } from "./queryKeys";
 
-/** 메인 최상단 캐러셀 한 장. 문구는 없고 이미지와 이동 링크만 내려옵니다. */
+/**
+ * 배너를 그리는 틀. 지금은 이벤트형 하나이고, 캐릭터 소개형이 생기면 값이 늘어난다.
+ * 모르는 값이 와도 화면은 이벤트형으로 그린다.
+ */
+export type BannerTemplateType = "EVENT";
+
+/** 메인 최상단 캐러셀 한 장. 배경 이미지 위에 templateType 의 배치로 문구를 얹습니다. */
 export interface HomeBanner {
   mainBannerId: string;
+  templateType: BannerTemplateType;
+  title: string;
+  description: string | null;
+  /** 제목 위 뱃지 라벨. 색은 라벨에서 만든다(lib/badgeColor). */
+  badges: string[];
+  /** 설명 아래 태그. # 없이 온다. */
+  tags: string[];
+  /** 배경 이미지. 줄이지 않은 원본 크기 webp(sc10). */
   imageUrl: string;
   linkUrl: string | null;
 }

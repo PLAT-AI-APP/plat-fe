@@ -13,7 +13,6 @@ const en = {
     createPromptTitle: "Create your own character",
     createCharacter: "Create character",
     createCharacterCta: "Create character",
-    bannerAlt: "Main banner {index}",
     previousBanner: "Previous banner",
     nextBanner: "Next banner",
     banner1Title: "First event headline",
