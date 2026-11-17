@@ -143,7 +143,7 @@ export function MainBannerCarousel() {
 
   if (isLoading) {
     return (
-      <section className="aspect-[64/23] min-h-[220px] max-h-[437px] w-full max-w-full skeleton" />
+      <section className="aspect-[64/23] min-h-[220px] max-h-[437px] w-full max-w-[1200px] mx-auto skeleton" />
     );
   }
 
@@ -288,7 +288,7 @@ export function MainBannerCarousel() {
       aria-roledescription="carousel"
       style={layout}
       className={cn(
-        "@container relative aspect-[64/23] min-h-[220px] max-h-[437px] w-full max-w-full touch-pan-y overflow-hidden select-none",
+        "@container relative aspect-[64/23] min-h-[220px] max-h-[437px] w-full max-w-[1200px] mx-auto touch-pan-y overflow-hidden select-none",
         "[--banner-side:8.7cqw] [--banner-gap:8px] [--radius:20px] [--ease-banner:cubic-bezier(0.45,0.05,0.15,1)] md:[--banner-side:110px] md:[--banner-gap:16px] md:[--radius:28px]",
         "[&_img]:pointer-events-none",
         !hasMultiple && "[--radius:0px] md:[--radius:0px]",
