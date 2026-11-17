@@ -15,6 +15,13 @@ const en = {
     createCharacterCta: "Create character",
     previousBanner: "Previous banner",
     nextBanner: "Next banner",
+    bannerBadge: {
+      EVENT: "Event",
+      NOTICE: "Notice",
+      NEW: "New",
+      UPDATE: "Update",
+      HOT: "Hot",
+    },
     banner1Title: "First event headline",
     banner1Desc:
       "This is the detailed copy for the first banner. Add any description you want here.",

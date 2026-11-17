@@ -68,7 +68,7 @@ export function MainBannerCarousel() {
 
             return (
               <div
-                key={banner.mainBannerId}
+                key={banner.bannerId}
                 className="relative h-full min-w-0 flex-[0_0_100%] overflow-hidden"
               >
                 {banner.linkUrl ? (

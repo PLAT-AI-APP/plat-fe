@@ -15,6 +15,13 @@ const zh = {
     createCharacterCta: "创建角色",
     previousBanner: "上一个横幅",
     nextBanner: "下一个横幅",
+    bannerBadge: {
+      EVENT: "活动",
+      NOTICE: "公告",
+      NEW: "新上线",
+      UPDATE: "更新",
+      HOT: "热门",
+    },
     banner1Title: "第一个活动标题",
     banner1Desc: "这是第一个横幅的详细说明，你可以在这里填写想要的文案。",
     banner2Title: "第二个促销标题",
