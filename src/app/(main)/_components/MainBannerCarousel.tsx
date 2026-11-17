@@ -16,7 +16,7 @@ import { ArrowLeft, ArrowRight } from "@/icons";
 import { cn } from "@/lib/utils";
 import EventBanner from "./banner-templates/EventBanner";
 
-const AUTOPLAY_MS = 5000;
+const AUTOPLAY_MS = 7000;
 /** 이만큼 밀면 넘긴다. */
 const SWIPE_PX = 60;
 /** 짧게 튕겨도 이 속도(px/ms)를 넘으면 넘긴다. */
@@ -203,7 +203,7 @@ export function MainBannerCarousel() {
         className={cn(
           "absolute inset-0",
           !isDragging &&
-            "transition-transform duration-1000 ease-(--ease-banner) motion-reduce:transition-none",
+            "transition-transform duration-850 ease-(--ease-banner) motion-reduce:transition-none",
         )}
       >
         {slots.map((slot) => {
@@ -231,7 +231,7 @@ export function MainBannerCarousel() {
               }}
               className={cn(
                 "absolute top-0 left-0 h-full w-(--center) overflow-hidden bg-scrim will-change-transform",
-                "transition-[transform,clip-path,opacity] duration-1000 ease-(--ease-banner) motion-reduce:transition-none",
+                "transition-[transform,clip-path,opacity] duration-850 ease-(--ease-banner) motion-reduce:transition-none",
                 Math.abs(slot) === 2 && "pointer-events-none",
               )}
             >
