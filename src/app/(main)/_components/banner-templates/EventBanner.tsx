@@ -108,12 +108,12 @@ const EventBanner = ({
                 {banner.title}
               </h2>
               {banner.description && (
-                <p className="body-6 line-clamp-2 break-keep text-overlay-font/85 md:body-2">
+                <p className="body-6 line-clamp-2 break-keep text-overlay-font/85 md:body-3">
                   {banner.description}
                 </p>
               )}
               {banner.tags.length > 0 && (
-                <ul className="body-7 flex flex-wrap gap-x-2 text-overlay-font/65 md:body-3">
+                <ul className="body-7 flex flex-wrap gap-x-2 text-overlay-font/65 md:body-5">
                   {banner.tags.map((tag) => (
                     <li key={tag}>#{tag}</li>
                   ))}
