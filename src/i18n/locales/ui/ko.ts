@@ -13,6 +13,13 @@ const ko = {
     createCharacterCta: "캐릭터 생성하기",
     previousBanner: "이전 배너",
     nextBanner: "다음 배너",
+    bannerBadge: {
+      EVENT: "이벤트",
+      NOTICE: "공지",
+      NEW: "신규",
+      UPDATE: "업데이트",
+      HOT: "인기",
+    },
     banner1Title: "첫 번째 이벤트 제목",
     banner1Desc:
       "첫 번째 배너의 상세 내용입니다. 여기에 원하는 설명을 적으세요.",

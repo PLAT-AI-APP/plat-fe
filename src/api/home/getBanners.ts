@@ -14,14 +14,17 @@ import { homeQueryKeys } from "./queryKeys";
  */
 export type BannerTemplateType = "EVENT";
 
+/** 뱃지 코드. 글자는 home.bannerBadge 번역, 색은 constants/bannerBadge 가 정한다. */
+export type BannerBadge = "EVENT" | "NOTICE" | "NEW" | "UPDATE" | "HOT";
+
 /** 메인 최상단 캐러셀 한 장. 배경 이미지 위에 templateType 의 배치로 문구를 얹습니다. */
 export interface HomeBanner {
-  mainBannerId: string;
+  bannerId: string;
   templateType: BannerTemplateType;
   title: string;
   description: string | null;
-  /** 제목 위 뱃지 라벨. 색은 라벨에서 만든다(lib/badgeColor). */
-  badges: string[];
+  /** 제목 위 뱃지 코드. 모르는 코드는 화면이 건너뛴다. */
+  badges: BannerBadge[];
   /** 설명 아래 태그. # 없이 온다. */
   tags: string[];
   /** 배경 이미지. 줄이지 않은 원본 크기 webp(sc10). */
@@ -32,9 +35,9 @@ export interface HomeBanner {
 const getBanners = async (authenticated: boolean) => {
   // 성인 세계관으로 가는 배너를 섞을지 서버가 토큰으로 판단하므로, 로그인했으면 토큰을 싣는다.
   const client = authenticated ? authAxios : axiosInstance;
-  const response = await client.get<HomeBanner[]>("/home/banners");
+  const response = await client.get<{ banners: HomeBanner[] }>("/home/banners");
 
-  return response.data;
+  return response.data.banners;
 };
 
 /** 홈 메인 배너 목록 조회. 배열 순서가 곧 노출 순서입니다. */

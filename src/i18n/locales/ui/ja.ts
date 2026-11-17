@@ -15,6 +15,13 @@ const ja = {
     createCharacterCta: "キャラクターを作成",
     previousBanner: "前のバナー",
     nextBanner: "次のバナー",
+    bannerBadge: {
+      EVENT: "イベント",
+      NOTICE: "お知らせ",
+      NEW: "新着",
+      UPDATE: "アップデート",
+      HOT: "人気",
+    },
     banner1Title: "1つ目のイベント見出し",
     banner1Desc:
       "1つ目のバナーの詳細説明です。ここに好きな説明文を入れてください。",

@@ -15,6 +15,13 @@ const th = {
     createCharacterCta: "สร้างตัวละคร",
     previousBanner: "แบนเนอร์ก่อนหน้า",
     nextBanner: "แบนเนอร์ถัดไป",
+    bannerBadge: {
+      EVENT: "กิจกรรม",
+      NOTICE: "ประกาศ",
+      NEW: "ใหม่",
+      UPDATE: "อัปเดต",
+      HOT: "ยอดนิยม",
+    },
     banner1Title: "หัวข้ออีเวนต์แรก",
     banner1Desc:
       "นี่คือรายละเอียดของแบนเนอร์แรก คุณสามารถใส่คำอธิบายที่ต้องการได้ที่นี่",
