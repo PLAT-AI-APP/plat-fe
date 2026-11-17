@@ -77,6 +77,8 @@ const visibleCenter = (slot: number, dragX: number, g: Geometry) => {
 
 /** 끝 칸을 넘어 끌면 이만큼만 따라온다(iOS 처럼 고무줄 저항). */
 const RUBBER = 0.2;
+/** 끝 장이 가운데에 왔을 때 그 너머 반 화면을 채울 접힌 장 수(1440px 화면에서 5개 남짓 들어간다). */
+const FILL_SLOTS = 7;
 
 const mod = (value: number, size: number) => ((value % size) + size) % size;
 
@@ -148,16 +150,14 @@ export function MainBannerCarousel() {
   if (count === 0) return null;
 
   /*
-   * 끌 수 있는 거리는 배너 수만큼이다. 왼쪽으로 끝까지 끌면 마지막(count - 1 번째 뒤) 장의 오른쪽 끝이 화면
-   * 오른쪽 끝에 닿는 데서 멈추고(오른쪽으로는 첫 장이 왼쪽 끝에 닿는 데서), 그 너머는 고무줄처럼 조금만
-   * 따라온다. 그래서 줄 끝 너머의 빈 자리가 드러나지 않는다.
+   * 끌 수 있는 거리는 배너 수만큼이다. 왼쪽으로 끝까지 끌면 마지막(count - 1 번째 뒤) 장이 가운데에 오는 데서
+   * 멈추고(오른쪽으로는 첫 장이 가운데에 오는 데서), 그 너머는 고무줄처럼 조금만 따라온다. 그래서 몇 장이든 끝까지
+   * 한 번에 훑을 수 있다. 가운데 너머 자리는 순환으로 이어지는 장(FILL_SLOTS)이 채워 비지 않는다.
    */
   const clampDrag = (deltaX: number, g: Geometry) => {
-    const step = g.side + g.gap;
-    // 두 장이어도 한 칸은 끌 수 있어야 넘길 수 있다.
-    const reachPx = Math.max(count - 2, 1) * step;
-    const min = -reachPx;
-    const max = reachPx;
+    const last = count - 1;
+    const min = g.width / 2 - visibleCenter(last, 0, g);
+    const max = g.width / 2 - visibleCenter(-last, 0, g);
     if (deltaX < min) return min + (deltaX - min) * RUBBER;
     if (deltaX > max) return max + (deltaX - max) * RUBBER;
     return deltaX;
@@ -262,8 +262,8 @@ export function MainBannerCarousel() {
       : { "--side": "0px", "--gap": "0px", "--center": "100cqw" }
   ) as CSSProperties;
 
-  // 끌면 앞뒤로 배너 수만큼 줄지어 나오니 그만큼 그려 둔다. 바깥 칸은 평소 투명하다.
-  const reach = hasMultiple ? count : 0;
+  // 끌면 앞뒤로 배너 수만큼 줄지어 나오고, 끝 장이 가운데에 와도 그 너머 반 화면이 비지 않게 더 그려 둔다.
+  const reach = hasMultiple ? count + FILL_SLOTS : 0;
   const slots = Array.from(
     { length: reach * 2 + 1 },
     (_, index) => index - reach,
