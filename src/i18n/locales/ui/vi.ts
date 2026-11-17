@@ -13,9 +13,15 @@ const vi = {
     createPromptTitle: "Hãy tự tạo nhân vật của riêng bạn",
     createCharacter: "Tạo nhân vật",
     createCharacterCta: "Tạo nhân vật",
-    bannerAlt: "Banner chính {index}",
     previousBanner: "Banner trước",
     nextBanner: "Banner tiếp theo",
+    bannerBadge: {
+      EVENT: "Sự kiện",
+      NOTICE: "Thông báo",
+      NEW: "Mới",
+      UPDATE: "Cập nhật",
+      HOT: "Nổi bật",
+    },
     banner1Title: "Tiêu đề sự kiện đầu tiên",
     banner1Desc:
       "Đây là phần mô tả chi tiết của banner đầu tiên, bạn có thể điền nội dung mong muốn ở đây.",

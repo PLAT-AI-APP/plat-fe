@@ -186,15 +186,21 @@ const TODAY_PICK_ITEMS = Array.from({ length: 24 }, (_, index) => {
   };
 });
 
-/** 메인 배너. 실제 응답과 마찬가지로 이미지 URL과 이동 링크만 내려갑니다. */
+/** 메인 배너. 실제 응답과 같은 모양(이벤트형 템플릿)입니다. */
 const BANNER_ITEMS = Array.from({ length: 3 }, (_, index) => ({
-  mainBannerId: String(index + 1),
-  imageUrl: `https://picsum.photos/seed/plat-banner-${index}/1200/437`,
+  bannerId: String(index + 1),
+  templateType: "EVENT",
+  title: ["9월 출석 이벤트", "새 캐릭터 공개", "서비스 점검 안내"][index],
+  description: index === 2 ? null : "매일 출석하고 노트를 받아 가세요.",
+  badges: [["EVENT"], ["NEW", "HOT"], ["NOTICE"]][index],
+  tags: index === 2 ? [] : ["출석", "노트"],
+  backgroundImageUrl: `https://picsum.photos/seed/plat-banner-${index}/1200/437`,
+  foregroundImageUrl: null,
   linkUrl: index === 0 ? null : "/?tab=new",
 }));
 
 export const homeHandlers = [
-  http.get(endpoint("/home/banners"), () => HttpResponse.json(BANNER_ITEMS)),
+  http.get(endpoint("/home/banners"), () => HttpResponse.json({ banners: BANNER_ITEMS })),
 
   http.get(endpoint("/home/today-pick"), ({ request }) => {
     const url = new URL(request.url);

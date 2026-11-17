@@ -29,7 +29,23 @@ export interface UniverseDetailAsset {
   assetName: string;
   assetSituation: string;
   originalUrl: string;
+  isLocked: false;
 }
+
+/** 보는 사람이 아직 해금하지 못한 에셋. 서버가 자리만 내려 주고 파일·이름·주소는 비운다. */
+export interface UniverseDetailLockedAsset {
+  assetImageFileId: null;
+  assetName: null;
+  assetSituation: null;
+  originalUrl: null;
+  isLocked: true;
+}
+
+/** 잠긴 자리를 뺀, 볼 수 있는 에셋만. 편집·시나리오·미리보기는 이것만 쓴다. */
+export const unlockedAssets = (
+  assets: (UniverseDetailAsset | UniverseDetailLockedAsset)[],
+): UniverseDetailAsset[] =>
+  assets.filter((asset): asset is UniverseDetailAsset => !asset.isLocked);
 
 export interface UniverseDetailScenario {
   scenarioId: string;
@@ -81,7 +97,7 @@ export interface UniverseDetailResponse {
   hashtags: UniverseDetailHashtag[];
   /** 성인 세계관. 성인인증이 유효한 로그인 유저만 받을 수 있다(아니면 403 ADULT_CONTENT_RESTRICTED). */
   adult?: boolean;
-  assets: UniverseDetailAsset[];
+  assets: (UniverseDetailAsset | UniverseDetailLockedAsset)[];
   scenarios: UniverseDetailScenario[];
   /** 제작자 등급 뱃지. 등급이 없거나 인수한 캐릭터면 null. */
   creatorTier?: BadgeTierCode | null;
@@ -120,7 +136,8 @@ const createScenarioContents = (
 export const adaptUniverseDetailToCharacterDetail = (
   universe: UniverseDetailResponse,
 ): CharacterDetail => {
-  const images: CharacterImageItem[] = universe.assets.map((asset) => ({
+  const assets = unlockedAssets(universe.assets);
+  const images: CharacterImageItem[] = assets.map((asset) => ({
     id: asset.assetImageFileId,
     url: asset.originalUrl,
   }));
@@ -131,7 +148,7 @@ export const adaptUniverseDetailToCharacterDetail = (
     situation: scenario.content,
     firstDialogue: scenario.content,
     lang: "KO",
-    contents: createScenarioContents(scenario, universe.assets),
+    contents: createScenarioContents(scenario, assets),
   }));
   const comments: CharacterDetailComment[] = [];
 
@@ -152,6 +169,7 @@ export const adaptUniverseDetailToCharacterDetail = (
     isNew: universe.newRelease ?? false,
     adult: universe.adult ?? false,
     images,
+    lockedImageCount: universe.assets.length - assets.length,
     mainImage: universe.profileImageUrl,
     profileImage: universe.character.profileImageUrl,
     createdAt: universe.createdAt,

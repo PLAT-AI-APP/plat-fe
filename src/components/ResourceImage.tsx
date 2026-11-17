@@ -11,6 +11,11 @@ type ResourceImageProps = ImageProps & {
    * 호출부가 실패 시 자기만의 대체(이니셜 아바타 등)를 그린다면 끈다.
    */
   showFallback?: boolean;
+  /**
+   * 기본 이미지에만 줄 className. 그림 크기를 원본 비율에 맡긴 자리(h-auto w-auto)는 그 className 을 그대로
+   * 넘기면 기본 이미지가 크기를 못 잡고 0 으로 접힌다 — 그런 자리는 여기에 고정 크기를 준다.
+   */
+  fallbackClassName?: string;
 };
 
 type LoadStage = "variant" | "failed";
@@ -29,6 +34,7 @@ const ResourceImage = ({
   alt,
   onError,
   showFallback = true,
+  fallbackClassName,
   ...props
 }: ResourceImageProps) => {
   // 실패한 src 와 단계를 같이 기억해 두면, src 가 다른 이미지로 바뀌었을 때 따로 되돌리지 않아도 된다.
@@ -55,7 +61,7 @@ const ResourceImage = ({
     return (
       <ImageFallback
         alt={alt}
-        className={props.className}
+        className={fallbackClassName ?? props.className}
         style={props.style}
         fill={props.fill}
         width={props.width}
