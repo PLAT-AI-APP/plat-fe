@@ -77,8 +77,6 @@ const visibleCenter = (slot: number, dragX: number, g: Geometry) => {
 
 /** 끝 칸을 넘어 끌면 이만큼만 따라온다(iOS 처럼 고무줄 저항). */
 const RUBBER = 0.2;
-/** 끝까지 끌었을 때 가운데 너머를 채울 접힌 장 수. 넓은 화면(1440px)에서 접힌 장이 11개 남짓 들어간다. */
-const FILL_SLOTS = 12;
 
 const mod = (value: number, size: number) => ((value % size) + size) % size;
 
@@ -106,14 +104,19 @@ export function MainBannerCarousel() {
   const [position, setPosition] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [dragX, setDragX] = useState(0);
+  // 누른 순간부터 놓을 때까지. 이 동안은 자동 넘김을 멈춘다.
+  const [isHolding, setIsHolding] = useState(false);
+  // 실제로 끌기 시작한 뒤. dragX 가 0 으로 돌아와도(제자리까지 끌어 와도) 끄는 중이다.
+  const [isDragging, setIsDragging] = useState(false);
   const drag = useRef<Drag | null>(null);
   // 끌어서 넘긴 직후 따라오는 click 이 가운데 장 링크를 열지 않게 표시해 둔다.
   const didDrag = useRef(false);
   const count = banners.length;
   const hasMultiple = count > 1;
-  const isDragging = dragX !== 0;
 
   const sectionRef = useRef<HTMLElement>(null);
+  const sideProbeRef = useRef<HTMLDivElement>(null);
+  const stepProbeRef = useRef<HTMLDivElement>(null);
   const move = useCallback(
     (step: number) => setPosition((current) => current + step),
     [],
@@ -121,10 +124,10 @@ export function MainBannerCarousel() {
 
   // 넘길 때마다 타이머를 새로 건다 — 손으로 넘긴 직후 곧바로 또 넘어가지 않게 position 을 의존성에 둔다.
   useEffect(() => {
-    if (!hasMultiple || isPaused || isDragging) return;
+    if (!hasMultiple || isPaused || isHolding) return;
     const timer = window.setTimeout(() => move(1), AUTOPLAY_MS);
     return () => window.clearTimeout(timer);
-  }, [hasMultiple, isPaused, isDragging, move, position]);
+  }, [hasMultiple, isPaused, isHolding, move, position]);
 
   /*
    * 배너는 홍보용이고 여기에만 있는 정보가 없다. 그래서 못 불러왔을 때
@@ -143,28 +146,36 @@ export function MainBannerCarousel() {
   if (count === 0) return null;
 
   /*
-   * 끌 수 있는 거리는 배너 수만큼이다. 왼쪽으로 끝까지 끌면 마지막(count - 1 번째 뒤) 장이 가운데에 오는 데서
-   * 멈추고, 그 너머는 고무줄처럼 조금만 따라온다. 그래서 빈 자리가 드러나지 않는다.
+   * 끌 수 있는 거리는 배너 수만큼이다. 왼쪽으로 끝까지 끌면 마지막(count - 1 번째 뒤) 장의 오른쪽 끝이 화면
+   * 오른쪽 끝에 닿는 데서 멈추고(오른쪽으로는 첫 장이 왼쪽 끝에 닿는 데서), 그 너머는 고무줄처럼 조금만
+   * 따라온다. 그래서 줄 끝 너머의 빈 자리가 드러나지 않는다.
    */
   const clampDrag = (deltaX: number, g: Geometry) => {
-    const last = count - 1;
-    const min = g.width / 2 - visibleCenter(last, 0, g);
-    const max = g.width / 2 - visibleCenter(-last, 0, g);
+    const step = g.side + g.gap;
+    // 두 장이어도 한 칸은 끌 수 있어야 넘길 수 있다.
+    const reachPx = Math.max(count - 2, 1) * step;
+    const min = -reachPx;
+    const max = reachPx;
     if (deltaX < min) return min + (deltaX - min) * RUBBER;
     if (deltaX > max) return max + (deltaX - max) * RUBBER;
     return deltaX;
   };
 
-  /* 칸 치수는 CSS 가 정하므로 실제 그려진 가운데·오른쪽 장의 위치로 잰다. */
+  /*
+   * 칸 치수는 CSS 가 정한다(화면 폭에 따라 다름). 넘어가는 도중의 장 위치로 재면 값이 틀어지므로,
+   * 접힌 폭·한 칸 간격을 그대로 폭으로 가진 보이지 않는 막대 두 개를 재서 얻는다.
+   */
   const measure = (): Geometry | null => {
     const section = sectionRef.current;
-    const center = section?.querySelector<HTMLElement>('[data-slot="0"]');
-    const right = section?.querySelector<HTMLElement>('[data-slot="1"]');
-    if (!section || !center || !right) return null;
-    const width = section.clientWidth;
-    const side = width - new DOMMatrix(getComputedStyle(right).transform).m41;
-    const gap = new DOMMatrix(getComputedStyle(center).transform).m41 - side;
-    return { width, side, gap };
+    const sideProbe = sideProbeRef.current;
+    const stepProbe = stepProbeRef.current;
+    if (!section || !sideProbe || !stepProbe) return null;
+    const side = sideProbe.offsetWidth;
+    return {
+      width: section.clientWidth,
+      side,
+      gap: stepProbe.offsetWidth - side,
+    };
   };
 
   const onPointerDown = (event: PointerEvent) => {
@@ -177,6 +188,7 @@ export function MainBannerCarousel() {
       active: false,
       geometry,
     };
+    setIsHolding(true);
   };
 
   const onPointerMove = (event: PointerEvent) => {
@@ -184,6 +196,7 @@ export function MainBannerCarousel() {
     if (!current) return;
     const deltaX = event.clientX - current.startX;
     if (!current.active && Math.abs(deltaX) < DRAG_START_PX) return;
+    if (!current.active) setIsDragging(true);
     current.active = true;
     setDragX(clampDrag(deltaX, current.geometry));
   };
@@ -195,7 +208,9 @@ export function MainBannerCarousel() {
   const endDrag = (event: PointerEvent) => {
     const current = drag.current;
     drag.current = null;
+    setIsHolding(false);
     if (!current?.active) return;
+    setIsDragging(false);
     const g = current.geometry;
     const deltaX = clampDrag(event.clientX - current.startX, g);
     const speed =
@@ -233,11 +248,8 @@ export function MainBannerCarousel() {
       : { "--side": "0px", "--gap": "0px", "--center": "100cqw" }
   ) as CSSProperties;
 
-  /*
-   * 끌면 앞뒤로 배너 수만큼 줄지어 나오고, 끝까지 끌어도 그 너머가 비지 않게 화면을 채울 만큼(접힌 장 12개)
-   * 더 그려 둔다 — 순환이라 그 자리에는 처음 배너부터 다시 온다. 바깥 칸은 평소 투명하다.
-   */
-  const reach = hasMultiple ? count + FILL_SLOTS : 0;
+  // 끌면 앞뒤로 배너 수만큼 줄지어 나오니 그만큼 그려 둔다. 바깥 칸은 평소 투명하다.
+  const reach = hasMultiple ? count : 0;
   const slots = Array.from(
     { length: reach * 2 + 1 },
     (_, index) => index - reach,
@@ -269,6 +281,16 @@ export function MainBannerCarousel() {
         event.stopPropagation();
       }}
     >
+      <div
+        ref={sideProbeRef}
+        aria-hidden="true"
+        className="pointer-events-none invisible absolute h-0 w-(--side)"
+      />
+      <div
+        ref={stepProbeRef}
+        aria-hidden="true"
+        className="pointer-events-none invisible absolute h-0 w-[calc(var(--side)+var(--gap))]"
+      />
       {/* 끄는 동안은 손가락에 붙고(전환 없음), 놓으면 같은 곡선으로 돌아간다. */}
       <div
         style={{ transform: `translateX(${dragX}px)` }}
@@ -304,7 +326,10 @@ export function MainBannerCarousel() {
               }}
               className={cn(
                 "absolute top-0 left-0 h-full w-(--center) overflow-hidden bg-scrim will-change-transform",
-                "transition-[transform,clip-path,opacity] duration-850 ease-(--ease-banner) motion-reduce:transition-none",
+                // 끄는 동안에는 장이 움직이지 않으니 전환을 끈다 — 대기 장이 서서히가 아니라 곧바로 보인다.
+                isDragging
+                  ? "transition-none"
+                  : "transition-[transform,clip-path,opacity] duration-850 ease-(--ease-banner) motion-reduce:transition-none",
                 Math.abs(slot) >= 2 && !isDragging && "pointer-events-none",
               )}
             >
