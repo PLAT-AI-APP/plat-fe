@@ -108,6 +108,8 @@ export function MainBannerCarousel() {
   const [isHolding, setIsHolding] = useState(false);
   // 실제로 끌기 시작한 뒤. dragX 가 0 으로 돌아와도(제자리까지 끌어 와도) 끄는 중이다.
   const [isDragging, setIsDragging] = useState(false);
+  // 지금 놓으면 펼쳐질 칸. 끄는 동안 그 장만 밝히고 나머지는 살짝 어둡게 해 어디로 갈지 알린다.
+  const [targetSlot, setTargetSlot] = useState(0);
   const drag = useRef<Drag | null>(null);
   // 끌어서 넘긴 직후 따라오는 click 이 가운데 장 링크를 열지 않게 표시해 둔다.
   const didDrag = useRef(false);
@@ -178,6 +180,29 @@ export function MainBannerCarousel() {
     };
   };
 
+  /*
+   * 지금 끈 거리에서 놓으면 펼쳐질 칸. 그때 가운데에 가장 가까운 장이고, 짧게 밀어 가운데 장이 그대로면
+   * (또는 튕기면) 한 장만 넘긴다. 끄는 동안의 안내와 놓을 때의 판정이 같은 규칙을 쓴다.
+   */
+  const pickTarget = (deltaX: number, g: Geometry, speed = 0) => {
+    let target = 0;
+    let nearest = Number.POSITIVE_INFINITY;
+    for (let slot = -(count - 1); slot <= count - 1; slot++) {
+      const distance = Math.abs(visibleCenter(slot, deltaX, g) - g.width / 2);
+      if (distance < nearest) {
+        nearest = distance;
+        target = slot;
+      }
+    }
+    if (
+      target === 0 &&
+      (Math.abs(deltaX) >= SWIPE_PX || speed >= FLICK_SPEED)
+    ) {
+      target = deltaX < 0 ? 1 : -1;
+    }
+    return target;
+  };
+
   const onPointerDown = (event: PointerEvent) => {
     if (!hasMultiple || event.button !== 0) return;
     const geometry = measure();
@@ -198,7 +223,9 @@ export function MainBannerCarousel() {
     if (!current.active && Math.abs(deltaX) < DRAG_START_PX) return;
     if (!current.active) setIsDragging(true);
     current.active = true;
-    setDragX(clampDrag(deltaX, current.geometry));
+    const clamped = clampDrag(deltaX, current.geometry);
+    setDragX(clamped);
+    setTargetSlot(pickTarget(clamped, current.geometry));
   };
 
   /*
@@ -217,21 +244,8 @@ export function MainBannerCarousel() {
       Math.abs(deltaX) / Math.max(event.timeStamp - current.startTime, 1);
     didDrag.current = true;
 
-    let target = 0;
-    let nearest = Number.POSITIVE_INFINITY;
-    for (let slot = -(count - 1); slot <= count - 1; slot++) {
-      const distance = Math.abs(visibleCenter(slot, deltaX, g) - g.width / 2);
-      if (distance < nearest) {
-        nearest = distance;
-        target = slot;
-      }
-    }
-    if (
-      target === 0 &&
-      (Math.abs(deltaX) >= SWIPE_PX || speed >= FLICK_SPEED)
-    ) {
-      target = deltaX < 0 ? 1 : -1;
-    }
+    const target = pickTarget(deltaX, g, speed);
+    setTargetSlot(0);
     if (target !== 0) move(target);
     // 놓은 자리에서 새 칸(또는 제자리)으로 이어서 미끄러진다.
     setDragX(0);
@@ -328,8 +342,13 @@ export function MainBannerCarousel() {
                 "absolute top-0 left-0 h-full w-(--center) overflow-hidden bg-scrim will-change-transform",
                 // 끄는 동안에는 장이 움직이지 않으니 전환을 끈다 — 대기 장이 서서히가 아니라 곧바로 보인다.
                 isDragging
-                  ? "transition-none"
-                  : "transition-[transform,clip-path,opacity] duration-850 ease-(--ease-banner) motion-reduce:transition-none",
+                  ? "transition-[filter] duration-200"
+                  : "transition-[transform,clip-path,opacity,filter] duration-850 ease-(--ease-banner) motion-reduce:transition-none",
+                // 끄는 동안 놓으면 펼쳐질 장만 밝게, 나머지는 한 톤 어둡게.
+                isDragging &&
+                  (slot === targetSlot
+                    ? "brightness-110"
+                    : "brightness-[0.65]"),
                 Math.abs(slot) >= 2 && !isDragging && "pointer-events-none",
               )}
             >
