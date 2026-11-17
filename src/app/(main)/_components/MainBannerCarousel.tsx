@@ -12,7 +12,6 @@ import {
 } from "react";
 import { useFadeInAfterLoading } from "@/hooks/common/useFadeInAfterLoading";
 import { useHomeBannersQuery } from "@/api/home/getBanners";
-import { ArrowLeft, ArrowRight } from "@/icons";
 import { cn } from "@/lib/utils";
 import EventBanner from "./banner-templates/EventBanner";
 
@@ -222,7 +221,7 @@ export function MainBannerCarousel() {
           return (
             <div
               key={k}
-              aria-hidden={!isCenter}
+              aria-hidden={Math.abs(slot) === 2}
               aria-roledescription="slide"
               // 끄는 동안에는 대기 칸의 장도 보여야 빈 자리가 드러나지 않는다.
               style={{
@@ -249,12 +248,12 @@ export function MainBannerCarousel() {
                   card
                 )
               ) : (
-                // 접힌 장은 누르면 그쪽으로 넘긴다.
+                // 화살표 대신 접힌 장 자체가 넘기는 버튼이다. 올리면 살짝 밝아져 누를 수 있다는 걸 알린다.
                 <button
                   type="button"
-                  tabIndex={-1}
+                  tabIndex={Math.abs(slot) === 2 ? -1 : undefined}
                   onClick={() => move(slot < 0 ? -1 : 1)}
-                  className="block h-full w-full cursor-pointer"
+                  className="block h-full w-full cursor-pointer transition-[filter] duration-300 hover:brightness-125 focus-visible:brightness-125 focus-visible:outline-none"
                   aria-label={slot < 0 ? t("previousBanner") : t("nextBanner")}
                 >
                   {card}
@@ -264,28 +263,6 @@ export function MainBannerCarousel() {
           );
         })}
       </div>
-
-      {hasMultiple && (
-        <>
-          {/* 화살표는 접힌 장과 가운데 장 사이 틈에 걸친다. */}
-          <button
-            type="button"
-            onClick={() => move(-1)}
-            aria-label={t("previousBanner")}
-            className="absolute top-1/2 left-[calc(var(--side)+var(--gap)/2)] z-10 flex size-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-overlay-font/30 text-overlay-font backdrop-blur-sm transition-[background-color,scale] duration-200 hover:bg-overlay-font/45 active:scale-90 md:size-11"
-          >
-            <ArrowLeft className="size-5 md:size-6" />
-          </button>
-          <button
-            type="button"
-            onClick={() => move(1)}
-            aria-label={t("nextBanner")}
-            className="absolute top-1/2 right-[calc(var(--side)+var(--gap)/2)] z-10 flex size-8 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-overlay-font/30 text-overlay-font backdrop-blur-sm transition-[background-color,scale] duration-200 hover:bg-overlay-font/45 active:scale-90 md:size-11"
-          >
-            <ArrowRight className="size-5 md:size-6" />
-          </button>
-        </>
-      )}
     </section>
   );
 }
