@@ -39,7 +39,7 @@ const EventBanner = ({
         // 원본 크기 webp 를 그대로 건다. next/image 가 다시 줄이거나 인코딩하지 않게 한다.
         unoptimized
         className={cn(
-          "object-cover transition-[filter,transform] duration-500 ease-in-out motion-reduce:transition-none",
+          "object-cover transition-[filter,transform] duration-700 ease-(--ease-banner,ease-out) motion-reduce:transition-none",
           folded && "scale-110 blur-md",
         )}
         src={banner.backgroundImageUrl}
@@ -47,8 +47,11 @@ const EventBanner = ({
 
       <div
         className={cn(
-          "absolute inset-y-0 left-0 w-(--center,100%) transition-opacity duration-500 ease-in-out motion-reduce:transition-none",
-          folded ? "opacity-0" : "opacity-100",
+          "absolute inset-y-0 left-0 w-(--center,100%) transition-[opacity,translate] motion-reduce:transition-none",
+          // 접힐 때는 문구가 먼저 빠르게 빠지고, 펼칠 때는 창이 어느 정도 열린 뒤 살짝 떠오르며 들어온다.
+          folded
+            ? "translate-x-3 opacity-0 duration-200 ease-out"
+            : "translate-x-0 opacity-100 delay-200 duration-500 ease-(--ease-banner,ease-out)",
         )}
       >
         {/* 링크 클릭을 가로채지 않도록 pointer-events 를 끈다. */}
