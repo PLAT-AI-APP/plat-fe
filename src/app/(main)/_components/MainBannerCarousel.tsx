@@ -15,7 +15,7 @@ import { useHomeBannersQuery } from "@/api/home/getBanners";
 import { cn } from "@/lib/utils";
 import EventBanner from "./banner-templates/EventBanner";
 
-const AUTOPLAY_MS = 7000;
+const AUTOPLAY_MS = 5000;
 /** 이만큼 밀면 넘긴다. */
 const SWIPE_PX = 60;
 /** 짧게 튕겨도 이 속도(px/ms)를 넘으면 넘긴다. */
