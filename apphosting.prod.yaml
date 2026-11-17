@@ -49,10 +49,10 @@ env:
   #   value: "off"
   #   availability: [BUILD, RUNTIME]
 
-  # 검색 엔진 수집 허용. 정식 출시 때 true 로 연다. 클로즈베타 동안은 두지 않는다.
-  # - variable: NEXT_PUBLIC_ALLOW_INDEXING
-  #   value: "true"
-  #   availability: [BUILD, RUNTIME]
+  # 검색 엔진 수집 허용. AWS Activate 등 외부 사이트 검증 봇이 읽을 수 있게 연다.
+  - variable: NEXT_PUBLIC_ALLOW_INDEXING
+    value: "true"
+    availability: [BUILD, RUNTIME]
 
   # 포트원 실연동 채널. 저장소의 .env.production 은 테스트 채널이라 여기서 덮어쓴다. 공개값이다.
   - variable: NEXT_PUBLIC_PORTONE_CHANNEL_KEY
