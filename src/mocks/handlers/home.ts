@@ -194,7 +194,8 @@ const BANNER_ITEMS = Array.from({ length: 3 }, (_, index) => ({
   description: index === 2 ? null : "매일 출석하고 노트를 받아 가세요.",
   badges: [["EVENT"], ["NEW", "HOT"], ["NOTICE"]][index],
   tags: index === 2 ? [] : ["출석", "노트"],
-  imageUrl: `https://picsum.photos/seed/plat-banner-${index}/1200/437`,
+  backgroundImageUrl: `https://picsum.photos/seed/plat-banner-${index}/1200/437`,
+  foregroundImageUrl: null,
   linkUrl: index === 0 ? null : "/?tab=new",
 }));
 

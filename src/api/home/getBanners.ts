@@ -17,7 +17,7 @@ export type BannerTemplateType = "EVENT";
 /** 뱃지 코드. 글자는 home.bannerBadge 번역, 색은 constants/bannerBadge 가 정한다. */
 export type BannerBadge = "EVENT" | "NOTICE" | "NEW" | "UPDATE" | "HOT";
 
-/** 메인 최상단 캐러셀 한 장. 배경 이미지 위에 templateType 의 배치로 문구를 얹습니다. */
+/** 메인 최상단 캐러셀 한 장. 배경 이미지 위에 전경 이미지와 templateType 의 배치로 문구를 얹습니다. */
 export interface HomeBanner {
   bannerId: string;
   templateType: BannerTemplateType;
@@ -27,8 +27,10 @@ export interface HomeBanner {
   badges: BannerBadge[];
   /** 설명 아래 태그. # 없이 온다. */
   tags: string[];
-  /** 배경 이미지. 줄이지 않은 원본 크기 webp(sc10). */
-  imageUrl: string;
+  /** 넓게 까는 배경 이미지. 줄이지 않은 원본 크기 webp(sc10). */
+  backgroundImageUrl: string;
+  /** 배경 위 오른쪽에 얹어 강조하는 이미지(투명 배경 webp, sc10). 없으면 배경만 그린다. */
+  foregroundImageUrl: string | null;
   linkUrl: string | null;
 }
 
