@@ -77,7 +77,7 @@ interface Drag {
 
 /**
  * 메인 최상단 캐러셀. 가운데 한 장을 펼치고 앞뒤 장을 양옆에 접어(배경만 흐리게) 보여 준다.
- * 끝이 없다 — 5장 중 5번째가 가운데면 4·5·1 이 나온다. 움직임은 iOS 시트처럼 빠르게 출발해 길게 감속하는
+ * 끝이 없다 — 5장 중 5번째가 가운데면 4·5·1 이 나온다. 움직임은 iOS 시트처럼 부드럽게 출발해 길게 감속하는
  * 곡선(--ease-banner)이고, 밀면 손가락을 따라오다 놓는 순간 넘어가거나 제자리로 돌아간다.
  *
  * 배너는 템플릿으로 그린다 — 서버가 배경·전경 이미지와 문구를 따로 주고, 여기서는 틀(templateType)에 맞는
@@ -178,7 +178,7 @@ export function MainBannerCarousel() {
       style={layout}
       className={cn(
         "@container relative aspect-[64/23] min-h-[220px] max-h-[437px] w-full max-w-full touch-pan-y overflow-hidden select-none",
-        "[--banner-side:8.7cqw] [--banner-gap:8px] [--radius:20px] [--ease-banner:cubic-bezier(0.32,0.72,0,1)] md:[--banner-side:110px] md:[--banner-gap:16px] md:[--radius:28px]",
+        "[--banner-side:8.7cqw] [--banner-gap:8px] [--radius:20px] [--ease-banner:cubic-bezier(0.45,0.05,0.15,1)] md:[--banner-side:110px] md:[--banner-gap:16px] md:[--radius:28px]",
         "[&_img]:pointer-events-none",
         !hasMultiple && "[--radius:0px] md:[--radius:0px]",
         fadeInClassName,
@@ -203,7 +203,7 @@ export function MainBannerCarousel() {
         className={cn(
           "absolute inset-0",
           !isDragging &&
-            "transition-transform duration-700 ease-(--ease-banner) motion-reduce:transition-none",
+            "transition-transform duration-1000 ease-(--ease-banner) motion-reduce:transition-none",
         )}
       >
         {slots.map((slot) => {
@@ -231,7 +231,7 @@ export function MainBannerCarousel() {
               }}
               className={cn(
                 "absolute top-0 left-0 h-full w-(--center) overflow-hidden bg-scrim will-change-transform",
-                "transition-[transform,clip-path,opacity] duration-700 ease-(--ease-banner) motion-reduce:transition-none",
+                "transition-[transform,clip-path,opacity] duration-1000 ease-(--ease-banner) motion-reduce:transition-none",
                 Math.abs(slot) === 2 && "pointer-events-none",
               )}
             >
