@@ -86,11 +86,11 @@ const EventBanner = ({
         )}
 
         {/*
-        데스크톱 규격: 배너 기준 왼쪽 48px·아래 60px, 뱃지 14·제목 26·설명 18·태그 16px, 뱃지 아래 8px·나머지 4px.
+        데스크톱 규격: 배너 기준 왼쪽 48px·아래 48px, 뱃지 14·제목 26·설명 18·태그 16px, 뱃지 아래 8px·나머지 4px.
         모바일은 좌우 화살표(left-4 + 32px)와 겹치지 않게 본문 여백 안쪽에 둔다.
       */}
         <div className="absolute inset-0 flex items-end">
-          <div className="content-shell pb-6 md:max-w-none md:px-0 md:pb-[60px]">
+          <div className="content-shell pb-6 md:max-w-none md:px-0 md:pb-12">
             <div className="flex max-w-[560px] flex-col gap-1 pl-10 text-overlay-font md:pl-12">
               {badges.length > 0 && (
                 <ul className="mb-1 flex flex-wrap gap-1.5">
