@@ -231,7 +231,11 @@ export function MainBannerCarousel() {
     if (!current) return;
     const deltaX = (event.clientX - current.startX) * current.scale;
     if (!current.active && Math.abs(deltaX) < DRAG_START_PX) return;
-    if (!current.active) setIsDragging(true);
+    if (!current.active) {
+      setIsDragging(true);
+      // 배너 밖으로 나가도 놓을 때까지 따라오게 붙잡는다. 누를 때 잡으면 링크 click 이 배너로 가서 끌기 시작 뒤에 잡는다.
+      event.currentTarget.setPointerCapture(event.pointerId);
+    }
     current.active = true;
     const clamped = clampDrag(deltaX, current.geometry);
     setDragX(clamped);
@@ -300,7 +304,6 @@ export function MainBannerCarousel() {
       onPointerMove={onPointerMove}
       onPointerUp={endDrag}
       onPointerCancel={endDrag}
-      onPointerLeave={endDrag}
       onClickCapture={(event) => {
         if (!didDrag.current) return;
         didDrag.current = false;
