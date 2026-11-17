@@ -77,6 +77,8 @@ const visibleCenter = (slot: number, dragX: number, g: Geometry) => {
 
 /** 끝 칸을 넘어 끌면 이만큼만 따라온다(iOS 처럼 고무줄 저항). */
 const RUBBER = 0.2;
+/** 끝 장까지 닿는 데 필요한 손가락 이동을 화면 폭의 이 비율 안으로 맞춘다. */
+const DRAG_REACH_RATIO = 0.75;
 /** 끝 장이 가운데에 왔을 때 그 너머 반 화면을 채울 접힌 장 수(1440px 화면에서 5개 남짓 들어간다). */
 const FILL_SLOTS = 7;
 
@@ -88,6 +90,8 @@ interface Drag {
   /** DRAG_START_PX 를 넘어 실제로 끌기 시작했는가. */
   active: boolean;
   geometry: Geometry;
+  /** 손가락 1px 에 배너가 움직이는 px. 배너가 많으면 1 보다 커서 화면 안에서 끝 장까지 닿는다. */
+  scale: number;
 }
 
 /**
@@ -212,6 +216,15 @@ export function MainBannerCarousel() {
       startTime: event.timeStamp,
       active: false,
       geometry,
+      /*
+       * 끝 장을 가운데로 데려오는 거리가 화면 폭보다 길면(배너가 많으면) 손가락이 거기까지 갈 수 없다.
+       * 그럴 때만 끄는 거리를 늘려 화면 폭의 3/4 만 끌어도 끝 장에 닿게 한다.
+       */
+      scale: Math.max(
+        1,
+        (visibleCenter(count - 1, 0, geometry) - geometry.width / 2) /
+          (geometry.width * DRAG_REACH_RATIO),
+      ),
     };
     setIsHolding(true);
   };
@@ -219,7 +232,7 @@ export function MainBannerCarousel() {
   const onPointerMove = (event: PointerEvent) => {
     const current = drag.current;
     if (!current) return;
-    const deltaX = event.clientX - current.startX;
+    const deltaX = (event.clientX - current.startX) * current.scale;
     if (!current.active && Math.abs(deltaX) < DRAG_START_PX) return;
     if (!current.active) setIsDragging(true);
     current.active = true;
@@ -239,7 +252,10 @@ export function MainBannerCarousel() {
     if (!current?.active) return;
     setIsDragging(false);
     const g = current.geometry;
-    const deltaX = clampDrag(event.clientX - current.startX, g);
+    const deltaX = clampDrag(
+      (event.clientX - current.startX) * current.scale,
+      g,
+    );
     const speed =
       Math.abs(deltaX) / Math.max(event.timeStamp - current.startTime, 1);
     didDrag.current = true;
