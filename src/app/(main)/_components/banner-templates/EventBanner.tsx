@@ -10,8 +10,8 @@ interface EventBannerProps {
 }
 
 /**
- * 이벤트형 배너. 배경 이미지 위에 뱃지 → 제목 → 설명 → #태그 순으로 얹는다.
- * 글자는 왼쪽 아래에 모으고, 그 자리만 어둡게 깔아 어떤 배경에서도 읽히게 한다.
+ * 이벤트형 배너. 배경 이미지 위 오른쪽에 전경 이미지를 얹어 강조하고, 왼쪽 아래에 뱃지 → 제목 → 설명 → #태그 순으로 얹는다.
+ * 글자 자리만 어둡게 깔아 어떤 배경에서도 읽히게 하고, 전경은 그 막 위에 올려 어두워지지 않게 한다.
  */
 const EventBanner = ({ banner, priority }: EventBannerProps) => {
   const t = useTranslations("home.bannerBadge");
@@ -29,7 +29,7 @@ const EventBanner = ({ banner, priority }: EventBannerProps) => {
         // 원본 크기 webp 를 그대로 건다. next/image 가 다시 줄이거나 인코딩하지 않게 한다.
         unoptimized
         className="object-cover"
-        src={banner.imageUrl}
+        src={banner.backgroundImageUrl}
       />
 
       {/* 링크 클릭을 가로채지 않도록 pointer-events 를 끈다. */}
@@ -41,6 +41,34 @@ const EventBanner = ({ banner, priority }: EventBannerProps) => {
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 bottom-0 h-32 bg-linear-to-t from-scrim/70 via-scrim/20 via-60% to-transparent"
       />
+
+      {/*
+        전경은 본문 폭 오른쪽 아래에 붙이고 높이를 늘 꽉 채운다. 모바일처럼 배너가 세로로 길어지면 왼쪽(투명한 쪽)이 잘린다.
+        width·height 는 비율 힌트일 뿐이고 실제 크기는 h-full w-auto 가 정한다.
+      */}
+      {banner.foregroundImageUrl && (
+        <div className="pointer-events-none absolute inset-0 flex justify-center overflow-hidden">
+          <div className="content-shell relative h-full">
+            <ResourceImage
+              alt=""
+              width={2560}
+              height={920}
+              priority={priority}
+              sizes="100vw"
+              unoptimized
+              className="absolute right-0 bottom-0 h-full w-auto max-w-none"
+              src={banner.foregroundImageUrl}
+            />
+          </div>
+        </div>
+      )}
+      {/* 모바일은 폭이 좁아 전경이 글자 밑까지 들어온다. 그때만 전경 위에 한 겹 더 깔아 글자를 읽히게 한다. */}
+      {banner.foregroundImageUrl && (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 bg-linear-to-r from-scrim/70 via-scrim/30 via-60% to-transparent md:hidden"
+        />
+      )}
 
       {/* 좌우 화살표(left-4 / md:left-10 + 32px)와 겹치지 않게 안쪽 여백을 더 준다. */}
       <div className="absolute inset-0 flex items-end">
