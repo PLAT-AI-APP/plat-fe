@@ -79,9 +79,6 @@ const visibleCenter = (slot: number, dragX: number, g: Geometry) => {
 const RUBBER = 0.2;
 /** 끝 장까지 닿는 데 필요한 손가락 이동을 화면 폭의 이 비율 안으로 맞춘다. */
 const DRAG_REACH_RATIO = 0.75;
-/** 끝 장이 가운데에 왔을 때 그 너머 반 화면을 채울 접힌 장 수(1440px 화면에서 5개 남짓 들어간다). */
-const FILL_SLOTS = 7;
-
 const mod = (value: number, size: number) => ((value % size) + size) % size;
 
 interface Drag {
@@ -156,7 +153,7 @@ export function MainBannerCarousel() {
   /*
    * 끌 수 있는 거리는 배너 수만큼이다. 왼쪽으로 끝까지 끌면 마지막(count - 1 번째 뒤) 장이 가운데에 오는 데서
    * 멈추고(오른쪽으로는 첫 장이 가운데에 오는 데서), 그 너머는 고무줄처럼 조금만 따라온다. 그래서 몇 장이든 끝까지
-   * 한 번에 훑을 수 있다. 가운데 너머 자리는 순환으로 이어지는 장(FILL_SLOTS)이 채워 비지 않는다.
+   * 한 번에 훑을 수 있다. 끄는 동안 한 방향에 보이는 장은 배너 수까지라 같은 배너가 두 번 나오지 않는다.
    */
   const clampDrag = (deltaX: number, g: Geometry) => {
     const last = count - 1;
@@ -278,8 +275,8 @@ export function MainBannerCarousel() {
       : { "--side": "0px", "--gap": "0px", "--center": "100cqw" }
   ) as CSSProperties;
 
-  // 끌면 앞뒤로 배너 수만큼 줄지어 나오고, 끝 장이 가운데에 와도 그 너머 반 화면이 비지 않게 더 그려 둔다.
-  const reach = hasMultiple ? count + FILL_SLOTS : 0;
+  // 끌면 앞뒤로 나머지 배너가 한 번씩만 줄지어 나온다 — 5장이면 가운데 포함 5장까지, 되풀이하지 않는다.
+  const reach = hasMultiple ? count - 1 : 0;
   const slots = Array.from(
     { length: reach * 2 + 1 },
     (_, index) => index - reach,
