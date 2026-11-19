@@ -71,6 +71,8 @@ const ko = {
       descriptionPortrait: "대표이미지에 보일 영역을 1:1.3 비율(세로로 긴 직사각형)로 맞춰주세요.",
       dragGuide: "이미지를 드래그해 위치만 조정할 수 있어요.",
       zoom: "확대",
+      zoomOut: "축소",
+      zoomIn: "확대",
       cancel: "취소",
       apply: "자르기",
       ratios: {

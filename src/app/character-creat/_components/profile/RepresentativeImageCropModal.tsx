@@ -24,6 +24,14 @@ interface RepresentativeImageCropModalProps {
 // 비율은 쓰는 곳이 정해 넘기고, 이 모달 안에서는 사용자가 바꾸지 못하게 고정합니다.
 const SQUARE_CROP_ASPECT = 1;
 
+// 1배 미만으로 줄이면 이미지가 크롭 박스보다 작아져 빈 칸이 잘려 나오므로, 최소는 이미지를 꽉 채운 1배다.
+const MIN_ZOOM = 1;
+const MAX_ZOOM = 3;
+const ZOOM_STEP = 0.1;
+
+const clampZoom = (value: number) =>
+  Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, value));
+
 const RepresentativeImageCropModal = ({
   imageSrc,
   imageType,
@@ -34,6 +42,7 @@ const RepresentativeImageCropModal = ({
   const t = useTranslations("modalUi.imageCrop");
   const commonT = useTranslations("modalUi.common");
   const [crop, setCrop] = useState<Point>({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(MIN_ZOOM);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
   const [cropSize, setCropSize] = useState<{ width: number; height: number }>();
   const [isApplying, setIsApplying] = useState(false);
@@ -113,15 +122,16 @@ const RepresentativeImageCropModal = ({
                 image={imageSrc}
                 crop={crop}
                 cropSize={cropSize}
-                zoom={1}
+                zoom={zoom}
                 aspect={aspect}
                 cropShape="rect"
                 showGrid={false}
                 objectFit="contain"
-                minZoom={1}
-                maxZoom={1}
-                zoomWithScroll={false}
+                minZoom={MIN_ZOOM}
+                maxZoom={MAX_ZOOM}
+                zoomWithScroll
                 onCropChange={setCrop}
+                onZoomChange={setZoom}
                 onCropComplete={handleCropComplete}
                 onMediaLoaded={handleMediaLoaded}
                 style={{
@@ -136,6 +146,38 @@ const RepresentativeImageCropModal = ({
               />
             )}
           </section>
+
+          {/* 슬라이더·버튼·휠·두 손가락 모두 같은 zoom 상태를 바꾼다. */}
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              aria-label={t("zoomOut")}
+              onClick={() => setZoom((value) => clampZoom(value - ZOOM_STEP))}
+              disabled={zoom <= MIN_ZOOM}
+              className="title-3 flex size-8 shrink-0 items-center justify-center rounded-full bg-card-selected text-font-1 transition-colors hover:bg-main disabled:cursor-not-allowed disabled:text-font-disabled"
+            >
+              −
+            </button>
+            <input
+              type="range"
+              aria-label={t("zoom")}
+              min={MIN_ZOOM}
+              max={MAX_ZOOM}
+              step={0.01}
+              value={zoom}
+              onChange={(event) => setZoom(clampZoom(Number(event.target.value)))}
+              className="h-1 w-full cursor-pointer accent-brand"
+            />
+            <button
+              type="button"
+              aria-label={t("zoomIn")}
+              onClick={() => setZoom((value) => clampZoom(value + ZOOM_STEP))}
+              disabled={zoom >= MAX_ZOOM}
+              className="title-3 flex size-8 shrink-0 items-center justify-center rounded-full bg-card-selected text-font-1 transition-colors hover:bg-main disabled:cursor-not-allowed disabled:text-font-disabled"
+            >
+              +
+            </button>
+          </div>
         </div>
 
         <footer className="flex gap-2">

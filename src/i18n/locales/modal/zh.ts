@@ -73,6 +73,8 @@ const zh: typeof ko = {
       descriptionPortrait: "请将要显示在代表图片中的区域调整为 1:1.3（竖版）比例。",
       dragGuide: "只能通过拖动图片来调整位置。",
       zoom: "缩放",
+      zoomOut: "缩小",
+      zoomIn: "放大",
       cancel: "取消",
       apply: "裁剪",
       ratios: {

@@ -77,6 +77,8 @@ const en: typeof ko = {
       descriptionPortrait: "Adjust the 1:1.3 (portrait) area that will be shown as the cover image.",
       dragGuide: "You can drag the image to adjust its position only.",
       zoom: "Zoom",
+      zoomOut: "Zoom out",
+      zoomIn: "Zoom in",
       cancel: "Cancel",
       apply: "Crop",
       ratios: {

@@ -78,6 +78,8 @@ const vi: typeof ko = {
       descriptionPortrait: "Hãy căn vùng sẽ hiển thị trên ảnh đại diện theo tỷ lệ 1:1.3 (khung dọc).",
       dragGuide: "Bạn chỉ có thể kéo ảnh để điều chỉnh vị trí.",
       zoom: "Thu phóng",
+      zoomOut: "Thu nhỏ",
+      zoomIn: "Phóng to",
       cancel: "Hủy",
       apply: "Cắt",
       ratios: {

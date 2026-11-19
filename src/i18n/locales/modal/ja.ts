@@ -74,6 +74,8 @@ const ja: typeof ko = {
       descriptionPortrait: "代表画像に見える領域を1:1.3（縦長）の比率に合わせてください。",
       dragGuide: "画像はドラッグして位置だけ調整できます。",
       zoom: "拡大",
+      zoomOut: "縮小",
+      zoomIn: "拡大",
       cancel: "キャンセル",
       apply: "切り抜く",
       ratios: {
