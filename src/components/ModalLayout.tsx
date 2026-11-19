@@ -114,9 +114,15 @@ export const ModalLayout = ({
    * 호출부가 자기 max-w/max-h 를 주면 cn(tailwind-merge)이 그쪽을 살린다.
    * 고정 h-[...] 를 준 모달도 max-height 가 상한으로 작동해 함께 해결된다.
    * dvh 를 쓰는 이유는 모바일 주소창이 접혔다 펴질 때 vh 가 따라오지 않아서다.
+   * 모바일 폭(sm 미만)에서는 위 계약 대신 화면 전체를 채운다(아래 max-sm:*).
    */
   const modalPositionClass = hasBackground
-    ? "fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-h-[90dvh] max-w-[calc(100vw-2rem)] overflow-y-auto overscroll-contain"
+    ? cn(
+        "fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 max-h-[90dvh] max-w-[calc(100vw-2rem)] overflow-y-auto overscroll-contain",
+        // 모바일 폭에서는 떠 있는 카드 대신 화면 전체를 쓴다. 좁은 화면에서 모서리 여백과 둥근 테두리는
+        // 쓸 수 있는 폭만 줄인다. 호출부가 준 w-/h-/max-* 보다 뒤에 와서 이기도록 변형 접두사를 쓴다.
+        "max-sm:inset-0 max-sm:translate-x-0 max-sm:translate-y-0 max-sm:h-dvh max-sm:max-h-dvh max-sm:w-screen max-sm:max-w-none max-sm:rounded-none max-sm:border-0",
+      )
     : "absolute right-0 top-full translate-y-2.5";
 
   useClickAway(modalRef, handleClose, triggerRef);
