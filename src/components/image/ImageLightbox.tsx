@@ -2,8 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { useTranslations } from "next-intl";
 import { Close } from "@/icons";
 import ResourceImage from "@/components/ResourceImage";
+import { cn } from "@/lib/utils";
+
+/** 이미지를 눌러 확대할 때의 배율 */
+const ZOOM_SCALE = 2;
 
 export interface LightboxImage {
   id: string;
@@ -40,13 +45,38 @@ const ImageLightbox = ({
   onChangeIndex,
   onClose,
 }: ImageLightboxProps) => {
+  // 확대·축소 라벨은 이미지 편집 모달과 같은 문구를 쓴다(모든 언어에 이미 있다).
+  const t = useTranslations("modalUi.imageCrop");
   const closeRef = useRef<HTMLButtonElement>(null);
   const frameRef = useRef<HTMLDivElement>(null);
   // 이미지별로 받은 가로세로 비율. 다른 이미지로 넘기면 id 가 달라 이전 비율을 쓰지 않는다.
   const [ratio, setRatio] = useState<{ id: string; value: number } | null>(
     null,
   );
+  // 확대 여부와 확대 중심(이미지 안의 %). 다른 이미지로 넘기면 확대를 풀어야 해서 id 와 함께 기억한다.
+  const [zoomState, setZoomState] = useState<{
+    id: string;
+    origin: { x: number; y: number };
+  } | null>(null);
   const image = images[index];
+  const isZoomed = zoomState?.id === image?.id;
+  const origin = isZoomed ? zoomState.origin : { x: 50, y: 50 };
+
+  const handleToggleZoom = () => {
+    setZoomState(isZoomed || !image ? null : { id: image.id, origin });
+  };
+
+  const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (!isZoomed || !image) return;
+    const rect = event.currentTarget.getBoundingClientRect();
+    setZoomState({
+      id: image.id,
+      origin: {
+        x: ((event.clientX - rect.left) / rect.width) * 100,
+        y: ((event.clientY - rect.top) / rect.height) * 100,
+      },
+    });
+  };
   const hasPrevious = index > 0;
   const hasNext = index < images.length - 1;
 
@@ -139,7 +169,23 @@ const ImageLightbox = ({
           {/* 높이를 70vh 로 못 박고 가로는 원본 비율로 잡는다. 내용 크기에 맡기면(w-auto) 칸이 0 으로 접혀 이미지가 안 보였다.
               비율은 받은 뒤에야 알 수 있어, 그 전엔 정사각형 자리로 둔다. */}
           <div
-            className="relative h-[70vh] max-w-[calc(100vw-9rem)]"
+            role="button"
+            tabIndex={0}
+            aria-pressed={isZoomed}
+            aria-label={isZoomed ? t("zoomOut") : t("zoomIn")}
+            onClick={handleToggleZoom}
+            onKeyDown={(event) => {
+              if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                handleToggleZoom();
+              }
+            }}
+            onPointerMove={handlePointerMove}
+            // 마우스를 올리면 돋보기(+), 확대한 뒤에는 돋보기(−)로 바뀌어 한 번 더 누르면 돌아온다.
+            className={cn(
+              "relative h-[70vh] max-w-[calc(100vw-9rem)] overflow-hidden rounded-xl",
+              isZoomed ? "cursor-zoom-out" : "cursor-zoom-in",
+            )}
             style={{
               aspectRatio: ratio?.id === image.id ? ratio.value : 1,
             }}
@@ -160,7 +206,12 @@ const ImageLightbox = ({
                   });
                 }
               }}
-              className="rounded-xl object-contain"
+              // 확대하면 마우스가 있는 곳을 중심으로 키워, 마우스를 움직여 이미지 구석구석을 본다.
+              className="object-contain transition-transform duration-200 ease-out"
+              style={{
+                transform: isZoomed ? `scale(${ZOOM_SCALE})` : undefined,
+                transformOrigin: `${origin.x}% ${origin.y}%`,
+              }}
             />
           </div>
 
