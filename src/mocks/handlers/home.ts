@@ -196,7 +196,7 @@ const BANNER_ITEMS = Array.from({ length: 3 }, (_, index) => ({
   tags: index === 2 ? [] : ["출석", "노트"],
   backgroundImageUrl: `https://picsum.photos/seed/plat-banner-${index}/1200/437`,
   foregroundImageUrl: null,
-  linkUrl: index === 0 ? null : "/?tab=new",
+  linkUrl: [null, "plat://universe/1", "https://plat.so", "plat://event/unknown"][index % 4],
 }));
 
 export const homeHandlers = [

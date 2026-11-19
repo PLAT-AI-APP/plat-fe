@@ -12,6 +12,7 @@ import {
 } from "react";
 import { useFadeInAfterLoading } from "@/hooks/common/useFadeInAfterLoading";
 import { useHomeBannersQuery } from "@/api/home/getBanners";
+import { resolveBannerLink } from "@/lib/bannerLink";
 import { cn } from "@/lib/utils";
 import EventBanner from "./banner-templates/EventBanner";
 
@@ -334,6 +335,7 @@ export function MainBannerCarousel() {
           const k = position + slot;
           const banner = banners[mod(k, count)];
           const isCenter = slot === 0;
+          const link = resolveBannerLink(banner.linkUrl);
 
           const card = (
             <EventBanner
@@ -369,12 +371,16 @@ export function MainBannerCarousel() {
               )}
             >
               {isCenter ? (
-                banner.linkUrl ? (
+                link ? (
                   <Link
-                    href={banner.linkUrl}
+                    href={link.href}
                     className="block h-full w-full"
                     aria-label={banner.title}
                     draggable={false}
+                    {...(link.external && {
+                      target: "_blank",
+                      rel: "noopener noreferrer",
+                    })}
                   >
                     {card}
                   </Link>
