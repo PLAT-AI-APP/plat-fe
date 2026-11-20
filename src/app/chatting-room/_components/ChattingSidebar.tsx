@@ -473,6 +473,10 @@ const ChattingSidebar = ({ roomId, toggleIsSidebar }: ChattingSidebarProps) => {
                                 />
                               }
                             />
+                            {/* 추천은 채팅과 별도로 생성·과금되므로 켜기 전에 알린다. */}
+                            <p className="body-5 px-2 pb-1 text-font-2">
+                              {t("suggestedReplyCostHint")}
+                            </p>
                           </li>
                           <li>
                             <SidebarMenuItem

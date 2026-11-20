@@ -36,6 +36,7 @@ const ja: typeof ko = {
       assetGalleryEmpty: "まだアセットがありません",
       assetTotal: "合計  {count}件",
       suggestedReply: "おすすめ返信",
+      suggestedReplyCostHint: "オンにすると、返信ごとにノートが追加で消費されます（最低1ノート）",
       novelView: "小説で見る",
       assetView: "アセット表示",
       assetLocked: "ロックされたアセット",

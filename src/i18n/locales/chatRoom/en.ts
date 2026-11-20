@@ -36,6 +36,7 @@ const en: typeof ko = {
       assetGalleryEmpty: "No assets yet",
       assetTotal: "Total  {count}",
       suggestedReply: "Suggested replies",
+      suggestedReplyCostHint: "Uses extra notes for each reply when on (minimum 1 note)",
       novelView: "View as novel",
       assetView: "Show assets",
       assetLocked: "Locked asset",

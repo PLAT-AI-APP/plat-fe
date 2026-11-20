@@ -34,6 +34,7 @@ const ko = {
       assetGalleryEmpty: "아직 에셋이 없어요",
       assetTotal: "총  {count}개",
       suggestedReply: "추천 답변",
+      suggestedReplyCostHint: "켜면 답변마다 노트가 추가로 차감돼요 (최소 1노트)",
       novelView: "소설로 보기",
       assetView: "에셋 보기",
       assetLocked: "잠긴 에셋",

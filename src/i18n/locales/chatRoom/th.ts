@@ -36,6 +36,7 @@ const th: typeof ko = {
       assetGalleryEmpty: "ยังไม่มีแอสเซ็ต",
       assetTotal: "ทั้งหมด  {count} รายการ",
       suggestedReply: "คำตอบแนะนำ",
+      suggestedReplyCostHint: "เมื่อเปิด จะหักโน้ตเพิ่มในทุกคำตอบ (ขั้นต่ำ 1 โน้ต)",
       novelView: "อ่านแบบนิยาย",
       assetView: "แสดงแอสเซ็ต",
       assetLocked: "แอสเซ็ตที่ล็อกอยู่",

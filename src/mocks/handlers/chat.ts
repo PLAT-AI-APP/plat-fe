@@ -106,6 +106,12 @@ const buildMessage = (type: MessageSender, content: string): RoomMessage => ({
 /** chatTurnId(클라이언트가 만든 멱등키) → 턴. 서버도 같은 값을 그대로 turnId로 쓴다. */
 const chatTurns = new Map<string, MockChatTurn>();
 
+const MOCK_RECOMMENDATIONS = [
+  "그 말을 듣고 조금 안심했어.",
+  "그래도 네 생각이 궁금해.",
+  "그럼 우리 조금 더 이야기할래?",
+];
+
 /** 유저 메시지를 그대로 되비추는 짧은 캐릭터 답변을 만들어 토큰 단위로 쪼갭니다. */
 const buildReplyTokens = (userMessage: string): string[] => {
   const reply = `"${userMessage.slice(0, 30)}"... 라고 말했구나. 흥미로운걸.`;
@@ -219,12 +225,21 @@ export const chatHandlers = [
           controller.enqueue(encoder.encode(`id: ${index}\ndata: ${turn.tokens[index]}\n\n`));
           await delay(30);
         }
-        controller.enqueue(
-          encoder.encode(`id: ${turn.tokens.length}\nevent: done\ndata: \n\n`),
-        );
-        // 스트림이 끝났으니 완성된 답변을 방 메시지 목록에 반영하고 턴을 정리합니다.
+        // 실제 서버 순서: 토큰 → answer_done → (추천 ON이면 recommendations) → done.
+        // answer_done 시점에 답변은 이미 저장됐으니 목록에도 먼저 반영합니다.
         const room = rooms.get(turn.roomId);
         if (room) room.messages.push(buildMessage("AI", turn.tokens.join("")));
+
+        let eventId = turn.tokens.length;
+        controller.enqueue(encoder.encode(`id: ${eventId++}\nevent: answer_done\ndata: \n\n`));
+        // 방 상세 목업이 추천을 항상 켠 채로 내려주므로 여기서도 항상 보냅니다. 별도 생성이라 조금 늦게 옵니다.
+        await delay(400);
+        controller.enqueue(
+          encoder.encode(
+            `id: ${eventId++}\nevent: recommendations\ndata: ${JSON.stringify({ items: MOCK_RECOMMENDATIONS })}\n\n`,
+          ),
+        );
+        controller.enqueue(encoder.encode(`id: ${eventId}\nevent: done\ndata: \n\n`));
         if (turnId) chatTurns.delete(turnId);
         controller.close();
       },

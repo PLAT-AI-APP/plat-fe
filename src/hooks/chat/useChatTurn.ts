@@ -15,10 +15,7 @@ import {
 } from "@/api/room/getRoomMessages";
 import { roomQueryKeys } from "@/api/room/queryKeys";
 import { getApiErrorMessage, isAppError } from "@/lib/apiError";
-import {
-  parseRecommendations,
-  stripRecommendationBlock,
-} from "@/lib/chatRecommendations";
+import { parseRecommendations } from "@/lib/chatRecommendations";
 import { createTextReveal } from "@/lib/textReveal";
 import { showAppToast } from "@/lib/toast";
 import { useDialogStore } from "@/store/useDialogStore";
@@ -92,6 +89,8 @@ export const useChatTurn = ({
   // 마지막 응답에 딸려 온 추천 문장. 서버가 저장하지 않으므로 새로고침하면 사라진다.
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [isBusy, setIsBusy] = useState(false);
+  // 가장 최근에 시작한 턴. 입력을 다시 받은 뒤 이전 턴의 추천이 늦게 와도 화면에 적용하지 않기 위해 쓴다.
+  const latestTurnIdRef = useRef<string | null>(null);
   // state 는 다음 렌더에야 반영돼, 연달아 눌린 전송을 막으려면 즉시 읽히는 ref 가 필요합니다.
   const isBusyRef = useRef(false);
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -263,20 +262,30 @@ export const useChatTurn = ({
       hasRunTurnRef.current = true;
       let hasStarted = false;
       let receivedText = "";
-      // 화면에 내보낸 본문 길이. 추천 블록을 뗀 뒤 늘어난 만큼만 이어 보낸다.
-      let revealedLength = 0;
+      let hasFailed = false;
       // 토큰이 뭉쳐서 와도 응답이 툭 나타나지 않도록 화면에는 조금씩 이어 보여 준다.
       const reveal = createTextReveal((text) => {
         updateTurn(chatTurnId, { assistantContent: text });
       });
 
-      /** 응답 끝의 추천 블록은 말풍선에 그리지 않는다(서버도 저장할 때 뗀다). */
-      const revealBody = () => {
-        const body = stripRecommendationBlock(receivedText);
-        if (body.length <= revealedLength) return;
+      // 답변을 다 보여 주고 입력을 풀어 저장 확인으로 넘어가는 마무리. 한 번만 한다.
+      // 서버는 답변이 끝나면(answer_done) 추천을 만드는 동안에도 다음 입력을 받으므로, 추천을 기다리지 않고 바로 푼다.
+      // answer_done 를 보내지 않는 응답은 스트림이 끝난 뒤 같은 마무리를 거친다.
+      let finishing: Promise<void> | null = null;
+      const finishAnswer = () => {
+        finishing ??= (async () => {
+          // 받은 글자를 화면에 다 내보낸 뒤에 임시 말풍선을 서버 이력으로 바꿔야 끝에서 툭 튀지 않는다.
+          await reveal.finish();
+          if (abortController.signal.aborted) return;
 
-        reveal.push(body.slice(revealedLength));
-        revealedLength = body.length;
+          updateTurn(chatTurnId, { isStreaming: false });
+          // 응답이 다 보였으니 바로 다음 말을 받는다. 저장 확인은 뒤에서 이어진다.
+          releaseBusy();
+
+          // 실패해도 부분 응답이 저장됐을 수 있어, 이력을 한 번 확인한 뒤에 화면의 임시 말풍선을 치웁니다.
+          void settleTurn(chatTurnId, !hasFailed, replacesMessageId);
+        })();
+        return finishing;
       };
 
       try {
@@ -284,13 +293,29 @@ export const useChatTurn = ({
         const { turnId } = await start();
         hasStarted = true;
 
-        let hasFailed = false;
         await consumeChatStream({
           turnId,
           signal: abortController.signal,
           onToken: (token) => {
             receivedText += token;
-            revealBody();
+            reveal.push(token);
+          },
+          onAnswerDone: () => {
+            void finishAnswer();
+          },
+          onRecommendations: (data) => {
+            // 그 사이 새 말을 보냈거나 화면을 떠났다면 이전 턴의 추천은 버린다.
+            if (
+              abortController.signal.aborted ||
+              latestTurnIdRef.current !== chatTurnId
+            ) {
+              return;
+            }
+            setSuggestions(parseRecommendations(data));
+          },
+          onRecommendationFailed: (reason) => {
+            // 추천만 실패한 것이라 채팅 성공은 그대로 두고 추천 칸만 비운다.
+            console.warn("[chat] 답변 추천 실패:", reason);
           },
           onFailed: (reason) => {
             hasFailed = true;
@@ -317,20 +342,12 @@ export const useChatTurn = ({
           return;
         }
 
-        // 받은 글자를 화면에 다 내보낸 뒤에 임시 말풍선을 서버 이력으로 바꿔야 끝에서 툭 튀지 않는다.
-        await reveal.finish();
-        if (abortController.signal.aborted) return;
-
-        // 추천은 응답을 다 받아야 온전한 JSON 이 된다. 방 설정이 꺼져 있으면 빈 배열이라 그대로 지운다.
-        setSuggestions(parseRecommendations(receivedText));
-
-        updateTurn(chatTurnId, { isStreaming: false });
-        // 응답이 다 보였으니 바로 다음 말을 받는다. 저장 확인은 뒤에서 이어진다.
-        releaseBusy();
-
-        // 실패해도 부분 응답이 저장됐을 수 있어, 이력을 한 번 확인한 뒤에 화면의 임시 말풍선을 치웁니다.
-        void settleTurn(chatTurnId, !hasFailed, replacesMessageId);
+        // answer_done 로 이미 마무리했다면 같은 작업을 돌려주고, 아니면(실패·구버전 응답) 지금 마무리한다.
+        await finishAnswer();
       } catch (error) {
+        // 답변은 이미 마무리됐고 추천을 기다리던 연결만 끊긴 경우다. 추천은 덤이라 조용히 넘어간다.
+        if (finishing) return;
+
         reveal.cancel();
         if (abortController.signal.aborted) return;
 
@@ -415,6 +432,7 @@ export const useChatTurn = ({
       abortControllerRef.current = abortController;
       isBusyRef.current = true;
       setIsBusy(true);
+      latestTurnIdRef.current = chatTurnId;
       // 지난 답에 딸려 온 추천은 새 말을 보내는 순간 의미가 없다.
       setSuggestions([]);
       setTurns((previous) => [
@@ -474,6 +492,7 @@ export const useChatTurn = ({
       abortControllerRef.current = abortController;
       isBusyRef.current = true;
       setIsBusy(true);
+      latestTurnIdRef.current = chatTurnId;
       setSuggestions([]);
       setTurns((previous) => [
         ...previous,

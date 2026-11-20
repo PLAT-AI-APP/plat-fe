@@ -7,6 +7,12 @@ import { getApiErrorMessage } from "@/lib/apiError";
 export interface ChatStreamHandlers {
   /** 토큰 조각이 도착할 때마다 호출됩니다. 조각을 이어붙이면 전체 응답이 됩니다. */
   onToken?: (token: string, eventId: string) => void;
+  /** 채팅 답변이 끝났습니다. 추천은 이 뒤에 따로 오므로 입력은 여기서부터 받을 수 있습니다. */
+  onAnswerDone?: (eventId: string) => void;
+  /** 별도로 생성된 답변 추천(`{"items":[...]}`)이 도착했습니다. 파싱은 부르는 쪽에서 합니다. */
+  onRecommendations?: (data: string, eventId: string) => void;
+  /** 추천만 실패했습니다. 채팅 답변은 성공이라 오류로 다루지 않습니다. */
+  onRecommendationFailed?: (reason: string, eventId: string) => void;
   /** 생성이 정상 종료됐습니다. */
   onDone?: (eventId: string) => void;
   /** 서버가 생성 실패를 알렸습니다. 네트워크 오류가 아니라 생성 자체의 실패입니다. */
@@ -29,7 +35,7 @@ const SSE_ENDPOINT = (turnId: string) => `/chat/${turnId}/stream`;
 const MAX_RESUME_ATTEMPTS = 2;
 const RESUME_DELAY_MS = 500;
 
-/** 끝(done/failed)을 받기 전에 연결이 닫혔다. 이어 받기까지 실패하면 이 오류로 끝난다. */
+/** 끝(done/failed)을 받기 전에 연결이 닫혔다(답변 완료 뒤 추천을 기다리다 닫힌 경우 포함). 이어 받기까지 실패하면 이 오류로 끝난다. */
 export class ChatStreamInterruptedError extends Error {
   constructor() {
     super("chat stream closed before completion");
@@ -113,6 +119,9 @@ const consume = async ({
   lastEventId,
   signal,
   onToken,
+  onAnswerDone,
+  onRecommendations,
+  onRecommendationFailed,
   onDone,
   onFailed,
 }: ChatStreamOptions): Promise<void> => {
@@ -172,7 +181,20 @@ const consume = async ({
             onFailed?.(data, id);
             return true;
           }
-          onToken?.(data, id);
+          if (event === "answer_done") {
+            onAnswerDone?.(id);
+            continue;
+          }
+          if (event === "recommendations") {
+            onRecommendations?.(data, id);
+            continue;
+          }
+          if (event === "recommendation_failed") {
+            onRecommendationFailed?.(data, id);
+            continue;
+          }
+          // 토큰은 이름 없는 이벤트로만 온다. 모르는 이름의 이벤트가 본문에 섞이지 않게 무시한다.
+          if (event === "message") onToken?.(data, id);
         }
       }
     } finally {

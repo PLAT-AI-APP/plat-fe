@@ -36,6 +36,7 @@ const vi: typeof ko = {
       assetGalleryEmpty: "Chưa có asset nào",
       assetTotal: "Tổng  {count}",
       suggestedReply: "Trả lời gợi ý",
+      suggestedReplyCostHint: "Khi bật, mỗi câu trả lời sẽ trừ thêm Note (tối thiểu 1 Note)",
       novelView: "Xem dạng tiểu thuyết",
       assetView: "Hiển thị asset",
       assetLocked: "Tài nguyên đang khóa",

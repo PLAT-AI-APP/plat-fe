@@ -33,6 +33,7 @@ const zh: typeof ko = {
       assetGalleryEmpty: "暂无素材",
       assetTotal: "共  {count}个",
       suggestedReply: "推荐回复",
+      suggestedReplyCostHint: "开启后每次回复会额外扣除笔记（至少1笔记）",
       novelView: "以小说形式查看",
       assetView: "显示素材",
       assetLocked: "未解锁的素材",
