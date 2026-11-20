@@ -357,6 +357,9 @@ export const universeHandlers = [
     return new HttpResponse(null, { status: 204 });
   }),
 
+  /** 세계관 본문 AI 반려 이의 신청. 목업은 항상 접수(204)한다. */
+  http.post(/\/content-reviews\/universes\/([^/]+)\/appeal$/, () => new HttpResponse(null, { status: 204 })),
+
   http.get(/\/universe\/([^/]+)(?:\?.*)?$/, ({ request }) => {
     const universeId = pathValue(request.url, /\/universe\/([^/]+)$/);
 

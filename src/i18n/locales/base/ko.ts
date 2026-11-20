@@ -195,6 +195,8 @@ const ko = {
       awaitingAdminDescription: "자동 검수를 마치지 못해 운영자가 직접 확인하고 있어요. 확인이 끝나면 다른 유저에게도 보여요.",
       rejectedFallback: "검수 기준에 맞지 않아 공개되지 않았어요. 내용을 고친 뒤 다시 저장해 주세요.",
       findingsTitle: "고칠 곳",
+      appealBody: "본문 이의 신청",
+      appealBodyNotAllowed: "이의 신청할 수 없는 상태예요. 내용을 고쳐 다시 저장해 주세요.",
       edit: "수정하기",
       close: "닫기",
       fields: {

@@ -195,6 +195,8 @@ const vi: typeof ko = {
       awaitingAdminDescription: "Kiểm duyệt tự động chưa hoàn tất nên quản trị viên đang trực tiếp kiểm tra. Xong rồi người dùng khác sẽ thấy.",
       rejectedFallback: "Chưa đạt tiêu chuẩn kiểm duyệt nên chưa được công khai. Hãy sửa và lưu lại.",
       findingsTitle: "Cần sửa",
+      appealBody: "Khiếu nại nội dung",
+      appealBodyNotAllowed: "Hiện không thể khiếu nại. Hãy sửa nội dung rồi lưu lại.",
       edit: "Chỉnh sửa",
       close: "Đóng",
       fields: {

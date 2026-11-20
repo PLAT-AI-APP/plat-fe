@@ -199,6 +199,8 @@ const en: typeof ko = {
       awaitingAdminDescription: "Automatic review couldn't finish, so an admin is checking it directly. Other users can see it once that's done.",
       rejectedFallback: "It didn't meet our review guidelines, so it isn't public. Edit it and save again.",
       findingsTitle: "What to fix",
+      appealBody: "Appeal this review",
+      appealBodyNotAllowed: "This can't be appealed right now. Please edit the content and save again.",
       edit: "Edit",
       close: "Close",
       fields: {

@@ -167,7 +167,11 @@ export default function ProfileContent({ id }: { id: string }) {
               ? t("characterCard.reviewStatus.rejectedHint")
               : t("characterCard.reviewStatus.pendingHint"),
         },
-        onClick: () => openDialog("CONTENT_REVIEW", { review, editHref }),
+        onClick: () => openDialog("CONTENT_REVIEW", {
+            review,
+            universeId: card.universeId,
+            editHref,
+          }),
       };
     }
     if (card.visibility && card.visibility !== "PUBLIC") {

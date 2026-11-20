@@ -7,6 +7,7 @@ import ResourceImage from "@/components/ResourceImage";
 import Button from "@/components/ui/Button";
 import { ImageIcon } from "@/icons";
 import { useImageAppeal } from "@/hooks/data/useImageAppeal";
+import { useUniverseAppeal } from "@/hooks/data/useUniverseAppeal";
 import {
   getImageReasonKey,
   getReviewFocus,
@@ -34,7 +35,7 @@ const STATUS_CLASS: Record<ReviewImage["status"], string> = {
  * 내 캐릭터가 왜 아직 보이지 않는지. 반려면 사유와 고칠 곳(본문·이미지)을 보여 주고 수정 화면으로 보낸다.
  * 검수 중·운영자 확인 중이면 기다리면 된다는 것만 알린다.
  */
-const ContentReviewDialog = ({ onClose, review, editHref }: ContentReviewDialogProps) => {
+const ContentReviewDialog = ({ onClose, review, universeId, editHref }: ContentReviewDialogProps) => {
   const t = useTranslations("dialog.contentReview");
   const imageT = useTranslations("imageReview");
   const router = useRouter();
@@ -43,18 +44,28 @@ const ContentReviewDialog = ({ onClose, review, editHref }: ContentReviewDialogP
   const { appeal, pendingFileId } = useImageAppeal((fileId) =>
     setAppealedIds((prev) => [...prev, fileId]),
   );
+  // 본문 이의 신청도 같은 이유로 이 창에서 접수한 것을 기억한다. 접수하면 운영자 확인 대기로 바뀐다.
+  const [isBodyAppealed, setIsBodyAppealed] = useState(false);
+  const { appeal: appealBody, isPending: isBodyAppealPending } = useUniverseAppeal(() =>
+    setIsBodyAppealed(true),
+  );
   const images = (review.images ?? []).map((image) =>
     appealedIds.includes(image.fileId)
       ? { ...image, status: "PENDING" as const, appealed: true, appealable: false }
       : image,
   );
   const isBodyRejected =
-    review.status === "REJECTED" && (Boolean(review.reason) || review.findings.length > 0);
+    review.status === "REJECTED" &&
+    (Boolean(review.reason) || review.findings.length > 0) &&
+    !isBodyAppealed;
+  // 운영자 확인 중인 건은 이미 이의 신청과 같은 상태라 다시 받지 않는다.
+  const canAppealBody = isBodyRejected && !review.awaitingAdmin;
   const blockingCount = images.filter(isBlockingImage).length;
   // 이 창에서 이의 신청해 고칠 이미지가 남지 않으면 반려가 아니라 운영자 확인 대기로 바뀐다.
   const isRejected =
-    isBodyRejected || blockingCount > 0 || (review.status === "REJECTED" && images.length === 0);
-  const isAwaitingAdmin = review.awaitingAdmin || images.some((image) => image.appealed);
+    isBodyRejected || blockingCount > 0 || (review.status === "REJECTED" && images.length === 0 && !isBodyAppealed);
+  const isAwaitingAdmin =
+    review.awaitingAdmin || isBodyAppealed || images.some((image) => image.appealed);
   const title = isRejected
     ? t("rejectedTitle")
     : isAwaitingAdmin
@@ -76,7 +87,7 @@ const ContentReviewDialog = ({ onClose, review, editHref }: ContentReviewDialogP
     </p>
   ) : (
     <p className="body-5 w-full whitespace-pre-line break-keep text-font-2">
-      {review.awaitingAdmin ? t("awaitingAdminDescription") : t("pendingDescription")}
+      {review.awaitingAdmin || isBodyAppealed ? t("awaitingAdminDescription") : t("pendingDescription")}
     </p>
   );
 
@@ -85,6 +96,18 @@ const ContentReviewDialog = ({ onClose, review, editHref }: ContentReviewDialogP
   const description = (
     <div className="flex w-full flex-col gap-4">
       {summary}
+      {canAppealBody && (
+        <Button
+          variant="outline"
+          size="sm"
+          className="self-start"
+          isPending={isBodyAppealPending}
+          disabled={isBodyAppealPending}
+          onClick={() => appealBody(universeId)}
+        >
+          {t("appealBody")}
+        </Button>
+      )}
       {hasFixList && (
         <div className="flex w-full flex-col gap-2">
           <p className="title-6 text-font-1">{t("findingsTitle")}</p>

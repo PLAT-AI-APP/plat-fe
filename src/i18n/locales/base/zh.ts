@@ -193,6 +193,8 @@ const zh: typeof ko = {
       awaitingAdminDescription: "自动审核未能完成，运营人员正在直接确认。确认完成后其他用户也能看到。",
       rejectedFallback: "未符合审核标准，因此未公开。请修改内容后重新保存。",
       findingsTitle: "需修改的地方",
+      appealBody: "对正文提出异议",
+      appealBodyNotAllowed: "目前无法提出异议。请修改内容后重新保存。",
       edit: "去修改",
       close: "关闭",
       fields: {

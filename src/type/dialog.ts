@@ -98,6 +98,8 @@ export interface UniverseDeleteDialogProps {
 export interface ContentReviewDialogProps {
   onClose: () => void;
   review: OwnCardReview;
+  /** 본문 이의 신청을 보낼 세계관 */
+  universeId: string;
   /** 반려일 때 "수정하기"가 보낼 곳 */
   editHref: string;
 }
